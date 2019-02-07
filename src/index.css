@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+/* Required by leaflet */
+.leaflet-container {
+    width: 100%;
+    height: calc(100vmin - 0px);
+    margin: 0 auto;
+}
+
+/* Required by react-leaflet-draw */
+.sr-only {
+    display: none;
+}
+
+
