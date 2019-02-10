@@ -43,7 +43,6 @@ class _Control extends MapControl {
         this.forceUpdate(() => {
             // console.log("Updated forced", this.leafletElement.getContainer());
         });
-
     }
 
     render() {

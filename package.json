@@ -9,6 +9,11 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/recharts": "^1.1.10",
+    "classnames": "^2.2.6",
     "leaflet": "^1.4.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
@@ -16,11 +21,14 @@
     "react-leaflet-control": "^2.0.0",
     "react-redux": "^6.0.0",
     "react-scripts-ts": "3.1.0",
+    "recharts": "^1.4.2",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.7",
+    "@types/enzyme": "^3.1.17",
     "@types/jest": "^24.0.0",
     "@types/leaflet": "^1.4.1",
     "@types/node": "^10.12.21",
@@ -30,6 +38,8 @@
     "@types/react-redux": "^7.0.1",
     "@types/redux-logger": "^3.0.6",
     "@types/redux-thunk": "^2.1.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.9.1",
     "typescript": "^3.3.1"
   }
 }

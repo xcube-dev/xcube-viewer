@@ -1,1 +1,1 @@
-export const DEFAULT_API_SERVER_URL = "http://ocdb-test:4000/eocdb/api/v0.1.0";
+export const DEFAULT_API_SERVER_URL = "http://localhost:9090/xcube/api/v0.1.0";

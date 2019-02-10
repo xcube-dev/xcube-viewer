@@ -14,7 +14,7 @@ declare module "react-leaflet" {
 
 import { Map, TileLayer, LayersControl, LeafletConsumer, LeafletContext } from 'react-leaflet';
 import * as L from "leaflet";
-import { ErrorBoundary } from "./ErrorBoundary";
+import ErrorBoundary from "./ErrorBoundary";
 import Control from "./Control";
 
 import './Viewer.css';

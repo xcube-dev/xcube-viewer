@@ -6,7 +6,8 @@ import thunk from 'redux-thunk';
 import * as ReduxLogger from 'redux-logger';
 import { viewerReducer } from './reducers/viewerReducer';
 import { updateDatasets } from "./actions/dataActions";
-import Viewer from './components/Viewer';
+// import Viewer from './components/Viewer';
+import Dashboard from "./components/Dashboard";
 import registerServiceWorker from './registerServiceWorker';
 
 import './index.css';
@@ -17,7 +18,7 @@ store.dispatch(updateDatasets() as any);
 
 ReactDOM.render(
     <Provider store={store}>
-        <Viewer/>
+        <Dashboard/>
     </Provider>,
     document.getElementById('root') as HTMLElement
 );

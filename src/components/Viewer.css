@@ -1,28 +1,15 @@
-.App {
-  text-align: center;
+/* Required by leaflet */
+.leaflet-container {
+    width: 100%;
+    /*height: calc(100vmin - 0px);*/
+    height: 400px;
+    margin: 0 auto;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+/* Required by react-leaflet-draw */
+.sr-only {
+    display: none;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
 
-.App-title {
-  font-size: 1.5em;
-}
 
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}

@@ -1,34 +1,51 @@
-import * as React from "react";
-import { ErrorInfo } from "react";
+import * as React from 'react';
+import './ErrorBoundary.css';
 
-export interface ErrorBoundaryProps {
-
+interface ErrorBoundaryProps {
 }
 
-export interface ErrorBoundaryState {
-    error?: Error;
+interface ErrorBoundaryState {
+    error: Error | null;
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-    constructor(props: ErrorBoundaryProps) {
+/**
+ * An error boundary is used to catch JavaScript errors anywhere in their child component tree, log those errors,
+ * and display a fallback UI (see https://reactjs.org/docs/error-boundaries.html).
+ */
+export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+    constructor(props: object) {
         super(props);
-        this.state = {};
+        this.state = {error: null};
     }
 
-    static getDerivedStateFromError(error: Error) {
+    static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+        // Update state so the next render will show the fallback UI.
         return {error};
     }
 
-    componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error(error, errorInfo);
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+        //  log error information here, e.g. send info to API
     }
 
     render() {
-        if (this.state.error) {
-            // Render custom fallback UI
-            return <h1>Something went wrong: ${this.state.error}</h1>;
+        if (!this.props.children) {
+            throw new Error('An ErrorBoundary requires at least one child');
         }
 
+        if (this.state.error) {
+            // Error path
+            return (
+                <div>
+                    <h2 className="errorBoundary-header">Something went wrong.</h2>
+                    <details className="errorBoundary-details" style={{whiteSpace: 'pre-wrap'}}>
+                        {this.state.error.toString()}
+                        <br/>
+                    </details>
+                </div>
+            );
+        }
+
+        // Normally, just render children
         return this.props.children;
     }
 }
