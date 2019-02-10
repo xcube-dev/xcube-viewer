@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Theme, WithStyles, createStyles, withStyles } from "@material-ui/core";
-import { CssBaseline, Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, Badge } from '@material-ui/core';
+import { CssBaseline, Drawer, AppBar, Toolbar, Typography, Divider, IconButton, Badge } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import classNames from "classnames";
 
-import { mainListItems, secondaryListItems } from './listItems';
+import PrimaryDrawerList from './PrimaryDrawerList';
+import SecondaryDrawerList from "./SecondaryDrawerList";
 import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
 import Viewer from "./Viewer";
@@ -53,24 +54,27 @@ const styles = (theme: Theme) => createStyles(
         title: {
             flexGrow: 1,
         },
-        drawerPaper: {
-            position: 'relative',
+        drawer: {
+            width: drawerWidth,
+            flexShrink: 0,
             whiteSpace: 'nowrap',
+        },
+        drawerOpen: {
             width: drawerWidth,
             transition: theme.transitions.create('width', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen,
             }),
         },
-        drawerPaperClose: {
-            overflowX: 'hidden',
+        drawerClose: {
             transition: theme.transitions.create('width', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
             }),
-            width: theme.spacing.unit * 7,
+            overflowX: 'hidden',
+            width: theme.spacing.unit * 7 + 1,
             [theme.breakpoints.up('sm')]: {
-                width: theme.spacing.unit * 9,
+                width: theme.spacing.unit * 9 + 1,
             },
         },
         appBarSpacer: theme.mixins.toolbar,
@@ -99,12 +103,22 @@ interface DashboardProps extends WithStyles<typeof styles> {
 
 interface DashboardState {
     open: boolean;
+    isDatasetsSelected?: boolean;
+    isLayersSelected?: boolean;
+    isRegionsSelected?: boolean;
+    isTimeSelected?: boolean;
+    isTimeseriesSelected?: boolean;
 }
 
 class Dashboard extends React.Component<DashboardProps, DashboardState> {
-    state = {
-        open: true,
-    };
+
+
+    constructor(props: Readonly<DashboardProps>) {
+        super(props);
+        this.state = {
+            open: false,
+        };
+    }
 
     handleDrawerOpen = () => {
         this.setState({open: true});
@@ -113,6 +127,33 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
     handleDrawerClose = () => {
         this.setState({open: false});
     };
+
+    private onDatasetsSelected = () =>  {
+        const isDatasetsSelected = !this.state.isDatasetsSelected;
+        this.setState({isDatasetsSelected,  isLayersSelected: !isDatasetsSelected, isRegionsSelected: !isDatasetsSelected});
+    };
+
+    private onLayersSelected= () =>  {
+        const isLayersSelected = !this.state.isLayersSelected;
+        this.setState({isLayersSelected,  isDatasetsSelected: !isLayersSelected, isRegionsSelected: !isLayersSelected});
+    };
+
+    private onRegionsSelected= () =>  {
+        const isRegionsSelected = !this.state.isRegionsSelected;
+        this.setState({isRegionsSelected,  isDatasetsSelected: !isRegionsSelected, isLayersSelected: !isRegionsSelected});
+    };
+
+    private onTimeSelected= () =>  {
+        const isTimeSelected = !this.state.isTimeSelected;
+        this.setState({isTimeSelected});
+    };
+
+    private onTimeseriesSelected= () =>  {
+        const isTimeseriesSelected = !this.state.isTimeseriesSelected;
+        this.setState({isTimeseriesSelected});
+    };
+
+
 
     render() {
         const {classes} = this.props;
@@ -133,13 +174,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                         >
                             <MenuIcon/>
                         </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            className={classes.title}
-                        >
+                        <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                             xcube Viewer
                         </Typography>
                         <IconButton color="inherit">
@@ -150,9 +185,16 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                     </Toolbar>
                 </AppBar>
                 <Drawer
-                    //variant="permanent"
+                    variant="permanent"
+                    className={classNames(classes.drawer, {
+                        [classes.drawerOpen]: this.state.open,
+                        [classes.drawerClose]: !this.state.open,
+                    })}
                     classes={{
-                        paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+                        paper: classNames({
+                                              [classes.drawerOpen]: this.state.open,
+                                              [classes.drawerClose]: !this.state.open,
+                                          }),
                     }}
                     open={this.state.open}
                 >
@@ -162,9 +204,20 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
                         </IconButton>
                     </div>
                     <Divider/>
-                    <List>{mainListItems}</List>
+                    <PrimaryDrawerList
+                        isDatasetsSelected={!!this.state.isDatasetsSelected}
+                        onDatasetsSelected={this.onDatasetsSelected}
+                        isLayersSelected={!!this.state.isLayersSelected}
+                        onLayersSelected={this.onLayersSelected}
+                        isRegionsSelected={!!this.state.isRegionsSelected}
+                        onRegionsSelected={this.onRegionsSelected}
+                        isTimeSelected={!!this.state.isTimeSelected}
+                        onTimeSelected={this.onTimeSelected}
+                        isTimeseriesSelected={!!this.state.isTimeseriesSelected}
+                        onTimeseriesSelected={this.onTimeseriesSelected}
+                    />
                     <Divider/>
-                    <List>{secondaryListItems}</List>
+                    <SecondaryDrawerList/>
                 </Drawer>
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer}/>
