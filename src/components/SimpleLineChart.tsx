@@ -21,8 +21,8 @@ export default function SimpleLineChart() {
                 <CartesianGrid vertical={false} strokeDasharray="3 3"/>
                 <Tooltip/>
                 <Legend/>
-                <Line type="monotone" dataKey="Visits" stroke="#82ca9d"/>
-                <Line type="monotone" dataKey="Orders" stroke="#8884d8" activeDot={{r: 8}}/>
+                <Line type="monotone" dataKey="Visits" stroke="#82ca9d" strokeWidth={3}/>
+                <Line type="monotone" dataKey="Orders" stroke="#8884d8" strokeWidth={3} activeDot={{r: 8}}/>
             </LineChart>
         </ResponsiveContainer>
     );

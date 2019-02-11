@@ -1,8 +1,8 @@
-import { Dispatch } from "redux";
-import { MessageLogAction, postMessage } from "./messageLogActions";
-import { ViewerState } from "../states/viewerState";
+import { Dispatch } from 'redux';
+import { MessageLogAction, postMessage } from './messageLogActions';
+import { AppState } from '../states/appState';
 import * as api from '../api'
-import { Dataset } from "../types/dataset";
+import { Dataset } from '../types/dataset';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@ export interface UpdateDatasets {
 
 
 export function updateDatasets() {
-    return (dispatch: Dispatch<UpdateDatasets | MessageLogAction>, getState: () => ViewerState) => {
+    return (dispatch: Dispatch<UpdateDatasets | MessageLogAction>, getState: () => AppState) => {
         const state = getState();
         const apiServerUrl = state.configState.apiServerUrl;
 

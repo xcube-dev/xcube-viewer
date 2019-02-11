@@ -1,11 +1,11 @@
 import { ConfigState } from "./configState";
 import { MessageLogState } from "./messageLogState";
 import { DataState } from "./dataState";
-import { SessionState } from "./sessionState";
+import { ControlState } from "./controlState";
 
-export interface ViewerState {
+export interface AppState {
     configState: ConfigState;
     dataState: DataState;
-    sessionState: SessionState;
+    controlState: ControlState;
     messageLogState: MessageLogState;
 }
