@@ -13,7 +13,6 @@ export interface Variable {
 export interface Dataset {
     id: string;
     title: string;
-    description: string;
     bounds: GeoJSON.BBox;
     locations?: Location[];
     variables: Variable[];

@@ -34,7 +34,7 @@ const styles = (theme: Theme) => createStyles(
         ...drawerStyles(theme),
     });
 
-class _Drawer extends React.Component<DashboardProps> {
+class AppDrawer extends React.Component<DashboardProps> {
 
     handleSideMenuClose = () => {
         this.props.changeComponentVisibility('sideMenu', false);
@@ -73,4 +73,4 @@ class _Drawer extends React.Component<DashboardProps> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(_Drawer));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppDrawer));

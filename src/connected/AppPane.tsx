@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 
+import { ComponentVisibility } from '../states/controlState';
+import { changeComponentVisibility } from '../actions/controlActions';
 import SimpleLineChart from '../components/SimpleLineChart';
 import SimpleTable from '../components/SimpleTable';
 import Viewer from '../components/Viewer';
 import { AppState } from '../states/appState';
-import { ComponentVisibility } from '../states/controlState';
-import { changeComponentVisibility } from '../actions/controlActions';
+import DatasetDrawer from './DatasetDrawer';
 
-
-interface MainPanelProps extends WithStyles<typeof styles> {
+interface AppPaneProps extends WithStyles<typeof styles> {
     componentVisibility: ComponentVisibility;
     changeComponentVisibility: (propertyName: string, visibility?: boolean) => void;
 }
@@ -49,7 +49,7 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-class MainPanel extends React.Component<MainPanelProps> {
+class AppPane extends React.Component<AppPaneProps> {
 
     render() {
         const {classes} = this.props;
@@ -57,6 +57,7 @@ class MainPanel extends React.Component<MainPanelProps> {
         return (
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
+                <DatasetDrawer/>
                 <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>
@@ -77,4 +78,4 @@ class MainPanel extends React.Component<MainPanelProps> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MainPanel));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppPane));

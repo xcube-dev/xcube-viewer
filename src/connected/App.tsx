@@ -12,8 +12,8 @@ import {
 
 import { AppState } from '../states/appState';
 import AppBar from './AppBar';
-import Drawer from './Drawer';
-import MainPanel from './MainPanel';
+import AppDrawer from './AppDrawer';
+import AppPane from './AppPane';
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -50,8 +50,8 @@ class App extends React.PureComponent<DashboardProps> {
                 <div className={classes.root}>
                     <CssBaseline/>
                     <AppBar/>
-                    <Drawer/>
-                    <MainPanel/>
+                    <AppDrawer/>
+                    <AppPane/>
                 </div>
             </MuiThemeProvider>
         );

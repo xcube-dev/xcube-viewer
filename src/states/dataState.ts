@@ -8,7 +8,29 @@ export interface DataState {
 
 export function newDataState(): DataState {
     return {
-        datasets: [],
+        datasets: [
+            {
+                id: "local",
+                title: "Local HIGHROC OLCI L2C cube for region SNS",
+                bounds: [4.0, 48.0, 12.0, 52.0],
+                locations: [],
+                variables: [],
+            },
+            {
+                id: "remote",
+                title: "Remote HIGHROC OLCI L2C cube for region SNS",
+                bounds: [4.0, 48.0, 12.0, 52.0],
+                locations: [],
+                variables: [],
+            },
+            {
+                id: "computed",
+                title: "Computed HIGHROC OLCI weekly L3 cube for region SNS",
+                bounds: [4.0, 48.0, 12.0, 52.0],
+                locations: [],
+                variables: [],
+            },
+        ],
         userPlaces: {
             type: "FeatureCollection",
             features: [

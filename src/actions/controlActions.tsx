@@ -41,6 +41,14 @@ export function changeComponentVisibility(propertyName: string, visibility?: boo
     return {type: CHANGE_COMPONENT_VISIBILITY, propertyName, visibility};
 }
 
+export function openDatasetList(): ChangeComponentVisibility {
+    return changeComponentVisibility("datasetList", true);
+}
+
+export function closeDatasetList(): ChangeComponentVisibility {
+    return changeComponentVisibility("datasetList", false);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
