@@ -24,11 +24,6 @@ const styles = (theme: Theme) => createStyles(
         selectEmpty: {
             marginTop: theme.spacing.unit * 2,
         },
-        textField: {
-            marginLeft: theme.spacing.unit,
-            marginRight: theme.spacing.unit,
-            width: 200,
-        },
     });
 
 interface ControlBarProps extends WithStyles<typeof styles> {
@@ -69,13 +64,13 @@ class ControlBar extends React.Component<ControlBarProps> {
     render() {
         const {classes} = this.props;
 
-        const selectedDatasetId = this.props.selectedDatasetId || undefined;
+        const selectedDatasetId = this.props.selectedDatasetId || "";
         const datasets = this.props.datasets || [];
 
-        const selectedVariableId = this.props.selectedVariableId || undefined;
+        const selectedVariableId = this.props.selectedVariableId || "";
         const variables = this.props.variables || [];
 
-        const selectedLocationId = this.props.selectedLocationId || undefined;
+        const selectedLocationId = this.props.selectedLocationId || "";
         const locations = this.props.locations || [];
 
         const dateTime = this.props.dateTime || "";
@@ -94,8 +89,10 @@ class ControlBar extends React.Component<ControlBarProps> {
                         name="dataset"
                         className={classes.selectEmpty}
                     >
-                        {datasets.map(dataset => <MenuItem value={dataset.id}
-                                                           selected={dataset.id === selectedDatasetId}>{dataset.title}</MenuItem>)}
+                        {datasets.map(dataset => <MenuItem
+                            key={dataset.id}
+                            value={dataset.id}
+                            selected={dataset.id === selectedDatasetId}>{dataset.title}</MenuItem>)}
                     </Select>
                     {/*<FormHelperText>Helper text</FormHelperText>*/}
                 </FormControl>
@@ -112,6 +109,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                         className={classes.selectEmpty}
                     >
                         {variables.map(variable => <MenuItem
+                            key={variable.name}
                             value={variable.name}
                             selected={variable.name === selectedVariableId}>{variable.title || variable.name}</MenuItem>)}
                     </Select>
@@ -130,20 +128,17 @@ class ControlBar extends React.Component<ControlBarProps> {
                         className={classes.selectEmpty}
                     >
                         {locations.map(location => <MenuItem
+                            key={location.feature.id}
                             value={location.feature.id}
                             selected={location.feature.id === selectedLocationId}>{ControlBar.getLocationDisplayName(location)}</MenuItem>)}
                     </Select>
                     {/*<FormHelperText>Helper text</FormHelperText>*/}
                 </FormControl>
-                {/*<FormControl className={classes.formControl}>*/}
-                    {/*<InputLabel shrink htmlFor="time-select">*/}
-                        {/*Time*/}
-                    {/*</InputLabel>*/}
-                {/*</FormControl>*/}
                 <TextField
                     id="time-select"
                     type="datetime-local"
                     value={dateTime}
+                    disabled
                     label={"Time"}
                     className={classes.formControl}
                     onChange={this.handleDateTimeChange}

@@ -1,5 +1,5 @@
 import * as GeoJSON from 'geojson';
-import { Dataset } from "../types/dataset";
+import { Dataset, Variable } from "../types/dataset";
 import { LocationGroup } from "../types/location";
 
 export interface DataState {
@@ -14,46 +14,8 @@ export function newDataState(): DataState {
                 id: "local",
                 title: "Local HIGHROC OLCI L2C cube for region SNS",
                 bounds: [4.0, 48.0, 12.0, 52.0],
-                locationGroup: {
-                    title: "Lakes",
-                    role: "lake",
-                    locations: [
-                        {
-                            feature: createTestFeature(0)
-                        },
-                        {
-                            feature: createTestFeature(1)
-                        },
-                        {
-                            feature: createTestFeature(2),
-                            group: {
-                                title: "Lake Stations",
-                                role: "station",
-                                locations: [
-                                    {
-                                        feature: createTestFeature(3),
-                                    },
-                                    {
-                                        feature: createTestFeature(4),
-                                    },
-                                    {
-                                        feature: createTestFeature(5),
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                },
-                variables: [
-                    {
-                        name: "conc_chl",
-                        title: "Chlorophyll Concentration",
-                    },
-                    {
-                        name: "conc_tsm",
-                        title: "Total Suspended Matter",
-                    }
-                ],
+                locationGroup: createTestLocationGroup(),
+                variables: createTestVariables(),
             },
             {
                 id: "remote",
@@ -87,6 +49,64 @@ export function newDataState(): DataState {
 }
 
 
+function createTestVariables(): Variable[] {
+    return [
+        {
+            id: "conc_chl",
+            name: "conc_chl",
+            title: "Chlorophyll Concentration",
+            units: "mg / m^-3",
+            dims: ["time", "lat", "lon"],
+            shape: [156, 2000, 2000],
+            dtype: "float64",
+            tileSourceOptions: null,
+        },
+        {
+            id: "conc_tsm",
+            name: "conc_tsm",
+            title: "Total Suspended Matter",
+            units: "mg / m^-3",
+            dims: ["time", "lat", "lon"],
+            shape: [156, 2000, 2000],
+            dtype: "float64",
+            tileSourceOptions: null,
+        }
+    ];
+}
+
+function createTestLocationGroup(): LocationGroup {
+    return {
+        title: "Lakes",
+        role: "lake",
+        locations: [
+            {
+                feature: createTestFeature(0)
+            },
+            {
+                feature: createTestFeature(1)
+            },
+            {
+                feature: createTestFeature(2),
+                group: {
+                    title: "Lake Stations",
+                    role: "station",
+                    locations: [
+                        {
+                            feature: createTestFeature(3),
+                        },
+                        {
+                            feature: createTestFeature(4),
+                        },
+                        {
+                            feature: createTestFeature(5),
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
 function createTestFeature(id: number, title?: string): GeoJSON.Feature {
 
     const x0 = -180 + Math.random() * 360;
@@ -111,17 +131,4 @@ function createTestFeature(id: number, title?: string): GeoJSON.Feature {
     };
 }
 
-
-function createTestVariables() {
-    return [
-        {
-            name: "conc_chl",
-            title: "Chlorophyll Concentration",
-        },
-        {
-            name: "conc_tsm",
-            title: "Total Suspended Matter",
-        }
-    ];
-}
 

@@ -2,14 +2,6 @@ import * as  GeoJSON from "geojson";
 import { LocationGroup } from "./location";
 
 
-export interface Variable {
-    name: string;
-    title: string;
-    units?: string;
-    vmin?: number;
-    vmax?: number;
-}
-
 export interface Dataset {
     id: string;
     title: string;
@@ -17,3 +9,15 @@ export interface Dataset {
     variables: Variable[];
     locationGroup?: LocationGroup;
 }
+
+export interface Variable {
+    id: string;
+    name: string;
+    dims: string[],
+    shape: number[],
+    dtype: string;
+    units: string;
+    title: string;
+    tileSourceOptions: any;
+}
+
