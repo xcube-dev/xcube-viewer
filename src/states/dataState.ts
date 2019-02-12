@@ -1,9 +1,10 @@
 import * as GeoJSON from 'geojson';
 import { Dataset } from "../types/dataset";
+import { LocationGroup } from "../types/location";
 
 export interface DataState {
     datasets: Dataset[];
-    userPlaces: GeoJSON.FeatureCollection;
+    userPlaces: LocationGroup;
 }
 
 export function newDataState(): DataState {
@@ -15,6 +16,7 @@ export function newDataState(): DataState {
                 bounds: [4.0, 48.0, 12.0, 52.0],
                 locationGroup: {
                     title: "Lakes",
+                    role: "lake",
                     locations: [
                         {
                             feature: createTestFeature(0)
@@ -25,7 +27,8 @@ export function newDataState(): DataState {
                         {
                             feature: createTestFeature(2),
                             group: {
-                                title: "Lakes",
+                                title: "Lake Stations",
+                                role: "station",
                                 locations: [
                                     {
                                         feature: createTestFeature(3),
@@ -41,33 +44,47 @@ export function newDataState(): DataState {
                         }
                     ]
                 },
-                variables: [],
+                variables: [
+                    {
+                        name: "conc_chl",
+                        title: "Chlorophyll Concentration",
+                    },
+                    {
+                        name: "conc_tsm",
+                        title: "Total Suspended Matter",
+                    }
+                ],
             },
             {
                 id: "remote",
                 title: "Remote HIGHROC OLCI L2C cube for region SNS",
                 bounds: [4.0, 48.0, 12.0, 52.0],
-                variables: [],
+                variables: createTestVariables(),
             },
             {
                 id: "computed",
                 title: "Computed HIGHROC OLCI weekly L3 cube for region SNS",
                 bounds: [4.0, 48.0, 12.0, 52.0],
-                variables: [],
+                variables: createTestVariables(),
             },
         ],
         userPlaces: {
-            type: "FeatureCollection",
-            features: [
-                createTestFeature(10),
-                createTestFeature(11),
-                createTestFeature(12),
-                createTestFeature(13),
-            ]
+            title: "Lakes",
+            role: "lakes",
+            locations: [
+                {
+                    feature: createTestFeature(11),
+                },
+                {
+                    feature: createTestFeature(12),
+                },
+                {
+                    feature: createTestFeature(13),
+                },
+            ],
         }
     };
 }
-
 
 
 function createTestFeature(id: number, title?: string): GeoJSON.Feature {
@@ -93,3 +110,18 @@ function createTestFeature(id: number, title?: string): GeoJSON.Feature {
         }
     };
 }
+
+
+function createTestVariables() {
+    return [
+        {
+            name: "conc_chl",
+            title: "Chlorophyll Concentration",
+        },
+        {
+            name: "conc_tsm",
+            title: "Total Suspended Matter",
+        }
+    ];
+}
+

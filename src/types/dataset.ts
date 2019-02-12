@@ -4,10 +4,10 @@ import { LocationGroup } from "./location";
 
 export interface Variable {
     name: string;
-    units: string;
     title: string;
-    vmin: number;
-    vmax: number;
+    units?: string;
+    vmin?: number;
+    vmax?: number;
 }
 
 export interface Dataset {

@@ -14,6 +14,34 @@ export function selectDataset(selectedDatasetId: string | null): SelectDataset {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const SELECT_VARIABLE = 'SELECT_VARIABLE';
+export type SELECT_VARIABLE = typeof SELECT_VARIABLE;
+
+export interface SelectVariable {
+    type: SELECT_VARIABLE;
+    selectedVariableId: string | null;
+}
+
+export function selectVariable(selectedVariableId: string | null): SelectVariable {
+    return {type: SELECT_VARIABLE, selectedVariableId};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_DATE_TIME = 'SELECT_DATE_TIME';
+export type SELECT_DATE_TIME = typeof SELECT_DATE_TIME;
+
+export interface SelectDateTime {
+    type: SELECT_DATE_TIME;
+    selectedDateTime: string | null;
+}
+
+export function selectDateTime(selectedDateTime: string | null): SelectDateTime {
+    return {type: SELECT_DATE_TIME, selectedDateTime};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_LOCATION = 'SELECT_LOCATION';
 export type SELECT_LOCATION = typeof SELECT_LOCATION;
 
@@ -66,4 +94,10 @@ export function closeLocationList(): ChangeComponentVisibility {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export type ControlAction = SelectDataset | SelectLocation | SelectUserPlace | ChangeComponentVisibility;
+export type ControlAction =
+    SelectDataset
+    | SelectVariable
+    | SelectLocation
+    | SelectDateTime
+    | SelectUserPlace
+    | ChangeComponentVisibility;

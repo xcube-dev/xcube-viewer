@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { AppBar, Toolbar, Typography, IconButton, Badge } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import { AppState } from '../states/appState';
 import { ComponentVisibility } from '../states/controlState';
 import { changeComponentVisibility } from '../actions/controlActions';
-import { appBarStyles, toolbarStyles, menuButtonStyles } from './styles';
+import { appBarStyles, toolbarStyles } from './styles';
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -32,7 +31,6 @@ const styles = (theme: Theme) => createStyles(
     {
         ...toolbarStyles(theme),
         ...appBarStyles(theme),
-        ...menuButtonStyles(theme),
         title: {
             flexGrow: 1,
         },
@@ -53,14 +51,6 @@ class _AppBar extends React.Component<DashboardProps> {
                 className={classNames(classes.appBar, sideMenuOpen && classes.appBarShift)}
             >
                 <Toolbar disableGutters={!sideMenuOpen} className={classes.toolbar}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="Open drawer"
-                        onClick={this.handleSideMenuOpen}
-                        className={classNames(classes.menuButton, sideMenuOpen && classes.menuButtonHidden)}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         xcube Viewer
                     </Typography>

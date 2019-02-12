@@ -2,6 +2,7 @@ import * as  GeoJSON from "geojson";
 
 export interface LocationGroup {
     title: string;
+    role: string;
     locations: Location[];
 }
 

@@ -1,9 +1,9 @@
-import { ComponentVisibility, ControlState, newSessionState } from '../states/controlState';
+import { ComponentVisibility, ControlState, newControlState } from '../states/controlState';
 import { CHANGE_COMPONENT_VISIBILITY, SELECT_DATASET, SELECT_LOCATION, ControlAction } from '../actions/controlActions';
 
 export function controlReducer(state: ControlState, action: ControlAction): ControlState {
     if (typeof state === 'undefined') {
-        state = newSessionState();
+        state = newControlState();
     }
     switch (action.type) {
         case SELECT_DATASET: {

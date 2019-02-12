@@ -9,8 +9,7 @@ import SimpleLineChart from '../components/SimpleLineChart';
 import SimpleTable from '../components/SimpleTable';
 import Viewer from '../components/Viewer';
 import { AppState } from '../states/appState';
-import DatasetList from './DatasetList';
-import LocationList from './LocationList';
+import ControlBar from "./ControlBar";
 
 interface AppPaneProps extends WithStyles<typeof styles> {
     componentVisibility: ComponentVisibility;
@@ -31,8 +30,8 @@ const styles = (theme: Theme) => createStyles(
     {
         content: {
             flexGrow: 1,
-            padding: theme.spacing.unit * 3,
-            // height: '100vh',
+            padding: theme.spacing.unit,
+            height: '100vh',
             overflow: 'auto',
         },
         appBarSpacer: theme.mixins.toolbar,
@@ -58,8 +57,7 @@ class AppPane extends React.Component<AppPaneProps> {
         return (
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
-                <DatasetList/>
-                <LocationList/>
+                <ControlBar/>
                 <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>

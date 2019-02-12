@@ -9,16 +9,21 @@ export interface ComponentVisibility {
 
 export interface ControlState {
     selectedDatasetId: string | null;
+    selectedVariableId: string | null;
     selectedLocationId: string | number | null;
+    selectedDateTime: string | null;
+
     selectedUserPlaceId: string | number | null;
     componentVisibility: ComponentVisibility;
 }
 
-export function newSessionState() {
+export function newControlState() {
     return {
-        selectedDatasetId: null,
-        selectedLocationId: null,
+        selectedDatasetId: "local",
+        selectedVariableId: "conc_chl",
+        selectedLocationId: 0,
         selectedUserPlaceId: null,
+        selectedDateTime: null,
         componentVisibility: {
             sideMenu: false,
             datasetList: false,

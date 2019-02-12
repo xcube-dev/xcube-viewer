@@ -12,7 +12,6 @@ import {
 
 import { AppState } from '../states/appState';
 import AppBar from './AppBar';
-import AppDrawer from './AppDrawer';
 import AppPane from './AppPane';
 
 
@@ -50,7 +49,6 @@ class App extends React.PureComponent<DashboardProps> {
                 <div className={classes.root}>
                     <CssBaseline/>
                     <AppBar/>
-                    <AppDrawer/>
                     <AppPane/>
                 </div>
             </MuiThemeProvider>

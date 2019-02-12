@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect'
 import { AppState } from "../states/appState";
 import { datasetsSelector } from "./dataSelectors";
-import { Dataset } from "../types/dataset";
-import { LocationGroup } from "../types/location";
+
+import { Dataset, Variable } from "../types/dataset";
+import { Location, LocationGroup } from "../types/location";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 
@@ -20,3 +21,18 @@ export const selectedDatasetLocationGroupSelector = createSelector(
         return (dataset && dataset.locationGroup) || null;
     }
 );
+
+export const selectedDatasetLocationsSelector= createSelector(
+    selectedDatasetLocationGroupSelector,
+    (locationGroup: LocationGroup | null): Location[] => {
+        return (locationGroup && locationGroup.locations) || [];
+    }
+);
+
+export const selectedDatasetVariablesSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): Variable[] | null => {
+        return (dataset && dataset.variables) || [];
+    }
+);
+
