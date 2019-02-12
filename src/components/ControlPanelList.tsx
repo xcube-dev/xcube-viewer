@@ -28,7 +28,7 @@ export default class ControlPanelList extends React.Component<PrimaryDrawerListP
         this.actionEntries = [
             this.getActionEntry('datasetList', 'Datasets', <StorageIcon/>),
             this.getActionEntry('layerList', 'Layers', <LayersIcon/>),
-            this.getActionEntry('regionList', 'Regions', <CategoryIcon/>),
+            this.getActionEntry('locationList', 'Locations', <CategoryIcon/>),
             this.getActionEntry('timePanel', 'Time', <DateRangeIcon/>),
             this.getActionEntry('timeSeriesPanel', 'Time-Series', <TimelineIcon/>),
         ];

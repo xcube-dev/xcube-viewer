@@ -9,7 +9,8 @@ import SimpleLineChart from '../components/SimpleLineChart';
 import SimpleTable from '../components/SimpleTable';
 import Viewer from '../components/Viewer';
 import { AppState } from '../states/appState';
-import DatasetDrawer from './DatasetDrawer';
+import DatasetList from './DatasetList';
+import LocationList from './LocationList';
 
 interface AppPaneProps extends WithStyles<typeof styles> {
     componentVisibility: ComponentVisibility;
@@ -57,7 +58,8 @@ class AppPane extends React.Component<AppPaneProps> {
         return (
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
-                <DatasetDrawer/>
+                <DatasetList/>
+                <LocationList/>
                 <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>

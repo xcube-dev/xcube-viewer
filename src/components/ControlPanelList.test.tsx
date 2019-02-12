@@ -9,7 +9,7 @@ it('renders without crashing', () => {
         sideMenu: true,
         datasetList: false,
         layerList: true,
-        regionList: false,
+        locationList: false,
         timePanel: false,
         timeSeriesPanel: true,
     };

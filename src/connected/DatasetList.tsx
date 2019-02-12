@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
-import DatasetDrawer from '../components/DatasetDrawer';
+
 import { AppState } from '../states/appState';
 import { selectDataset, closeDatasetList } from '../actions/controlActions';
+import DatasetList from '../components/DatasetList';
 
 const mapStateToProps = (state: AppState) => {
     return {
@@ -16,5 +17,4 @@ const mapDispatchToProps = {
     closeDatasetList,
 };
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(DatasetDrawer);
+export default connect(mapStateToProps, mapDispatchToProps)(DatasetList);

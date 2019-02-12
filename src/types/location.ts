@@ -1,6 +1,11 @@
 import * as  GeoJSON from "geojson";
 
+export interface LocationGroup {
+    title: string;
+    locations: Location[];
+}
+
 export interface Location {
     feature: GeoJSON.Feature;
-    subLocations?: Location[];
+    group?: LocationGroup;
 }

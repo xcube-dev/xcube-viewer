@@ -5,11 +5,25 @@ export type SELECT_DATASET = typeof SELECT_DATASET;
 
 export interface SelectDataset {
     type: SELECT_DATASET;
-    selectedDatasetId: string;
+    selectedDatasetId: string | null;
 }
 
-export function selectDataset(selectedDatasetId: string): SelectDataset {
+export function selectDataset(selectedDatasetId: string | null): SelectDataset {
     return {type: SELECT_DATASET, selectedDatasetId};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_LOCATION = 'SELECT_LOCATION';
+export type SELECT_LOCATION = typeof SELECT_LOCATION;
+
+export interface SelectLocation {
+    type: SELECT_LOCATION;
+    selectedLocationId: string | null;
+}
+
+export function selectLocation(selectedLocationId: string | null): SelectLocation {
+    return {type: SELECT_LOCATION, selectedLocationId};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,15 +55,15 @@ export function changeComponentVisibility(propertyName: string, visibility?: boo
     return {type: CHANGE_COMPONENT_VISIBILITY, propertyName, visibility};
 }
 
-export function openDatasetList(): ChangeComponentVisibility {
-    return changeComponentVisibility("datasetList", true);
-}
-
 export function closeDatasetList(): ChangeComponentVisibility {
     return changeComponentVisibility("datasetList", false);
+}
+
+export function closeLocationList(): ChangeComponentVisibility {
+    return changeComponentVisibility("locationList", false);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export type ControlAction = SelectDataset | SelectUserPlace | ChangeComponentVisibility;
+export type ControlAction = SelectDataset | SelectLocation | SelectUserPlace | ChangeComponentVisibility;

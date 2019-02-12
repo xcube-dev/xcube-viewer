@@ -1,5 +1,5 @@
 import * as  GeoJSON from "geojson";
-import { Location } from "./location";
+import { LocationGroup } from "./location";
 
 
 export interface Variable {
@@ -14,6 +14,6 @@ export interface Dataset {
     id: string;
     title: string;
     bounds: GeoJSON.BBox;
-    locations?: Location[];
     variables: Variable[];
+    locationGroup?: LocationGroup;
 }

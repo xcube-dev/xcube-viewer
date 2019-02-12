@@ -1,30 +1,34 @@
 import * as React from 'react';
-import { List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
 import { Dataset } from '../types/dataset';
 
 interface DatasetListProps {
     selectedDatasetId: string | number | null;
     datasets: Dataset[];
-    selectDataset: (placeId: string | number | null) => void;
+    selectDataset: (datasetId: string | null) => void;
+    isDatasetListVisible: boolean;
+    closeDatasetList: () => void;
 }
 
 export default class DatasetList extends React.Component<DatasetListProps> {
     render() {
-        const {selectedDatasetId, datasets, selectDataset} = this.props;
-        const userPlaceElements = datasets.map((dataset: Dataset) => (
+        const {selectedDatasetId, datasets, selectDataset, isDatasetListVisible, closeDatasetList} = this.props;
+        const elements = datasets.map((dataset: Dataset) => (
             <ListItem
                 button
                 selected={selectedDatasetId === dataset.id}
                 onClick={() => selectDataset(dataset.id)}
             >
-                <ListItemText primary={dataset.title}/>
+                <ListItemText primary={dataset.title} secondary={dataset.id}/>
             </ListItem>)
         );
         return (
-            <List>
-                <ListSubheader inset>Datasets</ListSubheader>
-                {userPlaceElements}
-            </List>
+            <Drawer anchor="left" open={isDatasetListVisible} onClose={closeDatasetList}>
+                <List>
+                    <ListSubheader>Select Dataset</ListSubheader >
+                    {elements}
+                </List>
+            </Drawer>
         );
     }
 }
