@@ -2,7 +2,7 @@ import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
     SELECT_VARIABLE,
-    SELECT_LOCATION,
+    SELECT_PLACE,
     ControlAction
 } from '../actions/controlActions';
 
@@ -24,10 +24,10 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
                 selectedVariableId: action.selectedVariableId,
             };
         }
-        case SELECT_LOCATION: {
+        case SELECT_PLACE: {
             return {
                 ...state,
-                selectedLocationId: action.selectedLocationId,
+                selectedPlaceId: action.selectedPlaceId,
             };
         }
     }

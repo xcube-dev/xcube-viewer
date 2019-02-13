@@ -1,50 +1,37 @@
-import * as GeoJSON from 'geojson';
-import { Dataset, Variable } from "../types/dataset";
-import { LocationGroup } from "../types/location";
+import { Dataset, Variable } from '../types/dataset';
+import { Place, PlaceGroup } from '../types/place';
 
 export interface DataState {
     datasets: Dataset[];
-    userPlaces: LocationGroup;
+    userPlaces: PlaceGroup;
 }
 
 export function newDataState(): DataState {
     return {
         datasets: [
             {
-                id: "local",
-                title: "Local HIGHROC OLCI L2C cube for region SNS",
-                bounds: [4.0, 48.0, 12.0, 52.0],
-                locationGroup: createTestLocationGroup(),
+                id: 'local',
+                title: 'Local HIGHROC OLCI L2C cube for region SNS',
+                bbox: [4.0, 48.0, 12.0, 52.0],
+                placeGroups: createTestPlaceGroups(),
                 variables: createTestVariables(),
             },
             {
-                id: "remote",
-                title: "Remote HIGHROC OLCI L2C cube for region SNS",
-                bounds: [4.0, 48.0, 12.0, 52.0],
+                id: 'remote',
+                title: 'Remote HIGHROC OLCI L2C cube for region SNS',
+                bbox: [4.0, 48.0, 12.0, 52.0],
+                placeGroups: createTestPlaceGroups(),
                 variables: createTestVariables(),
             },
             {
-                id: "computed",
-                title: "Computed HIGHROC OLCI weekly L3 cube for region SNS",
-                bounds: [4.0, 48.0, 12.0, 52.0],
+                id: 'computed',
+                title: 'Computed HIGHROC OLCI weekly L3 cube for region SNS',
+                bbox: [4.0, 48.0, 12.0, 52.0],
+                placeGroups: createTestPlaceGroups(),
                 variables: createTestVariables(),
             },
         ],
-        userPlaces: {
-            title: "Lakes",
-            role: "lakes",
-            locations: [
-                {
-                    feature: createTestFeature(11),
-                },
-                {
-                    feature: createTestFeature(12),
-                },
-                {
-                    feature: createTestFeature(13),
-                },
-            ],
-        }
+        userPlaces: createTestPlaceGroup('user', 'User')
     };
 }
 
@@ -52,62 +39,55 @@ export function newDataState(): DataState {
 function createTestVariables(): Variable[] {
     return [
         {
-            id: "conc_chl",
-            name: "conc_chl",
-            title: "Chlorophyll Concentration",
-            units: "mg / m^-3",
-            dims: ["time", "lat", "lon"],
+            id: 'conc_chl',
+            name: 'conc_chl',
+            title: 'Chlorophyll Concentration',
+            units: 'mg / m^-3',
+            dims: ['time', 'lat', 'lon'],
             shape: [156, 2000, 2000],
-            dtype: "float64",
+            dtype: 'float64',
             tileSourceOptions: null,
         },
         {
-            id: "conc_tsm",
-            name: "conc_tsm",
-            title: "Total Suspended Matter",
-            units: "mg / m^-3",
-            dims: ["time", "lat", "lon"],
+            id: 'conc_tsm',
+            name: 'conc_tsm',
+            title: 'Total Suspended Matter',
+            units: 'mg / m^-3',
+            dims: ['time', 'lat', 'lon'],
             shape: [156, 2000, 2000],
-            dtype: "float64",
+            dtype: 'float64',
             tileSourceOptions: null,
         }
     ];
 }
 
-function createTestLocationGroup(): LocationGroup {
-    return {
-        title: "Lakes",
-        role: "lake",
-        locations: [
-            {
-                feature: createTestFeature(0)
+function createTestPlaceGroups(): PlaceGroup[] {
+    return [
+        {
+            ...createTestPlaceGroup('lakes', 'Lakes'),
+            placeGroups: {
+                0: createTestPlaceGroup('lake-0', 'Lake 0'),
+                1: createTestPlaceGroup('lake-1', 'Lake 1'),
+                2: createTestPlaceGroup('lake-2', 'Lake 2'),
             },
-            {
-                feature: createTestFeature(1)
-            },
-            {
-                feature: createTestFeature(2),
-                group: {
-                    title: "Lake Stations",
-                    role: "station",
-                    locations: [
-                        {
-                            feature: createTestFeature(3),
-                        },
-                        {
-                            feature: createTestFeature(4),
-                        },
-                        {
-                            feature: createTestFeature(5),
-                        }
-                    ]
-                }
-            }
-        ]
-    }
+        },
+    ];
 }
 
-function createTestFeature(id: number, title?: string): GeoJSON.Feature {
+function createTestPlaceGroup(id: string, title: string): PlaceGroup {
+    return {
+        type: 'FeatureCollection',
+        id,
+        title,
+        features: [
+            createTestPlace(id + '-0'),
+            createTestPlace(id + '-1'),
+            createTestPlace(id + '-2'),
+        ],
+    };
+}
+
+function createTestPlace(id: string, title?: string): Place {
 
     const x0 = -180 + Math.random() * 360;
     const y0 = -80 + Math.random() * 160;
@@ -121,14 +101,12 @@ function createTestFeature(id: number, title?: string): GeoJSON.Feature {
     coordinates.push(coordinates[0]);
 
     return {
-        type: "Feature",
+        type: 'Feature',
         id,
-        properties: {title: title || `Feature #${id}`},
+        properties: {title: title || `Place ${id}`},
         geometry: {
-            type: "Polygon",
+            type: 'Polygon',
             coordinates: [coordinates],
         }
     };
 }
-
-

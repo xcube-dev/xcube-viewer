@@ -1,13 +1,13 @@
 import * as  GeoJSON from "geojson";
-import { LocationGroup } from "./location";
+import { PlaceGroup } from './place';
 
 
 export interface Dataset {
     id: string;
     title: string;
-    bounds: GeoJSON.BBox;
+    bbox: GeoJSON.BBox;
     variables: Variable[];
-    locationGroup?: LocationGroup;
+    placeGroups?: PlaceGroup[];
 }
 
 export interface Variable {

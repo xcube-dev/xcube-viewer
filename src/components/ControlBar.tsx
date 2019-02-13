@@ -6,9 +6,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
+import * as GeoJSON from 'geojson';
 
-import { Dataset, Variable } from "../types/dataset";
-import { Location } from "../types/location";
+import { Dataset, Variable } from '../types/dataset';
+import { Place } from '../types/place';
 
 const styles = (theme: Theme) => createStyles(
     {
@@ -27,18 +28,18 @@ const styles = (theme: Theme) => createStyles(
 
 interface ControlBarProps extends WithStyles<typeof styles> {
     selectedDatasetId: string | null;
-    datasets: Dataset[] | null;
+    datasets: Dataset[];
     selectDataset: (datasetId: string | null) => void;
 
     selectedVariableId: string | null;
-    variables: Variable[] | null;
+    variables: Variable[];
     selectVariable: (variableId: string | null) => void;
 
-    selectedLocationId: string | number | null;
-    locations: Location[] | null;
-    selectLocation: (locationId: string | null) => void;
+    selectedPlaceId: string | null;
+    places: Place[];
+    selectPlace: (placeId: string | null) => void;
 
-    dateTime: string | null;
+    selectedDateTime: string | null;
     selectDateTime: (dateTime: string | null) => void;
 }
 
@@ -52,8 +53,8 @@ class ControlBar extends React.Component<ControlBarProps> {
         this.props.selectVariable(event.target.value || null);
     };
 
-    handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectLocation(event.target.value || null);
+    handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.selectPlace(event.target.value || null);
     };
 
     handleDateTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,16 +64,16 @@ class ControlBar extends React.Component<ControlBarProps> {
     render() {
         const {classes} = this.props;
 
-        const selectedDatasetId = this.props.selectedDatasetId || "";
+        const selectedDatasetId = this.props.selectedDatasetId || '';
         const datasets = this.props.datasets || [];
 
-        const selectedVariableId = this.props.selectedVariableId || "";
+        const selectedVariableId = this.props.selectedVariableId || '';
         const variables = this.props.variables || [];
 
-        const selectedLocationId = this.props.selectedLocationId || "";
-        const locations = this.props.locations || [];
+        const selectedPlaceId = this.props.selectedPlaceId || '';
+        const places = this.props.places || [];
 
-        const dateTime = this.props.dateTime || "";
+        const dateTime = this.props.selectedDateTime || '';
 
         return (
             <form className={classes.root} autoComplete="off">
@@ -113,21 +114,21 @@ class ControlBar extends React.Component<ControlBarProps> {
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
-                    <InputLabel shrink htmlFor="location-select">
-                        Location
+                    <InputLabel shrink htmlFor="place-select">
+                        Place
                     </InputLabel>
                     <Select
-                        value={selectedLocationId}
-                        onChange={this.handleLocationChange}
-                        input={<Input name="location" id="location-select"/>}
+                        value={selectedPlaceId}
+                        onChange={this.handlePlaceChange}
+                        input={<Input name="place" id="place-select"/>}
                         displayEmpty
-                        name="location"
+                        name="place"
                         className={classes.selectEmpty}
                     >
-                        {locations.map(location => <MenuItem
-                            key={location.feature.id}
-                            value={location.feature.id}
-                            selected={location.feature.id === selectedLocationId}>{ControlBar.getLocationDisplayName(location)}</MenuItem>)}
+                        {places.map(place => <MenuItem
+                            key={place.id}
+                            value={place.id}
+                            selected={place.id === selectedPlaceId}>{ControlBar.getPlaceDisplayName(place)}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <TextField
@@ -135,7 +136,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                     type="datetime-local"
                     value={dateTime}
                     disabled
-                    label={"Time"}
+                    label={'Time'}
                     className={classes.formControl}
                     onChange={this.handleDateTimeChange}
                     InputLabelProps={{
@@ -146,11 +147,10 @@ class ControlBar extends React.Component<ControlBarProps> {
         );
     }
 
-    static getLocationDisplayName(location: Location): string {
-        let feature = location.feature;
-        let properties = feature.properties;
-        let value = properties && (properties["title"] || properties["name"] || properties["id"]) || feature.id;
-        if (typeof value === "string") {
+    static getPlaceDisplayName(place: GeoJSON.Feature): string {
+        let properties = place.properties;
+        let value = properties && (properties['title'] || properties['name'] || properties['id']) || place.id;
+        if (typeof value === 'string') {
             return value;
         }
         return `${value}`;

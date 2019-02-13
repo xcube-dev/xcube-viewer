@@ -42,16 +42,16 @@ export function selectDateTime(selectedDateTime: string | null): SelectDateTime 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const SELECT_LOCATION = 'SELECT_LOCATION';
-export type SELECT_LOCATION = typeof SELECT_LOCATION;
+export const SELECT_PLACE = 'SELECT_PLACE';
+export type SELECT_PLACE = typeof SELECT_PLACE;
 
-export interface SelectLocation {
-    type: SELECT_LOCATION;
-    selectedLocationId: string | null;
+export interface SelectPlace {
+    type: SELECT_PLACE;
+    selectedPlaceId: string | null;
 }
 
-export function selectLocation(selectedLocationId: string | null): SelectLocation {
-    return {type: SELECT_LOCATION, selectedLocationId};
+export function selectPlace(selectedPlaceId: string | null): SelectPlace {
+    return {type: SELECT_PLACE, selectedPlaceId};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +74,6 @@ export function selectUserPlace(selectedUserPlaceId: string | number | null): Se
 export type ControlAction =
     SelectDataset
     | SelectVariable
-    | SelectLocation
+    | SelectPlace
     | SelectDateTime
     | SelectUserPlace;

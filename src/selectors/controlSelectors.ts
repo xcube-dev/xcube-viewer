@@ -3,7 +3,7 @@ import { AppState } from "../states/appState";
 import { datasetsSelector } from "./dataSelectors";
 
 import { Dataset, Variable } from "../types/dataset";
-import { Location, LocationGroup } from "../types/location";
+import { Place, PlaceGroup } from "../types/place";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 
@@ -15,24 +15,28 @@ export const selectedDatasetSelector = createSelector(
     }
 );
 
-export const selectedDatasetLocationGroupSelector = createSelector(
-    selectedDatasetSelector,
-    (dataset: Dataset | null): LocationGroup | null => {
-        return (dataset && dataset.locationGroup) || null;
-    }
-);
-
-export const selectedDatasetLocationsSelector= createSelector(
-    selectedDatasetLocationGroupSelector,
-    (locationGroup: LocationGroup | null): Location[] => {
-        return (locationGroup && locationGroup.locations) || [];
-    }
-);
-
 export const selectedDatasetVariablesSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): Variable[] | null => {
         return (dataset && dataset.variables) || [];
+    }
+);
+
+export const selectedDatasetPlaceGroupsSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): PlaceGroup[] | null => {
+        return (dataset && dataset.placeGroups) || [];
+    }
+);
+
+/**
+ * Get first-level features as a single array
+ */
+export const selectedDatasetPlacesSelector = createSelector(
+    selectedDatasetPlaceGroupsSelector,
+    (placeGroups: PlaceGroup[]): Place[] => {
+        const args = placeGroups.map(placeGroup => placeGroup.features as Place[]);
+        return ([] as  Array<Place>).concat(...args);
     }
 );
 
