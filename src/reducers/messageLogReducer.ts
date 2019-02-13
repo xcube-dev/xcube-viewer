@@ -2,6 +2,7 @@ import { MessageLogState, newMessageLogState } from '../states/messageLogState';
 
 import { HIDE_MESSAGE, MessageLogAction, POST_MESSAGE } from "../actions/messageLogActions";
 
+
 export function messageLogReducer(state: MessageLogState, action: MessageLogAction): MessageLogState  {
     if (typeof state === 'undefined') {
         state = newMessageLogState();

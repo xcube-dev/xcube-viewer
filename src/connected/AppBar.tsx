@@ -8,26 +8,22 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import HelpIcon from '@material-ui/icons/Help';
 
 import { AppState } from '../states/appState';
-import { ComponentVisibility } from '../states/controlState';
-import { changeComponentVisibility } from '../actions/controlActions';
 import { appBarStyles, toolbarStyles } from './styles';
 
 import logo from "../resources/cube-icon.png";
 
 interface DashboardProps extends WithStyles<typeof styles> {
-    componentVisibility: ComponentVisibility;
-    changeComponentVisibility: (propertyName: string, visibility?: boolean) => void;
+    appName: string;
 }
 
+// noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     return {
-        componentVisibility: state.controlState.componentVisibility,
-    }
+        appName: state.configState.appName,
+    };
 };
 
-const mapDispatchToProps = {
-    changeComponentVisibility,
-};
+const mapDispatchToProps = {};
 
 
 const styles = (theme: Theme) => createStyles(
@@ -45,22 +41,17 @@ const styles = (theme: Theme) => createStyles(
 
 class _AppBar extends React.Component<DashboardProps> {
 
-    handleSideMenuOpen = () => {
-        this.props.changeComponentVisibility('sideMenu', true);
-    };
-
     render() {
-        const {classes, componentVisibility} = this.props;
-        const sideMenuOpen = componentVisibility.sideMenu;
+        const {classes, appName} = this.props;
         return (
             <AppBar
                 position="absolute"
-                className={classNames(classes.appBar, sideMenuOpen && classes.appBarShift)}
+                className={classNames(classes.appBar)}
             >
-                <Toolbar disableGutters={!sideMenuOpen} className={classes.toolbar}>
-                    <img src={logo} alt={"Xcube logo"} width={32} className={classes.logo}/>
+                <Toolbar disableGutters={true} className={classes.toolbar}>
+                    <img src={logo} alt={"xcube logo"} width={32} className={classes.logo}/>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        xcube Viewer
+                        {appName}
                     </Typography>
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="secondary">

@@ -5,6 +5,7 @@ import { dataReducer } from './dataReducer';
 import { controlReducer } from './controlReducer';
 import { messageLogReducer } from './messageLogReducer';
 
+
 export const appReducer = combineReducers<AppState>(
     {
         configState: configReducer,

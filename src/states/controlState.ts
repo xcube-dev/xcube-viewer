@@ -14,7 +14,6 @@ export interface ControlState {
     selectedDateTime: string | null;
 
     selectedUserPlaceId: string | number | null;
-    componentVisibility: ComponentVisibility;
 }
 
 export function newControlState() {

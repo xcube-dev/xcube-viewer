@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 
-import { ComponentVisibility } from '../states/controlState';
-import { changeComponentVisibility } from '../actions/controlActions';
 import SimpleLineChart from '../components/SimpleLineChart';
 import SimpleTable from '../components/SimpleTable';
 import Viewer from '../components/Viewer';
@@ -12,19 +10,14 @@ import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 
 interface AppPaneProps extends WithStyles<typeof styles> {
-    componentVisibility: ComponentVisibility;
-    changeComponentVisibility: (propertyName: string, visibility?: boolean) => void;
 }
 
+// noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
-    return {
-        componentVisibility: state.controlState.componentVisibility,
-    }
+    return {};
 };
 
-const mapDispatchToProps = {
-    changeComponentVisibility,
-};
+const mapDispatchToProps = {};
 
 const styles = (theme: Theme) => createStyles(
     {

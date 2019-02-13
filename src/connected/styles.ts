@@ -25,14 +25,6 @@ export const appBarStyles = (theme: Theme) => createStyles(
                 duration: theme.transitions.duration.leavingScreen,
             }),
         },
-        appBarShift: {
-            marginLeft: drawerWidth,
-            width: `calc(100% - ${drawerWidth}px)`,
-            transition: theme.transitions.create(['width', 'margin'], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
     });
 
 // noinspection JSUnusedLocalSymbols

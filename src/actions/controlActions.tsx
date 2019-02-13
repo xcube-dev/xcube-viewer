@@ -70,34 +70,10 @@ export function selectUserPlace(selectedUserPlaceId: string | number | null): Se
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const CHANGE_COMPONENT_VISIBILITY = 'CHANGE_COMPONENT_VISIBILITY';
-export type CHANGE_COMPONENT_VISIBILITY = typeof CHANGE_COMPONENT_VISIBILITY;
-
-export interface ChangeComponentVisibility {
-    type: CHANGE_COMPONENT_VISIBILITY;
-    propertyName: string;
-    visibility?: boolean;
-}
-
-export function changeComponentVisibility(propertyName: string, visibility?: boolean): ChangeComponentVisibility {
-    return {type: CHANGE_COMPONENT_VISIBILITY, propertyName, visibility};
-}
-
-export function closeDatasetList(): ChangeComponentVisibility {
-    return changeComponentVisibility("datasetList", false);
-}
-
-export function closeLocationList(): ChangeComponentVisibility {
-    return changeComponentVisibility("locationList", false);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 export type ControlAction =
     SelectDataset
     | SelectVariable
     | SelectLocation
     | SelectDateTime
-    | SelectUserPlace
-    | ChangeComponentVisibility;
+    | SelectUserPlace;

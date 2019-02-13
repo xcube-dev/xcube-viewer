@@ -1,6 +1,6 @@
 import { ConfigState, newConfigState } from '../states/configState';
-
 import { ConfigAction, CONFIGURE_SERVER } from '../actions/configActions';
+
 
 const initialState = newConfigState();
 

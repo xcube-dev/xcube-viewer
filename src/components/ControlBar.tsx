@@ -6,7 +6,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-// import FormHelperText from '@material-ui/core/FormHelperText';
 
 import { Dataset, Variable } from "../types/dataset";
 import { Location } from "../types/location";
@@ -94,7 +93,6 @@ class ControlBar extends React.Component<ControlBarProps> {
                             value={dataset.id}
                             selected={dataset.id === selectedDatasetId}>{dataset.title}</MenuItem>)}
                     </Select>
-                    {/*<FormHelperText>Helper text</FormHelperText>*/}
                 </FormControl>
                 <FormControl className={classes.formControl}>
                     <InputLabel shrink htmlFor="variable-select">
@@ -109,11 +107,10 @@ class ControlBar extends React.Component<ControlBarProps> {
                         className={classes.selectEmpty}
                     >
                         {variables.map(variable => <MenuItem
-                            key={variable.name}
-                            value={variable.name}
-                            selected={variable.name === selectedVariableId}>{variable.title || variable.name}</MenuItem>)}
+                            key={variable.id}
+                            value={variable.id}
+                            selected={variable.id === selectedVariableId}>{variable.title || variable.name}</MenuItem>)}
                     </Select>
-                    {/*<FormHelperText>Helper text</FormHelperText>*/}
                 </FormControl>
                 <FormControl className={classes.formControl}>
                     <InputLabel shrink htmlFor="location-select">
@@ -132,7 +129,6 @@ class ControlBar extends React.Component<ControlBarProps> {
                             value={location.feature.id}
                             selected={location.feature.id === selectedLocationId}>{ControlBar.getLocationDisplayName(location)}</MenuItem>)}
                     </Select>
-                    {/*<FormHelperText>Helper text</FormHelperText>*/}
                 </FormControl>
                 <TextField
                     id="time-select"
