@@ -147,10 +147,10 @@ class ControlBar extends React.Component<ControlBarProps> {
                     </Select>
                 </FormControl>
                 <TextField
+                    inputRef={this.handleTimeInputRef}
                     id="time-select"
-                    type="datetime-local"
+                    type="date"
                     value={selectedTime}
-                    disabled
                     label={'Time'}
                     className={classes.textField}
                     onChange={this.handleTimeChange}
@@ -158,15 +158,39 @@ class ControlBar extends React.Component<ControlBarProps> {
                         shrink: true,
                     }}
                 />
-                <IconButton className={classes.button} aria-label="One time step back">
-                    <ArrowLeft />
+                <IconButton className={classes.button} aria-label="One time step back"
+                            onClick={this.handleTimeStepDown}>
+                    <ArrowLeft/>
                 </IconButton>
-                <IconButton className={classes.button} aria-label="One time step forward">
-                    <ArrowRight />
+                <IconButton className={classes.button} aria-label="One time step forward"
+                            onClick={this.handleTimeStepUp}>
+                    <ArrowRight/>
                 </IconButton>
             </form>
         );
     }
+
+    timeInputElement: HTMLInputElement;
+
+    handleTimeInputRef = (timeInputElement: HTMLInputElement) => {
+        this.timeInputElement = timeInputElement;
+    };
+
+    handleTimeStepUp = () => {
+        let input = this.timeInputElement;
+        if (input) {
+            input.stepUp(1);
+            this.props.selectTime(input.value || null);
+        }
+    };
+
+    handleTimeStepDown = () => {
+        let input = this.timeInputElement;
+        if (input) {
+            input.stepDown(1);
+            this.props.selectTime(input.value || null);
+        }
+    };
 
     static getPlaceDisplayName(place: GeoJSON.Feature): string {
         let properties = place.properties;

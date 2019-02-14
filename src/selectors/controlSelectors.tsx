@@ -11,6 +11,7 @@ import { XYZ } from "../components/ol/layer/XYZ";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
+export const selectedTimeSelector = (state: AppState) => state.controlState.selectedTime;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -45,7 +46,6 @@ export const selectedDatasetPlacesSelector = createSelector(
     }
 );
 
-
 export const selectedVariableSelector = createSelector(
     selectedDatasetSelector,
     selectedVariableNameSelector,
@@ -57,17 +57,21 @@ export const selectedVariableSelector = createSelector(
     }
 );
 
-
 export const selectedVariableLayerSelector = createSelector(
     selectedVariableSelector,
-    (variable: Variable | null): LayerElement => {
+    selectedTimeSelector,
+    (variable: Variable | null, time: string | null): LayerElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
         const options = variable.tileSourceOptions;
+        let url = options.url;
+        if (time) {
+            url += `?time=${time}`;
+        }
         return (
             <XYZ
-                url={options.url}
+                url={url}
                 projection={ol.proj.get(options.projection)}
                 minZoom={options.minZoom}
                 maxZoom={options.maxZoom}
@@ -76,4 +80,3 @@ export const selectedVariableLayerSelector = createSelector(
         );
     }
 );
-
