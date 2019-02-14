@@ -1,6 +1,7 @@
 export interface TimeSeriesSource {
     datasetId: string;
     variableName: string;
+    variableUnits?: string;
     coordinate?: [number, number];
 }
 

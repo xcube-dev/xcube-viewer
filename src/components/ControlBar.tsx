@@ -18,7 +18,13 @@ const styles = (theme: Theme) => createStyles(
             flexWrap: 'wrap',
         },
         formControl: {
-            margin: theme.spacing.unit,
+            marginRight: theme.spacing.unit * 2,
+            marginBottom: theme.spacing.unit,
+            minWidth: 120,
+        },
+        textField: {
+            marginRight: theme.spacing.unit * 2,
+            marginBottom: theme.spacing.unit,
             minWidth: 120,
         },
         selectEmpty: {
@@ -138,7 +144,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                     value={selectedTime}
                     disabled
                     label={'Time'}
-                    className={classes.formControl}
+                    className={classes.textField}
                     onChange={this.handleTimeChange}
                     InputLabelProps={{
                         shrink: true,

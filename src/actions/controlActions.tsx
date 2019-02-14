@@ -6,7 +6,10 @@ import { Dispatch } from "redux";
 import * as api from '../api'
 import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
 import { TimeSeries } from "../types/timeSeries";
-import { selectedDatasetIdSelector, selectedVariableNameSelector } from "../selectors/controlSelectors";
+import {
+    selectedDatasetIdSelector,
+    selectedVariableSelector,
+} from "../selectors/controlSelectors";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,15 +98,16 @@ export function selectCoordinate(selectedCoordinate: [number, number] | null) {
         dispatch(_selectCoordinate(selectedCoordinate));
 
         let selectedDatasetId = selectedDatasetIdSelector(getState());
-        let selectedVariableName = selectedVariableNameSelector(getState());
+        let selectedVariable = selectedVariableSelector(getState());
 
-        if (selectedDatasetId && selectedVariableName && selectedCoordinate) {
-            api.getTimeSeriesForPoint(apiServerUrl, selectedDatasetId, selectedVariableName, selectedCoordinate)
+        if (selectedDatasetId && selectedVariable && selectedCoordinate) {
+            api.getTimeSeriesForPoint(apiServerUrl, selectedDatasetId, selectedVariable, selectedCoordinate)
                .then((timeSeries: TimeSeries | null) => {
                    if (timeSeries !== null) {
                        dispatch(updateTimeSeries(timeSeries, "replace"));
                    } else {
-                       dispatch(postMessage('info', 'No data found here')); /*I18N*/
+                       /*I18N*/
+                       dispatch(postMessage('info', 'No data found here'));
                    }
                })
                .catch(error => {

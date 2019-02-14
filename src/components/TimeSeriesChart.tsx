@@ -18,7 +18,7 @@ interface TimeSeriesChartProps {
     timeSeriesCollection?: TimeSeries[];
 }
 
-const STROKES = ["#82ca9d", "#8884d8", "blue", "yellow", "green"];
+const STROKES = ["red", "blue", "yellow", "green"];
 const DOMAIN: [AxisDomain, AxisDomain] = ["dataMin", "dataMax"];
 
 export default class TimeSeriesChart extends React.Component<TimeSeriesChartProps> {
@@ -37,6 +37,7 @@ export default class TimeSeriesChart extends React.Component<TimeSeriesChartProp
                     <Line
                         type="monotone"
                         name={source.variableName}
+                        unit={source.variableUnits}
                         data={data}
                         dataKey="value"
                         connectNulls={true}
@@ -72,26 +73,27 @@ export default class TimeSeriesChart extends React.Component<TimeSeriesChartProp
         );
     }
 
-    readonly tickFormatter = (utcTimeValue: number) => {
-        if (!Number.isFinite(utcTimeValue)) {
+    readonly tickFormatter = (value: any) => {
+        if (typeof value !== "number" || !Number.isFinite(value)) {
             return null;
         }
-        let isoString = new Date(utcTimeValue).toISOString();
+        let isoString = new Date(value).toISOString();
         let i = isoString.indexOf("T");
         return isoString.substring(0, i);
     };
 
-
+    // noinspection JSUnusedLocalSymbols
     readonly tooltipFormatter = (value: string | number | Array<string | number>,
-                        name: string,
-                        entry: TooltipPayload,
-                        index: number): React.ReactNode => {
-        console.log("tooltipFormatter: ", value, name, entry, index);
-        return <p>---{name}---<br/>---{value}---<br/>---{index}---</p>;
+                                 name: string,
+                                 entry: TooltipPayload,
+                                 index: number): React.ReactNode => {
+        if (typeof value === "number") {
+            value = Math.round(100 * value) / 100;
+        }
+        return <span style={{color: "black"}}>{value}&nbsp;</span>;
     };
 
     readonly labelFormatter = (label: string | number): React.ReactNode => {
-        console.log("labelFormatter: ", label);
-        return <p>---{label}---</p>;
+        return <span>{this.tickFormatter(label)}</span>;
     };
 }
