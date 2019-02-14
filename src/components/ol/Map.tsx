@@ -5,7 +5,13 @@ import 'openlayers/css/ol.css';
 import './Map.css';
 
 
-export const MapContext = React.createContext<ol.Map | null>(null);
+export interface MapContext {
+    map?: ol.Map;
+    mapDiv?: HTMLDivElement;
+    objects?: {[id:string]: ol.Object};
+}
+
+export const MapContextType = React.createContext<MapContext>({});
 
 interface MapProps extends ol.olx.MapOptions {
     children?: React.ReactNode;
@@ -26,8 +32,12 @@ const DEFAULT_VIEW = new ol.View(
 
 export class Map extends React.Component<MapProps, MapState> {
 
-    private map: ol.Map | null;
-    private mapDiv: HTMLDivElement | null;
+    private contextValue: MapContext;
+
+    constructor(props: MapProps) {
+        super(props);
+        this.contextValue = {objects: {}};
+    }
 
     private getMapOptions(): ol.olx.MapOptions {
         const mapOptions = {...this.props};
@@ -45,10 +55,9 @@ export class Map extends React.Component<MapProps, MapState> {
 
     componentDidMount(): void {
         const mapOptions = this.getMapOptions();
-        this.map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions});
+        const map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions, target: this.contextValue.mapDiv});
+        this.contextValue.map = map;
 
-        const map = this.map;
-        map.setTarget(this.mapDiv!);
         map.on('click', this.handleClick);
 
         // Force update so we can pass this.map as context to all children in next render()
@@ -56,22 +65,22 @@ export class Map extends React.Component<MapProps, MapState> {
     }
 
     componentDidUpdate(prevProps: Readonly<MapProps>): void {
-        // const mapOptions = this.getMapOptions();
-        // this.map!.setProperties(mapOptions)
+        const map = this.contextValue.map;
+        const mapOptions = this.getMapOptions();
+        map!.setProperties({...mapOptions, target: this.contextValue.mapDiv});
     }
 
     componentWillUnmount(): void {
-        //this.map = null;
-        //this.mapDiv = null;
+        this.contextValue = {};
     }
 
     render() {
         let childrenWithContext;
-        if (this.map) {
+        if (this.contextValue.map) {
             childrenWithContext = (
-                <MapContext.Provider value={this.map}>
+                <MapContextType.Provider value={this.contextValue}>
                     {this.props.children}
-                </MapContext.Provider>
+                </MapContextType.Provider>
             );
         }
         return (
@@ -82,13 +91,13 @@ export class Map extends React.Component<MapProps, MapState> {
     }
 
     private handleRef = (mapDiv: HTMLDivElement) => {
-        this.mapDiv = mapDiv;
-        this.mapDiv.onresize = () => {
-            if (this.map) {
-                this.map.updateSize();
+        mapDiv.onresize = () => {
+            const map = this.contextValue.map;
+            if (map) {
+                map.updateSize();
             }
         };
+        this.contextValue.mapDiv = mapDiv;
     };
-
 }
 

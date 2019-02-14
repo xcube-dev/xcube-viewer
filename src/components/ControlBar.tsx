@@ -6,6 +6,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
+import IconButton from "@material-ui/core/IconButton";
+import ArrowLeft from "@material-ui/icons/ArrowLeft";
+import ArrowRight from "@material-ui/icons/ArrowRight";
 import * as GeoJSON from 'geojson';
 
 import { Dataset, Variable } from '../types/dataset';
@@ -29,6 +32,9 @@ const styles = (theme: Theme) => createStyles(
         },
         selectEmpty: {
             marginTop: theme.spacing.unit * 2,
+        },
+        button: {
+            margin: theme.spacing.unit * 0.3,
         },
     });
 
@@ -152,6 +158,12 @@ class ControlBar extends React.Component<ControlBarProps> {
                         shrink: true,
                     }}
                 />
+                <IconButton className={classes.button} aria-label="One time step back">
+                    <ArrowLeft />
+                </IconButton>
+                <IconButton className={classes.button} aria-label="One time step forward">
+                    <ArrowRight />
+                </IconButton>
             </form>
         );
     }

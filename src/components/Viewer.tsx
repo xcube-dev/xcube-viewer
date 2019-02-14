@@ -7,9 +7,12 @@ import { Layers, LayerElement } from './ol/layer/Layers';
 import { OSM } from './ol/layer/OSM';
 import { View } from "./ol/View";
 import * as ol from "openlayers";
+import { Draw } from "./ol/interaction/Draw";
+import { Vector } from "./ol/layer/Vector";
 
 
 interface ViewerProps {
+    drawMode?: ol.geom.GeometryType | null;
     variableLayer?: LayerElement;
     selectCoordinate?: (geoCoordinate: [number, number]) => void;
     selectFeatures?: (features: GeoJSON.Feature[]) => void;
@@ -37,7 +40,8 @@ class Viewer extends React.Component<ViewerProps> {
     };
 
     public render() {
-        let {variableLayer} = this.props;
+        let {variableLayer, drawMode} = this.props;
+        let draw = drawMode ? <Draw layerId={"user"} type={drawMode}/> : null;
         return (
             <ErrorBoundary>
                 <Map onClick={this.handleMapClick}>
@@ -45,7 +49,9 @@ class Viewer extends React.Component<ViewerProps> {
                     <Layers>
                         <OSM/>
                         {variableLayer}
+                        <Vector id={"user"} layerOptions={{opacity: 1, zIndex: 500}}/>
                     </Layers>
+                    {draw}
                 </Map>
             </ErrorBoundary>
         );

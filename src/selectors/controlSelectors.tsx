@@ -65,13 +65,15 @@ export const selectedVariableLayerSelector = createSelector(
             return null;
         }
         const options = variable.tileSourceOptions;
-        return <XYZ
-            url={options.url}
-            projection={ol.proj.get(options.projection)}
-            minZoom={options.minZoom}
-            maxZoom={options.maxZoom}
-            tileGrid={new ol.tilegrid.TileGrid(options.tileGrid)}
-        />;
+        return (
+            <XYZ
+                url={options.url}
+                projection={ol.proj.get(options.projection)}
+                minZoom={options.minZoom}
+                maxZoom={options.maxZoom}
+                tileGrid={new ol.tilegrid.TileGrid(options.tileGrid)}
+            />
+        );
     }
 );
 

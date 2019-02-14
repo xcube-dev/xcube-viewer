@@ -18,7 +18,7 @@ interface TimeSeriesChartProps {
     timeSeriesCollection?: TimeSeries[];
 }
 
-const STROKES = ["red", "blue", "yellow", "green"];
+const STROKES = ["grey", "red", "blue", "green", "yellow"];
 const DOMAIN: [AxisDomain, AxisDomain] = ["dataMin", "dataMax"];
 
 export default class TimeSeriesChart extends React.Component<TimeSeriesChartProps> {

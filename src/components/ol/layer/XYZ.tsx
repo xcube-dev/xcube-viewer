@@ -2,14 +2,21 @@ import * as React from 'react';
 import * as ol from 'openlayers';
 import { olx } from 'openlayers';
 
-import { MapContext } from '../Map';
+import { MapContext, MapContextType } from '../Map';
+import { TileOptions } from "./Layers";
 
 
 interface XYZProps extends olx.source.XYZOptions {
-    tileOptions?: olx.layer.TileOptions;
+    layerOptions?: TileOptions;
 }
 
 export class XYZ extends React.Component<XYZProps> {
+
+    private getOptions(): olx.source.XYZOptions {
+        const options = {...this.props};
+        delete options['layerOptions'];
+        return options;
+    }
 
     // noinspection JSUnusedGlobalSymbols
     static NaturalEarth(): JSX.Element {
@@ -31,36 +38,32 @@ export class XYZ extends React.Component<XYZProps> {
     }
 
     // noinspection JSUnusedGlobalSymbols
-    static contextType = MapContext;
-
-    context: ol.Map;
+    static contextType = MapContextType;
+    context: MapContext;
     layer: ol.layer.Tile;
 
     componentDidMount(): void {
-        const map = this.context;
-        const tileOptions = this.props.tileOptions;
-        const source = this.createSource();
-        this.layer = new ol.layer.Tile({source, ...tileOptions});
+        const map = this.context.map!;
+        const source = new ol.source.XYZ(this.getOptions());
+        const layerOptions = this.props.layerOptions;
+        this.layer = new ol.layer.Tile({source, ...layerOptions});
         map.getLayers().push(this.layer);
     }
 
     componentDidUpdate(prevProps: Readonly<XYZProps>): void {
-        this.layer.setSource(this.createSource());
+        // Does not work:
+        // this.layer.getSource().setProperties(this.getOptions());
+        const source = new ol.source.XYZ(this.getOptions());
+        this.layer.setSource(source);
     }
 
     componentWillUnmount(): void {
-        const map = this.context;
+        const map = this.context.map!;
         map.getLayers().remove(this.layer);
     }
 
     render() {
         return null;
-    }
-
-    private createSource(): ol.source.XYZ {
-        const sourceOptions = {...this.props};
-        delete sourceOptions['tileOptions'];
-        return new ol.source.XYZ(sourceOptions);
     }
 }
 

@@ -9,6 +9,7 @@ import Viewer from '../components/Viewer';
 const mapStateToProps = (state: AppState) => {
     return {
         variableLayer: selectedVariableLayerSelector(state),
+        drawMode: state.controlState.selectedDrawMode,
     }
 };
 

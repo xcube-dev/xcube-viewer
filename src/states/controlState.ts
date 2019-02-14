@@ -5,9 +5,10 @@ export interface ControlState {
     selectedUserPlaceId: string | null;
     selectedTime: string | null;
     selectedCoordinate: [number, number] | null;
+    selectedDrawMode: ol.geom.GeometryType | null;
 }
 
-export function newControlState() {
+export function newControlState(): ControlState {
     return {
         selectedDatasetId: "local",
         selectedVariableName: "conc_chl",
@@ -15,5 +16,6 @@ export function newControlState() {
         selectedUserPlaceId: null,
         selectedTime: null,
         selectedCoordinate: null,
+        selectedDrawMode: "Point",
     };
 }
