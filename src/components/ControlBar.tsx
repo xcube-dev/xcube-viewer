@@ -47,6 +47,8 @@ interface ControlBarProps extends WithStyles<typeof styles> {
 
     selectedTime: string | null;
     selectTime: (time: string | null) => void;
+    minTime?: string;
+    maxTime?: string;
 }
 
 class ControlBar extends React.Component<ControlBarProps> {
