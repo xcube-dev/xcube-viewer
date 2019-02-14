@@ -11,6 +11,7 @@ interface XYZProps extends olx.source.XYZOptions {
 
 export class XYZ extends React.Component<XYZProps> {
 
+    // noinspection JSUnusedGlobalSymbols
     static NaturalEarth(): JSX.Element {
         return <XYZ url={'https://a.tiles.mapbox.com/v3/mapbox.natural-earth-2/{z}/{x}/{y}.png'}
                     attributions={[
@@ -19,12 +20,14 @@ export class XYZ extends React.Component<XYZProps> {
                     ]}/>;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     static Bathymetry(): JSX.Element {
-        return <XYZ url={'https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/gebco_2014_contours/MapServer/tile/{z}/{y}/{x}'}
-                    attributions={[
-                        new ol.Attribution({html: '&copy; <a href=&quot;https://www.gebco.net/data_and_products/gridded_bathymetry_data/&quot;>GEBCO</a>'}),
-                        new ol.Attribution({html: '&copy; <a href=&quot;https://maps.ngdc.noaa.gov/&quot;>NOAHH</a> and contributors'}),
-                    ]}/>;
+        return <XYZ
+            url={'https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/gebco_2014_contours/MapServer/tile/{z}/{y}/{x}'}
+            attributions={[
+                new ol.Attribution({html: '&copy; <a href=&quot;https://www.gebco.net/data_and_products/gridded_bathymetry_data/&quot;>GEBCO</a>'}),
+                new ol.Attribution({html: '&copy; <a href=&quot;https://maps.ngdc.noaa.gov/&quot;>NOAHH</a> and contributors'}),
+            ]}/>;
     }
 
     // noinspection JSUnusedGlobalSymbols

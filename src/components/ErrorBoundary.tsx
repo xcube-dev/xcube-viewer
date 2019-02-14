@@ -35,6 +35,7 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
         if (this.state.error) {
             // Error path
             return (
+                /*I18N*/
                 <div>
                     <h2 className="errorBoundary-header">Something went wrong.</h2>
                     <details className="errorBoundary-details" style={{whiteSpace: 'pre-wrap'}}>

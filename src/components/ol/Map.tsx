@@ -9,6 +9,7 @@ export const MapContext = React.createContext<ol.Map | null>(null);
 
 interface MapProps extends ol.olx.MapOptions {
     children?: React.ReactNode;
+    onClick?: (event: ol.MapBrowserEvent) => void;
 }
 
 interface MapState {
@@ -16,45 +17,52 @@ interface MapState {
 
 const DEFAULT_CONTAINER_SYTLE: React.CSSProperties = {height: '100%'};
 
+const DEFAULT_VIEW = new ol.View(
+    {
+        center: ol.proj.fromLonLat([0, 0]),
+        zoom: 2
+    }
+);
+
 export class Map extends React.Component<MapProps, MapState> {
 
-    private map: ol.Map;
-    private mapDiv: HTMLDivElement;
+    private map: ol.Map | null;
+    private mapDiv: HTMLDivElement | null;
 
-    componentDidMount(): void {
+    private getMapOptions(): ol.olx.MapOptions {
         const mapOptions = {...this.props};
         delete mapOptions["children"];
-        Map.checkMapOptions(mapOptions);
+        delete mapOptions["onClick"];
+        return mapOptions;
+    }
 
-        const testOptions: ol.olx.MapOptions = {
-            // layers: [
-            //     new ol.layer.Tile({
-            //                           source: new ol.source.OSM()
-            //                       })
-            // ],
-            view: new ol.View({
-                                  center: ol.proj.fromLonLat([37.41, 8.82]),
-                                  zoom: 4
-                              })
-        };
+    private handleClick = (event: ol.events.Event) => {
+        const onClick = this.props.onClick;
+        if (onClick) {
+            onClick(event as ol.MapBrowserEvent);
+        }
+    };
 
-        const options: ol.olx.MapOptions = {...testOptions, ...mapOptions};
+    componentDidMount(): void {
+        const mapOptions = this.getMapOptions();
+        this.map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions});
 
-        this.map = new ol.Map(options);
-        this.map.setTarget(this.mapDiv);
+        const map = this.map;
+        map.setTarget(this.mapDiv!);
+        map.on('click', this.handleClick);
 
         // Force update so we can pass this.map as context to all children in next render()
         this.forceUpdate();
     }
 
     componentDidUpdate(prevProps: Readonly<MapProps>): void {
-        const mapOptions = {...this.props};
-        delete mapOptions["children"];
-        Map.checkMapOptions(mapOptions);
-        // TODO (forman): alter map props here...
+        // const mapOptions = this.getMapOptions();
+        // this.map!.setProperties(mapOptions)
     }
 
     componentWillUnmount(): void {
+        //this.map = null;
+        //this.mapDiv = null;
     }
 
     render() {
@@ -82,18 +90,5 @@ export class Map extends React.Component<MapProps, MapState> {
         };
     };
 
-    private static checkMapOptions(options?: ol.olx.MapOptions) {
-        if (options) {
-            for (let optionName of ['target', 'layers', 'overlays', 'controls', 'interactions']) {
-                Map.checkOption('ol.Map', options, optionName);
-            }
-        }
-    }
-
-    private static checkOption(className: string, options: { [name: string]: any }, optionName: string) {
-        if (options[optionName]) {
-            throw new Error(`${className}: option '${optionName}' is not supported`);
-        }
-    }
 }
 

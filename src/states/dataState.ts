@@ -1,9 +1,11 @@
 import { Dataset, Variable } from '../types/dataset';
 import { Place, PlaceGroup } from '../types/place';
+import { TimeSeries } from "../types/timeSeries";
 
 export interface DataState {
     datasets: Dataset[];
     userPlaces: PlaceGroup;
+    timeSeriesCollection: TimeSeries[];
 }
 
 export function newDataState(): DataState {
@@ -31,7 +33,8 @@ export function newDataState(): DataState {
                 variables: createTestVariables(),
             },
         ],
-        userPlaces: createTestPlaceGroup('user', 'User')
+        userPlaces: createTestPlaceGroup('user', 'User'),
+        timeSeriesCollection: [],
     };
 }
 

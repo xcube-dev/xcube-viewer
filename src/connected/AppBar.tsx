@@ -8,9 +8,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import HelpIcon from '@material-ui/icons/Help';
 
 import { AppState } from '../states/appState';
-import { appBarStyles, toolbarStyles } from './styles';
-
 import logo from "../resources/cube-icon.png";
+
 
 interface DashboardProps extends WithStyles<typeof styles> {
     appName: string;
@@ -28,8 +27,23 @@ const mapDispatchToProps = {};
 
 const styles = (theme: Theme) => createStyles(
     {
-        ...toolbarStyles(theme),
-        ...appBarStyles(theme),
+        toolbar: {
+            paddingRight: 24, // keep right padding when drawer closed
+        },
+        toolbarIcon: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            padding: '0 8px',
+            ...theme.mixins.toolbar,
+        },
+        appBar: {
+            zIndex: theme.zIndex.drawer + 1,
+            transition: theme.transitions.create(['width', 'margin'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+            }),
+        },
         logo: {
             marginLeft: theme.spacing.unit * 2,
         },

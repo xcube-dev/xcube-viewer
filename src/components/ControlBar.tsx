@@ -31,16 +31,16 @@ interface ControlBarProps extends WithStyles<typeof styles> {
     datasets: Dataset[];
     selectDataset: (datasetId: string | null) => void;
 
-    selectedVariableId: string | null;
+    selectedVariableName: string | null;
     variables: Variable[];
-    selectVariable: (variableId: string | null) => void;
+    selectVariable: (variableName: string | null) => void;
 
     selectedPlaceId: string | null;
     places: Place[];
     selectPlace: (placeId: string | null) => void;
 
-    selectedDateTime: string | null;
-    selectDateTime: (dateTime: string | null) => void;
+    selectedTime: string | null;
+    selectTime: (time: string | null) => void;
 }
 
 class ControlBar extends React.Component<ControlBarProps> {
@@ -57,8 +57,8 @@ class ControlBar extends React.Component<ControlBarProps> {
         this.props.selectPlace(event.target.value || null);
     };
 
-    handleDateTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectDateTime(event.target.value || null);
+    handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.selectTime(event.target.value || null);
     };
 
     render() {
@@ -67,15 +67,16 @@ class ControlBar extends React.Component<ControlBarProps> {
         const selectedDatasetId = this.props.selectedDatasetId || '';
         const datasets = this.props.datasets || [];
 
-        const selectedVariableId = this.props.selectedVariableId || '';
+        const selectedVariableName = this.props.selectedVariableName || '';
         const variables = this.props.variables || [];
 
         const selectedPlaceId = this.props.selectedPlaceId || '';
         const places = this.props.places || [];
 
-        const dateTime = this.props.selectedDateTime || '';
+        const selectedTime = this.props.selectedTime || '';
 
         return (
+            /*I18*/
             <form className={classes.root} autoComplete="off">
                 <FormControl className={classes.formControl}>
                     <InputLabel shrink htmlFor="dataset-select">
@@ -100,7 +101,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                         Variable
                     </InputLabel>
                     <Select
-                        value={selectedVariableId}
+                        value={selectedVariableName}
                         onChange={this.handleVariableChange}
                         input={<Input name="variable" id="variable-select"/>}
                         displayEmpty
@@ -108,9 +109,9 @@ class ControlBar extends React.Component<ControlBarProps> {
                         className={classes.selectEmpty}
                     >
                         {variables.map(variable => <MenuItem
-                            key={variable.id}
-                            value={variable.id}
-                            selected={variable.id === selectedVariableId}>{variable.title || variable.name}</MenuItem>)}
+                            key={variable.name}
+                            value={variable.name}
+                            selected={variable.name === selectedVariableName}>{variable.title || variable.name}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
@@ -134,11 +135,11 @@ class ControlBar extends React.Component<ControlBarProps> {
                 <TextField
                     id="time-select"
                     type="datetime-local"
-                    value={dateTime}
+                    value={selectedTime}
                     disabled
                     label={'Time'}
                     className={classes.formControl}
-                    onChange={this.handleDateTimeChange}
+                    onChange={this.handleTimeChange}
                     InputLabelProps={{
                         shrink: true,
                     }}

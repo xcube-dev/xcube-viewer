@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import { selectDataset, selectVariable, selectPlace, selectDateTime } from '../actions/controlActions';
+import { selectDataset, selectVariable, selectPlace, selectTime } from '../actions/controlActions';
 import { selectedDatasetVariablesSelector, selectedDatasetPlacesSelector } from "../selectors/controlSelectors";
 import ControlBar from '../components/ControlBar';
 
@@ -11,13 +11,13 @@ const mapStateToProps = (state: AppState) => {
         selectedDatasetId: state.controlState.selectedDatasetId,
         datasets: state.dataState.datasets,
 
-        selectedVariableId: state.controlState.selectedVariableId,
+        selectedVariableName: state.controlState.selectedVariableName,
         variables: selectedDatasetVariablesSelector(state),
 
         selectedPlaceId: state.controlState.selectedPlaceId,
         places: selectedDatasetPlacesSelector(state),
 
-        selectedDateTime: state.controlState.selectedDateTime,
+        selectedTime: state.controlState.selectedTime,
     }
 };
 
@@ -25,7 +25,7 @@ const mapDispatchToProps = {
     selectDataset,
     selectVariable,
     selectPlace,
-    selectDateTime,
+    selectTime,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlBar);

@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 
+export type LayerElement = React.ReactElement<any> | null | undefined
+
 interface LayersProps {
-    children: React.ReactElement<any>[];
+    children: LayerElement[];
 }
 
 export function Layers(props: LayersProps) {

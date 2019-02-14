@@ -3,7 +3,8 @@ import {
     SELECT_DATASET,
     SELECT_VARIABLE,
     SELECT_PLACE,
-    ControlAction
+    SELECT_TIME,
+    ControlAction, SELECT_USER_PLACE, SELECT_COORDINATE
 } from '../actions/controlActions';
 
 
@@ -21,13 +22,31 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
         case SELECT_VARIABLE: {
             return {
                 ...state,
-                selectedVariableId: action.selectedVariableId,
+                selectedVariableName: action.selectedVariableName,
             };
         }
         case SELECT_PLACE: {
             return {
                 ...state,
                 selectedPlaceId: action.selectedPlaceId,
+            };
+        }
+        case SELECT_USER_PLACE: {
+            return {
+                ...state,
+                selectedUserPlaceId: action.selectedUserPlaceId,
+            };
+        }
+        case SELECT_TIME: {
+            return {
+                ...state,
+                selectedTime: action.selectedTime,
+            };
+        }
+        case SELECT_COORDINATE: {
+            return {
+                ...state,
+                selectedCoordinate: action.selectedCoordinate,
             };
         }
     }

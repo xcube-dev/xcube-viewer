@@ -1,11 +1,16 @@
+import * as React from "react";
 import { createSelector } from 'reselect'
 import { AppState } from "../states/appState";
 import { datasetsSelector } from "./dataSelectors";
+import * as ol from "openlayers";
 
 import { Dataset, Variable } from "../types/dataset";
 import { Place, PlaceGroup } from "../types/place";
+import { LayerElement } from 'src/components/ol/layer/Layers';
+import { XYZ } from "../components/ol/layer/XYZ";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
+export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -37,6 +42,36 @@ export const selectedDatasetPlacesSelector = createSelector(
     (placeGroups: PlaceGroup[]): Place[] => {
         const args = placeGroups.map(placeGroup => placeGroup.features as Place[]);
         return ([] as  Array<Place>).concat(...args);
+    }
+);
+
+
+export const selectedVariableSelector = createSelector(
+    selectedDatasetSelector,
+    selectedVariableNameSelector,
+    (dataset: Dataset | null, variableName: string | null): Variable | null => {
+        if (!dataset || !variableName) {
+            return null;
+        }
+        return dataset.variables.find(variable => variable.name === variableName) || null;
+    }
+);
+
+
+export const selectedVariableLayerSelector = createSelector(
+    selectedVariableSelector,
+    (variable: Variable | null): LayerElement => {
+        if (!variable || !variable.tileSourceOptions) {
+            return null;
+        }
+        const options = variable.tileSourceOptions;
+        return <XYZ
+            url={options.url}
+            projection={ol.proj.get(options.projection)}
+            minZoom={options.minZoom}
+            maxZoom={options.maxZoom}
+            tileGrid={new ol.tilegrid.TileGrid(options.tileGrid)}
+        />;
     }
 );
 
