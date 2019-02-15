@@ -4,8 +4,9 @@ import classNames from 'classnames';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { AppBar, Toolbar, Typography, IconButton, Badge } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import SettingsIcon from '@material-ui/icons/Settings';
-import HelpIcon from '@material-ui/icons/Help';
+import MoreVert from '@material-ui/icons/MoreVert';
+import Avatar from '@material-ui/core/Avatar';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
 import logo from "../resources/cube-icon.png";
@@ -28,7 +29,6 @@ const mapDispatchToProps = {};
 const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
-            paddingRight: 24, // keep right padding when drawer closed
         },
         toolbarIcon: {
             display: 'flex',
@@ -45,11 +45,16 @@ const styles = (theme: Theme) => createStyles(
             }),
         },
         logo: {
-            marginLeft: theme.spacing.unit * 2,
+            marginLeft: theme.spacing.unit,
         },
         title: {
             flexGrow: 1,
             marginLeft: theme.spacing.unit,
+        },
+        orangeAvatar: {
+            margin: 10,
+            color: '#fff',
+            backgroundColor: deepOrange[500],
         },
     });
 
@@ -72,11 +77,9 @@ class _AppBar extends React.Component<DashboardProps> {
                             <NotificationsIcon/>
                         </Badge>
                     </IconButton>
+                    <Avatar className={classes.orangeAvatar}>CL</Avatar>
                     <IconButton color="inherit">
-                        <SettingsIcon/>
-                    </IconButton>
-                    <IconButton color="inherit">
-                        <HelpIcon/>
+                        <MoreVert/>
                     </IconButton>
                 </Toolbar>
             </AppBar>

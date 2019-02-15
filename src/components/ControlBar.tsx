@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as GeoJSON from 'geojson';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -9,12 +10,11 @@ import Select from '@material-ui/core/Select';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import ArrowRight from '@material-ui/icons/ArrowRight';
-import * as GeoJSON from 'geojson';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { Dataset, Variable } from '../types/dataset';
 import { Place } from '../types/place';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = (theme: Theme) => createStyles(
     {
