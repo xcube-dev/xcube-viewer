@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 import { createSelector } from 'reselect'
-import { AppState } from "../states/appState";
-import { datasetsSelector } from "./dataSelectors";
-import * as ol from "openlayers";
+import { AppState } from '../states/appState';
+import { datasetsSelector } from './dataSelectors';
+import * as ol from 'openlayers';
 
-import { Dataset, Variable } from "../types/dataset";
-import { Place, PlaceGroup } from "../types/place";
+import { Dataset, Variable } from '../types/dataset';
+import { Place, PlaceGroup } from '../types/place';
 import { LayerElement } from 'src/components/ol/layer/Layers';
-import { XYZ } from "../components/ol/layer/XYZ";
+import { XYZ } from '../components/ol/layer/XYZ';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -69,6 +69,13 @@ export const selectedVariableLayerSelector = createSelector(
         if (time) {
             url += `?time=${time}`;
         }
+        const attributions = [
+            new ol.Attribution(
+                {
+                    html: '<br/>&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Consult GmbH</a> and contributors'
+                }
+            ),
+        ];
         // TODO: get attributions from dataset metadata
         return (
             <XYZ
@@ -77,7 +84,7 @@ export const selectedVariableLayerSelector = createSelector(
                 minZoom={options.minZoom}
                 maxZoom={options.maxZoom}
                 tileGrid={new ol.tilegrid.TileGrid(options.tileGrid)}
-                attributions={new ol.Attribution({html: '<br/>&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Consult GmbH</a> and contributors'})}
+                attributions={attributions}
             />
         );
     }
