@@ -16,6 +16,7 @@ export const MapContextType = React.createContext<MapContext>({});
 interface MapProps extends ol.olx.MapOptions {
     children?: React.ReactNode;
     onClick?: (event: ol.MapBrowserEvent) => void;
+    onMapRef?: (map: ol.Map | null) => void;
 }
 
 interface MapState {
@@ -62,6 +63,11 @@ export class Map extends React.Component<MapProps, MapState> {
 
         // Force update so we can pass this.map as context to all children in next render()
         this.forceUpdate();
+
+        const onMapRef = this.props.onMapRef;
+        if (onMapRef) {
+            onMapRef(map);
+        }
     }
 
     componentDidUpdate(prevProps: Readonly<MapProps>): void {
@@ -71,6 +77,10 @@ export class Map extends React.Component<MapProps, MapState> {
     }
 
     componentWillUnmount(): void {
+        const onMapRef = this.props.onMapRef;
+        if (onMapRef) {
+            onMapRef(null);
+        }
         this.contextValue = {};
     }
 

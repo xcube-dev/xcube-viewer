@@ -102,6 +102,20 @@ export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: "add" | "replac
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const STORE_MAP_REF = 'STORE_MAP_REF';
+export type STORE_MAP_REF = typeof STORE_MAP_REF;
+
+export interface StoreMapRef {
+    type: STORE_MAP_REF;
+    map: ol.Map;
+}
+
+export function storeMapRef(map: ol.Map): StoreMapRef {
+    return {type: STORE_MAP_REF, map};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_COORDINATE = 'SELECT_COORDINATE';
 export type SELECT_COORDINATE = typeof SELECT_COORDINATE;
 
@@ -150,4 +164,5 @@ export type ControlAction =
     | SelectUserPlace
     | SelectTime
     | SelectCoordinate
-    | SelectTimeSeriesUpdateMode;
+    | SelectTimeSeriesUpdateMode
+    | StoreMapRef;

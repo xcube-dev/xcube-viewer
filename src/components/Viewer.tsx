@@ -16,6 +16,7 @@ interface ViewerProps {
     variableLayer?: LayerElement;
     selectCoordinate?: (geoCoordinate: [number, number]) => void;
     selectFeatures?: (features: GeoJSON.Feature[]) => void;
+    storeMapRef?: (map: ol.Map | null) => void;
 }
 
 class Viewer extends React.Component<ViewerProps> {
@@ -39,12 +40,19 @@ class Viewer extends React.Component<ViewerProps> {
         }
     };
 
+    handleMapRef = (map: ol.Map | null) => {
+        const storeMapRef = this.props.storeMapRef;
+        if (storeMapRef) {
+            storeMapRef(map);
+        }
+    };
+
     public render() {
         let {variableLayer, drawMode} = this.props;
         let draw = drawMode ? <Draw layerId={'user'} type={drawMode}/> : null;
         return (
             <ErrorBoundary>
-                <Map onClick={this.handleMapClick}>
+                <Map onClick={this.handleMapClick} onMapRef={this.handleMapRef}>
                     <View/>
                     <Layers>
                         <OSM/>

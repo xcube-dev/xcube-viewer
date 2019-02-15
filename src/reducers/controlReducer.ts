@@ -1,3 +1,5 @@
+import * as ol from 'openlayers';
+
 import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
@@ -7,7 +9,7 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction,
+    ControlAction, STORE_MAP_REF,
 } from '../actions/controlActions';
 import { findDataset, findDatasetVariable } from '../model';
 
@@ -23,6 +25,13 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             const variable = findDatasetVariable(dataset, selectedVariableName);
             if (!variable && dataset.variables.length > 0) {
                 selectedVariableName = dataset.variables[0].name;
+            }
+            if (dataset.bbox && state.map !== null) {
+                const map = state.map!;
+                map.getView().fit(ol.proj.transformExtent(dataset.bbox as ol.Extent,
+                                                          'EPSG:4326',
+                                                          map.getView().getProjection()),
+                                  {size: map.getSize()});
             }
             return {
                 ...state,
@@ -64,6 +73,12 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 selectedCoordinate: action.selectedCoordinate,
+            };
+        }
+        case STORE_MAP_REF: {
+            return {
+                ...state,
+                map: action.map,
             };
         }
     }
