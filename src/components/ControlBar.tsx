@@ -81,9 +81,7 @@ class ControlBar extends React.Component<ControlBarProps> {
     };
 
     handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const mode = event.target.checked ? 'add' : 'replace';
-        console.log('mode: ', mode);
-        this.props.selectTimeSeriesUpdateMode(mode);
+        this.props.selectTimeSeriesUpdateMode(event.target.checked ? 'add' : 'replace');
     };
 
     render() {

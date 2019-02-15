@@ -28,8 +28,6 @@ export class Draw extends React.Component<DrawProps> {
             }
         }
 
-        console.log("Draw.getOptions: ", options);
-
         return options;
     }
 

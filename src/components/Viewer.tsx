@@ -5,10 +5,10 @@ import ErrorBoundary from './ErrorBoundary';
 import { Map } from './ol/Map';
 import { Layers, LayerElement } from './ol/layer/Layers';
 import { OSM } from './ol/layer/OSM';
-import { View } from "./ol/View";
-import * as ol from "openlayers";
-import { Draw } from "./ol/interaction/Draw";
-import { Vector } from "./ol/layer/Vector";
+import { View } from './ol/View';
+import * as ol from 'openlayers';
+import { Draw } from './ol/interaction/Draw';
+import { Vector } from './ol/layer/Vector';
 
 
 interface ViewerProps {
@@ -33,7 +33,7 @@ class Viewer extends React.Component<ViewerProps> {
 
         if (selectFeatures) {
             map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-                console.log("Map.handleClick: feature is near: ", feature, layer);
+                // console.log("Map.handleClick: feature is near: ", feature, layer);
             });
             // selectFeature(features);
         }
@@ -41,7 +41,7 @@ class Viewer extends React.Component<ViewerProps> {
 
     public render() {
         let {variableLayer, drawMode} = this.props;
-        let draw = drawMode ? <Draw layerId={"user"} type={drawMode}/> : null;
+        let draw = drawMode ? <Draw layerId={'user'} type={drawMode}/> : null;
         return (
             <ErrorBoundary>
                 <Map onClick={this.handleMapClick}>
@@ -49,7 +49,7 @@ class Viewer extends React.Component<ViewerProps> {
                     <Layers>
                         <OSM/>
                         {variableLayer}
-                        <Vector id={"user"} layerOptions={{opacity: 1, zIndex: 500}}/>
+                        <Vector id={'user'} layerOptions={{opacity: 1, zIndex: 500}}/>
                     </Layers>
                     {draw}
                 </Map>
