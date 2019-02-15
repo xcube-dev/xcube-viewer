@@ -77,7 +77,7 @@ export const selectedVariableLayerSelector = createSelector(
                 minZoom={options.minZoom}
                 maxZoom={options.maxZoom}
                 tileGrid={new ol.tilegrid.TileGrid(options.tileGrid)}
-                attributions={new ol.Attribution({html: '&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Conult GmbH</a> and contributors'})}
+                attributions={new ol.Attribution({html: '<br/>&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Consult GmbH</a> and contributors'})}
             />
         );
     }
