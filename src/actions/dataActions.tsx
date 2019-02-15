@@ -1,9 +1,8 @@
 import { Dispatch } from 'redux';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { AppState } from '../states/appState';
-import { Dataset } from '../types/dataset';
+import { Dataset, TimeSeries } from '../model';
 import * as api from '../api'
-import { TimeSeries } from "../types/timeSeries";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,5 @@
-import { callJsonApi } from "./callApi";
-import { TimeSeries } from "../types/timeSeries";
-import { Variable } from "../types/dataset";
+import { callJsonApi } from './callApi';
+import { Variable, TimeSeries } from '../model';
 
 export function getTimeSeriesForPoint(apiServerUrl: string,
                                       datasetId: string,
@@ -9,7 +8,7 @@ export function getTimeSeriesForPoint(apiServerUrl: string,
     const url = apiServerUrl + `/ts/${datasetId}/${variable.name}/point?lon=${coordinate[0]}&lat=${coordinate[1]}`;
     return callJsonApi<TimeSeries>(url)
         .then(result => {
-            const results = result["results"];
+            const results = result['results'];
             if (!results || results.length === 0) {
                 return null;
             }

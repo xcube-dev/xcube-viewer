@@ -9,6 +9,7 @@ import {
     SELECT_COORDINATE,
     ControlAction,
 } from '../actions/controlActions';
+import { findDataset, findDatasetVariable } from '../model';
 
 
 export function controlReducer(state: ControlState, action: ControlAction): ControlState {
@@ -17,9 +18,16 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
     }
     switch (action.type) {
         case SELECT_DATASET: {
+            let selectedVariableName = state.selectedVariableName;
+            const dataset = findDataset(action.datasets, action.selectedDatasetId)!;
+            const variable = findDatasetVariable(dataset, selectedVariableName);
+            if (!variable && dataset.variables.length > 0) {
+                selectedVariableName = dataset.variables[0].name;
+            }
             return {
                 ...state,
                 selectedDatasetId: action.selectedDatasetId,
+                selectedVariableName
             };
         }
         case SELECT_VARIABLE: {

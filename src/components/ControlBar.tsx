@@ -13,8 +13,8 @@ import ArrowRight from '@material-ui/icons/ArrowRight';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { Dataset, Variable } from '../types/dataset';
-import { Place } from '../types/place';
+import { Dataset, Place, Variable } from '../model';
+
 
 const styles = (theme: Theme) => createStyles(
     {
@@ -43,7 +43,7 @@ const styles = (theme: Theme) => createStyles(
 interface ControlBarProps extends WithStyles<typeof styles> {
     selectedDatasetId: string | null;
     datasets: Dataset[];
-    selectDataset: (datasetId: string | null) => void;
+    selectDataset: (datasetId: string | null, dataset: Dataset[]) => void;
 
     selectedVariableName: string | null;
     variables: Variable[];
@@ -65,7 +65,7 @@ interface ControlBarProps extends WithStyles<typeof styles> {
 class ControlBar extends React.Component<ControlBarProps> {
 
     handleDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectDataset(event.target.value || null);
+        this.props.selectDataset(event.target.value || null, this.props.datasets);
     };
 
     handleVariableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

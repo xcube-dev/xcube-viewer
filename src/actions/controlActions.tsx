@@ -5,7 +5,7 @@ import { AppState } from "../states/appState";
 import { Dispatch } from "redux";
 import * as api from '../api'
 import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
-import { TimeSeries } from "../types/timeSeries";
+import { TimeSeries, Dataset } from "../model";
 import {
     selectedDatasetIdSelector,
     selectedVariableSelector,
@@ -19,10 +19,15 @@ export type SELECT_DATASET = typeof SELECT_DATASET;
 export interface SelectDataset {
     type: SELECT_DATASET;
     selectedDatasetId: string | null;
+    // Now, having datasets is really ugly, but we need it in the reducer to set selectedVariableName!
+    // That's why I started reading
+    // - https://medium.com/@williamjoshualacey/refactoring-redux-using-react-context-aa29fa16f4b7
+    // - https://codeburst.io/the-ugly-side-of-redux-6591fde68200
+    datasets: Dataset[];
 }
 
-export function selectDataset(selectedDatasetId: string | null): SelectDataset {
-    return {type: SELECT_DATASET, selectedDatasetId};
+export function selectDataset(selectedDatasetId: string | null, datasets: Dataset[]): SelectDataset {
+    return {type: SELECT_DATASET, selectedDatasetId, datasets};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

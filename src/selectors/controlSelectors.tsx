@@ -4,9 +4,8 @@ import { AppState } from '../states/appState';
 import { datasetsSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
-import { Dataset, Variable } from '../types/dataset';
-import { Place, PlaceGroup } from '../types/place';
-import { LayerElement } from 'src/components/ol/layer/Layers';
+import { Dataset, findDataset, findDatasetVariable, Variable, Place, PlaceGroup  } from '../model';
+import { LayerElement } from '../components/ol/layer/Layers';
 import { XYZ } from '../components/ol/layer/XYZ';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
@@ -16,9 +15,7 @@ export const selectedTimeSelector = (state: AppState) => state.controlState.sele
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
     selectedDatasetIdSelector,
-    (datasets: Dataset[], selectedDatasetId: string | null): Dataset | null => {
-        return datasets.find(dataset => dataset.id === selectedDatasetId) || null;
-    }
+    findDataset,
 );
 
 export const selectedDatasetVariablesSelector = createSelector(
@@ -50,10 +47,7 @@ export const selectedVariableSelector = createSelector(
     selectedDatasetSelector,
     selectedVariableNameSelector,
     (dataset: Dataset | null, variableName: string | null): Variable | null => {
-        if (!dataset || !variableName) {
-            return null;
-        }
-        return dataset.variables.find(variable => variable.name === variableName) || null;
+        return (dataset && findDatasetVariable(dataset, variableName)) || null;
     }
 );
 

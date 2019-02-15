@@ -11,15 +11,15 @@ import {
     AxisDomain,
     TooltipPayload
 } from 'recharts';
-import { TimeSeries } from "../types/timeSeries";
+import { TimeSeries } from '../model';
 
 
 interface TimeSeriesChartProps {
     timeSeriesCollection?: TimeSeries[];
 }
 
-const STROKES = ["grey", "red", "blue", "green", "yellow"];
-const DOMAIN: [AxisDomain, AxisDomain] = ["dataMin", "dataMax"];
+const STROKES = ['grey', 'red', 'blue', 'green', 'yellow'];
+const DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
 
 export default class TimeSeriesChart extends React.Component<TimeSeriesChartProps> {
 
@@ -75,11 +75,11 @@ export default class TimeSeriesChart extends React.Component<TimeSeriesChartProp
     }
 
     readonly tickFormatter = (value: any) => {
-        if (typeof value !== "number" || !Number.isFinite(value)) {
+        if (typeof value !== 'number' || !Number.isFinite(value)) {
             return null;
         }
         let isoString = new Date(value).toISOString();
-        let i = isoString.indexOf("T");
+        let i = isoString.indexOf('T');
         return isoString.substring(0, i);
     };
 
@@ -88,10 +88,10 @@ export default class TimeSeriesChart extends React.Component<TimeSeriesChartProp
                                  name: string,
                                  entry: TooltipPayload,
                                  index: number): React.ReactNode => {
-        if (typeof value === "number") {
+        if (typeof value === 'number') {
             value = Math.round(100 * value) / 100;
         }
-        return <span style={{color: "black"}}>{value}&nbsp;</span>;
+        return <span style={{color: 'black'}}>{value}&nbsp;</span>;
     };
 
     readonly labelFormatter = (label: string | number): React.ReactNode => {

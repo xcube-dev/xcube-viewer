@@ -1,6 +1,5 @@
-import { Dataset, Variable } from '../types/dataset';
-import { Place, PlaceGroup } from '../types/place';
-import { TimeSeries } from "../types/timeSeries";
+import { Dataset, Variable, Place, PlaceGroup, TimeSeries } from '../model';
+
 
 export interface DataState {
     datasets: Dataset[];
