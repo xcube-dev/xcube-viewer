@@ -179,6 +179,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                 </IconButton>
                 <FormControlLabel label="Multi" control={
                     <Switch
+                        color={"primary"}
                         checked={timeSeriesUpdateMode === 'add'}
                         onChange={this.handleTimeSeriesUpdateModeChange}
                     />
