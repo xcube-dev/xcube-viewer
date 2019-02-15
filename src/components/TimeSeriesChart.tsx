@@ -35,6 +35,7 @@ export default class TimeSeriesChart extends React.Component<TimeSeriesChartProp
                 });
                 return (
                     <Line
+                        key={i}
                         type="monotone"
                         name={source.variableName}
                         unit={source.variableUnits}
