@@ -6,13 +6,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
-import IconButton from "@material-ui/core/IconButton";
-import ArrowLeft from "@material-ui/icons/ArrowLeft";
-import ArrowRight from "@material-ui/icons/ArrowRight";
+import IconButton from '@material-ui/core/IconButton';
+import ArrowLeft from '@material-ui/icons/ArrowLeft';
+import ArrowRight from '@material-ui/icons/ArrowRight';
 import * as GeoJSON from 'geojson';
 
 import { Dataset, Variable } from '../types/dataset';
 import { Place } from '../types/place';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = (theme: Theme) => createStyles(
     {
@@ -55,6 +57,9 @@ interface ControlBarProps extends WithStyles<typeof styles> {
     selectTime: (time: string | null) => void;
     minTime?: string;
     maxTime?: string;
+
+    timeSeriesUpdateMode: 'add' | 'replace';
+    selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: 'add' | 'replace') => void;
 }
 
 class ControlBar extends React.Component<ControlBarProps> {
@@ -75,8 +80,14 @@ class ControlBar extends React.Component<ControlBarProps> {
         this.props.selectTime(event.target.value || null);
     };
 
+    handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const mode = event.target.checked ? 'add' : 'replace';
+        console.log('mode: ', mode);
+        this.props.selectTimeSeriesUpdateMode(mode);
+    };
+
     render() {
-        const {classes} = this.props;
+        const {classes, timeSeriesUpdateMode} = this.props;
 
         const selectedDatasetId = this.props.selectedDatasetId || '';
         const datasets = this.props.datasets || [];
@@ -166,6 +177,12 @@ class ControlBar extends React.Component<ControlBarProps> {
                             onClick={this.handleTimeStepUp}>
                     <ArrowRight/>
                 </IconButton>
+                <FormControlLabel label="Multi" control={
+                    <Switch
+                        checked={timeSeriesUpdateMode === 'add'}
+                        onChange={this.handleTimeSeriesUpdateModeChange}
+                    />
+                }/>
             </form>
         );
     }

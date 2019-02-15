@@ -83,6 +83,20 @@ export function selectTime(selectedTime: string | null): SelectTime {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const SELECT_TIME_SERIES_UPDATE_MODE = 'SELECT_TIME_SERIES_UPDATE_MODE';
+export type SELECT_TIME_SERIES_UPDATE_MODE = typeof SELECT_TIME_SERIES_UPDATE_MODE;
+
+export interface SelectTimeSeriesUpdateMode {
+    type: SELECT_TIME_SERIES_UPDATE_MODE;
+    timeSeriesUpdateMode: "add" | "replace";
+}
+
+export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: "add" | "replace"): SelectTimeSeriesUpdateMode {
+    return {type: SELECT_TIME_SERIES_UPDATE_MODE, timeSeriesUpdateMode};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_COORDINATE = 'SELECT_COORDINATE';
 export type SELECT_COORDINATE = typeof SELECT_COORDINATE;
 
@@ -99,12 +113,13 @@ export function selectCoordinate(selectedCoordinate: [number, number] | null) {
 
         let selectedDatasetId = selectedDatasetIdSelector(getState());
         let selectedVariable = selectedVariableSelector(getState());
+        let timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
 
         if (selectedDatasetId && selectedVariable && selectedCoordinate) {
             api.getTimeSeriesForPoint(apiServerUrl, selectedDatasetId, selectedVariable, selectedCoordinate)
                .then((timeSeries: TimeSeries | null) => {
                    if (timeSeries !== null) {
-                       dispatch(updateTimeSeries(timeSeries, "replace"));
+                       dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));
                    } else {
                        /*I18N*/
                        dispatch(postMessage('info', 'No data found here'));
@@ -129,4 +144,5 @@ export type ControlAction =
     | SelectPlace
     | SelectUserPlace
     | SelectTime
-    | SelectCoordinate;
+    | SelectCoordinate
+    | SelectTimeSeriesUpdateMode;

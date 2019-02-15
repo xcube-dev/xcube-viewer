@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import { selectDataset, selectVariable, selectPlace, selectTime } from '../actions/controlActions';
+import { selectDataset, selectVariable, selectPlace, selectTime, selectTimeSeriesUpdateMode } from '../actions/controlActions';
 import { selectedDatasetVariablesSelector, selectedDatasetPlacesSelector } from "../selectors/controlSelectors";
 import ControlBar from '../components/ControlBar';
 
@@ -18,6 +18,8 @@ const mapStateToProps = (state: AppState) => {
         places: selectedDatasetPlacesSelector(state),
 
         selectedTime: state.controlState.selectedTime,
+
+        timeSeriesUpdateMode : state.controlState.timeSeriesUpdateMode,
     }
 };
 
@@ -26,6 +28,7 @@ const mapDispatchToProps = {
     selectVariable,
     selectPlace,
     selectTime,
+    selectTimeSeriesUpdateMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlBar);

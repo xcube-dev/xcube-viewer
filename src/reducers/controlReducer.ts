@@ -4,7 +4,10 @@ import {
     SELECT_VARIABLE,
     SELECT_PLACE,
     SELECT_TIME,
-    ControlAction, SELECT_USER_PLACE, SELECT_COORDINATE
+    SELECT_TIME_SERIES_UPDATE_MODE,
+    SELECT_USER_PLACE,
+    SELECT_COORDINATE,
+    ControlAction,
 } from '../actions/controlActions';
 
 
@@ -41,6 +44,12 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 selectedTime: action.selectedTime,
+            };
+        }
+        case SELECT_TIME_SERIES_UPDATE_MODE: {
+            return {
+                ...state,
+                timeSeriesUpdateMode: action.timeSeriesUpdateMode,
             };
         }
         case SELECT_COORDINATE: {
