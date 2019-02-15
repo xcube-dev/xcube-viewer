@@ -4,13 +4,13 @@ import classNames from 'classnames';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { AppBar, Toolbar, Typography, IconButton, Badge } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import SettingsIcon from '@material-ui/icons/Settings';
-import HelpIcon from '@material-ui/icons/Help';
+import MoreVert from '@material-ui/icons/MoreVert';
+import Avatar from '@material-ui/core/Avatar';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
-import { appBarStyles, toolbarStyles } from './styles';
-
 import logo from "../resources/cube-icon.png";
+
 
 interface DashboardProps extends WithStyles<typeof styles> {
     appName: string;
@@ -28,14 +28,33 @@ const mapDispatchToProps = {};
 
 const styles = (theme: Theme) => createStyles(
     {
-        ...toolbarStyles(theme),
-        ...appBarStyles(theme),
+        toolbar: {
+        },
+        toolbarIcon: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            padding: '0 8px',
+            ...theme.mixins.toolbar,
+        },
+        appBar: {
+            zIndex: theme.zIndex.drawer + 1,
+            transition: theme.transitions.create(['width', 'margin'], {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+            }),
+        },
         logo: {
-            marginLeft: theme.spacing.unit * 2,
+            marginLeft: theme.spacing.unit,
         },
         title: {
             flexGrow: 1,
             marginLeft: theme.spacing.unit,
+        },
+        orangeAvatar: {
+            margin: 10,
+            color: '#fff',
+            backgroundColor: deepOrange[500],
         },
     });
 
@@ -58,11 +77,9 @@ class _AppBar extends React.Component<DashboardProps> {
                             <NotificationsIcon/>
                         </Badge>
                     </IconButton>
+                    <Avatar className={classes.orangeAvatar}>CL</Avatar>
                     <IconButton color="inherit">
-                        <SettingsIcon/>
-                    </IconButton>
-                    <IconButton color="inherit">
-                        <HelpIcon/>
+                        <MoreVert/>
                     </IconButton>
                 </Toolbar>
             </AppBar>

@@ -1,30 +1,34 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import { selectDataset, selectVariable, selectLocation, selectDateTime } from '../actions/controlActions';
-import { selectedDatasetVariablesSelector, selectedDatasetLocationsSelector } from "../selectors/controlSelectors";
+import { selectDataset, selectVariable, selectPlace, selectTime, selectTimeSeriesUpdateMode } from '../actions/controlActions';
+import { selectedDatasetVariablesSelector, selectedDatasetPlacesSelector } from "../selectors/controlSelectors";
 import ControlBar from '../components/ControlBar';
+
 
 const mapStateToProps = (state: AppState) => {
     return {
         selectedDatasetId: state.controlState.selectedDatasetId,
         datasets: state.dataState.datasets,
 
-        selectedVariableId: state.controlState.selectedVariableId,
+        selectedVariableName: state.controlState.selectedVariableName,
         variables: selectedDatasetVariablesSelector(state),
 
-        selectedLocationId: state.controlState.selectedLocationId,
-        locations: selectedDatasetLocationsSelector(state),
+        selectedPlaceId: state.controlState.selectedPlaceId,
+        places: selectedDatasetPlacesSelector(state),
 
-        dateTime: state.controlState.selectedDateTime,
+        selectedTime: state.controlState.selectedTime,
+
+        timeSeriesUpdateMode : state.controlState.timeSeriesUpdateMode,
     }
 };
 
 const mapDispatchToProps = {
     selectDataset,
     selectVariable,
-    selectLocation,
-    selectDateTime,
+    selectPlace,
+    selectTime,
+    selectTimeSeriesUpdateMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlBar);

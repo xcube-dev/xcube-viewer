@@ -11,7 +11,8 @@ import registerServiceWorker from './registerServiceWorker';
 
 import './index.css';
 
-const logger = ReduxLogger.createLogger({collapsed: false, diff: true});
+
+const logger = ReduxLogger.createLogger({collapsed: true, diff: true});
 const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
 store.dispatch(updateDatasets() as any);
 

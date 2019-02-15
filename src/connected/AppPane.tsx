@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 
-import SimpleLineChart from '../components/SimpleLineChart';
+import SimpleLineChart from './TimeSeriesChart';
 import SimpleTable from '../components/SimpleTable';
-import Viewer from '../components/Viewer';
 import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
+import Viewer from './Viewer';
+
 
 interface AppPaneProps extends WithStyles<typeof styles> {
 }

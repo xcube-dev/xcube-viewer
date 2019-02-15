@@ -1,35 +1,23 @@
-export interface ComponentVisibility {
-    sideMenu: boolean;
-    datasetList: boolean;
-    layerList: boolean;
-    locationList: boolean;
-    timePanel: boolean;
-    timeSeriesPanel: boolean;
-}
-
 export interface ControlState {
     selectedDatasetId: string | null;
-    selectedVariableId: string | null;
-    selectedLocationId: string | number | null;
-    selectedDateTime: string | null;
-
-    selectedUserPlaceId: string | number | null;
+    selectedVariableName: string | null;
+    selectedPlaceId: string | null;
+    selectedUserPlaceId: string | null;
+    selectedTime: string | null;
+    selectedCoordinate: [number, number] | null;
+    selectedDrawMode: ol.geom.GeometryType | null;
+    timeSeriesUpdateMode: "add" | "replace";
 }
 
-export function newControlState() {
+export function newControlState(): ControlState {
     return {
         selectedDatasetId: "local",
-        selectedVariableId: "conc_chl",
-        selectedLocationId: 0,
+        selectedVariableName: "conc_chl",
+        selectedPlaceId: null,
         selectedUserPlaceId: null,
-        selectedDateTime: null,
-        componentVisibility: {
-            sideMenu: false,
-            datasetList: false,
-            layerList: false,
-            locationList: false,
-            timePanel: false,
-            timeSeriesPanel: false,
-        }
+        selectedTime: null,
+        selectedCoordinate: null,
+        selectedDrawMode: "Point",
+        timeSeriesUpdateMode: "replace",
     };
 }

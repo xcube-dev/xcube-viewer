@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as GeoJSON from 'geojson';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -6,9 +7,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowLeft from '@material-ui/icons/ArrowLeft';
+import ArrowRight from '@material-ui/icons/ArrowRight';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { Dataset, Variable } from "../types/dataset";
-import { Location } from "../types/location";
+import { Dataset, Place, Variable } from '../model';
+
 
 const styles = (theme: Theme) => createStyles(
     {
@@ -17,64 +23,83 @@ const styles = (theme: Theme) => createStyles(
             flexWrap: 'wrap',
         },
         formControl: {
-            margin: theme.spacing.unit,
+            marginRight: theme.spacing.unit * 2,
+            marginBottom: theme.spacing.unit,
+            minWidth: 120,
+        },
+        textField: {
+            marginRight: theme.spacing.unit * 2,
+            marginBottom: theme.spacing.unit,
             minWidth: 120,
         },
         selectEmpty: {
             marginTop: theme.spacing.unit * 2,
         },
+        button: {
+            margin: theme.spacing.unit * 0.3,
+        },
     });
 
 interface ControlBarProps extends WithStyles<typeof styles> {
     selectedDatasetId: string | null;
-    datasets: Dataset[] | null;
-    selectDataset: (datasetId: string | null) => void;
+    datasets: Dataset[];
+    selectDataset: (datasetId: string | null, dataset: Dataset[]) => void;
 
-    selectedVariableId: string | null;
-    variables: Variable[] | null;
-    selectVariable: (variableId: string | null) => void;
+    selectedVariableName: string | null;
+    variables: Variable[];
+    selectVariable: (variableName: string | null) => void;
 
-    selectedLocationId: string | number | null;
-    locations: Location[] | null;
-    selectLocation: (locationId: string | null) => void;
+    selectedPlaceId: string | null;
+    places: Place[];
+    selectPlace: (placeId: string | null) => void;
 
-    dateTime: string | null;
-    selectDateTime: (dateTime: string | null) => void;
+    selectedTime: string | null;
+    selectTime: (time: string | null) => void;
+    minTime?: string;
+    maxTime?: string;
+
+    timeSeriesUpdateMode: 'add' | 'replace';
+    selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: 'add' | 'replace') => void;
 }
 
 class ControlBar extends React.Component<ControlBarProps> {
 
     handleDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectDataset(event.target.value || null);
+        this.props.selectDataset(event.target.value || null, this.props.datasets);
     };
 
     handleVariableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         this.props.selectVariable(event.target.value || null);
     };
 
-    handleLocationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectLocation(event.target.value || null);
+    handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.selectPlace(event.target.value || null);
     };
 
-    handleDateTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectDateTime(event.target.value || null);
+    handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.selectTime(event.target.value || null);
+    };
+
+    handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.selectTimeSeriesUpdateMode(event.target.checked ? 'add' : 'replace');
     };
 
     render() {
-        const {classes} = this.props;
+        const {classes, timeSeriesUpdateMode} = this.props;
 
-        const selectedDatasetId = this.props.selectedDatasetId || "";
+        const selectedDatasetId = this.props.selectedDatasetId || '';
         const datasets = this.props.datasets || [];
 
-        const selectedVariableId = this.props.selectedVariableId || "";
+        const selectedVariableName = this.props.selectedVariableName || '';
         const variables = this.props.variables || [];
 
-        const selectedLocationId = this.props.selectedLocationId || "";
-        const locations = this.props.locations || [];
+        const selectedPlaceId = this.props.selectedPlaceId || '';
+        const places = this.props.places || [];
 
-        const dateTime = this.props.dateTime || "";
+        const selectedTime = this.props.selectedTime || '';
 
         return (
+            /*I18*/
             <form className={classes.root} autoComplete="off">
                 <FormControl className={classes.formControl}>
                     <InputLabel shrink htmlFor="dataset-select">
@@ -99,7 +124,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                         Variable
                     </InputLabel>
                     <Select
-                        value={selectedVariableId}
+                        value={selectedVariableName}
                         onChange={this.handleVariableChange}
                         input={<Input name="variable" id="variable-select"/>}
                         displayEmpty
@@ -107,50 +132,86 @@ class ControlBar extends React.Component<ControlBarProps> {
                         className={classes.selectEmpty}
                     >
                         {variables.map(variable => <MenuItem
-                            key={variable.id}
-                            value={variable.id}
-                            selected={variable.id === selectedVariableId}>{variable.title || variable.name}</MenuItem>)}
+                            key={variable.name}
+                            value={variable.name}
+                            selected={variable.name === selectedVariableName}>{variable.title || variable.name}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
-                    <InputLabel shrink htmlFor="location-select">
-                        Location
+                    <InputLabel shrink htmlFor="place-select">
+                        Place
                     </InputLabel>
                     <Select
-                        value={selectedLocationId}
-                        onChange={this.handleLocationChange}
-                        input={<Input name="location" id="location-select"/>}
+                        value={selectedPlaceId}
+                        onChange={this.handlePlaceChange}
+                        input={<Input name="place" id="place-select"/>}
                         displayEmpty
-                        name="location"
+                        name="place"
                         className={classes.selectEmpty}
                     >
-                        {locations.map(location => <MenuItem
-                            key={location.feature.id}
-                            value={location.feature.id}
-                            selected={location.feature.id === selectedLocationId}>{ControlBar.getLocationDisplayName(location)}</MenuItem>)}
+                        {places.map(place => <MenuItem
+                            key={place.id}
+                            value={place.id}
+                            selected={place.id === selectedPlaceId}>{ControlBar.getPlaceDisplayName(place)}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <TextField
+                    inputRef={this.handleTimeInputRef}
                     id="time-select"
-                    type="datetime-local"
-                    value={dateTime}
-                    disabled
-                    label={"Time"}
-                    className={classes.formControl}
-                    onChange={this.handleDateTimeChange}
+                    type="date"
+                    value={selectedTime}
+                    label={'Time'}
+                    className={classes.textField}
+                    onChange={this.handleTimeChange}
                     InputLabelProps={{
                         shrink: true,
                     }}
                 />
+                <IconButton className={classes.button} aria-label="One time step back"
+                            onClick={this.handleTimeStepDown}>
+                    <ArrowLeft/>
+                </IconButton>
+                <IconButton className={classes.button} aria-label="One time step forward"
+                            onClick={this.handleTimeStepUp}>
+                    <ArrowRight/>
+                </IconButton>
+                <FormControlLabel label="Multi" control={
+                    <Switch
+                        color={"primary"}
+                        checked={timeSeriesUpdateMode === 'add'}
+                        onChange={this.handleTimeSeriesUpdateModeChange}
+                    />
+                }/>
             </form>
         );
     }
 
-    static getLocationDisplayName(location: Location): string {
-        let feature = location.feature;
-        let properties = feature.properties;
-        let value = properties && (properties["title"] || properties["name"] || properties["id"]) || feature.id;
-        if (typeof value === "string") {
+    timeInputElement: HTMLInputElement;
+
+    handleTimeInputRef = (timeInputElement: HTMLInputElement) => {
+        this.timeInputElement = timeInputElement;
+    };
+
+    handleTimeStepUp = () => {
+        let input = this.timeInputElement;
+        if (input) {
+            input.stepUp(1);
+            this.props.selectTime(input.value || null);
+        }
+    };
+
+    handleTimeStepDown = () => {
+        let input = this.timeInputElement;
+        if (input) {
+            input.stepDown(1);
+            this.props.selectTime(input.value || null);
+        }
+    };
+
+    static getPlaceDisplayName(place: GeoJSON.Feature): string {
+        let properties = place.properties;
+        let value = properties && (properties['title'] || properties['name'] || properties['id']) || place.id;
+        if (typeof value === 'string') {
             return value;
         }
         return `${value}`;

@@ -2,9 +2,14 @@ import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
     SELECT_VARIABLE,
-    SELECT_LOCATION,
-    ControlAction
+    SELECT_PLACE,
+    SELECT_TIME,
+    SELECT_TIME_SERIES_UPDATE_MODE,
+    SELECT_USER_PLACE,
+    SELECT_COORDINATE,
+    ControlAction,
 } from '../actions/controlActions';
+import { findDataset, findDatasetVariable } from '../model';
 
 
 export function controlReducer(state: ControlState, action: ControlAction): ControlState {
@@ -13,21 +18,52 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
     }
     switch (action.type) {
         case SELECT_DATASET: {
+            let selectedVariableName = state.selectedVariableName;
+            const dataset = findDataset(action.datasets, action.selectedDatasetId)!;
+            const variable = findDatasetVariable(dataset, selectedVariableName);
+            if (!variable && dataset.variables.length > 0) {
+                selectedVariableName = dataset.variables[0].name;
+            }
             return {
                 ...state,
                 selectedDatasetId: action.selectedDatasetId,
+                selectedVariableName
             };
         }
         case SELECT_VARIABLE: {
             return {
                 ...state,
-                selectedVariableId: action.selectedVariableId,
+                selectedVariableName: action.selectedVariableName,
             };
         }
-        case SELECT_LOCATION: {
+        case SELECT_PLACE: {
             return {
                 ...state,
-                selectedLocationId: action.selectedLocationId,
+                selectedPlaceId: action.selectedPlaceId,
+            };
+        }
+        case SELECT_USER_PLACE: {
+            return {
+                ...state,
+                selectedUserPlaceId: action.selectedUserPlaceId,
+            };
+        }
+        case SELECT_TIME: {
+            return {
+                ...state,
+                selectedTime: action.selectedTime,
+            };
+        }
+        case SELECT_TIME_SERIES_UPDATE_MODE: {
+            return {
+                ...state,
+                timeSeriesUpdateMode: action.timeSeriesUpdateMode,
+            };
+        }
+        case SELECT_COORDINATE: {
+            return {
+                ...state,
+                selectedCoordinate: action.selectedCoordinate,
             };
         }
     }

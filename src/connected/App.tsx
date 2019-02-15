@@ -30,6 +30,10 @@ const theme = createMuiTheme(
         palette: {
             type: 'dark',
         },
+        // see https://material-ui.com/style/typography/#migration-to-typography-v2
+        typography: {
+            useNextVariants: true,
+        },
     });
 
 // noinspection JSUnusedLocalSymbols
