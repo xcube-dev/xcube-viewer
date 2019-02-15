@@ -2,6 +2,15 @@
 
 A simple viewer component for xcube-server
 
+# Run it
+
+1. Install and start [xcube-server](https://github.com/dcs4cop/xcube-server) in demo mode
+2. Install and start xcube-viewer:
+    ```
+    $ yarn install
+    $ yarn run start
+    ```
+
 
 # Features
 
@@ -19,12 +28,17 @@ A simple viewer component for xcube-server
 * Select place and fly to bbox
 * Click in time series chart and select time
 * Show a variable's legend in map
-* Show selected place info, allow media content
-* Show place names in map, place tooltips
+* Show selected place info in card, allow media content
+* Show place names in map, show tooltip for place
 * Select place and show time series chart
 * Select time in time series chart
 * Show selected time in time series chart
 * Get page styles right, furnish interactions
+* Populate more menu:
+  * Config dialog, where xcube-server URL can be set
+  * External links (configurable)
+  * Help dialog 
+  * About dialog
 * Test on mobile devices
 * Internationalize texts
 
