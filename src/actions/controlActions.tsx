@@ -30,6 +30,27 @@ export function selectDataset(selectedDatasetId: string | null, datasets: Datase
     return {type: SELECT_DATASET, selectedDatasetId, datasets};
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_PLACE = 'SELECT_PLACE';
+export type SELECT_PLACE = typeof SELECT_PLACE;
+
+export interface SelectPlace {
+    type: SELECT_PLACE;
+    selectedPlaceId: string | null;
+    // Now, having datasets is really ugly, but we need it in the reducer to set selectedVariableName!
+    // That's why I started reading
+    // - https://medium.com/@williamjoshualacey/refactoring-redux-using-react-context-aa29fa16f4b7
+    // - https://codeburst.io/the-ugly-side-of-redux-6591fde68200
+    datasets: Dataset[];
+}
+
+export function selectPlace(selectedPlaceId: string | null, datasets: Dataset[]): SelectPlace {
+    return {type: SELECT_PLACE, selectedPlaceId, datasets};
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const SELECT_VARIABLE = 'SELECT_VARIABLE';
@@ -42,20 +63,6 @@ export interface SelectVariable {
 
 export function selectVariable(selectedVariableName: string | null): SelectVariable {
     return {type: SELECT_VARIABLE, selectedVariableName};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const SELECT_PLACE = 'SELECT_PLACE';
-export type SELECT_PLACE = typeof SELECT_PLACE;
-
-export interface SelectPlace {
-    type: SELECT_PLACE;
-    selectedPlaceId: string | null;
-}
-
-export function selectPlace(selectedPlaceId: string | null): SelectPlace {
-    return {type: SELECT_PLACE, selectedPlaceId};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,20 +105,6 @@ export interface SelectTimeSeriesUpdateMode {
 
 export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: "add" | "replace"): SelectTimeSeriesUpdateMode {
     return {type: SELECT_TIME_SERIES_UPDATE_MODE, timeSeriesUpdateMode};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const STORE_MAP_REF = 'STORE_MAP_REF';
-export type STORE_MAP_REF = typeof STORE_MAP_REF;
-
-export interface StoreMapRef {
-    type: STORE_MAP_REF;
-    map: ol.Map;
-}
-
-export function storeMapRef(map: ol.Map): StoreMapRef {
-    return {type: STORE_MAP_REF, map};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,5 +157,4 @@ export type ControlAction =
     | SelectUserPlace
     | SelectTime
     | SelectCoordinate
-    | SelectTimeSeriesUpdateMode
-    | StoreMapRef;
+    | SelectTimeSeriesUpdateMode;

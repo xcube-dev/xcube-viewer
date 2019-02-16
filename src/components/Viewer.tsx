@@ -16,10 +16,12 @@ interface ViewerProps {
     variableLayer?: LayerElement;
     selectCoordinate?: (geoCoordinate: [number, number]) => void;
     selectFeatures?: (features: GeoJSON.Feature[]) => void;
-    storeMapRef?: (map: ol.Map | null) => void;
+    flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
 
 class Viewer extends React.Component<ViewerProps> {
+
+    map: ol.Map | null;
 
     handleMapClick = (event: ol.MapBrowserEvent) => {
         const {selectCoordinate, selectFeatures} = this.props;
@@ -33,6 +35,7 @@ class Viewer extends React.Component<ViewerProps> {
         }
 
         if (selectFeatures) {
+            // noinspection JSUnusedLocalSymbols
             map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
                 // console.log("Map.handleClick: feature is near: ", feature, layer);
             });
@@ -41,11 +44,26 @@ class Viewer extends React.Component<ViewerProps> {
     };
 
     handleMapRef = (map: ol.Map | null) => {
-        const storeMapRef = this.props.storeMapRef;
-        if (storeMapRef) {
-            storeMapRef(map);
-        }
+        this.map = map;
     };
+
+
+    componentDidUpdate(prevProps: Readonly<ViewerProps>, prevState: Readonly<{}>, snapshot?: any): void {
+        let flyToCurr = this.props.flyTo || null;
+        let flyToPrev = prevProps.flyTo || null;
+        if (this.map !== null && flyToCurr !== null && flyToCurr !== flyToPrev) {
+            const map = this.map;
+            const projection = map.getView().getProjection();
+            let flyToTarget;
+            if (Array.isArray(flyToCurr)) {
+                flyToTarget = ol.proj.transformExtent(flyToCurr, 'EPSG:4326', projection);
+            } else {
+                flyToTarget = flyToCurr.transform('EPSG:4326', projection) as ol.geom.SimpleGeometry;
+            }
+            map.getView().fit(flyToTarget, {size: map.getSize()});
+        }
+    }
+
 
     public render() {
         let {variableLayer, drawMode} = this.props;

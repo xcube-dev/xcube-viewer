@@ -1,3 +1,6 @@
+import * as ol from "openlayers";
+
+
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
@@ -7,7 +10,7 @@ export interface ControlState {
     selectedCoordinate: [number, number] | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: "add" | "replace";
-    map: ol.Map | null;
+    flyTo: ol.geom.SimpleGeometry | ol.Extent | null;
 }
 
 export function newControlState(): ControlState {
@@ -20,6 +23,6 @@ export function newControlState(): ControlState {
         selectedCoordinate: null,
         selectedDrawMode: "Point",
         timeSeriesUpdateMode: "replace",
-        map: null,
+        flyTo: null,
     };
 }

@@ -45,13 +45,13 @@ interface ControlBarProps extends WithStyles<typeof styles> {
     datasets: Dataset[];
     selectDataset: (datasetId: string | null, dataset: Dataset[]) => void;
 
+    selectedPlaceId: string | null;
+    places: Place[];
+    selectPlace: (placeId: string | null, dataset: Dataset[]) => void;
+
     selectedVariableName: string | null;
     variables: Variable[];
     selectVariable: (variableName: string | null) => void;
-
-    selectedPlaceId: string | null;
-    places: Place[];
-    selectPlace: (placeId: string | null) => void;
 
     selectedTime: string | null;
     selectTime: (time: string | null) => void;
@@ -73,7 +73,7 @@ class ControlBar extends React.Component<ControlBarProps> {
     };
 
     handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectPlace(event.target.value || null);
+        this.props.selectPlace(event.target.value || null, this.props.datasets);
     };
 
     handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {

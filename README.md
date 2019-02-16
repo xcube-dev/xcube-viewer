@@ -16,16 +16,16 @@ A simple viewer component for xcube-server
 
 ## Already Working
 
-* Select dataset and update variable and places list
+* Select dataset, update variable and places list, fly to bounding box
+* Select place (Lakes / Stations) and fly to bounding box
 * Select variable and show as layer on map
-* Select Places (Lakes / Stations)
-* Select Time and update variable layer on map
+* Select time and update variable layer on map
 * Click in map and show time series chart
+* Select dataset and fly to bounding box
+* Select place and fly to bounding box
 
 ## Next
 
-* Select dataset and fly to bbox
-* Select place and fly to bbox
 * Click in time series chart and select time
 * Show a variable's legend in map
 * Show selected place info in card, allow media content

@@ -3,6 +3,7 @@ import { MessageLogAction, postMessage } from './messageLogActions';
 import { AppState } from '../states/appState';
 import { Dataset, TimeSeries } from '../model';
 import * as api from '../api'
+import { SelectDataset, selectDataset } from "./controlActions";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,13 +17,16 @@ export interface UpdateDatasets {
 }
 
 export function updateDatasets() {
-    return (dispatch: Dispatch<UpdateDatasets | MessageLogAction>, getState: () => AppState) => {
+    return (dispatch: Dispatch<UpdateDatasets | SelectDataset| MessageLogAction>, getState: () => AppState) => {
         const state = getState();
         const apiServerUrl = state.configState.apiServerUrl;
 
         api.getDatasets(apiServerUrl)
            .then((datasets: Dataset[]) => {
                dispatch(_updateDatasets(datasets));
+               if (datasets.length > 0) {
+                   dispatch(selectDataset(datasets[0].id, datasets));
+               }
            })
            .catch(error => {
                dispatch(postMessage('error', error + ''));
