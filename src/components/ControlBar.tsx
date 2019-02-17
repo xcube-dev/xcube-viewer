@@ -14,6 +14,7 @@ import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { Dataset, Place, Variable } from '../model';
+import { formatLocalToUtc, formatUtcToLocal } from "../util/time";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -77,7 +78,7 @@ class ControlBar extends React.Component<ControlBarProps> {
     };
 
     handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectTime(event.target.value || null);
+        this.props.selectTime(event.target.value ? formatLocalToUtc(event.target.value) : null);
     };
 
     handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +97,7 @@ class ControlBar extends React.Component<ControlBarProps> {
         const selectedPlaceId = this.props.selectedPlaceId || '';
         const places = this.props.places || [];
 
-        const selectedTime = this.props.selectedTime || '';
+        const selectedTime = this.props.selectedTime ? formatUtcToLocal(this.props.selectedTime) : "";
 
         return (
             /*I18*/
@@ -158,7 +159,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                 <TextField
                     inputRef={this.handleTimeInputRef}
                     id="time-select"
-                    type="date"
+                    type="datetime-local"
                     value={selectedTime}
                     label={'Time'}
                     className={classes.textField}
@@ -219,3 +220,4 @@ class ControlBar extends React.Component<ControlBarProps> {
 }
 
 export default withStyles(styles)(ControlBar);
+

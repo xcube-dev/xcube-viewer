@@ -23,16 +23,17 @@ A simple viewer component for xcube-server
 * Click in map and show time series chart
 * Select dataset and fly to bounding box
 * Select place and fly to bounding box
+* Click in time series chart and select time
+* Show selected time in time series chart
+* Zoom into and out of time series chart
+ * Use local time in UI (backend provides UTC time only)
 
 ## Next
 
-* Click in time series chart and select time
 * Show a variable's legend in map
 * Show selected place info in card, allow media content
 * Show place names in map, show tooltip for place
 * Select place and show time series chart
-* Select time in time series chart
-* Show selected time in time series chart
 * Get page styles right, furnish interactions
 * Populate more menu:
   * Config dialog, where xcube-server URL can be set
