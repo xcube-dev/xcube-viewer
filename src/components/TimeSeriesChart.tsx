@@ -159,9 +159,11 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                type="number"
                                domain={X_AXIS_DOMAIN}
                                padding={X_AXIS_PADDING}
+                               allowDuplicatedCategory={false}
                                tickFormatter={this.tickFormatter}
                         />
-                        <YAxis type="number"
+                        <YAxis dataKey="average"
+                               type="number"
                                domain={Y_AXIS_DOMAIN}
                         />
                         <CartesianGrid strokeDasharray="3 3"/>

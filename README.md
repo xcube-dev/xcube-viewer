@@ -30,7 +30,6 @@ A simple viewer component for xcube-server
 
 ## Current Issues
 
-* The tooltip in time series chart shows same values for all series (may be an issue in recharts!)
 * The legend and tooltip in time series chart should recognize Material UI theme
 
 ## Next
@@ -39,6 +38,8 @@ A simple viewer component for xcube-server
 * Show selected place info in card, allow media content
 * Show place names in map, show tooltip for place
 * Select place and show time series chart
+* Show all variables in time series chart for given point or place
+* In time series chart, show from which place it originates, select graph in chart --> fly to place
 * Get page styles right, furnish interactions
 * Populate more menu:
   * Config dialog
