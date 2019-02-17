@@ -4,9 +4,10 @@ import { AppState } from '../states/appState';
 import { datasetsSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
-import { Dataset, findDataset, findDatasetVariable, Variable, Place, PlaceGroup  } from '../model';
+import { Dataset, findDataset, findDatasetVariable, Variable, Place, PlaceGroup, Time } from '../model';
 import { LayerElement } from '../components/ol/layer/Layers';
 import { XYZ } from '../components/ol/layer/XYZ';
+
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -15,19 +16,20 @@ export const selectedTimeSelector = (state: AppState) => state.controlState.sele
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
     selectedDatasetIdSelector,
-    findDataset,
+    findDataset
 );
+
 
 export const selectedDatasetVariablesSelector = createSelector(
     selectedDatasetSelector,
-    (dataset: Dataset | null): Variable[] | null => {
+    (dataset: Dataset | null): Variable[] => {
         return (dataset && dataset.variables) || [];
     }
 );
 
 export const selectedDatasetPlaceGroupsSelector = createSelector(
     selectedDatasetSelector,
-    (dataset: Dataset | null): PlaceGroup[] | null => {
+    (dataset: Dataset | null): PlaceGroup[] => {
         return (dataset && dataset.placeGroups) || [];
     }
 );
@@ -54,14 +56,14 @@ export const selectedVariableSelector = createSelector(
 export const selectedVariableLayerSelector = createSelector(
     selectedVariableSelector,
     selectedTimeSelector,
-    (variable: Variable | null, time: string | null): LayerElement => {
+    (variable: Variable | null, time: Time | null): LayerElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
         const options = variable.tileSourceOptions;
         let url = options.url;
-        if (time) {
-            url += `?time=${time}`;
+        if (time !== null) {
+            url += `?time=${new Date(time).toISOString()}`;
         }
         const attributions = [
             new ol.Attribution(

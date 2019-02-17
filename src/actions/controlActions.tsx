@@ -1,15 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { AppState } from "../states/appState";
 import { Dispatch } from "redux";
+
 import * as api from '../api'
 import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
-import { TimeSeries, Dataset } from "../model";
+import { TimeSeries, Dataset, Time, TimeRange } from "../model";
 import {
     selectedDatasetIdSelector,
     selectedVariableSelector,
 } from "../selectors/controlSelectors";
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +30,27 @@ export function selectDataset(selectedDatasetId: string | null, datasets: Datase
     return {type: SELECT_DATASET, selectedDatasetId, datasets};
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_PLACE = 'SELECT_PLACE';
+export type SELECT_PLACE = typeof SELECT_PLACE;
+
+export interface SelectPlace {
+    type: SELECT_PLACE;
+    selectedPlaceId: string | null;
+    // Now, having datasets is really ugly, but we need it in the reducer to set selectedVariableName!
+    // That's why I started reading
+    // - https://medium.com/@williamjoshualacey/refactoring-redux-using-react-context-aa29fa16f4b7
+    // - https://codeburst.io/the-ugly-side-of-redux-6591fde68200
+    datasets: Dataset[];
+}
+
+export function selectPlace(selectedPlaceId: string | null, datasets: Dataset[]): SelectPlace {
+    return {type: SELECT_PLACE, selectedPlaceId, datasets};
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const SELECT_VARIABLE = 'SELECT_VARIABLE';
@@ -42,20 +63,6 @@ export interface SelectVariable {
 
 export function selectVariable(selectedVariableName: string | null): SelectVariable {
     return {type: SELECT_VARIABLE, selectedVariableName};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const SELECT_PLACE = 'SELECT_PLACE';
-export type SELECT_PLACE = typeof SELECT_PLACE;
-
-export interface SelectPlace {
-    type: SELECT_PLACE;
-    selectedPlaceId: string | null;
-}
-
-export function selectPlace(selectedPlaceId: string | null): SelectPlace {
-    return {type: SELECT_PLACE, selectedPlaceId};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,11 +86,25 @@ export type SELECT_TIME = typeof SELECT_TIME;
 
 export interface SelectTime {
     type: SELECT_TIME;
-    selectedTime: string | null;
+    selectedTime: Time | null;
 }
 
-export function selectTime(selectedTime: string | null): SelectTime {
+export function selectTime(selectedTime: Time | null): SelectTime {
     return {type: SELECT_TIME, selectedTime};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_TIME_RANGE = 'SELECT_TIME_RANGE';
+export type SELECT_TIME_RANGE = typeof SELECT_TIME_RANGE;
+
+export interface SelectTimeRange {
+    type: SELECT_TIME_RANGE;
+    selectedTimeRange: TimeRange | null;
+}
+
+export function selectTimeRange(selectedTimeRange: TimeRange | null): SelectTimeRange {
+    return {type: SELECT_TIME_RANGE, selectedTimeRange};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,5 +170,6 @@ export type ControlAction =
     | SelectPlace
     | SelectUserPlace
     | SelectTime
+    | SelectTimeRange
     | SelectCoordinate
     | SelectTimeSeriesUpdateMode;

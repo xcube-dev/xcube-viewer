@@ -1,3 +1,9 @@
+/**
+ * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
+ */
+export type Time = number;
+export type TimeRange = [Time, Time];
+
 export interface TimeSeriesSource {
     datasetId: string;
     variableName: string;
@@ -6,7 +12,7 @@ export interface TimeSeriesSource {
 }
 
 export interface TimeSeriesPoint {
-    time: string;
+    time: Time;
     totalCount: number;
     validCount: number;
     average: number;

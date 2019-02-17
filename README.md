@@ -16,26 +16,33 @@ A simple viewer component for xcube-server
 
 ## Already Working
 
-* Select dataset and update variable and places list
+* Select dataset, update variable and places list, fly to bounding box
+* Select place (Lakes / Stations) and fly to bounding box
 * Select variable and show as layer on map
-* Select Places (Lakes / Stations)
-* Select Time and update variable layer on map
+* Select time and update variable layer on map
 * Click in map and show time series chart
+* Select dataset and fly to bounding box
+* Select place and fly to bounding box
+* Click in time series chart and select time
+* Show selected time in time series chart
+* Zoom into and out of time series chart
+* Use local time in UI (backend provides UTC time only)
+
+## Current Issues
+
+* The tooltip in time series chart shows same values for all series
 
 ## Next
 
-* Select dataset and fly to bbox
-* Select place and fly to bbox
-* Click in time series chart and select time
 * Show a variable's legend in map
 * Show selected place info in card, allow media content
 * Show place names in map, show tooltip for place
 * Select place and show time series chart
-* Select time in time series chart
-* Show selected time in time series chart
 * Get page styles right, furnish interactions
 * Populate more menu:
-  * Config dialog, where xcube-server URL can be set
+  * Config dialog
+    - set xcube-server URL
+    - customize time-series chart: show points, connect null
   * External links (configurable)
   * Help dialog 
   * About dialog

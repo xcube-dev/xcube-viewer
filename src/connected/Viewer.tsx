@@ -10,6 +10,7 @@ const mapStateToProps = (state: AppState) => {
     return {
         variableLayer: selectedVariableLayerSelector(state),
         drawMode: state.controlState.selectedDrawMode,
+        flyTo: state.controlState.flyTo,
     }
 };
 

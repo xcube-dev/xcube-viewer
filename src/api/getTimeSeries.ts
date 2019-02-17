@@ -13,7 +13,7 @@ export function getTimeSeriesForPoint(apiServerUrl: string,
                 return null;
             }
             const data = results.map((item: any) => {
-                return {time: item.date, ...item.result};
+                return {time: new Date(item.date).getTime(), ...item.result};
             });
             const source = {
                 datasetId,

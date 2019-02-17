@@ -1,3 +1,5 @@
+import * as ol from "openlayers";
+
 import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
@@ -7,10 +9,13 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction,
+    ControlAction, SELECT_TIME_RANGE,
 } from '../actions/controlActions';
 import { findDataset, findDatasetVariable } from '../model';
+import { findDatasetPlace } from "../model/dataset";
 
+
+const SIMPLE_GEOMETRY_TYPES = ["Point" , "LineString" , "LinearRing" , "Polygon" , "MultiPoint" , "MultiLineString" , "MultiPolygon" , "Circle"];
 
 export function controlReducer(state: ControlState, action: ControlAction): ControlState {
     if (typeof state === 'undefined') {
@@ -24,22 +29,41 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             if (!variable && dataset.variables.length > 0) {
                 selectedVariableName = dataset.variables[0].name;
             }
+            let flyTo = state.flyTo;
+            if (dataset.bbox) {
+                flyTo = dataset.bbox;
+            }
             return {
                 ...state,
                 selectedDatasetId: action.selectedDatasetId,
-                selectedVariableName
+                selectedVariableName,
+                flyTo: flyTo,
+            };
+        }
+        case SELECT_PLACE: {
+            const selectedPlaceId = action.selectedPlaceId;
+            let flyTo = state.flyTo;
+            if (selectedPlaceId) {
+                const dataset = findDataset(action.datasets, state.selectedDatasetId)!;
+                const place = findDatasetPlace(dataset, selectedPlaceId);
+                if (place !== null) {
+                    if (place.bbox && place.bbox.length === 4) {
+                        flyTo = place.bbox as [number, number, number, number];
+                    } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
+                        flyTo = new ol.format.GeoJSON().readGeometry(place.geometry) as ol.geom.SimpleGeometry;
+                    }
+                }
+            }
+            return {
+                ...state,
+                selectedPlaceId,
+                flyTo
             };
         }
         case SELECT_VARIABLE: {
             return {
                 ...state,
                 selectedVariableName: action.selectedVariableName,
-            };
-        }
-        case SELECT_PLACE: {
-            return {
-                ...state,
-                selectedPlaceId: action.selectedPlaceId,
             };
         }
         case SELECT_USER_PLACE: {
@@ -52,6 +76,12 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 selectedTime: action.selectedTime,
+            };
+        }
+        case SELECT_TIME_RANGE: {
+            return {
+                ...state,
+                selectedTimeRange: action.selectedTimeRange,
             };
         }
         case SELECT_TIME_SERIES_UPDATE_MODE: {
