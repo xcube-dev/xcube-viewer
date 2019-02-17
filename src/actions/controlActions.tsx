@@ -95,6 +95,20 @@ export function selectTime(selectedTime: string | null): SelectTime {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const SELECT_TIME_RANGE = 'SELECT_TIME_RANGE';
+export type SELECT_TIME_RANGE = typeof SELECT_TIME_RANGE;
+
+export interface SelectTimeRange {
+    type: SELECT_TIME_RANGE;
+    selectedTimeRange: [number, number] | null;
+}
+
+export function selectTimeRange(selectedTimeRange: [number, number] | null): SelectTimeRange {
+    return {type: SELECT_TIME_RANGE, selectedTimeRange};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_TIME_SERIES_UPDATE_MODE = 'SELECT_TIME_SERIES_UPDATE_MODE';
 export type SELECT_TIME_SERIES_UPDATE_MODE = typeof SELECT_TIME_SERIES_UPDATE_MODE;
 
@@ -156,5 +170,6 @@ export type ControlAction =
     | SelectPlace
     | SelectUserPlace
     | SelectTime
+    | SelectTimeRange
     | SelectCoordinate
     | SelectTimeSeriesUpdateMode;

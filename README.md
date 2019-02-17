@@ -36,7 +36,9 @@ A simple viewer component for xcube-server
 * Select place and show time series chart
 * Get page styles right, furnish interactions
 * Populate more menu:
-  * Config dialog, where xcube-server URL can be set
+  * Config dialog
+    - set xcube-server URL
+    - customize time-series chart: show points, connect null
   * External links (configurable)
   * Help dialog 
   * About dialog

@@ -9,7 +9,7 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction,
+    ControlAction, SELECT_TIME_RANGE,
 } from '../actions/controlActions';
 import { findDataset, findDatasetVariable } from '../model';
 import { findDatasetPlace } from "../model/dataset";
@@ -76,6 +76,12 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 selectedTime: action.selectedTime,
+            };
+        }
+        case SELECT_TIME_RANGE: {
+            return {
+                ...state,
+                selectedTimeRange: action.selectedTimeRange,
             };
         }
         case SELECT_TIME_SERIES_UPDATE_MODE: {

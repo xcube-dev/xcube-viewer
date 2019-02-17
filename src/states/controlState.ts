@@ -7,6 +7,7 @@ export interface ControlState {
     selectedPlaceId: string | null;
     selectedUserPlaceId: string | null;
     selectedTime: string | null;
+    selectedTimeRange: [number, number] | null;
     selectedCoordinate: [number, number] | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: "add" | "replace";
@@ -20,6 +21,7 @@ export function newControlState(): ControlState {
         selectedPlaceId: null,
         selectedUserPlaceId: null,
         selectedTime: null,
+        selectedTimeRange: null,
         selectedCoordinate: null,
         selectedDrawMode: "Point",
         timeSeriesUpdateMode: "replace",
