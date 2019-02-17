@@ -4,9 +4,10 @@ import { AppState } from '../states/appState';
 import { datasetsSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
-import { Dataset, findDataset, findDatasetVariable, Variable, Place, PlaceGroup } from '../model';
+import { Dataset, findDataset, findDatasetVariable, Variable, Place, PlaceGroup, Time } from '../model';
 import { LayerElement } from '../components/ol/layer/Layers';
 import { XYZ } from '../components/ol/layer/XYZ';
+
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -55,14 +56,14 @@ export const selectedVariableSelector = createSelector(
 export const selectedVariableLayerSelector = createSelector(
     selectedVariableSelector,
     selectedTimeSelector,
-    (variable: Variable | null, time: string | null): LayerElement => {
+    (variable: Variable | null, time: Time | null): LayerElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
         const options = variable.tileSourceOptions;
         let url = options.url;
-        if (time) {
-            url += `?time=${time}`;
+        if (time !== null) {
+            url += `?time=${new Date(time).toISOString()}`;
         }
         const attributions = [
             new ol.Attribution(

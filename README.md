@@ -26,7 +26,11 @@ A simple viewer component for xcube-server
 * Click in time series chart and select time
 * Show selected time in time series chart
 * Zoom into and out of time series chart
- * Use local time in UI (backend provides UTC time only)
+* Use local time in UI (backend provides UTC time only)
+
+## Current Issues
+
+* The tooltip in time series chart shows same values for all series
 
 ## Next
 

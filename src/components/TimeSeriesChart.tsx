@@ -14,11 +14,11 @@ import {
 } from 'recharts';
 import IconButton from "@material-ui/core/IconButton";
 import ZoomOutMap from "@material-ui/icons/ZoomOutMap";
-
-import { TimeSeries } from '../model';
 import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
-import { formatUtcTimeToLocal } from "../util/time";
+
+import { TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
+import { utcTimeToLocalDateString } from "../util/time";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -33,11 +33,6 @@ const styles = (theme: Theme) => createStyles(
     });
 
 
-interface TimeSeriesChartPoint {
-    time: number;
-    value: number;
-}
-
 interface TimeSeriesChartProps extends WithStyles<typeof styles> {
     timeSeriesCollection?: TimeSeries[];
     selectedTime?: string | null;
@@ -49,8 +44,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles> {
 
 interface TimeSeriesChartState {
     isDragging: boolean;
-    dragTime1: number | null;
-    dragTime2: number | null;
+    firstTime: number | null;
+    secondTime: number | null;
 }
 
 const STROKES = ['grey', 'red', 'blue', 'green', 'yellow'];
@@ -61,13 +56,13 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
     constructor(props: TimeSeriesChartProps) {
         super(props);
-        this.state = TimeSeriesChart.newState();
+        this.state = TimeSeriesChart.clearState();
     }
 
     render() {
         const {classes, timeSeriesCollection, selectedTime, selectedTimeRange} = this.props;
 
-        const {isDragging, dragTime1, dragTime2} = this.state;
+        const {isDragging, firstTime, secondTime} = this.state;
 
         let isZoomed = false, time1: number | null = null, time2: number | null = null;
         if (selectedTimeRange) {
@@ -78,13 +73,16 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         let lines: JSX.Element[] = [];
         if (timeSeriesCollection) {
             lines = timeSeriesCollection.map((ts, i) => {
-                const data: TimeSeriesChartPoint[] = [];
-                ts.data.forEach(p => {
-                    const time = new Date(p.time).getTime();
-                    if (!isZoomed || (time >= time1! && time <= time2!)) {
-                        data.push({value: p.average, time});
-                    }
-                });
+                let data: TimeSeriesPoint[] = ts.data;
+                if (isZoomed) {
+                    data = [];
+                    ts.data.forEach(point => {
+                        const time = point.time;
+                        if (time >= time1! && time <= time2!) {
+                            data.push(point);
+                        }
+                    });
+                }
                 const source = ts.source;
                 return (
                     <Line
@@ -93,7 +91,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         name={source.variableName}
                         unit={source.variableUnits}
                         data={data}
-                        dataKey="value"
+                        dataKey="average"
                         connectNulls={true}
                         dot={true}
                         stroke={STROKES[i % STROKES.length]}
@@ -112,9 +110,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         }
 
         let referenceArea = null;
-        if (isDragging && dragTime1 !== null && dragTime2 !== null) {
+        if (isDragging && firstTime !== null && secondTime !== null) {
             referenceArea =
-                <ReferenceArea x1={dragTime1} x2={dragTime2} strokeOpacity={0.3} fill={"red"} fillOpacity={0.3}/>;
+                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={"red"} fillOpacity={0.3}/>;
         }
 
         let zoomOutButton = null;
@@ -163,7 +161,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         if (typeof value !== 'number' || !Number.isFinite(value)) {
             return null;
         }
-        return formatUtcTimeToLocal(value);
+        return utcTimeToLocalDateString(value);
     };
 
     // noinspection JSUnusedLocalSymbols
@@ -182,21 +180,22 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     };
 
     readonly handleClick = (event: any) => {
-        if (event && this.props.selectTime) {
-            this.props.selectTime(new Date(event.activeLabel).toISOString());
+        if (event && this.props.selectTime && event.activeLabel !== null && Number.isFinite(event.activeLabel)) {
+            this.props.selectTime(event.activeLabel);
         }
-        this.setState({isDragging: false, dragTime1: null, dragTime2: null});
+        this.setState(TimeSeriesChart.clearState());
     };
 
     readonly handleMouseDown = (event: any) => {
         if (event) {
-            this.setState({isDragging: false, dragTime1: event.activeLabel, dragTime2: null});
+            this.setState(TimeSeriesChart.newState(false, event.activeLabel, null));
         }
     };
 
     readonly handleMouseMove = (event: any) => {
-        if (event && this.state.dragTime1) {
-            this.setState({isDragging: true, dragTime2: event.activeLabel});
+        let {firstTime} = this.state;
+        if (event && firstTime) {
+            this.setState(TimeSeriesChart.newState(true, firstTime, event.activeLabel));
         }
     };
 
@@ -209,16 +208,16 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     };
 
     private zoomIn() {
-        let {dragTime1, dragTime2} = this.state;
-        if (dragTime1 === dragTime2 || dragTime1 === null || dragTime2 === null) {
-            this.setState(TimeSeriesChart.newState());
+        let {firstTime, secondTime} = this.state;
+        if (firstTime === secondTime || firstTime === null || secondTime === null) {
+            this.setState(TimeSeriesChart.clearState());
             return;
         }
-        let [minTime, maxTime] = [dragTime2, dragTime1];
+        let [minTime, maxTime] = [firstTime, secondTime];
         if (minTime > maxTime) {
             [minTime, maxTime] = [maxTime, minTime];
         }
-        this.setState({isDragging: false, dragTime1: null, dragTime2: null}, () => {
+        this.setState(TimeSeriesChart.clearState(), () => {
             if (this.props.selectTimeRange) {
                 this.props.selectTimeRange([minTime, maxTime]);
             }
@@ -226,15 +225,19 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     };
 
     private zoomOut() {
-        this.setState(TimeSeriesChart.newState(), () => {
+        this.setState(TimeSeriesChart.clearState(), () => {
             if (this.props.selectTimeRange) {
                 this.props.selectTimeRange(null);
             }
         });
     };
 
-    private static newState(): TimeSeriesChartState {
-        return {isDragging: false, dragTime1: null, dragTime2: null};
+    private static newState(isDragging: boolean, firstTime: number|null, secondTime: number|null): TimeSeriesChartState {
+        return {isDragging, firstTime, secondTime};
+    }
+
+    private static clearState(): TimeSeriesChartState {
+        return TimeSeriesChart.newState(false, null, null);
     }
 }
 

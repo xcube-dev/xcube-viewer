@@ -1,15 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { AppState } from "../states/appState";
 import { Dispatch } from "redux";
+
 import * as api from '../api'
 import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
-import { TimeSeries, Dataset } from "../model";
+import { TimeSeries, Dataset, Time, TimeRange } from "../model";
 import {
     selectedDatasetIdSelector,
     selectedVariableSelector,
 } from "../selectors/controlSelectors";
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -86,10 +86,10 @@ export type SELECT_TIME = typeof SELECT_TIME;
 
 export interface SelectTime {
     type: SELECT_TIME;
-    selectedTime: string | null;
+    selectedTime: Time | null;
 }
 
-export function selectTime(selectedTime: string | null): SelectTime {
+export function selectTime(selectedTime: Time | null): SelectTime {
     return {type: SELECT_TIME, selectedTime};
 }
 
@@ -100,10 +100,10 @@ export type SELECT_TIME_RANGE = typeof SELECT_TIME_RANGE;
 
 export interface SelectTimeRange {
     type: SELECT_TIME_RANGE;
-    selectedTimeRange: [number, number] | null;
+    selectedTimeRange: TimeRange | null;
 }
 
-export function selectTimeRange(selectedTimeRange: [number, number] | null): SelectTimeRange {
+export function selectTimeRange(selectedTimeRange: TimeRange | null): SelectTimeRange {
     return {type: SELECT_TIME_RANGE, selectedTimeRange};
 }
 

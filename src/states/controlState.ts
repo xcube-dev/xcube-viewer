@@ -1,4 +1,5 @@
 import * as ol from "openlayers";
+import { Time, TimeRange } from "../model/timeSeries";
 
 
 export interface ControlState {
@@ -6,8 +7,8 @@ export interface ControlState {
     selectedVariableName: string | null;
     selectedPlaceId: string | null;
     selectedUserPlaceId: string | null;
-    selectedTime: string | null;
-    selectedTimeRange: [number, number] | null;
+    selectedTime: Time | null;
+    selectedTimeRange: TimeRange | null;
     selectedCoordinate: [number, number] | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: "add" | "replace";

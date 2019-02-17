@@ -1,34 +1,33 @@
+export const LOCAL_OFFSET = -new Date("1970-01-01T00:00:00").getTime();
 
-const REF_TIME_STRING = "1970-01-01T00:00:00.000";
-const LOCAL_UTC_DELTA = new Date(REF_TIME_STRING).getTime() - new Date(REF_TIME_STRING + "Z").getTime();
-
-export function localToUtcTime(localTime: number): number {
-    return localTime - LOCAL_UTC_DELTA;
+export function localDateTimeStringToUtcTime(localTimeString: string): number {
+    return new Date(localTimeString).getTime();
 }
 
-export function utcToLocalTime(utcTime: number): number {
-    return utcTime + LOCAL_UTC_DELTA;
+export function utcTimeToLocalDateTimeString(utcTime: number) {
+    return new Date(utcTime).toLocaleString();
 }
 
-export function formatUtcToLocal(utcTimeString: string): string {
-    const utcTime = new Date(utcTimeString).getTime();
-    const localDate = new Date(localToUtcTime(utcTime));
-    const localTimeString = localDate.toISOString();
-    if (localTimeString.endsWith("Z")) {
-        return localTimeString.substr(0, localTimeString.length - 1);
+export function utcTimeToLocalDateString(utcTime: number) {
+    return new Date(utcTime).toLocaleDateString();
+}
+
+export function utcTimeToLocalIsoDateString(utcTime: number) {
+    let isoString = new Date(utcTime + LOCAL_OFFSET).toISOString();
+    const index = isoString.indexOf("T");
+    if (index > 0) {
+        // Should always end up here!
+        isoString = isoString.substring(0, index);
     }
-    return localTimeString;
+    return isoString;
 }
 
-export function formatLocalToUtc(localTimeString: string): string {
-    const localTime = new Date(localTimeString).getTime();
-    const utcDate = new Date(localToUtcTime(localTime));
-    return utcDate.toISOString();
-}
-
-
-export function formatUtcTimeToLocal(utcTime: number): string | null {
-    let isoString = new Date(utcToLocalTime(utcTime)).toISOString();
-    let i = isoString.indexOf('T');
-    return isoString.substring(0, i);
+export function utcTimeToLocalIsoDateTimeString(utcTime: number) {
+    console.log("utcTime =", utcTime, utcTime + LOCAL_OFFSET);
+    let isoString = new Date(utcTime + LOCAL_OFFSET).toISOString();
+    if (isoString.endsWith("Z")) {
+        // Should always end up here!
+        isoString = isoString.substr(0, isoString.length - 1);
+    }
+    return isoString;
 }

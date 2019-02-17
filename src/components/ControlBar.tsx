@@ -13,8 +13,11 @@ import ArrowRight from '@material-ui/icons/ArrowRight';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { Dataset, Place, Variable } from '../model';
-import { formatLocalToUtc, formatUtcToLocal } from "../util/time";
+import { Dataset, Place, Variable, Time } from '../model';
+import {
+    localDateTimeStringToUtcTime,
+    utcTimeToLocalIsoDateTimeString
+} from "../util/time";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -54,10 +57,8 @@ interface ControlBarProps extends WithStyles<typeof styles> {
     variables: Variable[];
     selectVariable: (variableName: string | null) => void;
 
-    selectedTime: string | null;
-    selectTime: (time: string | null) => void;
-    minTime?: string;
-    maxTime?: string;
+    selectedTime: Time | null;
+    selectTime: (time: Time | null) => void;
 
     timeSeriesUpdateMode: 'add' | 'replace';
     selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: 'add' | 'replace') => void;
@@ -65,25 +66,12 @@ interface ControlBarProps extends WithStyles<typeof styles> {
 
 class ControlBar extends React.Component<ControlBarProps> {
 
-    handleDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectDataset(event.target.value || null, this.props.datasets);
-    };
+    timeInputElement: HTMLInputElement | null;
 
-    handleVariableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectVariable(event.target.value || null);
-    };
-
-    handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectPlace(event.target.value || null, this.props.datasets);
-    };
-
-    handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectTime(event.target.value ? formatLocalToUtc(event.target.value) : null);
-    };
-
-    handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectTimeSeriesUpdateMode(event.target.checked ? 'add' : 'replace');
-    };
+    constructor(props: ControlBarProps) {
+        super(props);
+        this.timeInputElement = null;
+    }
 
     render() {
         const {classes, timeSeriesUpdateMode} = this.props;
@@ -97,7 +85,7 @@ class ControlBar extends React.Component<ControlBarProps> {
         const selectedPlaceId = this.props.selectedPlaceId || '';
         const places = this.props.places || [];
 
-        const selectedTime = this.props.selectedTime ? formatUtcToLocal(this.props.selectedTime) : "";
+        const selectedTime = this.props.selectedTime !== null ? utcTimeToLocalIsoDateTimeString(this.props.selectedTime) : "";
 
         return (
             /*I18*/
@@ -187,7 +175,25 @@ class ControlBar extends React.Component<ControlBarProps> {
         );
     }
 
-    timeInputElement: HTMLInputElement;
+    handleDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.selectDataset(event.target.value || null, this.props.datasets);
+    };
+
+    handleVariableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.selectVariable(event.target.value || null);
+    };
+
+    handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.selectPlace(event.target.value || null, this.props.datasets);
+    };
+
+    handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.selectTime(event.target.value ? localDateTimeStringToUtcTime(event.target.value) : null);
+    };
+
+    handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.selectTimeSeriesUpdateMode(event.target.checked ? 'add' : 'replace');
+    };
 
     handleTimeInputRef = (timeInputElement: HTMLInputElement) => {
         this.timeInputElement = timeInputElement;
@@ -195,17 +201,17 @@ class ControlBar extends React.Component<ControlBarProps> {
 
     handleTimeStepUp = () => {
         let input = this.timeInputElement;
-        if (input) {
+        if (input !== null) {
             input.stepUp(1);
-            this.props.selectTime(input.value || null);
+            this.props.selectTime(input.value ? localDateTimeStringToUtcTime(input.value) : null);
         }
     };
 
     handleTimeStepDown = () => {
         let input = this.timeInputElement;
-        if (input) {
+        if (input !== null) {
             input.stepDown(1);
-            this.props.selectTime(input.value || null);
+            this.props.selectTime(input.value ? localDateTimeStringToUtcTime(input.value) : null);
         }
     };
 
