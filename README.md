@@ -30,7 +30,7 @@ A simple viewer component for xcube-server
 
 ## Current Issues
 
-* The tooltip in time series chart shows same values for all series
+* The tooltip in time series chart shows same values for all series (may be an issue in recharts!)
 * The legend and tooltip in time series chart should recognize Material UI theme
 
 ## Next

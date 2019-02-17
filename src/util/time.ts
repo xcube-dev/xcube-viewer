@@ -23,7 +23,6 @@ export function utcTimeToLocalIsoDateString(utcTime: number) {
 }
 
 export function utcTimeToLocalIsoDateTimeString(utcTime: number) {
-    console.log("utcTime =", utcTime, utcTime + LOCAL_OFFSET);
     let isoString = new Date(utcTime + LOCAL_OFFSET).toISOString();
     if (isoString.endsWith("Z")) {
         // Should always end up here!

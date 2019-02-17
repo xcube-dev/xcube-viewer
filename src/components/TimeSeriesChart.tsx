@@ -10,7 +10,7 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine,
+    ReferenceArea, ReferenceLine, TooltipProps,
 } from 'recharts';
 import IconButton from "@material-ui/core/IconButton";
 import ZoomOutMap from "@material-ui/icons/ZoomOutMap";
@@ -18,7 +18,7 @@ import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 
 import { TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
-import { utcTimeToLocalDateString } from "../util/time";
+import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from "../util/time";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -29,6 +29,21 @@ const styles = (theme: Theme) => createStyles(
             margin: theme.spacing.unit,
             zIndex: 1000,
             opacity: 0.8,
+        },
+        toolTipContainer: {
+            backgroundColor: "black",
+            opacity: 0.8,
+            color: "white",
+            border: "2px solid black",
+            borderRadius: theme.spacing.unit * 2,
+            padding: theme.spacing.unit * 1.5,
+        },
+        toolTipValue: {
+            fontWeight: "bold",
+        },
+        toolTipLabel: {
+            fontWeight: "bold",
+            paddingBottom: theme.spacing.unit,
         },
     });
 
@@ -49,7 +64,9 @@ interface TimeSeriesChartState {
 }
 
 const STROKES = ['grey', 'red', 'blue', 'green', 'yellow'];
-const DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
+const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
+const X_AXIS_PADDING = {left: 20, right: 20};
+const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
 
 class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesChartState> {
@@ -140,13 +157,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     >
                         <XAxis dataKey="time"
                                type="number"
-                               domain={DOMAIN}
-                               tickFormatter={this.tickFormatter}/>
-                        <YAxis/>
+                               domain={X_AXIS_DOMAIN}
+                               padding={X_AXIS_PADDING}
+                               tickFormatter={this.tickFormatter}
+                        />
+                        <YAxis type="number"
+                               domain={Y_AXIS_DOMAIN}
+                        />
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <Tooltip
-                            labelFormatter={this.labelFormatter}
-                            formatter={this.tooltipFormatter}/>
+                        <Tooltip content={<CustomTooltip/>}/>
                         <Legend/>
                         {lines}
                         {referenceArea}
@@ -162,21 +181,6 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             return null;
         }
         return utcTimeToLocalDateString(value);
-    };
-
-    // noinspection JSUnusedLocalSymbols
-    readonly tooltipFormatter = (value: string | number | Array<string | number>,
-                                 name: string,
-                                 entry: TooltipPayload,
-                                 index: number): React.ReactNode => {
-        if (typeof value === 'number') {
-            value = Math.round(100 * value) / 100;
-        }
-        return <span style={{color: 'black'}}>{value}&nbsp;</span>;
-    };
-
-    readonly labelFormatter = (label: string | number): React.ReactNode => {
-        return <span>{this.tickFormatter(label)}</span>;
     };
 
     readonly handleClick = (event: any) => {
@@ -232,13 +236,56 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         });
     };
 
-    private static newState(isDragging: boolean, firstTime: number|null, secondTime: number|null): TimeSeriesChartState {
+    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null): TimeSeriesChartState {
         return {isDragging, firstTime, secondTime};
     }
 
     private static clearState(): TimeSeriesChartState {
         return TimeSeriesChart.newState(false, null, null);
     }
+
 }
 
 export default withStyles(styles)(TimeSeriesChart);
+
+
+interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
+}
+
+class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
+    render() {
+        const {classes, active, label, payload} = this.props;
+        if (typeof label !== "number") {
+            return null;
+        }
+        let items = null;
+        if (payload && payload.length > 0) {
+            items = payload.map((p: TooltipPayload, index: number) => {
+                let {name, value, color, unit} = p;
+                if (typeof value !== 'number') {
+                    return null;
+                }
+                value = Math.round(100 * value) / 100;
+                return (
+                    <div key={index}>
+                        <span>{name}:&nbsp;</span>
+                        <span className={classes.toolTipValue} style={{color: color}}>{value}</span>
+                        <span>&nbsp;{unit}</span>
+                    </div>
+                );
+            });
+        }
+
+        if (active) {
+            return (
+                <div className={classes.toolTipContainer}>
+                    <span className={classes.toolTipLabel}>{`${utcTimeToLocalDateTimeString(label)}`}</span>
+                    {items}
+                </div>
+            );
+        }
+        return null;
+    }
+}
+
+const CustomTooltip = withStyles(styles)(_CustomTooltip);
