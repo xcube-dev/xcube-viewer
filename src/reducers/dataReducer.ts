@@ -1,5 +1,5 @@
 import { newDataState, DataState } from '../states/dataState';
-import { UPDATE_TIME_SERIES, DataAction, UPDATE_DATASETS } from '../actions/dataActions';
+import { UPDATE_TIME_SERIES, DataAction, UPDATE_DATASETS, UPDATE_COLOR_BARS } from '../actions/dataActions';
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -9,6 +9,9 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
     switch (action.type) {
         case UPDATE_DATASETS: {
             return {...state, datasets: action.datasets};
+        }
+        case UPDATE_COLOR_BARS: {
+            return {...state, colorBars: action.colorBars};
         }
         case UPDATE_TIME_SERIES: {
             if (action.updateMode === "add") {

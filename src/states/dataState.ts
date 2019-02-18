@@ -1,8 +1,9 @@
-import { Dataset, Variable, Place, PlaceGroup, TimeSeries } from '../model';
+import { Dataset, Variable, Place, PlaceGroup, TimeSeries, ColorBars } from '../model';
 
 
 export interface DataState {
     datasets: Dataset[];
+    colorBars: ColorBars | null;
     userPlaces: PlaceGroup;
     timeSeriesCollection: TimeSeries[];
 }
@@ -32,6 +33,7 @@ export function newDataState(): DataState {
                 variables: createTestVariables(),
             },
         ],
+        colorBars: null,
         userPlaces: createTestPlaceGroup('user', 'User'),
         timeSeriesCollection: [],
     };
@@ -49,6 +51,9 @@ function createTestVariables(): Variable[] {
             shape: [156, 2000, 2000],
             dtype: 'float64',
             tileSourceOptions: null,
+            colorBarName: "viridis",
+            colorBarMin: 0.0,
+            colorBarMax: 10.0,
         },
         {
             id: 'conc_tsm',
@@ -59,6 +64,9 @@ function createTestVariables(): Variable[] {
             shape: [156, 2000, 2000],
             dtype: 'float64',
             tileSourceOptions: null,
+            colorBarName: "viridis",
+            colorBarMin: 0.0,
+            colorBarMax: 10.0,
         }
     ];
 }

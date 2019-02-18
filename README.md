@@ -30,6 +30,7 @@ A simple viewer component for xcube-server
 
 ## Current Issues
 
+* No initial time selected
 * The legend and tooltip in time series chart should recognize Material UI theme
 
 ## Next
