@@ -27,6 +27,7 @@ A simple viewer component for xcube-server
 * Show selected time in time series chart
 * Zoom into and out of time series chart
 * Use local time in UI (backend provides UTC time only)
+* Show a variable's legend in map
 
 ## Current Issues
 
@@ -35,7 +36,6 @@ A simple viewer component for xcube-server
 
 ## Next
 
-* Show a variable's legend in map
 * Show selected place info in card, allow media content
 * Show place names in map, show tooltip for place
 * Select place and show time series chart
@@ -54,6 +54,7 @@ A simple viewer component for xcube-server
 
 ## Nice to have soon
 
+* Minimize legend in map, click again to open (good for mobile) 
 * Click legend and adjust colour bar and value range
 * Allow other base layers (e.g. Sentinel-2 L2A RGBs, Meteorology Maps)
 * Animate through time (play forw/back)
