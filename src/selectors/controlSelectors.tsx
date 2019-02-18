@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { createSelector } from 'reselect'
 import { AppState } from '../states/appState';
-import { datasetsSelector } from './dataSelectors';
+import { datasetsSelector, colorBarsSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
 import { Dataset, findDataset, findDatasetVariable, Variable, Place, PlaceGroup, Time } from '../model';
-import { LayerElement } from '../components/ol/layer/Layers';
 import { XYZ } from '../components/ol/layer/XYZ';
+import ColorBarLegend from '../components/ColorBarLegend';
+import { MapElement } from '../components/ol/Map';
+import { ColorBars } from '../model/colorBar';
 
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
@@ -56,7 +58,7 @@ export const selectedVariableSelector = createSelector(
 export const selectedVariableLayerSelector = createSelector(
     selectedVariableSelector,
     selectedTimeSelector,
-    (variable: Variable | null, time: Time | null): LayerElement => {
+    (variable: Variable | null, time: Time | null): MapElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
@@ -81,6 +83,27 @@ export const selectedVariableLayerSelector = createSelector(
                 maxZoom={options.maxZoom}
                 tileGrid={new ol.tilegrid.TileGrid(options.tileGrid)}
                 attributions={attributions}
+            />
+        );
+    }
+);
+
+export const selectedColorBarLegendSelector = createSelector(
+    selectedVariableSelector,
+    colorBarsSelector,
+    (variable: Variable | null, colorBars: ColorBars | null): MapElement => {
+        if (!variable || !colorBars) {
+            return null;
+        }
+        const {name, units, colorBarName, colorBarMin, colorBarMax} = variable;
+        const imageData = colorBars.images[colorBarName];
+        return (
+            <ColorBarLegend
+                name={name}
+                units={units}
+                imageData={imageData}
+                minValue={colorBarMin}
+                maxValue={colorBarMax}
             />
         );
     }

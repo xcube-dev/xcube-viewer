@@ -2,18 +2,20 @@ import * as React from 'react';
 import * as GeoJSON from 'geojson';
 
 import ErrorBoundary from './ErrorBoundary';
-import { Map } from './ol/Map';
-import { Layers, LayerElement } from './ol/layer/Layers';
+import { Map, MapElement } from './ol/Map';
+import { Layers } from './ol/layer/Layers';
 import { OSM } from './ol/layer/OSM';
 import { View } from './ol/View';
 import * as ol from 'openlayers';
 import { Draw } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
+import { Control } from './ol/control/Control';
 
 
 interface ViewerProps {
     drawMode?: ol.geom.GeometryType | null;
-    variableLayer?: LayerElement;
+    variableLayer?: MapElement;
+    colorBarLegend?: MapElement;
     selectCoordinate?: (geoCoordinate: [number, number]) => void;
     selectFeatures?: (features: GeoJSON.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
@@ -66,8 +68,18 @@ class Viewer extends React.Component<ViewerProps> {
 
 
     public render() {
-        let {variableLayer, drawMode} = this.props;
+        let {variableLayer, colorBarLegend, drawMode} = this.props;
         let draw = drawMode ? <Draw layerId={'user'} type={drawMode}/> : null;
+
+        let colorBarControl = null;
+        if (colorBarLegend) {
+            colorBarControl = (
+                <Control style={{zValue: 1000, left: 10, bottom: 65, position: 'relative'}}>
+                    {colorBarLegend}
+                </Control>
+            );
+        }
+
         return (
             <ErrorBoundary>
                 <Map onClick={this.handleMapClick} onMapRef={this.handleMapRef}>
@@ -78,6 +90,7 @@ class Viewer extends React.Component<ViewerProps> {
                         <Vector id={'user'} layerOptions={{opacity: 1, zIndex: 500}}/>
                     </Layers>
                     {draw}
+                    {colorBarControl}
                 </Map>
             </ErrorBoundary>
         );

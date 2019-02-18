@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import { selectedVariableLayerSelector } from "../selectors/controlSelectors";
+import { selectedColorBarLegendSelector, selectedVariableLayerSelector } from '../selectors/controlSelectors';
 import { selectCoordinate } from '../actions/controlActions';
 import Viewer from '../components/Viewer';
 
@@ -9,6 +9,7 @@ import Viewer from '../components/Viewer';
 const mapStateToProps = (state: AppState) => {
     return {
         variableLayer: selectedVariableLayerSelector(state),
+        colorBarLegend: selectedColorBarLegendSelector(state),
         drawMode: state.controlState.selectedDrawMode,
         flyTo: state.controlState.flyTo,
     }
