@@ -4,6 +4,7 @@ import { AppState } from '../states/appState';
 import { Dataset, TimeSeries } from '../model';
 import * as api from '../api'
 import { SelectDataset, selectDataset } from "./controlActions";
+import { ColorBars } from "../model/colorBar";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +18,7 @@ export interface UpdateDatasets {
 }
 
 export function updateDatasets() {
-    return (dispatch: Dispatch<UpdateDatasets | SelectDataset| MessageLogAction>, getState: () => AppState) => {
+    return (dispatch: Dispatch<UpdateDatasets | SelectDataset | MessageLogAction>, getState: () => AppState) => {
         const state = getState();
         const apiServerUrl = state.configState.apiServerUrl;
 
@@ -41,6 +42,35 @@ export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const UPDATE_COLOR_BARS = 'UPDATE_COLOR_BARS';
+export type UPDATE_COLOR_BARS = typeof UPDATE_COLOR_BARS;
+
+export interface UpdateColorBars {
+    type: UPDATE_COLOR_BARS;
+    colorBars: ColorBars;
+}
+
+export function updateColorBars() {
+    return (dispatch: Dispatch<UpdateColorBars | MessageLogAction>, getState: () => AppState) => {
+        const state = getState();
+        const apiServerUrl = state.configState.apiServerUrl;
+
+        api.getColorBars(apiServerUrl)
+           .then((colorBars: ColorBars) => {
+               dispatch(_updateColorBars(colorBars));
+           })
+           .catch(error => {
+               dispatch(postMessage('error', error + ''));
+           });
+    };
+}
+
+export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
+    return {type: UPDATE_COLOR_BARS, colorBars};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const UPDATE_TIME_SERIES = 'UPDATE_TIME_SERIES';
 export type UPDATE_TIME_SERIES = typeof UPDATE_TIME_SERIES;
 
@@ -57,4 +87,4 @@ export function updateTimeSeries(timeSeries: TimeSeries, updateMode: "add" | "re
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export type DataAction = UpdateDatasets | UpdateTimeSeries;
+export type DataAction = UpdateDatasets | UpdateColorBars | UpdateTimeSeries;

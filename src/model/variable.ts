@@ -1,4 +1,3 @@
-
 export interface Variable {
     id: string;
     name: string;
@@ -8,5 +7,8 @@ export interface Variable {
     units: string;
     title: string;
     tileSourceOptions: any;
+    colorBarName: string;
+    colorBarMin: number;
+    colorBarMax: number;
 }
 

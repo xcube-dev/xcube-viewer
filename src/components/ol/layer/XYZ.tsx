@@ -38,6 +38,15 @@ export class XYZ extends React.Component<XYZProps> {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    static OSMBlackAndWhite(): JSX.Element {
+        return <XYZ
+            url={'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png'}
+            attributions={[
+                new ol.Attribution({html: '&copy; <a href=&quot;https://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors'}),
+            ]}/>;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
     static contextType = MapContextType;
     context: MapContext;
     layer: ol.layer.Tile;

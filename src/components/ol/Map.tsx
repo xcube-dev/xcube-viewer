@@ -5,6 +5,8 @@ import 'openlayers/css/ol.css';
 import './Map.css';
 
 
+export type MapElement = React.ReactElement<any> | null | undefined;
+
 export interface MapContext {
     map?: ol.Map;
     mapDiv?: HTMLDivElement;
