@@ -4,12 +4,13 @@ import * as GeoJSON from 'geojson';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
-import { OSM } from './ol/layer/OSM';
+// import { OSM } from './ol/layer/OSM';
 import { View } from './ol/View';
 import * as ol from 'openlayers';
 import { Draw } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { Control } from './ol/control/Control';
+import { XYZ } from './ol/layer/XYZ';
 
 
 interface ViewerProps {
@@ -85,7 +86,8 @@ class Viewer extends React.Component<ViewerProps> {
                 <Map onClick={this.handleMapClick} onMapRef={this.handleMapRef}>
                     <View/>
                     <Layers>
-                        <OSM/>
+                        <XYZ.OSMBlackAndWhite/>
+                        {/*<OSM/>*/}
                         {variableLayer}
                         <Vector id={'user'} layerOptions={{opacity: 1, zIndex: 500}}/>
                     </Layers>
