@@ -1,10 +1,11 @@
 import { Dispatch } from 'redux';
 import { MessageLogAction, postMessage } from './messageLogActions';
-import { AppState } from '../states/appState';
-import { Dataset, TimeSeries } from '../model';
-import * as api from '../api'
 import { SelectDataset, selectDataset } from "./controlActions";
+import { AppState } from '../states/appState';
+import { Dataset } from '../model/dataset';
+import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from "../model/colorBar";
+import * as api from '../api'
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

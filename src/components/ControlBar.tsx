@@ -13,14 +13,15 @@ import ArrowRight from '@material-ui/icons/ArrowRight';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { Dataset, Place, Variable, Time } from '../model';
+import { Dataset } from '../model/dataset';
+import { Place } from '../model/place';
+import { Variable } from '../model/variable';
+import { Time } from '../model/timeSeries';
 import {
     localDateTimeStringToUtcTime,
     utcTimeToLocalIsoDateTimeString
 } from "../util/time";
 import { I18N } from '../config/config';
-
-
 
 
 const styles = (theme: Theme) => createStyles(

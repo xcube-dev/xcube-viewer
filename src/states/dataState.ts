@@ -1,4 +1,8 @@
-import { Dataset, Variable, Place, PlaceGroup, TimeSeries, ColorBars } from '../model';
+import { Dataset, } from '../model/dataset';
+import { Variable, } from '../model/variable';
+import { Place, PlaceGroup, } from '../model/place';
+import { TimeSeries } from '../model/timeSeries';
+import { ColorBars } from '../model/colorBar';
 
 
 export interface DataState {

@@ -4,11 +4,12 @@ import { Dispatch } from "redux";
 
 import * as api from '../api'
 import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
-import { TimeSeries, Dataset, Time, TimeRange } from "../model";
 import {
     selectedDatasetIdSelector,
     selectedVariableSelector,
 } from "../selectors/controlSelectors";
+import { Dataset } from "../model/dataset";
+import { Time, TimeRange, TimeSeries } from "../model/timeSeries";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,6 @@
 import { callJsonApi } from './callApi';
-import { Variable, TimeSeries } from '../model';
+import { Variable } from '../model/variable';
+import { TimeSeries } from '../model/timeSeries';
 
 export function getTimeSeriesForPoint(apiServerUrl: string,
                                       datasetId: string,

@@ -11,8 +11,7 @@ import {
     SELECT_COORDINATE,
     ControlAction, SELECT_TIME_RANGE,
 } from '../actions/controlActions';
-import { findDataset, findDatasetVariable } from '../model';
-import { findDatasetPlace } from "../model/dataset";
+import { findDataset, findDatasetVariable, findDatasetPlace } from '../model/dataset';
 
 
 const SIMPLE_GEOMETRY_TYPES = ["Point" , "LineString" , "LinearRing" , "Polygon" , "MultiPoint" , "MultiLineString" , "MultiPolygon" , "Circle"];
