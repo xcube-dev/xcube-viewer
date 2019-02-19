@@ -32,6 +32,7 @@ A simple viewer component for xcube-server
 ## Current Issues
 
 * No initial time selected
+* Must have means to select a time slice, currently we don't know where there is data
 * The legend and tooltip in time series chart should recognize Material UI theme
 
 ## Next
