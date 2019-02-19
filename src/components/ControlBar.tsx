@@ -18,6 +18,9 @@ import {
     localDateTimeStringToUtcTime,
     utcTimeToLocalIsoDateTimeString
 } from "../util/time";
+import { I18N } from '../config/config';
+
+
 
 
 const styles = (theme: Theme) => createStyles(
@@ -88,11 +91,10 @@ class ControlBar extends React.Component<ControlBarProps> {
         const selectedTime = this.props.selectedTime !== null ? utcTimeToLocalIsoDateTimeString(this.props.selectedTime) : "";
 
         return (
-            /*I18*/
             <form className={classes.root} autoComplete="off">
                 <FormControl className={classes.formControl}>
                     <InputLabel shrink htmlFor="dataset-select">
-                        Dataset
+                        {I18N.text`Dataset`}
                     </InputLabel>
                     <Select
                         value={selectedDatasetId}
@@ -110,7 +112,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                 </FormControl>
                 <FormControl className={classes.formControl}>
                     <InputLabel shrink htmlFor="variable-select">
-                        Variable
+                        {I18N.text`Variable`}
                     </InputLabel>
                     <Select
                         value={selectedVariableName}
@@ -128,7 +130,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                 </FormControl>
                 <FormControl className={classes.formControl}>
                     <InputLabel shrink htmlFor="place-select">
-                        Place
+                        {I18N.text`Place`}
                     </InputLabel>
                     <Select
                         value={selectedPlaceId}
@@ -149,7 +151,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                     id="time-select"
                     type="datetime-local"
                     value={selectedTime}
-                    label={'Time'}
+                    label={I18N.text`Time`}
                     className={classes.textField}
                     onChange={this.handleTimeChange}
                     InputLabelProps={{
@@ -164,7 +166,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                             onClick={this.handleTimeStepUp}>
                     <ArrowRight/>
                 </IconButton>
-                <FormControlLabel label="Multi" control={
+                <FormControlLabel label={I18N.text`Multi`} control={
                     <Switch
                         color={"primary"}
                         checked={timeSeriesUpdateMode === 'add'}

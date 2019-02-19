@@ -147,7 +147,7 @@ export function selectCoordinate(selectedCoordinate: [number, number] | null) {
                    if (timeSeries !== null) {
                        dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));
                    } else {
-                       /*I18N*/
+                       /*Database*/
                        dispatch(postMessage('info', 'No data found here'));
                    }
                })

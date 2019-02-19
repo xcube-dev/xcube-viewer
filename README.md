@@ -39,6 +39,8 @@ A simple viewer component for xcube-server
 * Show selected place info in card, allow media content
 * Show place names in map, show tooltip for place
 * Select place and show time series chart
+* Compute temporal statistics for places, show std-deviations as uncertainty ranges
+* Compute spatial statistics for places, show std-deviations as uncertainty ranges
 * Show all variables in time series chart for given point or place
 * In time series chart, show from which place it originates, select graph in chart --> fly to place
 * Get page styles right, furnish interactions
@@ -46,11 +48,12 @@ A simple viewer component for xcube-server
   * Config dialog
     - set xcube-server URL
     - customize time-series chart: show points, connect null
+    - switch language
   * External links (configurable)
   * Help dialog 
   * About dialog
 * Test on mobile devices
-* Internationalize texts
+* Internationalize texts, select language on default locale
 
 ## Nice to have soon
 

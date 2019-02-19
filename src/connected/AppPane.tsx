@@ -8,6 +8,7 @@ import SimpleTable from '../components/SimpleTable';
 import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 import Viewer from './Viewer';
+import { I18N } from '../config/config';
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
@@ -56,13 +57,13 @@ class AppPane extends React.Component<AppPaneProps> {
                     <Viewer/>
                 </div>
                 <Typography variant="h6" gutterBottom component="h5">
-                    Time-Series
+                    {I18N.text`Time-Series`}
                 </Typography>
                 <div className={classes.chartContainer}>
                     <SimpleLineChart/>
                 </div>
                 <Typography variant="h6" gutterBottom component="h5">
-                    Values
+                    {I18N.text`Values`}
                 </Typography>
                 <div className={classes.tableContainer}>
                     <SimpleTable/>
