@@ -36,13 +36,13 @@ A simple viewer component for xcube-server
 * Must have means to select a time slice, currently we don't know where there is data
 * The legend and tooltip in time series chart should recognize Material UI theme
 * Must revise the way we will work with *places*: Each Dataset may have a list of PlaceGroups
-  o A PlaceGroup
+  * A PlaceGroup
     - produces a unique vector layer in the map
     - can have min/max zoom level, style settings (see ol.layer.Vector, ol.source.Vector options)
     - can specify its (property) field that will provide the values for predefined roles:
       label, icon, image, description, size, area, ect.
     - can specify its (property) fields to be used for fuzzy text search
-  o In the UI
+  * In the UI
     - If a dataset has place groups, we render a drop-down list with checkboxes for each place group
     - This will toggle the visibility of the vector layer
     - We will have a global search field that can search for any feature provided by any place group.
