@@ -28,6 +28,7 @@ A simple viewer component for xcube-server
 * Zoom into and out of time series chart
 * Use local time in UI (backend provides UTC time only)
 * Show a variable's legend in map
+* Texts are internationalizable. Locales are currently "en" and "de". (see constant `I18N` in `src/config/config.ts`)
 
 ## Current Issues
 
@@ -37,8 +38,8 @@ A simple viewer component for xcube-server
 
 ## Next
 
+* Show places with names as layer in map, show tooltip for place
 * Show selected place info in card, allow media content
-* Show place names in map, show tooltip for place
 * Select place and show time series chart
 * Compute temporal statistics for places, show std-deviations as uncertainty ranges
 * Compute spatial statistics for places, show std-deviations as uncertainty ranges
@@ -54,7 +55,6 @@ A simple viewer component for xcube-server
   * Help dialog 
   * About dialog
 * Test on mobile devices
-* Internationalize texts, select language on default locale
 
 ## Nice to have soon
 
