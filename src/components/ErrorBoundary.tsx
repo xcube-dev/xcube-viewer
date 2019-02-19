@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './ErrorBoundary.css';
+import { I18N } from '../config/config';
 
 interface ErrorBoundaryProps {
 }
@@ -35,9 +36,9 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
         if (this.state.error) {
             // Error path
             return (
-                /*I18N*/
+                /*Database*/
                 <div>
-                    <h2 className="errorBoundary-header">Something went wrong.</h2>
+                    <h2 className="errorBoundary-header">{I18N.text`Something went wrong.`}</h2>
                     <details className="errorBoundary-details" style={{whiteSpace: 'pre-wrap'}}>
                         {this.state.error.toString()}
                         <br/>
