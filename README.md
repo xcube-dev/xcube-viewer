@@ -56,6 +56,7 @@ A simple viewer component for xcube-server
 * Show places with names as layer in map, show tooltip for place
 * Show selected place info in card, allow media content
 * Select place and show time series chart
+* Log-scaled color bars (or data) for CHL.
 * Compute temporal statistics for places, show std-deviations as uncertainty ranges
 * Compute spatial statistics for places, show std-deviations as uncertainty ranges
 * Show all variables in time series chart for given point or place
