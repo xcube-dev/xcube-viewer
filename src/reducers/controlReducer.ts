@@ -4,6 +4,7 @@ import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
     SELECT_VARIABLE,
+    SELECT_PLACE_GROUPS,
     SELECT_PLACE,
     SELECT_TIME,
     SELECT_TIME_SERIES_UPDATE_MODE,
@@ -37,6 +38,13 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
                 selectedDatasetId: action.selectedDatasetId,
                 selectedVariableName,
                 flyTo: flyTo,
+            };
+        }
+        case SELECT_PLACE_GROUPS: {
+            const selectedPlaceGroupIds = action.selectedPlaceGroupIds;
+            return {
+                ...state,
+                selectedPlaceGroupIds,
             };
         }
         case SELECT_PLACE: {

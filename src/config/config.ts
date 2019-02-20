@@ -13,6 +13,9 @@ I18N.set('en')`Dataset`
 I18N.set('en')`Variable`
     .add('de')`Variable`;
 
+I18N.set('en')`Places`
+    .add('de')`Orte`;
+
 I18N.set('en')`Place`
     .add('de')`Ort`;
 

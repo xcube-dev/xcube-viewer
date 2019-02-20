@@ -42,6 +42,8 @@ A simple viewer component for xcube-server
     - can specify its (property) field that will provide the values for predefined roles:
       label, icon, image, description, size, area, ect.;
     - can specify its (property) fields to be used for fuzzy text search;
+    - can specify a (GeoJSON) path template, and specify its template parameters whose values are extracted from another
+      (selected) feature's properties.
   * In the UI
     - If a dataset has place groups, we render a drop-down list with checkboxes for each place group;
     - This will toggle the visibility of the vector layer;

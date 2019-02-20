@@ -20,8 +20,8 @@ export type SELECT_DATASET = typeof SELECT_DATASET;
 export interface SelectDataset {
     type: SELECT_DATASET;
     selectedDatasetId: string | null;
-    // Now, having datasets is really ugly, but we need it in the reducer to set selectedVariableName!
-    // That's why I started reading
+    // TODO: Having datasets in here is ugly, but we need it in the reducer.
+    // See
     // - https://medium.com/@williamjoshualacey/refactoring-redux-using-react-context-aa29fa16f4b7
     // - https://codeburst.io/the-ugly-side-of-redux-6591fde68200
     datasets: Dataset[];
@@ -34,16 +34,29 @@ export function selectDataset(selectedDatasetId: string | null, datasets: Datase
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const SELECT_PLACE_GROUPS = 'SELECT_PLACE_GROUPS';
+export type SELECT_PLACE_GROUPS = typeof SELECT_PLACE_GROUPS;
+
+export interface SelectPlaceGroups {
+    type: SELECT_PLACE_GROUPS;
+    selectedPlaceGroupIds: string[] | null;
+    // TODO: Having datasets in here is ugly, but we need it in the reducer.
+    datasets: Dataset[];
+}
+
+export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null, datasets: Dataset[]): SelectPlaceGroups {
+    return {type: SELECT_PLACE_GROUPS, selectedPlaceGroupIds, datasets};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_PLACE = 'SELECT_PLACE';
 export type SELECT_PLACE = typeof SELECT_PLACE;
 
 export interface SelectPlace {
     type: SELECT_PLACE;
     selectedPlaceId: string | null;
-    // Now, having datasets is really ugly, but we need it in the reducer to set selectedVariableName!
-    // That's why I started reading
-    // - https://medium.com/@williamjoshualacey/refactoring-redux-using-react-context-aa29fa16f4b7
-    // - https://codeburst.io/the-ugly-side-of-redux-6591fde68200
+    // TODO: Having datasets in here is ugly, but we need it in the reducer.
     datasets: Dataset[];
 }
 
@@ -168,6 +181,7 @@ export function _selectCoordinate(selectedCoordinate: [number, number] | null): 
 export type ControlAction =
     SelectDataset
     | SelectVariable
+    | SelectPlaceGroups
     | SelectPlace
     | SelectUserPlace
     | SelectTime

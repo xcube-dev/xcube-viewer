@@ -12,9 +12,12 @@ import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from "@material-ui/core/Checkbox";
+import ListItemText from "@material-ui/core/ListItemText";
+// import { MenuProps } from "@material-ui/core/Menu";
 
 import { Dataset } from '../model/dataset';
-import { Place } from '../model/place';
+import { Place, PlaceGroup } from '../model/place';
 import { Variable } from '../model/variable';
 import { Time } from '../model/timeSeries';
 import {
@@ -53,6 +56,10 @@ interface ControlBarProps extends WithStyles<typeof styles> {
     datasets: Dataset[];
     selectDataset: (datasetId: string | null, dataset: Dataset[]) => void;
 
+    selectedPlaceGroupIds: string[] | null;
+    placeGroups: PlaceGroup[];
+    selectPlaceGroups: (placeGroupIds: string[] | null, dataset: Dataset[]) => void;
+
     selectedPlaceId: string | null;
     places: Place[];
     selectPlace: (placeId: string | null, dataset: Dataset[]) => void;
@@ -86,10 +93,16 @@ class ControlBar extends React.Component<ControlBarProps> {
         const selectedVariableName = this.props.selectedVariableName || '';
         const variables = this.props.variables || [];
 
+        const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
+        const placeGroups = this.props.placeGroups || [];
+
         const selectedPlaceId = this.props.selectedPlaceId || '';
         const places = this.props.places || [];
 
         const selectedTime = this.props.selectedTime !== null ? utcTimeToLocalIsoDateTimeString(this.props.selectedTime) : "";
+
+        // Make property and use selector
+        const selectedPlaceGroupTitles = selectedPlaceGroupIds.map(id => placeGroups.find(pg => id === pg.id)!.title).join(", ");
 
         return (
             <form className={classes.root} autoComplete="off">
@@ -105,10 +118,15 @@ class ControlBar extends React.Component<ControlBarProps> {
                         name="dataset"
                         className={classes.selectEmpty}
                     >
-                        {datasets.map(dataset => <MenuItem
-                            key={dataset.id}
-                            value={dataset.id}
-                            selected={dataset.id === selectedDatasetId}>{dataset.title}</MenuItem>)}
+                        {datasets.map(dataset => (
+                            <MenuItem
+                                key={dataset.id}
+                                value={dataset.id}
+                                selected={dataset.id === selectedDatasetId}
+                            >
+                                {dataset.title}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
@@ -123,10 +141,38 @@ class ControlBar extends React.Component<ControlBarProps> {
                         name="variable"
                         className={classes.selectEmpty}
                     >
-                        {variables.map(variable => <MenuItem
-                            key={variable.name}
-                            value={variable.name}
-                            selected={variable.name === selectedVariableName}>{variable.title || variable.name}</MenuItem>)}
+                        {variables.map(variable => (
+                            <MenuItem
+                                key={variable.name}
+                                value={variable.name}
+                                selected={variable.name === selectedVariableName}
+                            >
+                                {variable.title || variable.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                    <InputLabel shrink htmlFor="place-groups-select">
+                        {I18N.text`Places`}
+                    </InputLabel>
+                    <Select
+                        multiple
+                        onChange={this.handlePlaceGroupsChange}
+                        input={<Input name="place-groups" id="place-groups-select"/>}
+                        value={selectedPlaceGroupIds}
+                        renderValue={x => selectedPlaceGroupTitles}
+                        name="place-groups"
+                    >
+                        {placeGroups.map(placeGroup => (
+                            <MenuItem
+                                key={placeGroup.id}
+                                value={placeGroup.id}
+                            >
+                                <Checkbox checked={selectedPlaceGroupIds.indexOf(placeGroup.id) > -1}/>
+                                <ListItemText primary={placeGroup.title}/>
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
                 <FormControl className={classes.formControl}>
@@ -141,10 +187,15 @@ class ControlBar extends React.Component<ControlBarProps> {
                         name="place"
                         className={classes.selectEmpty}
                     >
-                        {places.map(place => <MenuItem
-                            key={place.id}
-                            value={place.id}
-                            selected={place.id === selectedPlaceId}>{ControlBar.getPlaceDisplayName(place)}</MenuItem>)}
+                        {places.map(place => (
+                            <MenuItem
+                                key={place.id}
+                                value={place.id}
+                                selected={place.id === selectedPlaceId}
+                            >
+                                {ControlBar.getPlaceDisplayName(place)}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
                 <TextField
@@ -184,6 +235,11 @@ class ControlBar extends React.Component<ControlBarProps> {
 
     handleVariableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         this.props.selectVariable(event.target.value || null);
+    };
+
+    handlePlaceGroupsChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        console.log("handlePlaceGroupsChange: ", event.target.value);
+        this.props.selectPlaceGroups(event.target.value as any as string[] || null, this.props.datasets);
     };
 
     handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
