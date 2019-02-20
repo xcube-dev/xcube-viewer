@@ -6,7 +6,7 @@ import * as api from '../api'
 import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
 import {
     selectedDatasetIdSelector,
-    selectedVariableSelector,
+    selectedDatasetVariableSelector,
 } from "../selectors/controlSelectors";
 import { Dataset } from "../model/dataset";
 import { Time, TimeRange, TimeSeries } from "../model/timeSeries";
@@ -152,7 +152,7 @@ export function selectCoordinate(selectedCoordinate: [number, number] | null) {
         dispatch(_selectCoordinate(selectedCoordinate));
 
         let selectedDatasetId = selectedDatasetIdSelector(getState());
-        let selectedVariable = selectedVariableSelector(getState());
+        let selectedVariable = selectedDatasetVariableSelector(getState());
         let timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
 
         if (selectedDatasetId && selectedVariable && selectedCoordinate) {

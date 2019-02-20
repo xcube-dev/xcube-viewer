@@ -4,23 +4,27 @@ import * as GeoJSON from 'geojson';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
-// import { OSM } from './ol/layer/OSM';
 import { View } from './ol/View';
 import * as ol from 'openlayers';
 import { Draw } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { Control } from './ol/control/Control';
-import { XYZ } from './ol/layer/XYZ';
+import { OSMBlackAndWhite } from "./ol/layer/Tile";
 
 
 interface ViewerProps {
     drawMode?: ol.geom.GeometryType | null;
     variableLayer?: MapElement;
+    placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
     selectCoordinate?: (geoCoordinate: [number, number]) => void;
     selectFeatures?: (features: GeoJSON.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
+
+
+const USER_LAYER_SOURCE = new ol.source.Vector();
+
 
 class Viewer extends React.Component<ViewerProps> {
 
@@ -69,7 +73,7 @@ class Viewer extends React.Component<ViewerProps> {
 
 
     public render() {
-        let {variableLayer, colorBarLegend, drawMode} = this.props;
+        let {variableLayer, placeGroupLayers,colorBarLegend, drawMode} = this.props;
         let draw = drawMode ? <Draw layerId={'user'} type={drawMode}/> : null;
 
         let colorBarControl = null;
@@ -86,11 +90,11 @@ class Viewer extends React.Component<ViewerProps> {
                 <Map onClick={this.handleMapClick} onMapRef={this.handleMapRef}>
                     <View/>
                     <Layers>
-                        <XYZ.OSMBlackAndWhite/>
-                        {/*<OSM/>*/}
+                        <OSMBlackAndWhite/>
                         {variableLayer}
-                        <Vector id={'user'} layerOptions={{opacity: 1, zIndex: 500}}/>
+                        <Vector id={'user'} opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
                     </Layers>
+                    {placeGroupLayers}
                     {draw}
                     {colorBarControl}
                 </Map>
