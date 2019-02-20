@@ -11,9 +11,9 @@ import { Time } from '../model/timeSeries';
 import ColorBarLegend from '../components/ColorBarLegend';
 import { MapElement } from '../components/ol/Map';
 import { ColorBars } from '../model/colorBar';
-import { Tile } from "../components/ol/layer/Tile";
-import { Vector } from "../components/ol/layer/Vector";
-import { Layers } from "../components/ol/layer/Layers";
+import { Tile } from '../components/ol/layer/Tile';
+import { Vector } from '../components/ol/layer/Vector';
+import { Layers } from '../components/ol/layer/Layers';
 
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
@@ -58,14 +58,34 @@ export const selectedDatasetSelectedPlaceGroupsSelector = createSelector(
     }
 );
 
-/**
- * Get first-level features as a single array
- */
-export const selectedDatasetPlacesSelector = createSelector(
-    selectedDatasetPlaceGroupsSelector,
+export const selectedDatasetSelectedPlaceGroupsTitleSelector = createSelector(
+    selectedDatasetSelectedPlaceGroupsSelector,
+    (placeGroups: PlaceGroup[]): string => {
+        return placeGroups.map(placeGroup => placeGroup.title || placeGroup.id).join(', ');
+    }
+);
+
+export const selectedDatasetSelectedPlaceGroupPlacesSelector = createSelector(
+    selectedDatasetSelectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): Place[] => {
         const args = placeGroups.map(placeGroup => placeGroup.features as Place[]);
-        return ([] as  Array<Place>).concat(...args);
+        return ([] as Array<Place>).concat(...args);
+    }
+);
+
+export const selectedDatasetSelectedPlaceGroupPlaceLabelsSelector = createSelector(
+    selectedDatasetSelectedPlaceGroupsSelector,
+    (placeGroups: PlaceGroup[]): string[] => {
+        const labelPropNames = ['__placeholder__', 'label', 'title', 'name', 'id'];
+        let labels: string[] = [];
+        placeGroups.forEach(placeGroup => {
+            const propertyMapping = placeGroup.propertyMapping;
+            if (propertyMapping && propertyMapping['label']) {
+                labelPropNames[0] = propertyMapping['label'];
+            }
+            labels = labels.concat(placeGroup.features.map((place: Place) => getPlaceLabel(place, labelPropNames)))
+        });
+        return labels;
     }
 );
 
@@ -92,7 +112,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
         const attributions = [
             new ol.Attribution(
                 {
-                    html: '<br/>&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Consult GmbH</a> and contributors'
+                    html: '&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Consult GmbH</a>'
                 }
             ),
         ];
@@ -127,7 +147,10 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                     key={index}
                     source={new ol.source.Vector(
                         {
-                            features: new ol.format.GeoJSON().readFeatures(placeGroup.features)
+                            features: new ol.format.GeoJSON({
+                                                                defaultDataProjection: 'EPSG:4326',
+                                                                featureProjection: 'EPSG:3857'
+                                                            }).readFeatures(placeGroup),
                         })}
                 />);
         });
@@ -155,3 +178,17 @@ export const selectedColorBarLegendSelector = createSelector(
         );
     }
 );
+
+
+function getPlaceLabel(place: Place, labelPropNames: string []) {
+    if (place.properties) {
+        let label;
+        for (let propName of labelPropNames) {
+            label = place.properties[propName];
+            if (label) {
+                return label;
+            }
+        }
+    }
+    return '' + place.id;
+}

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as GeoJSON from 'geojson';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -14,7 +13,6 @@ import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
-// import { MenuProps } from "@material-ui/core/Menu";
 
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
@@ -59,9 +57,11 @@ interface ControlBarProps extends WithStyles<typeof styles> {
     selectedPlaceGroupIds: string[] | null;
     placeGroups: PlaceGroup[];
     selectPlaceGroups: (placeGroupIds: string[] | null, dataset: Dataset[]) => void;
+    selectedPlaceGroupsTitle: string;
 
     selectedPlaceId: string | null;
     places: Place[];
+    placeLabels: string[];
     selectPlace: (placeId: string | null, dataset: Dataset[]) => void;
 
     selectedVariableName: string | null;
@@ -95,14 +95,13 @@ class ControlBar extends React.Component<ControlBarProps> {
 
         const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
         const placeGroups = this.props.placeGroups || [];
+        const selectedPlaceGroupsTitle = this.props.selectedPlaceGroupsTitle;
 
         const selectedPlaceId = this.props.selectedPlaceId || '';
         const places = this.props.places || [];
+        const placeLabels = this.props.placeLabels || [];
 
         const selectedTime = this.props.selectedTime !== null ? utcTimeToLocalIsoDateTimeString(this.props.selectedTime) : "";
-
-        // Make property and use selector
-        const selectedPlaceGroupTitles = selectedPlaceGroupIds.map(id => placeGroups.find(pg => id === pg.id)!.title).join(", ");
 
         return (
             <form className={classes.root} autoComplete="off">
@@ -161,7 +160,7 @@ class ControlBar extends React.Component<ControlBarProps> {
                         onChange={this.handlePlaceGroupsChange}
                         input={<Input name="place-groups" id="place-groups-select"/>}
                         value={selectedPlaceGroupIds}
-                        renderValue={x => selectedPlaceGroupTitles}
+                        renderValue={x => selectedPlaceGroupsTitle}
                         name="place-groups"
                     >
                         {placeGroups.map(placeGroup => (
@@ -187,13 +186,13 @@ class ControlBar extends React.Component<ControlBarProps> {
                         name="place"
                         className={classes.selectEmpty}
                     >
-                        {places.map(place => (
+                        {places.map((place, i) => (
                             <MenuItem
                                 key={place.id}
                                 value={place.id}
                                 selected={place.id === selectedPlaceId}
                             >
-                                {ControlBar.getPlaceDisplayName(place)}
+                                {placeLabels[i]}
                             </MenuItem>
                         ))}
                     </Select>
@@ -273,15 +272,6 @@ class ControlBar extends React.Component<ControlBarProps> {
             this.props.selectTime(input.value ? localDateTimeStringToUtcTime(input.value) : null);
         }
     };
-
-    static getPlaceDisplayName(place: GeoJSON.Feature): string {
-        let properties = place.properties;
-        let value = properties && (properties['title'] || properties['name'] || properties['id']) || place.id;
-        if (typeof value === 'string') {
-            return value;
-        }
-        return `${value}`;
-    }
 }
 
 export default withStyles(styles)(ControlBar);

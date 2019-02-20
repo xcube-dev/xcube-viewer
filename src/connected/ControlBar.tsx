@@ -12,9 +12,10 @@ import {
 } from '../actions/controlActions';
 import {
     selectedDatasetVariablesSelector,
-    selectedDatasetPlacesSelector,
-    selectedDatasetPlaceGroupsSelector
-} from "../selectors/controlSelectors";
+    selectedDatasetSelectedPlaceGroupPlacesSelector,
+    selectedDatasetPlaceGroupsSelector,
+    selectedDatasetSelectedPlaceGroupsTitleSelector, selectedDatasetSelectedPlaceGroupPlaceLabelsSelector
+} from '../selectors/controlSelectors';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -27,9 +28,11 @@ const mapStateToProps = (state: AppState) => {
 
         selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
         placeGroups: selectedDatasetPlaceGroupsSelector(state),
+        selectedPlaceGroupsTitle: selectedDatasetSelectedPlaceGroupsTitleSelector(state),
 
         selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedDatasetPlacesSelector(state),
+        places: selectedDatasetSelectedPlaceGroupPlacesSelector(state),
+        placeLabels: selectedDatasetSelectedPlaceGroupPlaceLabelsSelector(state),
 
         selectedTime: state.controlState.selectedTime,
 

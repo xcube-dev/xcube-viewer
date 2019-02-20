@@ -8,8 +8,8 @@ import { View } from './ol/View';
 import * as ol from 'openlayers';
 import { Draw } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
-import { Control } from './ol/control/Control';
 import { OSMBlackAndWhite } from "./ol/layer/Tile";
+import { Control } from './ol/control/Control';
 
 
 interface ViewerProps {
@@ -73,8 +73,11 @@ class Viewer extends React.Component<ViewerProps> {
 
 
     public render() {
-        let {variableLayer, placeGroupLayers,colorBarLegend, drawMode} = this.props;
-        let draw = drawMode ? <Draw layerId={'user'} type={drawMode}/> : null;
+        const variableLayer = this.props.variableLayer;
+        const placeGroupLayers = this.props.placeGroupLayers;
+        const colorBarLegend = this.props.colorBarLegend;
+        const drawMode = this.props.drawMode;
+        const draw = drawMode ? <Draw layerId={'user'} type={drawMode}/> : null;
 
         let colorBarControl = null;
         if (colorBarLegend) {

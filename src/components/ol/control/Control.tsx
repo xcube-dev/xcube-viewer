@@ -27,8 +27,8 @@ export class Control extends React.Component<ControlProps> {
     }
 
     componentWillUnmount(): void {
-        const map = this.context.map!;
-        map.removeControl(this.control!);
+        // const map = this.context.map!;
+        // map.removeControl(this.control!);
         this.control = null;
     }
 
