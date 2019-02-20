@@ -20,7 +20,7 @@ export class Vector extends React.Component<VectorProps> {
         this.layer = new ol.layer.Vector(this.props);
         map.getLayers().push(this.layer);
         if (this.props.id) {
-            this.context.objects![this.props.id] = this.layer;
+            this.context.mapObjects![this.props.id] = this.layer;
         }
     }
 
@@ -45,7 +45,7 @@ export class Vector extends React.Component<VectorProps> {
             this.layer.setMaxResolution(this.props.maxResolution);
         }
         if (this.props.id) {
-            this.context.objects![this.props.id] = this.layer;
+            this.context.mapObjects![this.props.id] = this.layer;
         }
     }
 
@@ -53,7 +53,7 @@ export class Vector extends React.Component<VectorProps> {
         const map = this.context.map!;
         map.getLayers().remove(this.layer);
         if (this.props.id) {
-            delete this.context.objects![this.props.id];
+            delete this.context.mapObjects![this.props.id];
         }
     }
 
