@@ -10,9 +10,10 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction, SELECT_TIME_RANGE,
+    ControlAction, SELECT_TIME_RANGE, UPDATE_VISIBLE_TIME_RANGE,
 } from '../actions/controlActions';
 import { findDataset, findDatasetVariable, findDatasetPlace, getDatasetTimeRange } from '../model/dataset';
+import { TimeRange } from "../model/timeSeries";
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -35,12 +36,15 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             }
             const selectedDatasetId = action.selectedDatasetId;
             const selectedTimeRange = getDatasetTimeRange(dataset);
-            console.log("controlReducer: selectedTimeRange =", selectedTimeRange);
+            const visibleTimeRange: TimeRange | null = selectedTimeRange ? [selectedTimeRange[0], selectedTimeRange[1]] : null;
+            const selectedTime = selectedTimeRange ? selectedTimeRange[1] : null;
             return {
                 ...state,
                 selectedDatasetId,
                 selectedVariableName,
                 selectedTimeRange,
+                visibleTimeRange,
+                selectedTime,
                 flyTo,
             };
         }
@@ -93,6 +97,12 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 selectedTimeRange: action.selectedTimeRange,
+            };
+        }
+        case UPDATE_VISIBLE_TIME_RANGE: {
+            return {
+                ...state,
+                visibleTimeRange: action.visibleTimeRange,
             };
         }
         case SELECT_TIME_SERIES_UPDATE_MODE: {

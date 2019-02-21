@@ -123,6 +123,20 @@ export function selectTimeRange(selectedTimeRange: TimeRange | null): SelectTime
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const UPDATE_VISIBLE_TIME_RANGE = 'UPDATE_VISIBLE_TIME_RANGE';
+export type UPDATE_VISIBLE_TIME_RANGE = typeof UPDATE_VISIBLE_TIME_RANGE;
+
+export interface UpdateVisibleTimeRange {
+    type: UPDATE_VISIBLE_TIME_RANGE;
+    visibleTimeRange: TimeRange | null;
+}
+
+export function updateVisibleTimeRange(visibleTimeRange: TimeRange | null): UpdateVisibleTimeRange {
+    return {type: UPDATE_VISIBLE_TIME_RANGE, visibleTimeRange};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_TIME_SERIES_UPDATE_MODE = 'SELECT_TIME_SERIES_UPDATE_MODE';
 export type SELECT_TIME_SERIES_UPDATE_MODE = typeof SELECT_TIME_SERIES_UPDATE_MODE;
 
@@ -187,4 +201,5 @@ export type ControlAction =
     | SelectTime
     | SelectTimeRange
     | SelectCoordinate
-    | SelectTimeSeriesUpdateMode;
+    | SelectTimeSeriesUpdateMode
+    | UpdateVisibleTimeRange;

@@ -2,7 +2,17 @@
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
  */
 export type Time = number;
+export type TimeDelta = number;
 export type TimeRange = [Time, Time];
+
+export const UNIT = {
+    seconds: 1000,
+    minutes: 1000 * 60,
+    hours: 1000 * 60 * 60,
+    days: 1000 * 60 * 60 * 24,
+    weeks: 1000 * 60 * 60 * 24 * 7,
+    years: 1000 * 60 * 60 * 24 * 365,
+};
 
 export interface TimeSeriesSource {
     datasetId: string;

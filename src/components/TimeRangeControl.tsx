@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 const Slider = require('material-ui-slider').Slider;
 
-import { utcTimeToLocalDateString } from '../util/time';
-import { TimeRange } from '../model/timeSeries';
+import { TimeRange, UNIT } from '../model/timeSeries';
+import TimeRangeContainer from "./TimeRangeContainer";
 
 
 // noinspection JSUnusedLocalSymbols
@@ -20,25 +17,27 @@ const styles = (theme: Theme) => createStyles(
     }
 );
 
-interface TimeControlProps extends WithStyles<typeof styles> {
+interface TimeRangeControlProps extends WithStyles<typeof styles> {
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
+    visibleTimeRange?: TimeRange | null;
+    updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
-interface TimeControlState {
+interface TimeRangeControlState {
     selectedTimeRange?: TimeRange | null;
 }
 
-class TimeRangeControl extends React.Component<TimeControlProps, TimeControlState> {
-    state: TimeControlState;
+class TimeRangeControl extends React.Component<TimeRangeControlProps, TimeRangeControlState> {
+    state: TimeRangeControlState;
 
-    constructor(props: TimeControlProps) {
+    constructor(props: TimeRangeControlProps) {
         super(props);
         this.state = {selectedTimeRange: this.props.selectedTimeRange};
     }
 
-    componentDidUpdate(prevProps: Readonly<TimeControlProps>, prevState: Readonly<TimeControlState>): void {
+    componentDidUpdate(prevProps: Readonly<TimeRangeControlProps>, prevState: Readonly<TimeRangeControlState>): void {
         let selectedTimeRange = this.props.selectedTimeRange;
         if (selectedTimeRange !== prevProps.selectedTimeRange) {
             if (selectedTimeRange) {
@@ -58,49 +57,41 @@ class TimeRangeControl extends React.Component<TimeControlProps, TimeControlStat
         }
     };
 
-    handleTimeStepDown = () => {
-    };
-
-    handleTimeStepUp = () => {
+    handleVisibleTimeRangeChange = (selectedTimeRange: TimeRange) => {
+        if (this.props.updateVisibleTimeRange) {
+            this.props.updateVisibleTimeRange([selectedTimeRange[0], selectedTimeRange[1]]);
+        }
     };
 
     render() {
-        let {classes, dataTimeRange} = this.props;
-        let {selectedTimeRange} = this.state;
+        let {dataTimeRange, visibleTimeRange, selectedTimeRange} = this.props;
 
         const dataTimeRangeValid = Array.isArray(dataTimeRange);
         if (!dataTimeRangeValid) {
-            dataTimeRange = [Date.now() - 365 * 1000 * 60 * 60 * 24, Date.now()];
+            dataTimeRange = [Date.now() - 2 * UNIT.years, Date.now()];
         }
-        if (!Array.isArray(selectedTimeRange)) {
-            selectedTimeRange = dataTimeRange;
+        if (!Array.isArray(visibleTimeRange)) {
+            visibleTimeRange = dataTimeRange;
         }
-        const timeMinText = utcTimeToLocalDateString(selectedTimeRange![0]);
-        const timeMaxText = utcTimeToLocalDateString(selectedTimeRange![1]);
 
-        return <div style={{width: '100%', display: 'flex', color: 'white', fontColor: 'white', alignItems: 'center'}}>
-            <IconButton className={classes.button} aria-label="One time step back"
-                        onClick={this.handleTimeStepDown}>
-                <KeyboardArrowLeft/>
-            </IconButton>
-            <div style={{width: '6em'}}>{timeMinText}</div>
-            <div style={{flexGrow: 1}}>
+        return (
+            <TimeRangeContainer
+                min={dataTimeRange![0]}
+                max={dataTimeRange![1]}
+                step={UNIT.weeks + 4}
+                value={visibleTimeRange || null}
+                onChange={this.handleVisibleTimeRangeChange}>
                 <Slider
                     range
                     disabled={!dataTimeRangeValid}
-                    min={dataTimeRange![0]}
-                    max={dataTimeRange![1]}
+                    min={visibleTimeRange![0]}
+                    max={visibleTimeRange![1]}
                     value={selectedTimeRange}
                     onChange={this.handleSliderChange}
                     onChangeComplete={this.handleChangeComplete}
                 />
-            </div>
-            <div style={{width: '6em', textAlign: 'right'}}>{timeMaxText}</div>
-            <IconButton className={classes.button} aria-label="One time step forward"
-                        onClick={this.handleTimeStepUp}>
-                <KeyboardArrowRight/>
-            </IconButton>
-        </div>
+            </TimeRangeContainer>
+        );
     }
 }
 
