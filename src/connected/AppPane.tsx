@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 
-import SimpleLineChart from './TimeSeriesChart';
+import TimeSeriesChart from './TimeSeriesChart';
 import SimpleTable from '../components/SimpleTable';
 import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 import Viewer from './Viewer';
 import { I18N } from '../config';
+import TimeRangeControl from './TimeRangeControl';
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
@@ -60,8 +61,9 @@ class AppPane extends React.Component<AppPaneProps> {
                     {I18N.text`Time-Series`}
                 </Typography>
                 <div className={classes.chartContainer}>
-                    <SimpleLineChart/>
+                    <TimeSeriesChart/>
                 </div>
+                <TimeRangeControl/>
                 <Typography variant="h6" gutterBottom component="h5">
                     {I18N.text`Values`}
                 </Typography>

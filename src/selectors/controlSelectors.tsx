@@ -4,10 +4,10 @@ import { AppState } from '../states/appState';
 import { datasetsSelector, colorBarsSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
-import { Dataset, findDataset, findDatasetVariable } from '../model/dataset';
+import { Dataset, findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { Variable } from '../model/variable';
 import { Place, PlaceGroup } from '../model/place';
-import { Time } from '../model/timeSeries';
+import { Time, TimeRange } from '../model/timeSeries';
 import ColorBarLegend from '../components/ColorBarLegend';
 import { MapElement } from '../components/ol/Map';
 import { ColorBars } from '../model/colorBar';
@@ -32,6 +32,13 @@ export const selectedDatasetVariablesSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): Variable[] => {
         return (dataset && dataset.variables) || [];
+    }
+);
+
+export const selectedDatasetTimeRangeSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): TimeRange | null => {
+        return dataset !== null ? getDatasetTimeRange(dataset) : null;
     }
 );
 

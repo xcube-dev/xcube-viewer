@@ -19,7 +19,7 @@ import { Place, PlaceGroup } from '../model/place';
 import { Variable } from '../model/variable';
 import { Time } from '../model/timeSeries';
 import {
-    localDateTimeStringToUtcTime,
+    dateTimeStringToUtcTime,
     utcTimeToLocalIsoDateTimeString
 } from "../util/time";
 import { I18N } from '../config';
@@ -246,7 +246,7 @@ class ControlBar extends React.Component<ControlBarProps> {
     };
 
     handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectTime(event.target.value ? localDateTimeStringToUtcTime(event.target.value) : null);
+        this.props.selectTime(event.target.value ? dateTimeStringToUtcTime(event.target.value) : null);
     };
 
     handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -261,7 +261,7 @@ class ControlBar extends React.Component<ControlBarProps> {
         let input = this.timeInputElement;
         if (input !== null) {
             input.stepUp(1);
-            this.props.selectTime(input.value ? localDateTimeStringToUtcTime(input.value) : null);
+            this.props.selectTime(input.value ? dateTimeStringToUtcTime(input.value) : null);
         }
     };
 
@@ -269,7 +269,7 @@ class ControlBar extends React.Component<ControlBarProps> {
         let input = this.timeInputElement;
         if (input !== null) {
             input.stepDown(1);
-            this.props.selectTime(input.value ? localDateTimeStringToUtcTime(input.value) : null);
+            this.props.selectTime(input.value ? dateTimeStringToUtcTime(input.value) : null);
         }
     };
 }

@@ -1,4 +1,4 @@
-import * as ol from "openlayers";
+import * as ol from 'openlayers';
 
 import { ControlState, newControlState } from '../states/controlState';
 import {
@@ -12,10 +12,10 @@ import {
     SELECT_COORDINATE,
     ControlAction, SELECT_TIME_RANGE,
 } from '../actions/controlActions';
-import { findDataset, findDatasetVariable, findDatasetPlace } from '../model/dataset';
+import { findDataset, findDatasetVariable, findDatasetPlace, getDatasetTimeRange } from '../model/dataset';
 
 
-const SIMPLE_GEOMETRY_TYPES = ["Point" , "LineString" , "LinearRing" , "Polygon" , "MultiPoint" , "MultiLineString" , "MultiPolygon" , "Circle"];
+const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
 export function controlReducer(state: ControlState, action: ControlAction): ControlState {
     if (typeof state === 'undefined') {
@@ -33,11 +33,15 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             if (dataset.bbox) {
                 flyTo = dataset.bbox;
             }
+            const selectedDatasetId = action.selectedDatasetId;
+            const selectedTimeRange = getDatasetTimeRange(dataset);
+            console.log("controlReducer: selectedTimeRange =", selectedTimeRange);
             return {
                 ...state,
-                selectedDatasetId: action.selectedDatasetId,
+                selectedDatasetId,
                 selectedVariableName,
-                flyTo: flyTo,
+                selectedTimeRange,
+                flyTo,
             };
         }
         case SELECT_PLACE_GROUPS: {
