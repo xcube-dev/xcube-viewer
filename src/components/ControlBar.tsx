@@ -22,7 +22,7 @@ import {
     localDateTimeStringToUtcTime,
     utcTimeToLocalIsoDateTimeString
 } from "../util/time";
-import { I18N } from '../config/config';
+import { I18N } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(

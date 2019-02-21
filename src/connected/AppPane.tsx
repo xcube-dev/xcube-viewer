@@ -8,7 +8,7 @@ import SimpleTable from '../components/SimpleTable';
 import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 import Viewer from './Viewer';
-import { I18N } from '../config/config';
+import { I18N } from '../config';
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {

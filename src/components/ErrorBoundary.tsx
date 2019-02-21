@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './ErrorBoundary.css';
-import { I18N } from '../config/config';
+import { I18N } from '../config';
 
 interface ErrorBoundaryProps {
 }
