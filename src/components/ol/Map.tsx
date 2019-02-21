@@ -9,8 +9,8 @@ export type MapElement = React.ReactElement<any> | null | undefined;
 
 export interface MapContext {
     map?: ol.Map;
-    mapDiv?: HTMLDivElement;
-    objects?: {[id:string]: ol.Object};
+    mapDiv?: HTMLDivElement | null;
+    mapObjects?: { [id: string]: ol.Object };
 }
 
 export const MapContextType = React.createContext<MapContext>({});
@@ -39,13 +39,13 @@ export class Map extends React.Component<MapProps, MapState> {
 
     constructor(props: MapProps) {
         super(props);
-        this.contextValue = {objects: {}};
+        this.contextValue = {mapObjects: {}};
     }
 
     private getMapOptions(): ol.olx.MapOptions {
         const mapOptions = {...this.props};
-        delete mapOptions["children"];
-        delete mapOptions["onClick"];
+        delete mapOptions['children'];
+        delete mapOptions['onClick'];
         return mapOptions;
     }
 
@@ -57,8 +57,10 @@ export class Map extends React.Component<MapProps, MapState> {
     };
 
     componentDidMount(): void {
+        console.log("Map.componentDidMount: new Map!");
         const mapOptions = this.getMapOptions();
-        const map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions, target: this.contextValue.mapDiv});
+        const target = this.contextValue.mapDiv!;
+        const map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions, target});
         this.contextValue.map = map;
 
         map.on('click', this.handleClick);
@@ -73,12 +75,14 @@ export class Map extends React.Component<MapProps, MapState> {
     }
 
     componentDidUpdate(prevProps: Readonly<MapProps>): void {
+        console.log("Map.componentDidUpdate: update Map!");
         const map = this.contextValue.map;
         const mapOptions = this.getMapOptions();
         map!.setProperties({...mapOptions, target: this.contextValue.mapDiv});
     }
 
     componentWillUnmount(): void {
+        console.log("Map.componentWillUnmount: remove Map!");
         const onMapRef = this.props.onMapRef;
         if (onMapRef) {
             onMapRef(null);
@@ -102,13 +106,15 @@ export class Map extends React.Component<MapProps, MapState> {
         );
     }
 
-    private handleRef = (mapDiv: HTMLDivElement) => {
-        mapDiv.onresize = () => {
-            const map = this.contextValue.map;
-            if (map) {
-                map.updateSize();
-            }
-        };
+    private handleRef = (mapDiv: HTMLDivElement | null) => {
+        if (mapDiv !== null) {
+            mapDiv.onresize = () => {
+                const map = this.contextValue.map;
+                if (map) {
+                    map.updateSize();
+                }
+            };
+        }
         this.contextValue.mapDiv = mapDiv;
     };
 }

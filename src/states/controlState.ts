@@ -5,6 +5,7 @@ import { Time, TimeRange } from "../model/timeSeries";
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
+    selectedPlaceGroupIds: string[] | null;
     selectedPlaceId: string | null;
     selectedUserPlaceId: string | null;
     selectedTime: Time | null;
@@ -19,6 +20,7 @@ export function newControlState(): ControlState {
     return {
         selectedDatasetId: "local",
         selectedVariableName: "conc_chl",
+        selectedPlaceGroupIds: null,
         selectedPlaceId: null,
         selectedUserPlaceId: null,
         selectedTime: null,

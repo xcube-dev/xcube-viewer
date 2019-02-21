@@ -14,5 +14,6 @@ export interface Place extends GeoJSON.Feature {
 export interface PlaceGroup extends GeoJSON.FeatureCollection {
     id: string;
     title: string;
+    propertyMapping?: {[role: string]: string};
     placeGroups?: {[placeId: string]: PlaceGroup};
 }

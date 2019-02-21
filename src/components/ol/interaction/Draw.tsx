@@ -22,7 +22,7 @@ export class Draw extends React.Component<DrawProps> {
 
         const layerId = this.props.layerId;
         if (layerId && !options.source) {
-            const vectorLayer = this.context.objects![layerId];
+            const vectorLayer = this.context.mapObjects![layerId];
             if (vectorLayer) {
                 options["source"] = (vectorLayer as ol.layer.Vector).getSource();
             }
@@ -41,14 +41,14 @@ export class Draw extends React.Component<DrawProps> {
         this.draw = new ol.interaction.Draw(this.getOptions());
         map.addInteraction(this.draw);
         if (this.props.id) {
-            this.context.objects![this.props.id] = this.draw;
+            this.context.mapObjects![this.props.id] = this.draw;
         }
     }
 
     componentDidUpdate(prevProps: Readonly<DrawProps>): void {
         this.draw!.setProperties(this.getOptions());
         if (this.props.id) {
-            this.context.objects![this.props.id] = this.draw!;
+            this.context.mapObjects![this.props.id] = this.draw!;
         }
     }
 
@@ -57,7 +57,7 @@ export class Draw extends React.Component<DrawProps> {
         map.removeInteraction(this.draw!);
         this.draw = null;
         if (this.props.id) {
-            delete this.context.objects![this.props.id];
+            delete this.context.mapObjects![this.props.id];
         }
     }
 
