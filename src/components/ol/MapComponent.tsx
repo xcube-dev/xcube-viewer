@@ -8,7 +8,7 @@ export interface MapComponentProps {
     id?: string;
 }
 
-export abstract class MapComponent<T extends ol.Object, P extends MapComponentProps, S = {}> extends React.Component<P, S> {
+export abstract class MapComponent<T extends ol.Object, P extends MapComponentProps, S = {}> extends React.PureComponent<P, S> {
     // noinspection JSUnusedGlobalSymbols
     static contextType = MapContextType;
     context: MapContext;
@@ -31,14 +31,17 @@ export abstract class MapComponent<T extends ol.Object, P extends MapComponentPr
     }
 
     componentDidMount(): void {
+        console.log("MapComponent.componentDidMount: id =", this.props.id);
         this._updateMapObject(this.addMapObject(this.context.map!));
     }
 
     componentDidUpdate(prevProps: Readonly<P>): void {
+        console.log("MapComponent.componentDidUpdate: id =", this.props.id);
         this._updateMapObject(this.updateMapObject(this.context.map!, this.object!, prevProps));
     }
 
     componentWillUnmount(): void {
+        console.log("MapComponent.componentWillUnmount: id =", this.props.id);
         const map = this.context.map!;
         this.removeMapObject(map, this.object!);
         if (this.props.id) {

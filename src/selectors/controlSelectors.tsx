@@ -126,6 +126,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
         // TODO: get attributions from dataset metadata
         return (
             <Tile
+                id={"variable"}
                 source={new ol.source.XYZ(
                     {
                         url,
@@ -152,6 +153,7 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
             layers.push(
                 <Vector
                     key={index}
+                    id={`placeGroup.${placeGroup.id}`}
                     source={new ol.source.Vector(
                         {
                             features: new ol.format.GeoJSON({

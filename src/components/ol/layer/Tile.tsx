@@ -5,6 +5,27 @@ import { olx } from 'openlayers';
 import { MapComponent, MapComponentProps } from "../MapComponent";
 
 
+// noinspection JSUnusedGlobalSymbols
+export function NaturalEarth2(): JSX.Element {
+    return <Tile id={"NaturalEarth2"} source={NATURAL_EARTH_2_SOURCE}/>;
+}
+
+// noinspection JSUnusedGlobalSymbols
+export function Bathymetry(): JSX.Element {
+    return <Tile id={"Bathymetry"} source={BATHYMETRY_SOURCE}/>;
+}
+
+// noinspection JSUnusedGlobalSymbols
+export function OSM(): JSX.Element {
+    return <Tile id={"OSM"} source={OSM_SOURCE}/>;
+}
+
+// noinspection JSUnusedGlobalSymbols
+export function OSMBlackAndWhite(): JSX.Element {
+    return <Tile id={"OSMBW"} source={OSM_BW_SOURCE}/>;
+}
+
+
 interface TileProps extends MapComponentProps, olx.layer.TileOptions {
 }
 
@@ -45,61 +66,31 @@ export class Tile extends MapComponent<ol.layer.Tile, TileProps> {
     }
 }
 
+const NATURAL_EARTH_2_SOURCE = new ol.source.XYZ(
+    {
+        url: 'https://a.tiles.mapbox.com/v3/mapbox.natural-earth-2/{z}/{x}/{y}.png',
+        attributions: [
+            '&copy; <a href=&quot;https://www.naturalearthdata.com/&quot;>MapBox</a>',
+            '&copy; <a href=&quot;https://www.mapbox.com/&quot;>MapBox</a> and contributors',
+        ],
+    });
 
-// noinspection JSUnusedGlobalSymbols
-export function NaturalEarth2(): JSX.Element {
-    return (
-        <Tile
-            source={new ol.source.XYZ(
-                {
-                    url: 'https://a.tiles.mapbox.com/v3/mapbox.natural-earth-2/{z}/{x}/{y}.png',
-                    attributions: [
-                        '&copy; <a href=&quot;https://www.naturalearthdata.com/&quot;>MapBox</a>',
-                        '&copy; <a href=&quot;https://www.mapbox.com/&quot;>MapBox</a> and contributors',
-                    ],
-                })}
-        />
-    );
-}
+const BATHYMETRY_SOURCE = new ol.source.XYZ(
+    {
+        url: 'https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/gebco_2014_contours/MapServer/tile/{z}/{y}/{x}',
+        attributions: [
+            '&copy; <a href=&quot;https://www.gebco.net/data_and_products/gridded_bathymetry_data/&quot;>GEBCO</a>',
+            '&copy; <a href=&quot;https://maps.ngdc.noaa.gov/&quot;>NOAHH</a> and contributors',
+        ]
+    });
 
-// noinspection JSUnusedGlobalSymbols
-export function Bathymetry(): JSX.Element {
-    return (
-        <Tile
-            source={new ol.source.XYZ(
-                {
-                    url: 'https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/gebco_2014_contours/MapServer/tile/{z}/{y}/{x}',
-                    attributions: [
-                        '&copy; <a href=&quot;https://www.gebco.net/data_and_products/gridded_bathymetry_data/&quot;>GEBCO</a>',
-                        '&copy; <a href=&quot;https://maps.ngdc.noaa.gov/&quot;>NOAHH</a> and contributors',
-                    ]
-                })}
-        />
-    );
-}
+const OSM_SOURCE = new ol.source.OSM();
 
-// noinspection JSUnusedGlobalSymbols
-export function OSM(): JSX.Element {
-    return (
-        <Tile source={new ol.source.OSM()}/>
-    );
-}
-
-// noinspection JSUnusedGlobalSymbols
-export function OSMBlackAndWhite(): JSX.Element {
-    return (
-        <Tile
-            source={new ol.source.XYZ(
-                {
-                    url: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-                    attributions: [
-                        '&copy; <a href=&quot;https://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors',
-                    ]
-                })}
-        />
-    );
-}
-
-
-
+const OSM_BW_SOURCE = new ol.source.XYZ(
+    {
+        url: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+        attributions: [
+            '&copy; <a href=&quot;https://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors',
+        ]
+    });
 

@@ -24,6 +24,7 @@ interface ViewerProps {
 
 
 const USER_LAYER_SOURCE = new ol.source.Vector();
+const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, left: 10, bottom: 65, position: 'relative'};
 
 
 class Viewer extends React.Component<ViewerProps> {
@@ -77,12 +78,12 @@ class Viewer extends React.Component<ViewerProps> {
         const placeGroupLayers = this.props.placeGroupLayers;
         const colorBarLegend = this.props.colorBarLegend;
         const drawMode = this.props.drawMode;
-        const draw = drawMode ? <Draw layerId={'user'} type={drawMode}/> : null;
+        const draw = drawMode ? <Draw id="draw" layerId={'user'} type={drawMode}/> : null;
 
         let colorBarControl = null;
         if (colorBarLegend) {
             colorBarControl = (
-                <Control style={{zValue: 1000, left: 10, bottom: 65, position: 'relative'}}>
+                <Control id="legend" style={COLOR_LEGEND_STYLE}>
                     {colorBarLegend}
                 </Control>
             );
@@ -91,7 +92,7 @@ class Viewer extends React.Component<ViewerProps> {
         return (
             <ErrorBoundary>
                 <Map onClick={this.handleMapClick} onMapRef={this.handleMapRef}>
-                    <View/>
+                    <View id="view"/>
                     <Layers>
                         <OSMBlackAndWhite/>
                         {variableLayer}
