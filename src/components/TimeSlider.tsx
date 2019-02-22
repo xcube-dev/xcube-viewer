@@ -6,18 +6,21 @@ const Slider = require('material-ui-slider').Slider;
 
 import { Time, TimeRange, UNIT } from '../model/timeSeries';
 import TimeRangeContainer from "./TimeRangeContainer";
+import FormControl from "@material-ui/core/FormControl";
 
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
-        button: {
-            margin: theme.spacing.unit * 0.1,
+        formControl: {
+            marginRight: theme.spacing.unit * 2,
+            marginBottom: theme.spacing.unit,
+            minWidth: 400,
         },
     }
 );
 
-interface TimeControlProps extends WithStyles<typeof styles> {
+interface TimeSliderProps extends WithStyles<typeof styles> {
     selectedTime?: Time | null;
     selectTime?: (time: Time | null) => void;
     selectedTimeRange?: TimeRange | null;
@@ -25,19 +28,19 @@ interface TimeControlProps extends WithStyles<typeof styles> {
     visibleTimeRange?: TimeRange | null;
 }
 
-interface TimeControlState {
+interface TimeSliderState {
     selectedTime?: Time | null;
 }
 
-class TimeControl extends React.Component<TimeControlProps, TimeControlState> {
-    state: TimeControlState;
+class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
+    state: TimeSliderState;
 
-    constructor(props: TimeControlProps) {
+    constructor(props: TimeSliderProps) {
         super(props);
         this.state = {selectedTime: this.props.selectedTime};
     }
 
-    componentDidUpdate(prevProps: Readonly<TimeControlProps>, prevState: Readonly<TimeControlState>): void {
+    componentDidUpdate(prevProps: Readonly<TimeSliderProps>, prevState: Readonly<TimeSliderState>): void {
         let selectedTime = this.props.selectedTime;
         if (selectedTime !== prevProps.selectedTime) {
             this.setState({selectedTime});
@@ -61,7 +64,7 @@ class TimeControl extends React.Component<TimeControlProps, TimeControlState> {
     };
 
     render() {
-        let {visibleTimeRange, selectedTimeRange, selectedTime} = this.props;
+        let {classes, visibleTimeRange, selectedTimeRange, selectedTime} = this.props;
 
         let visibleDataRange = Array.isArray(visibleTimeRange);
         if (!visibleDataRange) {
@@ -72,25 +75,27 @@ class TimeControl extends React.Component<TimeControlProps, TimeControlState> {
         }
 
         return (
-            <TimeRangeContainer
-                min={visibleTimeRange![0]}
-                max={visibleTimeRange![1]}
-                step={UNIT.weeks}
-                value={selectedTimeRange || null}
-                onChange={this.handleSelectedTimeRangeChange}
-                disabled={!visibleDataRange}
-            >
-                <Slider
+            <FormControl className={classes.formControl}>
+                <TimeRangeContainer
+                    min={visibleTimeRange![0]}
+                    max={visibleTimeRange![1]}
+                    step={UNIT.weeks}
+                    value={selectedTimeRange || null}
+                    onChange={this.handleSelectedTimeRangeChange}
                     disabled={!visibleDataRange}
-                    min={selectedTimeRange![0]}
-                    max={selectedTimeRange![1]}
-                    value={selectedTime}
-                    onChange={this.handleSliderChange}
-                    onChangeComplete={this.handleChangeComplete}
-                />
-            </TimeRangeContainer>
+                >
+                    <Slider
+                        disabled={!visibleDataRange}
+                        min={selectedTimeRange![0]}
+                        max={selectedTimeRange![1]}
+                        value={selectedTime}
+                        onChange={this.handleSliderChange}
+                        onChangeComplete={this.handleChangeComplete}
+                    />
+                </TimeRangeContainer>
+            </FormControl>
         );
     }
 }
 
-export default withStyles(styles)(TimeControl);
+export default withStyles(styles)(TimeSlider);

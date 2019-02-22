@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import TimeControl from '../components/TimeControl';
+import TimeSlider from '../components/TimeSlider';
 import { selectTime, selectTimeRange, updateVisibleTimeRange } from '../actions/controlActions';
 
 
@@ -19,4 +19,4 @@ const mapDispatchToProps = {
     updateVisibleTimeRange,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeControl);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeSlider);

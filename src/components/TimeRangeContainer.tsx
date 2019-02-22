@@ -17,6 +17,7 @@ const styles = (theme: Theme) => createStyles(
         },
         container: {
             width: '100%',
+            minWidth: 120,
             display: 'flex',
             color: 'white',
             fontColor: 'white',

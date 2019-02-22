@@ -7,11 +7,17 @@ import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { utcTimeToLocalDateString } from "../util/time";
+import FormControl from "@material-ui/core/FormControl";
 
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
+        formControl: {
+            marginRight: theme.spacing.unit * 2,
+            marginBottom: theme.spacing.unit,
+            minWidth: 120,
+        },
         button: {
             margin: theme.spacing.unit * 0.1,
         },
@@ -107,17 +113,19 @@ class TimePlayer extends React.Component<TimePlayerProps> {
         const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
         return (
-            <div className={classes.container}>
-                <div className={classes.timeLabel}>{timeText}</div>
-                <IconButton
-                    className={classes.button}
-                    disabled={!isValid}
-                    aria-label={playToolTip}
-                    onClick={this.handlePlayButtonClick}
-                >
-                    {playIcon}
-                </IconButton>
-            </div>
+            <FormControl className={classes.formControl}>
+                <div className={classes.container}>
+                    <div className={classes.timeLabel}>{timeText}</div>
+                    <IconButton
+                        className={classes.button}
+                        disabled={!isValid}
+                        aria-label={playToolTip}
+                        onClick={this.handlePlayButtonClick}
+                    >
+                        {playIcon}
+                    </IconButton>
+                </div>
+            </FormControl>
         );
     }
 }

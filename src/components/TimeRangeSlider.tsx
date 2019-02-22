@@ -17,7 +17,7 @@ const styles = (theme: Theme) => createStyles(
     }
 );
 
-interface TimeRangeControlProps extends WithStyles<typeof styles> {
+interface TimeRangeSliderProps extends WithStyles<typeof styles> {
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
@@ -25,19 +25,19 @@ interface TimeRangeControlProps extends WithStyles<typeof styles> {
     updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
-interface TimeRangeControlState {
+interface TimeRangeSliderState {
     selectedTimeRange?: TimeRange | null;
 }
 
-class TimeRangeControl extends React.Component<TimeRangeControlProps, TimeRangeControlState> {
-    state: TimeRangeControlState;
+class TimeRangeSlider extends React.Component<TimeRangeSliderProps, TimeRangeSliderState> {
+    state: TimeRangeSliderState;
 
-    constructor(props: TimeRangeControlProps) {
+    constructor(props: TimeRangeSliderProps) {
         super(props);
         this.state = {selectedTimeRange: this.props.selectedTimeRange};
     }
 
-    componentDidUpdate(prevProps: Readonly<TimeRangeControlProps>, prevState: Readonly<TimeRangeControlState>): void {
+    componentDidUpdate(prevProps: Readonly<TimeRangeSliderProps>, prevState: Readonly<TimeRangeSliderState>): void {
         let selectedTimeRange = this.props.selectedTimeRange;
         if (selectedTimeRange !== prevProps.selectedTimeRange) {
             if (selectedTimeRange) {
@@ -95,4 +95,4 @@ class TimeRangeControl extends React.Component<TimeRangeControlProps, TimeRangeC
     }
 }
 
-export default withStyles(styles)(TimeRangeControl);
+export default withStyles(styles)(TimeRangeSlider);

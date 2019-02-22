@@ -166,7 +166,6 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                type="number"
                                tickCount={6}
                                domain={selectedTimeRange || X_AXIS_DOMAIN}
-                               mirror={true}
                                // padding={X_AXIS_PADDING}
                                tickFormatter={this.tickFormatter}
                         />
