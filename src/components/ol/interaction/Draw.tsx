@@ -1,68 +1,41 @@
-import * as React from 'react';
 import * as ol from 'openlayers';
 import { olx } from "openlayers";
 
-import 'openlayers/css/ol.css';
-import '../Map.css';
-import { MapContext, MapContextType } from "../Map";
+import { MapComponent, MapComponentProps } from "../MapComponent";
 
 
-interface DrawProps extends olx.interaction.DrawOptions {
-    id? : string;
+interface DrawProps extends MapComponentProps, olx.interaction.DrawOptions {
     layerId?: string;
 }
 
-export class Draw extends React.Component<DrawProps> {
+export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
 
-    private getOptions(): olx.interaction.DrawOptions {
+    addMapObject(map: ol.Map): ol.interaction.Draw {
+        const draw = new ol.interaction.Draw(this.getOptions());
+        map.addInteraction(draw);
+        return draw;
+    }
 
-        const options = {...this.props};
-        delete options["id"];
+    updateMapObject(map: ol.Map, draw: ol.interaction.Draw, prevProps: Readonly<DrawProps>): ol.interaction.Draw {
+        draw.setProperties(this.getOptions());
+        return draw;
+    }
+
+    removeMapObject(map: ol.Map, draw: ol.interaction.Draw): void {
+        map.removeInteraction(draw);
+    }
+
+    getOptions(): olx.interaction.DrawOptions {
+        let options = super.getOptions();
         delete options["layerId"];
-
         const layerId = this.props.layerId;
         if (layerId && !options.source) {
-            const vectorLayer = this.context.mapObjects![layerId];
+            const vectorLayer = this.getMapObject(layerId);
             if (vectorLayer) {
                 options["source"] = (vectorLayer as ol.layer.Vector).getSource();
             }
         }
-
         return options;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    static contextType = MapContextType;
-    context: MapContext;
-    draw: ol.interaction.Draw | null;
-
-    componentDidMount(): void {
-        const map = this.context.map!;
-        this.draw = new ol.interaction.Draw(this.getOptions());
-        map.addInteraction(this.draw);
-        if (this.props.id) {
-            this.context.mapObjects![this.props.id] = this.draw;
-        }
-    }
-
-    componentDidUpdate(prevProps: Readonly<DrawProps>): void {
-        this.draw!.setProperties(this.getOptions());
-        if (this.props.id) {
-            this.context.mapObjects![this.props.id] = this.draw!;
-        }
-    }
-
-    componentWillUnmount(): void {
-        const map = this.context.map!;
-        map.removeInteraction(this.draw!);
-        this.draw = null;
-        if (this.props.id) {
-            delete this.context.mapObjects![this.props.id];
-        }
-    }
-
-    render() {
-        return null;
     }
 }
 

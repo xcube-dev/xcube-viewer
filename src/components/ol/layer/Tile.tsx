@@ -2,54 +2,46 @@ import * as React from 'react';
 import * as ol from 'openlayers';
 import { olx } from 'openlayers';
 
-import { MapContext, MapContextType } from '../Map';
+import { MapComponent, MapComponentProps } from "../MapComponent";
 
-interface TileProps extends olx.layer.TileOptions {
+
+interface TileProps extends MapComponentProps, olx.layer.TileOptions {
 }
 
-export class Tile extends React.Component<TileProps> {
+export class Tile extends MapComponent<ol.layer.Tile, TileProps> {
 
-    // noinspection JSUnusedGlobalSymbols
-    static contextType = MapContextType;
-    context: MapContext;
-    layer: ol.layer.Tile;
-
-    componentDidMount(): void {
-        const map = this.context.map!;
-        this.layer = new ol.layer.Tile(this.props);
-        map.getLayers().push(this.layer);
+    addMapObject(map: ol.Map): ol.layer.Tile {
+        const layer = new ol.layer.Tile(this.props);
+        map.getLayers().push(layer);
+        return layer;
     }
 
-    componentDidUpdate(prevProps: Readonly<TileProps>): void {
+    updateMapObject(map: ol.Map, layer: ol.layer.Tile, prevProps: Readonly<TileProps>): ol.layer.Tile {
         // TODO: Code duplication in ./Vector.tsx
         if (this.props.source !== prevProps.source) {
-             this.layer.setSource(this.props.source);
+            layer.setSource(this.props.source);
         }
         if (this.props.visible && this.props.visible !== prevProps.visible) {
-            this.layer.setVisible(this.props.visible);
+            layer.setVisible(this.props.visible);
         }
         if (this.props.opacity && this.props.opacity !== prevProps.opacity) {
-            this.layer.setOpacity(this.props.opacity);
+            layer.setOpacity(this.props.opacity);
         }
         if (this.props.zIndex && this.props.zIndex !== prevProps.zIndex) {
-            this.layer.setZIndex(this.props.zIndex);
+            layer.setZIndex(this.props.zIndex);
         }
         if (this.props.minResolution && this.props.minResolution !== prevProps.minResolution) {
-            this.layer.setMinResolution(this.props.minResolution);
+            layer.setMinResolution(this.props.minResolution);
         }
         if (this.props.maxResolution && this.props.maxResolution !== prevProps.maxResolution) {
-            this.layer.setMaxResolution(this.props.maxResolution);
+            layer.setMaxResolution(this.props.maxResolution);
         }
         // TODO: add more props here
+        return layer;
     }
 
-    componentWillUnmount(): void {
-        const map = this.context.map!;
-        map.getLayers().remove(this.layer);
-    }
-
-    render() {
-        return null;
+    removeMapObject(map: ol.Map, layer: ol.layer.Tile): void {
+        map.getLayers().remove(layer);
     }
 }
 

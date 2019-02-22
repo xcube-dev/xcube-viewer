@@ -1,31 +1,24 @@
-import * as React from 'react';
 import * as ol from 'openlayers';
 
-import 'openlayers/css/ol.css';
-import './Map.css';
-import { MapContextType, MapContext } from "./Map";
+import { MapComponent, MapComponentProps } from "./MapComponent";
 
 
-interface ViewProps extends ol.olx.ViewOptions {
+interface ViewProps extends MapComponentProps, ol.olx.ViewOptions {
 }
 
-export class View extends React.Component<ViewProps> {
-    // noinspection JSUnusedGlobalSymbols
-    static contextType = MapContextType;
-    readonly context: MapContext;
+export class View extends MapComponent<ol.View, ViewProps> {
 
-    componentDidMount(): void {
-        const map = this.context.map!;
+    addMapObject(map: ol.Map): ol.View {
         map.getView().setProperties(this.props);
+        return map.getView();
     }
 
-    componentDidUpdate(prevProps: Readonly<ViewProps>): void {
-        const map = this.context.map!;
-        map.getView().setProperties(this.props);
+    removeMapObject(map: ol.Map, object: ol.View): void {
     }
 
-    render() {
-        return null;
+    updateMapObject(map: ol.Map, object: ol.View): ol.View {
+        map.getView().setProperties(this.props);
+        return map.getView();
     }
 }
 
