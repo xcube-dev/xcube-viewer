@@ -9,6 +9,7 @@ import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 import Viewer from './Viewer';
 import { I18N } from '../config';
+import TimePlayer from "./TimePlayer";
 import TimeControl from "./TimeControl";
 import TimeRangeControl from './TimeRangeControl';
 
@@ -58,6 +59,7 @@ class AppPane extends React.Component<AppPaneProps> {
                 <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>
+                <TimePlayer/>
                 <TimeControl/>
                 <TimeRangeControl/>
                 <Typography variant="h6" gutterBottom component="h5">

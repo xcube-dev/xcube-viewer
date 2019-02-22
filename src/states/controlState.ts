@@ -14,6 +14,8 @@ export interface ControlState {
     selectedCoordinate: [number, number] | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: "add" | "replace";
+    timeAnimationActive: boolean;
+    timeAnimationInterval: number;
     flyTo: ol.geom.SimpleGeometry | ol.Extent | null;
 }
 
@@ -30,6 +32,8 @@ export function newControlState(): ControlState {
         selectedCoordinate: null,
         selectedDrawMode: "Point",
         timeSeriesUpdateMode: "replace",
+        timeAnimationActive: false,
+        timeAnimationInterval: 500,
         flyTo: null,
     };
 }

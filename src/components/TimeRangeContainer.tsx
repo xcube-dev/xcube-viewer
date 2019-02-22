@@ -69,25 +69,31 @@ class TimeRangeContainer extends React.Component<TimeRangeContainerProps> {
         const {classes, value, component, children, disabled} = this.props;
         const timeMinText = value ? utcTimeToLocalDateString(value![0]) : "?";
         const timeMaxText = value ? utcTimeToLocalDateString(value![1]) : "?";
-        return <div className={classes.container}>
-            <IconButton className={classes.button}
-                        disabled={!value|| disabled}
-                        aria-label="Step back"
-                        onClick={this.handleTimeStepDown}>
-                <KeyboardArrowLeft/>
-            </IconButton>
-            <div className={classes.timeLabel}>{timeMinText}</div>
-            <div className={classes.componentContainer}>
-                {component || children}
+        return (
+            <div className={classes.container}>
+                <IconButton
+                    className={classes.button}
+                    disabled={!value || disabled}
+                    aria-label="Step back"
+                    onClick={this.handleTimeStepDown}
+                >
+                    <KeyboardArrowLeft/>
+                </IconButton>
+                <div className={classes.timeLabel}>{timeMinText}</div>
+                <div className={classes.componentContainer}>
+                    {component || children}
+                </div>
+                <div className={classes.timeLabel}>{timeMaxText}</div>
+                <IconButton
+                    className={classes.button}
+                    disabled={!value || disabled}
+                    aria-label="Step up"
+                    onClick={this.handleTimeStepUp}
+                >
+                    <KeyboardArrowRight/>
+                </IconButton>
             </div>
-            <div className={classes.timeLabel}>{timeMaxText}</div>
-            <IconButton className={classes.button}
-                        disabled={!value || disabled}
-                        aria-label="Step up"
-                        onClick={this.handleTimeStepUp}>
-                <KeyboardArrowRight/>
-            </IconButton>
-        </div>
+        );
     }
 }
 

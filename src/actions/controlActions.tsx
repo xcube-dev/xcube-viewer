@@ -151,6 +151,21 @@ export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: "add" | "replac
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const UPDATE_TIME_ANIMATION = 'UPDATE_TIME_ANIMATION';
+export type UPDATE_TIME_ANIMATION = typeof UPDATE_TIME_ANIMATION;
+
+export interface UpdateTimeAnimation {
+    type: UPDATE_TIME_ANIMATION;
+    timeAnimationActive: boolean;
+    timeAnimationInterval: number;
+}
+
+export function updateTimeAnimation(timeAnimationActive: boolean, timeAnimationInterval: number): UpdateTimeAnimation {
+    return {type: UPDATE_TIME_ANIMATION, timeAnimationActive, timeAnimationInterval};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_COORDINATE = 'SELECT_COORDINATE';
 export type SELECT_COORDINATE = typeof SELECT_COORDINATE;
 
@@ -202,4 +217,5 @@ export type ControlAction =
     | SelectTimeRange
     | SelectCoordinate
     | SelectTimeSeriesUpdateMode
-    | UpdateVisibleTimeRange;
+    | UpdateVisibleTimeRange
+    | UpdateTimeAnimation;

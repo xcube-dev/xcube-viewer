@@ -10,7 +10,7 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction, SELECT_TIME_RANGE, UPDATE_VISIBLE_TIME_RANGE,
+    ControlAction, SELECT_TIME_RANGE, UPDATE_VISIBLE_TIME_RANGE, UPDATE_TIME_ANIMATION,
 } from '../actions/controlActions';
 import { findDataset, findDatasetVariable, findDatasetPlace, getDatasetTimeRange } from '../model/dataset';
 import { TimeRange } from "../model/timeSeries";
@@ -109,6 +109,13 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 timeSeriesUpdateMode: action.timeSeriesUpdateMode,
+            };
+        }
+        case UPDATE_TIME_ANIMATION: {
+            return {
+                ...state,
+                timeAnimationActive: action.timeAnimationActive,
+                timeAnimationInterval: action.timeAnimationInterval,
             };
         }
         case SELECT_COORDINATE: {
