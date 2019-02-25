@@ -13,6 +13,7 @@ import TimeSeriesModeSelect from "./TimeSeriesModeSelect";
 
 
 const mapStateToProps = (state: AppState) => {
+    return {};
 };
 
 const mapDispatchToProps = {};
