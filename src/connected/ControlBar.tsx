@@ -1,15 +1,15 @@
-import * as React from "react";
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import ControlBar from "../components/ControlBar";
-import DatasetSelect from "./DatasetSelect";
-import VariableSelect from "./VariableSelect";
-import PlaceGroupsSelect from "./PlaceGroupsSelect";
-import PlaceSelect from "./PlaceSelect";
-import TimePlayer from "./TimePlayer";
-import TimeSlider from "./TimeSlider";
-import TimeSeriesModeSelect from "./TimeSeriesModeSelect";
+import ControlBar from '../components/ControlBar';
+import DatasetSelect from './DatasetSelect';
+import VariableSelect from './VariableSelect';
+import PlaceGroupsSelect from './PlaceGroupsSelect';
+import PlaceSelect from './PlaceSelect';
+import TimeSelect from './TimeSelect';
+import TimeSlider from './TimeSlider';
+import TimeSeriesModeSelect from './TimeSeriesModeSelect';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -26,7 +26,7 @@ class _ControlBar extends React.Component {
                 <VariableSelect/>
                 <PlaceGroupsSelect/>
                 <PlaceSelect/>
-                <TimePlayer/>
+                <TimeSelect/>
                 <TimeSlider/>
                 <TimeSeriesModeSelect/>
             </ControlBar>
