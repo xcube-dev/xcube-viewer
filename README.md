@@ -29,11 +29,13 @@ A simple viewer component for xcube-server
 * Use local time in UI (backend provides UTC time only)
 * Show a variable's legend in map
 * Texts are internationalizable. Locales are currently "en" and "de". (see constant `I18N` in `src/config/config.ts`)
+* Show modal "loading" dialog on initial data load
+* Show toast on info events (e.g. server error) 
+* Added means to select a time slice
+* Time ranges set from datasets
 
 ## Current Issues
 
-* No initial time selected
-* Must have means to select a time slice, currently we don't know where there is data
 * The legend and tooltip in time series chart should recognize Material UI theme
 * Must revise the way we will work with *places*. Each Dataset may have a list of PlaceGroups.
   * A PlaceGroup
@@ -71,6 +73,7 @@ A simple viewer component for xcube-server
   * Help dialog 
   * About dialog
 * Test on mobile devices
+* Configure and test PWA
 
 ## Nice to have soon
 

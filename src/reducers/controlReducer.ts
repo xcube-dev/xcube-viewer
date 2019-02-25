@@ -1,5 +1,7 @@
-import * as ol from "openlayers";
+import * as ol from 'openlayers';
 
+import { findDataset, findDatasetVariable, findDatasetPlace, getDatasetTimeRange } from '../model/dataset';
+import { TimeRange } from "../model/timeSeries";
 import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
@@ -10,12 +12,11 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction, SELECT_TIME_RANGE,
+    ControlAction, SELECT_TIME_RANGE, UPDATE_VISIBLE_TIME_RANGE, UPDATE_TIME_ANIMATION, ADD_ACTIVITY, REMOVE_ACTIVITY,
 } from '../actions/controlActions';
-import { findDataset, findDatasetVariable, findDatasetPlace } from '../model/dataset';
 
 
-const SIMPLE_GEOMETRY_TYPES = ["Point" , "LineString" , "LinearRing" , "Polygon" , "MultiPoint" , "MultiLineString" , "MultiPolygon" , "Circle"];
+const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
 export function controlReducer(state: ControlState, action: ControlAction): ControlState {
     if (typeof state === 'undefined') {
@@ -33,11 +34,18 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             if (dataset.bbox) {
                 flyTo = dataset.bbox;
             }
+            const selectedDatasetId = action.selectedDatasetId;
+            const selectedTimeRange = getDatasetTimeRange(dataset);
+            const visibleTimeRange: TimeRange | null = selectedTimeRange ? [selectedTimeRange[0], selectedTimeRange[1]] : null;
+            const selectedTime = selectedTimeRange ? selectedTimeRange[1] : null;
             return {
                 ...state,
-                selectedDatasetId: action.selectedDatasetId,
+                selectedDatasetId,
                 selectedVariableName,
-                flyTo: flyTo,
+                selectedTimeRange,
+                visibleTimeRange,
+                selectedTime,
+                flyTo,
             };
         }
         case SELECT_PLACE_GROUPS: {
@@ -91,16 +99,43 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
                 selectedTimeRange: action.selectedTimeRange,
             };
         }
+        case UPDATE_VISIBLE_TIME_RANGE: {
+            return {
+                ...state,
+                visibleTimeRange: action.visibleTimeRange,
+            };
+        }
         case SELECT_TIME_SERIES_UPDATE_MODE: {
             return {
                 ...state,
                 timeSeriesUpdateMode: action.timeSeriesUpdateMode,
             };
         }
+        case UPDATE_TIME_ANIMATION: {
+            return {
+                ...state,
+                timeAnimationActive: action.timeAnimationActive,
+                timeAnimationInterval: action.timeAnimationInterval,
+            };
+        }
         case SELECT_COORDINATE: {
             return {
                 ...state,
                 selectedCoordinate: action.selectedCoordinate,
+            };
+        }
+        case ADD_ACTIVITY: {
+            return {
+                ...state,
+                activities: {...state.activities, [action.id]: action.message},
+            };
+        }
+        case REMOVE_ACTIVITY: {
+            const activities = {...state.activities};
+            delete activities[action.id];
+            return {
+                ...state,
+                activities,
             };
         }
     }

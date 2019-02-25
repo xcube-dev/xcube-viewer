@@ -10,10 +10,14 @@ export interface ControlState {
     selectedUserPlaceId: string | null;
     selectedTime: Time | null;
     selectedTimeRange: TimeRange | null;
+    visibleTimeRange: TimeRange | null;
     selectedCoordinate: [number, number] | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: "add" | "replace";
+    timeAnimationActive: boolean;
+    timeAnimationInterval: number;
     flyTo: ol.geom.SimpleGeometry | ol.Extent | null;
+    activities: { [id: string]: string };
 }
 
 export function newControlState(): ControlState {
@@ -25,9 +29,13 @@ export function newControlState(): ControlState {
         selectedUserPlaceId: null,
         selectedTime: null,
         selectedTimeRange: null,
+        visibleTimeRange: null,
         selectedCoordinate: null,
         selectedDrawMode: "Point",
         timeSeriesUpdateMode: "replace",
+        timeAnimationActive: false,
+        timeAnimationInterval: 500,
         flyTo: null,
+        activities: {},
     };
 }

@@ -5,7 +5,7 @@ export const DEFAULT_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev
 
 export const I18N = new Database();
 
-I18N.locale = "se";
+I18N.locale = 'se';
 
 I18N.set('en')`Dataset`
     .add('de')`Datensatz`
@@ -43,3 +43,22 @@ I18N.set('en')`Values`
     .add('de')`Werte`
     .add('se')`Värden`;
 
+I18N.set('en')`Start`
+    .add('de')`Start`
+    .add('se')`Start`;
+
+I18N.set('en')`Stop`
+    .add('de')`Stopp`
+    .add('se')`Stanna`;
+
+I18N.set('en')`Please wait...`
+    .add('de')`Bitte warten...`
+    .add('se')`Vänta vänta...`;
+
+I18N.set('en')`Loading data`
+    .add('de')`Lade Daten`
+    .add('se')`Laddar data`;
+
+I18N.set('en')`Cannot reach server`
+    .add('de')`Kann Server nicht erreichen`
+    .add('se')`Kan inte nå servern`;

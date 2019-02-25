@@ -1,7 +1,7 @@
 export const LOCAL_OFFSET = -new Date("1970-01-01T00:00:00").getTime();
 
-export function localDateTimeStringToUtcTime(localTimeString: string): number {
-    return new Date(localTimeString).getTime();
+export function dateTimeStringToUtcTime(dateTimeString: string): number {
+    return new Date(dateTimeString).getTime();
 }
 
 export function utcTimeToLocalDateTimeString(utcTime: number) {

@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
 
-import SimpleLineChart from './TimeSeriesChart';
-import SimpleTable from '../components/SimpleTable';
+import TimeSeriesChart from './TimeSeriesChart';
 import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 import Viewer from './Viewer';
-import { I18N } from '../config';
+import TimeRangeControl from './TimeRangeSlider';
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
@@ -31,13 +29,10 @@ const styles = (theme: Theme) => createStyles(
         },
         appBarSpacer: theme.mixins.toolbar,
         viewerContainer: {
-            height: 400,
+            height: 380,
         },
         chartContainer: {
-            marginLeft: -22,
-        },
-        tableContainer: {
-            height: 320,
+            // marginLeft: -22,
         },
         h5: {
             marginBottom: theme.spacing.unit * 2,
@@ -56,18 +51,10 @@ class AppPane extends React.Component<AppPaneProps> {
                 <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>
-                <Typography variant="h6" gutterBottom component="h5">
-                    {I18N.text`Time-Series`}
-                </Typography>
                 <div className={classes.chartContainer}>
-                    <SimpleLineChart/>
+                    <TimeSeriesChart/>
                 </div>
-                <Typography variant="h6" gutterBottom component="h5">
-                    {I18N.text`Values`}
-                </Typography>
-                <div className={classes.tableContainer}>
-                    <SimpleTable/>
-                </div>
+                <TimeRangeControl/>
             </main>
         );
     }

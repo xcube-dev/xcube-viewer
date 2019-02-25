@@ -1,35 +1,34 @@
 import * as React from 'react';
 import * as ol from 'openlayers';
-import { MapContextType, MapContext } from '../Map';
+
+import { MapComponent, MapComponentProps } from "../MapComponent";
 
 
-interface ControlProps {
+interface ControlProps extends MapComponentProps {
     style?: React.CSSProperties;
     className?: string;
 }
 
-export class Control extends React.Component<ControlProps> {
-    // noinspection JSUnusedGlobalSymbols
-    static contextType = MapContextType;
-    context: MapContext;
-    control: ol.control.Control | null;
+export class Control extends MapComponent<ol.control.Control , ControlProps> {
     divRef: HTMLDivElement | null;
 
     handleDivRef = (divRef: HTMLDivElement | null) => {
         this.divRef = divRef;
     };
 
-    componentDidMount(): void {
-        const map = this.context.map!;
-        this.control = new ol.control.Control({element: this.divRef!, target: map.getTarget()});
-        // this.control.setTarget(map.getTargetElement());
-        map.addControl(this.control);
+    addMapObject(map: ol.Map): ol.control.Control {
+        const control = new ol.control.Control({element: this.divRef!, target: map.getTarget()});
+        map.addControl(control);
+        return control;
     }
 
-    componentWillUnmount(): void {
-        // const map = this.context.map!;
-        // map.removeControl(this.control!);
-        this.control = null;
+    updateMapObject(map: ol.Map, control: ol.control.Control, prevProps: Readonly<ControlProps>): ol.control.Control {
+        return control;
+    }
+
+    removeMapObject(map: ol.Map, control: ol.control.Control): void {
+        // TODO: This will cause React to crash, but it should be correct!
+        // map.removeControl(control);
     }
 
     render() {

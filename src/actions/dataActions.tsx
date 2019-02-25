@@ -1,11 +1,19 @@
 import { Dispatch } from 'redux';
-import { MessageLogAction, postMessage } from './messageLogActions';
-import { SelectDataset, selectDataset } from "./controlActions";
 import { AppState } from '../states/appState';
+import * as api from '../api'
+import { MessageLogAction, postMessage } from './messageLogActions';
+import {
+    AddActivity,
+    addActivity,
+    RemoveActivity,
+    removeActivity,
+    SelectDataset,
+    selectDataset
+} from './controlActions';
 import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
-import { ColorBars } from "../model/colorBar";
-import * as api from '../api'
+import { ColorBars } from '../model/colorBar';
+import { I18N } from '../config';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,9 +27,11 @@ export interface UpdateDatasets {
 }
 
 export function updateDatasets() {
-    return (dispatch: Dispatch<UpdateDatasets | SelectDataset | MessageLogAction>, getState: () => AppState) => {
+    return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const state = getState();
         const apiServerUrl = state.configState.apiServerUrl;
+
+        dispatch(addActivity(UPDATE_DATASETS, I18N.text`Loading data`));
 
         api.getDatasets(apiServerUrl)
            .then((datasets: Dataset[]) => {
@@ -32,6 +42,9 @@ export function updateDatasets() {
            })
            .catch(error => {
                dispatch(postMessage('error', error + ''));
+           })
+           .finally(() => {
+               dispatch(removeActivity(UPDATE_DATASETS));
            });
     };
 }
@@ -61,7 +74,7 @@ export function updateColorBars() {
                dispatch(_updateColorBars(colorBars));
            })
            .catch(error => {
-               dispatch(postMessage('error', error + ''));
+               dispatch(postMessage('error', error.message || `${error}`));
            });
     };
 }
@@ -78,10 +91,10 @@ export type UPDATE_TIME_SERIES = typeof UPDATE_TIME_SERIES;
 export interface UpdateTimeSeries {
     type: UPDATE_TIME_SERIES;
     timeSeries: TimeSeries;
-    updateMode: "add" | "replace";
+    updateMode: 'add' | 'replace';
 }
 
-export function updateTimeSeries(timeSeries: TimeSeries, updateMode: "add" | "replace"): UpdateTimeSeries {
+export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace'): UpdateTimeSeries {
     return {type: UPDATE_TIME_SERIES, timeSeries, updateMode};
 }
 

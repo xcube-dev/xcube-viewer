@@ -1,11 +1,30 @@
 import { Variable } from './variable';
 import { Place, PlaceGroup } from './place';
+import { TimeRange } from './timeSeries';
 
+
+export interface Dimension {
+    name: string;
+    size: number;
+    dtype: string;
+    coordinates: any[];
+}
+
+export interface SpaceDimension extends Dimension {
+    name: 'lon' | 'lat';
+    coordinates: number[];
+}
+
+export interface TimeDimension extends Dimension {
+    name: 'time';
+    coordinates: string[];
+}
 
 export interface Dataset {
     id: string;
     title: string;
     bbox: [number, number, number, number];
+    dimensions: [TimeDimension, SpaceDimension, SpaceDimension];
     variables: Variable[];
     placeGroups?: PlaceGroup[];
 }
@@ -55,3 +74,15 @@ export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | 
     return null;
 }
 
+export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
+    if (!(dataset.dimensions && dataset.dimensions.length > 0)) {
+        return null;
+    }
+    const timeDimension = dataset.dimensions[0];
+    let coordinates = timeDimension.coordinates;
+    if (!(coordinates && coordinates.length > 0)) {
+        return null;
+    }
+    const size = timeDimension.size;
+    return [new Date(coordinates[0]).getTime(), new Date(coordinates[size - 1]).getTime()];
+}

@@ -10,39 +10,45 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps,
+    ReferenceArea, ReferenceLine, TooltipProps, Brush
 } from 'recharts';
-import IconButton from "@material-ui/core/IconButton";
-import ZoomOutMap from "@material-ui/icons/ZoomOutMap";
-import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
+import IconButton from '@material-ui/core/IconButton';
+import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core';
 
-import { TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
-import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from "../util/time";
+import { equalTimeRanges, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
+import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
+import Typography from '@material-ui/core/Typography';
+import { I18N } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
     {
+        container: {
+            userSelect: 'none',
+            position: 'relative',
+        },
         zoomOutButton: {
-            position: "absolute",
-            right: theme.spacing.unit * 3,
+            position: 'absolute',
+            right: theme.spacing.unit,
             margin: theme.spacing.unit,
             zIndex: 1000,
             opacity: 0.8,
         },
         toolTipContainer: {
-            backgroundColor: "black",
+            backgroundColor: 'black',
             opacity: 0.8,
-            color: "white",
-            border: "2px solid black",
+            color: 'white',
+            border: '2px solid black',
             borderRadius: theme.spacing.unit * 2,
             padding: theme.spacing.unit * 1.5,
         },
         toolTipValue: {
-            fontWeight: "bold",
+            fontWeight: 'bold',
         },
         toolTipLabel: {
-            fontWeight: "bold",
+            fontWeight: 'bold',
             paddingBottom: theme.spacing.unit,
         },
     });
@@ -53,8 +59,9 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles> {
     selectedTime?: string | null;
     selectTime?: (time: string | null) => void;
 
-    selectedTimeRange?: [number, number] | null;
-    selectTimeRange?: (timeRange: [number, number] | null) => void;
+    dataTimeRange?: TimeRange | null;
+    selectedTimeRange?: TimeRange | null;
+    selectTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
 interface TimeSeriesChartState {
@@ -65,7 +72,6 @@ interface TimeSeriesChartState {
 
 const STROKES = ['grey', 'red', 'blue', 'green', 'yellow'];
 const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
-const X_AXIS_PADDING = {left: 20, right: 20};
 const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
 
@@ -77,13 +83,14 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     }
 
     render() {
-        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange} = this.props;
+        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange} = this.props;
 
         const {isDragging, firstTime, secondTime} = this.state;
 
-        let isZoomed = false, time1: number | null = null, time2: number | null = null;
+        let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
         if (selectedTimeRange) {
-            isZoomed = true;
+            isZoomedIn = !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
+            console.log("TimeSeriesChart: isZoomedIn: ", isZoomedIn, selectedTimeRange, dataTimeRange);
             [time1, time2] = selectedTimeRange;
         }
 
@@ -91,7 +98,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         if (timeSeriesCollection) {
             lines = timeSeriesCollection.map((ts, i) => {
                 let data: TimeSeriesPoint[] = ts.data;
-                if (isZoomed) {
+                if (isZoomedIn) {
                     data = [];
                     ts.data.forEach(point => {
                         const time = point.time;
@@ -123,17 +130,17 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         if (selectedTime) {
             const time = new Date(selectedTime).getTime();
             referenceLine =
-                <ReferenceLine isFront={true} x={time} stroke={"yellow"} strokeWidth={3} strokeOpacity={0.5}/>;
+                <ReferenceLine isFront={true} x={time} stroke={'yellow'} strokeWidth={3} strokeOpacity={0.5}/>;
         }
 
         let referenceArea = null;
         if (isDragging && firstTime !== null && secondTime !== null) {
             referenceArea =
-                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={"red"} fillOpacity={0.3}/>;
+                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={'red'} fillOpacity={0.3}/>;
         }
 
         let zoomOutButton = null;
-        if (time1 && time2) {
+        if (isZoomedIn) {
             zoomOutButton = (
                 <IconButton
                     className={classes.zoomOutButton}
@@ -147,19 +154,20 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
         // 99% per https://github.com/recharts/recharts/issues/172
         return (
-            <div style={{userSelect: 'none'}}>
+            <div className={classes.container}>
+                <Typography variant='subtitle1'>{I18N.text`Time-Series`}</Typography>
                 {zoomOutButton}
                 <ResponsiveContainer width="99%" height={320}>
                     <LineChart onMouseDown={this.handleMouseDown}
                                onMouseMove={this.handleMouseMove}
                                onMouseUp={this.handleMouseUp}
                                onClick={this.handleClick}
+                               syncId="anyId"
                     >
                         <XAxis dataKey="time"
                                type="number"
-                               domain={X_AXIS_DOMAIN}
-                               padding={X_AXIS_PADDING}
-                               allowDuplicatedCategory={false}
+                               tickCount={6}
+                               domain={selectedTimeRange || X_AXIS_DOMAIN}
                                tickFormatter={this.tickFormatter}
                         />
                         <YAxis dataKey="average"
@@ -167,6 +175,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                domain={Y_AXIS_DOMAIN}
                         />
                         <CartesianGrid strokeDasharray="3 3"/>
+                        <Brush dataKey={'time'} width={100} updateId={'time'}/>
                         <Tooltip content={<CustomTooltip/>}/>
                         <Legend/>
                         {lines}
@@ -233,7 +242,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     private zoomOut() {
         this.setState(TimeSeriesChart.clearState(), () => {
             if (this.props.selectTimeRange) {
-                this.props.selectTimeRange(null);
+                this.props.selectTimeRange(this.props.dataTimeRange || null);
             }
         });
     };
@@ -257,7 +266,7 @@ interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
 class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
     render() {
         const {classes, active, label, payload} = this.props;
-        if (typeof label !== "number") {
+        if (typeof label !== 'number') {
             return null;
         }
         let items = null;

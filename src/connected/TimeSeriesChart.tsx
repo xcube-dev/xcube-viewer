@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../states/appState';
 import TimeSeriesChart from '../components/TimeSeriesChart';
 import { selectTime, selectTimeRange } from "../actions/controlActions";
+import { selectedDatasetTimeRangeSelector } from '../selectors/controlSelectors';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -10,6 +11,7 @@ const mapStateToProps = (state: AppState) => {
         timeSeriesCollection: state.dataState.timeSeriesCollection,
         selectedTime: state.controlState.selectedTime,
         selectedTimeRange:  state.controlState.selectedTimeRange,
+        dataTimeRange: selectedDatasetTimeRangeSelector(state),
     }
 };
 
