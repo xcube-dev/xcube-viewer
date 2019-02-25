@@ -3,16 +3,16 @@ import { AppState } from '../states/appState';
 import * as api from '../api'
 import { MessageLogAction, postMessage } from './messageLogActions';
 import {
-AddActivity,
-addActivity,
-RemoveActivity,
-removeActivity,
-SelectDataset,
-selectDataset
-} from "./controlActions";
+    AddActivity,
+    addActivity,
+    RemoveActivity,
+    removeActivity,
+    SelectDataset,
+    selectDataset
+} from './controlActions';
 import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
-import { ColorBars } from "../model/colorBar";
+import { ColorBars } from '../model/colorBar';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ export function updateDatasets() {
         const apiServerUrl = state.configState.apiServerUrl;
 
         // TODO: I18N me!
-        dispatch(addActivity(UPDATE_DATASETS, "Loading datasets"));
+        dispatch(addActivity(UPDATE_DATASETS, 'Loading datasets'));
 
         api.getDatasets(apiServerUrl)
            .then((datasets: Dataset[]) => {
@@ -91,10 +91,10 @@ export type UPDATE_TIME_SERIES = typeof UPDATE_TIME_SERIES;
 export interface UpdateTimeSeries {
     type: UPDATE_TIME_SERIES;
     timeSeries: TimeSeries;
-    updateMode: "add" | "replace";
+    updateMode: 'add' | 'replace';
 }
 
-export function updateTimeSeries(timeSeries: TimeSeries, updateMode: "add" | "replace"): UpdateTimeSeries {
+export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace'): UpdateTimeSeries {
     return {type: UPDATE_TIME_SERIES, timeSeries, updateMode};
 }
 
