@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import TimePlayer from '../components/TimePlayer';
+import TimeSelect from '../components/TimeSelect';
 import { selectTime, selectTimeRange, updateTimeAnimation } from '../actions/controlActions';
 import { UNIT } from "../model/timeSeries";
 
@@ -22,4 +22,4 @@ const mapDispatchToProps = {
     updateTimeAnimation,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimePlayer);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeSelect);
