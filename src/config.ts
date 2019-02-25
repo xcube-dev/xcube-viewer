@@ -1,7 +1,14 @@
 import Database from './util/i18n';
+import lightGreen from '@material-ui/core/colors/lightGreen';
+import deepPurple from '@material-ui/core/colors/deepPurple';
+
 
 export const DEFAULT_APP_NAME = 'CyanoAlert';
 export const DEFAULT_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev6';
+
+export const DEFAULT_UI_THEME = 'light';
+export const DEFAULT_UI_PRIMARY_COLOR = lightGreen;
+export const DEFAULT_UI_SECONDARY_COLOR = deepPurple;
 
 export const I18N = new Database();
 
