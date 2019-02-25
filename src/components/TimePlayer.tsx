@@ -6,8 +6,9 @@ import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { utcTimeToLocalDateString } from "../util/time";
-import FormControl from "@material-ui/core/FormControl";
+import { utcTimeToLocalDateString } from '../util/time';
+import FormControl from '@material-ui/core/FormControl';
+import { I18N } from '../config';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -105,11 +106,10 @@ class TimePlayer extends React.Component<TimePlayerProps> {
     render() {
         let {classes, selectedTime, timeAnimationActive} = this.props;
 
-        const isValid = typeof selectedTime === "number";
-        const timeText = isValid ? utcTimeToLocalDateString(selectedTime!) : "?";
+        const isValid = typeof selectedTime === 'number';
+        const timeText = isValid ? utcTimeToLocalDateString(selectedTime!) : '?';
 
-        // TODO: I18N me!
-        const playToolTip = timeAnimationActive ? "Pause" : "Play";
+        const playToolTip = timeAnimationActive ? I18N.text`Stop` : I18N.text`Start`;
         const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
         return (

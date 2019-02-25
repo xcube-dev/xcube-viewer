@@ -67,14 +67,14 @@ class TimeRangeContainer extends React.Component<TimeRangeContainerProps> {
 
     render() {
         // TODO: I18N me!
-        const {classes, value, component, children, disabled} = this.props;
+        const {classes, min, max, value, component, children, disabled} = this.props;
         const timeMinText = value ? utcTimeToLocalDateString(value![0]) : "?";
         const timeMaxText = value ? utcTimeToLocalDateString(value![1]) : "?";
         return (
             <div className={classes.container}>
                 <IconButton
                     className={classes.button}
-                    disabled={!value || disabled}
+                    disabled={!value || value![0] <= min || disabled}
                     aria-label="Step back"
                     onClick={this.handleTimeStepDown}
                 >
@@ -87,7 +87,7 @@ class TimeRangeContainer extends React.Component<TimeRangeContainerProps> {
                 <div className={classes.timeLabel}>{timeMaxText}</div>
                 <IconButton
                     className={classes.button}
-                    disabled={!value || disabled}
+                    disabled={!value || value![1] >= max || disabled}
                     aria-label="Step up"
                     onClick={this.handleTimeStepUp}
                 >

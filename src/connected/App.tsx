@@ -13,7 +13,8 @@ import {
 import { AppState } from '../states/appState';
 import AppBar from './AppBar';
 import AppPane from './AppPane';
-import LoadingDialog from "./LoadingDialog";
+import LoadingDialog from './LoadingDialog';
+import MessageLog from './MessageLog';
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -57,6 +58,7 @@ class App extends React.PureComponent<DashboardProps> {
                     <AppBar/>
                     <AppPane/>
                     <LoadingDialog/>
+                    <MessageLog/>
                 </div>
             </MuiThemeProvider>
         );

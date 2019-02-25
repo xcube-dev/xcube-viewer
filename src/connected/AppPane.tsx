@@ -32,7 +32,7 @@ const styles = (theme: Theme) => createStyles(
             height: 380,
         },
         chartContainer: {
-            marginLeft: -22,
+            // marginLeft: -22,
         },
         h5: {
             marginBottom: theme.spacing.unit * 2,

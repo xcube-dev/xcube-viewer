@@ -34,7 +34,7 @@ export interface TimeSeries {
 }
 
 
-export function equalTimes(t1: Time | null, t2: Time | null) {
+export function equalTimeRanges(t1: TimeRange | null, t2: TimeRange | null) {
     if (t1 === t2) {
         return true;
     } else if (t1 !== null && t2 != null) {
@@ -42,3 +42,4 @@ export function equalTimes(t1: Time | null, t2: Time | null) {
     }
     return false;
 }
+

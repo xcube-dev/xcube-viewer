@@ -13,6 +13,7 @@ import {
 import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
+import { I18N } from '../config';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,8 +31,7 @@ export function updateDatasets() {
         const state = getState();
         const apiServerUrl = state.configState.apiServerUrl;
 
-        // TODO: I18N me!
-        dispatch(addActivity(UPDATE_DATASETS, 'Loading datasets'));
+        dispatch(addActivity(UPDATE_DATASETS, I18N.text`Loading data`));
 
         api.getDatasets(apiServerUrl)
            .then((datasets: Dataset[]) => {
@@ -74,7 +74,7 @@ export function updateColorBars() {
                dispatch(_updateColorBars(colorBars));
            })
            .catch(error => {
-               dispatch(postMessage('error', error + ''));
+               dispatch(postMessage('error', error.message || `${error}`));
            });
     };
 }

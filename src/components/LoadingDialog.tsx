@@ -4,6 +4,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import Typography from "@material-ui/core/Typography";
+import { I18N } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -36,10 +37,9 @@ class LoadingDialog extends React.Component<LoadingDialogProps> {
             return null;
         }
 
-        // TODO: I18N me!
         return (
             <Dialog open={true} aria-labelledby="loading">
-                <DialogTitle id="loading">Please wait...</DialogTitle>
+                <DialogTitle id="loading">{I18N.text`Please wait...`}</DialogTitle>
                 <div className={classes.contentContainer}>
                     <CircularProgress className={classes.progress}/>
                     {messages.map((message, i) => (

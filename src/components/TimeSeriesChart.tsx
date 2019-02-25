@@ -17,15 +17,21 @@ import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 
-import { TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
+import { equalTimeRanges, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
+import Typography from '@material-ui/core/Typography';
+import { I18N } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
     {
+        container: {
+            userSelect: 'none',
+            position: 'relative',
+        },
         zoomOutButton: {
             position: 'absolute',
-            right: theme.spacing.unit * 3,
+            right: theme.spacing.unit,
             margin: theme.spacing.unit,
             zIndex: 1000,
             opacity: 0.8,
@@ -66,7 +72,6 @@ interface TimeSeriesChartState {
 
 const STROKES = ['grey', 'red', 'blue', 'green', 'yellow'];
 const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
-//const X_AXIS_PADDING = {left: 20, right: 20};
 const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
 
@@ -78,13 +83,14 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     }
 
     render() {
-        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange} = this.props;
+        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange} = this.props;
 
         const {isDragging, firstTime, secondTime} = this.state;
 
-        let isZoomed = false, time1: number | null = null, time2: number | null = null;
+        let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
         if (selectedTimeRange) {
-            isZoomed = true;
+            isZoomedIn = !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
+            console.log("TimeSeriesChart: isZoomedIn: ", isZoomedIn, selectedTimeRange, dataTimeRange);
             [time1, time2] = selectedTimeRange;
         }
 
@@ -92,7 +98,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         if (timeSeriesCollection) {
             lines = timeSeriesCollection.map((ts, i) => {
                 let data: TimeSeriesPoint[] = ts.data;
-                if (isZoomed) {
+                if (isZoomedIn) {
                     data = [];
                     ts.data.forEach(point => {
                         const time = point.time;
@@ -134,7 +140,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         }
 
         let zoomOutButton = null;
-        if (time1 && time2) {
+        if (isZoomedIn) {
             zoomOutButton = (
                 <IconButton
                     className={classes.zoomOutButton}
@@ -148,12 +154,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
         // 99% per https://github.com/recharts/recharts/issues/172
         return (
-            <div style={{userSelect: 'none'}}>
-                <Brush width={200} height={50} fill={'yellow'}
-                       dataKey={'time'}
-                       startIndex={0}
-                       endIndex={4}
-                       data={[{time: 0}, {time: 1}, {time: 2}, {time: 3}, {time: 4}]}/>
+            <div className={classes.container}>
+                <Typography variant='subtitle1'>{I18N.text`Time-Series`}</Typography>
                 {zoomOutButton}
                 <ResponsiveContainer width="99%" height={320}>
                     <LineChart onMouseDown={this.handleMouseDown}
@@ -166,7 +168,6 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                type="number"
                                tickCount={6}
                                domain={selectedTimeRange || X_AXIS_DOMAIN}
-                               // padding={X_AXIS_PADDING}
                                tickFormatter={this.tickFormatter}
                         />
                         <YAxis dataKey="average"
