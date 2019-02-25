@@ -17,6 +17,7 @@ export interface ControlState {
     timeAnimationActive: boolean;
     timeAnimationInterval: number;
     flyTo: ol.geom.SimpleGeometry | ol.Extent | null;
+    activities: { [id: string]: string };
 }
 
 export function newControlState(): ControlState {
@@ -35,5 +36,6 @@ export function newControlState(): ControlState {
         timeAnimationActive: false,
         timeAnimationInterval: 500,
         flyTo: null,
+        activities: {},
     };
 }

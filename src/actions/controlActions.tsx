@@ -1,15 +1,15 @@
-import { MessageLogAction, postMessage } from "./messageLogActions";
-import { AppState } from "../states/appState";
 import { Dispatch } from "redux";
 
-import * as api from '../api'
-import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
 import {
     selectedDatasetIdSelector,
     selectedDatasetVariableSelector,
 } from "../selectors/controlSelectors";
 import { Dataset } from "../model/dataset";
 import { Time, TimeRange, TimeSeries } from "../model/timeSeries";
+import { AppState } from "../states/appState";
+import * as api from '../api'
+import { MessageLogAction, postMessage } from "./messageLogActions";
+import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,6 +207,35 @@ export function _selectCoordinate(selectedCoordinate: [number, number] | null): 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const ADD_ACTIVITY = 'ADD_ACTIVITY';
+export type ADD_ACTIVITY = typeof ADD_ACTIVITY;
+
+export interface AddActivity {
+    type: ADD_ACTIVITY;
+    id: string;
+    message: string;
+}
+
+export function addActivity(id: string, message: string): AddActivity {
+    return {type: ADD_ACTIVITY, id, message};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const REMOVE_ACTIVITY = 'REMOVE_ACTIVITY';
+export type REMOVE_ACTIVITY = typeof REMOVE_ACTIVITY;
+
+export interface RemoveActivity {
+    type: REMOVE_ACTIVITY;
+    id: string;
+}
+
+export function removeActivity(id: string): RemoveActivity {
+    return {type: REMOVE_ACTIVITY, id};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
     SelectDataset
     | SelectVariable
@@ -218,4 +247,6 @@ export type ControlAction =
     | SelectCoordinate
     | SelectTimeSeriesUpdateMode
     | UpdateVisibleTimeRange
-    | UpdateTimeAnimation;
+    | UpdateTimeAnimation
+    | AddActivity
+    | RemoveActivity;

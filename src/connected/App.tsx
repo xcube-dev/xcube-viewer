@@ -13,6 +13,7 @@ import {
 import { AppState } from '../states/appState';
 import AppBar from './AppBar';
 import AppPane from './AppPane';
+import LoadingDialog from "./LoadingDialog";
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -27,6 +28,7 @@ const mapDispatchToProps = {};
 
 const theme = createMuiTheme(
     {
+        // TODO: make the theme part of configuration in src/config.ts
         palette: {
             type: 'dark',
         },
@@ -54,6 +56,7 @@ class App extends React.PureComponent<DashboardProps> {
                     <CssBaseline/>
                     <AppBar/>
                     <AppPane/>
+                    <LoadingDialog/>
                 </div>
             </MuiThemeProvider>
         );

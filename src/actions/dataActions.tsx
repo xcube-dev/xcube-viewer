@@ -1,11 +1,18 @@
 import { Dispatch } from 'redux';
-import { MessageLogAction, postMessage } from './messageLogActions';
-import { SelectDataset, selectDataset } from "./controlActions";
 import { AppState } from '../states/appState';
+import * as api from '../api'
+import { MessageLogAction, postMessage } from './messageLogActions';
+import {
+AddActivity,
+addActivity,
+RemoveActivity,
+removeActivity,
+SelectDataset,
+selectDataset
+} from "./controlActions";
 import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from "../model/colorBar";
-import * as api from '../api'
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,9 +26,12 @@ export interface UpdateDatasets {
 }
 
 export function updateDatasets() {
-    return (dispatch: Dispatch<UpdateDatasets | SelectDataset | MessageLogAction>, getState: () => AppState) => {
+    return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const state = getState();
         const apiServerUrl = state.configState.apiServerUrl;
+
+        // TODO: I18N me!
+        dispatch(addActivity(UPDATE_DATASETS, "Loading datasets"));
 
         api.getDatasets(apiServerUrl)
            .then((datasets: Dataset[]) => {
@@ -32,6 +42,9 @@ export function updateDatasets() {
            })
            .catch(error => {
                dispatch(postMessage('error', error + ''));
+           })
+           .finally(() => {
+               dispatch(removeActivity(UPDATE_DATASETS));
            });
     };
 }

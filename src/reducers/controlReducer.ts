@@ -1,5 +1,7 @@
 import * as ol from 'openlayers';
 
+import { findDataset, findDatasetVariable, findDatasetPlace, getDatasetTimeRange } from '../model/dataset';
+import { TimeRange } from "../model/timeSeries";
 import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
@@ -10,10 +12,8 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction, SELECT_TIME_RANGE, UPDATE_VISIBLE_TIME_RANGE, UPDATE_TIME_ANIMATION,
+    ControlAction, SELECT_TIME_RANGE, UPDATE_VISIBLE_TIME_RANGE, UPDATE_TIME_ANIMATION, ADD_ACTIVITY, REMOVE_ACTIVITY,
 } from '../actions/controlActions';
-import { findDataset, findDatasetVariable, findDatasetPlace, getDatasetTimeRange } from '../model/dataset';
-import { TimeRange } from "../model/timeSeries";
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -122,6 +122,20 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 selectedCoordinate: action.selectedCoordinate,
+            };
+        }
+        case ADD_ACTIVITY: {
+            return {
+                ...state,
+                activities: {...state.activities, [action.id]: action.message},
+            };
+        }
+        case REMOVE_ACTIVITY: {
+            const activities = {...state.activities};
+            delete activities[action.id];
+            return {
+                ...state,
+                activities,
             };
         }
     }

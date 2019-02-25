@@ -6,7 +6,7 @@ import * as ol from 'openlayers';
 
 import { Dataset, findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { Variable } from '../model/variable';
-import { Place, PlaceGroup } from '../model/place';
+import { getPlaceLabel, Place, PlaceGroup, LABEL_PROPERTY_NAMES } from '../model/place';
 import { Time, TimeRange } from '../model/timeSeries';
 import ColorBarLegend from '../components/ColorBarLegend';
 import { MapElement } from '../components/ol/Map';
@@ -20,6 +20,7 @@ export const selectedDatasetIdSelector = (state: AppState) => state.controlState
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
 export const selectedPlaceGroupIdsSelector = (state: AppState) => state.controlState.selectedPlaceGroupIds;
 export const selectedTimeSelector = (state: AppState) => state.controlState.selectedTime;
+export const activitiesSelector = (state: AppState) => state.controlState.activities;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -83,7 +84,7 @@ export const selectedDatasetSelectedPlaceGroupPlacesSelector = createSelector(
 export const selectedDatasetSelectedPlaceGroupPlaceLabelsSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): string[] => {
-        const labelPropNames = ['__placeholder__', 'label', 'title', 'name', 'id'];
+        const labelPropNames = ['__placeholder__', ...LABEL_PROPERTY_NAMES];
         let labels: string[] = [];
         placeGroups.forEach(placeGroup => {
             const propertyMapping = placeGroup.propertyMapping;
@@ -188,16 +189,10 @@ export const selectedColorBarLegendSelector = createSelector(
     }
 );
 
-
-function getPlaceLabel(place: Place, labelPropNames: string []) {
-    if (place.properties) {
-        let label;
-        for (let propName of labelPropNames) {
-            label = place.properties[propName];
-            if (label) {
-                return label;
-            }
-        }
+export const activityMessagesSelector = createSelector(
+    activitiesSelector,
+    (activities: { [id: string]: string }): string[] => {
+        return Object.keys(activities).map(k => activities[k]);
     }
-    return '' + place.id;
-}
+);
+
