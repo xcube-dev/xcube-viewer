@@ -15,6 +15,7 @@ import AppBar from './AppBar';
 import AppPane from './AppPane';
 import LoadingDialog from './LoadingDialog';
 import MessageLog from './MessageLog';
+import { DEFAULT_THEME, DEFAULT_PRIMARY_COLOR, DEFAULT_SECONDARY_COLOR } from '../config';
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -29,9 +30,10 @@ const mapDispatchToProps = {};
 
 const theme = createMuiTheme(
     {
-        // TODO: make the theme part of configuration in src/config.ts
         palette: {
-            type: 'dark',
+            type: DEFAULT_THEME,
+            primary: DEFAULT_PRIMARY_COLOR,
+            secondary: DEFAULT_SECONDARY_COLOR,
         },
         // see https://material-ui.com/style/typography/#migration-to-typography-v2
         typography: {
