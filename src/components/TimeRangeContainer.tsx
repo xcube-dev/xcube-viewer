@@ -7,6 +7,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import { utcTimeToLocalDateString } from '../util/time';
 import { Time, TimeDelta, TimeRange } from '../model/timeSeries';
+import Typography from '@material-ui/core/Typography';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -80,11 +81,11 @@ class TimeRangeContainer extends React.Component<TimeRangeContainerProps> {
                 >
                     <KeyboardArrowLeft/>
                 </IconButton>
-                <div className={classes.timeLabel}>{timeMinText}</div>
+                <div className={classes.timeLabel}><Typography variant={"body2"}>{timeMinText}</Typography></div>
                 <div className={classes.componentContainer}>
                     {component || children}
                 </div>
-                <div className={classes.timeLabel}>{timeMaxText}</div>
+                <div className={classes.timeLabel}><Typography variant={"body2"}>{timeMaxText}</Typography></div>
                 <IconButton
                     className={classes.button}
                     disabled={!value || value![1] >= max || disabled}

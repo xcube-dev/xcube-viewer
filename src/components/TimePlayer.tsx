@@ -6,9 +6,12 @@ import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { utcTimeToLocalDateString } from '../util/time';
+import { dateTimeStringToUtcTime, utcTimeToLocalDateTimeString } from '../util/time';
 import FormControl from '@material-ui/core/FormControl';
 import { I18N } from '../config';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel/InputLabel';
+import Input from '@material-ui/core/Input';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -22,15 +25,9 @@ const styles = (theme: Theme) => createStyles(
         button: {
             margin: theme.spacing.unit * 0.1,
         },
-        container: {
-            width: '100%',
-            display: 'flex',
-            color: 'white',
-            fontColor: 'white',
-            alignItems: 'center',
-            justifyContent: 'center',
+        textField: {
+            width: '14em',
         },
-        componentContainer: {},
         timeLabel: {
             width: '6em',
             textAlign: 'center',
@@ -70,6 +67,11 @@ class TimePlayer extends React.Component<TimePlayerProps> {
         updateTimeAnimation(!timeAnimationActive, timeAnimationInterval);
     };
 
+    private handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedTimeString = event.target.value;
+        this.props.selectTime(selectedTimeString ? dateTimeStringToUtcTime(selectedTimeString) : null);
+    };
+
     private playOrNor() {
         if (this.props.timeAnimationActive) {
             this.installTimer();
@@ -107,24 +109,33 @@ class TimePlayer extends React.Component<TimePlayerProps> {
         let {classes, selectedTime, timeAnimationActive} = this.props;
 
         const isValid = typeof selectedTime === 'number';
-        const timeText = isValid ? utcTimeToLocalDateString(selectedTime!) : '?';
+        const timeText = isValid ? utcTimeToLocalDateTimeString(selectedTime!) : '?';
 
         const playToolTip = timeAnimationActive ? I18N.text`Stop` : I18N.text`Start`;
         const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
         return (
             <FormControl className={classes.formControl}>
-                <div className={classes.container}>
-                    <div className={classes.timeLabel}>{timeText}</div>
-                    <IconButton
-                        className={classes.button}
-                        disabled={!isValid}
-                        aria-label={playToolTip}
-                        onClick={this.handlePlayButtonClick}
-                    >
-                        {playIcon}
-                    </IconButton>
-                </div>
+                <InputLabel htmlFor="time-select">{I18N.text`Time`}</InputLabel>
+                <Input
+                    id="time-select"
+                    type="text"
+                    value={timeText}
+                    className={classes.textField}
+                    onChange={this.handleTimeChange}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                className={classes.button}
+                                disabled={!isValid}
+                                aria-label={playToolTip}
+                                onClick={this.handlePlayButtonClick}
+                            >
+                                {playIcon}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                />
             </FormControl>
         );
     }
