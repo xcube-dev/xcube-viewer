@@ -13,7 +13,13 @@ const styles = (theme: Theme) => createStyles(
         },
         message: {
             margin: theme.spacing.unit,
-            textAlign: "center"
+        },
+        contentContainer: {
+            margin: theme.spacing.unit,
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
         },
     });
 
@@ -34,7 +40,7 @@ class LoadingDialog extends React.Component<LoadingDialogProps> {
         return (
             <Dialog open={true} aria-labelledby="loading">
                 <DialogTitle id="loading">Please wait...</DialogTitle>
-                <div>
+                <div className={classes.contentContainer}>
                     <CircularProgress className={classes.progress}/>
                     {messages.map((message, i) => (
                         <Typography component="div" key={i}
