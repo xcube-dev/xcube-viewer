@@ -1,5 +1,4 @@
 import Database from './util/i18n';
-import { red } from "@material-ui/core/colors";
 
 
 export const DEFAULT_APP_NAME = '';
@@ -13,7 +12,13 @@ export const DEFAULT_PRIMARY_COLOR = {
     dark: "#bcbcbc",
     contrastText: '#fff',
 };
-export const DEFAULT_SECONDARY_COLOR = red;
+
+export const DEFAULT_SECONDARY_COLOR = {
+    light: "#65e1d9",
+    main: "#24afa8",
+    dark: "#007f79",
+    contrastText: '#fff',
+};
 
 export const I18N = new Database();
 
