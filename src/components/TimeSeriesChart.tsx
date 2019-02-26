@@ -10,7 +10,7 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps, Brush
+    ReferenceArea, ReferenceLine, TooltipProps
 } from 'recharts';
 import IconButton from '@material-ui/core/IconButton';
 import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
@@ -169,13 +169,13 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                tickCount={6}
                                domain={selectedTimeRange || X_AXIS_DOMAIN}
                                tickFormatter={this.tickFormatter}
+                               allowDuplicatedCategory={false}
                         />
                         <YAxis dataKey="average"
                                type="number"
                                domain={Y_AXIS_DOMAIN}
                         />
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <Brush dataKey={'time'} width={100} updateId={'time'}/>
                         <Tooltip content={<CustomTooltip/>}/>
                         <Legend/>
                         {lines}
