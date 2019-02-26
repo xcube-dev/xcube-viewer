@@ -12,7 +12,7 @@ export const DEFAULT_SECONDARY_COLOR = pink;
 
 export const I18N = new Database();
 
-I18N.locale = 'se';
+I18N.locale = 'en';
 
 I18N.set('en')`Dataset`
     .add('de')`Datensatz`
