@@ -1,5 +1,11 @@
 import { newDataState, DataState } from '../states/dataState';
-import { UPDATE_TIME_SERIES, DataAction, UPDATE_DATASETS, UPDATE_COLOR_BARS } from '../actions/dataActions';
+import {
+    UPDATE_TIME_SERIES,
+    DataAction,
+    UPDATE_DATASETS,
+    UPDATE_COLOR_BARS,
+    REMOVE_ALL_TIME_SERIES
+} from '../actions/dataActions';
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -18,7 +24,12 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                 return {...state, timeSeriesCollection: [...state.timeSeriesCollection, action.timeSeries]};
             } else if (action.updateMode === "replace") {
                 return {...state, timeSeriesCollection: [action.timeSeries]};
+            } else {
+                return state;
             }
+        }
+        case REMOVE_ALL_TIME_SERIES: {
+            return {...state, timeSeriesCollection: []};
         }
     }
     return state;
