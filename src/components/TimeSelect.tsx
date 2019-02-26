@@ -26,12 +26,7 @@ const styles = (theme: Theme) => createStyles(
             margin: theme.spacing.unit * 0.1,
         },
         textField: {
-            width: '14em',
-        },
-        timeLabel: {
-            width: '6em',
-            textAlign: 'center',
-            fontWeight: 'bold',
+            width: '15em',
         },
     }
 );
