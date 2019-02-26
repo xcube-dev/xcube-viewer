@@ -51,10 +51,14 @@ const styles = (theme: Theme) => createStyles(
             fontWeight: 'bold',
             paddingBottom: theme.spacing.unit,
         },
+        line: {
+            color: theme.palette.primary.light,
+        }
     });
 
 
 interface TimeSeriesChartProps extends WithStyles<typeof styles> {
+    theme: Theme;
     timeSeriesCollection?: TimeSeries[];
     selectedTime?: string | null;
     selectTime?: (time: string | null) => void;
@@ -83,7 +87,10 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     }
 
     render() {
-        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange} = this.props;
+        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange, theme} = this.props;
+
+        const lightStroke = theme.palette.primary.light;
+        const mainStroke = theme.palette.primary.main;
 
         const {isDragging, firstTime, secondTime} = this.state;
 
@@ -130,13 +137,13 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         if (selectedTime) {
             const time = new Date(selectedTime).getTime();
             referenceLine =
-                <ReferenceLine isFront={true} x={time} stroke={'yellow'} strokeWidth={3} strokeOpacity={0.5}/>;
+                <ReferenceLine isFront={true} x={time} stroke={mainStroke} strokeWidth={3} strokeOpacity={0.5}/>;
         }
 
         let referenceArea = null;
         if (isDragging && firstTime !== null && secondTime !== null) {
             referenceArea =
-                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={'red'} fillOpacity={0.3}/>;
+                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={lightStroke} fillOpacity={0.3}/>;
         }
 
         let zoomOutButton = null;
@@ -163,16 +170,19 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                onMouseUp={this.handleMouseUp}
                                onClick={this.handleClick}
                                syncId="anyId"
+                               style={{color: mainStroke}}
                     >
                         <XAxis dataKey="time"
                                type="number"
                                tickCount={6}
                                domain={selectedTimeRange || X_AXIS_DOMAIN}
                                tickFormatter={this.tickFormatter}
+                               stroke={mainStroke}
                         />
                         <YAxis dataKey="average"
                                type="number"
                                domain={Y_AXIS_DOMAIN}
+                               stroke={mainStroke}
                         />
                         <CartesianGrid strokeDasharray="3 3"/>
                         <Brush dataKey={'time'} width={100} updateId={'time'}/>
@@ -257,7 +267,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
 }
 
-export default withStyles(styles)(TimeSeriesChart);
+export default withStyles(styles, { withTheme: true })(TimeSeriesChart);
 
 
 interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
