@@ -59,7 +59,7 @@ const styles = (theme: Theme) => createStyles(
             backgroundColor: deepOrange[500],
         },
         iconButton: {
-            color: theme.palette.primary.dark,
+            color: theme.palette.type === 'dark' ? theme.palette.secondary.light : theme.palette.secondary.dark,
         }
     });
 
