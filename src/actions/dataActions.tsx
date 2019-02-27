@@ -98,7 +98,20 @@ export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 're
     return {type: UPDATE_TIME_SERIES, timeSeries, updateMode};
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const REMOVE_ALL_TIME_SERIES = 'REMOVE_ALL_TIME_SERIES';
+export type REMOVE_ALL_TIME_SERIES = typeof REMOVE_ALL_TIME_SERIES;
+
+export interface RemoveAllTimeSeries {
+    type: REMOVE_ALL_TIME_SERIES;
+}
+
+export function removeAllTimeSeries(): RemoveAllTimeSeries {
+    return {type: REMOVE_ALL_TIME_SERIES};
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export type DataAction = UpdateDatasets | UpdateColorBars | UpdateTimeSeries;
+export type DataAction = UpdateDatasets | UpdateColorBars | UpdateTimeSeries | RemoveAllTimeSeries;

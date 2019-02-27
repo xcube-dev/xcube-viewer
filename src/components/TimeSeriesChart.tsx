@@ -10,16 +10,17 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps, Brush
+    ReferenceArea, ReferenceLine, TooltipProps
 } from 'recharts';
 import IconButton from '@material-ui/core/IconButton';
 import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
+import DeleteSweep from '@material-ui/icons/DeleteSweep';
+import Typography from '@material-ui/core/Typography';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 
 import { equalTimeRanges, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import Typography from '@material-ui/core/Typography';
 import { I18N } from '../config';
 
 
@@ -30,6 +31,13 @@ const styles = (theme: Theme) => createStyles(
             position: 'relative',
         },
         zoomOutButton: {
+            position: 'absolute',
+            right: 8 * theme.spacing.unit,
+            margin: theme.spacing.unit,
+            zIndex: 1000,
+            opacity: 0.8,
+        },
+        removeAllButton: {
             position: 'absolute',
             right: theme.spacing.unit,
             margin: theme.spacing.unit,
@@ -66,6 +74,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles> {
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
+
+    removeAllTimeSeries?: () => void;
 }
 
 interface TimeSeriesChartState {
@@ -97,7 +107,6 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
         if (selectedTimeRange) {
             isZoomedIn = !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
-            console.log("TimeSeriesChart: isZoomedIn: ", isZoomedIn, selectedTimeRange, dataTimeRange);
             [time1, time2] = selectedTimeRange;
         }
 
@@ -146,24 +155,42 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                 <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={lightStroke} fillOpacity={0.3}/>;
         }
 
-        let zoomOutButton = null;
+        const actionButtons = [];
+
         if (isZoomedIn) {
-            zoomOutButton = (
+            const zoomOutButton = (
                 <IconButton
+                    key={'zoomOutButton'}
                     className={classes.zoomOutButton}
                     aria-label="Zoom Out"
-                    onClick={this.handleZoomOutButtonClicked}
+                    onClick={this.handleZoomOutButtonClick}
                 >
                     <ZoomOutMap/>
                 </IconButton>
             );
+            actionButtons.push(zoomOutButton);
         }
+
+        if (timeSeriesCollection && timeSeriesCollection.length > 0) {
+            const removeAllButton = (
+                <IconButton
+                    key={'removeAllButton'}
+                    className={classes.removeAllButton}
+                    aria-label="Remove all"
+                    onClick={this.handleRemoveAllButtonClick}
+                >
+                    <DeleteSweep/>
+                </IconButton>
+            );
+            actionButtons.push(removeAllButton);
+        }
+
 
         // 99% per https://github.com/recharts/recharts/issues/172
         return (
             <div className={classes.container}>
                 <Typography variant='subtitle1'>{I18N.text`Time-Series`}</Typography>
-                {zoomOutButton}
+                {actionButtons}
                 <ResponsiveContainer width="99%" height={320}>
                     <LineChart onMouseDown={this.handleMouseDown}
                                onMouseMove={this.handleMouseMove}
@@ -178,6 +205,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                domain={selectedTimeRange || X_AXIS_DOMAIN}
                                tickFormatter={this.tickFormatter}
                                stroke={mainStroke}
+                               allowDuplicatedCategory={false}
                         />
                         <YAxis dataKey="average"
                                type="number"
@@ -185,7 +213,6 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                stroke={mainStroke}
                         />
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <Brush dataKey={'time'} width={100} updateId={'time'}/>
                         <Tooltip content={<CustomTooltip/>}/>
                         <Legend/>
                         {lines}
@@ -228,8 +255,14 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         this.zoomIn();
     };
 
-    readonly handleZoomOutButtonClicked = () => {
+    readonly handleZoomOutButtonClick = () => {
         this.zoomOut();
+    };
+
+    readonly handleRemoveAllButtonClick = () => {
+        if (this.props.removeAllTimeSeries) {
+            this.props.removeAllTimeSeries();
+        }
     };
 
     private zoomIn() {
