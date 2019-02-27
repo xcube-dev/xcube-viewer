@@ -21,7 +21,12 @@ import { Theme } from '@material-ui/core';
 
 import { equalTimeRanges, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import { I18N, LINECHART_STROKES } from '../config';
+import {
+    I18N,
+    LINECHART_STROKE_SHADE_DARK,
+    LINECHART_STROKE_SHADE_LIGHT,
+    LINECHART_STROKES
+} from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -81,7 +86,7 @@ interface TimeSeriesChartState {
     secondTime: number | null;
 }
 
-const STROKES = LINECHART_STROKES;
+
 const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
 const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
@@ -96,6 +101,10 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     render() {
         const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange, theme} = this.props;
 
+        let strokes = LINECHART_STROKES.map(color => color[LINECHART_STROKE_SHADE_DARK]);
+        if (theme.palette.type === 'light') {
+            strokes = LINECHART_STROKES.map(color => color[LINECHART_STROKE_SHADE_LIGHT]);
+        }
         const lightStroke = theme.palette.primary.light;
         const mainStroke = theme.palette.primary.main;
         const labelTextColor = theme.palette.text.primary;
@@ -132,7 +141,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         dataKey="average"
                         connectNulls={true}
                         dot={true}
-                        stroke={STROKES[i % STROKES.length]}
+                        stroke={strokes[i % strokes.length]}
                         strokeWidth={3}
                         activeDot={true}
                     />
