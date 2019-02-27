@@ -1,30 +1,33 @@
 import { Variable } from './variable';
 import { Place, PlaceGroup } from './place';
-import { TimeRange } from './timeSeries';
+import { Time, TimeRange } from './timeSeries';
 
 
 export interface Dimension {
     name: string;
     size: number;
     dtype: string;
-    coordinates: any[];
+    coordinates: number[];
 }
 
-export interface SpaceDimension extends Dimension {
-    name: 'lon' | 'lat';
-    coordinates: number[];
+export interface LonDimension extends Dimension {
+    name: 'lon';
+}
+
+export interface LatDimension extends Dimension {
+    name: 'lat';
 }
 
 export interface TimeDimension extends Dimension {
     name: 'time';
-    coordinates: string[];
+    labels: string[];
 }
 
 export interface Dataset {
     id: string;
     title: string;
     bbox: [number, number, number, number];
-    dimensions: [TimeDimension, SpaceDimension, SpaceDimension];
+    dimensions: Dimension[];
     variables: Variable[];
     placeGroups?: PlaceGroup[];
 }
@@ -78,11 +81,22 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
     if (!(dataset.dimensions && dataset.dimensions.length > 0)) {
         return null;
     }
-    const timeDimension = dataset.dimensions[0];
-    let coordinates = timeDimension.coordinates;
+    const timeDimension = dataset.dimensions.find(dimension => dimension.name === "time");
+    const coordinates = timeDimension.coordinates;
     if (!(coordinates && coordinates.length > 0)) {
         return null;
     }
     const size = timeDimension.size;
-    return [new Date(coordinates[0]).getTime(), new Date(coordinates[size - 1]).getTime()];
+    return [coordinates[0], coordinates[size - 1]];
+}
+
+
+export function findDatasetTimeIndex(dataset: Dataset, time: Time): number | null {
+    const timeDimension = dataset.dimensions.find(dimension => dimension.name === "time");
+    const coordinates = timeDimension.coordinates;
+    if (!(coordinates && coordinates.length > 0)) {
+        return null;
+    }
+    const size = timeDimension.size;
+    return [coordinates[0], coordinates[size - 1]];
 }
