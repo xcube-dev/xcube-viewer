@@ -10,6 +10,7 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
 import logo from "../resources/logo.png";
+import { VIEWER_LOGO_WIDTH } from "../config";
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -72,7 +73,7 @@ class _AppBar extends React.Component<DashboardProps> {
                 className={classNames(classes.appBar)}
             >
                 <Toolbar disableGutters={true} className={classes.toolbar}>
-                    <img src={logo} alt={"xcube logo"} width={130} className={classes.logo}/>
+                    <img src={logo} alt={"xcube logo"} width={VIEWER_LOGO_WIDTH} className={classes.logo}/>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {appName}
                     </Typography>

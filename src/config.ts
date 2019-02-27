@@ -1,24 +1,17 @@
 import Database from './util/i18n';
+import { blue } from "@material-ui/core/colors";
+import { pink } from "@material-ui/core/colors";
 
 
-export const DEFAULT_APP_NAME = '';
-export const DEFAULT_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev6';
+export const VIEWER_APP_NAME = 'xcube Viewer';
+export const VIEWER_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev6';
 
+export const VIEWER_THEME = 'dark';
+export const VIEWER_PRIMARY_COLOR = blue;
+export const VIEWER_SECONDARY_COLOR = pink;
 
-export const DEFAULT_THEME = 'dark';
-export const DEFAULT_PRIMARY_COLOR = {
-    light: "#ffffff",
-    main: "#eeeeee",
-    dark: "#bcbcbc",
-    contrastText: '#fff',
-};
+export const VIEWER_LOGO_WIDTH = 32;
 
-export const DEFAULT_SECONDARY_COLOR = {
-    light: "#65e1d9",
-    main: "#24afa8",
-    dark: "#007f79",
-    contrastText: '#fff',
-};
 
 export const I18N = new Database();
 
