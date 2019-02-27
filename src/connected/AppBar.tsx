@@ -9,7 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
-import logo from "../resources/dcs4cop-logo.png";
+import logo from "../resources/logo.png";
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
