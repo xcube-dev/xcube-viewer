@@ -7,7 +7,7 @@ import { yellow } from "@material-ui/core/es/colors";
 export const VIEWER_APP_NAME = 'xcube Viewer';
 export const VIEWER_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev6';
 
-export const VIEWER_THEME = 'light';
+export const VIEWER_THEME = 'dark';
 export const VIEWER_PRIMARY_COLOR = blue;
 export const VIEWER_SECONDARY_COLOR = pink;
 
