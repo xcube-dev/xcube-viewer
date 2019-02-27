@@ -31,30 +31,21 @@ A simple viewer component for xcube-server
 * Texts are internationalizable. Locales are currently "en" and "de". (see constant `I18N` in `src/config/config.ts`)
 * Show modal "loading" dialog on initial data load
 * Show toast on info events (e.g. server error) 
+* Animate through time (play forw/back)
 * Added means to select a time slice
 * Time ranges set from datasets
+* Place groups associated to datasets
+  - produce a unique vector layer in the map;
+  - can specify their feature property fields that will provide the values for predefined roles:
+    "label", "infoUrl" (not used yet);
 
 ## Current Issues
 
 * The legend and tooltip in time series chart should recognize Material UI theme
-* Must revise the way we will work with *places*. Each Dataset may have a list of PlaceGroups.
-  * A PlaceGroup
-    - produces a unique vector layer in the map;
-    - can have min/max zoom level, style settings (see `ol.layer.Vector`, `ol.source.Vector` options);
-    - can specify its (property) field that will provide the values for predefined roles:
-      label, icon, image, description, size, area, ect.;
-    - can specify its (property) fields to be used for fuzzy text search;
-    - can specify a (GeoJSON) path template, and specify its template parameters whose values are extracted from another
-      (selected) feature's properties.
-  * In the UI
-    - If a dataset has place groups, we render a drop-down list with checkboxes for each place group;
-    - This will toggle the visibility of the vector layer;
-    - We will have a global search field that can search for any feature provided by any place group.
-      Selecting a feature from the result will cause the map to fly to its location and select its geometry so we can
-      use it to generate a time-series with statistics.
 
 ## Next
 
+* 
 * Show places with names as layer in map, show tooltip for place
 * Show selected place info in card, allow media content
 * Select place and show time series chart
@@ -80,14 +71,23 @@ A simple viewer component for xcube-server
 * Minimize legend in map, click again to open (good for mobile) 
 * Click legend and adjust colour bar and value range
 * Allow other base layers (e.g. Sentinel-2 L2A RGBs, Meteorology Maps)
-* Animate through time (play forw/back)
-* Create place and show time series chart
+* Draw place shape (polygon, circle, rectangle) and show time series chart
 * Brand the app so it can be used for different projects (texts, logos, colours, fonts)
 * Allow switching light/dark theme
 * User login
-  - Data events subscription for logged-in users 
-  - Data access for logged-in users for logged-in users 
-  - Manage user created places for logged-in users
+    - Data events subscription for logged-in users 
+    - Data access for logged-in users for logged-in users 
+    - Manage user created places for logged-in users
+* A PlaceGroup
+    - can have min/max zoom level, style settings (see `ol.layer.Vector`, `ol.source.Vector` options);
+    - can specify their feature property names that will provide the values for predefined roles:
+      icon, image, description, size, area, ect.;
+    - can specify their feature property names to be used for fuzzy text search;
+    - can specify a (GeoJSON) path template, and specify its template parameters
+      whose values are extracted from another (selected) feature's properties.
+* Add a search field for global search in the feature properties of all features in all place groups.
+  Selecting a feature from the result will cause the map to fly to its location and select its geometry so we can
+  use it to generate a time-series with statistics.
 
 
 
