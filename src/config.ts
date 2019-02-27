@@ -1,6 +1,7 @@
 import Database from './util/i18n';
-import { blue } from "@material-ui/core/colors";
+import { blue, green, grey, red } from "@material-ui/core/colors";
 import { pink } from "@material-ui/core/colors";
+import { yellow } from "@material-ui/core/es/colors";
 
 
 export const VIEWER_APP_NAME = 'xcube Viewer';
@@ -11,6 +12,9 @@ export const VIEWER_PRIMARY_COLOR = blue;
 export const VIEWER_SECONDARY_COLOR = pink;
 
 export const VIEWER_LOGO_WIDTH = 32;
+export const VIEWER_HEADER_BACKGROUND_COLOR = undefined;
+
+export const LINECHART_STROKES = [grey.A100, red.A100, blue.A100, green.A100, yellow.A100];
 
 
 export const I18N = new Database();

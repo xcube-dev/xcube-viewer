@@ -21,7 +21,7 @@ import { Theme } from '@material-ui/core';
 
 import { equalTimeRanges, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import { I18N } from '../config';
+import { I18N, LINECHART_STROKES } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -59,9 +59,6 @@ const styles = (theme: Theme) => createStyles(
             fontWeight: 'bold',
             paddingBottom: theme.spacing.unit,
         },
-        line: {
-            color: theme.palette.primary.light,
-        }
     });
 
 
@@ -84,7 +81,7 @@ interface TimeSeriesChartState {
     secondTime: number | null;
 }
 
-const STROKES = ['grey', 'red', 'blue', 'green', 'yellow'];
+const STROKES = LINECHART_STROKES;
 const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
 const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
@@ -101,6 +98,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
         const lightStroke = theme.palette.primary.light;
         const mainStroke = theme.palette.primary.main;
+        const labelTextColor = theme.palette.text.primary;
 
         const {isDragging, firstTime, secondTime} = this.state;
 
@@ -197,20 +195,20 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                onMouseUp={this.handleMouseUp}
                                onClick={this.handleClick}
                                syncId="anyId"
-                               style={{color: mainStroke}}
+                               style={{color: labelTextColor}}
                     >
                         <XAxis dataKey="time"
                                type="number"
                                tickCount={6}
                                domain={selectedTimeRange || X_AXIS_DOMAIN}
                                tickFormatter={this.tickFormatter}
-                               stroke={mainStroke}
+                               stroke={labelTextColor}
                                allowDuplicatedCategory={false}
                         />
                         <YAxis dataKey="average"
                                type="number"
                                domain={Y_AXIS_DOMAIN}
-                               stroke={mainStroke}
+                               stroke={labelTextColor}
                         />
                         <CartesianGrid strokeDasharray="3 3"/>
                         <Tooltip content={<CustomTooltip/>}/>

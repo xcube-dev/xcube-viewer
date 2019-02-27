@@ -10,7 +10,7 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
 import logo from "../resources/logo.png";
-import { VIEWER_LOGO_WIDTH } from "../config";
+import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR } from "../config";
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -30,7 +30,7 @@ const mapDispatchToProps = {};
 const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
-            backgroundColor: 'white',
+            backgroundColor: VIEWER_HEADER_BACKGROUND_COLOR,
         },
         toolbarIcon: {
             display: 'flex',
