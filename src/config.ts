@@ -14,7 +14,14 @@ export const VIEWER_SECONDARY_COLOR = pink;
 export const VIEWER_LOGO_WIDTH = 32;
 export const VIEWER_HEADER_BACKGROUND_COLOR = undefined;
 
-export const LINECHART_STROKES = [grey.A100, red.A100, blue.A100, green.A100, yellow.A100];
+export const LINECHART_STROKE_SHADE = 200;
+export const LINECHART_STROKES = [
+    grey[LINECHART_STROKE_SHADE],
+    red[LINECHART_STROKE_SHADE],
+    blue[LINECHART_STROKE_SHADE],
+    green[LINECHART_STROKE_SHADE],
+    yellow[LINECHART_STROKE_SHADE]
+];
 
 
 export const I18N = new Database();
