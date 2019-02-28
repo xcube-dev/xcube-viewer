@@ -1,4 +1,4 @@
-import { DEFAULT_APP_NAME, DEFAULT_API_SERVER_URL } from "../config";
+import { VIEWER_API_SERVER_URL, VIEWER_APP_NAME } from "../config";
 
 export interface ConfigState {
     appName: string;
@@ -7,7 +7,7 @@ export interface ConfigState {
 
 export function newConfigState() {
     return {
-        appName: DEFAULT_APP_NAME,
-        apiServerUrl: DEFAULT_API_SERVER_URL,
+        appName: VIEWER_APP_NAME,
+        apiServerUrl: VIEWER_API_SERVER_URL,
     }
 }
