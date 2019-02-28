@@ -44,10 +44,15 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
         const selectedPlaceId = this.props.selectedPlaceId || '';
         const places = this.props.places || [];
         const placeLabels = this.props.placeLabels || [];
+        const disabled = places.length === 0;
 
         return (
             <FormControl className={classes.formControl}>
-                <InputLabel shrink htmlFor="place-select">
+                <InputLabel
+                    shrink
+                    htmlFor="place-select"
+                    disabled={disabled}
+                >
                     {I18N.text`Place`}
                 </InputLabel>
                 <Select
@@ -57,6 +62,7 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
                     displayEmpty
                     name="place"
                     className={classes.selectEmpty}
+                    disabled={disabled}
                 >
                     {places.map((place, i) => (
                         <MenuItem
