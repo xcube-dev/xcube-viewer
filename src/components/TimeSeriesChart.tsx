@@ -21,7 +21,12 @@ import { Theme } from '@material-ui/core';
 
 import { equalTimeRanges, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import { I18N } from '../config';
+import {
+    I18N,
+    LINECHART_STROKE_SHADE_DARK,
+    LINECHART_STROKE_SHADE_LIGHT,
+    LINECHART_STROKES
+} from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -63,6 +68,7 @@ const styles = (theme: Theme) => createStyles(
 
 
 interface TimeSeriesChartProps extends WithStyles<typeof styles> {
+    theme: Theme;
     timeSeriesCollection?: TimeSeries[];
     selectedTime?: string | null;
     selectTime?: (time: string | null) => void;
@@ -80,7 +86,7 @@ interface TimeSeriesChartState {
     secondTime: number | null;
 }
 
-const STROKES = ['grey', 'red', 'blue', 'green', 'yellow'];
+
 const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
 const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
@@ -93,7 +99,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     }
 
     render() {
-        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange} = this.props;
+        const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange, theme} = this.props;
+
+        let strokes = LINECHART_STROKES.map(color => color[LINECHART_STROKE_SHADE_DARK]);
+        if (theme.palette.type === 'light') {
+            strokes = LINECHART_STROKES.map(color => color[LINECHART_STROKE_SHADE_LIGHT]);
+        }
+        const lightStroke = theme.palette.primary.light;
+        const mainStroke = theme.palette.primary.main;
+        const labelTextColor = theme.palette.text.primary;
 
         const {isDragging, firstTime, secondTime} = this.state;
 
@@ -127,7 +141,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         dataKey="average"
                         connectNulls={true}
                         dot={true}
-                        stroke={STROKES[i % STROKES.length]}
+                        stroke={strokes[i % strokes.length]}
                         strokeWidth={3}
                         activeDot={true}
                     />
@@ -139,13 +153,13 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         if (selectedTime) {
             const time = new Date(selectedTime).getTime();
             referenceLine =
-                <ReferenceLine isFront={true} x={time} stroke={'yellow'} strokeWidth={3} strokeOpacity={0.5}/>;
+                <ReferenceLine isFront={true} x={time} stroke={mainStroke} strokeWidth={3} strokeOpacity={0.5}/>;
         }
 
         let referenceArea = null;
         if (isDragging && firstTime !== null && secondTime !== null) {
             referenceArea =
-                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={'red'} fillOpacity={0.3}/>;
+                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={lightStroke} fillOpacity={0.3}/>;
         }
 
         const actionButtons = [];
@@ -190,17 +204,20 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                                onMouseUp={this.handleMouseUp}
                                onClick={this.handleClick}
                                syncId="anyId"
+                               style={{color: labelTextColor}}
                     >
                         <XAxis dataKey="time"
                                type="number"
                                tickCount={6}
                                domain={selectedTimeRange || X_AXIS_DOMAIN}
                                tickFormatter={this.tickFormatter}
+                               stroke={labelTextColor}
                                allowDuplicatedCategory={false}
                         />
                         <YAxis dataKey="average"
                                type="number"
                                domain={Y_AXIS_DOMAIN}
+                               stroke={labelTextColor}
                         />
                         <CartesianGrid strokeDasharray="3 3"/>
                         <Tooltip content={<CustomTooltip/>}/>
@@ -290,7 +307,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
 }
 
-export default withStyles(styles)(TimeSeriesChart);
+export default withStyles(styles, { withTheme: true })(TimeSeriesChart);
 
 
 interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {

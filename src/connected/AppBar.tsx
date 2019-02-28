@@ -9,7 +9,8 @@ import Avatar from '@material-ui/core/Avatar';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
-import logo from "../resources/cube-icon.png";
+import logo from "../resources/logo.png";
+import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR } from "../config";
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -29,6 +30,7 @@ const mapDispatchToProps = {};
 const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
+            backgroundColor: VIEWER_HEADER_BACKGROUND_COLOR,
         },
         toolbarIcon: {
             display: 'flex',
@@ -56,6 +58,9 @@ const styles = (theme: Theme) => createStyles(
             color: '#fff',
             backgroundColor: deepOrange[500],
         },
+        iconButton: {
+            color: theme.palette.type === 'dark' ? theme.palette.secondary.light : theme.palette.secondary.dark,
+        }
     });
 
 class _AppBar extends React.Component<DashboardProps> {
@@ -68,17 +73,17 @@ class _AppBar extends React.Component<DashboardProps> {
                 className={classNames(classes.appBar)}
             >
                 <Toolbar disableGutters={true} className={classes.toolbar}>
-                    <img src={logo} alt={"xcube logo"} width={32} className={classes.logo}/>
+                    <img src={logo} alt={"xcube logo"} width={VIEWER_LOGO_WIDTH} className={classes.logo}/>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {appName}
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
+                    <IconButton className={classes.iconButton} >
+                        <Badge badgeContent={4} color={"secondary"}>
                             <NotificationsIcon/>
                         </Badge>
                     </IconButton>
                     <Avatar className={classes.orangeAvatar}>CL</Avatar>
-                    <IconButton color="inherit">
+                    <IconButton className={classes.iconButton} >
                         <MoreVert/>
                     </IconButton>
                 </Toolbar>
