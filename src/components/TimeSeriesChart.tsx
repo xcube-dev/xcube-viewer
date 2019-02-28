@@ -21,12 +21,7 @@ import { Theme } from '@material-ui/core';
 
 import { equalTimeRanges, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import {
-    I18N,
-    LINECHART_STROKE_SHADE_DARK,
-    LINECHART_STROKE_SHADE_LIGHT,
-    LINECHART_STROKES
-} from '../config';
+import { I18N, LINECHART_STROKES_DARK, LINECHART_STROKES_LIGHT } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -101,10 +96,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     render() {
         const {classes, timeSeriesCollection, selectedTime, selectedTimeRange, dataTimeRange, theme} = this.props;
 
-        let strokes = LINECHART_STROKES.map(color => color[LINECHART_STROKE_SHADE_DARK]);
-        if (theme.palette.type === 'light') {
-            strokes = LINECHART_STROKES.map(color => color[LINECHART_STROKE_SHADE_LIGHT]);
-        }
+        const strokes = theme.palette.type === 'light' ? LINECHART_STROKES_LIGHT : LINECHART_STROKES_DARK;
         const lightStroke = theme.palette.primary.light;
         const mainStroke = theme.palette.primary.main;
         const labelTextColor = theme.palette.text.primary;
@@ -159,7 +151,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         let referenceArea = null;
         if (isDragging && firstTime !== null && secondTime !== null) {
             referenceArea =
-                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={lightStroke} fillOpacity={0.3}/>;
+                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={lightStroke}
+                               fillOpacity={0.3}/>;
         }
 
         const actionButtons = [];
@@ -307,7 +300,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
 }
 
-export default withStyles(styles, { withTheme: true })(TimeSeriesChart);
+export default withStyles(styles, {withTheme: true})(TimeSeriesChart);
 
 
 interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
