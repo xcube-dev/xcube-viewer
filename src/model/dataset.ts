@@ -1,6 +1,11 @@
 import { Variable } from './variable';
 import { Place, PlaceGroup } from './place';
-import { Time, TimeRange } from './timeSeries';
+import { TimeRange } from './timeSeries';
+import {
+    assertArrayNotEmpty,
+    assertDefinedAndNotNull,
+    assertTrue,
+} from "../util/assert";
 
 
 export interface Dimension {
@@ -10,13 +15,13 @@ export interface Dimension {
     coordinates: number[];
 }
 
-export interface LonDimension extends Dimension {
-    name: 'lon';
-}
-
-export interface LatDimension extends Dimension {
-    name: 'lat';
-}
+// export interface LonDimension extends Dimension {
+//     name: 'lon';
+// }
+//
+// export interface LatDimension extends Dimension {
+//     name: 'lat';
+// }
 
 export interface TimeDimension extends Dimension {
     name: 'time';
@@ -77,26 +82,19 @@ export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | 
     return null;
 }
 
-export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
-    if (!(dataset.dimensions && dataset.dimensions.length > 0)) {
-        return null;
-    }
-    const timeDimension = dataset.dimensions.find(dimension => dimension.name === "time");
-    const coordinates = timeDimension.coordinates;
-    if (!(coordinates && coordinates.length > 0)) {
-        return null;
-    }
-    const size = timeDimension.size;
-    return [coordinates[0], coordinates[size - 1]];
+export function getDatasetTimeDimension(dataset: Dataset): TimeDimension {
+    assertDefinedAndNotNull(dataset, "dataset");
+    assertArrayNotEmpty(dataset.dimensions, "dataset.dimensions");
+    const dimension: any = dataset.dimensions.find(dimension => dimension.name === "time");
+    assertTrue(dimension, "'time' not found in dataset dimensions");
+    assertArrayNotEmpty(dimension!.coordinates, "timeDimension.coordinates");
+    assertArrayNotEmpty(dimension!.labels, "timeDimension.labels");
+    return dimension as TimeDimension;
 }
 
-
-export function findDatasetTimeIndex(dataset: Dataset, time: Time): number | null {
-    const timeDimension = dataset.dimensions.find(dimension => dimension.name === "time");
+export function getDatasetTimeRange(dataset: Dataset): TimeRange {
+    const timeDimension = getDatasetTimeDimension(dataset);
     const coordinates = timeDimension.coordinates;
-    if (!(coordinates && coordinates.length > 0)) {
-        return null;
-    }
-    const size = timeDimension.size;
-    return [coordinates[0], coordinates[size - 1]];
+    return [coordinates[0], coordinates[coordinates.length - 1]];
 }
+
