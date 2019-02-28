@@ -41,17 +41,25 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
         this.props.selectPlaceGroups(event.target.value as any as string[] || null, this.props.datasets);
     };
 
+    renderSelectedPlaceGroupsTitle = () => {
+        return this.props.selectedPlaceGroupsTitle;
+    };
+
     render() {
         const {classes} = this.props;
 
         const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
         const placeGroups = this.props.placeGroups || [];
-        const selectedPlaceGroupsTitle = this.props.selectedPlaceGroupsTitle;
+        const disabled = placeGroups.length === 0;
 
         return (
 
             <FormControl className={classes.formControl}>
-                <InputLabel shrink htmlFor="place-groups-select">
+                <InputLabel
+                    shrink
+                    htmlFor="place-groups-select"
+                    disabled={disabled}
+                >
                     {I18N.text`Places`}
                 </InputLabel>
                 <Select
@@ -59,8 +67,9 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
                     onChange={this.handlePlaceGroupsChange}
                     input={<Input name="place-groups" id="place-groups-select"/>}
                     value={selectedPlaceGroupIds}
-                    renderValue={x => selectedPlaceGroupsTitle}
+                    renderValue={this.renderSelectedPlaceGroupsTitle}
                     name="place-groups"
+                    disabled={disabled}
                 >
                     {placeGroups.map(placeGroup => (
                         <MenuItem
