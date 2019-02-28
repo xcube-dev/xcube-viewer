@@ -23,7 +23,7 @@ export const LINECHART_STROKES_DARK = LINECHART_STROKES_BASE.map(color => color[
 
 export const I18N = new Database();
 
-I18N.locale = 'fi';
+I18N.locale = 'en';
 
 I18N.set('en')`Dataset`
     .add('de')`Datensatz`
