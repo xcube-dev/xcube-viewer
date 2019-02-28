@@ -99,7 +99,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         const strokes = theme.palette.type === 'light' ? LINECHART_STROKES_LIGHT : LINECHART_STROKES_DARK;
         const lightStroke = theme.palette.primary.light;
         const mainStroke = theme.palette.primary.main;
-        const labelTextColor = theme.palette.text.primary;
+        const labelTextColor = theme.palette.primary.contrastText;
 
         const {isDragging, firstTime, secondTime} = this.state;
 
