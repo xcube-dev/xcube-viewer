@@ -4,7 +4,13 @@ import { AppState } from '../states/appState';
 import { datasetsSelector, colorBarsSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
-import { Dataset, findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
+import {
+    Dataset,
+    findDataset,
+    findDatasetVariable,
+    getDatasetTimeDimension,
+    getDatasetTimeRange, TimeDimension
+} from '../model/dataset';
 import { Variable } from '../model/variable';
 import { getPlaceLabel, Place, PlaceGroup, LABEL_PROPERTY_NAMES } from '../model/place';
 import { Time, TimeRange } from '../model/timeSeries';
@@ -14,6 +20,7 @@ import { ColorBars } from '../model/colorBar';
 import { Tile } from '../components/ol/layer/Tile';
 import { Vector } from '../components/ol/layer/Vector';
 import { Layers } from '../components/ol/layer/Layers';
+import { findIndexCloseTo } from "../util/find";
 
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
@@ -105,17 +112,36 @@ export const selectedDatasetVariableSelector = createSelector(
     }
 );
 
+export const selectedDatasetTimeDimensionSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): TimeDimension | null => {
+        return (dataset && getDatasetTimeDimension(dataset)) || null;
+    }
+);
+
 export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetVariableSelector,
+    selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
-    (variable: Variable | null, time: Time | null): MapElement => {
+    (variable: Variable | null, timeDimension: TimeDimension | null, time: Time | null): MapElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
         const options = variable.tileSourceOptions;
         let url = options.url;
         if (time !== null) {
-            url += `?time=${new Date(time).toISOString()}`;
+            let timeString;
+            if (timeDimension) {
+                const timeIndex = findIndexCloseTo(timeDimension.coordinates, time);
+                if (timeIndex > -1) {
+                    timeString = timeDimension.labels[timeIndex];
+                    console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
+                }
+            }
+            if (!timeString) {
+                timeString = new Date(time).toISOString();
+            }
+            url += `?time=${timeString}`;
         }
         const attributions = [
             new ol.Attribution(
