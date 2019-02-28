@@ -1,15 +1,22 @@
 import Database from './util/i18n';
-import { blue, green, grey, purple, red, pink, yellow } from "@material-ui/core/colors";
+import { blue, green, grey, purple, red, pink, yellow, deepPurple } from "@material-ui/core/colors";
 
 
-export const VIEWER_APP_NAME = 'xcube Viewer';
+export const VIEWER_APP_NAME = '';
 export const VIEWER_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev6';
 
 export const VIEWER_THEME = 'dark';
-export const VIEWER_PRIMARY_COLOR = blue;
-export const VIEWER_SECONDARY_COLOR = pink;
 
-export const VIEWER_LOGO_WIDTH = 32;
+export const VIEWER_PRIMARY_COLOR = {
+    light: "#ceef64",
+    main: "#9abc31",
+    dark: "#688c00",
+    contrastText: '#fff',
+};
+
+export const VIEWER_SECONDARY_COLOR = deepPurple;
+
+export const VIEWER_LOGO_WIDTH = 120;
 export const VIEWER_HEADER_BACKGROUND_COLOR = undefined;
 
 export const LINECHART_STROKE_SHADE_DARK = 400;
@@ -23,7 +30,7 @@ export const LINECHART_STROKES_DARK = LINECHART_STROKES_BASE.map(color => color[
 
 export const I18N = new Database();
 
-I18N.locale = 'fi';
+I18N.locale = 'en';
 
 I18N.set('en')`Dataset`
     .add('de')`Datensatz`
