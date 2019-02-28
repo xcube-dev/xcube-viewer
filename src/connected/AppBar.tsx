@@ -56,11 +56,8 @@ const styles = (theme: Theme) => createStyles(
         orangeAvatar: {
             margin: 10,
             color: '#fff',
-            backgroundColor: deepOrange[500],
+            backgroundColor: deepOrange[300],
         },
-        iconButton: {
-            color: theme.palette.type === 'dark' ? theme.palette.secondary.light : theme.palette.secondary.dark,
-        }
     });
 
 class _AppBar extends React.Component<DashboardProps> {
@@ -77,13 +74,13 @@ class _AppBar extends React.Component<DashboardProps> {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {appName}
                     </Typography>
-                    <IconButton className={classes.iconButton} >
+                    <IconButton>
                         <Badge badgeContent={4} color={"secondary"}>
                             <NotificationsIcon/>
                         </Badge>
                     </IconButton>
                     <Avatar className={classes.orangeAvatar}>CL</Avatar>
-                    <IconButton className={classes.iconButton} >
+                    <IconButton>
                         <MoreVert/>
                     </IconButton>
                 </Toolbar>
