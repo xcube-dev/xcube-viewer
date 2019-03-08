@@ -11,20 +11,31 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 import { AppState } from '../states/appState';
 import logo from "../resources/logo.png";
 import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR } from "../config";
+import AppMenu from "../components/AppMenu";
+import SelectLanguageDialog from "./LanguageDialog";
+import { openDialog } from "../actions/controlActions";
 
 
-interface DashboardProps extends WithStyles<typeof styles> {
+interface AppBarProps extends WithStyles<typeof styles> {
     appName: string;
+    openDialog: (dialogId: string) => void;
+}
+
+interface AppBarState {
+    appMenuAnchorElement: HTMLElement | null;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
         appName: state.configState.appName,
     };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    openDialog,
+};
 
 
 const styles = (theme: Theme) => createStyles(
@@ -60,7 +71,25 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-class _AppBar extends React.Component<DashboardProps> {
+class _AppBar extends React.Component<AppBarProps, AppBarState> {
+
+    constructor(props: AppBarProps) {
+        super(props);
+        this.state = {appMenuAnchorElement: null};
+    }
+
+    handleAppMenuClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+        this.setState({appMenuAnchorElement: event.currentTarget});
+    };
+
+    handleAppMenuItemSelect = (itemId: string | null) => {
+        this.setState({appMenuAnchorElement: null});
+        if (itemId === "language") {
+            this.props.openDialog("language");
+        } else if (itemId === "settings") {
+            this.props.openDialog("settings");
+        }
+    };
 
     render() {
         const {classes, appName} = this.props;
@@ -80,10 +109,15 @@ class _AppBar extends React.Component<DashboardProps> {
                         </Badge>
                     </IconButton>
                     <Avatar className={classes.orangeAvatar}>CL</Avatar>
-                    <IconButton>
+                    <IconButton onClick={this.handleAppMenuClicked}>
                         <MoreVert/>
                     </IconButton>
                 </Toolbar>
+                <AppMenu
+                    itemSelect={this.handleAppMenuItemSelect}
+                    anchorElement={this.state.appMenuAnchorElement}
+                />
+                <SelectLanguageDialog/>
             </AppBar>
         );
     }

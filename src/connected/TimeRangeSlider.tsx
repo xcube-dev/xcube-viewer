@@ -8,6 +8,8 @@ import { selectedDatasetTimeRangeSelector } from '../selectors/controlSelectors'
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
+
         dataTimeRange: selectedDatasetTimeRangeSelector(state),
         selectedTimeRange: state.controlState.selectedTimeRange,
         visibleTimeRange: state.controlState.visibleTimeRange,

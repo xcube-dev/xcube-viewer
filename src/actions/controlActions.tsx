@@ -236,6 +236,48 @@ export function removeActivity(id: string): RemoveActivity {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const CHANGE_LOCALE = 'CHANGE_LOCALE';
+export type CHANGE_LOCALE = typeof CHANGE_LOCALE;
+
+export interface ChangeLocale {
+    type: CHANGE_LOCALE;
+    locale: string;
+}
+
+export function changeLocale(locale: string): ChangeLocale {
+    return {type: CHANGE_LOCALE, locale};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const OPEN_DIALOG = 'OPEN_DIALOG';
+export type OPEN_DIALOG = typeof OPEN_DIALOG;
+
+export interface OpenDialog {
+    type: OPEN_DIALOG;
+    dialogId: string;
+}
+
+export function openDialog(dialogId: string): OpenDialog {
+    return {type: OPEN_DIALOG, dialogId};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const CLOSE_DIALOG = 'CLOSE_DIALOG';
+export type CLOSE_DIALOG = typeof CLOSE_DIALOG;
+
+export interface CloseDialog {
+    type: CLOSE_DIALOG;
+    dialogId: string;
+}
+
+export function closeDialog(dialogId: string): CloseDialog {
+    return {type: CLOSE_DIALOG, dialogId};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
     SelectDataset
     | SelectVariable
@@ -249,4 +291,7 @@ export type ControlAction =
     | UpdateVisibleTimeRange
     | UpdateTimeAnimation
     | AddActivity
-    | RemoveActivity;
+    | RemoveActivity
+    | ChangeLocale
+    | OpenDialog
+    | CloseDialog;

@@ -11,6 +11,8 @@ import {
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
+
         datasets: state.dataState.datasets,
 
         selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,

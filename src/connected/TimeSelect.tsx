@@ -8,6 +8,8 @@ import { UNIT } from "../model/timeSeries";
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
+
         selectedTime: state.controlState.selectedTime,
         selectedTimeRange: state.controlState.selectedTimeRange,
         step: UNIT.days,

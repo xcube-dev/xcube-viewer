@@ -7,6 +7,8 @@ import { selectTimeSeriesUpdateMode } from '../actions/controlActions';
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
+
         timeSeriesUpdateMode: state.controlState.timeSeriesUpdateMode,
     };
 };

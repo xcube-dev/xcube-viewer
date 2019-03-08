@@ -1,0 +1,106 @@
+{
+  "languages": {
+    "de": "Deutsch",
+    "en": "English",
+    "fi": "Suomalainen",
+    "se": "Svenska"
+  },
+  "dictionary": [
+    {
+      "en": "Dataset",
+      "de": "Datensatz",
+      "se": "Uppgifter",
+      "fi": "Aineisto"
+    },
+    {
+      "en": "Variable",
+      "de": "Variable",
+      "se": "Variabel",
+      "fi": "Muuttuja"
+    },
+    {
+      "en": "Places",
+      "de": "Orte",
+      "se": "Platser",
+      "fi": "Paikat"
+    },
+    {
+      "en": "Place",
+      "de": "Ort",
+      "se": "Plats",
+      "fi": "Paikka"
+    },
+    {
+      "en": "Time",
+      "de": "Zeit",
+      "se": "Tid",
+      "fi": "Aika"
+    },
+    {
+      "en": "Multi",
+      "de": "Multi",
+      "se": "Multi",
+      "fi": "Multi"
+    },
+    {
+      "en": "Something went wrong",
+      "de": "Irgendetwas lief schief",
+      "se": "Något gick fel",
+      "fi": "Jotain meni pieleen"
+    },
+    {
+      "en": "Time-Series",
+      "de": "Zeitserie",
+      "se": "Tidsserier",
+      "fi": "Aikasarja"
+    },
+    {
+      "en": "Values",
+      "de": "Werte",
+      "se": "Värden",
+      "fi": "Arvot"
+    },
+    {
+      "en": "Start",
+      "de": "Start",
+      "se": "Start",
+      "fi": "Alkaa"
+    },
+    {
+      "en": "Stop",
+      "de": "Stopp",
+      "se": "Stanna",
+      "fi": "Stop"
+    },
+    {
+      "en": "Please wait...",
+      "de": "Bitte warten...",
+      "se": "Vänta vänta...",
+      "fi": "Odota..."
+    },
+    {
+      "en": "Loading data",
+      "de": "Lade Daten",
+      "se": "Laddar data",
+      "fi": "Tietoja ladataan"
+    },
+    {
+      "en": "Cannot reach server",
+      "de": "Kann Server nicht erreichen",
+      "se": "Kan inte nå servern",
+      "fi": "Palvelimeen ei pääse"
+    },
+    {
+      "en": "Language",
+      "de": "Sprache",
+      "se": "Språk",
+      "fi": "Kieli"
+    },
+    {
+      "en": "Settings",
+      "de": "Einstellungen",
+      "se": "Inställningar",
+      "fi": "Asetukset"
+    }
+  ]
+}

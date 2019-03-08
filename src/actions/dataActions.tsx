@@ -31,7 +31,7 @@ export function updateDatasets() {
         const state = getState();
         const apiServerUrl = state.configState.apiServerUrl;
 
-        dispatch(addActivity(UPDATE_DATASETS, I18N.text`Loading data`));
+        dispatch(addActivity(UPDATE_DATASETS, I18N.get("Loading data")));
 
         api.getDatasets(apiServerUrl)
            .then((datasets: Dataset[]) => {
