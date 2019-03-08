@@ -3,7 +3,7 @@ import { blue, green, grey, purple, red, pink, yellow, deepPurple } from "@mater
 
 
 export const VIEWER_APP_NAME = '';
-export const VIEWER_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev6';
+export const VIEWER_API_SERVER_URL = 'https://www.brockmann-consult.de/cyanoalert-dev/api/0.1.0.dev6';
 
 export const VIEWER_THEME = 'dark';
 
