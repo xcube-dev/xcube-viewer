@@ -9,6 +9,8 @@ import { selectedDatasetTimeRangeSelector } from '../selectors/controlSelectors'
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
+
         timeSeriesCollection: state.dataState.timeSeriesCollection,
         selectedTime: state.controlState.selectedTime,
         selectedTimeRange:  state.controlState.selectedTimeRange,

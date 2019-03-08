@@ -7,6 +7,8 @@ import { selectTime, selectTimeRange, updateVisibleTimeRange } from '../actions/
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
+
         selectedTime: state.controlState.selectedTime,
         selectedTimeRange: state.controlState.selectedTimeRange,
         visibleTimeRange: state.controlState.visibleTimeRange,

@@ -1,4 +1,6 @@
 import { blue, green, grey, purple, red, pink, yellow } from "@material-ui/core/colors";
+import { LanguageDictionary } from "./util/lang";
+import lang from "./resources/lang.json";
 
 
 export const VIEWER_APP_NAME = 'xcube Viewer';
@@ -18,3 +20,4 @@ export const LINECHART_STROKES_BASE = [grey, red, blue, green, yellow, purple, p
 export const LINECHART_STROKES_LIGHT = LINECHART_STROKES_BASE.map(color => color[LINECHART_STROKE_SHADE_LIGHT]);
 export const LINECHART_STROKES_DARK = LINECHART_STROKES_BASE.map(color => color[LINECHART_STROKE_SHADE_DARK]);
 
+export const I18N = new LanguageDictionary(lang);
