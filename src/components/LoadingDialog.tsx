@@ -4,7 +4,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import Typography from "@material-ui/core/Typography";
-import { I18N } from '../config';
+import { I18N } from '../lang';
 
 
 const styles = (theme: Theme) => createStyles(

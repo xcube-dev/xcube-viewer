@@ -1,5 +1,5 @@
 import { HTTPError } from './errors';
-import { I18N } from '../config';
+import { I18N } from '../lang';
 
 export type QueryComponent = [string, string];
 

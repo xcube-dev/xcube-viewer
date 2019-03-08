@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { Variable } from '../model/variable';
-import { I18N } from '../config';
+import { I18N } from '../lang';
 
 
 const styles = (theme: Theme) => createStyles(

@@ -13,7 +13,7 @@ import {
 import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
-import { I18N } from '../config';
+import { I18N } from '../lang';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

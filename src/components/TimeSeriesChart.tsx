@@ -21,7 +21,8 @@ import { Theme } from '@material-ui/core';
 
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import { I18N, LINECHART_STROKES_DARK, LINECHART_STROKES_LIGHT } from '../config';
+import { LINECHART_STROKES_DARK, LINECHART_STROKES_LIGHT } from '../config';
+import { I18N } from '../lang';
 
 
 const styles = (theme: Theme) => createStyles(

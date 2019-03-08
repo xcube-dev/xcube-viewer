@@ -3,7 +3,7 @@ import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/s
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { I18N } from '../config';
+import { I18N } from '../lang';
 
 
 const styles = (theme: Theme) => createStyles(

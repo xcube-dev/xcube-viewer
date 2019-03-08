@@ -8,7 +8,7 @@ import Select from '@material-ui/core/Select';
 
 import { Dataset } from '../model/dataset';
 import { Place } from '../model/place';
-import { I18N } from '../config';
+import { I18N } from '../lang';
 
 
 const styles = (theme: Theme) => createStyles(

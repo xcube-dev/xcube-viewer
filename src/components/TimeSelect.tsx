@@ -8,7 +8,7 @@ import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
 import { Time, TimeRange } from '../model/timeSeries';
 import { dateTimeStringToUtcTime, utcTimeToLocalDateTimeString } from '../util/time';
 import FormControl from '@material-ui/core/FormControl';
-import { I18N } from '../config';
+import { I18N } from '../lang';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
 import Input from '@material-ui/core/Input';
