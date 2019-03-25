@@ -16,17 +16,11 @@ export class LanguageDictionary {
     private readonly _content: LanguageDictionaryContent;
     private _locale: string;
 
-    constructor(json: LanguageDictionaryJson, locale?: string) {
+    constructor(json: LanguageDictionaryJson) {
 
         const locales = Object.getOwnPropertyNames(json.languages);
         if (locales.findIndex(locale => locale === "en") < 0) {
             throw new Error(`Internal error: locale "en" must be included in supported languages`)
-        }
-
-        let currentLocale = locale || getCurrentLocale();
-        if (locales.findIndex(locale => locale === currentLocale) < 0) {
-            console.warn(`No translation found for current locale "${currentLocale}", falling back to "en".`);
-            currentLocale = "en";
         }
 
         const content = {};
@@ -46,7 +40,7 @@ export class LanguageDictionary {
 
         this._languages = json.languages;
         this._content = content;
-        this._locale = currentLocale;
+        this._locale = "en";
     }
 
     get languages(): LanguageDictionaryEntry {
@@ -58,6 +52,18 @@ export class LanguageDictionary {
     }
 
     set locale(value: string) {
+        const locales = Object.getOwnPropertyNames(this._languages);
+        if (locales.findIndex(locale => locale === value) < 0) {
+            const baseValue = value.split("-")[0];
+            if (locales.findIndex(locale => locale === baseValue) < 0) {
+                console.error(`No translation found for locale "${value}", staying with "${this._locale}".`);
+                return;
+            } else {
+                console.warn(`No translation found for locale "${value}", falling back to "${baseValue}".`);
+                value = baseValue;
+            }
+        }
+
         this._locale = value;
     }
 
@@ -82,7 +88,7 @@ export class LanguageDictionary {
     }
 }
 
-const getCurrentLocale = (): string => {
+export const getCurrentLocale = (): string => {
     if (navigator.languages && navigator.languages.length > 0) {
         return navigator.languages[0];
     } else {

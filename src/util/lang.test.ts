@@ -51,6 +51,10 @@ describe('Database', () => {
         expect(i18n.locale).toEqual('en');
         i18n.locale = 'de';
         expect(i18n.locale).toEqual('de');
+        i18n.locale = 'en-US';
+        expect(i18n.locale).toEqual('en');
+        i18n.locale = 'de-DE';
+        expect(i18n.locale).toEqual('de');
     });
 
     it('can add', () => {
