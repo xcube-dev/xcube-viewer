@@ -57,7 +57,7 @@ export class Map extends React.Component<MapProps, MapState> {
     };
 
     componentDidMount(): void {
-        console.log("Map.componentDidMount: new Map!");
+        // console.log("Map.componentDidMount: new Map!");
         const mapOptions = this.getMapOptions();
         const target = this.contextValue.mapDiv!;
         const map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions, target});
@@ -75,14 +75,14 @@ export class Map extends React.Component<MapProps, MapState> {
     }
 
     componentDidUpdate(prevProps: Readonly<MapProps>): void {
-        console.log("Map.componentDidUpdate: update Map!");
+        // console.log("Map.componentDidUpdate: update Map!");
         const map = this.contextValue.map;
         const mapOptions = this.getMapOptions();
         map!.setProperties({...mapOptions, target: this.contextValue.mapDiv});
     }
 
     componentWillUnmount(): void {
-        console.log("Map.componentWillUnmount: remove Map!");
+        // console.log("Map.componentWillUnmount: remove Map!");
         const onMapRef = this.props.onMapRef;
         if (onMapRef) {
             onMapRef(null);

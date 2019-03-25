@@ -135,7 +135,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
                 const timeIndex = findIndexCloseTo(timeDimension.coordinates, time);
                 if (timeIndex > -1) {
                     timeString = timeDimension.labels[timeIndex];
-                    console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
+                    // console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
                 }
             }
             if (!timeString) {
