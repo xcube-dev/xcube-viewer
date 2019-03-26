@@ -10,7 +10,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import { Dataset } from '../model/dataset';
 import { PlaceGroup } from '../model/place';
-import { I18N } from '../config';
+import { WithLocale } from "../util/lang";
+import { I18N } from "../config";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -25,13 +26,15 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-interface PlaceGroupSelectProps extends WithStyles<typeof styles> {
+interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
     datasets: Dataset[];
 
     selectedPlaceGroupIds: string[] | null;
     placeGroups: PlaceGroup[];
     selectPlaceGroups: (placeGroupIds: string[] | null, dataset: Dataset[]) => void;
     selectedPlaceGroupsTitle: string;
+
+    language?: string;
 }
 
 class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
@@ -60,7 +63,7 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
                     htmlFor="place-groups-select"
                     disabled={disabled}
                 >
-                    {I18N.text`Places`}
+                    {I18N.get("Places")}
                 </InputLabel>
                 <Select
                     multiple

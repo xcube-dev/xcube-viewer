@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { Variable } from '../model/variable';
+import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 
 
@@ -22,8 +23,7 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-interface VariableSelectProps extends WithStyles<typeof styles> {
-
+interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedVariableName: string | null;
     variables: Variable[];
     selectVariable: (variableName: string | null) => void;
@@ -44,7 +44,7 @@ class VariableSelect extends React.Component<VariableSelectProps> {
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel shrink htmlFor="variable-select">
-                    {I18N.text`Variable`}
+                    {I18N.get("Variable")}
                 </InputLabel>
                 <Select
                     className={classes.selectEmpty}
@@ -67,7 +67,6 @@ class VariableSelect extends React.Component<VariableSelectProps> {
             </FormControl>
         );
     }
-
 }
 
 export default withStyles(styles)(VariableSelect);

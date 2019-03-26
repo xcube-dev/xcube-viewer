@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { Dataset } from '../model/dataset';
+import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 
 
@@ -22,7 +23,7 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-interface DatasetSelectProps extends WithStyles<typeof styles> {
+interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedDatasetId: string | null;
     datasets: Dataset[];
     selectDataset: (datasetId: string | null, dataset: Dataset[]) => void;
@@ -43,7 +44,7 @@ class DatasetSelect extends React.Component<DatasetSelectProps> {
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel shrink htmlFor="dataset-select">
-                    {I18N.text`Dataset`}
+                    {I18N.get("Dataset")}
                 </InputLabel>
                 <Select
                     value={selectedDatasetId}

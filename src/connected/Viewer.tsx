@@ -12,6 +12,8 @@ import Viewer from '../components/Viewer';
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
+
         variableLayer: selectedDatasetVariableLayerSelector(state),
         placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
         colorBarLegend: selectedColorBarLegendSelector(state),

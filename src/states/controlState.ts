@@ -18,6 +18,8 @@ export interface ControlState {
     timeAnimationInterval: number;
     flyTo: ol.geom.SimpleGeometry | ol.Extent | null;
     activities: { [id: string]: string };
+    locale: string;
+    dialogOpen: {[dialogId: string]: boolean};
 }
 
 export function newControlState(): ControlState {
@@ -37,5 +39,7 @@ export function newControlState(): ControlState {
         timeAnimationInterval: 500,
         flyTo: null,
         activities: {},
+        locale: "en",
+        dialogOpen: {},
     };
 }

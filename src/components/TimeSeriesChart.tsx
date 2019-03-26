@@ -22,6 +22,7 @@ import { Theme } from '@material-ui/core';
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
 import { I18N, LINECHART_STROKES_DARK, LINECHART_STROKES_LIGHT } from '../config';
+import { WithLocale } from "../util/lang";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -62,7 +63,7 @@ const styles = (theme: Theme) => createStyles(
     });
 
 
-interface TimeSeriesChartProps extends WithStyles<typeof styles> {
+interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     theme: Theme;
     timeSeriesCollection?: TimeSeries[];
     selectedTime?: Time | null;
@@ -144,7 +145,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         let referenceLine = null;
         if (selectedTime !== null) {
             referenceLine =
-                <ReferenceLine isFront={true} x={selectedTime} stroke={mainStroke} strokeWidth={3} strokeOpacity={0.5}/>;
+                <ReferenceLine isFront={true} x={selectedTime} stroke={mainStroke} strokeWidth={3}
+                               strokeOpacity={0.5}/>;
         }
 
         let referenceArea = null;
@@ -184,11 +186,12 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             actionButtons.push(removeAllButton);
         }
 
+        const timeSeriesText = I18N.get("Time-Series");
 
         // 99% per https://github.com/recharts/recharts/issues/172
         return (
             <div className={classes.container}>
-                <Typography variant='subtitle1'>{I18N.text`Time-Series`}</Typography>
+                <Typography variant='subtitle1'>{timeSeriesText}</Typography>
                 {actionButtons}
                 <ResponsiveContainer width="99%" height={320}>
                     <LineChart onMouseDown={this.handleMouseDown}

@@ -8,7 +8,8 @@ import Select from '@material-ui/core/Select';
 
 import { Dataset } from '../model/dataset';
 import { Place } from '../model/place';
-import { I18N } from '../config';
+import { WithLocale } from "../util/lang";
+import { I18N } from "../config";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -23,7 +24,7 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-interface PlaceSelectProps extends WithStyles<typeof styles> {
+interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     datasets: Dataset[];
 
     selectedPlaceId: string | null;
@@ -53,7 +54,7 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
                     htmlFor="place-select"
                     disabled={disabled}
                 >
-                    {I18N.text`Place`}
+                    {I18N.get("Place")}
                 </InputLabel>
                 <Select
                     value={selectedPlaceId}

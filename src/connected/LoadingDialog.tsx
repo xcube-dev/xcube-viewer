@@ -7,6 +7,7 @@ import { activityMessagesSelector } from "../selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
         messages: activityMessagesSelector(state),
     };
 };

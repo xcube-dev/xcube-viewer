@@ -3,13 +3,14 @@ import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/s
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { I18N } from '../config';
+import { WithLocale } from "../util/lang";
+import { I18N } from "../config";
 
 
 const styles = (theme: Theme) => createStyles(
     {});
 
-interface TimeSeriesModeSelectProps extends WithStyles<typeof styles> {
+interface TimeSeriesModeSelectProps extends WithStyles<typeof styles>, WithLocale {
     timeSeriesUpdateMode: 'add' | 'replace';
     selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: 'add' | 'replace') => void;
 }
@@ -23,7 +24,7 @@ class TimeSeriesModeSelect extends React.Component<TimeSeriesModeSelectProps> {
     render() {
         const {timeSeriesUpdateMode} = this.props;
         return (
-            <FormControlLabel label={I18N.text`Multi`} control={
+            <FormControlLabel label={I18N.get("Multi")} control={
                 <Switch
                     color={"primary"}
                     checked={timeSeriesUpdateMode === 'add'}

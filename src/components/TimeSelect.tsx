@@ -4,14 +4,15 @@ import { Theme } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
-
-import { Time, TimeRange } from '../model/timeSeries';
-import { dateTimeStringToUtcTime, utcTimeToLocalDateTimeString } from '../util/time';
 import FormControl from '@material-ui/core/FormControl';
-import { I18N } from '../config';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
 import Input from '@material-ui/core/Input';
+
+import { Time, TimeRange } from '../model/timeSeries';
+import { dateTimeStringToUtcTime, utcTimeToLocalDateTimeString } from '../util/time';
+import { WithLocale } from "../util/lang";
+import { I18N } from "../config";
 
 
 // noinspection JSUnusedLocalSymbols
@@ -31,7 +32,7 @@ const styles = (theme: Theme) => createStyles(
     }
 );
 
-interface TimeSelectProps extends WithStyles<typeof styles> {
+interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedTime: Time | null;
     selectTime: (time: Time | null) => void;
     selectedTimeRange: TimeRange | null;
@@ -105,12 +106,12 @@ class TimeSelect extends React.Component<TimeSelectProps> {
         const isValid = typeof selectedTime === 'number';
         const timeText = isValid ? utcTimeToLocalDateTimeString(selectedTime!) : '?';
 
-        const playToolTip = timeAnimationActive ? I18N.text`Stop` : I18N.text`Start`;
+        const playToolTip = I18N.get(timeAnimationActive ? "Stop" : "Start");
         const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
         return (
             <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="time-select">{I18N.text`Time`}</InputLabel>
+                <InputLabel htmlFor="time-select">{I18N.get("Time")}</InputLabel>
                 <Input
                     id="time-select"
                     type="text"

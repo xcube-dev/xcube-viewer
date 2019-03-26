@@ -1,6 +1,7 @@
 import { HTTPError } from './errors';
 import { I18N } from '../config';
 
+
 export type QueryComponent = [string, string];
 
 export function callApi<T>(endpointUrl: string, queryComponents?: QueryComponent[], init?: RequestInit): Promise<Response> {
@@ -23,7 +24,7 @@ export function callApi<T>(endpointUrl: string, queryComponents?: QueryComponent
         .catch(error => {
             if (error instanceof TypeError) {
                 console.error(`Cannot reach ${endpointUrl}`, error);
-                throw new Error(I18N.text`Cannot reach server`);
+                throw new Error(I18N.get("Cannot reach server"));
             } else {
                 console.error(error);
             }

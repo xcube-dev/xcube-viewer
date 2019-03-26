@@ -7,6 +7,7 @@ import { selectDataset } from '../actions/controlActions';
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
         selectedDatasetId: state.controlState.selectedDatasetId,
         datasets: state.dataState.datasets,
     };

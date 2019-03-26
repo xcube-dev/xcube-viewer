@@ -8,6 +8,7 @@ import { hideMessage } from '../actions/messageLogActions';
 const mapStateToProps = (state: AppState) => {
     let newEntries = state.messageLogState.newEntries;
     return {
+        locale: state.controlState.locale,
         message: newEntries.length > 0 ? newEntries[0] : null,
     };
 };

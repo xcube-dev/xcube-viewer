@@ -12,8 +12,15 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
     SELECT_COORDINATE,
-    ControlAction, SELECT_TIME_RANGE, UPDATE_VISIBLE_TIME_RANGE, UPDATE_TIME_ANIMATION, ADD_ACTIVITY, REMOVE_ACTIVITY,
+    ControlAction,
+    SELECT_TIME_RANGE,
+    UPDATE_VISIBLE_TIME_RANGE,
+    UPDATE_TIME_ANIMATION,
+    ADD_ACTIVITY,
+    REMOVE_ACTIVITY,
+    CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG,
 } from '../actions/controlActions';
+import { I18N } from "../config";
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -136,6 +143,28 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             return {
                 ...state,
                 activities,
+            };
+        }
+        case CHANGE_LOCALE: {
+            const locale = action.locale;
+            I18N.locale = locale;
+            return {
+                ...state,
+                locale,
+            };
+        }
+        case OPEN_DIALOG: {
+            const dialogId = action.dialogId;
+            return {
+                ...state,
+                dialogOpen: {...state.dialogOpen, [dialogId]: true},
+            };
+        }
+        case CLOSE_DIALOG: {
+            const dialogId = action.dialogId;
+            return {
+                ...state,
+                dialogOpen: {...state.dialogOpen, [dialogId]: false},
             };
         }
     }
