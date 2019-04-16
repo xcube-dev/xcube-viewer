@@ -2,27 +2,27 @@ import * as React from 'react';
 import * as ol from 'openlayers';
 import { olx } from 'openlayers';
 
-import { MapComponent, MapComponentProps } from "../MapComponent";
+import { MapComponent, MapComponentProps } from '../MapComponent';
 
 
 // noinspection JSUnusedGlobalSymbols
 export function NaturalEarth2(): JSX.Element {
-    return <Tile id={"NaturalEarth2"} source={NATURAL_EARTH_2_SOURCE}/>;
+    return <Tile id={'NaturalEarth2'} source={NATURAL_EARTH_2_SOURCE}/>;
 }
 
 // noinspection JSUnusedGlobalSymbols
 export function Bathymetry(): JSX.Element {
-    return <Tile id={"Bathymetry"} source={BATHYMETRY_SOURCE}/>;
+    return <Tile id={'Bathymetry'} source={BATHYMETRY_SOURCE}/>;
 }
 
 // noinspection JSUnusedGlobalSymbols
 export function OSM(): JSX.Element {
-    return <Tile id={"OSM"} source={OSM_SOURCE}/>;
+    return <Tile id={'OSM'} source={OSM_SOURCE}/>;
 }
 
 // noinspection JSUnusedGlobalSymbols
 export function OSMBlackAndWhite(): JSX.Element {
-    return <Tile id={"OSMBW"} source={OSM_BW_SOURCE}/>;
+    return <Tile id={'OSMBW'} source={OSM_BW_SOURCE}/>;
 }
 
 
@@ -33,6 +33,25 @@ export class Tile extends MapComponent<ol.layer.Tile, TileProps> {
 
     addMapObject(map: ol.Map): ol.layer.Tile {
         const layer = new ol.layer.Tile(this.props);
+
+        // Attempt to avoid image smoothing so crisp image pixels are drawn.
+        // See https://stackoverflow.com/questions/54083424/preventing-smoothing-of-tileimage-layer
+        // See https://openlayers.org/en/latest/examples/layer-spy.html
+        //
+        layer.on('precompose', (event: any) => {
+            const ctx = event.context as any; // CanvasRenderingContext2D;
+            ctx.save();
+            ctx.imageSmoothingQuality = 'low';
+            ctx.imageSmoothingEnabled = false;
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.mozImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+        });
+        layer.on('postcompose', (event: any) => {
+            const ctx = event.context;
+            ctx.restore();
+        });
+
         map.getLayers().push(layer);
         return layer;
     }
