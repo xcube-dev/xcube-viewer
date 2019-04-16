@@ -33,6 +33,25 @@ export class Tile extends MapComponent<ol.layer.Tile, TileProps> {
 
     addMapObject(map: ol.Map): ol.layer.Tile {
         const layer = new ol.layer.Tile(this.props);
+
+        // Attempt to avoid image smoothing so crisp image pixels are drawn.
+        // See https://stackoverflow.com/questions/54083424/preventing-smoothing-of-tileimage-layer
+        // See https://openlayers.org/en/latest/examples/layer-spy.html
+        //
+        layer.on('precompose', function (event: any) {
+            const ctx = event.context as any; // CanvasRenderingContext2D;
+            ctx.save();
+            ctx.imageSmoothingQuality = "low";
+            ctx.imageSmoothingEnabled = false;
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.mozImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+        });
+        layer.on('postcompose', function (event: any) {
+            const ctx = event.context;
+            ctx.restore();
+        });
+
         map.getLayers().push(layer);
         return layer;
     }
