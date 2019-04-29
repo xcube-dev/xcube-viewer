@@ -1,20 +1,46 @@
 # xcube-viewer
 
-A simple viewer component for xcube-server
+A simple viewer component for Xcube server.
 
-# Run it
+## Run it
 
-1. Install and start [xcube-server](https://github.com/dcs4cop/xcube-server) in demo mode
-2. Install and start xcube-viewer:
-    ```
+1. Install [xcube](https://github.com/dcs4cop/xcube) and run server in demo mode
+2. Install and start `xcube-viewer` with demo configuration
+
+`xcube` one-time install:
+
+    $ git clone https://github.com/dcs4cop/xcube.git
+    $ cd xcube
+    $ conda env create
+    $ conda activate xcube
+    $ python setup.py develop  
+
+    
+`xcube` update and run server:
+
+    $ cd xcube
+    $ git pull
+    $ conda activate xcube  
+    $ xcube server --verbose --traceperf --config xcube/webapi/res/demo/config.yml  
+    
+
+
+`xcube-viewer` one-time install:
+
+    $ git clone https://github.com/dcs4cop/xcube-viewer.git
+    $ cd xcube-viewer
     $ yarn install
+
+`xcube-viewer` update and run:
+
+    $ cd xcube-viewer
+    $ git pull
     $ yarn run start
-    ```
 
 
-# Features
+## Features
 
-## Already Working
+### Already Working
 
 * Select dataset, update variable and places list, fly to bounding box
 * Select place (Lakes / Stations) and fly to bounding box
@@ -39,7 +65,7 @@ A simple viewer component for xcube-server
   - can specify their feature property fields that will provide the values for predefined roles:
     "label", "infoUrl" (not used yet);
 
-## Current Issues
+### Current Issues
 
 * The legend and tooltip in time series chart should recognize Material UI theme
 
@@ -66,7 +92,7 @@ A simple viewer component for xcube-server
 * Test on mobile devices
 * Configure and test PWA
 
-## Nice to have soon
+### Nice to have soon
 
 * Minimize legend in map, click again to open (good for mobile) 
 * Click legend and adjust colour bar and value range
