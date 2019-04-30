@@ -73,6 +73,7 @@ A simple viewer component for Xcube server.
 
 ## Next
 
+* Indicate in the UI where there are non-nan time slices in the datasets (often data is sparse due to cloud masking)
 * Show places with names as layer in map, show tooltip for place
 * Show selected place info in card, allow media content
 * Select place and show time series chart
