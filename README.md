@@ -68,10 +68,11 @@ A simple viewer component for Xcube server.
 ### Current Issues
 
 * The legend and tooltip in time series chart should recognize Material UI theme
+* Improve initial dataset configuration loads, currently takes seconds (main time seems to be spend loading coord vars) 
+* Dataset configuration should be automatically reloaded once there are changes 
 
 ## Next
 
-* 
 * Show places with names as layer in map, show tooltip for place
 * Show selected place info in card, allow media content
 * Select place and show time series chart
