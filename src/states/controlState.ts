@@ -1,6 +1,6 @@
 import * as ol from "openlayers";
 import { Time, TimeRange } from "../model/timeSeries";
-
+import { VIEWER_DEFAULT_API_SERVER } from "../config";
 
 export interface ControlState {
     selectedDatasetId: string | null;
@@ -8,6 +8,7 @@ export interface ControlState {
     selectedPlaceGroupIds: string[] | null;
     selectedPlaceId: string | null;
     selectedUserPlaceId: string | null;
+    selectedServerId: string;
     selectedTime: Time | null;
     selectedTimeRange: TimeRange | null;
     visibleTimeRange: TimeRange | null;
@@ -29,6 +30,7 @@ export function newControlState(): ControlState {
         selectedPlaceGroupIds: null,
         selectedPlaceId: null,
         selectedUserPlaceId: null,
+        selectedServerId: VIEWER_DEFAULT_API_SERVER.id,
         selectedTime: null,
         selectedTimeRange: null,
         visibleTimeRange: null,

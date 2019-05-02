@@ -7,6 +7,18 @@
   },
   "dictionary": [
     {
+      "en": "OK",
+      "de": "OK",
+      "se": "OK",
+      "fi": "Kunnossa"
+    },
+    {
+      "en": "Cancel",
+      "de": "Abbrechen",
+      "se": "Annullera",
+      "fi": "Peruuttaa"
+    },
+    {
       "en": "Dataset",
       "de": "Datensatz",
       "se": "Dataset",
@@ -95,6 +107,12 @@
       "de": "Sprache",
       "se": "Språk",
       "fi": "Kieli"
+    },
+    {
+      "en": "Server",
+      "de": "Server",
+      "se": "Server",
+      "fi": "Server"
     },
     {
       "en": "Settings",

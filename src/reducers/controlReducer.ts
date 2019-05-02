@@ -20,12 +20,13 @@ import {
     REMOVE_ACTIVITY,
     CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG,
 } from '../actions/controlActions';
+import { CONFIGURE_SERVERS, DataAction } from "../actions/dataActions";
 import { I18N } from "../config";
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
-export function controlReducer(state: ControlState, action: ControlAction): ControlState {
+export function controlReducer(state: ControlState, action: ControlAction | DataAction): ControlState {
     if (typeof state === 'undefined') {
         state = newControlState();
     }
@@ -166,6 +167,11 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
                 ...state,
                 dialogOpen: {...state.dialogOpen, [dialogId]: false},
             };
+        }
+        case CONFIGURE_SERVERS: {
+            if (state.selectedServerId !== action.selectedServerId) {
+                return {...state, selectedServerId: action.selectedServerId};
+            }
         }
     }
     return state;
