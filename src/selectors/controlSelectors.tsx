@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createSelector } from 'reselect'
 import { AppState } from '../states/appState';
-import { datasetsSelector, colorBarsSelector } from './dataSelectors';
+import { datasetsSelector, colorBarsSelector, userServersSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
 import {
@@ -21,12 +21,14 @@ import { Tile } from '../components/ol/layer/Tile';
 import { Vector } from '../components/ol/layer/Vector';
 import { Layers } from '../components/ol/layer/Layers';
 import { findIndexCloseTo } from "../util/find";
+import { Server } from "../model/server";
 
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
 export const selectedPlaceGroupIdsSelector = (state: AppState) => state.controlState.selectedPlaceGroupIds;
 export const selectedTimeSelector = (state: AppState) => state.controlState.selectedTime;
+export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
 
 export const selectedDatasetSelector = createSelector(
@@ -222,3 +224,17 @@ export const activityMessagesSelector = createSelector(
     }
 );
 
+export const selectedServerSelector = createSelector(
+    userServersSelector,
+    selectedServerIdSelector,
+    (userServers: Server[], serverId: string): Server => {
+        if (userServers.length === 0) {
+            throw new Error(`internal error: no servers configured`);
+        }
+        const server = userServers.find(server => server.id === serverId);
+        if (!server) {
+            throw new Error(`internal error: server with ID "${serverId}" not found`);
+        }
+        return server;
+    }
+);

@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 
 import {
     selectedDatasetIdSelector,
-    selectedDatasetVariableSelector,
+    selectedDatasetVariableSelector, selectedServerSelector,
 } from "../selectors/controlSelectors";
 import { Dataset } from "../model/dataset";
 import { Time, TimeRange, TimeSeries } from "../model/timeSeries";
@@ -176,7 +176,7 @@ export interface SelectCoordinate {
 
 export function selectCoordinate(selectedCoordinate: [number, number] | null) {
     return (dispatch: Dispatch<SelectCoordinate | UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
-        const apiServerUrl = getState().configState.apiServerUrl;
+        const apiServer = selectedServerSelector(getState());
 
         dispatch(_selectCoordinate(selectedCoordinate));
 
@@ -185,7 +185,7 @@ export function selectCoordinate(selectedCoordinate: [number, number] | null) {
         let timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
 
         if (selectedDatasetId && selectedVariable && selectedCoordinate) {
-            api.getTimeSeriesForPoint(apiServerUrl, selectedDatasetId, selectedVariable, selectedCoordinate)
+            api.getTimeSeriesForPoint(apiServer.url, selectedDatasetId, selectedVariable, selectedCoordinate)
                .then((timeSeries: TimeSeries | null) => {
                    if (timeSeries !== null) {
                        dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));

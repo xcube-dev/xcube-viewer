@@ -1,10 +1,10 @@
-import { newDataState, DataState } from '../states/dataState';
+import { newDataState, DataState, storeUserServers } from '../states/dataState';
 import {
     UPDATE_TIME_SERIES,
     DataAction,
     UPDATE_DATASETS,
     UPDATE_COLOR_BARS,
-    REMOVE_ALL_TIME_SERIES
+    REMOVE_ALL_TIME_SERIES, CONFIGURE_SERVERS
 } from '../actions/dataActions';
 
 
@@ -30,6 +30,12 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         }
         case REMOVE_ALL_TIME_SERIES: {
             return {...state, timeSeriesCollection: []};
+        }
+        case CONFIGURE_SERVERS: {
+            if (state.userServers !== action.servers) {
+                storeUserServers(action.servers);
+                return {...state, userServers: action.servers};
+            }
         }
     }
     return state;

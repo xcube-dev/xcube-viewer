@@ -7,6 +7,48 @@
   },
   "dictionary": [
     {
+      "en": "OK",
+      "de": "OK",
+      "se": "OK",
+      "fi": "Kunnossa"
+    },
+    {
+      "en": "Cancel",
+      "de": "Abbrechen",
+      "se": "Annullera",
+      "fi": "Peruuttaa"
+    },
+    {
+      "en": "Save",
+      "de": "Speichern",
+      "se": "Spara",
+      "fi": "Säästää"
+    },
+    {
+      "en": "Select",
+      "de": "Auswählen",
+      "se": "Välja",
+      "fi": "Valita"
+    },
+    {
+      "en": "Add",
+      "de": "Hinzufügen",
+      "se": "Foga",
+      "fi": "Lisätä"
+    },
+    {
+      "en": "Edit",
+      "de": "Bearbeiten",
+      "se": "Edera",
+      "fi": "Muokata"
+    },
+    {
+      "en": "Remove",
+      "de": "Entfernen",
+      "se": "Avlägsna",
+      "fi": "Poistaa"
+    },
+    {
       "en": "Dataset",
       "de": "Datensatz",
       "se": "Dataset",
@@ -101,6 +143,24 @@
       "de": "Einstellungen",
       "se": "Inställningar",
       "fi": "Asetukset"
+    },
+    {
+      "en": "Add Server",
+      "de": "Server hinzufügen",
+      "se": "Lägg till Server",
+      "fi": "Lisää Palvelin"
+    },
+    {
+      "en": "Edit Server",
+      "de": "Server bearbeiten",
+      "se": "Redigera Server",
+      "fi": "Muokkaa Palvelinta"
+    },
+    {
+      "en": "Select Server",
+      "de": "Server auswählen",
+      "se": "Välj Server",
+      "fi": "Valitse Palvelin"
     }
   ]
 }

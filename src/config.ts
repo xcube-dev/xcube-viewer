@@ -2,9 +2,17 @@ import { blue, green, grey, purple, red, pink, yellow } from "@material-ui/core/
 import { LanguageDictionary } from "./util/lang";
 import lang from "./resources/lang.json";
 
-
 export const VIEWER_APP_NAME = 'xcube Viewer';
-export const VIEWER_API_SERVER_URL = 'http://localhost:8080/xcube/api/0.1.0.dev6';
+
+export const VIEWER_DEFAULT_API_SERVER = {
+    id: 'local',
+    name: 'Local Server',
+    url: 'http://localhost:8080/xcube/api/0.1.0.dev6'
+};
+
+export const VIEWER_API_SERVERS = [
+    {...VIEWER_DEFAULT_API_SERVER},
+];
 
 export const VIEWER_THEME = 'dark';
 export const VIEWER_PRIMARY_COLOR = blue;
