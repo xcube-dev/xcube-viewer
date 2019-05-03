@@ -6,14 +6,14 @@ import {
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetVariableLayerSelector
 } from '../selectors/controlSelectors';
-import { selectCoordinate } from '../actions/controlActions';
+import { addGeometry } from '../actions/controlActions';
+import { setMap } from '../states/controlState';
 import Viewer from '../components/Viewer';
 
 
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-
         variableLayer: selectedDatasetVariableLayerSelector(state),
         placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
         colorBarLegend: selectedColorBarLegendSelector(state),
@@ -23,7 +23,8 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-    selectCoordinate,
+    addGeometry,
+    setMap
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Viewer);

@@ -1,3 +1,5 @@
+import * as geojson from 'geojson';
+
 /**
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
  */
@@ -18,7 +20,8 @@ export interface TimeSeriesSource {
     datasetId: string;
     variableName: string;
     variableUnits?: string;
-    coordinate?: [number, number];
+    featureId: string;
+    geometry: geojson.Geometry;
 }
 
 export interface TimeSeriesPoint {

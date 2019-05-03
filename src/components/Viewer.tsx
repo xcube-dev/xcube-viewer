@@ -1,15 +1,16 @@
 import * as React from 'react';
-import * as GeoJSON from 'geojson';
+import * as geojson from 'geojson';
 
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
 import { View } from './ol/View';
 import * as ol from 'openlayers';
-import { Draw } from './ol/interaction/Draw';
+import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
-import { OSMBlackAndWhite } from "./ol/layer/Tile";
+import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
+import { newId } from '../util/id';
 
 
 interface ViewerProps {
@@ -17,9 +18,10 @@ interface ViewerProps {
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    selectCoordinate?: (geoCoordinate: [number, number]) => void;
-    selectFeatures?: (features: GeoJSON.Feature[]) => void;
+    addGeometry?: (featureId: string, geometry: geojson.Geometry) => void;
+    selectFeatures?: (features: geojson.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
+    setMap?: (map: ol.Map | null) => void;
 }
 
 
@@ -32,29 +34,37 @@ class Viewer extends React.Component<ViewerProps> {
     map: ol.Map | null;
 
     handleMapClick = (event: ol.MapBrowserEvent) => {
-        const {selectCoordinate, selectFeatures} = this.props;
-
-        const map = event.map;
-        const mapCoordinate = map.getCoordinateFromPixel(event.pixel);
-        const geoCoordinate = ol.proj.transform(mapCoordinate, map.getView().getProjection(), 'EPSG:4326');
-
-        if (selectCoordinate) {
-            selectCoordinate(geoCoordinate);
-        }
-
-        if (selectFeatures) {
+        const {selectFeatures, drawMode} = this.props;
+        if (selectFeatures && drawMode === null) {
+            const map = event.map;
             // noinspection JSUnusedLocalSymbols
             map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-                // console.log("Map.handleClick: feature is near: ", feature, layer);
+                console.log('Map.handleClick: feature is near: ', feature, layer);
             });
             // selectFeature(features);
         }
     };
 
-    handleMapRef = (map: ol.Map | null) => {
-        this.map = map;
+    handleDrawEnd = (event: DrawEvent) => {
+        const {addGeometry, drawMode} = this.props;
+        if (this.map !== null && addGeometry && drawMode) {
+            const feature = event.feature;
+            const featureId = `Draw-${drawMode}-${newId()}`;
+            feature.setId(featureId);
+            const projection = this.map.getView().getProjection();
+            const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
+            const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
+            addGeometry(featureId, geoJSONGeometry as geojson.Geometry);
+        }
+        return true;
     };
 
+    handleMapRef = (map: ol.Map | null) => {
+        this.map = map;
+        if (this.props.setMap) {
+            this.props.setMap(map);
+        }
+    };
 
     componentDidUpdate(prevProps: Readonly<ViewerProps>, prevState: Readonly<{}>, snapshot?: any): void {
         let flyToCurr = this.props.flyTo || null;
@@ -72,13 +82,20 @@ class Viewer extends React.Component<ViewerProps> {
         }
     }
 
-
     public render() {
         const variableLayer = this.props.variableLayer;
         const placeGroupLayers = this.props.placeGroupLayers;
         const colorBarLegend = this.props.colorBarLegend;
         const drawMode = this.props.drawMode;
-        const draw = drawMode ? <Draw id="draw" layerId={'user'} type={drawMode}/> : null;
+        const draw = drawMode ?
+                     <Draw
+                         id="draw"
+                         layerId={'user'}
+                         type={drawMode}
+                         wrapX={true}
+                         stopClick={true}
+                         onDrawEnd={this.handleDrawEnd}
+                     /> : null;
 
         let colorBarControl = null;
         if (colorBarLegend) {

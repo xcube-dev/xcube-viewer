@@ -1,16 +1,16 @@
-import { Dispatch } from "redux";
+import { Dispatch } from 'redux';
+import * as geojson from 'geojson'
 
 import {
     selectedDatasetIdSelector,
     selectedDatasetVariableSelector, selectedServerSelector,
-} from "../selectors/controlSelectors";
-import { Dataset } from "../model/dataset";
-import { Time, TimeRange, TimeSeries } from "../model/timeSeries";
-import { AppState } from "../states/appState";
+} from '../selectors/controlSelectors';
+import { Dataset } from '../model/dataset';
+import { Time, TimeRange, TimeSeries } from '../model/timeSeries';
+import { AppState } from '../states/appState';
 import * as api from '../api'
-import { MessageLogAction, postMessage } from "./messageLogActions";
-import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
-
+import { MessageLogAction, postMessage } from './messageLogActions';
+import { UpdateTimeSeries, updateTimeSeries } from './dataActions';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -142,10 +142,10 @@ export type SELECT_TIME_SERIES_UPDATE_MODE = typeof SELECT_TIME_SERIES_UPDATE_MO
 
 export interface SelectTimeSeriesUpdateMode {
     type: SELECT_TIME_SERIES_UPDATE_MODE;
-    timeSeriesUpdateMode: "add" | "replace";
+    timeSeriesUpdateMode: 'add' | 'replace';
 }
 
-export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: "add" | "replace"): SelectTimeSeriesUpdateMode {
+export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: 'add' | 'replace'): SelectTimeSeriesUpdateMode {
     return {type: SELECT_TIME_SERIES_UPDATE_MODE, timeSeriesUpdateMode};
 }
 
@@ -166,26 +166,27 @@ export function updateTimeAnimation(timeAnimationActive: boolean, timeAnimationI
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const SELECT_COORDINATE = 'SELECT_COORDINATE';
-export type SELECT_COORDINATE = typeof SELECT_COORDINATE;
+export const ADD_GEOMETRY = 'ADD_GEOMETRY';
+export type ADD_GEOMETRY = typeof ADD_GEOMETRY;
 
-export interface SelectCoordinate {
-    type: SELECT_COORDINATE;
-    selectedCoordinate: [number, number] | null;
+export interface AddGeometry {
+    type: ADD_GEOMETRY;
+    featureId: string;
+    geometry: geojson.Geometry;
 }
 
-export function selectCoordinate(selectedCoordinate: [number, number] | null) {
-    return (dispatch: Dispatch<SelectCoordinate | UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
+export function addGeometry(featureId: string, geometry: geojson.Geometry) {
+    return (dispatch: Dispatch<AddGeometry | UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        dispatch(_selectCoordinate(selectedCoordinate));
+        dispatch(_addGeometry(featureId, geometry));
 
         let selectedDatasetId = selectedDatasetIdSelector(getState());
         let selectedVariable = selectedDatasetVariableSelector(getState());
         let timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
 
-        if (selectedDatasetId && selectedVariable && selectedCoordinate) {
-            api.getTimeSeriesForPoint(apiServer.url, selectedDatasetId, selectedVariable, selectedCoordinate)
+        if (selectedDatasetId && selectedVariable) {
+            api.getTimeSeriesForGeometry(apiServer.url, selectedDatasetId, selectedVariable, featureId, geometry)
                .then((timeSeries: TimeSeries | null) => {
                    if (timeSeries !== null) {
                        dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));
@@ -201,8 +202,24 @@ export function selectCoordinate(selectedCoordinate: [number, number] | null) {
     };
 }
 
-export function _selectCoordinate(selectedCoordinate: [number, number] | null): SelectCoordinate {
-    return {type: SELECT_COORDINATE, selectedCoordinate};
+export function _addGeometry(featureId: string, geometry: geojson.Geometry): AddGeometry {
+    return {type: ADD_GEOMETRY, featureId, geometry};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+export const SELECT_GEOMETRY = 'SELECT_GEOMETRY';
+export type SELECT_GEOMETRY = typeof SELECT_GEOMETRY;
+
+export interface SelectGeometry {
+    type: SELECT_GEOMETRY;
+    featureId: string;
+    geometry: geojson.Geometry;
+}
+
+export function selectGeometry(featureId: string, geometry: geojson.Geometry): SelectGeometry {
+    return {type: SELECT_GEOMETRY, featureId, geometry};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,7 +303,8 @@ export type ControlAction =
     | SelectUserPlace
     | SelectTime
     | SelectTimeRange
-    | SelectCoordinate
+    | AddGeometry
+    | SelectGeometry
     | SelectTimeSeriesUpdateMode
     | UpdateVisibleTimeRange
     | UpdateTimeAnimation
