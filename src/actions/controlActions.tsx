@@ -177,10 +177,6 @@ export interface SelectCoordinate {
 export function selectCoordinate(selectedCoordinate: [number, number] | null) {
     return (dispatch: Dispatch<SelectCoordinate | UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
-        if (apiServer === null) {
-            console.warn("No server configured!");
-            return;
-        }
 
         dispatch(_selectCoordinate(selectedCoordinate));
 

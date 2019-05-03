@@ -228,6 +228,13 @@ export const selectedServerSelector = createSelector(
     userServersSelector,
     selectedServerIdSelector,
     (userServers: Server[], serverId: string): Server => {
-        return userServers.find(server => server.id === serverId)!;
+        if (userServers.length === 0) {
+            throw new Error(`internal error: no servers configured`);
+        }
+        const server = userServers.find(server => server.id === serverId);
+        if (!server) {
+            throw new Error(`internal error: server with ID "${serverId}" not found`);
+        }
+        return server;
     }
 );

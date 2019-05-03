@@ -100,16 +100,13 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
         if (dialogMode === "select") {
             this.doClose();
             this.setState(ServerDialog.deriveState(this.props))
-        } else if (dialogMode === "add") {
-            this.setState({dialogMode: "select"});
-        } else if (dialogMode === "edit") {
-            this.setState({dialogMode: "select"});
+        } else {
+            this.cancelAddOrEditMode();
         }
     };
 
-    doClose = () => {
-        const {closeDialog} = this.props;
-        closeDialog("server");
+    handleClose = () => {
+        this.doClose();
     };
 
     handleSelectServer = (event: any) => {
@@ -119,14 +116,14 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
     };
 
     handleServerNameChange = (event: any) => {
-        const name = event.target.value;
-        const selectedServer = {...this.state.selectedServer, name};
+        const selectedServerName = event.target.value;
+        const selectedServer = {...this.state.selectedServer, name: selectedServerName};
         this.setState({selectedServer});
     };
 
     handleServerURLChange = (event: any) => {
-        const url = event.target.value;
-        const selectedServer = {...this.state.selectedServer, url};
+        const selectedServerURL = event.target.value;
+        const selectedServer = {...this.state.selectedServer, url: selectedServerURL};
         this.setState({selectedServer});
     };
 
@@ -138,35 +135,55 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
         this.setState({dialogMode: "edit"});
     };
 
-    doAddServer = () => {
+    handleRemoveServer = () => {
+        this.doRemoveServer();
+    };
+
+    doClose() {
+        const {closeDialog} = this.props;
+        closeDialog("server");
+    };
+
+    getSelectedServerIndex(): number {
+        const selectedServerId = this.state.selectedServer.id;
+        return this.state.servers.findIndex(server => server.id === selectedServerId)!;
+    }
+
+    setSelectedServer(selectedServerIndex: number, selectedServer: Server) {
+        const servers = [...this.state.servers];
+        servers[selectedServerIndex] = selectedServer;
+        this.setServers(servers, selectedServer);
+    };
+
+    setServers(servers: Server[], selectedServer: Server) {
+        this.setState({servers, selectedServer, dialogMode: "select"});
+    };
+
+    doAddServer() {
         const selectedServerId = (Date.now().toString(16) + Math.random().toString(16).substr(2)).toUpperCase();
         const selectedServer = {...this.state.selectedServer, id: selectedServerId};
         const servers = [...this.state.servers, selectedServer];
-        this.setState({servers, selectedServer, dialogMode: "select"});
+        this.setServers(servers, selectedServer);
     };
 
-    doEditServer = () => {
-        const selectedServerId = this.state.selectedServer.id;
-        const selectedServerIndex = this.state.servers.findIndex(server => server.id === selectedServerId)!;
-        const selectedServer = {...this.state.selectedServer};
-        const servers = [
-            ...this.state.servers.slice(0, selectedServerIndex),
-            selectedServer,
-            ...this.state.servers.slice(selectedServerIndex + 1),
-        ];
-        this.setState({servers, selectedServer, dialogMode: "select"});
+    doEditServer() {
+        this.setSelectedServer(this.getSelectedServerIndex(), {...this.state.selectedServer});
     };
 
-    handleRemoveServer = () => {
+    cancelAddOrEditMode() {
+        const selectedServerIndex = this.getSelectedServerIndex();
+        this.setSelectedServer(this.getSelectedServerIndex(), this.state.servers[selectedServerIndex]);
+    }
+
+    doRemoveServer() {
         const servers = [...this.state.servers];
         if (servers.length < 2) {
             throw new Error("internal error: server list cannot be emptied");
         }
-        const selectedServerId = this.state.selectedServer.id;
-        const selectedServerIndex = servers.findIndex(server => server.id === selectedServerId)!;
+        const selectedServerIndex = this.getSelectedServerIndex();
         const selectedServer = servers[selectedServerIndex + (selectedServerIndex > 0 ? -1 : 1)];
         servers.splice(selectedServerIndex, 1);
-        this.setState({servers, selectedServer});
+        this.setServers(servers, selectedServer);
     };
 
     render() {
@@ -174,17 +191,20 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
         const {servers, selectedServer, dialogMode} = this.state;
 
         const menuItems = servers.map((server, index) => (
-            <MenuItem key={index} value={server.id}>{server.name}</MenuItem>));
+            <MenuItem key={index} value={server.id}>{server.name}</MenuItem>
+        ));
 
+        // TODO (forman): I18N
         let okButtonName;
         if (dialogMode === "add") {
             okButtonName = I18N.get("Add");
         } else if (dialogMode === "edit") {
             okButtonName = I18N.get("Save");
         } else {
-            okButtonName = I18N.get("Select");
+            okButtonName = I18N.get("OK");
         }
 
+        // TODO (forman): I18N
         let dialogTitle;
         if (dialogMode === "add") {
             dialogTitle = I18N.get("Add Server");
@@ -202,7 +222,6 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
                         required
                         id="server-name"
                         label="Name"
-                        defaultValue="My Server"
                         className={classes.textField}
                         margin="normal"
                         value={selectedServer.name}
@@ -213,7 +232,6 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
                         required
                         id="server-url"
                         label="URL"
-                        defaultValue="Hello World"
                         className={classes.textField2}
                         margin="normal"
                         value={selectedServer.url}
@@ -249,7 +267,6 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
                         <IconButton
                             className={classes.button}
                             aria-label="Edit"
-                            color="primary"
                             onClick={this.handleEditMode}
                         >
                             <EditIcon fontSize="small"/>
@@ -257,7 +274,6 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
                         <IconButton
                             className={classes.button}
                             aria-label="Delete"
-                            color="primary"
                             disabled={servers.length < 2}
                             onClick={this.handleRemoveServer}
                         >
@@ -271,14 +287,14 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
         return (
             <Dialog
                 open={open}
-                onClose={this.doClose}
+                onClose={this.handleClose}
                 aria-labelledby="server-dialog-title"
             >
                 <DialogTitle id="server-dialog-title">{dialogTitle}</DialogTitle>
                 {dialogContent}
                 <DialogActions>
-                    <Button onClick={this.handleCancel} color="primary" autoFocus>{I18N.get("Cancel")}</Button>
-                    <Button onClick={this.handleConfirm} color="primary">{okButtonName}</Button>
+                    <Button onClick={this.handleCancel}>{I18N.get("Cancel")}</Button>
+                    <Button onClick={this.handleConfirm} autoFocus color="primary">{okButtonName}</Button>
                 </DialogActions>
             </Dialog>
         );

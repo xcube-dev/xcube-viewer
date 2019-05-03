@@ -30,12 +30,7 @@ export interface UpdateDatasets {
 
 export function updateDatasets() {
     return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
-        const state = getState();
-        const apiServer = selectedServerSelector(state);
-        if (apiServer === null) {
-            console.warn("No server configured!");
-            return;
-        }
+        const apiServer = selectedServerSelector(getState());
 
         dispatch(addActivity(UPDATE_DATASETS, I18N.get("Loading data")));
 
@@ -72,12 +67,7 @@ export interface UpdateColorBars {
 
 export function updateColorBars() {
     return (dispatch: Dispatch<UpdateColorBars | MessageLogAction>, getState: () => AppState) => {
-        const state = getState();
-        const apiServer = selectedServerSelector(state);
-        if (apiServer === null) {
-            console.warn("No server configured!");
-            return;
-        }
+        const apiServer = selectedServerSelector(getState());
 
         api.getColorBars(apiServer.url)
            .then((colorBars: ColorBars) => {
@@ -133,10 +123,22 @@ export interface ConfigureServers {
     selectedServerId: string;
 }
 
-export function configureServers(servers: Server[], selectedServerId: string): ConfigureServers {
-    return {type: CONFIGURE_SERVERS, servers, selectedServerId};
+export function configureServers(servers: Server[], selectedServerId: string) {
+    return (dispatch: Dispatch<any>, getState: () => AppState) => {
+        if (getState().controlState.selectedServerId !== selectedServerId) {
+            dispatch(removeAllTimeSeries());
+            dispatch(_configureServers(servers, selectedServerId));
+            dispatch(updateDatasets());
+            dispatch(updateColorBars());
+        } else if (getState().dataState.userServers !== servers) {
+            dispatch(_configureServers(servers, selectedServerId));
+        }
+    };
 }
 
+export function _configureServers(servers: Server[], selectedServerId: string): ConfigureServers {
+    return {type: CONFIGURE_SERVERS, servers, selectedServerId};
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
