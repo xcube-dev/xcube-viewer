@@ -19,12 +19,12 @@ const mapStateToProps = (state: AppState) => {
         colorBarLegend: selectedColorBarLegendSelector(state),
         drawMode: state.controlState.selectedDrawMode,
         flyTo: state.controlState.flyTo,
+        setMap
     }
 };
 
 const mapDispatchToProps = {
     addGeometry,
-    setMap
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Viewer);
