@@ -24,8 +24,7 @@ export const VIEWER_HEADER_BACKGROUND_COLOR = undefined;
 export const LINECHART_STROKE_SHADE_DARK = 400;
 export const LINECHART_STROKE_SHADE_LIGHT = 600;
 
-export const LINECHART_STROKES_BASE = [grey, red, blue, green, yellow, purple, pink];
-export const LINECHART_STROKES_LIGHT = LINECHART_STROKES_BASE.map(color => color[LINECHART_STROKE_SHADE_LIGHT]);
-export const LINECHART_STROKES_DARK = LINECHART_STROKES_BASE.map(color => color[LINECHART_STROKE_SHADE_DARK]);
+export const TIME_SERIES_COLORS = {grey, red, blue, green, yellow, purple, pink};
+export const TIME_SERIES_COLOR_NAMES = Object.keys(TIME_SERIES_COLORS);
 
 export const I18N = new LanguageDictionary(lang);

@@ -34,8 +34,8 @@ export interface TimeSeriesPoint {
 export interface TimeSeries {
     source: TimeSeriesSource;
     data: TimeSeriesPoint[];
+    color: string;
 }
-
 
 export function equalTimeRanges(t1: TimeRange | null, t2: TimeRange | null) {
     if (t1 === t2) {
