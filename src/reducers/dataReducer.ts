@@ -10,7 +10,7 @@ import {
     UPDATE_TIME_SERIES
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from "../states/controlState";
-import { TIME_SERIES_COLOR_NAMES } from "../config";
+import { USER_PLACES_COLOR_NAMES } from "../config";
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -26,8 +26,8 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         }
         case UPDATE_TIME_SERIES: {
             if (action.updateMode === "add") {
-                const colorIndex = state.timeSeriesCollection.length % TIME_SERIES_COLOR_NAMES.length;
-                const color = TIME_SERIES_COLOR_NAMES[colorIndex];
+                const colorIndex = state.timeSeriesCollection.length % USER_PLACES_COLOR_NAMES.length;
+                const color = USER_PLACES_COLOR_NAMES[colorIndex];
                 return {
                     ...state,
                     timeSeriesCollection: [
@@ -50,7 +50,7 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                         }
                     });
                 }
-                const color = TIME_SERIES_COLOR_NAMES[0];
+                const color = USER_PLACES_COLOR_NAMES[0];
                 return {
                     ...state,
                     timeSeriesCollection: [
