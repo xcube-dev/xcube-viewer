@@ -46,15 +46,7 @@ export function newControlState(): ControlState {
     };
 }
 
-// We cannot keep "_map" in control state object, because it is (a) not serializable
-// and (b) logging actions will cause the browsers to crash
+// We cannot keep "MAP_OBJECTS" in control state object, because these objects are (1) not serializable
+// and (2) logging actions will cause the browsers to crash
 
-let _map: ol.Map | null = null;
-
-export function getMap(): ol.Map | null {
-    return _map;
-}
-
-export function setMap(map: ol.Map | null) {
-    _map = map;
-}
+export const MAP_OBJECTS: {[id: string]: ol.Object} = {};

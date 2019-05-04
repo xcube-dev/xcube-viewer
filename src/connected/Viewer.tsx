@@ -7,7 +7,6 @@ import {
     selectedDatasetVariableLayerSelector
 } from '../selectors/controlSelectors';
 import { addGeometry } from '../actions/controlActions';
-import { setMap } from '../states/controlState';
 import Viewer from '../components/Viewer';
 
 
@@ -19,7 +18,6 @@ const mapStateToProps = (state: AppState) => {
         colorBarLegend: selectedColorBarLegendSelector(state),
         drawMode: state.controlState.selectedDrawMode,
         flyTo: state.controlState.flyTo,
-        setMap
     }
 };
 

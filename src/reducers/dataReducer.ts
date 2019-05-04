@@ -1,11 +1,15 @@
-import { newDataState, DataState, storeUserServers } from '../states/dataState';
+import * as ol from 'openlayers';
+
+import { DataState, newDataState, storeUserServers } from '../states/dataState';
 import {
-    UPDATE_TIME_SERIES,
+    CONFIGURE_SERVERS,
     DataAction,
-    UPDATE_DATASETS,
+    REMOVE_ALL_TIME_SERIES,
     UPDATE_COLOR_BARS,
-    REMOVE_ALL_TIME_SERIES, CONFIGURE_SERVERS
+    UPDATE_DATASETS,
+    UPDATE_TIME_SERIES
 } from '../actions/dataActions';
+import { MAP_OBJECTS } from "../states/controlState";
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -23,12 +27,31 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
             if (action.updateMode === "add") {
                 return {...state, timeSeriesCollection: [...state.timeSeriesCollection, action.timeSeries]};
             } else if (action.updateMode === "replace") {
+                if (MAP_OBJECTS.userLayer) {
+                    const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+                    state.timeSeriesCollection.forEach(timeSeries => {
+                        const featureId = timeSeries.source.featureId;
+                        if (featureId !== action.timeSeries.source.featureId) {
+                            const source = userLayer.getSource();
+                            const feature = source.getFeatureById(featureId);
+                            source.removeFeature(feature);
+                        }
+                    });
+                }
                 return {...state, timeSeriesCollection: [action.timeSeries]};
             } else {
                 return state;
             }
         }
         case REMOVE_ALL_TIME_SERIES: {
+            if (MAP_OBJECTS.userLayer) {
+                const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+                state.timeSeriesCollection.forEach(timeSeries => {
+                    let source = userLayer.getSource();
+                    let feature = source.getFeatureById(timeSeries.source.featureId);
+                    source.removeFeature(feature);
+                });
+            }
             return {...state, timeSeriesCollection: []};
         }
         case CONFIGURE_SERVERS: {

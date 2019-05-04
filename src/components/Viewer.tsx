@@ -1,16 +1,17 @@
 import * as React from 'react';
 import * as geojson from 'geojson';
+import * as ol from 'openlayers';
 
-import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
 import { View } from './ol/View';
-import * as ol from 'openlayers';
 import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
+import ErrorBoundary from './ErrorBoundary';
 import { newId } from '../util/id';
+import { MAP_OBJECTS } from "../states/controlState";
 
 
 interface ViewerProps {
@@ -21,7 +22,6 @@ interface ViewerProps {
     addGeometry?: (featureId: string, geometry: geojson.Geometry) => void;
     selectFeatures?: (features: geojson.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
-    setMap?: (map: ol.Map | null) => void;
 }
 
 
@@ -61,9 +61,6 @@ class Viewer extends React.Component<ViewerProps> {
 
     handleMapRef = (map: ol.Map | null) => {
         this.map = map;
-        if (this.props.setMap) {
-            this.props.setMap(map);
-        }
     };
 
     componentDidUpdate(prevProps: Readonly<ViewerProps>, prevState: Readonly<{}>, snapshot?: any): void {
@@ -88,14 +85,14 @@ class Viewer extends React.Component<ViewerProps> {
         const colorBarLegend = this.props.colorBarLegend;
         const drawMode = this.props.drawMode;
         const draw = drawMode ?
-                     <Draw
-                         id="draw"
-                         layerId={'user'}
-                         type={drawMode}
-                         wrapX={true}
-                         stopClick={true}
-                         onDrawEnd={this.handleDrawEnd}
-                     /> : null;
+            <Draw
+                id="draw"
+                layerId={'userLayer'}
+                type={drawMode}
+                wrapX={true}
+                stopClick={true}
+                onDrawEnd={this.handleDrawEnd}
+            /> : null;
 
         let colorBarControl = null;
         if (colorBarLegend) {
@@ -108,12 +105,17 @@ class Viewer extends React.Component<ViewerProps> {
 
         return (
             <ErrorBoundary>
-                <Map onClick={this.handleMapClick} onMapRef={this.handleMapRef}>
+                <Map
+                    id="map"
+                    onClick={this.handleMapClick}
+                    onMapRef={this.handleMapRef}
+                    mapObjects={MAP_OBJECTS}
+                >
                     <View id="view"/>
                     <Layers>
                         <OSMBlackAndWhite/>
                         {variableLayer}
-                        <Vector id={'user'} opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
+                        <Vector id='userLayer' opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
                     </Layers>
                     {placeGroupLayers}
                     {draw}
