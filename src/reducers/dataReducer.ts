@@ -10,6 +10,7 @@ import {
     UPDATE_TIME_SERIES
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from "../states/controlState";
+import { USER_PLACES_COLOR_NAMES } from "../config";
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -25,7 +26,18 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         }
         case UPDATE_TIME_SERIES: {
             if (action.updateMode === "add") {
-                return {...state, timeSeriesCollection: [...state.timeSeriesCollection, action.timeSeries]};
+                const colorIndex = state.timeSeriesCollection.length % USER_PLACES_COLOR_NAMES.length;
+                const color = USER_PLACES_COLOR_NAMES[colorIndex];
+                return {
+                    ...state,
+                    timeSeriesCollection: [
+                        ...state.timeSeriesCollection,
+                        {
+                            ...action.timeSeries,
+                            color,
+                        }
+                    ]
+                };
             } else if (action.updateMode === "replace") {
                 if (MAP_OBJECTS.userLayer) {
                     const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
@@ -38,10 +50,18 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                         }
                     });
                 }
-                return {...state, timeSeriesCollection: [action.timeSeries]};
-            } else {
-                return state;
+                const color = USER_PLACES_COLOR_NAMES[0];
+                return {
+                    ...state,
+                    timeSeriesCollection: [
+                        {
+                            ...action.timeSeries,
+                            color
+                        }
+                    ]
+                };
             }
+            return state;
         }
         case REMOVE_ALL_TIME_SERIES: {
             if (MAP_OBJECTS.userLayer) {
@@ -59,7 +79,9 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                 storeUserServers(action.servers);
                 return {...state, userServers: action.servers};
             }
+            return state;
         }
     }
+
     return state;
 }

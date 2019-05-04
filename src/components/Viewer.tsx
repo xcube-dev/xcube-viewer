@@ -12,6 +12,7 @@ import { Control } from './ol/control/Control';
 import ErrorBoundary from './ErrorBoundary';
 import { newId } from '../util/id';
 import { MAP_OBJECTS } from "../states/controlState";
+import { USER_PLACES_COLOR_NAMES } from "../config";
 
 
 interface ViewerProps {
@@ -50,10 +51,19 @@ class Viewer extends React.Component<ViewerProps> {
         if (this.map !== null && addGeometry && drawMode) {
             const feature = event.feature;
             const featureId = `Draw-${drawMode}-${newId()}`;
-            feature.setId(featureId);
             const projection = this.map.getView().getProjection();
             const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
             const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
+            feature.setId(featureId);
+            if (drawMode === "Point") {
+                let colorIndex = 0;
+                if (MAP_OBJECTS.userLayer) {
+                    const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+                    const features = userLayer.getSource().getFeatures();
+                    colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
+                }
+                feature.setStyle(createCircleStyle(7, USER_PLACES_COLOR_NAMES[colorIndex]));
+            }
             addGeometry(featureId, geoJSONGeometry as geojson.Geometry);
         }
         return true;
@@ -127,3 +137,22 @@ class Viewer extends React.Component<ViewerProps> {
 }
 
 export default Viewer;
+
+
+function createCircleStyle(radius: number, fillColor: string, strokeColor: string = "white", strokeWidth: number = 1) {
+    let fill = new ol.style.Fill(
+        {
+            color: fillColor,
+        });
+    let stroke = new ol.style.Stroke(
+        {
+            color: strokeColor,
+            width: strokeWidth,
+        }
+    );
+    return new ol.style.Style(
+        {
+            image: new ol.style.Circle({radius, fill, stroke})
+        }
+    );
+}

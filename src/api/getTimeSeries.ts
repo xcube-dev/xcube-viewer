@@ -36,6 +36,6 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
                 featureId,
                 geometry,
             };
-            return {source, data};
+            return {source, data, color: "green"};
         });
 }
