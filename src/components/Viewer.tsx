@@ -1,15 +1,17 @@
 import * as React from 'react';
-import * as GeoJSON from 'geojson';
+import * as geojson from 'geojson';
+import * as ol from 'openlayers';
 
-import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
 import { View } from './ol/View';
-import * as ol from 'openlayers';
-import { Draw } from './ol/interaction/Draw';
+import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
-import { OSMBlackAndWhite } from "./ol/layer/Tile";
+import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
+import ErrorBoundary from './ErrorBoundary';
+import { newId } from '../util/id';
+import { MAP_OBJECTS } from "../states/controlState";
 
 
 interface ViewerProps {
@@ -17,8 +19,8 @@ interface ViewerProps {
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    selectCoordinate?: (geoCoordinate: [number, number]) => void;
-    selectFeatures?: (features: GeoJSON.Feature[]) => void;
+    addGeometry?: (featureId: string, geometry: geojson.Geometry) => void;
+    selectFeatures?: (features: geojson.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
 
@@ -32,29 +34,34 @@ class Viewer extends React.Component<ViewerProps> {
     map: ol.Map | null;
 
     handleMapClick = (event: ol.MapBrowserEvent) => {
-        const {selectCoordinate, selectFeatures} = this.props;
-
-        const map = event.map;
-        const mapCoordinate = map.getCoordinateFromPixel(event.pixel);
-        const geoCoordinate = ol.proj.transform(mapCoordinate, map.getView().getProjection(), 'EPSG:4326');
-
-        if (selectCoordinate) {
-            selectCoordinate(geoCoordinate);
-        }
-
-        if (selectFeatures) {
+        const {selectFeatures, drawMode} = this.props;
+        if (selectFeatures && drawMode === null) {
+            const map = event.map;
             // noinspection JSUnusedLocalSymbols
             map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-                // console.log("Map.handleClick: feature is near: ", feature, layer);
+                console.log('Map.handleClick: feature is near: ', feature, layer);
             });
             // selectFeature(features);
         }
     };
 
+    handleDrawEnd = (event: DrawEvent) => {
+        const {addGeometry, drawMode} = this.props;
+        if (this.map !== null && addGeometry && drawMode) {
+            const feature = event.feature;
+            const featureId = `Draw-${drawMode}-${newId()}`;
+            feature.setId(featureId);
+            const projection = this.map.getView().getProjection();
+            const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
+            const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
+            addGeometry(featureId, geoJSONGeometry as geojson.Geometry);
+        }
+        return true;
+    };
+
     handleMapRef = (map: ol.Map | null) => {
         this.map = map;
     };
-
 
     componentDidUpdate(prevProps: Readonly<ViewerProps>, prevState: Readonly<{}>, snapshot?: any): void {
         let flyToCurr = this.props.flyTo || null;
@@ -72,13 +79,20 @@ class Viewer extends React.Component<ViewerProps> {
         }
     }
 
-
     public render() {
         const variableLayer = this.props.variableLayer;
         const placeGroupLayers = this.props.placeGroupLayers;
         const colorBarLegend = this.props.colorBarLegend;
         const drawMode = this.props.drawMode;
-        const draw = drawMode ? <Draw id="draw" layerId={'user'} type={drawMode}/> : null;
+        const draw = drawMode ?
+            <Draw
+                id="draw"
+                layerId={'userLayer'}
+                type={drawMode}
+                wrapX={true}
+                stopClick={true}
+                onDrawEnd={this.handleDrawEnd}
+            /> : null;
 
         let colorBarControl = null;
         if (colorBarLegend) {
@@ -91,12 +105,17 @@ class Viewer extends React.Component<ViewerProps> {
 
         return (
             <ErrorBoundary>
-                <Map onClick={this.handleMapClick} onMapRef={this.handleMapRef}>
+                <Map
+                    id="map"
+                    onClick={this.handleMapClick}
+                    onMapRef={this.handleMapRef}
+                    mapObjects={MAP_OBJECTS}
+                >
                     <View id="view"/>
                     <Layers>
                         <OSMBlackAndWhite/>
                         {variableLayer}
-                        <Vector id={'user'} opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
+                        <Vector id='userLayer' opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
                     </Layers>
                     {placeGroupLayers}
                     {draw}

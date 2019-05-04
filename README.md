@@ -58,6 +58,7 @@ A simple viewer component for Xcube server.
 * Animate through time (play forw/back)
 * Added means to select a time slice
 * Time ranges set from datasets
+* Change xcube server. Users' xcube server configurations are saved in local browser storage.  
 * Place groups associated to datasets
   - produce a unique vector layer in the map;
   - can specify their feature property fields that will provide the values for predefined roles:

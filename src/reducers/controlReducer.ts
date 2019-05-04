@@ -11,7 +11,8 @@ import {
     SELECT_TIME,
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
-    SELECT_COORDINATE,
+    ADD_GEOMETRY,
+    SELECT_GEOMETRY,
     ControlAction,
     SELECT_TIME_RANGE,
     UPDATE_VISIBLE_TIME_RANGE,
@@ -126,10 +127,16 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                 timeAnimationInterval: action.timeAnimationInterval,
             };
         }
-        case SELECT_COORDINATE: {
+        case ADD_GEOMETRY: {
             return {
                 ...state,
-                selectedCoordinate: action.selectedCoordinate,
+                selectedFeatureId: action.featureId,
+            };
+        }
+        case SELECT_GEOMETRY: {
+            return {
+                ...state,
+                selectedFeatureId: action.featureId,
             };
         }
         case ADD_ACTIVITY: {

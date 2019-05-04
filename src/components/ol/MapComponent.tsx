@@ -52,6 +52,7 @@ export abstract class MapComponent<T extends ol.Object, P extends MapComponentPr
 
     private _updateMapObject(object: T) {
         if (object != null && this.props.id) {
+            object.set("objectId", this.props.id);
             this.context.mapObjects![this.props.id!] = object;
         }
         this.object = object;

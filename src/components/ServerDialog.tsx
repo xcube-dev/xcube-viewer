@@ -21,6 +21,7 @@ import TextField from "@material-ui/core/TextField";
 import { WithLocale } from "../util/lang";
 import { I18N } from "../config";
 import { Server } from "../model/server";
+import { newId } from '../util/id';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -69,13 +70,11 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
     }
 
     static deriveState(props: ServerDialogProps): ServerDialogState {
-        console.log("getDerivedStateFromProps: ", props);
         const {servers, selectedServer} = props;
         return {servers, selectedServer, dialogMode: "select"};
     }
 
     componentDidUpdate(prevProps: Readonly<ServerDialogProps>): void {
-        console.log("componentDidUpdate: ", this.props, this.state);
         if (prevProps.servers !== this.props.servers
             || prevProps.selectedServer !== this.props.selectedServer) {
             this.setState(ServerDialog.deriveState(this.props));
@@ -160,8 +159,7 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
     };
 
     doAddServer() {
-        const selectedServerId = (Date.now().toString(16) + Math.random().toString(16).substr(2)).toUpperCase();
-        const selectedServer = {...this.state.selectedServer, id: selectedServerId};
+        const selectedServer = {...this.state.selectedServer, id: newId()};
         const servers = [...this.state.servers, selectedServer];
         this.setServers(servers, selectedServer);
     };
