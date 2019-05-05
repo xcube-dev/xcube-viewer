@@ -10,7 +10,7 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps
+    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar
 } from 'recharts';
 import IconButton from '@material-ui/core/IconButton';
 import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
@@ -128,6 +128,20 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         }
                     });
                 }
+                let errorBar;
+                if (ts.data.find(point => typeof point.stdev === "number")) {
+                    errorBar = (
+                        <ErrorBar
+                            //data={data}
+                            dataKey="stdev"
+                            width={4}
+                            strokeWidth={2}
+                            stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
+                            // direction="y"
+                        />
+                    );
+                }
+                console.log("ErrorBar: ", errorBar);
                 const source = ts.source;
                 return (
                     <Line
@@ -142,7 +156,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
                         strokeWidth={3}
                         activeDot={true}
-                    />
+                    >{errorBar}</Line>
                 );
             });
         }

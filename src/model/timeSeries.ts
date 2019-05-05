@@ -28,7 +28,8 @@ export interface TimeSeriesPoint {
     time: Time;
     totalCount: number;
     validCount: number;
-    average: number;
+    average: number | null;
+    stdev?: number | null;
 }
 
 export interface TimeSeries {
