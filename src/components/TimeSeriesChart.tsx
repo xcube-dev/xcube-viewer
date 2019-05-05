@@ -141,7 +141,6 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         />
                     );
                 }
-                console.log("ErrorBar: ", errorBar);
                 const source = ts.source;
                 return (
                     <Line
