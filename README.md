@@ -21,7 +21,7 @@ A simple viewer component for Xcube server.
     $ cd xcube
     $ git pull
     $ conda activate xcube  
-    $ xcube server --verbose --traceperf --config xcube/webapi/res/demo/config.yml  
+    $ xcube serve --verbose --traceperf --config xcube/webapi/res/demo/config.yml  
     
 
 
