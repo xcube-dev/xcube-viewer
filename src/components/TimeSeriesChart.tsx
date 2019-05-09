@@ -118,26 +118,34 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         let lines: JSX.Element[] = [];
         if (timeSeriesCollection) {
             lines = timeSeriesCollection.map((ts, i) => {
-                let data: TimeSeriesPoint[] = ts.data;
-                if (isZoomedIn) {
-                    data = [];
-                    ts.data.forEach(point => {
-                        const time = point.time;
-                        if (time >= time1! && time <= time2!) {
+                const data: TimeSeriesPoint[] = [];
+                let hasErrorBars = false;
+                ts.data.forEach(point => {
+                    if (point.average !== null) {
+                        let time1Ok = true;
+                        let time2Ok = true;
+                        if (time1 !== null) {
+                            time1Ok = point.time >= time1;
+                        }
+                        if (time2 !== null) {
+                            time2Ok = point.time <= time2;
+                        }
+                        if (time1Ok && time2Ok) {
                             data.push(point);
                         }
-                    });
-                }
+                        if (typeof point.stdev === "number") {
+                            hasErrorBars = true;
+                        }
+                    }
+                });
                 let errorBar;
-                if (ts.data.find(point => typeof point.stdev === "number")) {
+                if (hasErrorBars) {
                     errorBar = (
                         <ErrorBar
-                            //data={data}
                             dataKey="stdev"
                             width={4}
                             strokeWidth={2}
                             stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
-                            // direction="y"
                         />
                     );
                 }
@@ -329,36 +337,45 @@ interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
 class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
     render() {
         const {classes, active, label, payload} = this.props;
-        if (typeof label !== 'number') {
+        if (!active) {
+            console.log(`CustomToolTip: not active`);
             return null;
         }
-        let items = null;
-        if (payload && payload.length > 0) {
-            items = payload.map((p: TooltipPayload, index: number) => {
-                let {name, value, color, unit} = p;
-                if (typeof value !== 'number') {
-                    return null;
-                }
-                value = Math.round(100 * value) / 100;
-                return (
-                    <div key={index}>
-                        <span>{name}:&nbsp;</span>
-                        <span className={classes.toolTipValue} style={{color: color}}>{value}</span>
-                        <span>&nbsp;{unit}</span>
-                    </div>
-                );
-            });
+        if (typeof label !== 'number') {
+            console.log(`CustomToolTip: label is not a number, but ${typeof label}: ${label}`);
+            return null;
         }
-
-        if (active) {
+        if (!payload || payload.length === 0) {
+            console.log(`CustomToolTip: empty payload: ${payload}`);
+            return null;
+        }
+        const items = payload.map((p: TooltipPayload, index: number) => {
+            let {name, value, color, unit} = p;
+            if (typeof value !== 'number') {
+                console.log(`CustomToolTip: value is not a number, but ${typeof value}: ${value}`);
+                return null;
+            }
+            value = Math.round(100 * value) / 100;
             return (
-                <div className={classes.toolTipContainer}>
-                    <span className={classes.toolTipLabel}>{`${utcTimeToLocalDateTimeString(label)}`}</span>
-                    {items}
+                <div key={index}>
+                    <span>{name}:&nbsp;</span>
+                    <span className={classes.toolTipValue} style={{color: color}}>{value}</span>
+                    <span>&nbsp;{unit}</span>
                 </div>
             );
+        });
+
+        if (!items) {
+            console.log(`CustomToolTip: no items`);
+            return null;
         }
-        return null;
+
+        return (
+            <div className={classes.toolTipContainer}>
+                <span className={classes.toolTipLabel}>{`${utcTimeToLocalDateTimeString(label)}`}</span>
+                {items}
+            </div>
+        );
     }
 }
 
