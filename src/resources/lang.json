@@ -1,166 +1,200 @@
 {
   "languages": {
-    "de": "Deutsch",
     "en": "English",
-    "fi": "Suomalainen",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "ro": "Rumeno",
     "se": "Svenska"
   },
   "dictionary": [
     {
       "en": "OK",
       "de": "OK",
-      "se": "OK",
-      "fi": "Kunnossa"
+      "it": "OK",
+      "ro": "OK",
+      "se": "OK"
     },
     {
       "en": "Cancel",
       "de": "Abbrechen",
-      "se": "Annullera",
-      "fi": "Peruuttaa"
+      "it": "Annulla",
+      "ro": "Anulare",
+      "se": "Annullera"
     },
     {
       "en": "Save",
       "de": "Speichern",
-      "se": "Spara",
-      "fi": "Säästää"
+      "it": "Salvare",
+      "ro": "Salva",
+      "se": "Spara"
     },
     {
       "en": "Select",
       "de": "Auswählen",
-      "se": "Välja",
-      "fi": "Valita"
+      "it": "Selezionare",
+      "ro": "Selectați",
+      "se": "Välja"
     },
     {
       "en": "Add",
       "de": "Hinzufügen",
-      "se": "Foga",
-      "fi": "Lisätä"
+      "it": "Aggiungere",
+      "ro": "Adăuga",
+      "se": "Foga"
     },
     {
       "en": "Edit",
       "de": "Bearbeiten",
-      "se": "Edera",
-      "fi": "Muokata"
+      "it": "Modificare",
+      "ro": "Edita",
+      "se": "Edera"
     },
     {
       "en": "Remove",
       "de": "Entfernen",
-      "se": "Avlägsna",
-      "fi": "Poistaa"
+      "it": "Eliminare",
+      "ro": "Elimina",
+      "se": "Avlägsna"
     },
     {
       "en": "Dataset",
       "de": "Datensatz",
-      "se": "Dataset",
-      "fi": "Aineisto"
+      "it": "Dataset",
+      "ro": "Dataset",
+      "se": "Dataset"
     },
     {
       "en": "Variable",
       "de": "Variable",
-      "se": "Variabel",
-      "fi": "Muuttuja"
+      "it": "Variabile",
+      "ro": "Variabil",
+      "se": "Variabel"
     },
     {
       "en": "Places",
       "de": "Orte",
-      "se": "Platser",
-      "fi": "Paikat"
+      "it": "Posti",
+      "ro": "Locuri",
+      "se": "Platser"
     },
     {
       "en": "Place",
       "de": "Ort",
-      "se": "Plats",
-      "fi": "Paikka"
+      "it": "Posto",
+      "ro": "Loc",
+      "se": "Plats"
     },
     {
       "en": "Time",
       "de": "Zeit",
-      "se": "Tid",
-      "fi": "Aika"
+      "it": "Tempo",
+      "ro": "Timp",
+      "se": "Tid"
     },
     {
       "en": "Multi",
       "de": "Multi",
-      "se": "Multi",
-      "fi": "Multi"
+      "it": "Multi",
+      "ro": "Multi",
+      "se": "Multi"
     },
     {
       "en": "Something went wrong",
       "de": "Irgendetwas lief schief",
-      "se": "Något gick fel",
-      "fi": "Jotain meni pieleen"
+      "it": "Qualcosa è andato storto",
+      "ro": "Ceva n-a mers bine",
+      "se": "Något gick fel"
     },
     {
       "en": "Time-Series",
       "de": "Zeitserie",
-      "se": "Tidsserier",
-      "fi": "Aikasarja"
+      "it": "Time-Series",
+      "ro": "Time-Series",
+      "se": "Tidsserier"
     },
     {
       "en": "Values",
       "de": "Werte",
-      "se": "Värden",
-      "fi": "Arvot"
+      "it": "Valori",
+      "ro": "Valori",
+      "se": "Värden"
     },
     {
       "en": "Start",
       "de": "Start",
-      "se": "Start",
-      "fi": "Alkaa"
+      "it": "Inizio",
+      "ro": "Start",
+      "se": "Start"
     },
     {
       "en": "Stop",
       "de": "Stopp",
-      "se": "Stanna",
-      "fi": "Stop"
+      "it": "Fermare",
+      "ro": "Stop",
+      "se": "Stanna"
     },
     {
       "en": "Please wait...",
       "de": "Bitte warten...",
-      "se": "Vänta vänta...",
-      "fi": "Odota..."
+      "it": "Attendere prego...",
+      "ro": "Te rog asteapta...",
+      "se": "Vänta vänta..."
     },
     {
       "en": "Loading data",
       "de": "Lade Daten",
-      "se": "Laddar data",
-      "fi": "Tietoja ladataan"
+      "it": "Attendere prego",
+      "ro": "Încărcare date",
+      "se": "Laddar data"
     },
     {
       "en": "Cannot reach server",
       "de": "Kann Server nicht erreichen",
-      "se": "Kan inte nå servern",
-      "fi": "Palvelimeen ei pääse"
+      "it": "Impossibile raggiungere il server",
+      "ro": "Nu se poate ajunge la server",
+      "se": "Kan inte nå servern"
     },
     {
       "en": "Language",
       "de": "Sprache",
-      "se": "Språk",
-      "fi": "Kieli"
+      "it": "Linguaggio",
+      "ro": "Limba",
+      "se": "Språk"
     },
     {
       "en": "Settings",
       "de": "Einstellungen",
-      "se": "Inställningar",
-      "fi": "Asetukset"
+      "it": "Impostazioni",
+      "ro": "Setări",
+      "se": "Inställningar"
+    },
+    {
+      "en": "Server",
+      "de": "Server",
+      "it": "Server",
+      "ro": "Server",
+      "se": "Server"
     },
     {
       "en": "Add Server",
       "de": "Server hinzufügen",
-      "se": "Lägg till Server",
-      "fi": "Lisää Palvelin"
+      "it": "Aggiungi Server",
+      "ro": "Adauga Server",
+      "se": "Lägg till Server"
     },
     {
       "en": "Edit Server",
       "de": "Server bearbeiten",
-      "se": "Redigera Server",
-      "fi": "Muokkaa Palvelinta"
+      "it": "Modifica Server",
+      "ro": "Editați Serverul",
+      "se": "Redigera Server"
     },
     {
       "en": "Select Server",
       "de": "Server auswählen",
-      "se": "Välj Server",
-      "fi": "Valitse Palvelin"
+      "it": "Seleziona Server",
+      "ro": "Selectați Server",
+      "se": "Välj Server"
     }
   ]
 }
