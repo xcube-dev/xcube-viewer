@@ -38,6 +38,12 @@ export interface TimeSeries {
     color: string;
 }
 
+export interface TimeSeriesGroup {
+    id: string;
+    variableUnits?: string;
+    timeSeries: TimeSeries[];
+}
+
 export function equalTimeRanges(t1: TimeRange | null, t2: TimeRange | null) {
     if (t1 === t2) {
         return true;

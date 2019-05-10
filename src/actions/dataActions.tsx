@@ -100,6 +100,20 @@ export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 're
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const REMOVE_TIME_SERIES_GROUP = 'REMOVE_TIME_SERIES_GROUP';
+export type REMOVE_TIME_SERIES_GROUP = typeof REMOVE_TIME_SERIES_GROUP;
+
+export interface RemoveTimeSeriesGroup {
+    type: REMOVE_TIME_SERIES_GROUP;
+    id: string;
+}
+
+export function removeTimeSeriesGroup(id: string): RemoveTimeSeriesGroup {
+    return {type: REMOVE_TIME_SERIES_GROUP, id};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const REMOVE_ALL_TIME_SERIES = 'REMOVE_ALL_TIME_SERIES';
 export type REMOVE_ALL_TIME_SERIES = typeof REMOVE_ALL_TIME_SERIES;
 
@@ -142,4 +156,10 @@ export function _configureServers(servers: Server[], selectedServerId: string): 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export type DataAction = UpdateDatasets | UpdateColorBars | UpdateTimeSeries | RemoveAllTimeSeries | ConfigureServers;
+export type DataAction =
+    UpdateDatasets
+    | UpdateColorBars
+    | UpdateTimeSeries
+    | RemoveTimeSeriesGroup
+    | RemoveAllTimeSeries
+    | ConfigureServers;

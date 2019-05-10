@@ -1,5 +1,6 @@
 ## Changes in version 0.2 (in dev.)
 
+* The viewer now allows for multiple time-series groups based on the variable's units (#27)
 * Fixed a problem where selecting data points in time-series didn't show any data (#41)
 * Added translation for Italiano and Rumeno (#25)
 * Time-series are now plotted with standard deviation, if available e.g. for weekly means (#19)

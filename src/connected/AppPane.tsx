@@ -2,11 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 
-import TimeSeriesChart from './TimeSeriesChart';
 import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 import Viewer from './Viewer';
-import TimeRangeControl from './TimeRangeSlider';
+import TimeSeriesCharts from "./TimeSeriesCharts";
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
@@ -54,9 +53,8 @@ class AppPane extends React.Component<AppPaneProps> {
                     <Viewer/>
                 </div>
                 <div className={classes.chartContainer}>
-                    <TimeSeriesChart/>
+                    <TimeSeriesCharts/>
                 </div>
-                <TimeRangeControl/>
             </main>
         );
     }

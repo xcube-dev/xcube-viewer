@@ -113,6 +113,13 @@
       "se": "Tidsserier"
     },
     {
+      "en": "unknown units",
+      "de": "unbekannte Einheiten",
+      "it": "unità sconosciute",
+      "ro": "unități necunoscute",
+      "se": "okända enheter"
+    },
+    {
       "en": "Values",
       "de": "Werte",
       "it": "Valori",

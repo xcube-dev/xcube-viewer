@@ -1,6 +1,6 @@
 import { Dataset, } from '../model/dataset';
 import { Place, PlaceGroup, } from '../model/place';
-import { TimeSeries } from '../model/timeSeries';
+import { TimeSeriesGroup } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { Server } from "../model/server";
 import { VIEWER_API_SERVERS } from "../config";
@@ -10,7 +10,7 @@ import { getLocalStorage } from "../util/storage";
 export interface DataState {
     datasets: Dataset[];
     colorBars: ColorBars | null;
-    timeSeriesCollection: TimeSeries[];
+    timeSeriesGroups: TimeSeriesGroup[];
     userPlaces: PlaceGroup;
     userServers: Server[];
 }
@@ -26,7 +26,7 @@ export function newDataState(): DataState {
     return {
         datasets: [],
         colorBars: null,
-        timeSeriesCollection: [],
+        timeSeriesGroups: [],
         userPlaces: {id: 'user', title: 'My places', type: "FeatureCollection", features: [] as Array<Place>},
         userServers,
     };
