@@ -2,6 +2,8 @@
 
 A simple viewer component for Xcube server.
 
+![xcube-viewer](./doc/xcube-viewer.jpg)
+
 ## Run it
 
 1. Install [xcube](https://github.com/dcs4cop/xcube) and run server in demo mode
