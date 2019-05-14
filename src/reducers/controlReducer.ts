@@ -23,6 +23,7 @@ import {
 } from '../actions/controlActions';
 import { CONFIGURE_SERVERS, DataAction } from "../actions/dataActions";
 import { I18N } from "../config";
+import { findIndexCloseTo } from "../util/find";
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -97,9 +98,16 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             };
         }
         case SELECT_TIME: {
+            let {selectedTime, snapTimes} = action;
+            if (selectedTime !== null && snapTimes && snapTimes.length) {
+                const index = findIndexCloseTo(snapTimes!, selectedTime);
+                if (index >= 0) {
+                    selectedTime = snapTimes[index];
+                }
+            }
             return {
                 ...state,
-                selectedTime: action.selectedTime,
+                selectedTime,
             };
         }
         case SELECT_TIME_RANGE: {

@@ -34,12 +34,13 @@ const styles = (theme: Theme) => createStyles(
 
 interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedTime: Time | null;
-    selectTime: (time: Time | null) => void;
+    selectTime: (time: Time | null, snapTimes?: Time[]) => void;
     selectedTimeRange: TimeRange | null;
     step: Time;
     timeAnimationActive: boolean;
     timeAnimationInterval: number;
     updateTimeAnimation: (active: boolean, interval: number) => void;
+    snapTimes?: Time[];
 }
 
 
@@ -48,14 +49,14 @@ class TimeSelect extends React.Component<TimeSelectProps> {
     private intervalId: number | null = null;
 
     private handlePlayEvent = () => {
-        const {selectTime, selectedTime, selectedTimeRange, step} = this.props;
+        const {selectTime, selectedTime, selectedTimeRange, step, snapTimes} = this.props;
         let newTime = selectedTime! + step;
         if (selectedTimeRange) {
             if (newTime > selectedTimeRange[1]) {
                 newTime = selectedTimeRange[0];
             }
         }
-        selectTime(newTime);
+        selectTime(newTime, snapTimes);
     };
 
     private handlePlayButtonClick = () => {
@@ -65,7 +66,8 @@ class TimeSelect extends React.Component<TimeSelectProps> {
 
     private handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedTimeString = event.target.value;
-        this.props.selectTime(selectedTimeString ? dateTimeStringToUtcTime(selectedTimeString) : null);
+        this.props.selectTime(selectedTimeString ? dateTimeStringToUtcTime(selectedTimeString) : null,
+                              this.props.snapTimes);
     };
 
     private playOrNor() {

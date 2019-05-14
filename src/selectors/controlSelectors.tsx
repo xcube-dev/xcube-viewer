@@ -1,3 +1,4 @@
+///<reference path="../util/find.ts"/>
 import * as React from 'react';
 import { createSelector } from 'reselect'
 import { AppState } from '../states/appState';
@@ -30,6 +31,7 @@ export const selectedPlaceGroupIdsSelector = (state: AppState) => state.controlS
 export const selectedTimeSelector = (state: AppState) => state.controlState.selectedTime;
 export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
+export const snapToDataTimeSelector = (state: AppState) => state.controlState.snapToDataTime;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -118,6 +120,29 @@ export const selectedDatasetTimeDimensionSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): TimeDimension | null => {
         return (dataset && getDatasetTimeDimension(dataset)) || null;
+    }
+);
+
+export const snapTimesSelector = createSelector(
+    selectedDatasetTimeDimensionSelector,
+    snapToDataTimeSelector,
+    (timeDimension: TimeDimension | null, snapToDataTime: boolean): Time[] | undefined => {
+        let timeCoords;
+        if (!snapToDataTime || timeDimension === null || timeDimension.coordinates.length === 0) {
+            return timeCoords;
+        }
+        return timeDimension.coordinates;
+    }
+);
+
+export const selectedTimeIndexSelector = createSelector(
+    selectedTimeSelector,
+    snapTimesSelector,
+    (time: Time | null, snapTimes?: Time[]): number => {
+        if (time === null || !snapTimes) {
+            return -1;
+        }
+        return findIndexCloseTo(snapTimes, time);
     }
 );
 

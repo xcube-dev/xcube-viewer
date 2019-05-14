@@ -11,6 +11,7 @@ import { AppState } from '../states/appState';
 import * as api from '../api'
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { UpdateTimeSeries, updateTimeSeries } from './dataActions';
+import { findIndexCloseTo } from "../util/find";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,10 +102,11 @@ export type SELECT_TIME = typeof SELECT_TIME;
 export interface SelectTime {
     type: SELECT_TIME;
     selectedTime: Time | null;
+    snapTimes?: Time[];
 }
 
-export function selectTime(selectedTime: Time | null): SelectTime {
-    return {type: SELECT_TIME, selectedTime};
+export function selectTime(selectedTime: Time | null, snapTimes?: Time[]): SelectTime {
+    return {type: SELECT_TIME, selectedTime, snapTimes};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
