@@ -4,7 +4,7 @@ import { AppState } from '../states/appState';
 import TimeSeriesCharts from '../components/TimeSeriesCharts';
 import { removeTimeSeriesGroup } from "../actions/dataActions";
 import { selectTime, selectTimeRange } from "../actions/controlActions";
-import { selectedDatasetTimeRangeSelector, snapTimesSelector } from '../selectors/controlSelectors';
+import { selectedDatasetTimeRangeSelector } from '../selectors/controlSelectors';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -14,7 +14,6 @@ const mapStateToProps = (state: AppState) => {
         selectedTime: state.controlState.selectedTime,
         selectedTimeRange: state.controlState.selectedTimeRange,
         dataTimeRange: selectedDatasetTimeRangeSelector(state),
-        snapTimes: snapTimesSelector(state),
     }
 };
 

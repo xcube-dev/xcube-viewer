@@ -12,7 +12,6 @@ export interface ControlState {
     selectedTime: Time | null;
     selectedTimeRange: TimeRange | null;
     visibleTimeRange: TimeRange | null;
-    snapToDataTime: boolean;
     selectedFeatureId: string | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: 'add' | 'replace';
@@ -34,13 +33,12 @@ export function newControlState(): ControlState {
         selectedServerId: VIEWER_DEFAULT_API_SERVER.id,
         selectedTime: null,
         selectedTimeRange: null,
-        snapToDataTime: true,
         visibleTimeRange: null,
         selectedFeatureId: null,
         selectedDrawMode: 'Point',
         timeSeriesUpdateMode: 'replace',
         timeAnimationActive: false,
-        timeAnimationInterval: 500,
+        timeAnimationInterval: 1000,
         flyTo: null,
         activities: {},
         locale: 'en',

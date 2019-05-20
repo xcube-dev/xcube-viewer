@@ -35,8 +35,7 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     theme: Theme;
     timeSeriesGroups: TimeSeriesGroup[];
     selectedTime?: Time | null;
-    selectTime?: (time: Time | null, snapTimes?: Time[]) => void;
-    snapTimes?: Time[];
+    selectTime?: (time: Time | null) => void;
 
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;

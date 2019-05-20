@@ -22,11 +22,10 @@ const styles = (theme: Theme) => createStyles(
 
 interface TimeSliderProps extends WithStyles<typeof styles> {
     selectedTime?: Time | null;
-    selectTime?: (time: Time | null, snapTimes?: Time[]) => void;
+    selectTime?: (time: Time | null) => void;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
     visibleTimeRange?: TimeRange | null;
-    snapTimes?: Time[];
 }
 
 interface TimeSliderState {
@@ -54,7 +53,7 @@ class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
 
     handleChangeComplete = (selectedTime: Time) => {
         if (this.props.selectTime) {
-            this.props.selectTime(selectedTime, this.props.snapTimes);
+            this.props.selectTime(selectedTime);
         }
     };
 

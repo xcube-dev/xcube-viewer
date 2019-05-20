@@ -31,7 +31,7 @@ export const selectedPlaceGroupIdsSelector = (state: AppState) => state.controlS
 export const selectedTimeSelector = (state: AppState) => state.controlState.selectedTime;
 export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
-export const snapToDataTimeSelector = (state: AppState) => state.controlState.snapToDataTime;
+export const timeAnimationActiveSelector = (state: AppState) => state.controlState.timeAnimationActive;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -123,13 +123,11 @@ export const selectedDatasetTimeDimensionSelector = createSelector(
     }
 );
 
-export const snapTimesSelector = createSelector(
+export const timeCoordinatesSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
-    snapToDataTimeSelector,
-    (timeDimension: TimeDimension | null, snapToDataTime: boolean): Time[] | undefined => {
-        let timeCoords;
-        if (!snapToDataTime || timeDimension === null || timeDimension.coordinates.length === 0) {
-            return timeCoords;
+    (timeDimension: TimeDimension | null): Time[] | null => {
+        if (timeDimension === null || timeDimension.coordinates.length === 0) {
+            return null;
         }
         return timeDimension.coordinates;
     }
@@ -137,12 +135,12 @@ export const snapTimesSelector = createSelector(
 
 export const selectedTimeIndexSelector = createSelector(
     selectedTimeSelector,
-    snapTimesSelector,
-    (time: Time | null, snapTimes?: Time[]): number => {
-        if (time === null || !snapTimes) {
+    timeCoordinatesSelector,
+    (time: Time | null, timeCoordinates: Time[] | null): number => {
+        if (time === null || timeCoordinates === null) {
             return -1;
         }
-        return findIndexCloseTo(snapTimes, time);
+        return findIndexCloseTo(timeCoordinates, time);
     }
 );
 
@@ -150,7 +148,11 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetVariableSelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
-    (variable: Variable | null, timeDimension: TimeDimension | null, time: Time | null): MapElement => {
+    timeAnimationActiveSelector,
+    (variable: Variable | null,
+     timeDimension: TimeDimension | null,
+     time: Time | null,
+     timeAnimationActive: boolean): MapElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
@@ -178,20 +180,19 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             ),
         ];
         // TODO: get attributions from dataset metadata
+        const source = new ol.source.XYZ(
+            {
+                url,
+                projection: ol.proj.get(options.projection),
+                minZoom: options.minZoom,
+                maxZoom: options.maxZoom,
+                tileGrid: new ol.tilegrid.TileGrid(options.tileGrid),
+                attributions,
+                // @ts-ignore
+                transition: timeAnimationActive ? 0 : 250,
+            });
         return (
-            <Tile
-                id={"variable"}
-                source={new ol.source.XYZ(
-                    {
-                        url,
-                        projection: ol.proj.get(options.projection),
-                        minZoom: options.minZoom,
-                        maxZoom: options.maxZoom,
-                        tileGrid: new ol.tilegrid.TileGrid(options.tileGrid),
-                        attributions,
-                    })
-                }
-            />
+            <Tile id={"variable"} source={source}/>
         );
     }
 );

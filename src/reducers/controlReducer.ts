@@ -19,16 +19,18 @@ import {
     UPDATE_TIME_ANIMATION,
     ADD_ACTIVITY,
     REMOVE_ACTIVITY,
-    CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG,
+    CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG, INC_SELECTED_TIME,
 } from '../actions/controlActions';
 import { CONFIGURE_SERVERS, DataAction } from "../actions/dataActions";
 import { I18N } from "../config";
+import { AppState } from "../states/appState";
+import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
 import { findIndexCloseTo } from "../util/find";
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
-export function controlReducer(state: ControlState, action: ControlAction | DataAction): ControlState {
+export function controlReducer(state: ControlState, action: ControlAction | DataAction, appState: AppState): ControlState {
     if (typeof state === 'undefined') {
         state = newControlState();
     }
@@ -98,17 +100,51 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             };
         }
         case SELECT_TIME: {
-            let {selectedTime, snapTimes} = action;
-            if (selectedTime !== null && snapTimes && snapTimes.length) {
-                const index = findIndexCloseTo(snapTimes!, selectedTime);
+            let {selectedTime} = action;
+            if (selectedTime !== null) {
+                const timeCoordinates = timeCoordinatesSelector(appState)!;
+                const index = timeCoordinates ? findIndexCloseTo(timeCoordinates, selectedTime) : -1;
                 if (index >= 0) {
-                    selectedTime = snapTimes[index];
+                    selectedTime = timeCoordinates[index];
                 }
             }
-            return {
-                ...state,
-                selectedTime,
-            };
+            if (state.selectedTime !== selectedTime) {
+                return {
+                    ...state,
+                    selectedTime,
+                };
+            }
+            return state;
+        }
+        case INC_SELECTED_TIME: {
+            let index = selectedTimeIndexSelector(appState);
+            if (index >= 0) {
+                const timeCoordinates = timeCoordinatesSelector(appState)!;
+                index += action.increment;
+                if (index < 0) {
+                    index = timeCoordinates.length - 1;
+                }
+                if (index > timeCoordinates.length - 1) {
+                    index = 0;
+                }
+                let selectedTime = timeCoordinates[index];
+                let selectedTimeRange = state.selectedTimeRange;
+                if (selectedTimeRange !== null) {
+                    if (selectedTime < selectedTimeRange[0]) {
+                        selectedTime = selectedTimeRange[0];
+                    }
+                    if (selectedTime > selectedTimeRange[1]) {
+                        selectedTime = selectedTimeRange[1];
+                    }
+                }
+                if (state.selectedTime !== selectedTime) {
+                    return {
+                        ...state,
+                        selectedTime,
+                    };
+                }
+            }
+            return state;
         }
         case SELECT_TIME_RANGE: {
             return {
