@@ -35,8 +35,8 @@ const styles = (theme: Theme) => createStyles(
 interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedTime: Time | null;
     selectTime: (time: Time | null) => void;
+    incSelectedTime: (increment: -1 | 1) => void;
     selectedTimeRange: TimeRange | null;
-    step: Time;
     timeAnimationActive: boolean;
     timeAnimationInterval: number;
     updateTimeAnimation: (active: boolean, interval: number) => void;
@@ -48,14 +48,7 @@ class TimeSelect extends React.Component<TimeSelectProps> {
     private intervalId: number | null = null;
 
     private handlePlayEvent = () => {
-        const {selectTime, selectedTime, selectedTimeRange, step} = this.props;
-        let newTime = selectedTime! + step;
-        if (selectedTimeRange) {
-            if (newTime > selectedTimeRange[1]) {
-                newTime = selectedTimeRange[0];
-            }
-        }
-        selectTime(newTime);
+        this.props.incSelectedTime(1);
     };
 
     private handlePlayButtonClick = () => {

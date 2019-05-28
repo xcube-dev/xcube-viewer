@@ -38,7 +38,7 @@ export function newControlState(): ControlState {
         selectedDrawMode: 'Point',
         timeSeriesUpdateMode: 'replace',
         timeAnimationActive: false,
-        timeAnimationInterval: 500,
+        timeAnimationInterval: 1000,
         flyTo: null,
         activities: {},
         locale: 'en',

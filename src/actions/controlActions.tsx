@@ -89,6 +89,7 @@ export interface SelectUserPlace {
     selectedUserPlaceId: string | null;
 }
 
+// TODO (forman): let users select their points
 export function selectUserPlace(selectedUserPlaceId: string | null): SelectUserPlace {
     return {type: SELECT_USER_PLACE, selectedUserPlaceId};
 }
@@ -105,6 +106,20 @@ export interface SelectTime {
 
 export function selectTime(selectedTime: Time | null): SelectTime {
     return {type: SELECT_TIME, selectedTime};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const INC_SELECTED_TIME = 'INC_SELECTED_TIME';
+export type INC_SELECTED_TIME = typeof INC_SELECTED_TIME;
+
+export interface IncSelectedTime {
+    type: INC_SELECTED_TIME;
+    increment: -1 | 1;
+}
+
+export function incSelectedTime(increment: -1 | 1): IncSelectedTime {
+    return {type: INC_SELECTED_TIME, increment};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -187,17 +202,17 @@ export function addGeometry(featureId: string, geometry: geojson.Geometry) {
 
         if (selectedDatasetId && selectedVariable) {
             api.getTimeSeriesForGeometry(apiServer.url, selectedDatasetId, selectedVariable, featureId, geometry)
-               .then((timeSeries: TimeSeries | null) => {
-                   if (timeSeries !== null) {
-                       dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));
-                   } else {
-                       /*Database*/
-                       dispatch(postMessage('info', 'No data found here'));
-                   }
-               })
-               .catch(error => {
-                   dispatch(postMessage('error', error + ''));
-               });
+                .then((timeSeries: TimeSeries | null) => {
+                    if (timeSeries !== null) {
+                        dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));
+                    } else {
+                        /*Database*/
+                        dispatch(postMessage('info', 'No data found here'));
+                    }
+                })
+                .catch(error => {
+                    dispatch(postMessage('error', error + ''));
+                });
         }
     };
 }
@@ -302,6 +317,7 @@ export type ControlAction =
     | SelectPlace
     | SelectUserPlace
     | SelectTime
+    | IncSelectedTime
     | SelectTimeRange
     | AddGeometry
     | SelectGeometry
