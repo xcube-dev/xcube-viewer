@@ -134,7 +134,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     if (time1Ok && time2Ok) {
                         data.push(point);
                     }
-                    if ((typeof point.stdev) === "number") {
+                    if ((typeof point.uncertainty) === "number") {
                         hasErrorBars = true;
                     }
                 }
@@ -143,7 +143,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             if (hasErrorBars) {
                 errorBar = (
                     <ErrorBar
-                        dataKey="stdev"
+                        dataKey="uncertainty"
                         width={4}
                         strokeWidth={2}
                         stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
@@ -352,8 +352,8 @@ class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
                 return null;
             }
             // let valueText;
-            // if (typeof p.stdev === 'number') {
-            //     valueText = `${value.toFixed(2)} ±${p.stdev.toFixed(2)} (stdev)`;
+            // if (typeof p.uncertainty === 'number') {
+            //     valueText = `${value.toFixed(2)} ±${p.uncertainty.toFixed(2)} (uncertainty)`;
             // } else {
             //     valueText = value.toFixed(3);
             // }

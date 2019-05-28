@@ -29,7 +29,7 @@ export interface TimeSeriesPoint {
     totalCount: number;
     validCount: number;
     average: number | null;
-    stdev?: number | null;
+    uncertainty?: number | null;
 }
 
 export interface TimeSeries {
