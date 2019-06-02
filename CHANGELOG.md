@@ -1,6 +1,9 @@
+
 ## Changes in version 0.2 (in dev.)
 
-* When animating through time, the index into a dataset's time coordinates array is incremented 
+* Time-series are now loaded in increments so user see constantly growing time-series graph
+  instead of doing nothing for tens of seconds until the server returns the complete series (#38)
+* When animating through time, the index into a dataset's time coordinates array is incremented
   rather than incrementing current UI time by constant delta (#40)
 * The viewer now allows for multiple time-series groups based on the variable's units (#27)
 * Fixed a problem where selecting data points in time-series didn't show any data (#41)

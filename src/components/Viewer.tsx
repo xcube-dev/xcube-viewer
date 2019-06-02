@@ -2,6 +2,10 @@ import * as React from 'react';
 import * as geojson from 'geojson';
 import * as ol from 'openlayers';
 
+import { newId } from '../util/id';
+import { MAP_OBJECTS } from "../states/controlState";
+import { USER_PLACES_COLOR_NAMES } from "../config";
+import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
 import { View } from './ol/View';
@@ -9,10 +13,6 @@ import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
-import ErrorBoundary from './ErrorBoundary';
-import { newId } from '../util/id';
-import { MAP_OBJECTS } from "../states/controlState";
-import { USER_PLACES_COLOR_NAMES } from "../config";
 
 
 interface ViewerProps {
@@ -20,7 +20,7 @@ interface ViewerProps {
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    addGeometry?: (featureId: string, geometry: geojson.Geometry) => void;
+    addGeometry?: (featureId: string, geometry: geojson.Geometry, color: string) => void;
     selectFeatures?: (features: geojson.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
@@ -55,16 +55,17 @@ class Viewer extends React.Component<ViewerProps> {
             const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
             const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
             feature.setId(featureId);
-            if (drawMode === "Point") {
-                let colorIndex = 0;
-                if (MAP_OBJECTS.userLayer) {
-                    const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
-                    const features = userLayer.getSource().getFeatures();
-                    colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
-                }
-                feature.setStyle(createCircleStyle(7, USER_PLACES_COLOR_NAMES[colorIndex]));
+            let colorIndex = 0;
+            if (MAP_OBJECTS.userLayer) {
+                const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+                const features = userLayer.getSource().getFeatures();
+                colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
             }
-            addGeometry(featureId, geoJSONGeometry as geojson.Geometry);
+            const color = USER_PLACES_COLOR_NAMES[colorIndex];
+            if (drawMode === "Point") {
+                feature.setStyle(createCircleStyle(7, color));
+            }
+            addGeometry(featureId, geoJSONGeometry as geojson.Geometry, color);
         }
         return true;
     };
@@ -80,6 +81,7 @@ class Viewer extends React.Component<ViewerProps> {
             const map = this.map;
             const projection = map.getView().getProjection();
             let flyToTarget;
+            // noinspection JSDeprecatedSymbols
             if (Array.isArray(flyToCurr)) {
                 flyToTarget = ol.proj.transformExtent(flyToCurr, 'EPSG:4326', projection);
             } else {
@@ -95,14 +97,14 @@ class Viewer extends React.Component<ViewerProps> {
         const colorBarLegend = this.props.colorBarLegend;
         const drawMode = this.props.drawMode;
         const draw = drawMode ?
-            <Draw
-                id="draw"
-                layerId={'userLayer'}
-                type={drawMode}
-                wrapX={true}
-                stopClick={true}
-                onDrawEnd={this.handleDrawEnd}
-            /> : null;
+                     <Draw
+                         id="draw"
+                         layerId={'userLayer'}
+                         type={drawMode}
+                         wrapX={true}
+                         stopClick={true}
+                         onDrawEnd={this.handleDrawEnd}
+                     /> : null;
 
         let colorBarControl = null;
         if (colorBarLegend) {

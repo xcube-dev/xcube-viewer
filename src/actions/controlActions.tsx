@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import * as geojson from 'geojson'
 
 import {
-    selectedDatasetIdSelector,
+    selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
     selectedDatasetVariableSelector, selectedServerSelector,
 } from '../selectors/controlSelectors';
 import { Dataset } from '../model/dataset';
@@ -190,27 +190,59 @@ export interface AddGeometry {
     geometry: geojson.Geometry;
 }
 
-export function addGeometry(featureId: string, geometry: geojson.Geometry) {
+export function addGeometry(featureId: string, geometry: geojson.Geometry, color: string) {
     return (dispatch: Dispatch<AddGeometry | UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
         dispatch(_addGeometry(featureId, geometry));
 
-        let selectedDatasetId = selectedDatasetIdSelector(getState());
-        let selectedVariable = selectedDatasetVariableSelector(getState());
-        let timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+        // TODO (forman): extract following code as deparate action addTimeSeries()
 
-        if (selectedDatasetId && selectedVariable) {
-            api.getTimeSeriesForGeometry(apiServer.url, selectedDatasetId, selectedVariable, featureId, geometry)
-                .then((timeSeries: TimeSeries | null) => {
-                    if (timeSeries !== null) {
-                        dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));
-                    } else {
-                        /*Database*/
-                        dispatch(postMessage('info', 'No data found here'));
+        const selectedDatasetId = selectedDatasetIdSelector(getState());
+        const selectedDatasetTimeDim = selectedDatasetTimeDimensionSelector(getState());
+        const selectedVariable = selectedDatasetVariableSelector(getState());
+        const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+
+        const timeLabels = selectedDatasetTimeDim != null ? selectedDatasetTimeDim.labels : null;
+
+        if (selectedDatasetId && selectedVariable && timeLabels !== null) {
+            const numTimeLabels = timeLabels.length;
+            const timeChunkSize = 16;
+            let endTimeIndex = numTimeLabels - 1;
+            let startTimeIndex = endTimeIndex - timeChunkSize + 1;
+
+            const getTimeSeriesChunk = () => {
+                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
+                const endDateLabel = timeLabels[endTimeIndex];
+                return api.getTimeSeriesForGeometry(apiServer.url,
+                                                    selectedDatasetId,
+                                                    selectedVariable,
+                                                    featureId,
+                                                    geometry,
+                                                    startDateLabel,
+                                                    endDateLabel);
+            };
+
+            const successAction = (timeSeries: TimeSeries | null) => {
+                if (timeSeries !== null) {
+                    const hasMore = startTimeIndex > 0;
+                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
+                    dispatch(updateTimeSeries({...timeSeries, dataProgress, color},
+                                              timeSeriesUpdateMode,
+                                              endTimeIndex === numTimeLabels - 1 ? "new" : "append"));
+                    if (hasMore) {
+                        startTimeIndex -= timeChunkSize;
+                        endTimeIndex -= timeChunkSize;
+                        getTimeSeriesChunk().then(successAction);
                     }
-                })
-                .catch(error => {
+                } else {
+                    dispatch(postMessage('info', 'No data found here'));
+                }
+            };
+
+            getTimeSeriesChunk()
+                .then(successAction)
+                .catch((error: any) => {
                     dispatch(postMessage('error', error + ''));
                 });
         }

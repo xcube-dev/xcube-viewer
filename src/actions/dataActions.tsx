@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
+
 import { AppState } from '../states/appState';
 import * as api from '../api'
-import { MessageLogAction, postMessage } from './messageLogActions';
 import {
     AddActivity,
     addActivity,
@@ -16,6 +16,7 @@ import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
 import { selectedServerSelector } from "../selectors/controlSelectors";
 import { Server } from "../model/server";
+import { MessageLogAction, postMessage } from './messageLogActions';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,10 +93,11 @@ export interface UpdateTimeSeries {
     type: UPDATE_TIME_SERIES;
     timeSeries: TimeSeries;
     updateMode: 'add' | 'replace';
+    dataMode: 'new' | 'append';
 }
 
-export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace'): UpdateTimeSeries {
-    return {type: UPDATE_TIME_SERIES, timeSeries, updateMode};
+export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace', dataMode: 'new' | 'append'): UpdateTimeSeries {
+    return {type: UPDATE_TIME_SERIES, timeSeries, updateMode, dataMode};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

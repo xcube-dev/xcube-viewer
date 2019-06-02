@@ -12,12 +12,11 @@ import {
     TooltipPayload,
     ReferenceArea, ReferenceLine, TooltipProps, ErrorBar
 } from 'recharts';
+import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
 import Close from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Theme } from '@material-ui/core';
 
 import { equalTimeRanges, Time, TimeRange, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
@@ -66,8 +65,7 @@ const styles = (theme: Theme) => createStyles(
             fontWeight: 'bold',
             paddingBottom: theme.spacing.unit,
         },
-        chartTitle: {
-        }
+        chartTitle: {}
     });
 
 
@@ -118,7 +116,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             [time1, time2] = selectedTimeRange;
         }
 
-        const lines = timeSeriesGroup.timeSeries.map((ts, i) => {
+        const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
             const data: TimeSeriesPoint[] = [];
             let hasErrorBars = false;
             ts.data.forEach(point => {
@@ -134,7 +132,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     if (time1Ok && time2Ok) {
                         data.push(point);
                     }
-                    if ((typeof point.stdev) === "number") {
+                    // noinspection SuspiciousTypeOfGuard
+                    if ((typeof point.uncertainty) === "number") {
                         hasErrorBars = true;
                     }
                 }
@@ -143,7 +142,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             if (hasErrorBars) {
                 errorBar = (
                     <ErrorBar
-                        dataKey="stdev"
+                        dataKey="uncertainty"
                         width={4}
                         strokeWidth={2}
                         stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
@@ -162,8 +161,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     connectNulls={true}
                     dot={true}
                     stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
-                    strokeWidth={3}
+                    strokeWidth={3 * (ts.dataProgress || 1)}
                     activeDot={true}
+                    isAnimationActive={ts.dataProgress === 1.0}
                 >{errorBar}</Line>
             );
         });
@@ -352,8 +352,8 @@ class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
                 return null;
             }
             // let valueText;
-            // if (typeof p.stdev === 'number') {
-            //     valueText = `${value.toFixed(2)} ±${p.stdev.toFixed(2)} (stdev)`;
+            // if (typeof p.uncertainty === 'number') {
+            //     valueText = `${value.toFixed(2)} ±${p.uncertainty.toFixed(2)} (uncertainty)`;
             // } else {
             //     valueText = value.toFixed(3);
             // }

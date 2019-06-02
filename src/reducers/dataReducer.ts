@@ -10,7 +10,6 @@ import {
     UPDATE_TIME_SERIES
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from "../states/controlState";
-import { USER_PLACES_COLOR_NAMES } from "../config";
 import { newId } from "../util/id";
 import { TimeSeriesGroup } from "../model/timeSeries";
 
@@ -27,48 +26,65 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
             return {...state, colorBars: action.colorBars};
         }
         case UPDATE_TIME_SERIES: {
-            if (action.updateMode === "add") {
-                const timeSeries = action.timeSeries;
-                const tsgIndex = state.timeSeriesGroups.findIndex(tsg => tsg.variableUnits === timeSeries.source.variableUnits);
-                let timeSeriesGroups;
-                if (tsgIndex >= 0) {
-                    timeSeriesGroups = state.timeSeriesGroups.slice();
-                    const timeSeriesGroup = timeSeriesGroups[tsgIndex];
-                    const timeSeriesArray = timeSeriesGroup.timeSeries;
-                    const colorIndex = timeSeriesArray.length % USER_PLACES_COLOR_NAMES.length;
-                    const color = USER_PLACES_COLOR_NAMES[colorIndex];
-                    timeSeriesGroups[tsgIndex] = {
-                        ...timeSeriesGroup,
-                        timeSeries: [{...timeSeries, color}, ...timeSeriesArray],
-                    };
-                } else {
-                    const timeSeriesGroup = {
-                        id: newId(),
-                        variableUnits: timeSeries.source.variableUnits,
-                        timeSeries: [{...timeSeries, color: USER_PLACES_COLOR_NAMES[0]}],
-                    };
-                    timeSeriesGroups = [timeSeriesGroup, ...state.timeSeriesGroups];
-                }
-                return {
-                    ...state,
-                    timeSeriesGroups,
-                };
-            } else if (action.updateMode === "replace") {
-                const timeSeries = action.timeSeries;
-                const featureId = timeSeries.source.featureId;
+            let newTimeSeries = action.timeSeries;
+
+            if (action.updateMode === "replace" && action.dataMode === "new") {
+                const featureId = newTimeSeries.source.featureId;
                 state.timeSeriesGroups.forEach(tsg => {
                     removeTimeSeriesGroupFeatures(tsg, (fid: string) => fid !== featureId);
                 });
+            }
 
-                const timeSeriesGroup = {
+            let newTimeSeriesGroups;
+            const tsgIndex = state.timeSeriesGroups.findIndex(tsg => tsg.variableUnits === newTimeSeries.source.variableUnits);
+            if (tsgIndex >= 0) {
+                const timeSeriesGroup = state.timeSeriesGroups[tsgIndex];
+                const timeSeriesArray = timeSeriesGroup.timeSeriesArray;
+                const tsIndex = timeSeriesArray.findIndex(ts => ts.source.datasetId === newTimeSeries.source.datasetId
+                                                                && ts.source.featureId === newTimeSeries.source.featureId
+                                                                && ts.source.variableName === newTimeSeries.source.variableName);
+                let newTimeSeriesArray;
+                if (tsIndex >= 0) {
+                    const oldTimeSeries = timeSeriesArray[tsIndex];
+                    if (action.dataMode === "append") {
+                        newTimeSeries = {...newTimeSeries, data: [...newTimeSeries.data, ...oldTimeSeries.data]};
+                    }
+                    if (action.updateMode === "replace") {
+                        newTimeSeriesArray = [newTimeSeries];
+                    } else {
+                        newTimeSeriesArray = timeSeriesArray.slice();
+                        newTimeSeriesArray[tsIndex] = newTimeSeries;
+                    }
+                } else {
+                    if (action.updateMode === "replace") {
+                        newTimeSeriesArray = [newTimeSeries];
+                    } else {
+                        newTimeSeriesArray = [newTimeSeries, ...timeSeriesArray];
+                    }
+                }
+                const newTimeSeriesGroup = {...timeSeriesGroup, timeSeriesArray: newTimeSeriesArray};
+                if (action.updateMode === "replace") {
+                    newTimeSeriesGroups = [newTimeSeriesGroup];
+                } else {
+                    newTimeSeriesGroups = state.timeSeriesGroups.slice();
+                    newTimeSeriesGroups[tsgIndex] = newTimeSeriesGroup;
+                }
+            } else {
+                const newTimeSeriesGroup = {
                     id: newId(),
-                    variableUnits: timeSeries.source.variableUnits || "-",
-                    timeSeries: [{...timeSeries, color: USER_PLACES_COLOR_NAMES[0]}],
+                    variableUnits: newTimeSeries.source.variableUnits,
+                    timeSeriesArray: [newTimeSeries],
                 };
-                const timeSeriesGroups = [timeSeriesGroup];
+                if (action.updateMode === "replace") {
+                    newTimeSeriesGroups = [newTimeSeriesGroup];
+                } else {
+                    newTimeSeriesGroups = [newTimeSeriesGroup, ...state.timeSeriesGroups];
+                }
+            }
+            if (newTimeSeriesGroups) {
                 return {
                     ...state,
-                    timeSeriesGroups,
+                    timeSeriesGroups: newTimeSeriesGroups,
                 };
             }
             return state;
@@ -105,12 +121,14 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
 function removeTimeSeriesGroupFeatures(tsg: TimeSeriesGroup, predicate?: (fid: string) => boolean) {
     if (MAP_OBJECTS.userLayer) {
         const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
-        tsg.timeSeries.forEach(ts => {
+        tsg.timeSeriesArray.forEach(ts => {
             const fid = ts.source.featureId;
             if (!predicate || predicate(fid)) {
                 const source = userLayer.getSource();
                 const feature = source.getFeatureById(fid);
-                source.removeFeature(feature);
+                if (feature) {
+                    source.removeFeature(feature);
+                }
             }
         });
     }
