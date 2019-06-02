@@ -35,13 +35,14 @@ export interface TimeSeriesPoint {
 export interface TimeSeries {
     source: TimeSeriesSource;
     data: TimeSeriesPoint[];
+    dataProgress?: number;
     color: string;
 }
 
 export interface TimeSeriesGroup {
     id: string;
     variableUnits?: string;
-    timeSeries: TimeSeries[];
+    timeSeriesArray: TimeSeries[];
 }
 
 export function equalTimeRanges(t1: TimeRange | null, t2: TimeRange | null) {
