@@ -15,7 +15,6 @@ import TimeRangeSlider from "./TimeRangeSlider";
 const styles = (theme: Theme) => createStyles(
     {
         chartContainer: {
-            marginTop: "1em",
             display: "flex",
             flexDirection: "column",
             flexWrap: "wrap",
@@ -74,7 +73,6 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
         if (charts.length > 0) {
             return (
                 <div className={classes.chartContainer}>
-                    {charts}
                     <TimeRangeSlider
                         selectedTimeRange={selectedTimeRange}
                         dataTimeRange={dataTimeRange}
@@ -82,6 +80,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                         visibleTimeRange={visibleTimeRange}
                         updateVisibleTimeRange={updateVisibleTimeRange}
                     />
+                    {charts}
                 </div>
             );
         } else {
