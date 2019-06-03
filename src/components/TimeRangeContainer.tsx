@@ -16,7 +16,7 @@ const styles = (theme: Theme) => createStyles(
         button: {
             margin: theme.spacing.unit * 0.1,
         },
-        container: {
+        chartContainer: {
             width: '100%',
             minWidth: 120,
             display: 'flex',
@@ -72,7 +72,7 @@ class TimeRangeContainer extends React.Component<TimeRangeContainerProps> {
         const timeMinText = value ? utcTimeToLocalDateString(value![0]) : "?";
         const timeMaxText = value ? utcTimeToLocalDateString(value![1]) : "?";
         return (
-            <div className={classes.container}>
+            <div className={classes.chartContainer}>
                 <IconButton
                     className={classes.button}
                     disabled={!value || value![0] <= min || disabled}

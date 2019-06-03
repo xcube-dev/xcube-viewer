@@ -10,13 +10,15 @@ export type MapElement = React.ReactElement<any> | null | undefined;
 export interface MapContext {
     map?: ol.Map;
     mapDiv?: HTMLDivElement | null;
-    mapObjects?: { [id: string]: ol.Object };
+    mapObjects: { [id: string]: ol.Object };
 }
 
-export const MapContextType = React.createContext<MapContext>({});
+export const MapContextType = React.createContext<MapContext>({mapObjects: {}});
 
 interface MapProps extends ol.olx.MapOptions {
+    id: string;
     children?: React.ReactNode;
+    mapObjects?: { [id: string]: ol.Object };
     onClick?: (event: ol.MapBrowserEvent) => void;
     onMapRef?: (map: ol.Map | null) => void;
 }
@@ -39,7 +41,7 @@ export class Map extends React.Component<MapProps, MapState> {
 
     constructor(props: MapProps) {
         super(props);
-        this.contextValue = {mapObjects: {}};
+        this.contextValue = {mapObjects: this.props.mapObjects || {}};
     }
 
     private getMapOptions(): ol.olx.MapOptions {
@@ -61,7 +63,9 @@ export class Map extends React.Component<MapProps, MapState> {
         const mapOptions = this.getMapOptions();
         const target = this.contextValue.mapDiv!;
         const map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions, target});
+        map.set("objectId", this.props.id);
         this.contextValue.map = map;
+        this.contextValue.mapObjects[this.props.id] = map;
 
         map.on('click', this.handleClick);
 
@@ -87,7 +91,7 @@ export class Map extends React.Component<MapProps, MapState> {
         if (onMapRef) {
             onMapRef(null);
         }
-        this.contextValue = {};
+        this.contextValue = {mapObjects: {}};
     }
 
     render() {

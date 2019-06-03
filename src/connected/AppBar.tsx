@@ -10,9 +10,10 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
 import logo from "../resources/logo.png";
-import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR } from "../config";
+import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from "../config";
 import AppMenu from "../components/AppMenu";
-import SelectLanguageDialog from "./LanguageDialog";
+import LanguageDialog from "./LanguageDialog";
+import ServerDialog from "./ServerDialog";
 import { openDialog } from "../actions/controlActions";
 
 
@@ -29,7 +30,7 @@ interface AppBarState {
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-        appName: state.configState.appName,
+        appName: VIEWER_APP_NAME,
     };
 };
 
@@ -86,6 +87,8 @@ class _AppBar extends React.Component<AppBarProps, AppBarState> {
         this.setState({appMenuAnchorElement: null});
         if (itemId === "language") {
             this.props.openDialog("language");
+        } else if (itemId === "server") {
+            this.props.openDialog("server");
         } else if (itemId === "settings") {
             this.props.openDialog("settings");
         }
@@ -117,7 +120,8 @@ class _AppBar extends React.Component<AppBarProps, AppBarState> {
                     itemSelect={this.handleAppMenuItemSelect}
                     anchorElement={this.state.appMenuAnchorElement}
                 />
-                <SelectLanguageDialog/>
+                <LanguageDialog/>
+                <ServerDialog/>
             </AppBar>
         );
     }

@@ -1,3 +1,5 @@
+import * as geojson from 'geojson';
+
 /**
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
  */
@@ -18,21 +20,30 @@ export interface TimeSeriesSource {
     datasetId: string;
     variableName: string;
     variableUnits?: string;
-    coordinate?: [number, number];
+    featureId: string;
+    geometry: geojson.Geometry;
 }
 
 export interface TimeSeriesPoint {
     time: Time;
     totalCount: number;
     validCount: number;
-    average: number;
+    average: number | null;
+    uncertainty?: number | null;
 }
 
 export interface TimeSeries {
     source: TimeSeriesSource;
     data: TimeSeriesPoint[];
+    dataProgress?: number;
+    color: string;
 }
 
+export interface TimeSeriesGroup {
+    id: string;
+    variableUnits?: string;
+    timeSeriesArray: TimeSeries[];
+}
 
 export function equalTimeRanges(t1: TimeRange | null, t2: TimeRange | null) {
     if (t1 === t2) {

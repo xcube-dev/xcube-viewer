@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import TimeSeriesChart from '../components/TimeSeriesChart';
-import { removeAllTimeSeries } from "../actions/dataActions";
+import TimeSeriesCharts from '../components/TimeSeriesCharts';
+import { removeTimeSeriesGroup } from "../actions/dataActions";
 import { selectTime, selectTimeRange } from "../actions/controlActions";
 import { selectedDatasetTimeRangeSelector } from '../selectors/controlSelectors';
 
@@ -10,10 +10,9 @@ import { selectedDatasetTimeRangeSelector } from '../selectors/controlSelectors'
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-
-        timeSeriesCollection: state.dataState.timeSeriesCollection,
+        timeSeriesGroups: state.dataState.timeSeriesGroups,
         selectedTime: state.controlState.selectedTime,
-        selectedTimeRange:  state.controlState.selectedTimeRange,
+        selectedTimeRange: state.controlState.selectedTimeRange,
         dataTimeRange: selectedDatasetTimeRangeSelector(state),
     }
 };
@@ -21,7 +20,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
     selectTime,
     selectTimeRange,
-    removeAllTimeSeries
+    removeTimeSeriesGroup
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeSeriesChart);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeSeriesCharts);
