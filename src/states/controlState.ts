@@ -36,7 +36,7 @@ export function newControlState(): ControlState {
         visibleTimeRange: null,
         selectedFeatureId: null,
         selectedDrawMode: 'Point',
-        timeSeriesUpdateMode: 'replace',
+        timeSeriesUpdateMode: 'add',
         timeAnimationActive: false,
         timeAnimationInterval: 1000,
         flyTo: null,
