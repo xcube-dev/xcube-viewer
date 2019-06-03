@@ -3,6 +3,10 @@ import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
 import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
 import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -21,13 +25,13 @@ const styles = (theme: Theme) => createStyles(
         formControl: {
             marginRight: theme.spacing.unit * 2,
             marginBottom: theme.spacing.unit,
-            minWidth: 120,
+            // minWidth: 120,
         },
         button: {
-            margin: theme.spacing.unit * 0.1,
+            marginLeft: theme.spacing.unit * 0.1,
         },
         textField: {
-            width: '15em',
+            // width: '15em',
         },
     }
 );
@@ -49,6 +53,14 @@ class TimeSelect extends React.Component<TimeSelectProps> {
 
     private handlePlayEvent = () => {
         this.props.incSelectedTime(1);
+    };
+
+    private handleChevronLeftClick = () => {
+        this.props.incSelectedTime(1);
+    };
+
+    private handleChevronRightClick = () => {
+        this.props.incSelectedTime(-1);
     };
 
     private handlePlayButtonClick = () => {
@@ -115,11 +127,37 @@ class TimeSelect extends React.Component<TimeSelectProps> {
                         <InputAdornment position="end">
                             <IconButton
                                 className={classes.button}
+                                disabled={timeAnimationActive}
+                            >
+                                <FirstPage/>
+                            </IconButton>
+                            <IconButton
+                                className={classes.button}
+                                disabled={timeAnimationActive}
+                                onClick={this.handleChevronRightClick}
+                            >
+                                <ChevronLeft/>
+                            </IconButton>
+                            <IconButton
+                                className={classes.button}
                                 disabled={!isValid}
                                 aria-label={playToolTip}
                                 onClick={this.handlePlayButtonClick}
                             >
                                 {playIcon}
+                            </IconButton>
+                            <IconButton
+                                className={classes.button}
+                                disabled={timeAnimationActive}
+                                onClick={this.handleChevronLeftClick}
+                            >
+                                <ChevronRight/>
+                            </IconButton>
+                            <IconButton
+                                className={classes.button}
+                                disabled={timeAnimationActive}
+                            >
+                                <LastPage/>
                             </IconButton>
                         </InputAdornment>
                     }
