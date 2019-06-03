@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import * as geojson from 'geojson'
+import * as ol from "openlayers";
 
 import {
     selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
@@ -11,6 +12,7 @@ import { AppState } from '../states/appState';
 import * as api from '../api'
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { UpdateTimeSeries, updateTimeSeries } from './dataActions';
+import { MAP_OBJECTS } from "../states/controlState";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -224,13 +226,13 @@ export function addGeometry(featureId: string, geometry: geojson.Geometry, color
             };
 
             const successAction = (timeSeries: TimeSeries | null) => {
-                if (timeSeries !== null) {
+                if (timeSeries !== null && hasUserFeature(featureId)) {
                     const hasMore = startTimeIndex > 0;
                     const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
                     dispatch(updateTimeSeries({...timeSeries, dataProgress, color},
                                               timeSeriesUpdateMode,
                                               endTimeIndex === numTimeLabels - 1 ? "new" : "append"));
-                    if (hasMore) {
+                    if (hasMore && hasUserFeature(featureId)) {
                         startTimeIndex -= timeChunkSize;
                         endTimeIndex -= timeChunkSize;
                         getTimeSeriesChunk().then(successAction);
@@ -249,9 +251,19 @@ export function addGeometry(featureId: string, geometry: geojson.Geometry, color
     };
 }
 
-export function _addGeometry(featureId: string, geometry: geojson.Geometry): AddGeometry {
+function _addGeometry(featureId: string, geometry: geojson.Geometry): AddGeometry {
     return {type: ADD_GEOMETRY, featureId, geometry};
 }
+
+function hasUserFeature(featureId: string): boolean {
+    if (MAP_OBJECTS.userLayer) {
+        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+        const source = userLayer.getSource();
+        return !!source.getFeatureById(featureId);
+    }
+    return false;
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
