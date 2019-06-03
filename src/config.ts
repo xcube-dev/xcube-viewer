@@ -1,4 +1,16 @@
-import { blue, green, grey, purple, red, pink, yellow, deepPurple } from '@material-ui/core/colors';
+import {
+    blue,
+    green,
+    grey,
+    purple,
+    red,
+    pink,
+    yellow,
+    deepPurple,
+    orange,
+    cyan,
+    indigo
+} from '@material-ui/core/colors';
 import { LanguageDictionary } from './util/lang';
 import lang from './resources/lang.json';
 
