@@ -2,11 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 
-import TimeSeriesChart from './TimeSeriesChart';
 import { AppState } from '../states/appState';
 import ControlBar from "./ControlBar";
 import Viewer from './Viewer';
-import TimeRangeControl from './TimeRangeSlider';
+import TimeSeriesCharts from "./TimeSeriesCharts";
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
@@ -23,21 +22,44 @@ const mapDispatchToProps = {};
 
 const styles = (theme: Theme) => createStyles(
     {
-        content: {
+        main: {
             flexGrow: 1,
             padding: theme.spacing.unit,
-            height: '100vh',
-            overflow: 'auto',
+            width: '100vw',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            [theme.breakpoints.up('md')]: {
+                height: '100vh',
+                overflow: 'hidden',
+            },
         },
         appBarSpacer: theme.mixins.toolbar,
+        contentContainer: {
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'row',
+            [theme.breakpoints.down('md')]: {
+                flexDirection: 'column',
+            },
+        },
         viewerContainer: {
-            height: 380,
+            overflow: 'hidden',
+            width: '50%',
+            height: '100%',
+            [theme.breakpoints.down('md')]: {
+                width: '100%',
+                height: '60%',
+            },
         },
         chartContainer: {
-            // marginLeft: -22,
-        },
-        h5: {
-            marginBottom: theme.spacing.unit * 2,
+            width: '50%',
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            paddingLeft: '8px',
+            [theme.breakpoints.down('md')]: {
+                width: '100%',
+            },
         },
     });
 
@@ -47,16 +69,17 @@ class AppPane extends React.Component<AppPaneProps> {
         const {classes} = this.props;
 
         return (
-            <main className={classes.content}>
+            <main className={classes.main}>
                 <div className={classes.appBarSpacer}/>
                 <ControlBar/>
-                <div className={classes.viewerContainer}>
-                    <Viewer/>
+                <div className={classes.contentContainer}>
+                    <div className={classes.viewerContainer}>
+                        <Viewer/>
+                    </div>
+                    <div className={classes.chartContainer}>
+                        <TimeSeriesCharts/>
+                    </div>
                 </div>
-                <div className={classes.chartContainer}>
-                    <TimeSeriesChart/>
-                </div>
-                <TimeRangeControl/>
             </main>
         );
     }

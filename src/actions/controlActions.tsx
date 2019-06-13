@@ -1,16 +1,18 @@
-import { Dispatch } from "redux";
+import { Dispatch } from 'redux';
+import * as geojson from 'geojson'
+import * as ol from "openlayers";
 
 import {
-    selectedDatasetIdSelector,
-    selectedDatasetVariableSelector,
-} from "../selectors/controlSelectors";
-import { Dataset } from "../model/dataset";
-import { Time, TimeRange, TimeSeries } from "../model/timeSeries";
-import { AppState } from "../states/appState";
+    selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
+    selectedDatasetVariableSelector, selectedServerSelector,
+} from '../selectors/controlSelectors';
+import { Dataset } from '../model/dataset';
+import { Time, TimeRange, TimeSeries } from '../model/timeSeries';
+import { AppState } from '../states/appState';
 import * as api from '../api'
-import { MessageLogAction, postMessage } from "./messageLogActions";
-import { UpdateTimeSeries, updateTimeSeries } from "./dataActions";
-
+import { MessageLogAction, postMessage } from './messageLogActions';
+import { UpdateTimeSeries, updateTimeSeries } from './dataActions';
+import { MAP_OBJECTS } from "../states/controlState";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -89,6 +91,7 @@ export interface SelectUserPlace {
     selectedUserPlaceId: string | null;
 }
 
+// TODO (forman): let users select their points
 export function selectUserPlace(selectedUserPlaceId: string | null): SelectUserPlace {
     return {type: SELECT_USER_PLACE, selectedUserPlaceId};
 }
@@ -105,6 +108,20 @@ export interface SelectTime {
 
 export function selectTime(selectedTime: Time | null): SelectTime {
     return {type: SELECT_TIME, selectedTime};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const INC_SELECTED_TIME = 'INC_SELECTED_TIME';
+export type INC_SELECTED_TIME = typeof INC_SELECTED_TIME;
+
+export interface IncSelectedTime {
+    type: INC_SELECTED_TIME;
+    increment: -1 | 1;
+}
+
+export function incSelectedTime(increment: -1 | 1): IncSelectedTime {
+    return {type: INC_SELECTED_TIME, increment};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,10 +159,10 @@ export type SELECT_TIME_SERIES_UPDATE_MODE = typeof SELECT_TIME_SERIES_UPDATE_MO
 
 export interface SelectTimeSeriesUpdateMode {
     type: SELECT_TIME_SERIES_UPDATE_MODE;
-    timeSeriesUpdateMode: "add" | "replace";
+    timeSeriesUpdateMode: 'add' | 'replace';
 }
 
-export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: "add" | "replace"): SelectTimeSeriesUpdateMode {
+export function selectTimeSeriesUpdateMode(timeSeriesUpdateMode: 'add' | 'replace'): SelectTimeSeriesUpdateMode {
     return {type: SELECT_TIME_SERIES_UPDATE_MODE, timeSeriesUpdateMode};
 }
 
@@ -166,43 +183,102 @@ export function updateTimeAnimation(timeAnimationActive: boolean, timeAnimationI
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const SELECT_COORDINATE = 'SELECT_COORDINATE';
-export type SELECT_COORDINATE = typeof SELECT_COORDINATE;
+export const ADD_GEOMETRY = 'ADD_GEOMETRY';
+export type ADD_GEOMETRY = typeof ADD_GEOMETRY;
 
-export interface SelectCoordinate {
-    type: SELECT_COORDINATE;
-    selectedCoordinate: [number, number] | null;
+export interface AddGeometry {
+    type: ADD_GEOMETRY;
+    featureId: string;
+    geometry: geojson.Geometry;
 }
 
-export function selectCoordinate(selectedCoordinate: [number, number] | null) {
-    return (dispatch: Dispatch<SelectCoordinate | UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
-        const apiServerUrl = getState().configState.apiServerUrl;
+export function addGeometry(featureId: string, geometry: geojson.Geometry, color: string) {
+    return (dispatch: Dispatch<AddGeometry | UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
+        const apiServer = selectedServerSelector(getState());
 
-        dispatch(_selectCoordinate(selectedCoordinate));
+        dispatch(_addGeometry(featureId, geometry));
 
-        let selectedDatasetId = selectedDatasetIdSelector(getState());
-        let selectedVariable = selectedDatasetVariableSelector(getState());
-        let timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+        // TODO (forman): extract following code as deparate action addTimeSeries()
 
-        if (selectedDatasetId && selectedVariable && selectedCoordinate) {
-            api.getTimeSeriesForPoint(apiServerUrl, selectedDatasetId, selectedVariable, selectedCoordinate)
-               .then((timeSeries: TimeSeries | null) => {
-                   if (timeSeries !== null) {
-                       dispatch(updateTimeSeries(timeSeries, timeSeriesUpdateMode));
-                   } else {
-                       /*Database*/
-                       dispatch(postMessage('info', 'No data found here'));
-                   }
-               })
-               .catch(error => {
-                   dispatch(postMessage('error', error + ''));
-               });
+        const selectedDatasetId = selectedDatasetIdSelector(getState());
+        const selectedDatasetTimeDim = selectedDatasetTimeDimensionSelector(getState());
+        const selectedVariable = selectedDatasetVariableSelector(getState());
+        const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+
+        const timeLabels = selectedDatasetTimeDim != null ? selectedDatasetTimeDim.labels : null;
+
+        if (selectedDatasetId && selectedVariable && timeLabels !== null) {
+            const numTimeLabels = timeLabels.length;
+            const timeChunkSize = 16;
+            let endTimeIndex = numTimeLabels - 1;
+            let startTimeIndex = endTimeIndex - timeChunkSize + 1;
+
+            const getTimeSeriesChunk = () => {
+                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
+                const endDateLabel = timeLabels[endTimeIndex];
+                return api.getTimeSeriesForGeometry(apiServer.url,
+                                                    selectedDatasetId,
+                                                    selectedVariable,
+                                                    featureId,
+                                                    geometry,
+                                                    startDateLabel,
+                                                    endDateLabel);
+            };
+
+            const successAction = (timeSeries: TimeSeries | null) => {
+                if (timeSeries !== null && hasUserFeature(featureId)) {
+                    const hasMore = startTimeIndex > 0;
+                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
+                    dispatch(updateTimeSeries({...timeSeries, dataProgress, color},
+                                              timeSeriesUpdateMode,
+                                              endTimeIndex === numTimeLabels - 1 ? "new" : "append"));
+                    if (hasMore && hasUserFeature(featureId)) {
+                        startTimeIndex -= timeChunkSize;
+                        endTimeIndex -= timeChunkSize;
+                        getTimeSeriesChunk().then(successAction);
+                    }
+                } else {
+                    dispatch(postMessage('info', 'No data found here'));
+                }
+            };
+
+            getTimeSeriesChunk()
+                .then(successAction)
+                .catch((error: any) => {
+                    dispatch(postMessage('error', error + ''));
+                });
         }
     };
 }
 
-export function _selectCoordinate(selectedCoordinate: [number, number] | null): SelectCoordinate {
-    return {type: SELECT_COORDINATE, selectedCoordinate};
+function _addGeometry(featureId: string, geometry: geojson.Geometry): AddGeometry {
+    return {type: ADD_GEOMETRY, featureId, geometry};
+}
+
+function hasUserFeature(featureId: string): boolean {
+    if (MAP_OBJECTS.userLayer) {
+        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+        const source = userLayer.getSource();
+        return !!source.getFeatureById(featureId);
+    }
+    return false;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+export const SELECT_GEOMETRY = 'SELECT_GEOMETRY';
+export type SELECT_GEOMETRY = typeof SELECT_GEOMETRY;
+
+export interface SelectGeometry {
+    type: SELECT_GEOMETRY;
+    featureId: string;
+    geometry: geojson.Geometry;
+}
+
+export function selectGeometry(featureId: string, geometry: geojson.Geometry): SelectGeometry {
+    return {type: SELECT_GEOMETRY, featureId, geometry};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,8 +361,10 @@ export type ControlAction =
     | SelectPlace
     | SelectUserPlace
     | SelectTime
+    | IncSelectedTime
     | SelectTimeRange
-    | SelectCoordinate
+    | AddGeometry
+    | SelectGeometry
     | SelectTimeSeriesUpdateMode
     | UpdateVisibleTimeRange
     | UpdateTimeAnimation

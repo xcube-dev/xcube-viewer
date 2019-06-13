@@ -11,21 +11,26 @@ import {
     SELECT_TIME,
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_USER_PLACE,
-    SELECT_COORDINATE,
+    ADD_GEOMETRY,
+    SELECT_GEOMETRY,
     ControlAction,
     SELECT_TIME_RANGE,
     UPDATE_VISIBLE_TIME_RANGE,
     UPDATE_TIME_ANIMATION,
     ADD_ACTIVITY,
     REMOVE_ACTIVITY,
-    CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG,
+    CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG, INC_SELECTED_TIME,
 } from '../actions/controlActions';
+import { CONFIGURE_SERVERS, DataAction } from "../actions/dataActions";
 import { I18N } from "../config";
+import { AppState } from "../states/appState";
+import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
+import { findIndexCloseTo } from "../util/find";
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
-export function controlReducer(state: ControlState, action: ControlAction): ControlState {
+export function controlReducer(state: ControlState, action: ControlAction | DataAction, appState: AppState): ControlState {
     if (typeof state === 'undefined') {
         state = newControlState();
     }
@@ -95,10 +100,51 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
             };
         }
         case SELECT_TIME: {
-            return {
-                ...state,
-                selectedTime: action.selectedTime,
-            };
+            let {selectedTime} = action;
+            if (selectedTime !== null) {
+                const timeCoordinates = timeCoordinatesSelector(appState)!;
+                const index = timeCoordinates ? findIndexCloseTo(timeCoordinates, selectedTime) : -1;
+                if (index >= 0) {
+                    selectedTime = timeCoordinates[index];
+                }
+            }
+            if (state.selectedTime !== selectedTime) {
+                return {
+                    ...state,
+                    selectedTime,
+                };
+            }
+            return state;
+        }
+        case INC_SELECTED_TIME: {
+            let index = selectedTimeIndexSelector(appState);
+            if (index >= 0) {
+                const timeCoordinates = timeCoordinatesSelector(appState)!;
+                index += action.increment;
+                if (index < 0) {
+                    index = timeCoordinates.length - 1;
+                }
+                if (index > timeCoordinates.length - 1) {
+                    index = 0;
+                }
+                let selectedTime = timeCoordinates[index];
+                let selectedTimeRange = state.selectedTimeRange;
+                if (selectedTimeRange !== null) {
+                    if (selectedTime < selectedTimeRange[0]) {
+                        selectedTime = selectedTimeRange[0];
+                    }
+                    if (selectedTime > selectedTimeRange[1]) {
+                        selectedTime = selectedTimeRange[1];
+                    }
+                }
+                if (state.selectedTime !== selectedTime) {
+                    return {
+                        ...state,
+                        selectedTime,
+                    };
+                }
+            }
+            return state;
         }
         case SELECT_TIME_RANGE: {
             return {
@@ -125,10 +171,16 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
                 timeAnimationInterval: action.timeAnimationInterval,
             };
         }
-        case SELECT_COORDINATE: {
+        case ADD_GEOMETRY: {
             return {
                 ...state,
-                selectedCoordinate: action.selectedCoordinate,
+                selectedFeatureId: action.featureId,
+            };
+        }
+        case SELECT_GEOMETRY: {
+            return {
+                ...state,
+                selectedFeatureId: action.featureId,
             };
         }
         case ADD_ACTIVITY: {
@@ -166,6 +218,11 @@ export function controlReducer(state: ControlState, action: ControlAction): Cont
                 ...state,
                 dialogOpen: {...state.dialogOpen, [dialogId]: false},
             };
+        }
+        case CONFIGURE_SERVERS: {
+            if (state.selectedServerId !== action.selectedServerId) {
+                return {...state, selectedServerId: action.selectedServerId};
+            }
         }
     }
     return state;

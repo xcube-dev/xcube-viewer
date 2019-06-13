@@ -1,7 +1,8 @@
+///<reference path="../util/find.ts"/>
 import * as React from 'react';
 import { createSelector } from 'reselect'
 import { AppState } from '../states/appState';
-import { datasetsSelector, colorBarsSelector } from './dataSelectors';
+import { datasetsSelector, colorBarsSelector, userServersSelector } from './dataSelectors';
 import * as ol from 'openlayers';
 
 import {
@@ -21,13 +22,16 @@ import { Tile } from '../components/ol/layer/Tile';
 import { Vector } from '../components/ol/layer/Vector';
 import { Layers } from '../components/ol/layer/Layers';
 import { findIndexCloseTo } from "../util/find";
+import { Server } from "../model/server";
 
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
 export const selectedPlaceGroupIdsSelector = (state: AppState) => state.controlState.selectedPlaceGroupIds;
 export const selectedTimeSelector = (state: AppState) => state.controlState.selectedTime;
+export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
+export const timeAnimationActiveSelector = (state: AppState) => state.controlState.timeAnimationActive;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -119,11 +123,36 @@ export const selectedDatasetTimeDimensionSelector = createSelector(
     }
 );
 
+export const timeCoordinatesSelector = createSelector(
+    selectedDatasetTimeDimensionSelector,
+    (timeDimension: TimeDimension | null): Time[] | null => {
+        if (timeDimension === null || timeDimension.coordinates.length === 0) {
+            return null;
+        }
+        return timeDimension.coordinates;
+    }
+);
+
+export const selectedTimeIndexSelector = createSelector(
+    selectedTimeSelector,
+    timeCoordinatesSelector,
+    (time: Time | null, timeCoordinates: Time[] | null): number => {
+        if (time === null || timeCoordinates === null) {
+            return -1;
+        }
+        return findIndexCloseTo(timeCoordinates, time);
+    }
+);
+
 export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetVariableSelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
-    (variable: Variable | null, timeDimension: TimeDimension | null, time: Time | null): MapElement => {
+    timeAnimationActiveSelector,
+    (variable: Variable | null,
+     timeDimension: TimeDimension | null,
+     time: Time | null,
+     timeAnimationActive: boolean): MapElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
@@ -151,20 +180,19 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             ),
         ];
         // TODO: get attributions from dataset metadata
+        const source = new ol.source.XYZ(
+            {
+                url,
+                projection: ol.proj.get(options.projection),
+                minZoom: options.minZoom,
+                maxZoom: options.maxZoom,
+                tileGrid: new ol.tilegrid.TileGrid(options.tileGrid),
+                attributions,
+                // @ts-ignore
+                transition: timeAnimationActive ? 0 : 250,
+            });
         return (
-            <Tile
-                id={"variable"}
-                source={new ol.source.XYZ(
-                    {
-                        url,
-                        projection: ol.proj.get(options.projection),
-                        minZoom: options.minZoom,
-                        maxZoom: options.maxZoom,
-                        tileGrid: new ol.tilegrid.TileGrid(options.tileGrid),
-                        attributions,
-                    })
-                }
-            />
+            <Tile id={"variable"} source={source}/>
         );
     }
 );
@@ -222,3 +250,17 @@ export const activityMessagesSelector = createSelector(
     }
 );
 
+export const selectedServerSelector = createSelector(
+    userServersSelector,
+    selectedServerIdSelector,
+    (userServers: Server[], serverId: string): Server => {
+        if (userServers.length === 0) {
+            throw new Error(`internal error: no servers configured`);
+        }
+        const server = userServers.find(server => server.id === serverId);
+        if (!server) {
+            throw new Error(`internal error: server with ID "${serverId}" not found`);
+        }
+        return server;
+    }
+);

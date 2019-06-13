@@ -17,6 +17,10 @@ export default class AppMenu extends React.Component<AppMenuProps> {
         this.props.itemSelect("language");
     };
 
+    handleServer = () => {
+        this.props.itemSelect("server");
+    };
+
     handleSettings = () => {
         this.props.itemSelect("settings");
     };
@@ -35,6 +39,7 @@ export default class AppMenu extends React.Component<AppMenuProps> {
                 onClose={this.handleClose}
             >
                 <MenuItem onClick={this.handleLanguage}>{I18N.get('Language')}</MenuItem>
+                <MenuItem onClick={this.handleServer}>{I18N.get('Server')}</MenuItem>
                 <MenuItem onClick={this.handleSettings}>{I18N.get('Settings')}</MenuItem>
             </Menu>
         );

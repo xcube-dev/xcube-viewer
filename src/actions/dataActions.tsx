@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
+
 import { AppState } from '../states/appState';
 import * as api from '../api'
-import { MessageLogAction, postMessage } from './messageLogActions';
 import {
     AddActivity,
     addActivity,
@@ -14,6 +14,9 @@ import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
+import { selectedServerSelector } from "../selectors/controlSelectors";
+import { Server } from "../model/server";
+import { MessageLogAction, postMessage } from './messageLogActions';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,12 +31,11 @@ export interface UpdateDatasets {
 
 export function updateDatasets() {
     return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
-        const state = getState();
-        const apiServerUrl = state.configState.apiServerUrl;
+        const apiServer = selectedServerSelector(getState());
 
         dispatch(addActivity(UPDATE_DATASETS, I18N.get("Loading data")));
 
-        api.getDatasets(apiServerUrl)
+        api.getDatasets(apiServer.url)
            .then((datasets: Dataset[]) => {
                dispatch(_updateDatasets(datasets));
                if (datasets.length > 0) {
@@ -66,10 +68,9 @@ export interface UpdateColorBars {
 
 export function updateColorBars() {
     return (dispatch: Dispatch<UpdateColorBars | MessageLogAction>, getState: () => AppState) => {
-        const state = getState();
-        const apiServerUrl = state.configState.apiServerUrl;
+        const apiServer = selectedServerSelector(getState());
 
-        api.getColorBars(apiServerUrl)
+        api.getColorBars(apiServer.url)
            .then((colorBars: ColorBars) => {
                dispatch(_updateColorBars(colorBars));
            })
@@ -92,10 +93,25 @@ export interface UpdateTimeSeries {
     type: UPDATE_TIME_SERIES;
     timeSeries: TimeSeries;
     updateMode: 'add' | 'replace';
+    dataMode: 'new' | 'append';
 }
 
-export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace'): UpdateTimeSeries {
-    return {type: UPDATE_TIME_SERIES, timeSeries, updateMode};
+export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace', dataMode: 'new' | 'append'): UpdateTimeSeries {
+    return {type: UPDATE_TIME_SERIES, timeSeries, updateMode, dataMode};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const REMOVE_TIME_SERIES_GROUP = 'REMOVE_TIME_SERIES_GROUP';
+export type REMOVE_TIME_SERIES_GROUP = typeof REMOVE_TIME_SERIES_GROUP;
+
+export interface RemoveTimeSeriesGroup {
+    type: REMOVE_TIME_SERIES_GROUP;
+    id: string;
+}
+
+export function removeTimeSeriesGroup(id: string): RemoveTimeSeriesGroup {
+    return {type: REMOVE_TIME_SERIES_GROUP, id};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,4 +130,38 @@ export function removeAllTimeSeries(): RemoveAllTimeSeries {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export type DataAction = UpdateDatasets | UpdateColorBars | UpdateTimeSeries | RemoveAllTimeSeries;
+export const CONFIGURE_SERVERS = 'CONFIGURE_SERVERS';
+export type CONFIGURE_SERVERS = typeof CONFIGURE_SERVERS;
+
+export interface ConfigureServers {
+    type: CONFIGURE_SERVERS;
+    servers: Server[];
+    selectedServerId: string;
+}
+
+export function configureServers(servers: Server[], selectedServerId: string) {
+    return (dispatch: Dispatch<any>, getState: () => AppState) => {
+        if (getState().controlState.selectedServerId !== selectedServerId) {
+            dispatch(removeAllTimeSeries());
+            dispatch(_configureServers(servers, selectedServerId));
+            dispatch(updateDatasets());
+            dispatch(updateColorBars());
+        } else if (getState().dataState.userServers !== servers) {
+            dispatch(_configureServers(servers, selectedServerId));
+        }
+    };
+}
+
+export function _configureServers(servers: Server[], selectedServerId: string): ConfigureServers {
+    return {type: CONFIGURE_SERVERS, servers, selectedServerId};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export type DataAction =
+    UpdateDatasets
+    | UpdateColorBars
+    | UpdateTimeSeries
+    | RemoveTimeSeriesGroup
+    | RemoveAllTimeSeries
+    | ConfigureServers;
