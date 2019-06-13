@@ -26,8 +26,10 @@ const styles = (theme: Theme) => createStyles(
             flexGrow: 1,
             display: 'flex',
             flexDirection: 'row',
+            overflowY: 'hidden',
             [theme.breakpoints.down('md')]: {
-                flexDirection: 'column',
+                display: 'block',
+                overflowY: 'auto',
             },
         },
 
@@ -39,6 +41,7 @@ const styles = (theme: Theme) => createStyles(
             [theme.breakpoints.down('md')]: {
                 width: '100%',
                 paddingLeft: 0,
+                overflowY: 'hidden',
             },
         },
 
@@ -48,7 +51,7 @@ const styles = (theme: Theme) => createStyles(
             height: '100%',
             [theme.breakpoints.down('md')]: {
                 width: '100%',
-                height: '60%',
+                height: '60vh',
             },
         },
 
