@@ -19,7 +19,7 @@ export const VIEWER_APP_NAME = '';
 export const VIEWER_DEFAULT_API_SERVER = {
     id: 'cyanoalert',
     name: 'CyanoAlert Server',
-    url: 'https://cyanoalert.brockmann-consult.com/cyanoalert-dev/api/0.1.0.dev6'
+    url: 'https://cyanoalert.brockmann-consult.com/api/v1.dev'
 };
 
 export const VIEWER_API_SERVERS = [
