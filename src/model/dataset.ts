@@ -67,14 +67,14 @@ export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | 
         return null;
     }
     const place = placeGroup.features.find(place => place.id === placeId);
-    if (place !== null) {
+    if (place !== undefined) {
         return place as Place;
     }
     let subPlaceGroups = placeGroup.placeGroups;
     if (subPlaceGroups) {
         for (let parentPlaceId in subPlaceGroups) {
             const place = findPlaceInPlaceGroup(subPlaceGroups[parentPlaceId], placeId);
-            if (place !== null) {
+            if (place !== undefined) {
                 return place;
             }
         }
