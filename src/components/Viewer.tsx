@@ -74,6 +74,29 @@ class Viewer extends React.Component<ViewerProps> {
         this.map = map;
     };
 
+    transformPointExtent = (point: ol.geom.SimpleGeometry, projection: any) => {
+        const extent = point.getExtent();
+        switch (projection.getUnits()) {
+            case "degrees":
+                extent[0] -= 0.01;
+                extent[1] -= 0.01;
+                extent[2] += 0.01;
+                extent[3] += 0.01;
+                break;
+            case 'm': {
+                extent[0] -= 1000;
+                extent[1] -= 1000;
+                extent[2] += 1000;
+                extent[3] += 1000;
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+        return extent;
+    };
+
     componentDidUpdate(prevProps: Readonly<ViewerProps>, prevState: Readonly<{}>, snapshot?: any): void {
         let flyToCurr = this.props.flyTo || null;
         let flyToPrev = prevProps.flyTo || null;
@@ -86,6 +109,11 @@ class Viewer extends React.Component<ViewerProps> {
                 flyToTarget = ol.proj.transformExtent(flyToCurr, 'EPSG:4326', projection);
             } else {
                 flyToTarget = flyToCurr.transform('EPSG:4326', projection) as ol.geom.SimpleGeometry;
+
+                if(flyToTarget.getType() == "Point"){
+                    flyToTarget = this.transformPointExtent(flyToTarget, projection);
+                }
+
             }
             map.getView().fit(flyToTarget, {size: map.getSize()});
         }
