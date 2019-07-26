@@ -1,6 +1,9 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Place groups (GeoJSON feature collections) are now only loaded if selected which significantly
+  increases viewer loading time for server configurations whose data cubes
+  are associated with lots of vector data. (#61)
 * Time-series are now loaded in increments so user see constantly growing time-series graph
   instead of doing nothing for tens of seconds until the server returns the complete series (#38)
 * When animating through time, the index into a dataset's time coordinates array is incremented
