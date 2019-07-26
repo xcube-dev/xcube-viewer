@@ -1,18 +1,29 @@
 import { Dispatch } from 'redux';
 import * as geojson from 'geojson'
-import * as ol from "openlayers";
+import * as ol from 'openlayers';
 
 import {
-    selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
-    selectedDatasetVariableSelector, selectedServerSelector,
+    selectedDatasetIdSelector,
+    selectedDatasetSelectedPlaceGroupsSelector,
+    selectedDatasetSelector,
+    selectedDatasetTimeDimensionSelector,
+    selectedDatasetVariableSelector,
+    selectedServerSelector,
 } from '../selectors/controlSelectors';
 import { Dataset } from '../model/dataset';
 import { Time, TimeRange, TimeSeries } from '../model/timeSeries';
 import { AppState } from '../states/appState';
 import * as api from '../api'
 import { MessageLogAction, postMessage } from './messageLogActions';
-import { UpdateTimeSeries, updateTimeSeries } from './dataActions';
-import { MAP_OBJECTS } from "../states/controlState";
+import {
+    updateDatasetPlaceGroup, UPDATE_DATASET_PLACE_GROUP,
+    UpdateDatasetPlaceGroup,
+    UpdateTimeSeries,
+    updateTimeSeries
+} from './dataActions';
+import { MAP_OBJECTS } from '../states/controlState';
+import { isValidPlaceGroup, PlaceGroup } from '../model/place';
+import { I18N } from '../config';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -46,7 +57,39 @@ export interface SelectPlaceGroups {
     datasets: Dataset[];
 }
 
-export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null, datasets: Dataset[]): SelectPlaceGroups {
+export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null, datasets: Dataset[]) {
+
+    return (dispatch: Dispatch<SelectPlaceGroups | UpdateDatasetPlaceGroup | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
+        const apiServer = selectedServerSelector(getState());
+
+        dispatch(_selectPlaceGroups(selectedPlaceGroupIds, datasets));
+
+        const dataset = selectedDatasetSelector(getState());
+        const placeGroups = selectedDatasetSelectedPlaceGroupsSelector(getState());
+        if (dataset !== null && placeGroups.length > 0) {
+            for (let placeGroup of placeGroups) {
+                if (!isValidPlaceGroup(placeGroup)) {
+                    const datasetId = dataset!.id;
+                    const placeGroupId = placeGroup.id;
+                    const activitityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
+                    dispatch(addActivity(activitityId, I18N.get('Loading place group')));
+                    api.getDatasetPlaceGroup(apiServer.url, datasetId, placeGroupId)
+                       .then((placeGroup: PlaceGroup) => {
+                           dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
+                       })
+                       .catch(error => {
+                           dispatch(postMessage('error', error + ''));
+                       })
+                       .finally(() => {
+                           dispatch(removeActivity(activitityId));
+                       });
+                }
+            }
+        }
+    };
+}
+
+export function _selectPlaceGroups(selectedPlaceGroupIds: string[] | null, datasets: Dataset[]): SelectPlaceGroups {
     return {type: SELECT_PLACE_GROUPS, selectedPlaceGroupIds, datasets};
 }
 
@@ -198,7 +241,7 @@ export function addGeometry(featureId: string, geometry: geojson.Geometry, color
 
         dispatch(_addGeometry(featureId, geometry));
 
-        // TODO (forman): extract following code as deparate action addTimeSeries()
+        // TODO (forman): extract following code as separate action addTimeSeries()
 
         const selectedDatasetId = selectedDatasetIdSelector(getState());
         const selectedDatasetTimeDim = selectedDatasetTimeDimensionSelector(getState());
@@ -231,7 +274,7 @@ export function addGeometry(featureId: string, geometry: geojson.Geometry, color
                     const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
                     dispatch(updateTimeSeries({...timeSeries, dataProgress, color},
                                               timeSeriesUpdateMode,
-                                              endTimeIndex === numTimeLabels - 1 ? "new" : "append"));
+                                              endTimeIndex === numTimeLabels - 1 ? 'new' : 'append'));
                     if (hasMore && hasUserFeature(featureId)) {
                         startTimeIndex -= timeChunkSize;
                         endTimeIndex -= timeChunkSize;
@@ -264,9 +307,7 @@ function hasUserFeature(featureId: string): boolean {
     return false;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 export const SELECT_GEOMETRY = 'SELECT_GEOMETRY';
 export type SELECT_GEOMETRY = typeof SELECT_GEOMETRY;
@@ -356,6 +397,7 @@ export function closeDialog(dialogId: string): CloseDialog {
 
 export type ControlAction =
     SelectDataset
+    | UpdateDatasetPlaceGroup
     | SelectVariable
     | SelectPlaceGroups
     | SelectPlace
