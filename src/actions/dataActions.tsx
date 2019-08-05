@@ -45,7 +45,7 @@ export function updateDatasets() {
            .catch(error => {
                dispatch(postMessage('error', error + ''));
            })
-           .finally(() => {
+           .then(() => {
                dispatch(removeActivity(UPDATE_DATASETS));
            });
     };
