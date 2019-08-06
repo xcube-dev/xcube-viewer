@@ -45,6 +45,7 @@ export function updateDatasets() {
            .catch(error => {
                dispatch(postMessage('error', error + ''));
            })
+           // 'then' because Microsoft Edge does not understand method finally
            .then(() => {
                dispatch(removeActivity(UPDATE_DATASETS));
            });
