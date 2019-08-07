@@ -7,11 +7,11 @@ import {
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES
+    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP
 } from '../actions/dataActions';
-import { MAP_OBJECTS } from "../states/controlState";
-import { newId } from "../util/id";
-import { TimeSeriesGroup } from "../model/timeSeries";
+import { MAP_OBJECTS } from '../states/controlState';
+import { newId } from '../util/id';
+import { TimeSeriesGroup } from '../model/timeSeries';
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -22,13 +22,30 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         case UPDATE_DATASETS: {
             return {...state, datasets: action.datasets};
         }
+        case UPDATE_DATASET_PLACE_GROUP: {
+            const datasetIndex = state.datasets.findIndex(ds => ds.id === action.datasetId);
+            if (datasetIndex >= 0) {
+                let dataset = state.datasets[datasetIndex];
+                if (dataset.placeGroups) {
+                    const placeGroupIndex = dataset.placeGroups.findIndex(pg => pg.id === action.placeGroup.id);
+                    if (placeGroupIndex >= 0) {
+                        let datasets = state.datasets.slice();
+                        let placeGroups = dataset.placeGroups.slice();
+                        placeGroups[placeGroupIndex] = action.placeGroup;
+                        datasets[datasetIndex] = {...dataset, placeGroups};
+                        return {...state, datasets};
+                    }
+                }
+            }
+            return state;
+        }
         case UPDATE_COLOR_BARS: {
             return {...state, colorBars: action.colorBars};
         }
         case UPDATE_TIME_SERIES: {
             let newTimeSeries = action.timeSeries;
 
-            if (action.updateMode === "replace" && action.dataMode === "new") {
+            if (action.updateMode === 'replace' && action.dataMode === 'new') {
                 const featureId = newTimeSeries.source.featureId;
                 state.timeSeriesGroups.forEach(tsg => {
                     removeTimeSeriesGroupFeatures(tsg, (fid: string) => fid !== featureId);
@@ -46,24 +63,24 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                 let newTimeSeriesArray;
                 if (tsIndex >= 0) {
                     const oldTimeSeries = timeSeriesArray[tsIndex];
-                    if (action.dataMode === "append") {
+                    if (action.dataMode === 'append') {
                         newTimeSeries = {...newTimeSeries, data: [...newTimeSeries.data, ...oldTimeSeries.data]};
                     }
-                    if (action.updateMode === "replace") {
+                    if (action.updateMode === 'replace') {
                         newTimeSeriesArray = [newTimeSeries];
                     } else {
                         newTimeSeriesArray = timeSeriesArray.slice();
                         newTimeSeriesArray[tsIndex] = newTimeSeries;
                     }
                 } else {
-                    if (action.updateMode === "replace") {
+                    if (action.updateMode === 'replace') {
                         newTimeSeriesArray = [newTimeSeries];
                     } else {
                         newTimeSeriesArray = [newTimeSeries, ...timeSeriesArray];
                     }
                 }
                 const newTimeSeriesGroup = {...timeSeriesGroup, timeSeriesArray: newTimeSeriesArray};
-                if (action.updateMode === "replace") {
+                if (action.updateMode === 'replace') {
                     newTimeSeriesGroups = [newTimeSeriesGroup];
                 } else {
                     newTimeSeriesGroups = state.timeSeriesGroups.slice();
@@ -75,7 +92,7 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                     variableUnits: newTimeSeries.source.variableUnits,
                     timeSeriesArray: [newTimeSeries],
                 };
-                if (action.updateMode === "replace") {
+                if (action.updateMode === 'replace') {
                     newTimeSeriesGroups = [newTimeSeriesGroup];
                 } else {
                     newTimeSeriesGroups = [newTimeSeriesGroup, ...state.timeSeriesGroups];

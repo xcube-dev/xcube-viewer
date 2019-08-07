@@ -1,5 +1,5 @@
 import { Variable } from './variable';
-import { Place, PlaceGroup } from './place';
+import { isValidPlaceGroup, Place, PlaceGroup } from './place';
 import { TimeRange } from './timeSeries';
 import {
     assertArrayNotEmpty,
@@ -63,7 +63,7 @@ export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: strin
 }
 
 export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | null): Place | null {
-    if (!placeId) {
+    if (!placeId || !isValidPlaceGroup(placeGroup)) {
         return null;
     }
     const place = placeGroup.features.find(place => place.id === placeId);

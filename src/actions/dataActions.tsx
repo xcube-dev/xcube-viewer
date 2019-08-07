@@ -14,9 +14,10 @@ import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
-import { selectedServerSelector } from "../selectors/controlSelectors";
-import { Server } from "../model/server";
+import { selectedServerSelector } from '../selectors/controlSelectors';
+import { Server } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
+import { PlaceGroup } from '../model/place';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@ export function updateDatasets() {
     return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        dispatch(addActivity(UPDATE_DATASETS, I18N.get("Loading data")));
+        dispatch(addActivity(UPDATE_DATASETS, I18N.get('Loading data')));
 
         api.getDatasets(apiServer.url)
            .then((datasets: Dataset[]) => {
@@ -54,6 +55,22 @@ export function updateDatasets() {
 
 export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
     return {type: UPDATE_DATASETS, datasets};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_DATASET_PLACE_GROUP = 'UPDATE_DATASET_PLACE_GROUP';
+export type UPDATE_DATASET_PLACE_GROUP = typeof UPDATE_DATASET_PLACE_GROUP;
+
+export interface UpdateDatasetPlaceGroup {
+    type: UPDATE_DATASET_PLACE_GROUP;
+    datasetId: string;
+    placeGroup: PlaceGroup;
+}
+
+export function updateDatasetPlaceGroup(datasetId: string,
+                                        placeGroup: PlaceGroup): UpdateDatasetPlaceGroup {
+    return {type: UPDATE_DATASET_PLACE_GROUP, datasetId, placeGroup};
 }
 
 
@@ -161,6 +178,7 @@ export function _configureServers(servers: Server[], selectedServerId: string): 
 
 export type DataAction =
     UpdateDatasets
+    | UpdateDatasetPlaceGroup
     | UpdateColorBars
     | UpdateTimeSeries
     | RemoveTimeSeriesGroup
