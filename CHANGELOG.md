@@ -1,6 +1,7 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Viewer loads now in the MS Edge browser (#59)
 * Time-series are now loaded in increments so user see constantly growing time-series graph
   instead of doing nothing for tens of seconds until the server returns the complete series (#38)
 * When animating through time, the index into a dataset's time coordinates array is incremented
