@@ -83,7 +83,6 @@ export class LanguageDictionary {
         }
         if (values) {
             Object.keys(values).forEach(name => {
-                console.log("RAMBAZAMBA: " + name)
                 translatedPhrase = translatedPhrase.replace("${" + name + "}", `${values[name]}`)
             });
         }
