@@ -1,6 +1,7 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Removed dummy app bar icons ("Notifications", "Avatar") and menu entry ("Settings...")
 * Place groups (GeoJSON feature collections) are now only loaded if selected which significantly
   increases viewer loading time for server configurations whose data cubes
   are associated with lots of vector data. (#61)
