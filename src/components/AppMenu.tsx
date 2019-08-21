@@ -26,7 +26,7 @@ export default class AppMenu extends React.Component<AppMenuProps> {
     };
 
     // handleSettings = () => {
-    //     this.props.itemSelect("settings");
+    //     this.props.itemSelect('settings');
     // };
 
     render() {
