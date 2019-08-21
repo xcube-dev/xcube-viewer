@@ -5,6 +5,7 @@
   increases viewer loading time for server configurations whose data cubes
   are associated with lots of vector data. (#61)
 * Viewer loads now in the MS Edge browser (#59)
+* Fixed problem where viewer did not zoom to selected place if that is a point location. (#52)
 * Time-series are now loaded in increments so user see constantly growing time-series graph
   instead of doing nothing for tens of seconds until the server returns the complete series (#38)
 * When animating through time, the index into a dataset's time coordinates array is incremented
