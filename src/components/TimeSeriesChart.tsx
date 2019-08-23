@@ -18,7 +18,7 @@ import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
 import Close from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
-import { equalTimeRanges, Time, TimeRange, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
+import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
 import {
     I18N,
@@ -26,15 +26,15 @@ import {
     LINE_CHART_STROKE_SHADE_LIGHT_THEME,
     USER_PLACES_COLORS
 } from '../config';
-import { WithLocale } from "../util/lang";
+import { WithLocale } from '../util/lang';
 
 
 const styles = (theme: Theme) => createStyles(
     {
         chartContainer: {
-            userSelect: 'none',
+            // userSelect: 'none',
             position: 'relative',
-            width: "99%",
+            width: '99%',
             height: '40vh',
         },
         zoomOutButton: {
@@ -79,6 +79,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
+
+    selectTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
 }
@@ -134,7 +136,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         data.push(point);
                     }
                     // noinspection SuspiciousTypeOfGuard
-                    if ((typeof point.uncertainty) === "number") {
+                    if ((typeof point.uncertainty) === 'number') {
                         hasErrorBars = true;
                     }
                 }
@@ -151,11 +153,17 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                 );
             }
             const source = ts.source;
+            let lineName = source.variableName;
+            if (source.geometry.type === 'Point') {
+                const lon = source.geometry.coordinates[0];
+                const lat = source.geometry.coordinates[1];
+                lineName += ` (${lat.toFixed(5)},${lon.toFixed(5)})`;
+            }
             return (
                 <Line
                     key={i}
                     type="monotone"
-                    name={source.variableName}
+                    name={lineName}
                     unit={source.variableUnits}
                     data={data}
                     dataKey="average"
@@ -165,6 +173,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     strokeWidth={3 * (ts.dataProgress || 1)}
                     activeDot={true}
                     isAnimationActive={ts.dataProgress === 1.0}
+                    onClick={() => this.handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
                 >{errorBar}</Line>
             );
         });
@@ -211,8 +220,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         );
         actionButtons.push(removeAllButton);
 
-        const timeSeriesText = I18N.get("Time-Series");
-        const unitsText = timeSeriesGroup.variableUnits || I18N.get("unknown units");
+        const timeSeriesText = I18N.get('Time-Series');
+        const unitsText = timeSeriesGroup.variableUnits || I18N.get('unknown units');
         const chartTitle = `${timeSeriesText} (${unitsText})`;
 
         // 99% per https://github.com/recharts/recharts/issues/172
@@ -265,6 +274,14 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             this.props.selectTime(event.activeLabel);
         }
         this.setState(TimeSeriesChart.clearState());
+    };
+
+    readonly handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
+        const {selectTimeSeries} = this.props;
+        console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
+        if (!!selectTimeSeries) {
+            selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
+        }
     };
 
     readonly handleMouseDown = (event: any) => {
@@ -382,3 +399,5 @@ class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
 }
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip);
+
+
