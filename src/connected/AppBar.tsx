@@ -2,19 +2,20 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
-import { AppBar, Toolbar, Typography, IconButton, Badge } from '@material-ui/core';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreVert from '@material-ui/icons/MoreVert';
-import Avatar from '@material-ui/core/Avatar';
 import deepOrange from '@material-ui/core/colors/deepOrange';
+import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+// import { AppBar, Toolbar, Typography, IconButton, Badge } from '@material-ui/core';
+// import NotificationsIcon from '@material-ui/icons/Notifications';
+// import Avatar from '@material-ui/core/Avatar';
 
 import { AppState } from '../states/appState';
-import logo from "../resources/logo.png";
-import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from "../config";
-import AppMenu from "../components/AppMenu";
-import LanguageDialog from "./LanguageDialog";
-import ServerDialog from "./ServerDialog";
-import { openDialog } from "../actions/controlActions";
+import logo from '../resources/logo.png';
+import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
+import AppMenu from '../components/AppMenu';
+import LanguageDialog from './LanguageDialog';
+import ServerDialog from './ServerDialog';
+import { openDialog } from '../actions/controlActions';
 
 
 interface AppBarProps extends WithStyles<typeof styles> {
@@ -85,12 +86,12 @@ class _AppBar extends React.Component<AppBarProps, AppBarState> {
 
     handleAppMenuItemSelect = (itemId: string | null) => {
         this.setState({appMenuAnchorElement: null});
-        if (itemId === "language") {
-            this.props.openDialog("language");
-        } else if (itemId === "server") {
-            this.props.openDialog("server");
-        } else if (itemId === "settings") {
-            this.props.openDialog("settings");
+        if (itemId === 'language') {
+            this.props.openDialog('language');
+        } else if (itemId === 'server') {
+            this.props.openDialog('server');
+        } else if (itemId === 'settings') {
+            this.props.openDialog('settings');
         }
     };
 
@@ -102,16 +103,16 @@ class _AppBar extends React.Component<AppBarProps, AppBarState> {
                 className={classNames(classes.appBar)}
             >
                 <Toolbar disableGutters={true} className={classes.toolbar}>
-                    <img src={logo} alt={"xcube logo"} width={VIEWER_LOGO_WIDTH} className={classes.logo}/>
+                    <img src={logo} alt={'xcube logo'} width={VIEWER_LOGO_WIDTH} className={classes.logo}/>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {appName}
                     </Typography>
-                    <IconButton>
-                        <Badge badgeContent={4} color={"secondary"}>
-                            <NotificationsIcon/>
-                        </Badge>
-                    </IconButton>
-                    <Avatar className={classes.orangeAvatar}>CL</Avatar>
+                    {/*<IconButton>*/}
+                    {/*<Badge badgeContent={4} color={"secondary"}>*/}
+                    {/*<NotificationsIcon/>*/}
+                    {/*</Badge>*/}
+                    {/*</IconButton>*/}
+                    {/*<Avatar className={classes.orangeAvatar}>CL</Avatar>*/}
                     <IconButton onClick={this.handleAppMenuClicked}>
                         <MoreVert/>
                     </IconButton>

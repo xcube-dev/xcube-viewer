@@ -1,11 +1,11 @@
 import { Variable } from './variable';
-import { Place, PlaceGroup } from './place';
+import { isValidPlaceGroup, Place, PlaceGroup } from './place';
 import { TimeRange } from './timeSeries';
 import {
     assertArrayNotEmpty,
     assertDefinedAndNotNull,
     assertTrue,
-} from "../util/assert";
+} from '../util/assert';
 
 
 export interface Dimension {
@@ -63,18 +63,18 @@ export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: strin
 }
 
 export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | null): Place | null {
-    if (!placeId) {
+    if (!placeId || !isValidPlaceGroup(placeGroup)) {
         return null;
     }
     const place = placeGroup.features.find(place => place.id === placeId);
-    if (place !== null) {
+    if (!!place) {
         return place as Place;
     }
     let subPlaceGroups = placeGroup.placeGroups;
     if (subPlaceGroups) {
         for (let parentPlaceId in subPlaceGroups) {
             const place = findPlaceInPlaceGroup(subPlaceGroups[parentPlaceId], placeId);
-            if (place !== null) {
+            if (!!place) {
                 return place;
             }
         }
@@ -83,12 +83,12 @@ export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | 
 }
 
 export function getDatasetTimeDimension(dataset: Dataset): TimeDimension {
-    assertDefinedAndNotNull(dataset, "dataset");
-    assertArrayNotEmpty(dataset.dimensions, "dataset.dimensions");
-    const dimension: any = dataset.dimensions.find(dimension => dimension.name === "time");
-    assertTrue(dimension, "'time' not found in dataset dimensions");
-    assertArrayNotEmpty(dimension!.coordinates, "timeDimension.coordinates");
-    assertArrayNotEmpty(dimension!.labels, "timeDimension.labels");
+    assertDefinedAndNotNull(dataset, 'dataset');
+    assertArrayNotEmpty(dataset.dimensions, 'dataset.dimensions');
+    const dimension: any = dataset.dimensions.find(dimension => dimension.name === 'time');
+    assertTrue(dimension, '\'time\' not found in dataset dimensions');
+    assertArrayNotEmpty(dimension!.coordinates, 'timeDimension.coordinates');
+    assertArrayNotEmpty(dimension!.labels, 'timeDimension.labels');
     return dimension as TimeDimension;
 }
 
@@ -97,4 +97,3 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange {
     const coordinates = timeDimension.coordinates;
     return [coordinates[0], coordinates[coordinates.length - 1]];
 }
-

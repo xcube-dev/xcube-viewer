@@ -3,8 +3,8 @@ import * as geojson from 'geojson';
 import * as ol from 'openlayers';
 
 import { newId } from '../util/id';
-import { MAP_OBJECTS } from "../states/controlState";
-import { USER_PLACES_COLOR_NAMES } from "../config";
+import { MAP_OBJECTS } from '../states/controlState';
+import { USER_PLACES_COLOR_NAMES } from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
@@ -62,7 +62,7 @@ class Viewer extends React.Component<ViewerProps> {
                 colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
             }
             const color = USER_PLACES_COLOR_NAMES[colorIndex];
-            if (drawMode === "Point") {
+            if (drawMode === 'Point') {
                 feature.setStyle(createCircleStyle(7, color));
             }
             addGeometry(featureId, geoJSONGeometry as geojson.Geometry, color);
@@ -86,6 +86,9 @@ class Viewer extends React.Component<ViewerProps> {
                 flyToTarget = ol.proj.transformExtent(flyToCurr, 'EPSG:4326', projection);
             } else {
                 flyToTarget = flyToCurr.transform('EPSG:4326', projection) as ol.geom.SimpleGeometry;
+                if (flyToTarget.getType() == 'Point') {
+                    flyToTarget = transformPointExtent(flyToTarget, projection);
+                }
             }
             map.getView().fit(flyToTarget, {size: map.getSize()});
         }
@@ -141,7 +144,7 @@ class Viewer extends React.Component<ViewerProps> {
 export default Viewer;
 
 
-function createCircleStyle(radius: number, fillColor: string, strokeColor: string = "white", strokeWidth: number = 1) {
+function createCircleStyle(radius: number, fillColor: string, strokeColor: string = 'white', strokeWidth: number = 1) {
     let fill = new ol.style.Fill(
         {
             color: fillColor,
@@ -158,3 +161,25 @@ function createCircleStyle(radius: number, fillColor: string, strokeColor: strin
         }
     );
 }
+
+
+function transformPointExtent(point: ol.geom.SimpleGeometry, projection: any): ol.Extent {
+    const extent = point.getExtent();
+    switch (projection.getUnits()) {
+        case 'degrees':
+            extent[0] -= 0.01;
+            extent[1] -= 0.01;
+            extent[2] += 0.01;
+            extent[3] += 0.01;
+            break;
+        case 'm': {
+            extent[0] -= 1000;
+            extent[1] -= 1000;
+            extent[2] += 1000;
+            extent[3] += 1000;
+            break;
+        }
+    }
+    return extent;
+}
+

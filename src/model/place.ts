@@ -15,7 +15,7 @@ export interface PlaceGroup extends GeoJSON.FeatureCollection {
     id: string;
     title: string;
     propertyMapping?: { [role: string]: string };
-    placeGroups?: { [placeId: string]: PlaceGroup };
+    placeGroups?: { [placeId: string]: PlaceGroup }; // placeGroups in placeGroups are not yet supported
 }
 
 
@@ -33,4 +33,8 @@ export function getPlaceLabel(place: Place, labelPropNames: string []) {
         }
     }
     return '' + place.id;
+}
+
+export function isValidPlaceGroup(placeGroup: PlaceGroup): boolean {
+    return !!placeGroup.features;
 }

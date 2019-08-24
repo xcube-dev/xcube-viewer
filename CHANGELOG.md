@@ -1,6 +1,14 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Removed dummy app bar icons ("Notifications", "Avatar") and menu entry ("Settings...")
+* Place groups dropdown menus are no longer displayed if a dataset has no 
+  place groups and the places dropdown is no longer shown if no place group is selected. 
+* Place groups (GeoJSON feature collections) are now only loaded if selected which significantly
+  increases viewer loading time for server configurations whose data cubes
+  are associated with lots of vector data. (#61)
+* Viewer loads now in the MS Edge browser (#59)
+* Fixed problem where viewer did not zoom to selected place if that is a point location. (#52)
 * Time-series are now loaded in increments so user see constantly growing time-series graph
   instead of doing nothing for tens of seconds until the server returns the complete series (#38)
 * When animating through time, the index into a dataset's time coordinates array is incremented

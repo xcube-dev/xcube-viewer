@@ -70,14 +70,16 @@ export class LanguageDictionary {
     get(phrase: string, values?: { [name: string]: any }): string {
         const key = getPhraseKey(phrase);
         const entry = this._content[key];
+        let translatedPhrase: string;
         if (!entry) {
             console.warn(`missing translation for phrase "${phrase}"`);
-            return phrase;
-        }
-        let translatedPhrase = entry[this._locale];
-        if (!translatedPhrase) {
-            console.warn(`missing translation of phrase "${phrase}" for locale "${this._locale}"`);
-            return phrase;
+            translatedPhrase = phrase;
+        } else {
+            translatedPhrase = entry[this._locale];
+            if (!translatedPhrase) {
+                console.warn(`missing translation of phrase "${phrase}" for locale "${this._locale}"`);
+                translatedPhrase = phrase;
+            }
         }
         if (values) {
             Object.keys(values).forEach(name => {

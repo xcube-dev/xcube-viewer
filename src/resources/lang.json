@@ -99,11 +99,11 @@
       "se": "Multi"
     },
     {
-      "en": "Something went wrong",
-      "de": "Irgendetwas lief schief",
-      "it": "Qualcosa è andato storto",
-      "ro": "Ceva n-a mers bine",
-      "se": "Något gick fel"
+      "en": "Something went wrong.",
+      "de": "Irgendetwas lief schief.",
+      "it": "Qualcosa è andato storto.",
+      "ro": "Ceva n-a mers bine.",
+      "se": "Något gick fel."
     },
     {
       "en": "Time-Series",

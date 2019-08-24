@@ -13,7 +13,7 @@ import {
     getDatasetTimeRange, TimeDimension
 } from '../model/dataset';
 import { Variable } from '../model/variable';
-import { getPlaceLabel, Place, PlaceGroup, LABEL_PROPERTY_NAMES } from '../model/place';
+import { getPlaceLabel, Place, PlaceGroup, LABEL_PROPERTY_NAMES, isValidPlaceGroup } from '../model/place';
 import { Time, TimeRange } from '../model/timeSeries';
 import ColorBarLegend from '../components/ColorBarLegend';
 import { MapElement } from '../components/ol/Map';
@@ -87,7 +87,7 @@ export const selectedDatasetSelectedPlaceGroupsTitleSelector = createSelector(
 export const selectedDatasetSelectedPlaceGroupPlacesSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): Place[] => {
-        const args = placeGroups.map(placeGroup => placeGroup.features as Place[]);
+        const args = placeGroups.map(placeGroup => (isValidPlaceGroup(placeGroup) ? placeGroup.features : []) as Place[]);
         return ([] as Array<Place>).concat(...args);
     }
 );
@@ -102,7 +102,9 @@ export const selectedDatasetSelectedPlaceGroupPlaceLabelsSelector = createSelect
             if (propertyMapping && propertyMapping['label']) {
                 labelPropNames[0] = propertyMapping['label'];
             }
-            labels = labels.concat(placeGroup.features.map((place: Place) => getPlaceLabel(place, labelPropNames)))
+            if (isValidPlaceGroup(placeGroup)) {
+                labels = labels.concat(placeGroup.features.map((place: Place) => getPlaceLabel(place, labelPropNames)));
+            }
         });
         return labels;
     }
@@ -205,18 +207,20 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
         }
         const layers: MapElement[] = [];
         placeGroups.forEach((placeGroup, index) => {
-            layers.push(
-                <Vector
-                    key={index}
-                    id={`placeGroup.${placeGroup.id}`}
-                    source={new ol.source.Vector(
-                        {
-                            features: new ol.format.GeoJSON({
-                                                                defaultDataProjection: 'EPSG:4326',
-                                                                featureProjection: 'EPSG:3857'
-                                                            }).readFeatures(placeGroup),
-                        })}
-                />);
+            if (isValidPlaceGroup(placeGroup)) {
+                layers.push(
+                    <Vector
+                        key={index}
+                        id={`placeGroup.${placeGroup.id}`}
+                        source={new ol.source.Vector(
+                            {
+                                features: new ol.format.GeoJSON({
+                                                                    defaultDataProjection: 'EPSG:4326',
+                                                                    featureProjection: 'EPSG:3857'
+                                                                }).readFeatures(placeGroup),
+                            })}
+                    />);
+            }
         });
         return (<Layers>{layers}</Layers>);
     }

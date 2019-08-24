@@ -8,8 +8,8 @@ import Select from '@material-ui/core/Select';
 
 import { Dataset } from '../model/dataset';
 import { Place } from '../model/place';
-import { WithLocale } from "../util/lang";
-import { I18N } from "../config";
+import { WithLocale } from '../util/lang';
+import { I18N } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -42,19 +42,21 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
     render() {
         const {classes} = this.props;
 
-        const selectedPlaceId = this.props.selectedPlaceId || '';
         const places = this.props.places || [];
         const placeLabels = this.props.placeLabels || [];
-        const disabled = places.length === 0;
+        const selectedPlaceId = this.props.selectedPlaceId || '';
+
+        if (places.length === 0) {
+            return null;
+        }
 
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel
                     shrink
                     htmlFor="place-select"
-                    disabled={disabled}
                 >
-                    {I18N.get("Place")}
+                    {I18N.get('Place')}
                 </InputLabel>
                 <Select
                     value={selectedPlaceId}
@@ -63,7 +65,6 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
                     displayEmpty
                     name="place"
                     className={classes.selectEmpty}
-                    disabled={disabled}
                 >
                     {places.map((place, i) => (
                         <MenuItem

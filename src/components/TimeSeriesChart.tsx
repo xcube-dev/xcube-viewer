@@ -35,6 +35,7 @@ const styles = (theme: Theme) => createStyles(
             userSelect: 'none',
             position: 'relative',
             width: "99%",
+            height: '40vh',
         },
         zoomOutButton: {
             position: 'absolute',
