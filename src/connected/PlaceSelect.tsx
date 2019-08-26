@@ -4,8 +4,8 @@ import PlaceSelect from "../components/PlaceSelect";
 import { AppState } from '../states/appState';
 import { selectPlace } from '../actions/controlActions';
 import {
-    selectedDatasetSelectedPlaceGroupPlacesSelector,
-    selectedDatasetSelectedPlaceGroupPlaceLabelsSelector
+    selectedPlaceGroupPlacesSelector,
+    selectedPlaceGroupPlaceLabelsSelector
 } from '../selectors/controlSelectors';
 
 
@@ -14,10 +14,11 @@ const mapStateToProps = (state: AppState) => {
         locale: state.controlState.locale,
 
         datasets: state.dataState.datasets,
+        userPlaceGroup: state.dataState.userPlaceGroup,
 
         selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedDatasetSelectedPlaceGroupPlacesSelector(state),
-        placeLabels: selectedDatasetSelectedPlaceGroupPlaceLabelsSelector(state),
+        places: selectedPlaceGroupPlacesSelector(state),
+        placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
     };
 };
 

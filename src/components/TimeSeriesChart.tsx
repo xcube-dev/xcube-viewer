@@ -27,6 +27,7 @@ import {
     USER_PLACES_COLORS
 } from '../config';
 import { WithLocale } from '../util/lang';
+import { PlaceInfo } from "../model/place";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -83,6 +84,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     selectTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
+
+    placeInfos?: { [placeId: string]: PlaceInfo };
 }
 
 interface TimeSeriesChartState {
@@ -104,7 +107,10 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     }
 
     render() {
-        const {classes, timeSeriesGroup, selectedTime, selectedTimeRange, dataTimeRange, theme} = this.props;
+        const {
+            classes, timeSeriesGroup, selectedTime, selectedTimeRange,
+            dataTimeRange, theme, placeInfos
+        } = this.props;
 
         const strokeShade = theme.palette.type === 'light' ? LINE_CHART_STROKE_SHADE_LIGHT_THEME : LINE_CHART_STROKE_SHADE_DARK_THEME;
         const lightStroke = theme.palette.primary.light;
@@ -120,6 +126,25 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         }
 
         const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
+
+            const source = ts.source;
+            let lineName = source.variableName;
+            let lineColor = 'yellow';
+            if (placeInfos) {
+                const placeInfo = placeInfos[source.placeId];
+                if (placeInfo) {
+                    const {place, placeLabel} = placeInfo;
+                    if (place.geometry.type === 'Point') {
+                        const lon = place.geometry.coordinates[0];
+                        const lat = place.geometry.coordinates[1];
+                        lineName += ` (${placeLabel}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
+                    } else {
+                        lineName += ` (${placeLabel})`;
+                    }
+                    lineColor = (place.properties || {}) ['color'] || lineColor;
+                }
+            }
+
             const data: TimeSeriesPoint[] = [];
             let hasErrorBars = false;
             ts.data.forEach(point => {
@@ -148,16 +173,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         dataKey="uncertainty"
                         width={4}
                         strokeWidth={2}
-                        stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
+                        stroke={USER_PLACES_COLORS[lineColor][strokeShade]}
                     />
                 );
-            }
-            const source = ts.source;
-            let lineName = source.variableName;
-            if (source.geometry.type === 'Point') {
-                const lon = source.geometry.coordinates[0];
-                const lat = source.geometry.coordinates[1];
-                lineName += ` (${lat.toFixed(5)},${lon.toFixed(5)})`;
             }
             return (
                 <Line
@@ -169,7 +187,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     dataKey="average"
                     connectNulls={true}
                     dot={true}
-                    stroke={USER_PLACES_COLORS[ts.color][strokeShade]}
+                    stroke={USER_PLACES_COLORS[lineColor][strokeShade]}
                     strokeWidth={3 * (ts.dataProgress || 1)}
                     activeDot={true}
                     isAnimationActive={ts.dataProgress === 1.0}

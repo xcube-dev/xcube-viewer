@@ -50,6 +50,22 @@ export function findDatasetPlace(dataset: Dataset, placeId: string | null): Plac
     return (placeId && dataset.placeGroups && findPlaceInPlaceGroups(dataset.placeGroups, placeId)) || null;
 }
 
+export function findPlace(datasets: Dataset[], userPlaceGroup: PlaceGroup, placeId: string): Place | null {
+    if (!!userPlaceGroup.features) {
+        const place = userPlaceGroup.features.find(p => p.id === placeId);
+        if (!!place) {
+            return place as Place;
+        }
+    }
+    for (let dataset of datasets) {
+        const place = findDatasetPlace(dataset, placeId);
+        if (place !== null) {
+            return place;
+        }
+    }
+    return null;
+}
+
 export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: string | null): Place | null {
     if (placeId) {
         for (let placeGroup of placeGroups) {

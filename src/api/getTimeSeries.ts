@@ -8,7 +8,7 @@ import { callJsonApi } from './callApi';
 export function getTimeSeriesForGeometry(apiServerUrl: string,
                                          datasetId: string,
                                          variable: Variable,
-                                         featureId: string,
+                                         placeId: string,
                                          geometry: geojson.Geometry,
                                          startDate: string | null,
                                          endDate: string | null): Promise<TimeSeries | null> {
@@ -47,7 +47,7 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
             datasetId,
             variableName: variable.name,
             variableUnits: variable.units || undefined,
-            featureId,
+            placeId,
             geometry,
         };
         return {source, data, color: "green"};

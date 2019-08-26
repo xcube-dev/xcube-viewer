@@ -18,14 +18,46 @@ export interface PlaceGroup extends GeoJSON.FeatureCollection {
     placeGroups?: { [placeId: string]: PlaceGroup }; // placeGroups in placeGroups are not yet supported
 }
 
+/**
+ * Precomputed stuff.
+ */
+export interface PlaceInfo {
+    placeGroup: PlaceGroup;
+    place: Place;
+    placeLabel: string;
+}
 
-export const LABEL_PROPERTY_NAMES = ['label', 'title', 'name', 'id'];
 
+export const DEFAULT_LABEL_PROPERTY_NAMES = ['label', 'LABEL', 'title', 'TITLE', 'name', 'NAME', 'id', 'ID'];
 
-export function getPlaceLabel(place: Place, labelPropNames: string []) {
+export function forEachPlace(placeGroups: PlaceGroup[], callback: (placeGroup: PlaceGroup, place: Place, placeLabel: string) => void) {
+    placeGroups.forEach(placeGroup => {
+        if (isValidPlaceGroup(placeGroup)) {
+            const labelPropNames = getPlaceGroupLabelPropertyNames(placeGroup);
+            const propertyMapping = placeGroup.propertyMapping;
+            if (propertyMapping && propertyMapping['label']) {
+                labelPropNames[0] = propertyMapping['label'];
+            }
+            placeGroup.features.forEach((place: Place) => {
+                const placeLabel = getPlaceLabel(place, labelPropNames);
+                callback(placeGroup, place, placeLabel);
+            });
+        }
+    });
+}
+
+function getPlaceGroupLabelPropertyNames(placeGroup: PlaceGroup): string[] {
+    const propertyMapping = placeGroup.propertyMapping;
+    if (propertyMapping && propertyMapping['label']) {
+        return [propertyMapping['label'], ...DEFAULT_LABEL_PROPERTY_NAMES];
+    }
+    return DEFAULT_LABEL_PROPERTY_NAMES;
+}
+
+function getPlaceLabel(place: Place, labelPropertyNames: string []) {
     if (place.properties) {
         let label;
-        for (let propName of labelPropNames) {
+        for (let propName of labelPropertyNames) {
             label = place.properties[propName];
             if (label) {
                 return label;

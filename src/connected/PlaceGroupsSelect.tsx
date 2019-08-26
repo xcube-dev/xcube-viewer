@@ -4,8 +4,8 @@ import PlaceGroupsSelect from "../components/PlaceGroupsSelect";
 import { AppState } from '../states/appState';
 import { selectPlaceGroups } from '../actions/controlActions';
 import {
-    selectedDatasetPlaceGroupsSelector,
-    selectedDatasetSelectedPlaceGroupsTitleSelector
+    placeGroupsSelector,
+    selectedPlaceGroupsTitleSelector
 } from '../selectors/controlSelectors';
 
 
@@ -16,8 +16,8 @@ const mapStateToProps = (state: AppState) => {
         datasets: state.dataState.datasets,
 
         selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        placeGroups: selectedDatasetPlaceGroupsSelector(state),
-        selectedPlaceGroupsTitle: selectedDatasetSelectedPlaceGroupsTitleSelector(state),
+        placeGroups: placeGroupsSelector(state),
+        selectedPlaceGroupsTitle: selectedPlaceGroupsTitleSelector(state),
     };
 };
 

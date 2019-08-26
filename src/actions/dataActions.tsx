@@ -14,10 +14,17 @@ import { Dataset } from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
-import { selectedServerSelector } from '../selectors/controlSelectors';
+import {
+    selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
+    selectedDatasetVariableSelector, selectedPlaceSelector,
+    selectedServerSelector
+} from '../selectors/controlSelectors';
 import { Server } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { PlaceGroup } from '../model/place';
+import { MAP_OBJECTS } from "../states/controlState";
+import * as geojson from "geojson";
+import * as ol from "openlayers";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,33 +80,95 @@ export function updateDatasetPlaceGroup(datasetId: string,
     return {type: UPDATE_DATASET_PLACE_GROUP, datasetId, placeGroup};
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const UPDATE_COLOR_BARS = 'UPDATE_COLOR_BARS';
-export type UPDATE_COLOR_BARS = typeof UPDATE_COLOR_BARS;
+export const ADD_USER_PLACE = 'ADD_USER_PLACE';
+export type ADD_USER_PLACE = typeof ADD_USER_PLACE;
 
-export interface UpdateColorBars {
-    type: UPDATE_COLOR_BARS;
-    colorBars: ColorBars;
+export interface AddUserPlace {
+    type: ADD_USER_PLACE;
+    id: string;
+    label: string;
+    color: string;
+    geometry: geojson.Geometry;
 }
 
-export function updateColorBars() {
-    return (dispatch: Dispatch<UpdateColorBars | MessageLogAction>, getState: () => AppState) => {
-        const apiServer = selectedServerSelector(getState());
-
-        api.getColorBars(apiServer.url)
-           .then((colorBars: ColorBars) => {
-               dispatch(_updateColorBars(colorBars));
-           })
-           .catch(error => {
-               dispatch(postMessage('error', error.message || `${error}`));
-           });
+export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry) {
+    return (dispatch: Dispatch<AddUserPlace>) => {
+        dispatch(_addUserPlace(id, label, color, geometry));
+        dispatch(addTimeSeries(id) as any);
     };
 }
 
-export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
-    return {type: UPDATE_COLOR_BARS, colorBars};
+function _addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry): AddUserPlace {
+    return {type: ADD_USER_PLACE, id, label, color, geometry};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+export function addTimeSeries(placeId: string) {
+    return (dispatch: Dispatch<UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
+        const apiServer = selectedServerSelector(getState());
+
+        const selectedDatasetId = selectedDatasetIdSelector(getState());
+        const selectedDatasetTimeDim = selectedDatasetTimeDimensionSelector(getState());
+        const selectedVariable = selectedDatasetVariableSelector(getState());
+        const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+        const selectedPlace = selectedPlaceSelector(getState())!;
+        const timeLabels = selectedDatasetTimeDim != null ? selectedDatasetTimeDim.labels : null;
+
+        if (selectedDatasetId && selectedVariable && timeLabels !== null) {
+            const numTimeLabels = timeLabels.length;
+            const timeChunkSize = 16;
+            let endTimeIndex = numTimeLabels - 1;
+            let startTimeIndex = endTimeIndex - timeChunkSize + 1;
+
+            const getTimeSeriesChunk = () => {
+                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
+                const endDateLabel = timeLabels[endTimeIndex];
+                return api.getTimeSeriesForGeometry(apiServer.url,
+                                                    selectedDatasetId,
+                                                    selectedVariable,
+                                                    placeId,
+                                                    selectedPlace.geometry,
+                                                    startDateLabel,
+                                                    endDateLabel);
+            };
+
+            const successAction = (timeSeries: TimeSeries | null) => {
+                if (timeSeries !== null && hasUserPlace(placeId)) {
+                    const hasMore = startTimeIndex > 0;
+                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
+                    dispatch(updateTimeSeries({...timeSeries, dataProgress},
+                                              timeSeriesUpdateMode,
+                                              endTimeIndex === numTimeLabels - 1 ? 'new' : 'append'));
+                    if (hasMore && hasUserPlace(placeId)) {
+                        startTimeIndex -= timeChunkSize;
+                        endTimeIndex -= timeChunkSize;
+                        getTimeSeriesChunk().then(successAction);
+                    }
+                } else {
+                    dispatch(postMessage('info', 'No data found here'));
+                }
+            };
+
+            getTimeSeriesChunk()
+                .then(successAction)
+                .catch((error: any) => {
+                    dispatch(postMessage('error', error + ''));
+                });
+        }
+    };
+}
+
+function hasUserPlace(placeId: string): boolean {
+    if (MAP_OBJECTS.userLayer) {
+        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+        const source = userLayer.getSource();
+        return !!source.getFeatureById(placeId);
+    }
+    return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,13 +243,44 @@ export function _configureServers(servers: Server[], selectedServerId: string): 
     return {type: CONFIGURE_SERVERS, servers, selectedServerId};
 }
 
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_COLOR_BARS = 'UPDATE_COLOR_BARS';
+export type UPDATE_COLOR_BARS = typeof UPDATE_COLOR_BARS;
+
+export interface UpdateColorBars {
+    type: UPDATE_COLOR_BARS;
+    colorBars: ColorBars;
+}
+
+export function updateColorBars() {
+    return (dispatch: Dispatch<UpdateColorBars | MessageLogAction>, getState: () => AppState) => {
+        const apiServer = selectedServerSelector(getState());
+
+        api.getColorBars(apiServer.url)
+           .then((colorBars: ColorBars) => {
+               dispatch(_updateColorBars(colorBars));
+           })
+           .catch(error => {
+               dispatch(postMessage('error', error.message || `${error}`));
+           });
+    };
+}
+
+export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
+    return {type: UPDATE_COLOR_BARS, colorBars};
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type DataAction =
     UpdateDatasets
     | UpdateDatasetPlaceGroup
-    | UpdateColorBars
+    | AddUserPlace
     | UpdateTimeSeries
     | RemoveTimeSeriesGroup
     | RemoveAllTimeSeries
-    | ConfigureServers;
+    | ConfigureServers
+| UpdateColorBars;

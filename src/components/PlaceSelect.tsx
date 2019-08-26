@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import { Dataset } from '../model/dataset';
-import { Place } from '../model/place';
+import { Place, PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 
@@ -26,17 +26,18 @@ const styles = (theme: Theme) => createStyles(
 
 interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     datasets: Dataset[];
+    userPlaceGroup: PlaceGroup;
 
     selectedPlaceId: string | null;
     places: Place[];
     placeLabels: string[];
-    selectPlace: (placeId: string | null, dataset: Dataset[]) => void;
+    selectPlace: (placeId: string | null, dataset: Dataset[], userPlaceGroup: PlaceGroup) => void;
 }
 
 class PlaceSelect extends React.Component<PlaceSelectProps> {
 
     handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectPlace(event.target.value || null, this.props.datasets);
+        this.props.selectPlace(event.target.value || null, this.props.datasets, this.props.userPlaceGroup);
     };
 
     render() {

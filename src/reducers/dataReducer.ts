@@ -3,6 +3,7 @@ import * as ol from 'openlayers';
 import { DataState, newDataState, storeUserServers } from '../states/dataState';
 import {
     CONFIGURE_SERVERS,
+    ADD_USER_PLACE,
     DataAction, REMOVE_ALL_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
@@ -12,6 +13,7 @@ import {
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
 import { TimeSeriesGroup } from '../model/timeSeries';
+import { Place } from "../model/place";
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -39,6 +41,21 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
             }
             return state;
         }
+        case ADD_USER_PLACE: {
+            const {id, label, color, geometry } = action;
+            const feature = {
+                type: 'Feature',
+                id,
+                geometry,
+                properties: {label, color},
+            };
+            const features = [...state.userPlaceGroup.features, feature as Place];
+            const userPlaceGroup = {...state.userPlaceGroup, features};
+            return {
+                ...state,
+                userPlaceGroup,
+            };
+        }
         case UPDATE_COLOR_BARS: {
             return {...state, colorBars: action.colorBars};
         }
@@ -46,9 +63,9 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
             let newTimeSeries = action.timeSeries;
 
             if (action.updateMode === 'replace' && action.dataMode === 'new') {
-                const featureId = newTimeSeries.source.featureId;
+                const placeId = newTimeSeries.source.placeId;
                 state.timeSeriesGroups.forEach(tsg => {
-                    removeTimeSeriesGroupFeatures(tsg, (fid: string) => fid !== featureId);
+                    removeTimeSeriesGroupFeatures(tsg, (fid: string) => fid !== placeId);
                 });
             }
 
@@ -58,7 +75,7 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                 const timeSeriesGroup = state.timeSeriesGroups[tsgIndex];
                 const timeSeriesArray = timeSeriesGroup.timeSeriesArray;
                 const tsIndex = timeSeriesArray.findIndex(ts => ts.source.datasetId === newTimeSeries.source.datasetId
-                                                                && ts.source.featureId === newTimeSeries.source.featureId
+                                                                && ts.source.placeId === newTimeSeries.source.placeId
                                                                 && ts.source.variableName === newTimeSeries.source.variableName);
                 let newTimeSeriesArray;
                 if (tsIndex >= 0) {
@@ -135,14 +152,14 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
 }
 
 
-function removeTimeSeriesGroupFeatures(tsg: TimeSeriesGroup, predicate?: (fid: string) => boolean) {
+function removeTimeSeriesGroupFeatures(tsg: TimeSeriesGroup, predicate?: (placeId: string) => boolean) {
     if (MAP_OBJECTS.userLayer) {
         const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
         tsg.timeSeriesArray.forEach(ts => {
-            const fid = ts.source.featureId;
-            if (!predicate || predicate(fid)) {
+            const placeId = ts.source.placeId;
+            if (!predicate || predicate(placeId)) {
                 const source = userLayer.getSource();
-                const feature = source.getFeatureById(fid);
+                const feature = source.getFeatureById(placeId);
                 if (feature) {
                     source.removeFeature(feature);
                 }

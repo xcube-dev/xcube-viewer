@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+// import Card from '@material-ui/core/Card';
+// import CardContent from '@material-ui/core/CardContent';
+// import Typography from '@material-ui/core/Typography';
 
 import { WithLocale } from '../util/lang';
 import TimeSeriesChart from './TimeSeriesChart';
 import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-// import Card from '@material-ui/core/Card';
-// import CardContent from '@material-ui/core/CardContent';
-// import Typography from '@material-ui/core/Typography';
+import { PlaceInfo } from "../model/place";
 import TimeRangeSlider from './TimeRangeSlider';
 
 
@@ -43,6 +44,7 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
+    placeInfos?: { [placeId: string]: PlaceInfo };
 }
 
 class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
@@ -56,6 +58,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             removeTimeSeriesGroup,
             visibleTimeRange,
             updateVisibleTimeRange,
+            placeInfos
         }
             = this.props;
         const charts = timeSeriesGroups.map(timeSeriesGroup => (
@@ -69,6 +72,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 selectTime={selectTime}
                 selectTimeRange={selectTimeRange}
                 removeTimeSeriesGroup={removeTimeSeriesGroup}
+                placeInfos={placeInfos}
             />)
         );
         if (charts.length > 0) {
