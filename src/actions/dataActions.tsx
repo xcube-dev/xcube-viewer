@@ -206,11 +206,11 @@ export type UPDATE_TIME_SERIES = typeof UPDATE_TIME_SERIES;
 export interface UpdateTimeSeries {
     type: UPDATE_TIME_SERIES;
     timeSeries: TimeSeries;
-    updateMode: 'add' | 'replace';
+    updateMode: 'add' | 'replace' | 'remove';
     dataMode: 'new' | 'append';
 }
 
-export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace', dataMode: 'new' | 'append'): UpdateTimeSeries {
+export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace' | 'remove', dataMode: 'new' | 'append'): UpdateTimeSeries {
     return {type: UPDATE_TIME_SERIES, timeSeries, updateMode, dataMode};
 }
 
