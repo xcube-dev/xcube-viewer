@@ -19,7 +19,7 @@
       "de": "Abbrechen",
       "it": "Annulla",
       "ro": "Anulare",
-      "se": "Annullera"
+      "se": "Avbryt"
     },
     {
       "en": "Save",
@@ -33,28 +33,28 @@
       "de": "Auswählen",
       "it": "Selezionare",
       "ro": "Selectați",
-      "se": "Välja"
+      "se": "Välj"
     },
     {
       "en": "Add",
       "de": "Hinzufügen",
       "it": "Aggiungere",
       "ro": "Adăuga",
-      "se": "Foga"
+      "se": "Lägg till"
     },
     {
       "en": "Edit",
       "de": "Bearbeiten",
       "it": "Modificare",
       "ro": "Edita",
-      "se": "Edera"
+      "se": "Redigera"
     },
     {
       "en": "Remove",
       "de": "Entfernen",
       "it": "Eliminare",
       "ro": "Elimina",
-      "se": "Avlägsna"
+      "se": "Ta bort"
     },
     {
       "en": "Dataset",
@@ -138,14 +138,14 @@
       "de": "Stopp",
       "it": "Fermare",
       "ro": "Stop",
-      "se": "Stanna"
+      "se": "Stopp"
     },
     {
       "en": "Please wait...",
       "de": "Bitte warten...",
       "it": "Attendere prego...",
       "ro": "Te rog asteapta...",
-      "se": "Vänta vänta..."
+      "se": "Vänta ..."
     },
     {
       "en": "Loading data",
@@ -187,21 +187,21 @@
       "de": "Server hinzufügen",
       "it": "Aggiungi Server",
       "ro": "Adauga Server",
-      "se": "Lägg till Server"
+      "se": "Lägg till server"
     },
     {
       "en": "Edit Server",
       "de": "Server bearbeiten",
       "it": "Modifica Server",
       "ro": "Editați Serverul",
-      "se": "Redigera Server"
+      "se": "Redigera server"
     },
     {
       "en": "Select Server",
       "de": "Server auswählen",
       "it": "Seleziona Server",
       "ro": "Selectați Server",
-      "se": "Välj Server"
+      "se": "Välj server"
     }
   ]
 }
