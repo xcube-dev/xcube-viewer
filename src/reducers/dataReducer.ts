@@ -8,11 +8,10 @@ import {
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP
+    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
-import { TimeSeriesGroup } from '../model/timeSeries';
 import { Place } from "../model/place";
 
 
@@ -56,18 +55,35 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                 userPlaceGroup,
             };
         }
+        case REMOVE_USER_PLACE: {
+            const {id} = action;
+            const index = state.userPlaceGroup.features.findIndex(p => p.id == id);
+            if (index >= 0) {
+                removeUserPlacesFromLayer([id]);
+                const features = [...state.userPlaceGroup.features];
+                features.splice(index, 1);
+                const userPlaceGroup = {...state.userPlaceGroup, features};
+                return {
+                    ...state,
+                    userPlaceGroup,
+                };
+            }
+            return state;
+        }
+        case REMOVE_ALL_USER_PLACES: {
+            const userPlaces = state.userPlaceGroup.features as Place[];
+            removeUserPlacesFromLayer(userPlaces.map(p => p.id));
+            const userPlaceGroup = {...state.userPlaceGroup, features: []};
+            return {
+                ...state,
+                userPlaceGroup,
+            };
+        }
         case UPDATE_COLOR_BARS: {
             return {...state, colorBars: action.colorBars};
         }
         case UPDATE_TIME_SERIES: {
             let newTimeSeries = action.timeSeries;
-
-            if (action.updateMode === 'replace' && action.dataMode === 'new') {
-                const placeId = newTimeSeries.source.placeId;
-                state.timeSeriesGroups.forEach(tsg => {
-                    removeTimeSeriesGroupFeatures(tsg, (fid: string) => fid !== placeId);
-                });
-            }
 
             let newTimeSeriesGroups;
             const tsgIndex = state.timeSeriesGroups.findIndex(tsg => tsg.variableUnits === newTimeSeries.source.variableUnits);
@@ -126,17 +142,13 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         case REMOVE_TIME_SERIES_GROUP: {
             let tsgIndex = state.timeSeriesGroups.findIndex(tsg => tsg.id === action.id);
             if (tsgIndex >= 0) {
-                removeTimeSeriesGroupFeatures(state.timeSeriesGroups[tsgIndex]);
-                const timeSeriesGroups = state.timeSeriesGroups.slice();
+                const timeSeriesGroups = [...state.timeSeriesGroups];
                 timeSeriesGroups.splice(tsgIndex, 1);
                 return {...state, timeSeriesGroups};
             }
             return state;
         }
         case REMOVE_ALL_TIME_SERIES: {
-            state.timeSeriesGroups.forEach(tsg => {
-                removeTimeSeriesGroupFeatures(tsg);
-            });
             return {...state, timeSeriesGroups: []};
         }
         case CONFIGURE_SERVERS: {
@@ -152,17 +164,14 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
 }
 
 
-function removeTimeSeriesGroupFeatures(tsg: TimeSeriesGroup, predicate?: (placeId: string) => boolean) {
+function removeUserPlacesFromLayer(userPlaceIds: string[]) {
     if (MAP_OBJECTS.userLayer) {
         const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
-        tsg.timeSeriesArray.forEach(ts => {
-            const placeId = ts.source.placeId;
-            if (!predicate || predicate(placeId)) {
-                const source = userLayer.getSource();
-                const feature = source.getFeatureById(placeId);
-                if (feature) {
-                    source.removeFeature(feature);
-                }
+        const source = userLayer.getSource();
+        userPlaceIds.forEach(placeId => {
+            const feature = source.getFeatureById(placeId);
+            if (feature) {
+                source.removeFeature(feature);
             }
         });
     }

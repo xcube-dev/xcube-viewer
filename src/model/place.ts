@@ -70,3 +70,37 @@ function getPlaceLabel(place: Place, labelPropertyNames: string []) {
 export function isValidPlaceGroup(placeGroup: PlaceGroup): boolean {
     return !!placeGroup.features;
 }
+
+
+export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | null): Place | null {
+    if (!placeId || !isValidPlaceGroup(placeGroup)) {
+        return null;
+    }
+    const place = placeGroup.features.find(place => place.id === placeId);
+    if (!!place) {
+        return place as Place;
+    }
+    let subPlaceGroups = placeGroup.placeGroups;
+    if (subPlaceGroups) {
+        for (let parentPlaceId in subPlaceGroups) {
+            const place = findPlaceInPlaceGroup(subPlaceGroups[parentPlaceId], placeId);
+            if (!!place) {
+                return place;
+            }
+        }
+    }
+    return null;
+}
+
+export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: string | null): Place | null {
+    if (placeId) {
+        for (let placeGroup of placeGroups) {
+            const place = findPlaceInPlaceGroup(placeGroup, placeId);
+            if (place !== null) {
+                return place;
+            }
+        }
+    }
+    return null;
+}
+

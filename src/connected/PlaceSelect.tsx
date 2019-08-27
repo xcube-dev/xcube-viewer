@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 
 import PlaceSelect from "../components/PlaceSelect";
 import { AppState } from '../states/appState';
+import { removeUserPlace } from "../actions/dataActions";
 import { selectPlace } from '../actions/controlActions';
 import {
     selectedPlaceGroupPlacesSelector,
@@ -16,6 +17,7 @@ const mapStateToProps = (state: AppState) => {
         datasets: state.dataState.datasets,
         userPlaceGroup: state.dataState.userPlaceGroup,
 
+        selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
         selectedPlaceId: state.controlState.selectedPlaceId,
         places: selectedPlaceGroupPlacesSelector(state),
         placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
@@ -24,6 +26,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
     selectPlace,
+    removeUserPlace,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaceSelect);

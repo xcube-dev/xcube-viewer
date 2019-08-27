@@ -7,8 +7,10 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
-import { Dataset } from '../model/dataset';
 import { PlaceGroup } from '../model/place';
 import { WithLocale } from "../util/lang";
 import { I18N } from "../config";
@@ -24,14 +26,17 @@ const styles = (theme: Theme) => createStyles(
         selectEmpty: {
             marginTop: theme.spacing.unit * 2,
         },
+        button: {
+            margin: theme.spacing.unit * 0.1,
+        },
     });
 
 interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
-    datasets: Dataset[];
-
     selectedPlaceGroupIds: string[] | null;
     placeGroups: PlaceGroup[];
-    selectPlaceGroups: (placeGroupIds: string[] | null, dataset: Dataset[]) => void;
+    selectPlaceGroups: (placeGroupIds: string[] | null) => void;
+    removeAllUserPlaces: () => void;
+
     selectedPlaceGroupsTitle: string;
 
     language?: string;
@@ -40,8 +45,13 @@ interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
 class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
 
     handlePlaceGroupsChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        console.log("handlePlaceGroupsChange: ", event.target.value);
-        this.props.selectPlaceGroups(event.target.value as any as string[] || null, this.props.datasets);
+        const {selectPlaceGroups} = this.props;
+        selectPlaceGroups(event.target.value as any as string[] || null);
+    };
+
+    handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+        const {removeAllUserPlaces} = this.props;
+        removeAllUserPlaces();
     };
 
     renderSelectedPlaceGroupsTitle = () => {
@@ -74,6 +84,18 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
                     value={selectedPlaceGroupIds}
                     renderValue={this.renderSelectedPlaceGroupsTitle}
                     name="place-groups"
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                className={classes.button}
+                                disabled={selectedPlaceGroupIds.length === 0 || selectedPlaceGroupIds[0] !== 'user'}
+                                aria-label={I18N.get('Delete all user places')}
+                                onClick={this.handleRemoveButtonClick}
+                            >
+                                {<RemoveCircleIcon/>}
+                            </IconButton>
+                        </InputAdornment>
+                    }
                 >
                     {placeGroups.map(placeGroup => (
                         <MenuItem

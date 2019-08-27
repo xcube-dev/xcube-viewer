@@ -134,6 +134,32 @@ export const selectedPlaceSelector = createSelector(
 );
 
 
+export const canAddTimeSeriesSelector = createSelector(
+    timeSeriesGroupsSelector,
+    selectedDatasetIdSelector,
+    selectedVariableNameSelector,
+    selectedPlaceIdSelector,
+    (timeSeriesGroups: TimeSeriesGroup[],
+     datasetId: string | null,
+     variableName: string | null,
+     placeId: string | null): boolean => {
+        if (!datasetId || !variableName || !placeId) {
+            return false;
+        }
+        for (let timeSeriesGroup of timeSeriesGroups) {
+            for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
+                const source = timeSeries.source;
+                if (source.datasetId === datasetId
+                    && source.variableName === variableName
+                    && source.placeId === placeId) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+);
+
 export const timeSeriesPlaceInfosSelector = createSelector(
     timeSeriesGroupsSelector,
     placeGroupsSelector,

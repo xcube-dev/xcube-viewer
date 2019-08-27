@@ -1,6 +1,6 @@
 import * as ol from 'openlayers';
 
-import { findDataset, findDatasetVariable, getDatasetTimeRange, findPlace } from '../model/dataset';
+import { findDataset, findDatasetVariable, getDatasetTimeRange, findDatasetOrUserPlace } from '../model/dataset';
 import { TimeRange } from "../model/timeSeries";
 import { ControlState, newControlState } from '../states/controlState';
 import {
@@ -59,16 +59,18 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         }
         case SELECT_PLACE_GROUPS: {
             const selectedPlaceGroupIds = action.selectedPlaceGroupIds;
+            const selectedPlaceId = null;
             return {
                 ...state,
                 selectedPlaceGroupIds,
+                selectedPlaceId,
             };
         }
         case SELECT_PLACE: {
             const selectedPlaceId = action.selectedPlaceId;
             let flyTo = state.flyTo;
             if (selectedPlaceId) {
-                const place = findPlace(action.datasets, action.userPlaceGroup, selectedPlaceId);
+                const place = findDatasetOrUserPlace(action.datasets, action.userPlaceGroup, selectedPlaceId);
                 if (place !== null) {
                     if (place.bbox && place.bbox.length === 4) {
                         flyTo = place.bbox as [number, number, number, number];

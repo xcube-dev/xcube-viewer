@@ -1,3 +1,4 @@
+///<reference path="../model/dataset.ts"/>
 import { Dispatch } from 'redux';
 
 import { AppState } from '../states/appState';
@@ -8,23 +9,24 @@ import {
     RemoveActivity,
     removeActivity,
     SelectDataset,
-    selectDataset
+    selectDataset,
 } from './controlActions';
-import { Dataset } from '../model/dataset';
+import {
+    Dataset,
+} from '../model/dataset';
 import { TimeSeries } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
 import {
     selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
-    selectedDatasetVariableSelector, selectedPlaceSelector,
+    selectedDatasetVariableSelector, selectedPlaceIdSelector, selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
 import { Server } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
-import { PlaceGroup } from '../model/place';
-import { MAP_OBJECTS } from "../states/controlState";
+import { findPlaceInPlaceGroups, PlaceGroup } from '../model/place';
 import * as geojson from "geojson";
-import * as ol from "openlayers";
+import { placeGroupsSelector } from "../selectors/dataSelectors";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +98,7 @@ export interface AddUserPlace {
 export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry) {
     return (dispatch: Dispatch<AddUserPlace>) => {
         dispatch(_addUserPlace(id, label, color, geometry));
-        dispatch(addTimeSeries(id) as any);
+        dispatch(addTimeSeries() as any);
     };
 }
 
@@ -106,19 +108,48 @@ function _addUserPlace(id: string, label: string, color: string, geometry: geojs
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const REMOVE_USER_PLACE = 'REMOVE_USER_PLACE';
+export type REMOVE_USER_PLACE = typeof REMOVE_USER_PLACE;
 
-export function addTimeSeries(placeId: string) {
+export interface RemoveUserPlace {
+    type: REMOVE_USER_PLACE;
+    id: string;
+}
+
+export function removeUserPlace(id: string): RemoveUserPlace {
+    return {type: REMOVE_USER_PLACE, id};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const REMOVE_ALL_USER_PLACES = 'REMOVE_ALL_USER_PLACES';
+export type REMOVE_ALL_USER_PLACES = typeof REMOVE_ALL_USER_PLACES;
+
+export interface RemoveAllUserPlaces {
+    type: REMOVE_ALL_USER_PLACES;
+}
+
+export function removeAllUserPlaces(): RemoveAllUserPlaces {
+    return {type: REMOVE_ALL_USER_PLACES};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function addTimeSeries() {
     return (dispatch: Dispatch<UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
         const selectedDatasetId = selectedDatasetIdSelector(getState());
         const selectedDatasetTimeDim = selectedDatasetTimeDimensionSelector(getState());
         const selectedVariable = selectedDatasetVariableSelector(getState());
-        const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+        const selectedPlaceId = selectedPlaceIdSelector(getState());
         const selectedPlace = selectedPlaceSelector(getState())!;
-        const timeLabels = selectedDatasetTimeDim != null ? selectedDatasetTimeDim.labels : null;
+        const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
 
-        if (selectedDatasetId && selectedVariable && timeLabels !== null) {
+        const placeGroups = placeGroupsSelector(getState());
+
+        if (selectedDatasetId && selectedVariable && selectedPlaceId && selectedDatasetTimeDim) {
+            const timeLabels = selectedDatasetTimeDim.labels;
             const numTimeLabels = timeLabels.length;
             const timeChunkSize = 16;
             let endTimeIndex = numTimeLabels - 1;
@@ -130,20 +161,20 @@ export function addTimeSeries(placeId: string) {
                 return api.getTimeSeriesForGeometry(apiServer.url,
                                                     selectedDatasetId,
                                                     selectedVariable,
-                                                    placeId,
+                                                    selectedPlace.id,
                                                     selectedPlace.geometry,
                                                     startDateLabel,
                                                     endDateLabel);
             };
 
             const successAction = (timeSeries: TimeSeries | null) => {
-                if (timeSeries !== null && hasUserPlace(placeId)) {
+                if (timeSeries !== null && isValidPlace(placeGroups, selectedPlace.id)) {
                     const hasMore = startTimeIndex > 0;
                     const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
                     dispatch(updateTimeSeries({...timeSeries, dataProgress},
                                               timeSeriesUpdateMode,
                                               endTimeIndex === numTimeLabels - 1 ? 'new' : 'append'));
-                    if (hasMore && hasUserPlace(placeId)) {
+                    if (hasMore && isValidPlace(placeGroups, selectedPlace.id)) {
                         startTimeIndex -= timeChunkSize;
                         endTimeIndex -= timeChunkSize;
                         getTimeSeriesChunk().then(successAction);
@@ -162,14 +193,10 @@ export function addTimeSeries(placeId: string) {
     };
 }
 
-function hasUserPlace(placeId: string): boolean {
-    if (MAP_OBJECTS.userLayer) {
-        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
-        const source = userLayer.getSource();
-        return !!source.getFeatureById(placeId);
-    }
-    return false;
+function isValidPlace(placeGroups: PlaceGroup[], placeId: string) {
+    return findPlaceInPlaceGroups(placeGroups, placeId) !== null;
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -244,7 +271,6 @@ export function _configureServers(servers: Server[], selectedServerId: string): 
 }
 
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_COLOR_BARS = 'UPDATE_COLOR_BARS';
@@ -279,8 +305,10 @@ export type DataAction =
     UpdateDatasets
     | UpdateDatasetPlaceGroup
     | AddUserPlace
+    | RemoveUserPlace
+    | RemoveAllUserPlaces
     | UpdateTimeSeries
     | RemoveTimeSeriesGroup
     | RemoveAllTimeSeries
     | ConfigureServers
-| UpdateColorBars;
+    | UpdateColorBars;

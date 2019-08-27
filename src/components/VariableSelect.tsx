@@ -5,6 +5,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import BarChartIcon from '@material-ui/icons/BarChart';
 
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
@@ -21,12 +24,17 @@ const styles = (theme: Theme) => createStyles(
         selectEmpty: {
             marginTop: theme.spacing.unit * 2,
         },
+        button: {
+            margin: theme.spacing.unit * 0.1,
+        },
     });
 
 interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedVariableName: string | null;
+    canAddTimeSeries: boolean;
     variables: Variable[];
     selectVariable: (variableName: string | null) => void;
+    addTimeSeries: () => void;
 }
 
 class VariableSelect extends React.Component<VariableSelectProps> {
@@ -35,8 +43,12 @@ class VariableSelect extends React.Component<VariableSelectProps> {
         this.props.selectVariable(event.target.value || null);
     };
 
+    handleAddTimeSeriesButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+        this.props.addTimeSeries();
+    };
+
     render() {
-        const {classes} = this.props;
+        const {classes, canAddTimeSeries} = this.props;
 
         const selectedVariableName = this.props.selectedVariableName || '';
         const variables = this.props.variables || [];
@@ -53,6 +65,18 @@ class VariableSelect extends React.Component<VariableSelectProps> {
                     input={<Input name="variable" id="variable-select"/>}
                     displayEmpty
                     name="variable"
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                className={classes.button}
+                                disabled={!canAddTimeSeries}
+                                aria-label={I18N.get('Show time-series')}
+                                onClick={this.handleAddTimeSeriesButtonClick}
+                            >
+                                {<BarChartIcon/>}
+                            </IconButton>
+                        </InputAdornment>
+                    }
                 >
                     {variables.map(variable => (
                         <MenuItem

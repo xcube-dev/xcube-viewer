@@ -45,16 +45,14 @@ export type SELECT_PLACE_GROUPS = typeof SELECT_PLACE_GROUPS;
 export interface SelectPlaceGroups {
     type: SELECT_PLACE_GROUPS;
     selectedPlaceGroupIds: string[] | null;
-    // TODO: Having datasets in here is ugly, but we need it in the reducer.
-    datasets: Dataset[];
 }
 
-export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null, datasets: Dataset[]) {
+export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
 
     return (dispatch: Dispatch<SelectPlaceGroups | UpdateDatasetPlaceGroup | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        dispatch(_selectPlaceGroups(selectedPlaceGroupIds, datasets));
+        dispatch(_selectPlaceGroups(selectedPlaceGroupIds));
 
         const dataset = selectedDatasetSelector(getState());
         const placeGroups = selectedDatasetSelectedPlaceGroupsSelector(getState());
@@ -81,8 +79,8 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null, datase
     };
 }
 
-export function _selectPlaceGroups(selectedPlaceGroupIds: string[] | null, datasets: Dataset[]): SelectPlaceGroups {
-    return {type: SELECT_PLACE_GROUPS, selectedPlaceGroupIds, datasets};
+export function _selectPlaceGroups(selectedPlaceGroupIds: string[] | null): SelectPlaceGroups {
+    return {type: SELECT_PLACE_GROUPS, selectedPlaceGroupIds};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
