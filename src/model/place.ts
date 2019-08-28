@@ -28,16 +28,15 @@ export interface PlaceInfo {
 }
 
 
-export const DEFAULT_LABEL_PROPERTY_NAMES = ['label', 'LABEL', 'title', 'TITLE', 'name', 'NAME', 'id', 'ID'];
+export const DEFAULT_LABEL_PROPERTY_NAMES = ['label', 'LABEL', 'Label',
+                                             'title', 'TITLE', 'Title',
+                                             'name', 'NAME', 'Name',
+                                             'id', 'ID', 'Id'];
 
 export function forEachPlace(placeGroups: PlaceGroup[], callback: (placeGroup: PlaceGroup, place: Place, placeLabel: string) => void) {
     placeGroups.forEach(placeGroup => {
         if (isValidPlaceGroup(placeGroup)) {
             const labelPropNames = getPlaceGroupLabelPropertyNames(placeGroup);
-            const propertyMapping = placeGroup.propertyMapping;
-            if (propertyMapping && propertyMapping['label']) {
-                labelPropNames[0] = propertyMapping['label'];
-            }
             placeGroup.features.forEach((place: Place) => {
                 const placeLabel = getPlaceLabel(place, labelPropNames);
                 callback(placeGroup, place, placeLabel);
