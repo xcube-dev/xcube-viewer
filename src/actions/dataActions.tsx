@@ -25,8 +25,8 @@ import {
 import { Server } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, PlaceGroup } from '../model/place';
-import * as geojson from "geojson";
-import { placeGroupsSelector } from "../selectors/dataSelectors";
+import * as geojson from 'geojson';
+import { placeGroupsSelector } from '../selectors/dataSelectors';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,14 +95,7 @@ export interface AddUserPlace {
     geometry: geojson.Geometry;
 }
 
-export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry) {
-    return (dispatch: Dispatch<AddUserPlace>) => {
-        dispatch(_addUserPlace(id, label, color, geometry));
-        dispatch(addTimeSeries() as any);
-    };
-}
-
-function _addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry): AddUserPlace {
+export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry): AddUserPlace {
     return {type: ADD_USER_PLACE, id, label, color, geometry};
 }
 

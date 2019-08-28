@@ -60,11 +60,11 @@ const styles = (theme: Theme) => createStyles(
             }),
         },
         logo: {
-            marginLeft: theme.spacing.unit,
+            marginLeft: theme.spacing(1),
         },
         title: {
             flexGrow: 1,
-            marginLeft: theme.spacing.unit,
+            marginLeft: theme.spacing(1),
         },
         orangeAvatar: {
             margin: 10,

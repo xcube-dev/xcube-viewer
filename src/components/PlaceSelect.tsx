@@ -3,30 +3,29 @@ import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/s
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
+import ControlBarItem from './ControlBarItem';
 
 
 const styles = (theme: Theme) => createStyles(
     {
         formControl: {
-            marginRight: theme.spacing.unit * 2,
-            marginBottom: theme.spacing.unit,
+            marginRight: theme.spacing(2),
+            marginBottom: theme.spacing(1),
             minWidth: 120,
         },
-        selectEmpty: {
-            marginTop: theme.spacing.unit * 2,
-        },
         button: {
-            margin: theme.spacing.unit * 0.1,
+            // margin: theme.spacing(0.1),
+        },
+        margin: {
+            margin: theme.spacing(1),
         },
     });
 
@@ -56,55 +55,65 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
     };
 
     render() {
-        const {selectedPlaceGroupIds, classes} = this.props;
+        const {classes} = this.props;
 
         const places = this.props.places || [];
         const placeLabels = this.props.placeLabels || [];
         const selectedPlaceId = this.props.selectedPlaceId || '';
+        const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
 
         if (places.length === 0) {
             return null;
         }
 
+        const placeSelectLabel = (
+            <InputLabel
+                shrink
+                htmlFor="place-select"
+            >
+                {I18N.get('Place')}
+            </InputLabel>
+        );
+
+        const placeSelect = (
+            <Select
+                value={selectedPlaceId}
+                onChange={this.handlePlaceChange}
+                input={<Input name="place" id="place-select"/>}
+                displayEmpty
+                name="place"
+            >
+                {places.map((place, i) => (
+                    <MenuItem
+                        key={place.id}
+                        value={place.id}
+                        selected={place.id === selectedPlaceId}
+                    >
+                        {placeLabels[i]}
+                    </MenuItem>
+                ))}
+            </Select>
+        );
+
+        const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
+                              && selectedPlaceId !== '';
+        const placeRemoveButton = (
+            <IconButton
+                className={classes.button}
+                disabled={!removeEnabled}
+                aria-label={I18N.get('Delete place')}
+                onClick={this.handleRemoveButtonClick}
+            >
+                {<RemoveCircleIcon/>}
+            </IconButton>
+        );
+
         return (
-            <FormControl className={classes.formControl}>
-                <InputLabel
-                    shrink
-                    htmlFor="place-select"
-                >
-                    {I18N.get('Place')}
-                </InputLabel>
-                <Select
-                    value={selectedPlaceId}
-                    onChange={this.handlePlaceChange}
-                    input={<Input name="place" id="place-select"/>}
-                    displayEmpty
-                    name="place"
-                    className={classes.selectEmpty}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton
-                                className={classes.button}
-                                disabled={!selectedPlaceGroupIds || selectedPlaceGroupIds[0] !== 'user'}
-                                aria-label={I18N.get('Delete user place')}
-                                onClick={this.handleRemoveButtonClick}
-                            >
-                                {<RemoveCircleIcon/>}
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                >
-                    {places.map((place, i) => (
-                        <MenuItem
-                            key={place.id}
-                            value={place.id}
-                            selected={place.id === selectedPlaceId}
-                        >
-                            {placeLabels[i]}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            <ControlBarItem
+                label={placeSelectLabel}
+                control={placeSelect}
+                actions={placeRemoveButton}
+            />
         );
     }
 }

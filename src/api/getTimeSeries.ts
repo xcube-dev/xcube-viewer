@@ -18,7 +18,7 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
         method: 'post',
         body: JSON.stringify(geometry),
     };
-    const queryComponents: QueryComponent[] = [];
+    const queryComponents: QueryComponent[] = [['inclStDev', '1']];
     if (startDate) {
         queryComponents.push(['startDate', startDate]);
     }

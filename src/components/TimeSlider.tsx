@@ -13,8 +13,8 @@ import FormControl from "@material-ui/core/FormControl";
 const styles = (theme: Theme) => createStyles(
     {
         formControl: {
-            marginRight: theme.spacing.unit * 2,
-            marginBottom: theme.spacing.unit,
+            marginRight: theme.spacing(2),
+            marginBottom: theme.spacing(1),
             minWidth: 400,
         },
     }

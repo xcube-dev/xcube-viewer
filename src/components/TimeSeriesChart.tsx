@@ -14,8 +14,8 @@ import {
 } from 'recharts';
 import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import ZoomOutMap from '@material-ui/icons/ZoomOutMap';
-import Close from '@material-ui/icons/Close';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
@@ -40,15 +40,15 @@ const styles = (theme: Theme) => createStyles(
         },
         zoomOutButton: {
             position: 'absolute',
-            right: 8 * theme.spacing.unit,
-            margin: theme.spacing.unit,
+            right: 8 * theme.spacing(1),
+            margin: theme.spacing(1),
             zIndex: 1000,
             opacity: 0.8,
         },
         removeTimeSeriesGroup: {
             position: 'absolute',
-            right: theme.spacing.unit,
-            margin: theme.spacing.unit,
+            right: theme.spacing(1),
+            margin: theme.spacing(1),
             zIndex: 1000,
             opacity: 0.8,
         },
@@ -57,15 +57,15 @@ const styles = (theme: Theme) => createStyles(
             opacity: 0.8,
             color: 'white',
             border: '2px solid black',
-            borderRadius: theme.spacing.unit * 2,
-            padding: theme.spacing.unit * 1.5,
+            borderRadius: theme.spacing(2),
+            padding: theme.spacing(1.5),
         },
         toolTipValue: {
             fontWeight: 'bold',
         },
         toolTipLabel: {
             fontWeight: 'bold',
-            paddingBottom: theme.spacing.unit,
+            paddingBottom: theme.spacing(1),
         },
         chartTitle: {}
     });
@@ -220,7 +220,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     aria-label="Zoom Out"
                     onClick={this.handleZoomOutButtonClick}
                 >
-                    <ZoomOutMap/>
+                    <ZoomOutIcon/>
                 </IconButton>
             );
             actionButtons.push(zoomOutButton);
@@ -233,7 +233,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                 aria-label="Close"
                 onClick={this.handleRemoveTimeSeriesGroupClick}
             >
-                <Close/>
+                <CloseIcon/>
             </IconButton>
         );
         actionButtons.push(removeAllButton);
