@@ -57,30 +57,30 @@ describe('Database', () => {
         expect(i18n.locale).toEqual('de');
     });
 
-    it('can add', () => {
+    it('can replace parameter', () => {
         const i18n = new LanguageDictionary(JSON_CONTENT_1);
 
         const name = 'Bibo';
 
-        expect(i18n.get("Hello ${name}", {name})).toEqual('Hello Bibo!');
+        expect(i18n.get("Hello ${name}!", {name})).toEqual('Hello Bibo!');
 
         i18n.locale = 'en';
-        expect(i18n.get("Hello ${name}", {name})).toEqual('Hello Bibo!');
+        expect(i18n.get("Hello ${name}!", {name})).toEqual('Hello Bibo!');
 
         i18n.locale = 'es';
-        expect(i18n.get("Hello ${name}", {name})).toEqual('Hola Bibo!');
+        expect(i18n.get("Hello ${name}!", {name})).toEqual('Hola Bibo!');
 
         i18n.locale = 'de';
-        expect(i18n.get("Hello ${name}", {name})).toEqual('Hallo Bibo!');
+        expect(i18n.get("Hello ${name}!", {name})).toEqual('Hallo Bibo!');
 
         i18n.locale = 'it';
-        expect(i18n.get("Hello ${name}", {name})).toEqual('Ciao Bibo!');
+        expect(i18n.get("Hello ${name}!", {name})).toEqual('Ciao Bibo!');
 
         i18n.locale = 'ro';
-        expect(i18n.get("Hello ${name}", {name})).toEqual('Hello Bibo!');
+        expect(i18n.get("Hello ${name}!", {name})).toEqual('Ciao Bibo!');
     });
 
-    it('can deal with multiple parameters', () => {
+    it('can replace multiple parameters', () => {
         const i18n = new LanguageDictionary(JSON_CONTENT_2);
 
         i18n.locale = 'es';

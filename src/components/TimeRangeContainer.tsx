@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 const styles = (theme: Theme) => createStyles(
     {
         button: {
-            margin: theme.spacing.unit * 0.1,
+            margin: theme.spacing(0.1),
         },
         chartContainer: {
             width: '100%',

@@ -1,6 +1,6 @@
 import * as ol from 'openlayers';
 
-import { findDataset, findDatasetVariable, findDatasetPlace, getDatasetTimeRange } from '../model/dataset';
+import { findDataset, findDatasetVariable, getDatasetTimeRange, findDatasetOrUserPlace } from '../model/dataset';
 import { TimeRange } from "../model/timeSeries";
 import { ControlState, newControlState } from '../states/controlState';
 import {
@@ -10,9 +10,6 @@ import {
     SELECT_PLACE,
     SELECT_TIME,
     SELECT_TIME_SERIES_UPDATE_MODE,
-    SELECT_USER_PLACE,
-    ADD_GEOMETRY,
-    SELECT_GEOMETRY,
     ControlAction,
     SELECT_TIME_RANGE,
     UPDATE_VISIBLE_TIME_RANGE,
@@ -21,7 +18,7 @@ import {
     REMOVE_ACTIVITY,
     CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG, INC_SELECTED_TIME,
 } from '../actions/controlActions';
-import { CONFIGURE_SERVERS, DataAction } from "../actions/dataActions";
+import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE } from "../actions/dataActions";
 import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
@@ -62,17 +59,18 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         }
         case SELECT_PLACE_GROUPS: {
             const selectedPlaceGroupIds = action.selectedPlaceGroupIds;
+            const selectedPlaceId = null;
             return {
                 ...state,
                 selectedPlaceGroupIds,
+                selectedPlaceId,
             };
         }
         case SELECT_PLACE: {
             const selectedPlaceId = action.selectedPlaceId;
             let flyTo = state.flyTo;
             if (selectedPlaceId) {
-                const dataset = findDataset(action.datasets, state.selectedDatasetId)!;
-                const place = findDatasetPlace(dataset, selectedPlaceId);
+                const place = findDatasetOrUserPlace(action.datasets, action.userPlaceGroup, selectedPlaceId);
                 if (place !== null) {
                     if (place.bbox && place.bbox.length === 4) {
                         flyTo = place.bbox as [number, number, number, number];
@@ -91,12 +89,6 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             return {
                 ...state,
                 selectedVariableName: action.selectedVariableName,
-            };
-        }
-        case SELECT_USER_PLACE: {
-            return {
-                ...state,
-                selectedUserPlaceId: action.selectedUserPlaceId,
             };
         }
         case SELECT_TIME: {
@@ -171,16 +163,19 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                 timeAnimationInterval: action.timeAnimationInterval,
             };
         }
-        case ADD_GEOMETRY: {
+        case ADD_USER_PLACE: {
+            let selectedPlaceGroupIds;
+            if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
+                selectedPlaceGroupIds = ['user'];
+            } else if (state.selectedPlaceGroupIds.find(id => id === 'user')) {
+                selectedPlaceGroupIds = state.selectedPlaceGroupIds;
+            } else {
+                selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, 'user']
+            }
             return {
                 ...state,
-                selectedFeatureId: action.featureId,
-            };
-        }
-        case SELECT_GEOMETRY: {
-            return {
-                ...state,
-                selectedFeatureId: action.featureId,
+                selectedPlaceGroupIds,
+                selectedPlaceId: action.id,
             };
         }
         case ADD_ACTIVITY: {

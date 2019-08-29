@@ -1,28 +1,29 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+// import Card from '@material-ui/core/Card';
+// import CardContent from '@material-ui/core/CardContent';
+// import Typography from '@material-ui/core/Typography';
 
-import { WithLocale } from "../util/lang";
-import TimeSeriesChart from "./TimeSeriesChart";
-import { Time, TimeRange, TimeSeriesGroup } from "../model/timeSeries";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import TimeRangeSlider from "./TimeRangeSlider";
+import { WithLocale } from '../util/lang';
+import TimeSeriesChart from './TimeSeriesChart';
+import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
+import { PlaceInfo } from "../model/place";
+import TimeRangeSlider from './TimeRangeSlider';
 
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
         chartContainer: {
-            display: "flex",
-            flexDirection: "column",
-            flexWrap: "wrap",
-            flexFlow: "flex-start",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'wrap',
+            flexFlow: 'flex-start',
+            alignItems: 'center',
         },
         noChartsCard: {
-            width: "20em",
+            width: '20em',
         },
         noChartsTitle: {
             fontSize: 14,
@@ -43,20 +44,23 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
+    placeInfos?: { [placeId: string]: PlaceInfo };
 }
 
 class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
 
     render() {
-        const {classes, locale,
+        const {
+            classes, locale,
             timeSeriesGroups,
             selectedTime, selectedTimeRange,
             dataTimeRange, selectTime, selectTimeRange,
             removeTimeSeriesGroup,
             visibleTimeRange,
             updateVisibleTimeRange,
+            placeInfos
         }
-        = this.props;
+            = this.props;
         const charts = timeSeriesGroups.map(timeSeriesGroup => (
             <TimeSeriesChart
                 key={timeSeriesGroup.id}
@@ -68,6 +72,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 selectTime={selectTime}
                 selectTimeRange={selectTimeRange}
                 removeTimeSeriesGroup={removeTimeSeriesGroup}
+                placeInfos={placeInfos}
             />)
         );
         if (charts.length > 0) {
@@ -84,6 +89,8 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 </div>
             );
         } else {
+            return null;
+            /*
             return (
                 <div className={classes.chartContainer}>
                     <Card className={classes.noChartsCard}>
@@ -98,6 +105,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                     </Card>
                 </div>
             );
+            */
         }
     }
 }

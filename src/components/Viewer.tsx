@@ -3,8 +3,9 @@ import * as geojson from 'geojson';
 import * as ol from 'openlayers';
 
 import { newId } from '../util/id';
-import { MAP_OBJECTS } from "../states/controlState";
-import { USER_PLACES_COLOR_NAMES } from "../config";
+import { PlaceGroup } from '../model/place';
+import { MAP_OBJECTS } from '../states/controlState';
+import { I18N, USER_PLACES_COLOR_NAMES } from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
@@ -20,7 +21,8 @@ interface ViewerProps {
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    addGeometry?: (featureId: string, geometry: geojson.Geometry, color: string) => void;
+    addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
+    userPlaceGroup: PlaceGroup;
     selectFeatures?: (features: geojson.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
@@ -47,14 +49,14 @@ class Viewer extends React.Component<ViewerProps> {
     };
 
     handleDrawEnd = (event: DrawEvent) => {
-        const {addGeometry, drawMode} = this.props;
-        if (this.map !== null && addGeometry && drawMode) {
+        const {addUserPlace, drawMode, userPlaceGroup} = this.props;
+        if (this.map !== null && addUserPlace && drawMode) {
             const feature = event.feature;
-            const featureId = `Draw-${drawMode}-${newId()}`;
+            const placeId = `User-${drawMode}-${newId()}`;
             const projection = this.map.getView().getProjection();
             const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
             const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
-            feature.setId(featureId);
+            feature.setId(placeId);
             let colorIndex = 0;
             if (MAP_OBJECTS.userLayer) {
                 const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
@@ -62,10 +64,20 @@ class Viewer extends React.Component<ViewerProps> {
                 colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
             }
             const color = USER_PLACES_COLOR_NAMES[colorIndex];
-            if (drawMode === "Point") {
+            if (drawMode === 'Point') {
                 feature.setStyle(createCircleStyle(7, color));
             }
-            addGeometry(featureId, geoJSONGeometry as geojson.Geometry, color);
+
+            const nameBase = I18N.get(geoJSONGeometry.type);
+            let label: string;
+            for (let index = 1; ; index ++) {
+                label = `${nameBase} ${index}`;
+                if (!userPlaceGroup.features.find(p => (p.properties || {})['label'] === label)) {
+                    break;
+                }
+            }
+             
+            addUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry);
         }
         return true;
     };
@@ -86,6 +98,9 @@ class Viewer extends React.Component<ViewerProps> {
                 flyToTarget = ol.proj.transformExtent(flyToCurr, 'EPSG:4326', projection);
             } else {
                 flyToTarget = flyToCurr.transform('EPSG:4326', projection) as ol.geom.SimpleGeometry;
+                if (flyToTarget.getType() == 'Point') {
+                    flyToTarget = transformPointExtent(flyToTarget, projection);
+                }
             }
             map.getView().fit(flyToTarget, {size: map.getSize()});
         }
@@ -141,7 +156,7 @@ class Viewer extends React.Component<ViewerProps> {
 export default Viewer;
 
 
-function createCircleStyle(radius: number, fillColor: string, strokeColor: string = "white", strokeWidth: number = 1) {
+function createCircleStyle(radius: number, fillColor: string, strokeColor: string = 'white', strokeWidth: number = 1) {
     let fill = new ol.style.Fill(
         {
             color: fillColor,
@@ -158,3 +173,25 @@ function createCircleStyle(radius: number, fillColor: string, strokeColor: strin
         }
     );
 }
+
+
+function transformPointExtent(point: ol.geom.SimpleGeometry, projection: any): ol.Extent {
+    const extent = point.getExtent();
+    switch (projection.getUnits()) {
+        case 'degrees':
+            extent[0] -= 0.01;
+            extent[1] -= 0.01;
+            extent[2] += 0.01;
+            extent[3] += 0.01;
+            break;
+        case 'm': {
+            extent[0] -= 1000;
+            extent[1] -= 1000;
+            extent[2] += 1000;
+            extent[3] += 1000;
+            break;
+        }
+    }
+    return extent;
+}
+

@@ -35,10 +35,6 @@ const theme = createMuiTheme(
             primary: VIEWER_PRIMARY_COLOR,
             secondary: VIEWER_SECONDARY_COLOR,
         },
-        // see https://material-ui.com/style/typography/#migration-to-typography-v2
-        typography: {
-            useNextVariants: true,
-        },
     });
 
 // noinspection JSUnusedLocalSymbols

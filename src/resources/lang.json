@@ -71,6 +71,20 @@
       "se": "Variabel"
     },
     {
+      "en": "My places",
+      "de": "Meine Orte",
+      "it": "Miei posti",
+      "ro": "Locurile mele",
+      "se": "Mina platser"
+    },
+    {
+      "en": "Loading places",
+      "de": "Lade Orte",
+      "it": "Caricamento dei posti",
+      "ro": "Încărcarea locuri",
+      "se": "Laddar platser"
+    },
+    {
       "en": "Places",
       "de": "Orte",
       "it": "Posti",
@@ -92,6 +106,13 @@
       "se": "Tid"
     },
     {
+      "en": "Point",
+      "de": "Punkt",
+      "it": "Punto",
+      "ro": "Punct",
+      "se": "Punkt"
+    },
+    {
       "en": "Multi",
       "de": "Multi",
       "it": "Multi",
@@ -99,11 +120,11 @@
       "se": "Multi"
     },
     {
-      "en": "Something went wrong",
-      "de": "Irgendetwas lief schief",
-      "it": "Qualcosa è andato storto",
-      "ro": "Ceva n-a mers bine",
-      "se": "Något gick fel"
+      "en": "Something went wrong.",
+      "de": "Irgendetwas lief schief.",
+      "it": "Qualcosa è andato storto.",
+      "ro": "Ceva n-a mers bine.",
+      "se": "Något gick fel."
     },
     {
       "en": "Time-Series",
