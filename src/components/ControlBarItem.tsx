@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
-import Grid from '@material-ui/core/Grid';
 
 import { WithLocale } from '../util/lang';
+import Box from '@material-ui/core/Box';
 
 
 const styles = (theme: Theme) => createStyles(
-    {}
+    {
+        formControl: {
+            marginLeft: theme.spacing(1),
+            marginBottom: theme.spacing(0.2),
+        }
+    }
 );
 
 interface ControlBarItemProps extends WithStyles<typeof styles>, WithLocale {
@@ -19,46 +24,16 @@ interface ControlBarItemProps extends WithStyles<typeof styles>, WithLocale {
 class ControlBarItem extends React.Component<ControlBarItemProps> {
 
     render() {
-        const {label, control, actions} = this.props;
-
-        if (!!actions) {
-            return (
-                <FormControl>
-                    <Grid container>
-                        <Grid item container>
-                            <Grid item>
-                                {label}
-                            </Grid>
-                        </Grid>
-                        <Grid item container>
-                            <Grid item>
-                                {control}
-                            </Grid>
-                            <Grid item>
-                                {actions}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </FormControl>
-            );
-        } else {
-            return (
-                <FormControl>
-                    <Grid container>
-                        <Grid item container>
-                            <Grid item>
-                                {label}
-                            </Grid>
-                        </Grid>
-                        <Grid item container>
-                            <Grid item>
-                                {control}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </FormControl>
-            );
-        }
+        const {classes, label, control, actions} = this.props;
+        return (
+            <FormControl className={classes.formControl}>
+                <Box>
+                    {label}
+                    {control}
+                    {actions}
+                </Box>
+            </FormControl>
+        );
     }
 }
 
