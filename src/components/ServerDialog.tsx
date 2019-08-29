@@ -28,22 +28,22 @@ import { newId } from '../util/id';
 const styles = (theme: Theme) => createStyles(
     {
         formControl: {
-            marginLeft: theme.spacing.unit,
-            marginRight: theme.spacing.unit,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
             width: 200,
         },
         textField: {
-            marginLeft: theme.spacing.unit,
-            marginRight: theme.spacing.unit,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
             width: 200,
         },
         textField2: {
-            marginLeft: theme.spacing.unit,
-            marginRight: theme.spacing.unit,
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
             width: 400,
         },
         button: {
-            margin: 0.1 * theme.spacing.unit,
+            margin: 0.1 * theme.spacing(1),
         },
     });
 

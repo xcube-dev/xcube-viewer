@@ -12,13 +12,13 @@ import { I18N } from "../config";
 const styles = (theme: Theme) => createStyles(
     {
         progress: {
-            margin: theme.spacing.unit * 2,
+            margin: theme.spacing(2),
         },
         message: {
-            margin: theme.spacing.unit,
+            margin: theme.spacing(1),
         },
         contentContainer: {
-            margin: theme.spacing.unit,
+            margin: theme.spacing(1),
             textAlign: "center",
             display: "flex",
             alignItems: "center",

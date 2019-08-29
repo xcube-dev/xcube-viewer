@@ -2,7 +2,13 @@
 import * as React from 'react';
 import { createSelector } from 'reselect'
 import { AppState } from '../states/appState';
-import { datasetsSelector, colorBarsSelector, userServersSelector } from './dataSelectors';
+import {
+    datasetsSelector,
+    colorBarsSelector,
+    userServersSelector,
+    userPlaceGroupSelector,
+    timeSeriesGroupsSelector
+} from './dataSelectors';
 import * as ol from 'openlayers';
 
 import {
@@ -13,8 +19,13 @@ import {
     getDatasetTimeRange, TimeDimension
 } from '../model/dataset';
 import { Variable } from '../model/variable';
-import { getPlaceLabel, Place, PlaceGroup, LABEL_PROPERTY_NAMES, isValidPlaceGroup } from '../model/place';
-import { Time, TimeRange } from '../model/timeSeries';
+import {
+    Place,
+    PlaceGroup,
+    isValidPlaceGroup,
+    PlaceInfo, forEachPlace,
+} from '../model/place';
+import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
 import ColorBarLegend from '../components/ColorBarLegend';
 import { MapElement } from '../components/ol/Map';
 import { ColorBars } from '../model/colorBar';
@@ -28,6 +39,7 @@ import { Server } from "../model/server";
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
 export const selectedPlaceGroupIdsSelector = (state: AppState) => state.controlState.selectedPlaceGroupIds;
+export const selectedPlaceIdSelector = (state: AppState) => state.controlState.selectedPlaceId;
 export const selectedTimeSelector = (state: AppState) => state.controlState.selectedTime;
 export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
@@ -61,52 +73,119 @@ export const selectedDatasetPlaceGroupsSelector = createSelector(
     }
 );
 
-export const selectedDatasetSelectedPlaceGroupsSelector = createSelector(
+export const placeGroupsSelector = createSelector(
     selectedDatasetPlaceGroupsSelector,
-    selectedPlaceGroupIdsSelector,
-    (placeGroups: PlaceGroup[], placeGroupIds: string[] | null): PlaceGroup[] => {
-        const selectedPlaceGroups: PlaceGroup[] = [];
-        if (placeGroupIds !== null && placeGroupIds.length > 0) {
-            placeGroups.forEach(placeGroup => {
-                if (placeGroupIds.indexOf(placeGroup.id) > -1) {
-                    selectedPlaceGroups.push(placeGroup);
-                }
-            });
+    userPlaceGroupSelector,
+    (placeGroups: PlaceGroup[], userPlaceGroup: PlaceGroup): PlaceGroup[] => {
+        if (!userPlaceGroup.features || userPlaceGroup.features.length === 0) {
+            return placeGroups;
         }
-        return selectedPlaceGroups;
+        return placeGroups.concat([userPlaceGroup]);
     }
 );
 
-export const selectedDatasetSelectedPlaceGroupsTitleSelector = createSelector(
-    selectedDatasetSelectedPlaceGroupsSelector,
+function selectPlaceGroups(placeGroups: PlaceGroup[],
+                           placeGroupIds: string[] | null): PlaceGroup[] {
+    const selectedPlaceGroups: PlaceGroup[] = [];
+    if (placeGroupIds !== null && placeGroupIds.length > 0) {
+        placeGroups.forEach(placeGroup => {
+            if (placeGroupIds.indexOf(placeGroup.id) > -1) {
+                selectedPlaceGroups.push(placeGroup);
+            }
+        });
+    }
+    return selectedPlaceGroups;
+}
+
+export const selectedDatasetSelectedPlaceGroupsSelector = createSelector(
+    selectedDatasetPlaceGroupsSelector,
+    selectedPlaceGroupIdsSelector,
+    selectPlaceGroups
+);
+
+export const selectedPlaceGroupsSelector = createSelector(
+    placeGroupsSelector,
+    selectedPlaceGroupIdsSelector,
+    selectPlaceGroups
+);
+
+export const selectedPlaceGroupsTitleSelector = createSelector(
+    selectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): string => {
         return placeGroups.map(placeGroup => placeGroup.title || placeGroup.id).join(', ');
     }
 );
 
-export const selectedDatasetSelectedPlaceGroupPlacesSelector = createSelector(
-    selectedDatasetSelectedPlaceGroupsSelector,
+export const selectedPlaceGroupPlacesSelector = createSelector(
+    selectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): Place[] => {
         const args = placeGroups.map(placeGroup => (isValidPlaceGroup(placeGroup) ? placeGroup.features : []) as Place[]);
         return ([] as Array<Place>).concat(...args);
     }
 );
 
-export const selectedDatasetSelectedPlaceGroupPlaceLabelsSelector = createSelector(
-    selectedDatasetSelectedPlaceGroupsSelector,
-    (placeGroups: PlaceGroup[]): string[] => {
-        const labelPropNames = ['__placeholder__', ...LABEL_PROPERTY_NAMES];
-        let labels: string[] = [];
-        placeGroups.forEach(placeGroup => {
-            const propertyMapping = placeGroup.propertyMapping;
-            if (propertyMapping && propertyMapping['label']) {
-                labelPropNames[0] = propertyMapping['label'];
+
+export const selectedPlaceSelector = createSelector(
+    selectedPlaceGroupPlacesSelector,
+    selectedPlaceIdSelector,
+    (places: Place[], placeId: string | null): Place | null => {
+        return places.find(place => place.id === placeId) || null;
+    }
+);
+
+
+export const canAddTimeSeriesSelector = createSelector(
+    timeSeriesGroupsSelector,
+    selectedDatasetIdSelector,
+    selectedVariableNameSelector,
+    selectedPlaceIdSelector,
+    (timeSeriesGroups: TimeSeriesGroup[],
+     datasetId: string | null,
+     variableName: string | null,
+     placeId: string | null): boolean => {
+        if (!datasetId || !variableName || !placeId) {
+            return false;
+        }
+        for (let timeSeriesGroup of timeSeriesGroups) {
+            for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
+                const source = timeSeries.source;
+                if (source.datasetId === datasetId
+                    && source.variableName === variableName
+                    && source.placeId === placeId) {
+                    return false;
+                }
             }
-            if (isValidPlaceGroup(placeGroup)) {
-                labels = labels.concat(placeGroup.features.map((place: Place) => getPlaceLabel(place, labelPropNames)));
+        }
+        return true;
+    }
+);
+
+export const timeSeriesPlaceInfosSelector = createSelector(
+    timeSeriesGroupsSelector,
+    placeGroupsSelector,
+    (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
+        const placeInfos = {};
+        forEachPlace(placeGroups, (placeGroup, place, placeLabel) => {
+            for (let timeSeriesGroup of timeSeriesGroups) {
+                if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {
+                    placeInfos[place.id] = {placeGroup, place, placeLabel};
+                    break;
+                }
             }
         });
-        return labels;
+        return placeInfos;
+    }
+);
+
+
+export const selectedPlaceGroupPlaceLabelsSelector = createSelector(
+    selectedPlaceGroupsSelector,
+    (placeGroups: PlaceGroup[]): string[] => {
+        const placeLabels: string[] = [];
+        forEachPlace(placeGroups, (placeGroup, place, placeLabel) => {
+            placeLabels.push(placeLabel);
+        });
+        return placeLabels;
     }
 );
 

@@ -2,10 +2,11 @@ import { connect } from 'react-redux';
 
 import PlaceGroupsSelect from "../components/PlaceGroupsSelect";
 import { AppState } from '../states/appState';
+import { removeAllUserPlaces } from '../actions/dataActions';
 import { selectPlaceGroups } from '../actions/controlActions';
 import {
-    selectedDatasetPlaceGroupsSelector,
-    selectedDatasetSelectedPlaceGroupsTitleSelector
+    placeGroupsSelector,
+    selectedPlaceGroupsTitleSelector
 } from '../selectors/controlSelectors';
 
 
@@ -13,16 +14,15 @@ const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
 
-        datasets: state.dataState.datasets,
-
         selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        placeGroups: selectedDatasetPlaceGroupsSelector(state),
-        selectedPlaceGroupsTitle: selectedDatasetSelectedPlaceGroupsTitleSelector(state),
+        placeGroups: placeGroupsSelector(state),
+        selectedPlaceGroupsTitle: selectedPlaceGroupsTitleSelector(state),
     };
 };
 
 const mapDispatchToProps = {
     selectPlaceGroups,
+    removeAllUserPlaces,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaceGroupsSelect);

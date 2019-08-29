@@ -1,5 +1,5 @@
 import { Variable } from './variable';
-import { isValidPlaceGroup, Place, PlaceGroup } from './place';
+import { findPlaceInPlaceGroup, findPlaceInPlaceGroups, Place, PlaceGroup } from './place';
 import { TimeRange } from './timeSeries';
 import {
     assertArrayNotEmpty,
@@ -50,33 +50,15 @@ export function findDatasetPlace(dataset: Dataset, placeId: string | null): Plac
     return (placeId && dataset.placeGroups && findPlaceInPlaceGroups(dataset.placeGroups, placeId)) || null;
 }
 
-export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: string | null): Place | null {
-    if (placeId) {
-        for (let placeGroup of placeGroups) {
-            const place = findPlaceInPlaceGroup(placeGroup, placeId);
-            if (place !== null) {
-                return place;
-            }
-        }
+export function findDatasetOrUserPlace(datasets: Dataset[], userPlaceGroup: PlaceGroup, placeId: string): Place | null {
+    const place = findPlaceInPlaceGroup(userPlaceGroup, placeId);
+    if (place) {
+        return place;
     }
-    return null;
-}
-
-export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | null): Place | null {
-    if (!placeId || !isValidPlaceGroup(placeGroup)) {
-        return null;
-    }
-    const place = placeGroup.features.find(place => place.id === placeId);
-    if (!!place) {
-        return place as Place;
-    }
-    let subPlaceGroups = placeGroup.placeGroups;
-    if (subPlaceGroups) {
-        for (let parentPlaceId in subPlaceGroups) {
-            const place = findPlaceInPlaceGroup(subPlaceGroups[parentPlaceId], placeId);
-            if (!!place) {
-                return place;
-            }
+    for (let dataset of datasets) {
+        const place = findDatasetPlace(dataset, placeId);
+        if (place !== null) {
+            return place;
         }
     }
     return null;

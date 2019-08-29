@@ -12,7 +12,7 @@ import TimeRangeContainer from "./TimeRangeContainer";
 const styles = (theme: Theme) => createStyles(
     {
         button: {
-            margin: theme.spacing.unit * 0.1,
+            margin: theme.spacing(0.1),
         },
     }
 );

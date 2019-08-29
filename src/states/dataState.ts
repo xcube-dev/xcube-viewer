@@ -1,9 +1,9 @@
-import { Dataset, } from '../model/dataset';
+import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup, } from '../model/place';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { Server } from "../model/server";
-import { VIEWER_API_SERVERS } from "../config";
+import { I18N, VIEWER_API_SERVERS } from "../config";
 import { getLocalStorage } from "../util/storage";
 
 
@@ -11,7 +11,7 @@ export interface DataState {
     datasets: Dataset[];
     colorBars: ColorBars | null;
     timeSeriesGroups: TimeSeriesGroup[];
-    userPlaces: PlaceGroup;
+    userPlaceGroup: PlaceGroup;
     userServers: Server[];
 }
 
@@ -27,7 +27,12 @@ export function newDataState(): DataState {
         datasets: [],
         colorBars: null,
         timeSeriesGroups: [],
-        userPlaces: {id: 'user', title: 'My places', type: "FeatureCollection", features: [] as Array<Place>},
+        userPlaceGroup: {
+            id: 'user',
+            title: I18N.get('My places'),
+            type: "FeatureCollection",
+            features: [] as Array<Place>
+        },
         userServers,
     };
 }
@@ -37,7 +42,7 @@ export function storeUserServers(userServers: Server[]) {
     if (storage) {
         let userServersJson = JSON.stringify(userServers);
         try {
-            storage.setItem("xcube.userServers", userServersJson);
+            storage.setItem('xcube.userServers', userServersJson);
         } catch (e) {
             console.warn(`failed to store user servers: ${e}`);
         }
@@ -49,7 +54,7 @@ export function loadUserServers(): Server[] {
     if (storage) {
         let userServersJson;
         try {
-            userServersJson = storage.getItem("xcube.userServers");
+            userServersJson = storage.getItem('xcube.userServers');
         } catch (e) {
             console.warn(`failed to store user servers: ${e}`);
         }
@@ -59,6 +64,3 @@ export function loadUserServers(): Server[] {
     }
     return [];
 }
-
-
-

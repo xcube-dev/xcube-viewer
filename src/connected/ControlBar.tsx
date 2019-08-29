@@ -9,7 +9,7 @@ import PlaceGroupsSelect from './PlaceGroupsSelect';
 import PlaceSelect from './PlaceSelect';
 import TimeSelect from './TimeSelect';
 import TimeSlider from './TimeSlider';
-import TimeSeriesModeSelect from './TimeSeriesModeSelect';
+// import TimeSeriesModeSelect from './TimeSeriesModeSelect';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -30,7 +30,7 @@ class _ControlBar extends React.Component {
                 <PlaceSelect/>
                 <TimeSelect/>
                 <TimeSlider/>
-                <TimeSeriesModeSelect/>
+                {/*<TimeSeriesModeSelect/>*/}
             </ControlBar>
         );
     }

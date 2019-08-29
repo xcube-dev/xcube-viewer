@@ -37,7 +37,7 @@ const styles = (theme: Theme) => createStyles(
             width: '50%',
             overflowX: 'hidden',
             overflowY: 'auto',
-            paddingLeft: theme.spacing.unit,
+            paddingLeft: theme.spacing(1),
             [theme.breakpoints.down('md')]: {
                 width: '100%',
                 paddingLeft: 0,

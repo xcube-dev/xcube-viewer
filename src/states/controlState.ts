@@ -12,7 +12,6 @@ export interface ControlState {
     selectedTime: Time | null;
     selectedTimeRange: TimeRange | null;
     visibleTimeRange: TimeRange | null;
-    selectedFeatureId: string | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: 'add' | 'replace';
     timeAnimationActive: boolean;
@@ -34,7 +33,6 @@ export function newControlState(): ControlState {
         selectedTime: null,
         selectedTimeRange: null,
         visibleTimeRange: null,
-        selectedFeatureId: null,
         selectedDrawMode: 'Point',
         timeSeriesUpdateMode: 'add',
         timeAnimationActive: false,

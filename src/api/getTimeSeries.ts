@@ -2,37 +2,28 @@ import * as geojson from 'geojson';
 
 import { Variable } from '../model/variable';
 import { TimeSeries } from '../model/timeSeries';
-import { callJsonApi } from './callApi';
+import { callJsonApi, QueryComponent } from './callApi';
 
 
 export function getTimeSeriesForGeometry(apiServerUrl: string,
                                          datasetId: string,
                                          variable: Variable,
-                                         featureId: string,
+                                         placeId: string,
                                          geometry: geojson.Geometry,
                                          startDate: string | null,
                                          endDate: string | null): Promise<TimeSeries | null> {
 
-    let url;
-    let queryComponents: Array<[string, string]> | undefined;
-    if (geometry.type === "Point") {
-        const point = geometry as geojson.Point;
-        const coordinate = point.coordinates as [number, number];
-        url = apiServerUrl + `/ts/${datasetId}/${variable.name}/point`;
-        queryComponents = [
-            ['lon', `${coordinate[0]}`],
-            ['lat', `${coordinate[1]}`]
-        ];
-        if (startDate) {
-            queryComponents.push(['startDate', startDate]);
-        }
-        if (endDate) {
-            queryComponents.push(['endDate', endDate]);
-        }
+    const url = apiServerUrl + `/ts/${datasetId}/${variable.name}/geometry`;
+    const init = {
+        method: 'post',
+        body: JSON.stringify(geometry),
+    };
+    const queryComponents: QueryComponent[] = [['inclStDev', '1']];
+    if (startDate) {
+        queryComponents.push(['startDate', startDate]);
     }
-    if (!url) {
-        console.warn(`geometry type not yet supported for time series: "${geometry.type}"`);
-        return Promise.resolve(null);
+    if (endDate) {
+        queryComponents.push(['endDate', endDate]);
     }
 
     const convertTimeSeriesResult = (result: { [name: string]: any }) => {
@@ -47,12 +38,12 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
             datasetId,
             variableName: variable.name,
             variableUnits: variable.units || undefined,
-            featureId,
+            placeId,
             geometry,
         };
         return {source, data, color: "green"};
     };
 
-    return callJsonApi<TimeSeries>(url, queryComponents)
+    return callJsonApi<TimeSeries>(url, queryComponents, init)
         .then(convertTimeSeriesResult);
 }
