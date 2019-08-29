@@ -1,14 +1,19 @@
 import * as React from 'react';
+import DateFnsUtils from '@date-io/date-fns';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
-import Input from '@material-ui/core/Input';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDateTimePicker,
+} from '@material-ui/pickers';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { dateTimeStringToUtcTime, utcTimeToLocalDateTimeString } from '../util/time';
+import { dateTimeStringToUtcTime, /*dateTimeStringToUtcTime,*/ utcTimeToLocalDateTimeString } from '../util/time';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
@@ -16,19 +21,7 @@ import ControlBarItem from './ControlBarItem';
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
-    {
-        formControl: {
-            marginRight: theme.spacing(2),
-            marginBottom: theme.spacing(1),
-            minWidth: 120,
-        },
-        button: {
-            margin: theme.spacing(0.1),
-        },
-        textField: {
-            width: '15em',
-        },
-    }
+    {}
 );
 
 interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
@@ -55,9 +48,8 @@ class TimeSelect extends React.Component<TimeSelectProps> {
         updateTimeAnimation(!timeAnimationActive, timeAnimationInterval);
     };
 
-    private handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedTimeString = event.target.value;
-        this.props.selectTime(selectedTimeString ? dateTimeStringToUtcTime(selectedTimeString) : null);
+    private handleTimeChange = (date: MaterialUiPickersDate | null, value?: string | null) => {
+        this.props.selectTime(value ? dateTimeStringToUtcTime(value!) : null);
     };
 
     private playOrNor() {
@@ -93,7 +85,7 @@ class TimeSelect extends React.Component<TimeSelectProps> {
     }
 
     render() {
-        let {classes, selectedTime, timeAnimationActive} = this.props;
+        let {selectedTime, timeAnimationActive} = this.props;
 
         const timeInputLabel = (
             <InputLabel
@@ -107,13 +99,19 @@ class TimeSelect extends React.Component<TimeSelectProps> {
         const timeText = isValid ? utcTimeToLocalDateTimeString(selectedTime!) : '?';
 
         const timeInput = (
-            <Input
-                id='time-select'
-                type='text'
-                value={timeText}
-                className={classes.textField}
-                onChange={this.handleTimeChange}
-            />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDateTimePicker
+                    disableToolbar
+                    variant="inline"
+                    format="yyyy-MM-dd hh:mm:ss"
+                    id="time-select"
+                    value={timeText}
+                    onChange={this.handleTimeChange}
+                    KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                    }}
+                />
+            </MuiPickersUtilsProvider>
         );
 
         const playToolTip = I18N.get(timeAnimationActive ? 'Stop' : 'Start');
@@ -121,7 +119,6 @@ class TimeSelect extends React.Component<TimeSelectProps> {
 
         const playButton = (
             <IconButton
-                className={classes.button}
                 disabled={!isValid}
                 aria-label={playToolTip}
                 onClick={this.handlePlayButtonClick}
