@@ -112,6 +112,7 @@ class TimeSelect extends React.Component<TimeSelectProps> {
 
         const timeInputLabel = (
             <InputLabel
+                shrink
                 htmlFor="time-select"
             >
                 {I18N.get('Time')}
