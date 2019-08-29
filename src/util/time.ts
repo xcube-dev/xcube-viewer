@@ -41,5 +41,5 @@ export function utcTimeToLocalIsoDateTimeString(utcTime: number, skipSeconds?: b
         // Should always end up here!
         isoString = isoString.substr(0, isoString.length - 1);
     }
-    return isoString; //.replace("T", " ");
+    return isoString.replace("T", " ");
 }

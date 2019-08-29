@@ -1,21 +1,24 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-
-const Slider = require('material-ui-slider').Slider;
+import FormControl from "@material-ui/core/FormControl";
+import Slider, { Mark } from "@material-ui/core/Slider";
 
 import { Time, TimeRange, UNIT } from '../model/timeSeries';
-import TimeRangeContainer from "./TimeRangeContainer";
-import FormControl from "@material-ui/core/FormControl";
+import {
+    utcTimeToLocalDateTimeString,
+    utcTimeToLocalIsoDateString,
+} from "../util/time";
 
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
         formControl: {
-            marginRight: theme.spacing(2),
-            marginBottom: theme.spacing(1),
-            minWidth: 400,
+            marginTop: theme.spacing(3),
+            marginLeft: theme.spacing(6),
+            marginRight: theme.spacing(6),
+            minWidth: 300,
         },
     }
 );
@@ -33,66 +36,69 @@ interface TimeSliderState {
 }
 
 class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
-    state: TimeSliderState;
 
     constructor(props: TimeSliderProps) {
         super(props);
-        this.state = {selectedTime: this.props.selectedTime};
+        this.state = {
+            selectedTime: props.selectedTime
+        };
     }
 
-    componentDidUpdate(prevProps: Readonly<TimeSliderProps>, prevState: Readonly<TimeSliderState>): void {
-        let selectedTime = this.props.selectedTime;
-        if (selectedTime !== prevProps.selectedTime) {
-            this.setState({selectedTime});
+    componentWillUpdate(nextProps: Readonly<TimeSliderProps>, nextState: Readonly<TimeSliderState>) {
+        if (nextProps.selectedTime !== this.props.selectedTime
+            && nextState.selectedTime === this.state.selectedTime) {
+            this.setState({selectedTime: this.props.selectedTime});
         }
     }
 
-    handleSliderChange = (selectedTime: Time) => {
-        this.setState({selectedTime});
-    };
-
-    handleChangeComplete = (selectedTime: Time) => {
-        if (this.props.selectTime) {
-            this.props.selectTime(selectedTime);
+    handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        if (typeof value === 'number') {
+            this.setState({selectedTime: value});
         }
     };
 
-    handleSelectedTimeRangeChange = (selectedTimeRange: TimeRange) => {
-        if (this.props.selectTimeRange) {
-            this.props.selectTimeRange([selectedTimeRange[0], selectedTimeRange[1]]);
+    handleChangeCommitted = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        if (this.props.selectTime && typeof value === 'number') {
+            this.props.selectTime(value as number);
         }
     };
 
     render() {
-        let {classes, visibleTimeRange, selectedTimeRange, selectedTime} = this.props;
+        let {classes, visibleTimeRange, selectedTimeRange} = this.props;
 
-        let visibleDataRange = Array.isArray(visibleTimeRange);
-        if (!visibleDataRange) {
+        let visibleTimeRangeValid = Array.isArray(visibleTimeRange);
+        if (!visibleTimeRangeValid) {
             visibleTimeRange = [Date.now() - 2 * UNIT.years, Date.now()];
         }
-        if (!Array.isArray(selectedTimeRange)) {
+        let selectedTimeRangeValid = Array.isArray(selectedTimeRange);
+        if (!selectedTimeRangeValid) {
             selectedTimeRange = visibleTimeRange;
+        }
+
+        const selectedTime = this.state.selectedTime || selectedTimeRange![0];
+
+        const marks: Mark[] = [
+            {value: selectedTimeRange![0], label: utcTimeToLocalIsoDateString(selectedTimeRange![0])},
+            {value: selectedTimeRange![1], label: utcTimeToLocalIsoDateString(selectedTimeRange![1])},
+        ];
+
+        function valueLabelFormat(value: number) {
+            return utcTimeToLocalDateTimeString(value);
         }
 
         return (
             <FormControl className={classes.formControl}>
-                <TimeRangeContainer
-                    min={visibleTimeRange![0]}
-                    max={visibleTimeRange![1]}
-                    step={UNIT.weeks}
-                    value={selectedTimeRange || null}
-                    onChange={this.handleSelectedTimeRangeChange}
-                    disabled={!visibleDataRange}
-                >
-                    <Slider
-                        disabled={!visibleDataRange}
-                        min={selectedTimeRange![0]}
-                        max={selectedTimeRange![1]}
-                        value={selectedTime}
-                        onChange={this.handleSliderChange}
-                        onChangeComplete={this.handleChangeComplete}
-                    />
-                </TimeRangeContainer>
+                <Slider
+                    disabled={!visibleTimeRangeValid}
+                    min={selectedTimeRange![0]}
+                    max={selectedTimeRange![1]}
+                    value={selectedTime}
+                    valueLabelDisplay="off"
+                    valueLabelFormat={valueLabelFormat}
+                    marks={marks}
+                    onChange={this.handleChange}
+                    onChangeCommitted={this.handleChangeCommitted}
+                />
             </FormControl>
         );
     }

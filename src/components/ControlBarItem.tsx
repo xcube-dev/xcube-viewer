@@ -10,6 +10,7 @@ const styles = (theme: Theme) => createStyles(
     {
         formControl: {
             marginRight: theme.spacing(1),
+            minWidth: theme.spacing(10),
         }
     }
 );

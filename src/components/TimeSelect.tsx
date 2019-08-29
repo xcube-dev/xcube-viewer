@@ -17,7 +17,7 @@ import {
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { dateTimeStringToUtcTime, /*dateTimeStringToUtcTime,*/ utcTimeToLocalDateTimeString } from '../util/time';
+import { dateTimeStringToUtcTime, utcTimeToLocalIsoDateTimeString } from '../util/time';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
@@ -75,7 +75,7 @@ class TimeSelect extends React.Component<TimeSelectProps> {
         this.props.selectTime(selectedTimeRange ? selectedTimeRange[1] : null);
     };
 
-    private playOrNor() {
+    private playOrNot() {
         if (this.props.timeAnimationActive) {
             this.installTimer();
         } else {
@@ -96,11 +96,11 @@ class TimeSelect extends React.Component<TimeSelectProps> {
     };
 
     componentDidMount(): void {
-        this.playOrNor();
+        this.playOrNot();
     }
 
     componentDidUpdate(): void {
-        this.playOrNor();
+        this.playOrNot();
     }
 
     componentWillUnmount(): void {
@@ -120,7 +120,7 @@ class TimeSelect extends React.Component<TimeSelectProps> {
         );
 
         const isValid = typeof selectedTime === 'number';
-        const timeText = isValid ? utcTimeToLocalDateTimeString(selectedTime!) : '?';
+        const timeText = isValid ? utcTimeToLocalIsoDateTimeString(selectedTime!) : '?';
 
         const timeInput = (
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
