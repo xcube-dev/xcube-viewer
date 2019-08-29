@@ -9,8 +9,7 @@ import Box from '@material-ui/core/Box';
 const styles = (theme: Theme) => createStyles(
     {
         formControl: {
-            marginLeft: theme.spacing(1),
-            marginBottom: theme.spacing(0.2),
+            marginRight: theme.spacing(1),
         }
     }
 );
