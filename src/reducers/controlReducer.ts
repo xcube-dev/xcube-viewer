@@ -1,7 +1,6 @@
 import * as ol from 'openlayers';
 
 import { findDataset, findDatasetVariable, getDatasetTimeRange, findDatasetOrUserPlace } from '../model/dataset';
-import { TimeRange } from "../model/timeSeries";
 import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
@@ -12,7 +11,6 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     ControlAction,
     SELECT_TIME_RANGE,
-    UPDATE_VISIBLE_TIME_RANGE,
     UPDATE_TIME_ANIMATION,
     ADD_ACTIVITY,
     REMOVE_ACTIVITY,
@@ -45,14 +43,12 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             }
             const selectedDatasetId = action.selectedDatasetId;
             const selectedTimeRange = getDatasetTimeRange(dataset);
-            const visibleTimeRange: TimeRange | null = selectedTimeRange ? [selectedTimeRange[0], selectedTimeRange[1]] : null;
             const selectedTime = selectedTimeRange ? selectedTimeRange[1] : null;
             return {
                 ...state,
                 selectedDatasetId,
                 selectedVariableName,
                 selectedTimeRange,
-                visibleTimeRange,
                 selectedTime,
                 flyTo,
             };
@@ -142,12 +138,6 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             return {
                 ...state,
                 selectedTimeRange: action.selectedTimeRange,
-            };
-        }
-        case UPDATE_VISIBLE_TIME_RANGE: {
-            return {
-                ...state,
-                visibleTimeRange: action.visibleTimeRange,
             };
         }
         case SELECT_TIME_SERIES_UPDATE_MODE: {

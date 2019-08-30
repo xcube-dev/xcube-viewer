@@ -15,7 +15,6 @@
     "@material-ui/pickers": "^3.2.4",
     "classnames": "^2.2.6",
     "date-fns": "^2.0.1",
-    "material-ui-slider": "^3.0.8",
     "openlayers": "^4.6.5",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

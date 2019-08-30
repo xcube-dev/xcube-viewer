@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-import FormControl from "@material-ui/core/FormControl";
+import Box from "@material-ui/core/Box";
 import Slider, { Mark } from "@material-ui/core/Slider";
 
 import { Time, TimeRange, UNIT } from '../model/timeSeries';
@@ -10,15 +10,16 @@ import {
     utcTimeToLocalIsoDateString,
 } from "../util/time";
 
+const HOR_MARGIN = 5;
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
-        formControl: {
-            marginTop: theme.spacing(3),
-            marginLeft: theme.spacing(6),
-            marginRight: theme.spacing(6),
-            minWidth: 300,
+        box: {
+            marginTop: theme.spacing(2),
+            marginLeft: theme.spacing(HOR_MARGIN),
+            marginRight: theme.spacing(HOR_MARGIN),
+            minWidth: 200,
         },
     }
 );
@@ -28,7 +29,6 @@ interface TimeSliderProps extends WithStyles<typeof styles> {
     selectTime?: (time: Time | null) => void;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
-    visibleTimeRange?: TimeRange | null;
 }
 
 interface TimeSliderState {
@@ -36,6 +36,7 @@ interface TimeSliderState {
 }
 
 class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
+    state: TimeSliderState;
 
     constructor(props: TimeSliderProps) {
         super(props);
@@ -44,11 +45,9 @@ class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
         };
     }
 
-    componentWillUpdate(nextProps: Readonly<TimeSliderProps>, nextState: Readonly<TimeSliderState>) {
-        if (nextProps.selectedTime !== this.props.selectedTime
-            && nextState.selectedTime === this.state.selectedTime) {
-            this.setState({selectedTime: this.props.selectedTime});
-        }
+    // noinspection JSUnusedGlobalSymbols
+    static getDerivedStateFromProps(nextProps: Readonly<TimeSliderProps>) {
+        return {selectedTime: nextProps.selectedTime};
     }
 
     handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
@@ -64,15 +63,11 @@ class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
     };
 
     render() {
-        let {classes, visibleTimeRange, selectedTimeRange} = this.props;
+        let {classes, selectedTimeRange} = this.props;
 
-        let visibleTimeRangeValid = Array.isArray(visibleTimeRange);
-        if (!visibleTimeRangeValid) {
-            visibleTimeRange = [Date.now() - 2 * UNIT.years, Date.now()];
-        }
         let selectedTimeRangeValid = Array.isArray(selectedTimeRange);
         if (!selectedTimeRangeValid) {
-            selectedTimeRange = visibleTimeRange;
+            selectedTimeRange = [Date.now() - 2 * UNIT.years, Date.now()];
         }
 
         const selectedTime = this.state.selectedTime || selectedTimeRange![0];
@@ -87,9 +82,9 @@ class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
         }
 
         return (
-            <FormControl className={classes.formControl}>
+            <Box className={classes.box}>
                 <Slider
-                    disabled={!visibleTimeRangeValid}
+                    disabled={!selectedTimeRangeValid}
                     min={selectedTimeRange![0]}
                     max={selectedTimeRange![1]}
                     value={selectedTime}
@@ -99,7 +94,7 @@ class TimeSlider extends React.Component<TimeSliderProps, TimeSliderState> {
                     onChange={this.handleChange}
                     onChangeCommitted={this.handleChangeCommitted}
                 />
-            </FormControl>
+            </Box>
         );
     }
 }

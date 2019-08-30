@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-// import Card from '@material-ui/core/Card';
-// import CardContent from '@material-ui/core/CardContent';
-// import Typography from '@material-ui/core/Typography';
 
 import { WithLocale } from '../util/lang';
 import TimeSeriesChart from './TimeSeriesChart';
@@ -40,8 +37,6 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
-    visibleTimeRange?: TimeRange | null;
-    updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
     placeInfos?: { [placeId: string]: PlaceInfo };
@@ -56,8 +51,6 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             selectedTime, selectedTimeRange,
             dataTimeRange, selectTime, selectTimeRange,
             removeTimeSeriesGroup,
-            visibleTimeRange,
-            updateVisibleTimeRange,
             placeInfos
         }
             = this.props;
@@ -82,8 +75,6 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                         selectedTimeRange={selectedTimeRange}
                         dataTimeRange={dataTimeRange}
                         selectTimeRange={selectTimeRange}
-                        visibleTimeRange={visibleTimeRange}
-                        updateVisibleTimeRange={updateVisibleTimeRange}
                     />
                     {charts}
                 </div>

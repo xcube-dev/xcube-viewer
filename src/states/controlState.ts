@@ -11,7 +11,6 @@ export interface ControlState {
     selectedServerId: string;
     selectedTime: Time | null;
     selectedTimeRange: TimeRange | null;
-    visibleTimeRange: TimeRange | null;
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: 'add' | 'replace';
     timeAnimationActive: boolean;
@@ -32,7 +31,6 @@ export function newControlState(): ControlState {
         selectedServerId: VIEWER_DEFAULT_API_SERVER.id,
         selectedTime: null,
         selectedTimeRange: null,
-        visibleTimeRange: null,
         selectedDrawMode: 'Point',
         timeSeriesUpdateMode: 'add',
         timeAnimationActive: false,
