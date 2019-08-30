@@ -5,9 +5,7 @@ import { Theme } from '@material-ui/core';
 import { WithLocale } from '../util/lang';
 import TimeSeriesChart from './TimeSeriesChart';
 import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-// import Card from '@material-ui/core/Card';
-// import CardContent from '@material-ui/core/CardContent';
-// import Typography from '@material-ui/core/Typography';
+import { PlaceInfo } from "../model/place";
 import TimeRangeSlider from './TimeRangeSlider';
 
 
@@ -39,10 +37,9 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
-    visibleTimeRange?: TimeRange | null;
-    updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
+    placeInfos?: { [placeId: string]: PlaceInfo };
 }
 
 class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
@@ -54,8 +51,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             selectedTime, selectedTimeRange,
             dataTimeRange, selectTime, selectTimeRange,
             removeTimeSeriesGroup,
-            visibleTimeRange,
-            updateVisibleTimeRange,
+            placeInfos
         }
             = this.props;
         const charts = timeSeriesGroups.map(timeSeriesGroup => (
@@ -69,6 +65,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 selectTime={selectTime}
                 selectTimeRange={selectTimeRange}
                 removeTimeSeriesGroup={removeTimeSeriesGroup}
+                placeInfos={placeInfos}
             />)
         );
         if (charts.length > 0) {
@@ -78,8 +75,6 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                         selectedTimeRange={selectedTimeRange}
                         dataTimeRange={dataTimeRange}
                         selectTimeRange={selectTimeRange}
-                        visibleTimeRange={visibleTimeRange}
-                        updateVisibleTimeRange={updateVisibleTimeRange}
                     />
                     {charts}
                 </div>

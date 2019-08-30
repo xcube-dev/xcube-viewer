@@ -3,8 +3,9 @@ import * as geojson from 'geojson';
 import * as ol from 'openlayers';
 
 import { newId } from '../util/id';
+import { PlaceGroup } from '../model/place';
 import { MAP_OBJECTS } from '../states/controlState';
-import { USER_PLACES_COLOR_NAMES } from '../config';
+import { I18N, USER_PLACES_COLOR_NAMES } from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
@@ -20,7 +21,8 @@ interface ViewerProps {
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    addGeometry?: (featureId: string, geometry: geojson.Geometry, color: string) => void;
+    addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
+    userPlaceGroup: PlaceGroup;
     selectFeatures?: (features: geojson.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
@@ -47,14 +49,14 @@ class Viewer extends React.Component<ViewerProps> {
     };
 
     handleDrawEnd = (event: DrawEvent) => {
-        const {addGeometry, drawMode} = this.props;
-        if (this.map !== null && addGeometry && drawMode) {
+        const {addUserPlace, drawMode, userPlaceGroup} = this.props;
+        if (this.map !== null && addUserPlace && drawMode) {
             const feature = event.feature;
-            const featureId = `Draw-${drawMode}-${newId()}`;
+            const placeId = `User-${drawMode}-${newId()}`;
             const projection = this.map.getView().getProjection();
             const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
             const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
-            feature.setId(featureId);
+            feature.setId(placeId);
             let colorIndex = 0;
             if (MAP_OBJECTS.userLayer) {
                 const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
@@ -65,7 +67,17 @@ class Viewer extends React.Component<ViewerProps> {
             if (drawMode === 'Point') {
                 feature.setStyle(createCircleStyle(7, color));
             }
-            addGeometry(featureId, geoJSONGeometry as geojson.Geometry, color);
+
+            const nameBase = I18N.get(geoJSONGeometry.type);
+            let label: string;
+            for (let index = 1; ; index ++) {
+                label = `${nameBase} ${index}`;
+                if (!userPlaceGroup.features.find(p => (p.properties || {})['label'] === label)) {
+                    break;
+                }
+            }
+             
+            addUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry);
         }
         return true;
     };

@@ -1,18 +1,23 @@
 import * as React from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-
-const Slider = require('material-ui-slider').Slider;
+import Slider, { Mark } from "@material-ui/core/Slider";
+import Box from "@material-ui/core/Box";
 
 import { TimeRange, UNIT } from '../model/timeSeries';
-import TimeRangeContainer from "./TimeRangeContainer";
+import { utcTimeToLocalIsoDateString } from "../util/time";
 
+const HOR_MARGIN = 5;
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
-        button: {
-            margin: theme.spacing.unit * 0.1,
+        box: {
+            marginTop: theme.spacing(2),
+            marginLeft: theme.spacing(HOR_MARGIN),
+            marginRight: theme.spacing(HOR_MARGIN),
+            minWidth: 300,
+            width: `calc(100% - ${theme.spacing(2 * (HOR_MARGIN + 1))}px)`,
         },
     }
 );
@@ -21,7 +26,6 @@ interface TimeRangeSliderProps extends WithStyles<typeof styles> {
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
-    visibleTimeRange?: TimeRange | null;
     updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
@@ -37,60 +41,49 @@ class TimeRangeSlider extends React.Component<TimeRangeSliderProps, TimeRangeSli
         this.state = {selectedTimeRange: this.props.selectedTimeRange};
     }
 
-    componentDidUpdate(prevProps: Readonly<TimeRangeSliderProps>, prevState: Readonly<TimeRangeSliderState>): void {
-        let selectedTimeRange = this.props.selectedTimeRange;
-        if (selectedTimeRange !== prevProps.selectedTimeRange) {
-            if (selectedTimeRange) {
-                selectedTimeRange = [selectedTimeRange[0], selectedTimeRange[1]];
-            }
-            this.setState({selectedTimeRange});
-        }
+    // noinspection JSUnusedGlobalSymbols
+    static getDerivedStateFromProps(nextProps: Readonly<TimeRangeSliderProps>) {
+        return {selectedTimeRange: nextProps.selectedTimeRange || null};
     }
 
-    handleSliderChange = (selectedTimeRange: TimeRange) => {
-        this.setState({selectedTimeRange: [selectedTimeRange[0], selectedTimeRange[1]]});
-    };
-
-    handleChangeComplete = (selectedTimeRange: TimeRange) => {
-        if (this.props.selectTimeRange) {
-            this.props.selectTimeRange([selectedTimeRange[0], selectedTimeRange[1]]);
+    handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        if (Array.isArray(value)) {
+            this.setState({selectedTimeRange: [value[0], value[1]]});
         }
     };
 
-    handleVisibleTimeRangeChange = (selectedTimeRange: TimeRange) => {
-        if (this.props.updateVisibleTimeRange) {
-            this.props.updateVisibleTimeRange([selectedTimeRange[0], selectedTimeRange[1]]);
+    handleChangeCommitted = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        if (this.props.selectTimeRange && Array.isArray(value)) {
+            this.props.selectTimeRange([value[0], value[1]]);
         }
     };
+
 
     render() {
-        let {dataTimeRange, visibleTimeRange, selectedTimeRange} = this.props;
+        let {classes, dataTimeRange, selectedTimeRange} = this.props;
 
         const dataTimeRangeValid = Array.isArray(dataTimeRange);
         if (!dataTimeRangeValid) {
             dataTimeRange = [Date.now() - 2 * UNIT.years, Date.now()];
         }
-        if (!Array.isArray(visibleTimeRange)) {
-            visibleTimeRange = dataTimeRange;
-        }
+
+        const marks: Mark[] = [
+            {value: dataTimeRange![0], label: utcTimeToLocalIsoDateString(dataTimeRange![0])},
+            {value: dataTimeRange![1], label: utcTimeToLocalIsoDateString(dataTimeRange![1])},
+        ];
 
         return (
-            <TimeRangeContainer
-                min={dataTimeRange![0]}
-                max={dataTimeRange![1]}
-                step={UNIT.weeks + 4}
-                value={visibleTimeRange || null}
-                onChange={this.handleVisibleTimeRangeChange}>
+            <Box className={classes.box}>
                 <Slider
-                    range
                     disabled={!dataTimeRangeValid}
-                    min={visibleTimeRange![0]}
-                    max={visibleTimeRange![1]}
-                    value={selectedTimeRange}
-                    onChange={this.handleSliderChange}
-                    onChangeComplete={this.handleChangeComplete}
+                    min={dataTimeRange![0]}
+                    max={dataTimeRange![1]}
+                    value={selectedTimeRange || undefined}
+                    marks={marks}
+                    onChange={this.handleChange}
+                    onChangeCommitted={this.handleChangeCommitted}
                 />
-            </TimeRangeContainer>
+            </Box>
         );
     }
 }

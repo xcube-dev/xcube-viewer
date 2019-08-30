@@ -1,6 +1,9 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Users can now generate time series for any selected variable and any selected place. (#46 and #50)
+  User places can now be also removed, which will remove related time series too.
+  Removing time series, on the other hand, does no longer remove user added places.
 * Removed dummy app bar icons ("Notifications", "Avatar") and menu entry ("Settings...")
 * Place groups dropdown menus are no longer displayed if a dataset has no 
   place groups and the places dropdown is no longer shown if no place group is selected. 
