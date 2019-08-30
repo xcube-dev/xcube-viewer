@@ -11,7 +11,7 @@ const LABEL_CONTAINER_STYLE = {
     paddingBottom: '0.5em',
 } as React.CSSProperties;
 
-const LEGEND_CONTAINER_STYLE = {padding: '0.5em'} as React.CSSProperties;
+const LEGEND_CONTAINER_STYLE: React.CSSProperties = {padding: '0.5em', color: 'black'};
 
 interface ColorBarLegendProps {
     name: string;
