@@ -15,6 +15,7 @@ import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } fr
 import AppMenu from '../components/AppMenu';
 import LanguageDialog from './LanguageDialog';
 import ServerDialog from './ServerDialog';
+import SettingsDialog from './SettingsDialog';
 import { openDialog } from '../actions/controlActions';
 
 
@@ -123,6 +124,7 @@ class _AppBar extends React.Component<AppBarProps, AppBarState> {
                 />
                 <LanguageDialog/>
                 <ServerDialog/>
+                <SettingsDialog/>
             </AppBar>
         );
     }
