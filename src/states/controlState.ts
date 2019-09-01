@@ -2,6 +2,10 @@ import * as ol from 'openlayers';
 import { Time, TimeRange } from '../model/timeSeries';
 import { VIEWER_DEFAULT_API_SERVER } from '../config';
 
+export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
+export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000, 2500];
+
+
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
@@ -14,7 +18,10 @@ export interface ControlState {
     selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: 'add' | 'replace';
     timeAnimationActive: boolean;
-    timeAnimationInterval: number;
+    timeAnimationInterval: TimeAnimationInterval;
+    autoShowTimeSeries: boolean;
+    showTimeSeriesPointsOnly: boolean;
+    showTimeSeriesErrorBars: boolean;
     flyTo: ol.geom.SimpleGeometry | ol.Extent | null;
     activities: { [id: string]: string };
     locale: string;
@@ -35,6 +42,9 @@ export function newControlState(): ControlState {
         timeSeriesUpdateMode: 'add',
         timeAnimationActive: false,
         timeAnimationInterval: 1000,
+        autoShowTimeSeries: false,
+        showTimeSeriesPointsOnly: false,
+        showTimeSeriesErrorBars: true,
         flyTo: null,
         activities: {},
         locale: 'en',
@@ -45,4 +55,4 @@ export function newControlState(): ControlState {
 // We cannot keep "MAP_OBJECTS" in control state object, because these objects are (1) not serializable
 // and (2) logging actions will cause the browsers to crash
 
-export const MAP_OBJECTS: {[id: string]: ol.Object} = {};
+export const MAP_OBJECTS: { [id: string]: ol.Object } = {};

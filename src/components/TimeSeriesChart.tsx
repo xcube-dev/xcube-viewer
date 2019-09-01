@@ -14,7 +14,7 @@ import {
 } from 'recharts';
 import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import AllOutIcon from '@material-ui/icons/AllOut';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
@@ -81,6 +81,9 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
 
+    showPointsOnly: boolean;
+    showErrorBars: boolean;
+
     selectTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
@@ -109,7 +112,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     render() {
         const {
             classes, timeSeriesGroup, selectedTime, selectedTimeRange,
-            dataTimeRange, theme, placeInfos
+            dataTimeRange, theme, placeInfos, showErrorBars, showPointsOnly,
         } = this.props;
 
         const strokeShade = theme.palette.type === 'light' ? LINE_CHART_STROKE_SHADE_LIGHT_THEME : LINE_CHART_STROKE_SHADE_DARK_THEME;
@@ -159,15 +162,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     }
                     if (time1Ok && time2Ok) {
                         data.push(point);
-                    }
-                    // noinspection SuspiciousTypeOfGuard
-                    if ((typeof point.uncertainty) === 'number') {
-                        hasErrorBars = true;
+                        // noinspection SuspiciousTypeOfGuard
+                        if ((typeof point.uncertainty) === 'number') {
+                            hasErrorBars = true;
+                        }
                     }
                 }
             });
             let errorBar;
-            if (hasErrorBars) {
+            if (showErrorBars && hasErrorBars) {
                 errorBar = (
                     <ErrorBar
                         dataKey="uncertainty"
@@ -185,11 +188,10 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     unit={source.variableUnits}
                     data={data}
                     dataKey="average"
-                    connectNulls={true}
                     dot={true}
-                    stroke={USER_PLACES_COLORS[lineColor][strokeShade]}
-                    strokeWidth={3 * (ts.dataProgress || 1)}
                     activeDot={true}
+                    stroke={showPointsOnly ? '#00000000' : USER_PLACES_COLORS[lineColor][strokeShade]}
+                    strokeWidth={3 * (ts.dataProgress || 1)}
                     isAnimationActive={ts.dataProgress === 1.0}
                     onClick={() => this.handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
                 >{errorBar}</Line>
@@ -220,7 +222,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     aria-label="Zoom Out"
                     onClick={this.handleZoomOutButtonClick}
                 >
-                    <ZoomOutIcon/>
+                    <AllOutIcon/>
                 </IconButton>
             );
             actionButtons.push(zoomOutButton);

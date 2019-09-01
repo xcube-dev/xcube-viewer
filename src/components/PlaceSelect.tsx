@@ -5,7 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import IconButton from '@material-ui/core/IconButton';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
@@ -104,7 +104,7 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
                 aria-label={I18N.get('Delete place')}
                 onClick={this.handleRemoveButtonClick}
             >
-                {<RemoveCircleIcon/>}
+                {<RemoveCircleOutlineIcon/>}
             </IconButton>
         );
 

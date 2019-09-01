@@ -14,7 +14,11 @@ import {
     UPDATE_TIME_ANIMATION,
     ADD_ACTIVITY,
     REMOVE_ACTIVITY,
-    CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG, INC_SELECTED_TIME,
+    CHANGE_LOCALE,
+    OPEN_DIALOG,
+    CLOSE_DIALOG,
+    INC_SELECTED_TIME,
+    UPDATE_SETTINGS,
 } from '../actions/controlActions';
 import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE } from "../actions/dataActions";
 import { I18N } from "../config";
@@ -30,6 +34,8 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         state = newControlState();
     }
     switch (action.type) {
+        case UPDATE_SETTINGS:
+            return action.settings;
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;
             const dataset = findDataset(action.datasets, action.selectedDatasetId)!;

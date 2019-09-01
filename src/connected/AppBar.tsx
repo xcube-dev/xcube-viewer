@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
-import MoreVert from '@material-ui/icons/MoreVert';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 // import { AppBar, Toolbar, Typography, IconButton, Badge } from '@material-ui/core';
@@ -12,8 +12,6 @@ import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import { AppState } from '../states/appState';
 import logo from '../resources/logo.png';
 import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
-import AppMenu from '../components/AppMenu';
-import LanguageDialog from './LanguageDialog';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import { openDialog } from '../actions/controlActions';
@@ -24,9 +22,6 @@ interface AppBarProps extends WithStyles<typeof styles> {
     openDialog: (dialogId: string) => void;
 }
 
-interface AppBarState {
-    appMenuAnchorElement: HTMLElement | null;
-}
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
@@ -74,26 +69,10 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-class _AppBar extends React.Component<AppBarProps, AppBarState> {
+class _AppBar extends React.Component<AppBarProps> {
 
-    constructor(props: AppBarProps) {
-        super(props);
-        this.state = {appMenuAnchorElement: null};
-    }
-
-    handleAppMenuClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
-        this.setState({appMenuAnchorElement: event.currentTarget});
-    };
-
-    handleAppMenuItemSelect = (itemId: string | null) => {
-        this.setState({appMenuAnchorElement: null});
-        if (itemId === 'language') {
-            this.props.openDialog('language');
-        } else if (itemId === 'server') {
-            this.props.openDialog('server');
-        } else if (itemId === 'settings') {
-            this.props.openDialog('settings');
-        }
+    handleSettingsButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+        this.props.openDialog('settings');
     };
 
     render() {
@@ -114,15 +93,10 @@ class _AppBar extends React.Component<AppBarProps, AppBarState> {
                     {/*</Badge>*/}
                     {/*</IconButton>*/}
                     {/*<Avatar className={classes.orangeAvatar}>CL</Avatar>*/}
-                    <IconButton onClick={this.handleAppMenuClicked}>
-                        <MoreVert/>
+                    <IconButton onClick={this.handleSettingsButtonClicked}>
+                        <SettingsApplicationsIcon/>
                     </IconButton>
                 </Toolbar>
-                <AppMenu
-                    itemSelect={this.handleAppMenuItemSelect}
-                    anchorElement={this.state.appMenuAnchorElement}
-                />
-                <LanguageDialog/>
                 <ServerDialog/>
                 <SettingsDialog/>
             </AppBar>

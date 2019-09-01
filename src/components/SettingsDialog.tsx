@@ -1,86 +1,180 @@
-import React, { FunctionComponent } from 'react';
+import React, { ChangeEvent, FunctionComponent } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Divider from '@material-ui/core/Divider';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
+import List from "@material-ui/core/List";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import { I18N } from "../config";
+import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from "../states/controlState";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import { Server } from "../model/server";
 
 
-const useStyles = makeStyles(
-    {
-        title: {},
-        paper: {
-            padding: 8,
+const useStyles = makeStyles(theme => ({
+        settingsPanelTitle: {
+            marginBottom: theme.spacing(1),
         },
-        label: {},
-        value: {},
-        settingsPanel: {
-            marginBottom: 8,
+        settingsPanelPaper: {
+            backgroundFill: theme.palette.primary.light,
+            marginBottom: theme.spacing(2),
         },
-        subSettingsPanel: {
-            marginTop: 8,
-            marginBottom: 8,
+        settingsPanelList: {
+            margin: 0,
+        },
+        settingsPanelListItem: {},
+
+        textField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            fontSize: theme.typography.fontSize / 2
+        },
+
+        localeAvatar: {
+            margin: 10,
         }
     }
-);
+));
 
 interface SettingsDialogProps {
     open: boolean;
-    scroll: 'paper' | 'body';
     closeDialog: (dialogId: string) => void;
+
+    settings: ControlState;
+    selectedServer: Server;
+    updateSettings: (settings: ControlState) => void;
+    changeLocale: (locale: string) => void;
+    openDialog: (dialogId: string) => void;
 }
 
-export default function SettingsDialog(props: SettingsDialogProps) {
-    // const classes = useStyles();
+export default function SettingsDialog({open, closeDialog, settings, selectedServer, updateSettings, changeLocale, openDialog}: SettingsDialogProps) {
+    const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
+    const classes = useStyles();
 
-    const handleClose = () => {
-        props.closeDialog('settings');
-    };
+    if (!open) {
+        return null;
+    }
+
+    function handleCloseDialog() {
+        closeDialog('settings');
+    }
+
+    function handleOpenServerDialog() {
+        openDialog('server');
+    }
+
+    function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLSelectElement>) {
+        updateSettings({...settings, timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
+    }
+
+    const localeMenuItems = Object.getOwnPropertyNames(I18N.languages).map(langLocale => {
+        const langName = I18N.languages[langLocale];
+        return (
+            <MenuItem
+                button
+                key={langLocale}
+                selected={langLocale === settings.locale}
+                onClick={() => changeLocale(langLocale)}
+            >
+                <ListItemText primary={langName}/>
+            </MenuItem>
+        );
+    });
+
+    function handleLanguageMenuOpen(event: any) {
+        setLanguageMenuAnchor(event.currentTarget);
+    }
+
+    function handleLanguageMenuClose() {
+        setLanguageMenuAnchor(null);
+    }
 
     return (
         <div>
             <Dialog
-                open={props.open}
-                onClose={handleClose}
-                scroll={props.scroll}
-                aria-labelledby="scroll-dialog-title"
+                open={open}
+                fullWidth
+                maxWidth={'sm'}
+                onClose={handleCloseDialog}
+                scroll='body'
             >
-                <DialogTitle id="scroll-dialog-title">Settings</DialogTitle>
+                <DialogTitle>{I18N.get('Settings')}</DialogTitle>
                 <DialogContent>
 
                     <SettingsPanel title={'General'}>
-                        <SettingsSubPanel label={'Player interval'} value={'500 ms'}>
-                            <TextField defaultValue={'500'}/>
+                        <SettingsSubPanel
+                            label={I18N.get('Server')}
+                            value={selectedServer.name}
+                            onClick={handleOpenServerDialog}>
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={'Auto-open time-series chart'} value={'Off'}>
-                            <Switch defaultChecked={false}/>
+                        <SettingsSubPanel
+                            label={I18N.get('Language')}
+                            value={I18N.languages[settings.locale]}
+                            onClick={handleLanguageMenuOpen}>
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={I18N.get('Player time interval')}>
+                            <TextField
+                                select
+                                className={classes.textField}
+                                value={settings.timeAnimationInterval}
+                                onChange={handleTimeAnimationIntervalChange}
+                                margin="normal"
+                            >
+                                {TIME_ANIMATION_INTERVALS.map(value => (
+                                    <MenuItem key={value} value={value}>{value + ' ms'}</MenuItem>
+                                ))}
+                            </TextField>
                         </SettingsSubPanel>
                     </SettingsPanel>
 
-                    <SettingsPanel title={'Time-series'}>
-                        <SettingsSubPanel label={'Connect points by lines'} value={'On'}>
-                            <Switch defaultChecked={true}/>
+                    <SettingsPanel title={I18N.get('Time series')}>
+                        <SettingsSubPanel label={I18N.get('Draw graph after adding a point')}
+                                          value={getOnOff(settings.autoShowTimeSeries)}>
+                            <ToggleSetting
+                                propertyName={'autoShowTimeSeries'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={'Show standard deviation (error bars)'} value={'Off'}>
-                            <Switch defaultChecked={false}/>
+                        <SettingsSubPanel label={I18N.get('Show data points only')}
+                                          value={getOnOff(settings.showTimeSeriesPointsOnly)}>
+                            <ToggleSetting
+                                propertyName={'showTimeSeriesPointsOnly'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
                         </SettingsSubPanel>
-                    </SettingsPanel>
-
-                    <SettingsPanel title={'Other'}>
-                        <SettingsSubPanel label={'Server'} value={'DCS4COP'}>
-                        </SettingsSubPanel>
-                        <SettingsSubPanel label={'Language'} value={'English'}>
+                        <SettingsSubPanel label={I18N.get('Show error bars')}
+                                          value={getOnOff(settings.showTimeSeriesErrorBars)}>
+                            <ToggleSetting
+                                propertyName={'showTimeSeriesErrorBars'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
                         </SettingsSubPanel>
                     </SettingsPanel>
 
                 </DialogContent>
             </Dialog>
+
+            <Menu
+                anchorEl={languageMenuAnchor}
+                keepMounted
+                open={Boolean(languageMenuAnchor)}
+                onClose={handleLanguageMenuClose}
+            >
+                {localeMenuItems}
+            </Menu>
+
         </div>
     );
 }
@@ -94,21 +188,23 @@ const SettingsPanel: FunctionComponent<SettingsPanelProps> = (props) => {
 
     const childCount = React.Children.count(props.children);
 
-    const children: React.ReactNode[] = [];
+    const listItems: React.ReactNode[] = [];
     React.Children.forEach(props.children, (child: React.ReactNode, index: number) => {
-        children.push(child);
+        listItems.push(child);
         if (index < childCount - 1) {
-            children.push(<Divider/>);
+            listItems.push(<Divider key={childCount + index} variant="fullWidth" component="li"/>);
         }
     });
 
     return (
-        <Box className={classes.settingsPanel}>
-            <Typography variant='h6' className={classes.title}>
+        <Box>
+            <Typography variant='body1' className={classes.settingsPanelTitle}>
                 {props.title}
             </Typography>
-            <Paper className={classes.paper}>
-                {children}
+            <Paper className={classes.settingsPanelPaper}>
+                <List component="nav" dense={true} className={classes.settingsPanelList}>
+                    {listItems}
+                </List>
             </Paper>
         </Box>
     );
@@ -117,44 +213,58 @@ const SettingsPanel: FunctionComponent<SettingsPanelProps> = (props) => {
 interface SettingsSubPanelProps {
     label: string;
     value?: string | number;
+    onClick?: (event: any) => void;
 }
 
 const SettingsSubPanel: FunctionComponent<SettingsSubPanelProps> = (props) => {
     const classes = useStyles();
 
-    const labelElement = (
-        <Typography variant='body1' className={classes.label}>
-            {props.label}
-        </Typography>
-    );
+    const listItemText = (<ListItemText primary={props.label} secondary={props.value}/>);
 
-    let valueElement;
-    if (props.value) {
-        valueElement = (
-            <Typography variant='body2' color="textSecondary" className={classes.value}>
-                {props.value}
-            </Typography>
-        );
-    }
-
+    let listItemSecondaryAction;
     if (props.children) {
-        return (
-            <Grid container className={classes.subSettingsPanel}>
-                <Grid item>
-                    {labelElement}
-                    {valueElement}
-                </Grid>
-                <Grid item>
-                    {props.children}
-                </Grid>
-            </Grid>
-        );
-    } else {
-        return (
-            <Box className={classes.subSettingsPanel}>
-                {labelElement}
-                {valueElement}
-            </Box>
+        listItemSecondaryAction = (
+            <ListItemSecondaryAction>
+                {props.children}
+            </ListItemSecondaryAction>
         );
     }
+
+    if (!!props.onClick) {
+        return (
+            <ListItem button onClick={props.onClick} className={classes.settingsPanelListItem}>
+                {listItemText}
+                {listItemSecondaryAction}
+            </ListItem>
+        );
+    }
+
+    return (
+        <ListItem className={classes.settingsPanelListItem}>
+            {listItemText}
+            {listItemSecondaryAction}
+        </ListItem>
+    );
 };
+
+
+interface ToggleSettingProps {
+    propertyName: string;
+    settings: ControlState;
+    updateSettings: (settings: ControlState) => void;
+}
+
+const ToggleSetting = (props: ToggleSettingProps) => {
+    const {propertyName, settings, updateSettings} = props;
+    return (
+        <Switch
+            checked={settings[propertyName]}
+            onChange={() => updateSettings({...settings, [propertyName]: !props.settings[propertyName]})}
+        />
+    );
+};
+
+const getOnOff = (state: boolean) => {
+    return state ? I18N.get('On') : I18N.get('Off');
+};
+

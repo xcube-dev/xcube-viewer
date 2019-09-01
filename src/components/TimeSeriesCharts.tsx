@@ -34,6 +34,9 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     selectedTime?: Time | null;
     selectTime?: (time: Time | null) => void;
 
+    showPointsOnly: boolean;
+    showErrorBars: boolean;
+
     dataTimeRange?: TimeRange | null;
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
@@ -50,10 +53,9 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             timeSeriesGroups,
             selectedTime, selectedTimeRange,
             dataTimeRange, selectTime, selectTimeRange,
-            removeTimeSeriesGroup,
+            removeTimeSeriesGroup, showPointsOnly, showErrorBars,
             placeInfos
-        }
-            = this.props;
+        } = this.props;
         const charts = timeSeriesGroups.map(timeSeriesGroup => (
             <TimeSeriesChart
                 key={timeSeriesGroup.id}
@@ -65,6 +67,8 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 selectTime={selectTime}
                 selectTimeRange={selectTimeRange}
                 removeTimeSeriesGroup={removeTimeSeriesGroup}
+                showPointsOnly={showPointsOnly}
+                showErrorBars={showErrorBars}
                 placeInfos={placeInfos}
             />)
         );

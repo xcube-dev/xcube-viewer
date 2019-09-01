@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 
 import { PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
@@ -105,7 +105,7 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
                 aria-label={I18N.get('Delete all places')}
                 onClick={this.handleRemoveButtonClick}
             >
-                {<RemoveCircleIcon/>}
+                {<RemoveCircleOutlineIcon/>}
             </IconButton>
         );
 

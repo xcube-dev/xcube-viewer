@@ -2,18 +2,23 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
 import SettingsDialog from '../components/SettingsDialog';
-import { closeDialog } from '../actions/controlActions';
+import { changeLocale, closeDialog, openDialog, updateSettings } from '../actions/controlActions';
+import { selectedServerSelector } from "../selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
         open: state.controlState.dialogOpen['settings'],
-        scroll: 'body',
+        settings: state.controlState,
+        selectedServer: selectedServerSelector(state),
     };
 };
 
 const mapDispatchToProps = {
     closeDialog,
+    updateSettings,
+    changeLocale,
+    openDialog,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsDialog);

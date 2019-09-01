@@ -16,6 +16,7 @@ import {
 } from './dataActions';
 import { isValidPlaceGroup, PlaceGroup } from '../model/place';
 import { I18N } from '../config';
+import { ControlState, TimeAnimationInterval } from "../states/controlState";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -180,10 +181,10 @@ export type UPDATE_TIME_ANIMATION = typeof UPDATE_TIME_ANIMATION;
 export interface UpdateTimeAnimation {
     type: UPDATE_TIME_ANIMATION;
     timeAnimationActive: boolean;
-    timeAnimationInterval: number;
+    timeAnimationInterval: TimeAnimationInterval;
 }
 
-export function updateTimeAnimation(timeAnimationActive: boolean, timeAnimationInterval: number): UpdateTimeAnimation {
+export function updateTimeAnimation(timeAnimationActive: boolean, timeAnimationInterval: TimeAnimationInterval): UpdateTimeAnimation {
     return {type: UPDATE_TIME_ANIMATION, timeAnimationActive, timeAnimationInterval};
 }
 
@@ -260,6 +261,20 @@ export function closeDialog(dialogId: string): CloseDialog {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
+export type UPDATE_SETTINGS = typeof UPDATE_SETTINGS;
+
+export interface UpdateSettings {
+    type: UPDATE_SETTINGS;
+    settings: ControlState;
+}
+
+export function updateSettings(settings: ControlState): UpdateSettings {
+    return {type: UPDATE_SETTINGS, settings};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
     SelectDataset
     | UpdateDatasetPlaceGroup
@@ -274,5 +289,6 @@ export type ControlAction =
     | AddActivity
     | RemoveActivity
     | ChangeLocale
+    | UpdateSettings
     | OpenDialog
     | CloseDialog;

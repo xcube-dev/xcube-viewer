@@ -11,14 +11,15 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
                                          placeId: string,
                                          geometry: geojson.Geometry,
                                          startDate: string | null,
-                                         endDate: string | null): Promise<TimeSeries | null> {
+                                         endDate: string | null,
+                                         inclStDev: boolean): Promise<TimeSeries | null> {
 
     const url = apiServerUrl + `/ts/${datasetId}/${variable.name}/geometry`;
     const init = {
         method: 'post',
         body: JSON.stringify(geometry),
     };
-    const queryComponents: QueryComponent[] = [['inclStDev', '1']];
+    const queryComponents: QueryComponent[] = [['inclStDev', inclStDev ? '1' : '0']];
     if (startDate) {
         queryComponents.push(['startDate', startDate]);
     }

@@ -91,11 +91,13 @@ export class LanguageDictionary {
 }
 
 export const getCurrentLocale = (): string => {
+    let locale;
     if (navigator.languages && navigator.languages.length > 0) {
-        return navigator.languages[0];
+        locale = navigator.languages[0];
     } else {
-        return navigator["userLanguage"] || navigator["language"] || navigator["browserLanguage"] || 'en';
+        locale = navigator["userLanguage"] || navigator["language"] || navigator["browserLanguage"] || 'en';
     }
+    return locale.split('-')[0];
 };
 
 
