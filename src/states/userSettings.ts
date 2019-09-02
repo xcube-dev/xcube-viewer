@@ -64,27 +64,27 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
 
 
 function _storeProperty(storage: Storage, propertyName: string, source: any) {
-    console.log(`storing xcube.${propertyName}`);
     storage.setItem(`xcube.${propertyName}`, source[propertyName] + '');
+    // console.log(`stored xcube.${propertyName}`, source);
 }
 
 function _loadBooleanProperty(storage: Storage, propertyName: string, target: any, defaultObj: any) {
-    console.log(`loading xcube.${propertyName}`);
     const value = storage.getItem(`xcube.${propertyName}`);
     if (value !== null) {
         target[propertyName] = value == 'true';
     } else {
         target[propertyName] = !!defaultObj[propertyName];
     }
+    // console.log(`loaded xcube.${propertyName}`, target);
 }
 
 function _loadIntProperty(storage: Storage, propertyName: string, target: any, defaultObj: any) {
-    console.log(`loading xcube.${propertyName}`);
     const value = storage.getItem(`xcube.${propertyName}`);
     if (value !== null) {
         target[propertyName] = parseInt(value);
     } else {
         target[propertyName] = defaultObj[propertyName];
     }
+    // console.log(`loaded xcube.${propertyName}`, target);
 }
 
