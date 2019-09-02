@@ -81,7 +81,6 @@ class VariableSelect extends React.Component<VariableSelectProps> {
             <IconButton
                 className={classes.button}
                 disabled={!canAddTimeSeries}
-                aria-label={I18N.get('Show time-series')}
                 onClick={this.handleAddTimeSeriesButtonClick}
             >
                 {<TimelineIcon/>}

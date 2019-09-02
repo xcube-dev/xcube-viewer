@@ -109,7 +109,7 @@ export default function SettingsDialog({open, closeDialog, settings, selectedSer
                 <DialogTitle>{I18N.get('Settings')}</DialogTitle>
                 <DialogContent>
 
-                    <SettingsPanel title={'General'}>
+                    <SettingsPanel title={I18N.get('General')}>
                         <SettingsSubPanel
                             label={I18N.get('Server')}
                             value={selectedServer.name}
@@ -120,7 +120,7 @@ export default function SettingsDialog({open, closeDialog, settings, selectedSer
                             value={I18N.languages[settings.locale]}
                             onClick={handleLanguageMenuOpen}>
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Player time interval')}>
+                        <SettingsSubPanel label={I18N.get('Time interval of the player')}>
                             <TextField
                                 select
                                 className={classes.textField}
@@ -135,8 +135,8 @@ export default function SettingsDialog({open, closeDialog, settings, selectedSer
                         </SettingsSubPanel>
                     </SettingsPanel>
 
-                    <SettingsPanel title={I18N.get('Time series')}>
-                        <SettingsSubPanel label={I18N.get('Draw graph after adding a point')}
+                    <SettingsPanel title={I18N.get('Time-Series')}>
+                        <SettingsSubPanel label={I18N.get('Show graph after adding a point')}
                                           value={getOnOff(settings.autoShowTimeSeries)}>
                             <ToggleSetting
                                 propertyName={'autoShowTimeSeries'}

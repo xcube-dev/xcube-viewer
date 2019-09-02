@@ -197,6 +197,13 @@
       "se": "Inställningar"
     },
     {
+      "en": "General",
+      "de": "Allgemein",
+      "it": "Generalmente",
+      "ro": "General",
+      "se": "Allmänhet"
+    },
+    {
       "en": "Server",
       "de": "Server",
       "it": "Server",
@@ -237,6 +244,35 @@
       "it": "Spento",
       "ro": "Oprit",
       "se": "Av"
+    },
+    {
+      "en": "Time interval of the player",
+      "de": "Zeitintervall des Abspielers",
+      "it": "Intervallo di tempo del giocatore",
+      "ro": "Intervalul de timp al jucătorului",
+      "se": "Spelarens tidsintervall"
+    },
+    {
+      "en": "Show graph after adding a point",
+      "de": "Grafik anzeigen, nachdem ein Punkt hinzugefügt wurde",
+      "it": "Mostra grafico dopo aver aggiunto un punto",
+      "ro": "Afișează grafic după adăugarea unui punct",
+      "se": "Visa graf efter att ha lagt till en punkt"
+    },
+    {
+      "en": "Show data points only",
+      "de": "Nur Daten-Punkte anzeigen",
+      "it": "Mostra solo punti dati",
+      "ro": "Afișați doar puncte de date",
+      "se": "Visa endast datapunkter"
+    },
+    {
+      "en": "Show error bars",
+      "de": "Fehlerbalken anzeigen",
+      "it": "Mostra barre di errore",
+      "ro": "Afișează bare de eroare",
+      "se": "Visa felstaplar"
     }
+
   ]
 }
