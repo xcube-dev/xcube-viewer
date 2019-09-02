@@ -9,12 +9,12 @@ import {
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES
+    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES, ADD_USER_PLACE_2
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
-import { Place } from "../model/place";
-import { TimeSeries, TimeSeriesGroup } from "../model/timeSeries";
+import { Place } from '../model/place';
+import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
 
 
 export function dataReducer(state: DataState, action: DataAction): DataState {
@@ -51,6 +51,16 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                 properties: {label, color},
             };
             const features = [...state.userPlaceGroup.features, feature as Place];
+            const userPlaceGroup = {...state.userPlaceGroup, features};
+            return {
+                ...state,
+                userPlaceGroup,
+            };
+        }
+        case ADD_USER_PLACE_2: {
+            const {place} = action;
+            addUserPlaceToLayer(place);
+            const features = [...state.userPlaceGroup.features, place];
             const userPlaceGroup = {...state.userPlaceGroup, features};
             return {
                 ...state,
@@ -132,6 +142,20 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
     return state;
 }
 
+function addUserPlaceToLayer(place: Place) {
+    if (MAP_OBJECTS.userLayer) {
+        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+        const source = userLayer.getSource();
+        const feature = new ol.format.GeoJSON().readFeature(place);
+        feature.setStyle(new ol.style.Style(
+            {
+                stroke: new ol.style.Stroke({color: (place.properties || {}).color || 'red'}),
+                fill: new ol.style.Fill({color: '#ffffff80'}),
+            }
+        ));
+        source.addFeature(feature);
+    }
+}
 
 function removeUserPlacesFromLayer(userPlaceIds: string[]) {
     if (MAP_OBJECTS.userLayer) {

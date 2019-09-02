@@ -20,7 +20,7 @@ import {
     INC_SELECTED_TIME,
     UPDATE_SETTINGS,
 } from '../actions/controlActions';
-import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE } from "../actions/dataActions";
+import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, ADD_USER_PLACE_2 } from '../actions/dataActions';
 import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
@@ -162,22 +162,18 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             };
         }
         case ADD_USER_PLACE: {
-            if (!action.selectPlace) {
+            if (action.selectPlace) {
+                return selectPlace(state, action.id);
+            } else {
                 return state;
             }
-            let selectedPlaceGroupIds;
-            if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
-                selectedPlaceGroupIds = ['user'];
-            } else if (state.selectedPlaceGroupIds.find(id => id === 'user')) {
-                selectedPlaceGroupIds = state.selectedPlaceGroupIds;
+        }
+        case ADD_USER_PLACE_2: {
+            if (action.selectPlace) {
+                return selectPlace(state, action.place.id);
             } else {
-                selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, 'user']
+                return state;
             }
-            return {
-                ...state,
-                selectedPlaceGroupIds,
-                selectedPlaceId: action.id,
-            };
         }
         case ADD_ACTIVITY: {
             return {
@@ -224,3 +220,18 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
     return state;
 }
 
+function selectPlace(state: ControlState, selectedPlaceId: string): ControlState {
+    let selectedPlaceGroupIds;
+    if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
+        selectedPlaceGroupIds = ['user'];
+    } else if (state.selectedPlaceGroupIds.find(id => id === 'user')) {
+        selectedPlaceGroupIds = state.selectedPlaceGroupIds;
+    } else {
+        selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, 'user']
+    }
+    return {
+        ...state,
+        selectedPlaceGroupIds,
+        selectedPlaceId,
+    };
+}

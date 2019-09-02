@@ -9,7 +9,7 @@ import {
     RemoveActivity,
     removeActivity,
     SelectDataset,
-    selectDataset, SelectPlace, selectPlace,
+    selectDataset, SelectPlace, selectPlace, SelectPlaceGroups, selectPlaceGroups,
 } from './controlActions';
 import {
     Dataset,
@@ -24,7 +24,7 @@ import {
 } from '../selectors/controlSelectors';
 import { Server } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
-import { findPlaceInPlaceGroups, PlaceGroup } from '../model/place';
+import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
 import { placeGroupsSelector } from '../selectors/dataSelectors';
 import { newId } from '../util/id';
@@ -112,19 +112,39 @@ export function _addUserPlace(id: string, label: string, color: string, geometry
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const ADD_USER_PLACE_2 = 'ADD_USER_PLACE_2';
+export type ADD_USER_PLACE_2 = typeof ADD_USER_PLACE_2;
+
+export interface AddUserPlace2 {
+    type: ADD_USER_PLACE_2;
+    place: Place;
+    selectPlace: boolean;
+}
+
+export function addUserPlace2(place: Place, selectPlace: boolean): AddUserPlace2 {
+    return {type: ADD_USER_PLACE_2, place, selectPlace};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 export function addUserPlaceFromText(geometryText: string) {
-    return (dispatch: Dispatch<AddUserPlace | SelectPlace>, getState: () => AppState) => {
+    return (dispatch: Dispatch<AddUserPlace2 | SelectPlaceGroups | SelectPlace>, getState: () => AppState) => {
 
-        console.log(geometryText);
         const geometry = new ol.format.GeoJSON().readGeometry(geometryText);
-        console.log(geometry);
-        const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
-        console.log(geoJSONGeometry);
+        const geoJSONGeometry: geojson.Geometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
 
         const placeId = `User-GeoJSON-${newId()}`;
 
-        dispatch(_addUserPlace(placeId, 'User GeoJSON', 'red', geoJSONGeometry, false));
+        const place:Place = {
+            type: 'Feature',
+            id: placeId,
+            geometry: geoJSONGeometry,
+            properties: {color: 'red'},
+        };
+
+        dispatch(addUserPlace2(place, false));
+        dispatch(selectPlaceGroups(['user']) as any);
         dispatch(selectPlace(placeId, getState().dataState.datasets, getState().dataState.userPlaceGroup));
         if (getState().controlState.autoShowTimeSeries) {
             dispatch(addTimeSeries() as any);
@@ -189,7 +209,7 @@ export function addTimeSeries() {
                 return api.getTimeSeriesForGeometry(apiServer.url,
                                                     selectedDatasetId,
                                                     selectedVariable,
-                                                    selectedPlace.id,
+                                                    selectedPlaceId,
                                                     selectedPlace.geometry,
                                                     startDateLabel,
                                                     endDateLabel,
@@ -334,6 +354,7 @@ export type DataAction =
     UpdateDatasets
     | UpdateDatasetPlaceGroup
     | AddUserPlace
+    | AddUserPlace2
     | RemoveUserPlace
     | RemoveAllUserPlaces
     | UpdateTimeSeries
