@@ -4,6 +4,8 @@
 * Users can now generate time series for any selected variable and any selected place. (#50)
   User places can now be also removed, which will remove related time series too.
   Removing time series, on the other hand, does no longer remove user added places.
+* Selection of exact time steps has been improved. Introduced new time picker and user can also
+  select move forward and backward in time by single steps. (#58)
 * User can now adjust preferences in a new settings dialog:
   * xcube servers;
   * UI language;
