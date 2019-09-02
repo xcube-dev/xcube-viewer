@@ -223,6 +223,20 @@
       "it": "Seleziona Server",
       "ro": "Selectați Server",
       "se": "Välj server"
+    },
+    {
+      "en": "On",
+      "de": "An",
+      "it": "Acceso",
+      "ro": "Pornit",
+      "se": "På"
+    },
+    {
+      "en": "Off",
+      "de": "Aus",
+      "it": "Spento",
+      "ro": "Oprit",
+      "se": "Av"
     }
   ]
 }

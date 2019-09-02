@@ -8,8 +8,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import Box from "@material-ui/core/Box";
-import FormControl from "@material-ui/core/FormControl";
+import Box from '@material-ui/core/Box';
+import FormControl from '@material-ui/core/FormControl';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
@@ -154,13 +154,12 @@ class TimePlayer extends React.Component<TimePlayerProps> {
 
         return (
             <FormControl className={classes.formControl}>
-                <Box>{[
-                    firstTimeStepButton,
-                    prevTimeStepButton,
-                    playButton,
-                    nextTimeStepButton,
-                    lastTimeStepButton
-                ]}
+                <Box>
+                    {firstTimeStepButton}
+                    {prevTimeStepButton}
+                    {playButton}
+                    {nextTimeStepButton}
+                    {lastTimeStepButton}
                 </Box>
             </FormControl>
         );

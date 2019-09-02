@@ -25,6 +25,7 @@ import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
 import { findIndexCloseTo } from "../util/find";
+import { storeUserSettings } from '../states/userSettings';
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -35,6 +36,7 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
     }
     switch (action.type) {
         case UPDATE_SETTINGS:
+            storeUserSettings(state);
             return action.settings;
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;

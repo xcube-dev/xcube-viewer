@@ -7,32 +7,31 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
-import List from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
-import { I18N } from "../config";
-import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from "../states/controlState";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import { Server } from "../model/server";
-
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import { I18N } from '../config';
+import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import { Server } from '../model/server';
+import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles(theme => ({
         settingsPanelTitle: {
             marginBottom: theme.spacing(1),
         },
         settingsPanelPaper: {
-            backgroundFill: theme.palette.primary.light,
+            backgroundColor: (theme.palette.type === 'dark' ? lighten : darken)(theme.palette.background.paper, 0.1),
             marginBottom: theme.spacing(2),
         },
         settingsPanelList: {
             margin: 0,
         },
         settingsPanelListItem: {},
-
         textField: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
@@ -201,7 +200,7 @@ const SettingsPanel: FunctionComponent<SettingsPanelProps> = (props) => {
             <Typography variant='body1' className={classes.settingsPanelTitle}>
                 {props.title}
             </Typography>
-            <Paper className={classes.settingsPanelPaper}>
+            <Paper elevation={4} className={classes.settingsPanelPaper}>
                 <List component="nav" dense={true} className={classes.settingsPanelList}>
                     {listItems}
                 </List>

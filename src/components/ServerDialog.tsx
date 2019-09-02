@@ -215,7 +215,7 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
         let dialogContent;
         if (dialogMode === "add" || dialogMode === "edit") {
             dialogContent = (
-                <DialogContent>
+                <DialogContent dividers>
                     <TextField
                         required
                         id="server-name"
