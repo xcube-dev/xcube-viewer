@@ -1,4 +1,4 @@
-///<reference path="../model/dataset.ts"/>
+import * as ol from 'openlayers';
 import { Dispatch } from 'redux';
 
 import { AppState } from '../states/appState';
@@ -9,7 +9,7 @@ import {
     RemoveActivity,
     removeActivity,
     SelectDataset,
-    selectDataset,
+    selectDataset, SelectPlace, selectPlace,
 } from './controlActions';
 import {
     Dataset,
@@ -27,6 +27,7 @@ import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
 import { placeGroupsSelector } from '../selectors/dataSelectors';
+import { newId } from '../util/id';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,20 +94,44 @@ export interface AddUserPlace {
     label: string;
     color: string;
     geometry: geojson.Geometry;
+    selectPlace: boolean;
 }
 
-export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry) {
+export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry, selectPlace: boolean) {
     return (dispatch: Dispatch<AddUserPlace>, getState: () => AppState) => {
-        dispatch(_addUserPlace(id, label, color, geometry));
+        dispatch(_addUserPlace(id, label, color, geometry, selectPlace));
         if (getState().controlState.autoShowTimeSeries) {
             dispatch(addTimeSeries() as any);
         }
     };
 }
 
-export function _addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry): AddUserPlace {
-    return {type: ADD_USER_PLACE, id, label, color, geometry};
+export function _addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry, selectPlace: boolean): AddUserPlace {
+    return {type: ADD_USER_PLACE, id, label, color, geometry, selectPlace};
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+export function addUserPlaceFromText(geometryText: string) {
+    return (dispatch: Dispatch<AddUserPlace | SelectPlace>, getState: () => AppState) => {
+
+        console.log(geometryText);
+        const geometry = new ol.format.GeoJSON().readGeometry(geometryText);
+        console.log(geometry);
+        const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
+        console.log(geoJSONGeometry);
+
+        const placeId = `User-GeoJSON-${newId()}`;
+
+        dispatch(_addUserPlace(placeId, 'User GeoJSON', 'red', geoJSONGeometry, false));
+        dispatch(selectPlace(placeId, getState().dataState.datasets, getState().dataState.userPlaceGroup));
+        if (getState().controlState.autoShowTimeSeries) {
+            dispatch(addTimeSeries() as any);
+        }
+    };
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -21,7 +21,7 @@ interface ViewerProps {
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
+    addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry, selectPlace: boolean) => void;
     userPlaceGroup: PlaceGroup;
     selectFeatures?: (features: geojson.Feature[]) => void;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
@@ -77,7 +77,7 @@ class Viewer extends React.Component<ViewerProps> {
                 }
             }
              
-            addUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry);
+            addUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry, true);
         }
         return true;
     };

@@ -162,6 +162,9 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             };
         }
         case ADD_USER_PLACE: {
+            if (!action.selectPlace) {
+                return state;
+            }
             let selectedPlaceGroupIds;
             if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
                 selectedPlaceGroupIds = ['user'];

@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import CategoryIcon from '@material-ui/icons/Category';
 
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
@@ -39,6 +40,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     placeLabels: string[];
     selectPlace: (placeId: string | null, dataset: Dataset[], userPlaceGroup: PlaceGroup) => void;
     removeUserPlace: (placeId: string) => void;
+    openDialog: (dialogId: string) => void;
 }
 
 class PlaceSelect extends React.Component<PlaceSelectProps> {
@@ -47,7 +49,12 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
         this.props.selectPlace(event.target.value || null, this.props.datasets, this.props.userPlaceGroup);
     };
 
-    handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    handleAddButtonClick = () => {
+        const {openDialog} = this.props;
+        openDialog('addUserPlaceFromText');
+    };
+
+    handleRemoveButtonClick = () => {
         const {removeUserPlace, selectedPlaceId} = this.props;
         if (selectedPlaceId !== null) {
             removeUserPlace(selectedPlaceId);
@@ -62,49 +69,63 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
         const selectedPlaceId = this.props.selectedPlaceId || '';
         const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
 
-        if (places.length === 0) {
-            return null;
+        let placeSelectLabel;
+        let placeSelect;
+        let placeRemoveButton;
+        if (places.length > 0) {
+            placeSelectLabel = (
+                <InputLabel
+                    shrink
+                    htmlFor="place-select"
+                >
+                    {I18N.get('Place')}
+                </InputLabel>
+            );
+
+            placeSelect = (
+                <Select
+                    value={selectedPlaceId}
+                    onChange={this.handlePlaceChange}
+                    input={<Input name="place" id="place-select"/>}
+                    displayEmpty
+                    name="place"
+                >
+                    {places.map((place, i) => (
+                        <MenuItem
+                            key={place.id}
+                            value={place.id}
+                            selected={place.id === selectedPlaceId}
+                        >
+                            {placeLabels[i]}
+                        </MenuItem>
+                    ))}
+                </Select>
+            );
+
+            const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
+                                  && selectedPlaceId !== '' && places.length > 0;
+            placeRemoveButton = (
+                <IconButton
+                    key={'remove'}
+                    className={classes.button}
+                    disabled={!removeEnabled}
+                    aria-label={I18N.get('Delete place')}
+                    onClick={this.handleRemoveButtonClick}
+                >
+                    {<RemoveCircleOutlineIcon/>}
+                </IconButton>
+            );
+
         }
 
-        const placeSelectLabel = (
-            <InputLabel
-                shrink
-                htmlFor="place-select"
-            >
-                {I18N.get('Place')}
-            </InputLabel>
-        );
-
-        const placeSelect = (
-            <Select
-                value={selectedPlaceId}
-                onChange={this.handlePlaceChange}
-                input={<Input name="place" id="place-select"/>}
-                displayEmpty
-                name="place"
-            >
-                {places.map((place, i) => (
-                    <MenuItem
-                        key={place.id}
-                        value={place.id}
-                        selected={place.id === selectedPlaceId}
-                    >
-                        {placeLabels[i]}
-                    </MenuItem>
-                ))}
-            </Select>
-        );
-
-        const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
-                              && selectedPlaceId !== '';
-        const placeRemoveButton = (
+        const placeAddButton = (
             <IconButton
+                key={'add'}
                 className={classes.button}
-                disabled={!removeEnabled}
-                aria-label={I18N.get('Delete place')}
-                onClick={this.handleRemoveButtonClick}
+                aria-label={I18N.get('Add place')}
+                onClick={this.handleAddButtonClick}
             >
-                {<RemoveCircleOutlineIcon/>}
+                {<CategoryIcon/>}
             </IconButton>
         );
 
@@ -112,7 +133,7 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
             <ControlBarItem
                 label={placeSelectLabel}
                 control={placeSelect}
-                actions={placeRemoveButton}
+                actions={[placeAddButton, placeRemoveButton]}
             />
         );
     }

@@ -14,6 +14,7 @@ import logo from '../resources/logo.png';
 import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
+import AddPlaceDialog from './AddPlaceDialog';
 import { openDialog } from '../actions/controlActions';
 
 
@@ -99,6 +100,7 @@ class _AppBar extends React.Component<AppBarProps> {
                 </Toolbar>
                 <ServerDialog/>
                 <SettingsDialog/>
+                <AddPlaceDialog/>
             </AppBar>
         );
     }
