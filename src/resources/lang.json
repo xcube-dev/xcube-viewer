@@ -302,6 +302,13 @@
       "se": "här"
     },
     {
+      "en": "https://en.wikipedia.org/wiki/Web_storage",
+      "de": "https://de.wikipedia.org/wiki/Web_Storage",
+      "it": "https://en.wikipedia.org/wiki/Web_storage",
+      "ro": "https://en.wikipedia.org/wiki/Web_storage",
+      "se": "https://en.wikipedia.org/wiki/Web_storage"
+    },
+    {
       "en": "Accept and continue",
       "de": "Akzeptieren und weiter",
       "it": "Accetta e continua",

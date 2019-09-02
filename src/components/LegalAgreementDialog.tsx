@@ -53,7 +53,7 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
                 </DialogContentText>
                 <DialogContentText>
                     {I18N.get('Find out more')}{' '}
-                    <Link href="https://html.spec.whatwg.org/multipage/webstorage.html#webstorage"  target='_blank'>{I18N.get('here')}</Link>.
+                    <Link href={I18N.get("https://en.wikipedia.org/wiki/Web_storage")} target='_blank'>{I18N.get('here')}</Link>.
                 </DialogContentText>
             </DialogContent>
 
