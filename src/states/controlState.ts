@@ -27,6 +27,7 @@ export interface ControlState {
     activities: { [id: string]: string };
     locale: string;
     dialogOpen: { [dialogId: string]: boolean };
+    legalAgreementAccepted: boolean;
 }
 
 export function newControlState(): ControlState {
@@ -50,6 +51,7 @@ export function newControlState(): ControlState {
         activities: {},
         locale: 'en',
         dialogOpen: {},
+        legalAgreementAccepted: false,
     };
     return loadUserSettings(state);
 }

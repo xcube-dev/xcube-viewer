@@ -14,6 +14,7 @@ import { AppState } from '../states/appState';
 import AppBar from './AppBar';
 import AppPane from './AppPane';
 import LoadingDialog from './LoadingDialog';
+import LegalAgreementDialog from './LegalAgreementDialog';
 import MessageLog from './MessageLog';
 import { VIEWER_PRIMARY_COLOR, VIEWER_SECONDARY_COLOR, VIEWER_THEME } from "../config";
 
@@ -61,6 +62,7 @@ class App extends React.PureComponent<DashboardProps> {
                     <AppPane/>
                     <LoadingDialog/>
                     <MessageLog/>
+                    <LegalAgreementDialog/>
                 </div>
             </MuiThemeProvider>
         );
