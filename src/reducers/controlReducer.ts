@@ -36,7 +36,7 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
     }
     switch (action.type) {
         case UPDATE_SETTINGS:
-            storeUserSettings(state);
+            storeUserSettings(action.settings);
             return action.settings;
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;
