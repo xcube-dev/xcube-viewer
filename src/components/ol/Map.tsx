@@ -28,13 +28,6 @@ interface MapState {
 
 const DEFAULT_CONTAINER_SYTLE: React.CSSProperties = {height: '100%'};
 
-const DEFAULT_VIEW = new ol.View(
-    {
-        center: ol.proj.fromLonLat([0, 0]),
-        zoom: 2
-    }
-);
-
 export class Map extends React.Component<MapProps, MapState> {
 
     private contextValue: MapContext;
@@ -58,11 +51,48 @@ export class Map extends React.Component<MapProps, MapState> {
         }
     };
 
+    private handleRef = (mapDiv: HTMLDivElement | null) => {
+        this.contextValue.mapDiv = mapDiv;
+    };
+
+    private handleResize = () => {
+        const mapDiv = this.contextValue.mapDiv;
+        const map = this.contextValue.map;
+        if (mapDiv && map) {
+            map.updateSize();
+            const view = map.getView();
+            const minZoom = this.getMinZoom(mapDiv);
+            if (minZoom !== view.getMinZoom()) {
+                view.setMinZoom(minZoom);
+            }
+        }
+    };
+
+    private getMinZoom = (target: HTMLDivElement) => {
+        // Adjust the view's minZoom so there is only one world,
+        // see https://openlayers.org/en/latest/examples/min-zoom.html
+        const size = target.clientWidth;
+        const minZoom = Math.LOG2E * Math.log(size / 256);
+        if (minZoom >= 0.0) {
+            return minZoom;
+        }
+        return 0;
+    };
+
     componentDidMount(): void {
-        // console.log("Map.componentDidMount: new Map!");
-        const mapOptions = this.getMapOptions();
         const target = this.contextValue.mapDiv!;
-        const map = new ol.Map({view: DEFAULT_VIEW, ...mapOptions, target});
+        const initialZoom = this.getMinZoom(target);
+        // console.log("Map.componentDidMount: new Map!");
+        const view = new ol.View({
+                                     center: ol.proj.fromLonLat([0, 0]),
+                                     minZoom: initialZoom,
+                                     zoom: initialZoom,
+                                 });
+        const map = new ol.Map({
+                                   view,
+                                   ...this.getMapOptions(),
+                                   target
+                               });
         map.set("objectId", this.props.id);
         this.contextValue.map = map;
         this.contextValue.mapObjects[this.props.id] = map;
@@ -76,6 +106,10 @@ export class Map extends React.Component<MapProps, MapState> {
         if (onMapRef) {
             onMapRef(map);
         }
+
+        // Add resize listener so we can adjust the view's minZoom.
+        // See https://openlayers.org/en/latest/examples/min-zoom.html
+        window.addEventListener('resize', this.handleResize);
     }
 
     componentDidUpdate(prevProps: Readonly<MapProps>): void {
@@ -109,17 +143,5 @@ export class Map extends React.Component<MapProps, MapState> {
             </div>
         );
     }
-
-    private handleRef = (mapDiv: HTMLDivElement | null) => {
-        if (mapDiv !== null) {
-            mapDiv.onresize = () => {
-                const map = this.contextValue.map;
-                if (map) {
-                    map.updateSize();
-                }
-            };
-        }
-        this.contextValue.mapDiv = mapDiv;
-    };
 }
 
