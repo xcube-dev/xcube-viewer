@@ -272,7 +272,41 @@
       "it": "Mostra barre di errore",
       "ro": "Afișează bare de eroare",
       "se": "Visa felstaplar"
+    },
+    {
+      "en": "Legal Agreement",
+      "de": "Rechtliches Übereinkommen",
+      "it": "Accordo Legale",
+      "ro": "Intelegere Legala",
+      "se": "Laglig Överenskommelse"
+    },
+    {
+      "en": "We use „HTML5 local storage” to save and restore your settings. 3rd parties will never see your data. Note we not use „cookies” at all.",
+      "de": "Wir verwenden „HTML5 local storage”, um Ihre Einstellungen zu speichern und wiederherzustellen. Dritte werden Ihre Daten niemals sehen. Beachten Sie, dass wir keine „Cookies” verwenden.",
+      "it": "Utilizziamo „HTML5 local storage” per salvare e ripristinare le tue impostazioni. Le terze parti non vedranno mai i tuoi dati. Nota che non utilizziamo affatto „cookie”.",
+      "ro": "Folosim „HTML5 local storage” pentru a salva și restaura setările. Părțile terțe nu vă vor vedea niciodată datele. Rețineți că nu folosim deloc „cookie-uri”.",
+      "se": "Vi använder „HTML5 local storage” för att spara och återställa dina inställningar. Tredje parter kommer aldrig att se dina data. Observera att vi inte använder „cookies” alls."
+    },
+    {
+      "en": "Find out more",
+      "de": "Erfahren Sie mehr",
+      "it": "Scopri di più",
+      "ro": "Aflați mai multe aici",
+      "se": "Ta reda på mer"
+    },
+    {
+      "en": "here",
+      "de": "hier",
+      "it": "qui",
+      "ro": "aici",
+      "se": "här"
+    },
+    {
+      "en": "Accept and continue",
+      "de": "Akzeptieren und weiter",
+      "it": "Accetta e continua",
+      "ro": "Acceptați și continuați",
+      "se": "Acceptera och fortsätt"
     }
-
   ]
 }

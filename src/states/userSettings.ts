@@ -35,6 +35,7 @@ export function storeUserSettings(settings: ControlState) {
     const storage = getLocalStorage();
     if (storage) {
         try {
+            _storeProperty(storage, 'legalAgreementAccepted', settings);
             _storeProperty(storage, 'autoShowTimeSeries', settings);
             _storeProperty(storage, 'showTimeSeriesErrorBars', settings);
             _storeProperty(storage, 'showTimeSeriesPointsOnly', settings);
@@ -50,6 +51,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
     if (storage) {
         const settings = {...defaultSettings};
         try {
+            _loadBooleanProperty(storage, 'legalAgreementAccepted', settings, defaultSettings);
             _loadBooleanProperty(storage, 'autoShowTimeSeries', settings, defaultSettings);
             _loadBooleanProperty(storage, 'showTimeSeriesErrorBars', settings, defaultSettings);
             _loadBooleanProperty(storage, 'showTimeSeriesPointsOnly', settings, defaultSettings);
