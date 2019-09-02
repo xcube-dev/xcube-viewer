@@ -4,7 +4,7 @@ import { TimeSeriesGroup } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { Server } from "../model/server";
 import { I18N, VIEWER_API_SERVERS } from "../config";
-import { getLocalStorage } from "../util/storage";
+import { loadUserServers } from './userSettings';
 
 
 export interface DataState {
@@ -37,30 +37,3 @@ export function newDataState(): DataState {
     };
 }
 
-export function storeUserServers(userServers: Server[]) {
-    const storage = getLocalStorage();
-    if (storage) {
-        let userServersJson = JSON.stringify(userServers);
-        try {
-            storage.setItem('xcube.userServers', userServersJson);
-        } catch (e) {
-            console.warn(`failed to store user servers: ${e}`);
-        }
-    }
-}
-
-export function loadUserServers(): Server[] {
-    const storage = getLocalStorage();
-    if (storage) {
-        let userServersJson;
-        try {
-            userServersJson = storage.getItem('xcube.userServers');
-        } catch (e) {
-            console.warn(`failed to store user servers: ${e}`);
-        }
-        if (userServersJson) {
-            return JSON.parse(userServersJson) as Server[];
-        }
-    }
-    return [];
-}

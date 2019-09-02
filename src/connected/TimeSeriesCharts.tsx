@@ -14,6 +14,8 @@ const mapStateToProps = (state: AppState) => {
         selectedTime: state.controlState.selectedTime,
         selectedTimeRange: state.controlState.selectedTimeRange,
         dataTimeRange: selectedDatasetTimeRangeSelector(state),
+        showPointsOnly: state.controlState.showTimeSeriesPointsOnly,
+        showErrorBars: state.controlState.showTimeSeriesErrorBars,
         placeInfos: timeSeriesPlaceInfosSelector(state),
     }
 };

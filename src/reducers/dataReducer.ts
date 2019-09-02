@@ -1,6 +1,7 @@
 import * as ol from 'openlayers';
 
-import { DataState, newDataState, storeUserServers } from '../states/dataState';
+import { DataState, newDataState } from '../states/dataState';
+import { storeUserServers } from '../states/userSettings';
 import {
     CONFIGURE_SERVERS,
     ADD_USER_PLACE,

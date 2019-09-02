@@ -14,13 +14,18 @@ import {
     UPDATE_TIME_ANIMATION,
     ADD_ACTIVITY,
     REMOVE_ACTIVITY,
-    CHANGE_LOCALE, OPEN_DIALOG, CLOSE_DIALOG, INC_SELECTED_TIME,
+    CHANGE_LOCALE,
+    OPEN_DIALOG,
+    CLOSE_DIALOG,
+    INC_SELECTED_TIME,
+    UPDATE_SETTINGS,
 } from '../actions/controlActions';
 import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE } from "../actions/dataActions";
 import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
 import { findIndexCloseTo } from "../util/find";
+import { storeUserSettings } from '../states/userSettings';
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -30,6 +35,9 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         state = newControlState();
     }
     switch (action.type) {
+        case UPDATE_SETTINGS:
+            storeUserSettings(action.settings);
+            return action.settings;
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;
             const dataset = findDataset(action.datasets, action.selectedDatasetId)!;

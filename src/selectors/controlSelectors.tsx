@@ -35,7 +35,6 @@ import { Layers } from '../components/ol/layer/Layers';
 import { findIndexCloseTo } from "../util/find";
 import { Server } from "../model/server";
 
-
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
 export const selectedPlaceGroupIdsSelector = (state: AppState) => state.controlState.selectedPlaceGroupIds;
@@ -50,7 +49,6 @@ export const selectedDatasetSelector = createSelector(
     selectedDatasetIdSelector,
     findDataset
 );
-
 
 export const selectedDatasetVariablesSelector = createSelector(
     selectedDatasetSelector,
@@ -347,3 +345,4 @@ export const selectedServerSelector = createSelector(
         return server;
     }
 );
+

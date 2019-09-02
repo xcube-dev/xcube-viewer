@@ -30,6 +30,10 @@ const mapDispatchToProps = {};
 
 const theme = createMuiTheme(
     {
+        typography: {
+            fontSize: 12,
+            htmlFontSize: 14,
+        },
         palette: {
             type: VIEWER_THEME,
             primary: VIEWER_PRIMARY_COLOR,

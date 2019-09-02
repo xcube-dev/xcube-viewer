@@ -95,7 +95,16 @@ export interface AddUserPlace {
     geometry: geojson.Geometry;
 }
 
-export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry): AddUserPlace {
+export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry) {
+    return (dispatch: Dispatch<AddUserPlace>, getState: () => AppState) => {
+        dispatch(_addUserPlace(id, label, color, geometry));
+        if (getState().controlState.autoShowTimeSeries) {
+            dispatch(addTimeSeries() as any);
+        }
+    };
+}
+
+export function _addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry): AddUserPlace {
     return {type: ADD_USER_PLACE, id, label, color, geometry};
 }
 
@@ -138,6 +147,7 @@ export function addTimeSeries() {
         const selectedPlaceId = selectedPlaceIdSelector(getState());
         const selectedPlace = selectedPlaceSelector(getState())!;
         const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+        const inclStDev = getState().controlState.showTimeSeriesErrorBars;
 
         const placeGroups = placeGroupsSelector(getState());
 
@@ -157,7 +167,8 @@ export function addTimeSeries() {
                                                     selectedPlace.id,
                                                     selectedPlace.geometry,
                                                     startDateLabel,
-                                                    endDateLabel);
+                                                    endDateLabel,
+                                                    inclStDev);
             };
 
             const successAction = (timeSeries: TimeSeries | null) => {
