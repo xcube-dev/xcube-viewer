@@ -239,7 +239,7 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
             );
         } else {
             dialogContent = (
-                <DialogContent>
+                <DialogContent dividers>
                     <div>
                         <FormControl className={classes.formControl}>
                             <InputLabel htmlFor="server-name">Name</InputLabel>
