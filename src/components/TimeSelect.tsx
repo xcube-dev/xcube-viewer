@@ -47,7 +47,7 @@ class TimeSelect extends React.Component<TimeSelectProps> {
         );
 
         const isValid = typeof selectedTime === 'number';
-        const timeText = isValid ? utcTimeToLocalIsoDateTimeString(selectedTime!) : '?';
+        const timeText = isValid ? utcTimeToLocalIsoDateTimeString(selectedTime!) : null;
 
         let minTimeText, maxTimeText;
         if (Array.isArray(selectedTimeRange)) {
