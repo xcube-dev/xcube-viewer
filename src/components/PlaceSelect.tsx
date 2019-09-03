@@ -96,7 +96,6 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
             <IconButton
                 className={classes.button}
                 disabled={!removeEnabled}
-                aria-label={I18N.get('Delete place')}
                 onClick={this.handleRemoveButtonClick}
             >
                 {<RemoveCircleOutlineIcon/>}
