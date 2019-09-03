@@ -16,16 +16,10 @@ import ControlBarItem from './ControlBarItem';
 
 const styles = (theme: Theme) => createStyles(
     {
-        formControl: {
-            marginRight: theme.spacing(2),
-            marginBottom: theme.spacing(1),
-            minWidth: 120,
+        select: {
+            minWidth: '5em',
         },
         button: {
-            // margin: theme.spacing(0.1),
-        },
-        margin: {
-            margin: theme.spacing(1),
         },
     });
 
@@ -82,6 +76,7 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
                 input={<Input name="place" id="place-select"/>}
                 displayEmpty
                 name="place"
+                className={classes.select}
             >
                 {places.map((place, i) => (
                     <MenuItem
