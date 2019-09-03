@@ -22,21 +22,21 @@ A simple viewer component for Xcube server.
 
     $ cd xcube
     $ git pull
+    $ conda env update
     $ conda activate xcube  
     $ xcube serve --verbose --traceperf --config xcube/webapi/res/demo/config.yml  
     
 
 
-`xcube-viewer` one-time install:
+Checkout `xcube-viewer` sources:
 
     $ git clone https://github.com/dcs4cop/xcube-viewer.git
-    $ cd xcube-viewer
-    $ yarn install
 
-`xcube-viewer` update and run:
+`xcube-viewer` update, install, and run:
 
     $ cd xcube-viewer
     $ git pull
+    $ yarn install
     $ yarn run start
 
 
