@@ -1,6 +1,7 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Restrict zooming out, so that only a single world is shown. (#79)
 * Added legal agreement to inform about using HTML local storage. (#77)
 * Users can now generate time series for any selected variable and any selected place. (#50)
   User places can now be also removed, which will remove related time series too.
