@@ -12,11 +12,14 @@ import registerServiceWorker from './registerServiceWorker';
 import { getCurrentLocale } from "./util/lang";
 
 import './index.css';
+import { I18N } from "./config";
+
+I18N.locale = getCurrentLocale();
 
 const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
 const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
 
-store.dispatch(changeLocale(getCurrentLocale()) as any);
+store.dispatch(changeLocale(I18N.locale) as any);
 store.dispatch(updateDatasets() as any);
 store.dispatch(updateColorBars() as any);
 
