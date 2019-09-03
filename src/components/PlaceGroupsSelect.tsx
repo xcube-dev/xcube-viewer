@@ -96,7 +96,6 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
         const placeGroupRemoveButton = (
             <IconButton
                 disabled={!removeEnabled}
-                aria-label={I18N.get('Delete all places')}
                 onClick={this.handleRemoveButtonClick}
             >
                 {<RemoveCircleOutlineIcon/>}
