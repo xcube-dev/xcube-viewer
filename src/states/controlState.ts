@@ -34,7 +34,7 @@ export function newControlState(): ControlState {
     const state: ControlState = {
         selectedDatasetId: 'local',
         selectedVariableName: 'conc_chl',
-        selectedPlaceGroupIds: null,
+        selectedPlaceGroupIds: ['user'],
         selectedPlaceId: null,
         selectedUserPlaceId: null,
         selectedServerId: VIEWER_DEFAULT_API_SERVER.id,
