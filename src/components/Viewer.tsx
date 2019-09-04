@@ -137,6 +137,7 @@ class Viewer extends React.Component<ViewerProps> {
                     onClick={this.handleMapClick}
                     onMapRef={this.handleMapRef}
                     mapObjects={MAP_OBJECTS}
+                    isStale={true}
                 >
                     <View id="view"/>
                     <Layers>

@@ -21,6 +21,7 @@ interface MapProps extends ol.olx.MapOptions {
     mapObjects?: { [id: string]: ol.Object };
     onClick?: (event: ol.MapBrowserEvent) => void;
     onMapRef?: (map: ol.Map | null) => void;
+    isStale?: boolean;
 }
 
 interface MapState {
@@ -34,7 +35,7 @@ export class Map extends React.Component<MapProps, MapState> {
 
     constructor(props: MapProps) {
         super(props);
-        console.log("Map.constructor");
+        // console.log("Map.constructor: id =", this.props.id);
 
         const {id, mapObjects} = props;
         if (mapObjects) {
@@ -92,20 +93,23 @@ export class Map extends React.Component<MapProps, MapState> {
     };
 
     componentDidMount(): void {
-        console.log("Map.componentDidMount");
-        const {id, mapObjects} = this.props;
-        const target = this.contextValue.mapDiv!;
+        // console.log('Map.componentDidMount: id =', this.props.id);
+
+        const {id} = this.props;
+        const mapDiv = this.contextValue.mapDiv!;
 
         let map: ol.Map | undefined;
-        if (mapObjects && mapObjects[id]) {
-            // TODO (forman): perform more tests to verify it is a ol.Map object
-            map = mapObjects[id] as ol.Map;
+        if (this.props.isStale) {
+            const mapObject = this.contextValue.mapObjects[id];
+            if (mapObject && mapObject['addControl'] && mapObject['addLayer'] && mapObject['setTarget']) {
+                console.log('Map.componentDidMount: reusing stale map');
+                map = mapObject as ol.Map;
+                map.setTarget(mapDiv);
+            }
         }
 
-        console.log("Map.componentDidMount: ", map, mapObjects);
-
         if (!map) {
-            const initialZoom = this.getMinZoom(target);
+            const initialZoom = this.getMinZoom(mapDiv);
             const view = new ol.View({
                                          center: ol.proj.fromLonLat([0, 0]),
                                          minZoom: initialZoom,
@@ -114,20 +118,16 @@ export class Map extends React.Component<MapProps, MapState> {
             map = new ol.Map({
                                  view,
                                  ...this.getMapOptions(),
-                                 target
+                                 target: mapDiv
                              });
         }
 
         this.contextValue.map = map;
-        if (mapObjects) {
-            mapObjects[id] = map;
-            this.contextValue.mapObjects = mapObjects;
-        } else {
-            this.contextValue.mapObjects = {[id]: map};
-        }
+        this.contextValue.mapObjects[id] = map;
 
-        map.set("objectId", this.props.id);
+        map.set('objectId', this.props.id);
         map.on('click', this.handleClick);
+        map.updateSize();
 
         // Force update so we can pass this.map as context to all children in next render()
         this.forceUpdate();
@@ -135,6 +135,11 @@ export class Map extends React.Component<MapProps, MapState> {
         // Add resize listener so we can adjust the view's minZoom.
         // See https://openlayers.org/en/latest/examples/min-zoom.html
         window.addEventListener('resize', this.handleResize);
+        mapDiv.onresize = () => {
+            if (this.contextValue.map) {
+                this.contextValue.map.updateSize();
+            }
+        };
 
         const onMapRef = this.props.onMapRef;
         if (onMapRef) {
@@ -143,24 +148,29 @@ export class Map extends React.Component<MapProps, MapState> {
     }
 
     componentDidUpdate(prevProps: Readonly<MapProps>): void {
-        // console.log("Map.componentDidUpdate: update Map!");
-        const map = this.contextValue.map;
+        // console.log('Map.componentDidUpdate: id =', this.props.id);
+
+        const map = this.contextValue.map!;
+        const mapDiv = this.contextValue.mapDiv!;
         const mapOptions = this.getMapOptions();
-        map!.setProperties({...mapOptions, target: this.contextValue.mapDiv});
+        map.setProperties({...mapOptions});
+        map.setTarget(mapDiv);
+        map.updateSize();
     }
 
     componentWillUnmount(): void {
-        const {mapObjects} = this.props;
-        console.log("Map.componentWillUnmount: ", mapObjects);
-        if (!mapObjects) {
-            const onMapRef = this.props.onMapRef;
-            if (onMapRef) {
-                onMapRef(null);
-            }
-        }
+        // console.log('Map.componentWillUnmount: id =', this.props.id);
+
+        const mapDiv = this.contextValue.mapDiv!;
+        mapDiv.onresize = null;
 
         // Remove resize listener so we can adjust the view's minZoom.
         window.removeEventListener('resize', this.handleResize);
+
+        const onMapRef = this.props.onMapRef;
+        if (onMapRef) {
+            onMapRef(null);
+        }
     }
 
     render() {
