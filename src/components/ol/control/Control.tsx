@@ -17,7 +17,7 @@ export class Control extends MapComponent<ol.control.Control , ControlProps> {
     };
 
     addMapObject(map: ol.Map): ol.control.Control {
-        const control = new ol.control.Control({element: this.divRef!, target: map.getTarget()});
+        const control = new ol.control.Control({element: this.divRef!, target: this.context.mapDiv!});
         map.addControl(control);
         return control;
     }
@@ -27,8 +27,7 @@ export class Control extends MapComponent<ol.control.Control , ControlProps> {
     }
 
     removeMapObject(map: ol.Map, control: ol.control.Control): void {
-        // TODO: This will cause React to crash, but it should be correct!
-        // map.removeControl(control);
+        map.removeControl(control);
     }
 
     render() {
