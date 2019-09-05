@@ -72,36 +72,19 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 placeInfos={placeInfos}
             />)
         );
-        if (charts.length > 0) {
-            return (
-                <div className={classes.chartContainer}>
-                    <TimeRangeSlider
-                        selectedTimeRange={selectedTimeRange}
-                        dataTimeRange={dataTimeRange}
-                        selectTimeRange={selectTimeRange}
-                    />
-                    {charts}
-                </div>
-            );
-        } else {
+        if (charts.length == 0) {
             return null;
-            /*
-            return (
-                <div className={classes.chartContainer}>
-                    <Card className={classes.noChartsCard}>
-                        <CardContent>
-                            <Typography className={classes.noChartsTitle} color="textSecondary" gutterBottom>
-                                {"No Time-Series Loaded"}
-                            </Typography>
-                            <Typography component="p">
-                                {"Click into map to load time-series for that point!"}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </div>
-            );
-            */
         }
+        return (
+            <div className={classes.chartContainer}>
+                <TimeRangeSlider
+                    selectedTimeRange={selectedTimeRange}
+                    dataTimeRange={dataTimeRange}
+                    selectTimeRange={selectTimeRange}
+                />
+                {charts}
+            </div>
+        );
     }
 }
 
