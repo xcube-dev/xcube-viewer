@@ -14,6 +14,7 @@ import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
+import { Select, SelectEvent } from './ol/interaction/Select';
 
 
 interface ViewerProps {
@@ -82,6 +83,10 @@ class Viewer extends React.Component<ViewerProps> {
         return true;
     };
 
+    handleSelect = (event: SelectEvent) => {
+        console.log('handleSelect: ', event);
+    };
+
     handleMapRef = (map: ol.Map | null) => {
         this.map = map;
     };
@@ -116,7 +121,8 @@ class Viewer extends React.Component<ViewerProps> {
         const variableLayer = this.props.variableLayer;
         const placeGroupLayers = this.props.placeGroupLayers;
         const colorBarLegend = this.props.colorBarLegend;
-        const drawMode = this.props.drawMode;
+        //const drawMode = this.props.drawMode;
+        const drawMode = false;
         const draw = drawMode ?
                      <Draw
                          id="draw"
@@ -153,6 +159,7 @@ class Viewer extends React.Component<ViewerProps> {
                     </Layers>
                     {placeGroupLayers}
                     {draw}
+                    <Select onSelect={this.handleSelect}/>
                     {colorBarControl}
                 </Map>
             </ErrorBoundary>
