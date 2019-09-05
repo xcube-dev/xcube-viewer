@@ -36,6 +36,8 @@ export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
     getOptions(): olx.interaction.DrawOptions {
         let options = super.getOptions();
         delete options['layerId'];
+        delete options['onDrawStart'];
+        delete options['onDrawEnd'];
         const layerId = this.props.layerId;
         if (layerId && !options.source) {
             const vectorLayer = this.getMapObject(layerId);
