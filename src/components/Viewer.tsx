@@ -70,13 +70,13 @@ class Viewer extends React.Component<ViewerProps> {
 
             const nameBase = I18N.get(geoJSONGeometry.type);
             let label: string;
-            for (let index = 1; ; index ++) {
+            for (let index = 1; ; index++) {
                 label = `${nameBase} ${index}`;
                 if (!userPlaceGroup.features.find(p => (p.properties || {})['label'] === label)) {
                     break;
                 }
             }
-             
+
             addUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry);
         }
         return true;
@@ -95,14 +95,20 @@ class Viewer extends React.Component<ViewerProps> {
             let flyToTarget;
             // noinspection JSDeprecatedSymbols
             if (Array.isArray(flyToCurr)) {
+                // Fly to extent (bounding box)
                 flyToTarget = ol.proj.transformExtent(flyToCurr, 'EPSG:4326', projection);
+                map.getView().fit(flyToTarget, {size: map.getSize()});
             } else {
+                // Transform Geometry object
                 flyToTarget = flyToCurr.transform('EPSG:4326', projection) as ol.geom.SimpleGeometry;
                 if (flyToTarget.getType() == 'Point') {
-                    flyToTarget = transformPointExtent(flyToTarget, projection);
+                    // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
+                    map.getView().setCenter(flyToTarget.getFirstCoordinate());
+                } else {
+                    // Fly to shape
+                    map.getView().fit(flyToTarget, {size: map.getSize()});
                 }
             }
-            map.getView().fit(flyToTarget, {size: map.getSize()});
         }
     }
 
@@ -174,25 +180,3 @@ function createCircleStyle(radius: number, fillColor: string, strokeColor: strin
         }
     );
 }
-
-
-function transformPointExtent(point: ol.geom.SimpleGeometry, projection: any): ol.Extent {
-    const extent = point.getExtent();
-    switch (projection.getUnits()) {
-        case 'degrees':
-            extent[0] -= 0.01;
-            extent[1] -= 0.01;
-            extent[2] += 0.01;
-            extent[3] += 0.01;
-            break;
-        case 'm': {
-            extent[0] -= 1000;
-            extent[1] -= 1000;
-            extent[2] += 1000;
-            extent[3] += 1000;
-            break;
-        }
-    }
-    return extent;
-}
-
