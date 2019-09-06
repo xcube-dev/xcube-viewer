@@ -28,8 +28,8 @@ import {
 } from '../config';
 import {WithLocale} from '../util/lang';
 import {PlaceInfo} from "../model/place";
-//import LinearProgress from "@material-ui/core/LinearProgress";
-import {CircularProgress} from "@material-ui/core";
+
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -233,8 +233,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         const progress = this.props.completed.reduce((a: number, b: number) => a + b , 0) / this.props.completed.length;
         const loading = !!(progress > 0 && progress < 100);
 
-        //const progressBar = (<LinearProgress className={classes.removeTimeSeriesGroup} color="secondary" variant="determinate" value={progress}/>);
-        const progressBar = (<CircularProgress size={24} className={classes.removeTimeSeriesGroup} color={"secondary"}/>);
+        const progressBar = (<LinearProgress className={classes.removeTimeSeriesGroup} color="secondary" variant="determinate" value={progress}/>);
+        //const progressBar = (<CircularProgress size={24} className={classes.removeTimeSeriesGroup} color={"secondary"}/>);
 
         const removeButton = (
             (
