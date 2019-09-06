@@ -69,14 +69,6 @@ const styles = (theme: Theme) => createStyles(
             fontWeight: 'bold',
             paddingBottom: theme.spacing(1),
         },
-        fabProgress: {
-            zIndex: 1000,
-            opacity: 0.8,
-            position: 'absolute',
-            color: grey[500],
-            right: theme.spacing(1),
-            margin: theme.spacing(2.5),
-        },
         chartTitle: {}
     });
 
