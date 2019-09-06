@@ -2,7 +2,6 @@
   "name": "xcube-viewer",
   "version": "0.2.0",
   "private": true,
-  "homepage": "http://xcube-viewer.s3-website.eu-central-1.amazonaws.com",
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
