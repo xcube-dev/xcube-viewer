@@ -54,6 +54,13 @@ const styles = (theme: Theme) => createStyles(
             zIndex: 1000,
             opacity: 0.8,
         },
+        removeTimeSeriesProgress: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            margin: theme.spacing(2.5),
+            zIndex: 1000,
+            opacity: 0.8,
+        },
         toolTipContainer: {
             backgroundColor: 'black',
             opacity: 0.8,
@@ -234,7 +241,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         const loading = !!(progress > 0 && progress < 100);
 
         //const progressBar = (<LinearProgress className={classes.removeTimeSeriesGroup} color="secondary" variant="determinate" value={progress}/>);
-        const progressBar = (<CircularProgress size={24} className={classes.removeTimeSeriesGroup} color={"secondary"}/>);
+        const progressBar = (<CircularProgress size={24} className={classes.removeTimeSeriesProgress} color={"secondary"}/>);
 
         const removeButton = (
             (
