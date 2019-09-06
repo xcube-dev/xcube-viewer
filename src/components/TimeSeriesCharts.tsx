@@ -56,21 +56,31 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             removeTimeSeriesGroup, showPointsOnly, showErrorBars,
             placeInfos
         } = this.props;
-        const charts = timeSeriesGroups.map(timeSeriesGroup => (
-            <TimeSeriesChart
-                key={timeSeriesGroup.id}
-                locale={locale}
-                timeSeriesGroup={timeSeriesGroup}
-                selectedTime={selectedTime}
-                selectedTimeRange={selectedTimeRange}
-                dataTimeRange={dataTimeRange}
-                selectTime={selectTime}
-                selectTimeRange={selectTimeRange}
-                removeTimeSeriesGroup={removeTimeSeriesGroup}
-                showPointsOnly={showPointsOnly}
-                showErrorBars={showErrorBars}
-                placeInfos={placeInfos}
-            />)
+        const charts = timeSeriesGroups.map(timeSeriesGroup => {
+                let completed = [];
+                if(timeSeriesGroup.timeSeriesArray.length > 0){
+                    for(let item of timeSeriesGroup.timeSeriesArray) {
+                        completed.push(item.dataProgress ? 100 * item.dataProgress : -1);
+                    }
+                }
+
+                return (
+                    <TimeSeriesChart
+                        key={timeSeriesGroup.id}
+                        locale={locale}
+                        timeSeriesGroup={timeSeriesGroup}
+                        selectedTime={selectedTime}
+                        selectedTimeRange={selectedTimeRange}
+                        dataTimeRange={dataTimeRange}
+                        selectTime={selectTime}
+                        selectTimeRange={selectTimeRange}
+                        removeTimeSeriesGroup={removeTimeSeriesGroup}
+                        completed={completed}
+                        showPointsOnly={showPointsOnly}
+                        showErrorBars={showErrorBars}
+                        placeInfos={placeInfos}
+                    />)
+            }
         );
         if (charts.length > 0) {
             return (

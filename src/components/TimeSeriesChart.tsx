@@ -28,6 +28,8 @@ import {
 } from '../config';
 import { WithLocale } from '../util/lang';
 import { PlaceInfo } from "../model/place";
+import { grey } from "@material-ui/core/colors";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -67,6 +69,14 @@ const styles = (theme: Theme) => createStyles(
             fontWeight: 'bold',
             paddingBottom: theme.spacing(1),
         },
+        fabProgress: {
+            zIndex: 1000,
+            opacity: 0.8,
+            position: 'absolute',
+            color: grey[500],
+            right: theme.spacing(1),
+            margin: theme.spacing(2.5),
+        },
         chartTitle: {}
     });
 
@@ -87,6 +97,7 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     selectTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
+    completed: number[];
 
     placeInfos?: { [placeId: string]: PlaceInfo };
 }
@@ -214,6 +225,22 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
         const actionButtons = [];
 
+        let loading = false;
+
+        const progressBars = this.props.completed.map((item: number) => {
+            if (item > 0 && item < 100) {
+                loading = true;
+                return (
+                    <div>
+                        <br/>
+                        <LinearProgress color="secondary" variant="determinate" value={item}/>
+                    </div>
+                )
+            } else {
+                return (<div> </div>)
+            }
+        });
+
         if (isZoomedIn) {
             const zoomOutButton = (
                 <IconButton
@@ -229,14 +256,22 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         }
 
         const removeAllButton = (
-            <IconButton
-                key={'removeTimeSeriesGroup'}
-                className={classes.removeTimeSeriesGroup}
-                aria-label="Close"
-                onClick={this.handleRemoveTimeSeriesGroupClick}
-            >
-                <CloseIcon/>
-            </IconButton>
+            <div>
+                {!loading && (
+                    <IconButton
+                        key={'removeTimeSeriesGroup'}
+                        className={classes.removeTimeSeriesGroup}
+                        aria-label="Close"
+                        onClick={this.handleRemoveTimeSeriesGroupClick}
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                )
+                }
+
+
+                {progressBars}
+            </div>
         );
         actionButtons.push(removeAllButton);
 
@@ -328,6 +363,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     readonly handleRemoveTimeSeriesGroupClick = () => {
         if (this.props.removeTimeSeriesGroup) {
             this.props.removeTimeSeriesGroup(this.props.timeSeriesGroup.id);
+            this.setState(TimeSeriesChart.newState(this.state.isDragging,
+                this.state.firstTime,
+                this.state.secondTime))
         }
     };
 
@@ -356,7 +394,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         });
     };
 
-    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null): TimeSeriesChartState {
+    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null):
+        TimeSeriesChartState {
         return {isDragging, firstTime, secondTime};
     }
 
