@@ -136,15 +136,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             if (placeInfos) {
                 const placeInfo = placeInfos[source.placeId];
                 if (placeInfo) {
-                    const {place, placeLabel} = placeInfo;
+                    const {place, label, color} = placeInfo;
                     if (place.geometry.type === 'Point') {
                         const lon = place.geometry.coordinates[0];
                         const lat = place.geometry.coordinates[1];
-                        lineName += ` (${placeLabel}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
+                        lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
                     } else {
-                        lineName += ` (${placeLabel})`;
+                        lineName += ` (${label})`;
                     }
-                    lineColor = (place.properties || {}) ['color'] || lineColor;
+                    lineColor = color;
                 }
             }
 
@@ -175,7 +175,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     <ErrorBar
                         dataKey="uncertainty"
                         width={4}
-                        strokeWidth={2}
+                        strokeWidth={1}
                         stroke={USER_PLACES_COLORS[lineColor][strokeShade]}
                     />
                 );
