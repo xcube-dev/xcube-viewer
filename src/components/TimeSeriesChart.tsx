@@ -10,7 +10,7 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar
+    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar, DotProps
 } from 'recharts';
 import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -27,7 +27,7 @@ import {
     USER_PLACES_COLORS
 } from '../config';
 import { WithLocale } from '../util/lang';
-import { PlaceInfo } from "../model/place";
+import { PlaceInfo } from '../model/place';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -169,6 +169,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     }
                 }
             });
+            const shadedLineColor = USER_PLACES_COLORS[lineColor][strokeShade];
             let errorBar;
             if (showErrorBars && hasErrorBars) {
                 errorBar = (
@@ -176,7 +177,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         dataKey="uncertainty"
                         width={4}
                         strokeWidth={1}
-                        stroke={USER_PLACES_COLORS[lineColor][strokeShade]}
+                        stroke={shadedLineColor}
                     />
                 );
             }
@@ -188,9 +189,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     unit={source.variableUnits}
                     data={data}
                     dataKey="average"
-                    dot={true}
-                    activeDot={true}
-                    stroke={showPointsOnly ? '#00000000' : USER_PLACES_COLORS[lineColor][strokeShade]}
+                    dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
+                    activeDot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'yellow'} strokeWidth={3}/>}
+                    stroke={showPointsOnly ? '#00000000' :shadedLineColor}
                     strokeWidth={3 * (ts.dataProgress || 1)}
                     isAnimationActive={ts.dataProgress === 1.0}
                     onClick={() => this.handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
@@ -420,4 +421,33 @@ class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip);
 
+interface CustomizedDotProps extends DotProps {
+    radius: number;
+    stroke: string;
+    strokeWidth: number;
+    fill: string;
+}
 
+
+const CustomizedDot = (props: CustomizedDotProps) => {
+
+    const {cx, cy, radius, stroke, fill, strokeWidth} = props;
+
+    const vpSize = 1024;
+    const totalRadius = radius + 0.5 * strokeWidth;
+    const totalDiameter = 2 * totalRadius;
+
+    const r = Math.floor(100 * radius / totalDiameter + 0.5) + '%';
+    const sw = Math.floor(100 * strokeWidth / totalDiameter + 0.5) + '%';
+
+    // noinspection SuspiciousTypeOfGuard
+    if (typeof cx === 'number' && typeof cy === 'number') {
+        return (
+            <svg x={cx - totalRadius} y={cy - totalRadius} width={totalDiameter} height={totalDiameter}
+                 viewBox={`0 0 ${vpSize} ${vpSize}`}>
+                <circle cx='50%' cy='50%' r={r} strokeWidth={sw} stroke={stroke} fill={fill}/>
+            </svg>
+        );
+    }
+    return null;
+};
