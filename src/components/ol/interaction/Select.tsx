@@ -59,8 +59,10 @@ export class Select extends MapComponent<ol.interaction.Select, SelectProps> {
     private updateSelection(select: ol.interaction.Select) {
         if (this.context.map && this.props.selectedFeaturesIds) {
             const selectedFeatures = findFeaturesByIds(this.context.map!, this.props.selectedFeaturesIds).filter(f => f !== null) as ol.Feature[];
-            console.log("Select: ", this.props.selectedFeaturesIds, selectedFeatures);
+            // console.log("Select: ", this.props.selectedFeaturesIds, selectedFeatures);
             if (selectedFeatures.length > 0) {
+                // TODO (forman): must get around OpenLayers weirdness here: Selection style function is called only
+                // if a feature does not have any styles set.
                 select.getFeatures().clear();
                 select.getFeatures().extend(selectedFeatures);
                 this.context.map.render();
