@@ -216,18 +216,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
         const actionButtons = [];
 
-        let loading = false;
-
-        const progressBars = this.props.completed.map((item: number) => {
-            if (item > 0 && item < 100) {
-                loading = true;
-                return (
-                    <LinearProgress color="secondary" variant="determinate" value={item}/>
-                )
-            } else {
-                return (<div/>)
-            }
-        });
+        const progress = this.props.completed.reduce((a: number, b: number) => a + b , 0) / this.props.completed.length;
+        const loading = !!(progress > 0 && progress < 100);
+        const progressBar = loading && (<LinearProgress color="secondary" variant="determinate" value={progress}/>);
 
         if (isZoomedIn) {
             const zoomOutButton = (
@@ -255,7 +246,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         <CloseIcon/>
                     </IconButton>)
                 }
-                {progressBars}
+                {progressBar}
             </div>
         );
         actionButtons.push(removeAllButton);

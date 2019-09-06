@@ -59,7 +59,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
 
         const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
                 const completed = timeSeriesGroup.timeSeriesArray.map(item => (
-                        item.dataProgress ? 100 * item.dataProgress : -1
+                        item.dataProgress ? 100 * item.dataProgress : 0
                     )
                 );
 
