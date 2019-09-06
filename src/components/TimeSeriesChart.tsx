@@ -12,23 +12,22 @@ import {
     TooltipPayload,
     ReferenceArea, ReferenceLine, TooltipProps, ErrorBar
 } from 'recharts';
-import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import {Theme, createStyles, withStyles, WithStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
-import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
-import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
+import {equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint} from '../model/timeSeries';
+import {utcTimeToLocalDateString, utcTimeToLocalDateTimeString} from '../util/time';
 import {
     I18N,
     LINE_CHART_STROKE_SHADE_DARK_THEME,
     LINE_CHART_STROKE_SHADE_LIGHT_THEME,
     USER_PLACES_COLORS
 } from '../config';
-import { WithLocale } from '../util/lang';
-import { PlaceInfo } from "../model/place";
-import { grey } from "@material-ui/core/colors";
+import {WithLocale} from '../util/lang';
+import {PlaceInfo} from "../model/place";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 
@@ -223,13 +222,10 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             if (item > 0 && item < 100) {
                 loading = true;
                 return (
-                    <div>
-                        <br/>
-                        <LinearProgress color="secondary" variant="determinate" value={item}/>
-                    </div>
+                    <LinearProgress color="secondary" variant="determinate" value={item}/>
                 )
             } else {
-                return (<div> </div>)
+                return (<div/>)
             }
         });
 
@@ -257,11 +253,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                         onClick={this.handleRemoveTimeSeriesGroupClick}
                     >
                         <CloseIcon/>
-                    </IconButton>
-                )
+                    </IconButton>)
                 }
-
-
                 {progressBars}
             </div>
         );

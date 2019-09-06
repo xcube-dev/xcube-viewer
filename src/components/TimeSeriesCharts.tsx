@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Theme } from '@material-ui/core';
+import {createStyles, withStyles, WithStyles} from '@material-ui/core/styles';
+import {Theme} from '@material-ui/core';
 
-import { WithLocale } from '../util/lang';
+import {WithLocale} from '../util/lang';
 import TimeSeriesChart from './TimeSeriesChart';
-import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import { PlaceInfo } from "../model/place";
+import {Time, TimeRange, TimeSeriesGroup} from '../model/timeSeries';
+import {PlaceInfo} from "../model/place";
 import TimeRangeSlider from './TimeRangeSlider';
 
 
@@ -56,13 +56,12 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             removeTimeSeriesGroup, showPointsOnly, showErrorBars,
             placeInfos
         } = this.props;
-        const charts = timeSeriesGroups.map(timeSeriesGroup => {
-                let completed = [];
-                if(timeSeriesGroup.timeSeriesArray.length > 0){
-                    for(let item of timeSeriesGroup.timeSeriesArray) {
-                        completed.push(item.dataProgress ? 100 * item.dataProgress : -1);
-                    }
-                }
+
+        const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
+                const completed = timeSeriesGroup.timeSeriesArray.map(item => (
+                        item.dataProgress ? 100 * item.dataProgress : -1
+                    )
+                );
 
                 return (
                     <TimeSeriesChart
@@ -70,6 +69,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                         locale={locale}
                         timeSeriesGroup={timeSeriesGroup}
                         selectedTime={selectedTime}
+
                         selectedTimeRange={selectedTimeRange}
                         dataTimeRange={dataTimeRange}
                         selectTime={selectTime}
