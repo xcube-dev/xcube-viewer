@@ -14,7 +14,7 @@ import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
-import { Select, SelectEvent } from './ol/interaction/Select';
+// import { Select, SelectEvent } from './ol/interaction/Select';
 
 
 interface ViewerProps {
@@ -25,12 +25,31 @@ interface ViewerProps {
     addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
     userPlaceGroup: PlaceGroup;
     selectFeatures?: (features: geojson.Feature[]) => void;
+    selectedPlaceId?: string | null;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
 
-
+// TODO (forman): argh! no good design, store in some state instead
 const USER_LAYER_SOURCE = new ol.source.Vector();
+const SELECTION_LAYER_SOURCE = new ol.source.Vector();
 const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, left: 10, bottom: 65, position: 'relative'};
+
+const SELECTION_LAYER_STROKE = new ol.style.Stroke({
+                                                       color: [255, 200, 0, 1.0],
+                                                       width: 3
+                                                   });
+const SELECTION_LAYER_FILL = new ol.style.Fill({
+                                                   color: [255, 200, 0, 0.1]
+                                               });
+const SELECTION_LAYER_STYLE = new ol.style.Style({
+                                                     stroke: SELECTION_LAYER_STROKE,
+                                                     fill: SELECTION_LAYER_FILL,
+                                                     image: new ol.style.Circle({
+                                                                                    radius: 16,
+                                                                                    stroke: SELECTION_LAYER_STROKE,
+                                                                                    fill: SELECTION_LAYER_FILL,
+                                                                                })
+                                                 });
 
 
 class Viewer extends React.Component<ViewerProps> {
@@ -51,6 +70,7 @@ class Viewer extends React.Component<ViewerProps> {
 
     handleDrawEnd = (event: DrawEvent) => {
         const {addUserPlace, drawMode, userPlaceGroup} = this.props;
+        // TODO (forman): too much logic here! put the following code into an action + reducer.
         if (this.map !== null && addUserPlace && drawMode) {
             const feature = event.feature;
             const placeId = `User-${drawMode}-${newId()}`;
@@ -60,14 +80,15 @@ class Viewer extends React.Component<ViewerProps> {
             feature.setId(placeId);
             let colorIndex = 0;
             if (MAP_OBJECTS.userLayer) {
-                const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
-                const features = userLayer.getSource().getFeatures();
+                const features = USER_LAYER_SOURCE.getFeatures();
                 colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
             }
             const color = USER_PLACES_COLOR_NAMES[colorIndex];
             if (drawMode === 'Point') {
                 feature.setStyle(createCircleStyle(7, color));
             }
+
+            console.log('new feature: ', feature.getId(), feature.getProperties());
 
             const nameBase = I18N.get(geoJSONGeometry.type);
             let label: string;
@@ -83,19 +104,23 @@ class Viewer extends React.Component<ViewerProps> {
         return true;
     };
 
-    handleSelect = (event: SelectEvent) => {
-        console.log('handleSelect: ', event);
-    };
+    // handleSelect = (event: SelectEvent) => {
+    //     console.log('handleSelect: ', event);
+    // };
 
     handleMapRef = (map: ol.Map | null) => {
         this.map = map;
     };
 
     componentDidUpdate(prevProps: Readonly<ViewerProps>, prevState: Readonly<{}>, snapshot?: any): void {
+        if (this.map === null) {
+            return;
+        }
+        const map = this.map!;
         let flyToCurr = this.props.flyTo || null;
         let flyToPrev = prevProps.flyTo || null;
-        if (this.map !== null && flyToCurr !== null && flyToCurr !== flyToPrev) {
-            const map = this.map;
+        if (flyToCurr !== null && flyToCurr !== flyToPrev) {
+            // TODO (forman): too much logic here! put the following code into selector(s) and pass stuff as props.
             const projection = map.getView().getProjection();
             let flyToTarget;
             // noinspection JSDeprecatedSymbols
@@ -115,14 +140,26 @@ class Viewer extends React.Component<ViewerProps> {
                 }
             }
         }
+
+        const selectedPlaceIdCurr = this.props.selectedPlaceId;
+        const selectedPlaceIdPrev = prevProps.selectedPlaceId;
+        console.log('Viewer.componentDidUpdate: selectedPlaceId =', selectedPlaceIdCurr);
+        if (selectedPlaceIdCurr !== selectedPlaceIdPrev) {
+            SELECTION_LAYER_SOURCE.clear();
+            if (selectedPlaceIdCurr) {
+                const selectedFeature = findFeatureById(this.map!, selectedPlaceIdCurr);
+                console.log("Viewer.componentDidUpdate: ", selectedFeature);
+                if (selectedFeature) {
+                    SELECTION_LAYER_SOURCE.addFeature(selectedFeature);
+                }
+            }
+        }
     }
 
     public render() {
-        const variableLayer = this.props.variableLayer;
-        const placeGroupLayers = this.props.placeGroupLayers;
-        const colorBarLegend = this.props.colorBarLegend;
-        //const drawMode = this.props.drawMode;
-        const drawMode = false;
+        const {variableLayer, placeGroupLayers, colorBarLegend} = this.props;
+        const drawMode = this.props.drawMode;
+        // const drawMode = false;
         const draw = drawMode ?
                      <Draw
                          id="draw"
@@ -156,10 +193,11 @@ class Viewer extends React.Component<ViewerProps> {
                         <OSMBlackAndWhite/>
                         {variableLayer}
                         <Vector id='userLayer' opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
+                        <Vector id='selectionLayer' opacity={0.7} zIndex={510} style={SELECTION_LAYER_STYLE} source={SELECTION_LAYER_SOURCE}/>
                     </Layers>
                     {placeGroupLayers}
+                    {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={this.handleSelect}/>*/}
                     {draw}
-                    <Select onSelect={this.handleSelect}/>
                     {colorBarControl}
                 </Map>
             </ErrorBoundary>
@@ -186,4 +224,18 @@ function createCircleStyle(radius: number, fillColor: string, strokeColor: strin
             image: new ol.style.Circle({radius, fill, stroke})
         }
     );
+}
+
+
+function findFeatureById(map: ol.Map, featureId: string | number): ol.Feature | null {
+    for (let layer of map.getLayers().getArray()) {
+        if (layer instanceof ol.layer.Vector) {
+            const vectorLayer = layer as ol.layer.Vector;
+            const feature = vectorLayer.getSource().getFeatureById(featureId);
+            if (feature) {
+                return feature;
+            }
+        }
+    }
+    return null;
 }

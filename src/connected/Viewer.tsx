@@ -20,6 +20,7 @@ const mapStateToProps = (state: AppState) => {
         userPlaceGroup: userPlaceGroupSelector(state),
         drawMode: state.controlState.selectedDrawMode,
         flyTo: state.controlState.flyTo,
+        selectedPlaceId: state.controlState.selectedPlaceId,
     }
 };
 
