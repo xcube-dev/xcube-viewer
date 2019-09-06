@@ -28,7 +28,8 @@ import {
 } from '../config';
 import {WithLocale} from '../util/lang';
 import {PlaceInfo} from "../model/place";
-import LinearProgress from "@material-ui/core/LinearProgress";
+//import LinearProgress from "@material-ui/core/LinearProgress";
+import {CircularProgress} from "@material-ui/core";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -216,10 +217,6 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
         const actionButtons = [];
 
-        const progress = this.props.completed.reduce((a: number, b: number) => a + b , 0) / this.props.completed.length;
-        const loading = !!(progress > 0 && progress < 100);
-        const progressBar = loading && (<LinearProgress color="secondary" variant="determinate" value={progress}/>);
-
         if (isZoomedIn) {
             const zoomOutButton = (
                 <IconButton
@@ -233,10 +230,14 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             );
             actionButtons.push(zoomOutButton);
         }
+        const progress = this.props.completed.reduce((a: number, b: number) => a + b , 0) / this.props.completed.length;
+        const loading = !!(progress > 0 && progress < 100);
 
-        const removeAllButton = (
-            <div>
-                {!loading && (
+        //const progressBar = (<LinearProgress className={classes.removeTimeSeriesGroup} color="secondary" variant="determinate" value={progress}/>);
+        const progressBar = (<CircularProgress size={24} className={classes.removeTimeSeriesGroup} color={"secondary"}/>);
+
+        const removeButton = (
+            (
                     <IconButton
                         key={'removeTimeSeriesGroup'}
                         className={classes.removeTimeSeriesGroup}
@@ -245,10 +246,10 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     >
                         <CloseIcon/>
                     </IconButton>)
-                }
-                {progressBar}
-            </div>
         );
+
+        const removeAllButton = loading ? progressBar : removeButton;
+
         actionButtons.push(removeAllButton);
 
         const timeSeriesText = I18N.get('Time-Series');
