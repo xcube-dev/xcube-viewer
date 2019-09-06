@@ -29,9 +29,11 @@ interface ViewerProps {
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
 }
 
-// TODO (forman): argh! no good design, store in some state instead
+// TODO (forman): no good design, store in some state instead:
 const USER_LAYER_SOURCE = new ol.source.Vector();
 const SELECTION_LAYER_SOURCE = new ol.source.Vector();
+
+
 const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, left: 10, bottom: 65, position: 'relative'};
 
 const SELECTION_LAYER_STROKE = new ol.style.Stroke({
@@ -45,7 +47,7 @@ const SELECTION_LAYER_STYLE = new ol.style.Style({
                                                      stroke: SELECTION_LAYER_STROKE,
                                                      fill: SELECTION_LAYER_FILL,
                                                      image: new ol.style.Circle({
-                                                                                    radius: 16,
+                                                                                    radius: 10,
                                                                                     stroke: SELECTION_LAYER_STROKE,
                                                                                     fill: SELECTION_LAYER_FILL,
                                                                                 })
@@ -88,8 +90,6 @@ class Viewer extends React.Component<ViewerProps> {
                 feature.setStyle(createCircleStyle(7, color));
             }
 
-            console.log('new feature: ', feature.getId(), feature.getProperties());
-
             const nameBase = I18N.get(geoJSONGeometry.type);
             let label: string;
             for (let index = 1; ; index++) {
@@ -117,8 +117,9 @@ class Viewer extends React.Component<ViewerProps> {
             return;
         }
         const map = this.map!;
-        let flyToCurr = this.props.flyTo || null;
-        let flyToPrev = prevProps.flyTo || null;
+
+        const flyToCurr = this.props.flyTo || null;
+        const flyToPrev = prevProps.flyTo || null;
         if (flyToCurr !== null && flyToCurr !== flyToPrev) {
             // TODO (forman): too much logic here! put the following code into selector(s) and pass stuff as props.
             const projection = map.getView().getProjection();
@@ -143,14 +144,18 @@ class Viewer extends React.Component<ViewerProps> {
 
         const selectedPlaceIdCurr = this.props.selectedPlaceId;
         const selectedPlaceIdPrev = prevProps.selectedPlaceId;
-        console.log('Viewer.componentDidUpdate: selectedPlaceId =', selectedPlaceIdCurr);
         if (selectedPlaceIdCurr !== selectedPlaceIdPrev) {
             SELECTION_LAYER_SOURCE.clear();
             if (selectedPlaceIdCurr) {
                 const selectedFeature = findFeatureById(this.map!, selectedPlaceIdCurr);
-                console.log("Viewer.componentDidUpdate: ", selectedFeature);
                 if (selectedFeature) {
-                    SELECTION_LAYER_SOURCE.addFeature(selectedFeature);
+                    console.log("Viewer.componentDidUpdate: selectedFeature =", selectedFeature);
+                    // We clone so feature so we can set a new ID and clear the style, so the selection
+                    // layer style is used instead as default.
+                    const displayFeature = selectedFeature.clone();
+                    displayFeature.setId('Select-' + selectedFeature.getId());
+                    displayFeature.setStyle(null);
+                    SELECTION_LAYER_SOURCE.addFeature(displayFeature);
                 }
             }
         }
