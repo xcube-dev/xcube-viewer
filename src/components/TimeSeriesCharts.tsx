@@ -72,7 +72,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 placeInfos={placeInfos}
             />)
         );
-        if (charts.length == 0) {
+        if (charts.length === 0) {
             return null;
         }
         return (
