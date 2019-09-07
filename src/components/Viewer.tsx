@@ -3,8 +3,8 @@ import * as geojson from 'geojson';
 import * as ol from 'openlayers';
 
 import { newId } from '../util/id';
-import { PlaceGroup } from '../model/place';
-import { MAP_OBJECTS } from '../states/controlState';
+import { Place, PlaceGroup } from '../model/place';
+import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
 import { I18N, USER_PLACES_COLOR_NAMES } from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
@@ -14,19 +14,21 @@ import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
-// import { Select, SelectEvent } from './ol/interaction/Select';
+
+// import { Select, SelectEvent } from './ol/mapInteraction/Select';
 
 
 interface ViewerProps {
-    drawMode?: ol.geom.GeometryType | null;
+    mapInteraction?: MapInteraction;
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
     addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
     userPlaceGroup: PlaceGroup;
-    selectFeatures?: (features: geojson.Feature[]) => void;
+    selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
     flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
+    places: Place[];
 }
 
 // TODO (forman): no good design, store in some state instead:
@@ -59,23 +61,32 @@ class Viewer extends React.Component<ViewerProps> {
     map: ol.Map | null;
 
     handleMapClick = (event: ol.MapBrowserEvent) => {
-        const {selectFeatures, drawMode} = this.props;
-        if (selectFeatures && drawMode === null) {
+        const {selectPlace, mapInteraction, places} = this.props;
+        if (mapInteraction === 'Select') {
             const map = event.map;
-            // noinspection JSUnusedLocalSymbols
-            map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
-                console.log('Map.handleClick: feature is near: ', feature, layer);
-            });
-            // selectFeature(features);
+            let selectedPlaceId: string | null = null;
+            const features = map.getFeaturesAtPixel(event.pixel);
+            if (features) {
+                for (let f of features) {
+                    if (typeof f['getId'] === 'function') {
+                        selectedPlaceId = f['getId']() + '';
+                        break;
+                    }
+                }
+            }
+            console.log("selectedPlaceId =", selectedPlaceId);
+            if (selectPlace) {
+                selectPlace(selectedPlaceId, places, false);
+            }
         }
     };
 
     handleDrawEnd = (event: DrawEvent) => {
-        const {addUserPlace, drawMode, userPlaceGroup} = this.props;
+        const {addUserPlace, mapInteraction, userPlaceGroup} = this.props;
         // TODO (forman): too much logic here! put the following code into an action + reducer.
-        if (this.map !== null && addUserPlace && drawMode) {
+        if (this.map !== null && addUserPlace && mapInteraction !== 'Select') {
             const feature = event.feature;
-            const placeId = `User-${drawMode}-${newId()}`;
+            const placeId = `User-${mapInteraction}-${newId()}`;
             const projection = this.map.getView().getProjection();
             const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
             const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
@@ -86,7 +97,7 @@ class Viewer extends React.Component<ViewerProps> {
                 colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
             }
             const color = USER_PLACES_COLOR_NAMES[colorIndex];
-            if (drawMode === 'Point') {
+            if (mapInteraction === 'Point') {
                 feature.setStyle(createCircleStyle(7, color));
             }
 
@@ -162,18 +173,20 @@ class Viewer extends React.Component<ViewerProps> {
     }
 
     public render() {
-        const {variableLayer, placeGroupLayers, colorBarLegend} = this.props;
-        const drawMode = this.props.drawMode;
-        // const drawMode = false;
-        const draw = drawMode ?
-                     <Draw
-                         id="draw"
-                         layerId={'userLayer'}
-                         type={drawMode}
-                         wrapX={true}
-                         stopClick={true}
-                         onDrawEnd={this.handleDrawEnd}
-                     /> : null;
+        const {variableLayer, placeGroupLayers, colorBarLegend, mapInteraction} = this.props;
+        let draw;
+        if (mapInteraction === 'Point' || mapInteraction === 'Polygon') {
+            draw = (
+                <Draw
+                    id="draw"
+                    layerId={'userLayer'}
+                    type={mapInteraction}
+                    wrapX={true}
+                    stopClick={true}
+                    onDrawEnd={this.handleDrawEnd}
+                />
+            );
+        }
 
         let colorBarControl = null;
         if (colorBarLegend) {
@@ -198,7 +211,8 @@ class Viewer extends React.Component<ViewerProps> {
                         <OSMBlackAndWhite/>
                         {variableLayer}
                         <Vector id='userLayer' opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
-                        <Vector id='selectionLayer' opacity={0.7} zIndex={510} style={SELECTION_LAYER_STYLE} source={SELECTION_LAYER_SOURCE}/>
+                        <Vector id='selectionLayer' opacity={0.7} zIndex={510} style={SELECTION_LAYER_STYLE}
+                                source={SELECTION_LAYER_SOURCE}/>
                     </Layers>
                     {placeGroupLayers}
                     {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={this.handleSelect}/>*/}

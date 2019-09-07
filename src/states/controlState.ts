@@ -6,6 +6,7 @@ import { loadUserSettings } from './userSettings';
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000, 2500];
 
+export type MapInteraction = 'Select' | 'Point' | 'Polygon';
 
 export interface ControlState {
     selectedDatasetId: string | null;
@@ -16,7 +17,6 @@ export interface ControlState {
     selectedServerId: string;
     selectedTime: Time | null;
     selectedTimeRange: TimeRange | null;
-    selectedDrawMode: ol.geom.GeometryType | null;
     timeSeriesUpdateMode: 'add' | 'replace';
     timeAnimationActive: boolean;
     timeAnimationInterval: TimeAnimationInterval;
@@ -28,7 +28,9 @@ export interface ControlState {
     locale: string;
     dialogOpen: { [dialogId: string]: boolean };
     legalAgreementAccepted: boolean;
+    mapInteraction: MapInteraction;
 }
+
 
 export function newControlState(): ControlState {
     const state: ControlState = {
@@ -40,7 +42,6 @@ export function newControlState(): ControlState {
         selectedServerId: VIEWER_DEFAULT_API_SERVER.id,
         selectedTime: null,
         selectedTimeRange: null,
-        selectedDrawMode: 'Point',
         timeSeriesUpdateMode: 'add',
         timeAnimationActive: false,
         timeAnimationInterval: 1000,
@@ -52,6 +53,7 @@ export function newControlState(): ControlState {
         locale: 'en',
         dialogOpen: {},
         legalAgreementAccepted: false,
+        mapInteraction: 'Point',
     };
     return loadUserSettings(state);
 }

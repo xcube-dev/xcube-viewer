@@ -27,7 +27,7 @@ import {
     USER_PLACES_COLORS
 } from '../config';
 import { WithLocale } from '../util/lang';
-import { PlaceInfo } from '../model/place';
+import { Place, PlaceInfo } from '../model/place';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -95,6 +95,9 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     removeTimeSeriesGroup?: (id: string) => void;
 
     placeInfos?: { [placeId: string]: PlaceInfo };
+
+    selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
+    places: Place[];
 }
 
 interface TimeSeriesChartState {
@@ -304,11 +307,12 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     };
 
     readonly handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
-        const {selectTimeSeries} = this.props;
+        const {selectTimeSeries, selectPlace, places} = this.props;
         console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
+        selectPlace(timeSeries.source.placeId, places, true);
     };
 
     readonly handleMouseDown = (event: any) => {

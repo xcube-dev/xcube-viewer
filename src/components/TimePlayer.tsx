@@ -21,7 +21,6 @@ const styles = (theme: Theme) => createStyles(
     {
         formControl: {
             marginTop: theme.spacing(1),
-            marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
         },
     }

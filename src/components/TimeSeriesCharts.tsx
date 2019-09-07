@@ -5,7 +5,7 @@ import { Theme } from '@material-ui/core';
 import { WithLocale } from '../util/lang';
 import TimeSeriesChart from './TimeSeriesChart';
 import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import { PlaceInfo } from "../model/place";
+import { Place, PlaceInfo } from "../model/place";
 import TimeRangeSlider from './TimeRangeSlider';
 
 
@@ -43,6 +43,8 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
 
     removeTimeSeriesGroup?: (id: string) => void;
     placeInfos?: { [placeId: string]: PlaceInfo };
+    selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
+    places: Place[];
 }
 
 class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
@@ -54,7 +56,7 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             selectedTime, selectedTimeRange,
             dataTimeRange, selectTime, selectTimeRange,
             removeTimeSeriesGroup, showPointsOnly, showErrorBars,
-            placeInfos
+            placeInfos, places, selectPlace
         } = this.props;
         const charts = timeSeriesGroups.map(timeSeriesGroup => (
             <TimeSeriesChart
@@ -70,6 +72,8 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
                 showPointsOnly={showPointsOnly}
                 showErrorBars={showErrorBars}
                 placeInfos={placeInfos}
+                places={places}
+                selectPlace={selectPlace}
             />)
         );
         if (charts.length === 0) {

@@ -1,6 +1,10 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Improved selection of places:
+  - If a place is selected in the list it is zoomed to and highlighted in the map;
+  - Places can now be selected in the map if the select interaction is enabled;
+  - Places are also selected if a time-series line is clicked.
 * Minor fixes:
   * Time-series charts now have constant spacing
 * Restrict zooming out, so that only a single world is shown. (#79)
@@ -24,7 +28,7 @@
   increases viewer loading time for server configurations whose data cubes
   are associated with lots of vector data. (#61)
 * Viewer loads now in the MS Edge browser (#59)
-* Fixed problem where viewer did not zoom to selected place if that is a point location. (#52)
+* Fixed problem where viewer did not showInMap to selected place if that is a point location. (#52)
 * Time-series are now loaded in increments so user see constantly growing time-series graph
   instead of doing nothing for tens of seconds until the server returns the complete series (#38)
 * When animating through time, the index into a dataset's time coordinates array is incremented
