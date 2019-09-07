@@ -24,7 +24,7 @@ import {
 } from '../selectors/controlSelectors';
 import { Server } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
-import { findPlaceInPlaceGroups, PlaceGroup } from '../model/place';
+import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
 import { placeGroupsSelector } from '../selectors/dataSelectors';
 
@@ -116,10 +116,11 @@ export type REMOVE_USER_PLACE = typeof REMOVE_USER_PLACE;
 export interface RemoveUserPlace {
     type: REMOVE_USER_PLACE;
     id: string;
+    places: Place[];
 }
 
-export function removeUserPlace(id: string): RemoveUserPlace {
-    return {type: REMOVE_USER_PLACE, id};
+export function removeUserPlace(id: string, places: Place[]): RemoveUserPlace {
+    return {type: REMOVE_USER_PLACE, id, places};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

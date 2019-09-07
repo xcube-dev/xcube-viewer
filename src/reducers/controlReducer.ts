@@ -20,7 +20,7 @@ import {
     INC_SELECTED_TIME,
     UPDATE_SETTINGS,
 } from '../actions/controlActions';
-import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE } from "../actions/dataActions";
+import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, REMOVE_USER_PLACE } from "../actions/dataActions";
 import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
@@ -175,6 +175,25 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                 selectedPlaceGroupIds,
                 selectedPlaceId: action.id,
             };
+        }
+        case REMOVE_USER_PLACE: {
+            const {id, places} = action;
+            if (id === state.selectedPlaceId) {
+                let selectedPlaceId = null;
+                const index = places.findIndex(p => p.id === id);
+                if (index >= 0) {
+                    if (index < places.length - 1) {
+                        selectedPlaceId = places[index + 1].id;
+                    } else if (index > 0) {
+                        selectedPlaceId = places[index - 1].id;
+                    }
+                }
+                return {
+                    ...state,
+                    selectedPlaceId
+                };
+            }
+            return state;
         }
         case ADD_ACTIVITY: {
             return {

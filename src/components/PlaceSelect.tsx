@@ -32,7 +32,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     places: Place[];
     placeLabels: string[];
     selectPlace: (placeId: string | null, dataset: Dataset[], userPlaceGroup: PlaceGroup) => void;
-    removeUserPlace: (placeId: string) => void;
+    removeUserPlace: (placeId: string, places: Place[]) => void;
 }
 
 class PlaceSelect extends React.Component<PlaceSelectProps> {
@@ -42,9 +42,9 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
     };
 
     handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-        const {removeUserPlace, selectedPlaceId} = this.props;
+        const {removeUserPlace, selectedPlaceId, places} = this.props;
         if (selectedPlaceId !== null) {
-            removeUserPlace(selectedPlaceId);
+            removeUserPlace(selectedPlaceId, places);
         }
     };
 
