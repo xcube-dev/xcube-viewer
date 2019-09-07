@@ -1,6 +1,8 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Minor fixes:
+  * Time-series charts now have constant spacing
 * Restrict zooming out, so that only a single world is shown. (#79)
 * Added legal agreement to inform about using HTML local storage. (#77)
 * Users can now generate time series for any selected variable and any selected place. (#50)

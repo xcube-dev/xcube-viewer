@@ -34,9 +34,15 @@ const styles = (theme: Theme) => createStyles(
     {
         chartContainer: {
             // userSelect: 'none',
-            position: 'relative',
+            marginTop: theme.spacing(1),
             width: '99%',
-            height: '40vh',
+            height: '32vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-stretch',
+        },
+        responsiveContainer: {
+            flexGrow: 1,
         },
         zoomOutButton: {
             position: 'absolute',
@@ -250,7 +256,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             <div className={classes.chartContainer}>
                 <Typography className={classes.chartTitle}>{chartTitle}</Typography>
                 {actionButtons}
-                <ResponsiveContainer width="99%" height={320}>
+                <ResponsiveContainer width="99%" className={classes.responsiveContainer}>
                     <LineChart onMouseDown={this.handleMouseDown}
                                onMouseMove={this.handleMouseMove}
                                onMouseUp={this.handleMouseUp}
