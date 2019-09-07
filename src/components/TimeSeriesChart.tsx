@@ -196,7 +196,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     data={data}
                     dataKey="average"
                     dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
-                    activeDot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'yellow'} strokeWidth={3}/>}
+                    activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
                     stroke={showPointsOnly ? '#00000000' :shadedLineColor}
                     strokeWidth={3 * (ts.dataProgress || 1)}
                     isAnimationActive={ts.dataProgress === 1.0}
