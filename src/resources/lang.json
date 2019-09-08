@@ -113,6 +113,13 @@
       "se": "Punkt"
     },
     {
+      "en": "Polygon",
+      "de": "Polygon",
+      "it": "Poligono",
+      "ro": "Poligon",
+      "se": "Polygon"
+    },
+    {
       "en": "Multi",
       "de": "Multi",
       "it": "Multi",
