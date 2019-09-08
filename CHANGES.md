@@ -2,7 +2,7 @@
 ## Changes in version 0.2 (in dev.)
 
 * Users can now draw polygons and circles and show respective time-series. (#32)
-  In totel there are now 4 new interactions with the map:
+  In total there are now 4 new interactions with the map:
   - Select a geometry
   - Draw a point
   - Draw a geometry
