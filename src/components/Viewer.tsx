@@ -160,7 +160,6 @@ class Viewer extends React.Component<ViewerProps> {
             if (selectedPlaceIdCurr) {
                 const selectedFeature = findFeatureById(this.map!, selectedPlaceIdCurr);
                 if (selectedFeature) {
-                    console.log("Viewer.componentDidUpdate: selectedFeature =", selectedFeature);
                     // We clone so feature so we can set a new ID and clear the style, so the selection
                     // layer style is used instead as default.
                     const displayFeature = selectedFeature.clone();
