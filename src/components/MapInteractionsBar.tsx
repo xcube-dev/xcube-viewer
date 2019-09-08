@@ -1,12 +1,14 @@
 import * as React from 'react';
 import CenterFocusWeakIcon from '@material-ui/icons/CenterFocusWeak';
 import TripOriginIcon from '@material-ui/icons/TripOrigin';
+import CategoryIcon from '@material-ui/icons/Category';
 import FormControl from '@material-ui/core/FormControl';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { WithLocale } from '../util/lang';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { MapInteraction } from "../states/controlState";
 
 
 const useStyles = makeStyles(theme => ({
@@ -25,8 +27,12 @@ interface MapInteractionsBarProps extends WithLocale {
 export default function MapInteractionsBar({mapInteraction, setMapInteraction}: MapInteractionsBarProps) {
     const classes = useStyles();
 
-    function handleChange(event: React.MouseEvent<HTMLElement>, value: any) {
-        setMapInteraction(value);
+    function handleChange(event: React.MouseEvent<HTMLElement>, value: MapInteraction | null) {
+        if (value !== null) {
+            setMapInteraction(value);
+        } else {
+            setMapInteraction('Select');
+        }
     }
 
     return (
@@ -37,6 +43,9 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
                 </ToggleButton>
                 <ToggleButton key={1} value="Point">
                     <TripOriginIcon/>
+                </ToggleButton>
+                <ToggleButton key={2} value="Polygon">
+                    <CategoryIcon/>
                 </ToggleButton>
             </ToggleButtonGroup>
         </FormControl>
