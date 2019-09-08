@@ -6,7 +6,7 @@ import { loadUserSettings } from './userSettings';
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000, 2500];
 
-export type MapInteraction = 'Select' | 'Point' | 'Polygon';
+export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle';
 
 export interface ControlState {
     selectedDatasetId: string | null;

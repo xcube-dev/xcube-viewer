@@ -1,14 +1,15 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Users can now draw polygons and circles and show respective time-series. (#32)
 * Improved selection of places:
   - If a place is selected in the list it is zoomed to and highlighted in the map;
   - Places can now be selected in the map if the select interaction is enabled;
   - Places are also selected if a time-series line is clicked.
 * Minor fixes:
   * Time-series charts now have constant spacing
-* Restrict zooming out, so that only a single world is shown. (#79)
-* Added legal agreement to inform about using HTML local storage. (#77)
+  * Restrict zooming out, so that only a single world is shown. (#79)
+  * Added legal agreement to inform about using HTML local storage. (#77)
 * Users can now generate time series for any selected variable and any selected place. (#50)
   User places can now be also removed, which will remove related time series too.
   Removing time series, on the other hand, does no longer remove user added places.

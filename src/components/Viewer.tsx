@@ -1,11 +1,17 @@
 import * as React from 'react';
 import * as geojson from 'geojson';
 import * as ol from 'openlayers';
+import { createStyles, Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 
 import { newId } from '../util/id';
 import { Place, PlaceGroup } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
-import { I18N, USER_PLACES_COLOR_NAMES } from '../config';
+import {
+    I18N,
+    LINE_CHART_STROKE_SHADE_DARK_THEME,
+    LINE_CHART_STROKE_SHADE_LIGHT_THEME,
+    USER_PLACES_COLOR_NAMES, USER_PLACES_COLORS
+} from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
@@ -15,21 +21,9 @@ import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
 
-// import { Select, SelectEvent } from './ol/mapInteraction/Select';
 
-
-interface ViewerProps {
-    mapInteraction?: MapInteraction;
-    variableLayer?: MapElement;
-    placeGroupLayers?: MapElement;
-    colorBarLegend?: MapElement;
-    addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
-    userPlaceGroup: PlaceGroup;
-    selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
-    selectedPlaceId?: string | null;
-    flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
-    places: Place[];
-}
+// noinspection JSUnusedLocalSymbols
+const styles = (theme: Theme) => createStyles({});
 
 // TODO (forman): no good design, store in some state instead:
 const USER_LAYER_SOURCE = new ol.source.Vector();
@@ -43,7 +37,7 @@ const SELECTION_LAYER_STROKE = new ol.style.Stroke({
                                                        width: 3
                                                    });
 const SELECTION_LAYER_FILL = new ol.style.Fill({
-                                                   color: [255, 200, 0, 0.1]
+                                                   color: [255, 200, 0, 0.05]
                                                });
 const SELECTION_LAYER_STYLE = new ol.style.Style({
                                                      stroke: SELECTION_LAYER_STROKE,
@@ -55,6 +49,20 @@ const SELECTION_LAYER_STYLE = new ol.style.Style({
                                                                                 })
                                                  });
 
+
+interface ViewerProps extends WithStyles<typeof styles> {
+    theme: Theme;
+    mapInteraction: MapInteraction;
+    variableLayer?: MapElement;
+    placeGroupLayers?: MapElement;
+    colorBarLegend?: MapElement;
+    addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
+    userPlaceGroup: PlaceGroup;
+    selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
+    selectedPlaceId?: string | null;
+    flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
+    places: Place[];
+}
 
 class Viewer extends React.Component<ViewerProps> {
 
@@ -82,12 +90,19 @@ class Viewer extends React.Component<ViewerProps> {
     };
 
     handleDrawEnd = (event: DrawEvent) => {
-        const {addUserPlace, mapInteraction, userPlaceGroup} = this.props;
+        const {theme, addUserPlace, mapInteraction, userPlaceGroup} = this.props;
         // TODO (forman): too much logic here! put the following code into an action + reducer.
         if (this.map !== null && addUserPlace && mapInteraction !== 'Select') {
             const feature = event.feature;
             const placeId = `User-${mapInteraction}-${newId()}`;
             const projection = this.map.getView().getProjection();
+
+            if (feature.getGeometry() instanceof ol.geom.Circle) {
+                const polygon = ol.geom.Polygon.fromCircle(feature.getGeometry() as ol.geom.Circle);
+                feature.setGeometry(polygon);
+            }
+
+            // Beware: transform() is an in-place op
             const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
             const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
             feature.setId(placeId);
@@ -96,12 +111,18 @@ class Viewer extends React.Component<ViewerProps> {
                 const features = USER_LAYER_SOURCE.getFeatures();
                 colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
             }
+            const strokeShade = theme.palette.type === 'light' ? LINE_CHART_STROKE_SHADE_LIGHT_THEME : LINE_CHART_STROKE_SHADE_DARK_THEME;
             const color = USER_PLACES_COLOR_NAMES[colorIndex];
+            const shadedColor = USER_PLACES_COLORS[color][strokeShade];
             if (mapInteraction === 'Point') {
-                feature.setStyle(createCircleStyle(7, color));
+                feature.setStyle(createPointGeometryStyle(7, shadedColor, 'white', 1));
+            } else {
+                feature.setStyle(createGeometryStyle([255, 255, 255, 0.25], shadedColor, 2));
             }
 
-            const nameBase = I18N.get(geoJSONGeometry.type);
+            console.log('geoJSONGeometry =', geoJSONGeometry);
+
+            const nameBase = I18N.get(mapInteraction);
             let label: string;
             for (let index = 1; ; index++) {
                 label = `${nameBase} ${index}`;
@@ -114,10 +135,6 @@ class Viewer extends React.Component<ViewerProps> {
         }
         return true;
     };
-
-    // handleSelect = (event: SelectEvent) => {
-    //     console.log('handleSelect: ', event);
-    // };
 
     handleMapRef = (map: ol.Map | null) => {
         this.map = map;
@@ -173,19 +190,6 @@ class Viewer extends React.Component<ViewerProps> {
 
     public render() {
         const {variableLayer, placeGroupLayers, colorBarLegend, mapInteraction} = this.props;
-        let draw;
-        if (mapInteraction === 'Point' || mapInteraction === 'Polygon') {
-            draw = (
-                <Draw
-                    id="draw"
-                    layerId={'userLayer'}
-                    type={mapInteraction}
-                    wrapX={true}
-                    stopClick={true}
-                    onDrawEnd={this.handleDrawEnd}
-                />
-            );
-        }
 
         let colorBarControl = null;
         if (colorBarLegend) {
@@ -215,7 +219,33 @@ class Viewer extends React.Component<ViewerProps> {
                     </Layers>
                     {placeGroupLayers}
                     {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={this.handleSelect}/>*/}
-                    {draw}
+                    <Draw
+                        id="drawPoint"
+                        layerId={'userLayer'}
+                        active={mapInteraction === 'Point'}
+                        type={'Point'}
+                        wrapX={true}
+                        stopClick={true}
+                        onDrawEnd={this.handleDrawEnd}
+                    />
+                    <Draw
+                        id="drawPolygon"
+                        layerId={'userLayer'}
+                        active={mapInteraction === 'Polygon'}
+                        type={'Polygon'}
+                        wrapX={true}
+                        stopClick={true}
+                        onDrawEnd={this.handleDrawEnd}
+                    />
+                    <Draw
+                        id="drawCircle"
+                        layerId={'userLayer'}
+                        active={mapInteraction === 'Circle'}
+                        type={'Circle'}
+                        wrapX={true}
+                        stopClick={true}
+                        onDrawEnd={this.handleDrawEnd}
+                    />
                     {colorBarControl}
                 </Map>
             </ErrorBoundary>
@@ -223,10 +253,10 @@ class Viewer extends React.Component<ViewerProps> {
     }
 }
 
-export default Viewer;
+export default withStyles(styles, {withTheme: true})(Viewer);
 
 
-function createCircleStyle(radius: number, fillColor: string, strokeColor: string = 'white', strokeWidth: number = 1) {
+function createPointGeometryStyle(radius: number, fillColor: string, strokeColor: string, strokeWidth: number): ol.style.Style {
     let fill = new ol.style.Fill(
         {
             color: fillColor,
@@ -244,6 +274,20 @@ function createCircleStyle(radius: number, fillColor: string, strokeColor: strin
     );
 }
 
+function createGeometryStyle(fillColor: string | ol.Color, strokeColor: string | ol.Color, strokeWidth: number): ol.style.Style {
+    const fill = new ol.style.Fill(
+        {
+            color: fillColor,
+        });
+    const stroke = new ol.style.Stroke(
+        {
+            color: strokeColor,
+            width: strokeWidth,
+
+        }
+    );
+    return new ol.style.Style({fill, stroke});
+}
 
 function findFeatureById(map: ol.Map, featureId: string | number): ol.Feature | null {
     for (let layer of map.getLayers().getArray()) {

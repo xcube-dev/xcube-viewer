@@ -1,6 +1,7 @@
 import * as React from 'react';
-import CenterFocusWeakIcon from '@material-ui/icons/CenterFocusWeak';
-import TripOriginIcon from '@material-ui/icons/TripOrigin';
+import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import RoomIcon from '@material-ui/icons/Room';
 import CategoryIcon from '@material-ui/icons/Category';
 import FormControl from '@material-ui/core/FormControl';
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -20,8 +21,8 @@ const useStyles = makeStyles(theme => ({
 ));
 
 interface MapInteractionsBarProps extends WithLocale {
-    mapInteraction: string;
-    setMapInteraction: (interaction: string) => void;
+    mapInteraction: MapInteraction;
+    setMapInteraction: (interaction: MapInteraction) => void;
 }
 
 export default function MapInteractionsBar({mapInteraction, setMapInteraction}: MapInteractionsBarProps) {
@@ -39,13 +40,16 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
         <FormControl className={classes.formControl}>
             <ToggleButtonGroup size="small" value={mapInteraction} exclusive onChange={handleChange}>
                 <ToggleButton key={0} value="Select">
-                    <CenterFocusWeakIcon/>
+                    <CenterFocusStrongIcon/>
                 </ToggleButton>
                 <ToggleButton key={1} value="Point">
-                    <TripOriginIcon/>
+                    <RoomIcon/>
                 </ToggleButton>
                 <ToggleButton key={2} value="Polygon">
                     <CategoryIcon/>
+                </ToggleButton>
+                <ToggleButton key={3} value="Circle">
+                    <FiberManualRecordIcon/>
                 </ToggleButton>
             </ToggleButtonGroup>
         </FormControl>
