@@ -7,6 +7,7 @@
   - Places can now be selected in the map if the select interaction is enabled;
   - Places are also selected if a time-series line is clicked.
 * Minor fixes:
+  * Colors used for geometries in the map and for lines in the time-series charts are now exactly the same.
   * Time-series charts now have constant spacing
   * Restrict zooming out, so that only a single world is shown. (#79)
   * Added legal agreement to inform about using HTML local storage. (#77)
