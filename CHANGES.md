@@ -2,10 +2,16 @@
 ## Changes in version 0.2 (in dev.)
 
 * Users can now draw polygons and circles and show respective time-series. (#32)
+  In totel there are now 4 new interactions with the map:
+  - Select a geometry
+  - Draw a point
+  - Draw a geometry
+  - Draw a circle
 * Improved selection of places:
   - If a place is selected in the list it is zoomed to and highlighted in the map;
-  - Places can now be selected in the map if the select interaction is enabled;
+  - Places can now be selected in the map if the "Select" map interaction is active;
   - Places are also selected if a time-series line is clicked.
+    (However, that doesn't work nicely yet due to issues in the Recharts lib).
 * Minor fixes:
   * Colors used for geometries in the map and for lines in the time-series charts are now exactly the same.
   * Time-series charts now have constant spacing
