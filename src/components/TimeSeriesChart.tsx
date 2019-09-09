@@ -29,6 +29,7 @@ import {
 } from '../config';
 import { WithLocale } from '../util/lang';
 import { Place, PlaceInfo } from '../model/place';
+import Box from "@material-ui/core/Box";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -45,24 +46,7 @@ const styles = (theme: Theme) => createStyles(
         responsiveContainer: {
             flexGrow: 1,
         },
-        zoomOutButton: {
-            position: 'absolute',
-            right: 8 * theme.spacing(1),
-            margin: theme.spacing(1),
-            zIndex: 1000,
-            opacity: 0.8,
-        },
-        removeTimeSeriesGroup: {
-            position: 'absolute',
-            right: theme.spacing(1),
-            margin: theme.spacing(1),
-            zIndex: 1000,
-            opacity: 0.8,
-        },
-        removeTimeSeriesProgress: {
-            position: 'absolute',
-            right: theme.spacing(1),
-            margin: theme.spacing(2.5),
+        actionButton: {
             zIndex: 1000,
             opacity: 0.8,
         },
@@ -209,7 +193,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     dataKey="average"
                     dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
                     activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
-                    stroke={showPointsOnly ? '#00000000' :shadedLineColor}
+                    stroke={showPointsOnly ? '#00000000' : shadedLineColor}
                     strokeWidth={3 * (ts.dataProgress || 1)}
                     isAnimationActive={ts.dataProgress === 1.0}
                     onClick={() => this.handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
@@ -237,7 +221,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             const zoomOutButton = (
                 <IconButton
                     key={'zoomOutButton'}
-                    className={classes.zoomOutButton}
+                    className={classes.actionButton}
                     aria-label="Zoom Out"
                     onClick={this.handleZoomOutButtonClick}
                 >
@@ -246,25 +230,30 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             );
             actionButtons.push(zoomOutButton);
         }
-        const progress = this.props.completed.reduce((a: number, b: number) => a + b , 0) / this.props.completed.length;
+        const progress = this.props.completed.reduce((a: number, b: number) => a + b, 0) / this.props.completed.length;
         const loading = !!(progress > 0 && progress < 100);
 
-        //const progressBar = (<LinearProgress className={classes.removeTimeSeriesGroup} color="secondary" variant="determinate" value={progress}/>);
-        const progressBar = (<CircularProgress size={24} className={classes.removeTimeSeriesProgress} color={"secondary"}/>);
-
-        const removeButton = (
-            (
-                    <IconButton
-                        key={'removeTimeSeriesGroup'}
-                        className={classes.removeTimeSeriesGroup}
-                        aria-label="Close"
-                        onClick={this.handleRemoveTimeSeriesGroupClick}
-                    >
-                        <CloseIcon/>
-                    </IconButton>)
-        );
-
-        const removeAllButton = loading ? progressBar : removeButton;
+        let removeAllButton;
+        if (loading) {
+            removeAllButton = (
+                <CircularProgress
+                    size={24}
+                    className={classes.actionButton}
+                    color={"secondary"}
+                />
+            );
+        } else {
+            removeAllButton = (
+                <IconButton
+                    key={'removeTimeSeriesGroup'}
+                    className={classes.actionButton}
+                    aria-label="Close"
+                    onClick={this.handleRemoveTimeSeriesGroupClick}
+                >
+                    <CloseIcon/>
+                </IconButton>
+            );
+        }
 
         actionButtons.push(removeAllButton);
 
@@ -275,8 +264,12 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         // 99% per https://github.com/recharts/recharts/issues/172
         return (
             <div className={classes.chartContainer}>
-                <Typography className={classes.chartTitle}>{chartTitle}</Typography>
-                {actionButtons}
+                <Box display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
+                    <Typography className={classes.chartTitle}>{chartTitle}</Typography>
+                    <Box display='flex' flexDirection='row' flexWrap='nowrap' alignItems='center'>
+                        {actionButtons}
+                    </Box>
+                </Box>
                 <ResponsiveContainer width="99%" className={classes.responsiveContainer}>
                     <LineChart onMouseDown={this.handleMouseDown}
                                onMouseMove={this.handleMouseMove}
@@ -358,8 +351,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         if (this.props.removeTimeSeriesGroup) {
             this.props.removeTimeSeriesGroup(this.props.timeSeriesGroup.id);
             this.setState(TimeSeriesChart.newState(this.state.isDragging,
-                this.state.firstTime,
-                this.state.secondTime))
+                                                   this.state.firstTime,
+                                                   this.state.secondTime))
         }
     };
 
