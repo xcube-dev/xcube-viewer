@@ -82,7 +82,6 @@ class Viewer extends React.Component<ViewerProps> {
                     }
                 }
             }
-            console.log("selectedPlaceId =", selectedPlaceId);
             if (selectPlace) {
                 selectPlace(selectedPlaceId, places, false);
             }
