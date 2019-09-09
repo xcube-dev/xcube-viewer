@@ -9,7 +9,6 @@ export const VIEWER_APP_NAME = 'xcube Viewer';
 export const VIEWER_DEFAULT_API_SERVER_NAME = 'Default Server';
 export const VIEWER_DEFAULT_API_SERVER_URL = 'http://localhost:8080';
 
-
 export const VIEWER_DEFAULT_API_SERVER = {
     id: 'default',
     name: getQueryParameterByName(null, 'serverName', VIEWER_DEFAULT_API_SERVER_NAME)!,

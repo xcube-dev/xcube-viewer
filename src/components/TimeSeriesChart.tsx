@@ -12,22 +12,24 @@ import {
     TooltipPayload,
     ReferenceArea, ReferenceLine, TooltipProps, ErrorBar
 } from 'recharts';
-import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import {Theme, createStyles, withStyles, WithStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
-import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
-import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
+import {equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint} from '../model/timeSeries';
+import {utcTimeToLocalDateString, utcTimeToLocalDateTimeString} from '../util/time';
 import {
     I18N,
     LINE_CHART_STROKE_SHADE_DARK_THEME,
     LINE_CHART_STROKE_SHADE_LIGHT_THEME,
     USER_PLACES_COLORS
 } from '../config';
-import { WithLocale } from '../util/lang';
-import { PlaceInfo } from "../model/place";
+import {WithLocale} from '../util/lang';
+import {PlaceInfo} from "../model/place";
+//import LinearProgress from "@material-ui/core/LinearProgress";
+import {CircularProgress} from "@material-ui/core";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -55,6 +57,13 @@ const styles = (theme: Theme) => createStyles(
             position: 'absolute',
             right: theme.spacing(1),
             margin: theme.spacing(1),
+            zIndex: 1000,
+            opacity: 0.8,
+        },
+        removeTimeSeriesProgress: {
+            position: 'absolute',
+            right: theme.spacing(1),
+            margin: theme.spacing(2.5),
             zIndex: 1000,
             opacity: 0.8,
         },
@@ -93,6 +102,7 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     selectTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
+    completed: number[];
 
     placeInfos?: { [placeId: string]: PlaceInfo };
 }
@@ -233,17 +243,26 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             );
             actionButtons.push(zoomOutButton);
         }
+        const progress = this.props.completed.reduce((a: number, b: number) => a + b , 0) / this.props.completed.length;
+        const loading = !!(progress > 0 && progress < 100);
 
-        const removeAllButton = (
-            <IconButton
-                key={'removeTimeSeriesGroup'}
-                className={classes.removeTimeSeriesGroup}
-                aria-label="Close"
-                onClick={this.handleRemoveTimeSeriesGroupClick}
-            >
-                <CloseIcon/>
-            </IconButton>
+        //const progressBar = (<LinearProgress className={classes.removeTimeSeriesGroup} color="secondary" variant="determinate" value={progress}/>);
+        const progressBar = (<CircularProgress size={24} className={classes.removeTimeSeriesProgress} color={"secondary"}/>);
+
+        const removeButton = (
+            (
+                    <IconButton
+                        key={'removeTimeSeriesGroup'}
+                        className={classes.removeTimeSeriesGroup}
+                        aria-label="Close"
+                        onClick={this.handleRemoveTimeSeriesGroupClick}
+                    >
+                        <CloseIcon/>
+                    </IconButton>)
         );
+
+        const removeAllButton = loading ? progressBar : removeButton;
+
         actionButtons.push(removeAllButton);
 
         const timeSeriesText = I18N.get('Time-Series');
@@ -334,6 +353,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     readonly handleRemoveTimeSeriesGroupClick = () => {
         if (this.props.removeTimeSeriesGroup) {
             this.props.removeTimeSeriesGroup(this.props.timeSeriesGroup.id);
+            this.setState(TimeSeriesChart.newState(this.state.isDragging,
+                this.state.firstTime,
+                this.state.secondTime))
         }
     };
 
@@ -362,7 +384,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         });
     };
 
-    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null): TimeSeriesChartState {
+    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null):
+        TimeSeriesChartState {
         return {isDragging, firstTime, secondTime};
     }
 

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Theme } from '@material-ui/core';
+import {createStyles, withStyles, WithStyles} from '@material-ui/core/styles';
+import {Theme} from '@material-ui/core';
 
-import { WithLocale } from '../util/lang';
+import {WithLocale} from '../util/lang';
 import TimeSeriesChart from './TimeSeriesChart';
-import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import { PlaceInfo } from "../model/place";
+import {Time, TimeRange, TimeSeriesGroup} from '../model/timeSeries';
+import {PlaceInfo} from "../model/place";
 import TimeRangeSlider from './TimeRangeSlider';
 
 
@@ -56,21 +56,31 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             removeTimeSeriesGroup, showPointsOnly, showErrorBars,
             placeInfos
         } = this.props;
-        const charts = timeSeriesGroups.map(timeSeriesGroup => (
-            <TimeSeriesChart
-                key={timeSeriesGroup.id}
-                locale={locale}
-                timeSeriesGroup={timeSeriesGroup}
-                selectedTime={selectedTime}
-                selectedTimeRange={selectedTimeRange}
-                dataTimeRange={dataTimeRange}
-                selectTime={selectTime}
-                selectTimeRange={selectTimeRange}
-                removeTimeSeriesGroup={removeTimeSeriesGroup}
-                showPointsOnly={showPointsOnly}
-                showErrorBars={showErrorBars}
-                placeInfos={placeInfos}
-            />)
+
+        const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
+                const completed = timeSeriesGroup.timeSeriesArray.map(item => (
+                        item.dataProgress ? 100 * item.dataProgress : 0
+                    )
+                );
+
+                return (
+                    <TimeSeriesChart
+                        key={timeSeriesGroup.id}
+                        locale={locale}
+                        timeSeriesGroup={timeSeriesGroup}
+                        selectedTime={selectedTime}
+
+                        selectedTimeRange={selectedTimeRange}
+                        dataTimeRange={dataTimeRange}
+                        selectTime={selectTime}
+                        selectTimeRange={selectTimeRange}
+                        removeTimeSeriesGroup={removeTimeSeriesGroup}
+                        completed={completed}
+                        showPointsOnly={showPointsOnly}
+                        showErrorBars={showErrorBars}
+                        placeInfos={placeInfos}
+                    />)
+            }
         );
         if (charts.length === 0) {
             return null;
