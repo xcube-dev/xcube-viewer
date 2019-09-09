@@ -267,11 +267,11 @@
       "se": "Spelarens tidsintervall"
     },
     {
-      "en": "Show graph after adding a point",
-      "de": "Grafik anzeigen, nachdem ein Punkt hinzugefügt wurde",
-      "it": "Mostra grafico dopo aver aggiunto un punto",
-      "ro": "Afișează grafic după adăugarea unui punct",
-      "se": "Visa graf efter att ha lagt till en punkt"
+      "en": "Show graph after adding a place",
+      "de": "Grafik anzeigen, nachdem ein Ort hinzugefügt wurde",
+      "it": "Mostra grafico dopo aver aggiunto un posto",
+      "ro": "Afișează grafic după adăugarea unui loc",
+      "se": "Visa graf efter att ha lagt till en plats"
     },
     {
       "en": "Show data points only",

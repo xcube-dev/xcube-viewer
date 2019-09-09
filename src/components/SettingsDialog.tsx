@@ -136,7 +136,7 @@ export default function SettingsDialog({open, closeDialog, settings, selectedSer
                     </SettingsPanel>
 
                     <SettingsPanel title={I18N.get('Time-Series')}>
-                        <SettingsSubPanel label={I18N.get('Show graph after adding a point')}
+                        <SettingsSubPanel label={I18N.get('Show graph after adding a place')}
                                           value={getOnOff(settings.autoShowTimeSeries)}>
                             <ToggleSetting
                                 propertyName={'autoShowTimeSeries'}
