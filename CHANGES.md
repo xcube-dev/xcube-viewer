@@ -13,6 +13,10 @@
   - Places are also selected if a time-series line is clicked.
     (However, that doesn't work nicely yet due to issues in the Recharts lib).
 * Minor fixes:
+  * Time-series charts now have constant spacing;
+  * A loading icon is shown, while time-series are being loaded.
+  * Restrict zooming out, so that only a single world is shown. (#79)
+  * Added legal agreement to inform about using HTML local storage. (#77)
   * Colors used for geometries in the map and for lines in the time-series charts are now exactly the same.
   * Time-series charts now have constant spacing
   * Restrict zooming out, so that only a single world is shown. (#79)

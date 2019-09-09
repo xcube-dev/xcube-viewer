@@ -58,23 +58,58 @@ class TimeSeriesCharts extends React.Component<TimeSeriesChartsProps> {
             removeTimeSeriesGroup, showPointsOnly, showErrorBars,
             placeInfos, places, selectPlace
         } = this.props;
-        const charts = timeSeriesGroups.map(timeSeriesGroup => (
-            <TimeSeriesChart
-                key={timeSeriesGroup.id}
-                locale={locale}
-                timeSeriesGroup={timeSeriesGroup}
-                selectedTime={selectedTime}
-                selectedTimeRange={selectedTimeRange}
-                dataTimeRange={dataTimeRange}
-                selectTime={selectTime}
-                selectTimeRange={selectTimeRange}
-                removeTimeSeriesGroup={removeTimeSeriesGroup}
-                showPointsOnly={showPointsOnly}
-                showErrorBars={showErrorBars}
-                placeInfos={placeInfos}
-                places={places}
-                selectPlace={selectPlace}
-            />)
+        const charts = timeSeriesGroups.map(timeSeriesGroup => {
+            const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
+                const completed = timeSeriesGroup.timeSeriesArray.map(item => (
+                                                                          item.dataProgress ? 100 * item.dataProgress : 0
+                                                                      )
+                );
+
+                return (
+                <TimeSeriesChart
+                    key={timeSeriesGroup.id}
+                    locale={locale}
+                    timeSeriesGroup={timeSeriesGroup}
+                    selectedTime={selectedTime}
+                    selectedTimeRange={selectedTimeRange}
+                    dataTimeRange={dataTimeRange}
+                    selectTime={selectTime}
+                    selectTimeRange={selectTimeRange}
+                    removeTimeSeriesGroup={removeTimeSeriesGroup}
+                    completed={completed}
+                    showPointsOnly={showPointsOnly}
+                    showErrorBars={showErrorBars}
+                    placeInfos={placeInfos}
+                    places={places}
+                    selectPlace={selectPlace}
+                />);
+        }
+        }
+
+        const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
+                const completed = timeSeriesGroup.timeSeriesArray.map(item => (
+                        item.dataProgress ? 100 * item.dataProgress : 0
+                    )
+                );
+
+                return (
+                    <TimeSeriesChart
+                        key={timeSeriesGroup.id}
+                        locale={locale}
+                        timeSeriesGroup={timeSeriesGroup}
+                        selectedTime={selectedTime}
+
+                        selectedTimeRange={selectedTimeRange}
+                        dataTimeRange={dataTimeRange}
+                        selectTime={selectTime}
+                        selectTimeRange={selectTimeRange}
+                        removeTimeSeriesGroup={removeTimeSeriesGroup}
+                        completed={completed}
+                        showPointsOnly={showPointsOnly}
+                        showErrorBars={showErrorBars}
+                        placeInfos={placeInfos}
+                    />)
+            }
         );
         if (charts.length === 0) {
             return null;
