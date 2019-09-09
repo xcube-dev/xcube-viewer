@@ -12,7 +12,8 @@ export function callApi<T>(endpointUrl: string, queryComponents?: QueryComponent
         url += '?' + queryString;
     }
 
-    console.debug('Calling API: ', url);
+    // TODO (forman): enable debug logging by switch
+    // console.debug('Calling API: ', url);
 
     return fetch(url, init)
         .then(response => {
