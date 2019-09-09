@@ -45,6 +45,14 @@ If errors occur, you may need to update the environment:
     $ yarn install
 
 
+Build `xcube-viewer` for deployment:
+
+    $ cd xcube-viewer
+    $ git pull
+    $ yarn build
+
+Find outputs in `./build`.
+
 ## Features
 
 * Select dataset, update variable and places list, fly to bounding box
