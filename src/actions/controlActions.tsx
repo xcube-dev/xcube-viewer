@@ -63,7 +63,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                     const datasetId = dataset!.id;
                     const placeGroupId = placeGroup.id;
                     const activitityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
-                    dispatch(addActivity(activitityId, I18N.get('Loading place group')));
+                    dispatch(addActivity(activitityId, I18N.get('Loading places')));
                     api.getDatasetPlaceGroup(apiServer.url, datasetId, placeGroupId)
                        .then((placeGroup: PlaceGroup) => {
                            dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
