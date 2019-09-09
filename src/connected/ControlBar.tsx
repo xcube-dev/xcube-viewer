@@ -7,6 +7,7 @@ import DatasetSelect from './DatasetSelect';
 import VariableSelect from './VariableSelect';
 import PlaceGroupsSelect from './PlaceGroupsSelect';
 import PlaceSelect from './PlaceSelect';
+import MapInteractionsBar from "./MapInteractionsBar";
 import TimeSelect from './TimeSelect';
 import TimeSlider from './TimeSlider';
 import TimePlayer from "./TimePlayer";
@@ -28,6 +29,7 @@ class _ControlBar extends React.Component {
                 <VariableSelect/>
                 <PlaceGroupsSelect/>
                 <PlaceSelect/>
+                <MapInteractionsBar/>
                 <TimeSelect/>
                 <TimePlayer/>
                 <TimeSlider/>

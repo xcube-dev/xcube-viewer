@@ -8,6 +8,7 @@ export type DrawListener = ((event: DrawEvent) => void) | ((event: DrawEvent) =>
 
 interface DrawProps extends MapComponentProps, olx.interaction.DrawOptions {
     layerId?: string;
+    active?: boolean;
     onDrawStart?: DrawListener;
     onDrawEnd?: DrawListener;
 }
@@ -16,15 +17,23 @@ export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
 
     addMapObject(map: ol.Map): ol.interaction.Draw {
         const draw = new ol.interaction.Draw(this.getOptions());
+        let active = !!this.props.active;
+        draw.setActive(active);
         map.addInteraction(draw);
-        this.listen(draw, this.props);
+        if (active) {
+            this.listen(draw, this.props);
+        }
         return draw;
     }
 
     updateMapObject(map: ol.Map, draw: ol.interaction.Draw, prevProps: Readonly<DrawProps>): ol.interaction.Draw {
         draw.setProperties(this.getOptions());
+        let active = !!this.props.active;
+        draw.setActive(active);
         this.unlisten(draw, prevProps);
-        this.listen(draw, this.props);
+        if (active) {
+            this.listen(draw, this.props);
+        }
         return draw;
     }
 
@@ -36,6 +45,9 @@ export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
     getOptions(): olx.interaction.DrawOptions {
         let options = super.getOptions();
         delete options['layerId'];
+        delete options['active'];
+        delete options['onDrawStart'];
+        delete options['onDrawEnd'];
         const layerId = this.props.layerId;
         if (layerId && !options.source) {
             const vectorLayer = this.getMapObject(layerId);

@@ -1,11 +1,26 @@
 
 ## Changes in version 0.2 (in dev.)
 
+* Users can now draw polygons and circles and show respective time-series. (#32)
+  In total there are now 4 new interactions with the map:
+  - Select a geometry
+  - Draw a point
+  - Draw a geometry
+  - Draw a circle
+* Improved selection of places:
+  - If a place is selected in the list it is zoomed to and highlighted in the map;
+  - Places can now be selected in the map if the "Select" map interaction is active;
+  - Places are also selected if a time-series line is clicked.
+    (However, that doesn't work nicely yet due to issues in the Recharts lib).
 * Minor fixes:
   * Time-series charts now have constant spacing;
   * A loading icon is shown, while time-series are being loaded.
-* Restrict zooming out, so that only a single world is shown. (#79)
-* Added legal agreement to inform about using HTML local storage. (#77)
+  * Restrict zooming out, so that only a single world is shown. (#79)
+  * Added legal agreement to inform about using HTML local storage. (#77)
+  * Colors used for geometries in the map and for lines in the time-series charts are now exactly the same.
+  * Time-series charts now have constant spacing
+  * Restrict zooming out, so that only a single world is shown. (#79)
+  * Added legal agreement to inform about using HTML local storage. (#77)
 * Users can now generate time series for any selected variable and any selected place. (#50)
   User places can now be also removed, which will remove related time series too.
   Removing time series, on the other hand, does no longer remove user added places.
@@ -25,7 +40,7 @@
   increases viewer loading time for server configurations whose data cubes
   are associated with lots of vector data. (#61)
 * Viewer loads now in the MS Edge browser (#59)
-* Fixed problem where viewer did not zoom to selected place if that is a point location. (#52)
+* Fixed problem where viewer did not showInMap to selected place if that is a point location. (#52)
 * Time-series are now loaded in increments so user see constantly growing time-series graph
   instead of doing nothing for tens of seconds until the server returns the complete series (#38)
 * When animating through time, the index into a dataset's time coordinates array is incremented

@@ -1,6 +1,6 @@
 import * as ol from 'openlayers';
 
-import { findDataset, findDatasetVariable, getDatasetTimeRange, findDatasetOrUserPlace } from '../model/dataset';
+import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { ControlState, newControlState } from '../states/controlState';
 import {
     SELECT_DATASET,
@@ -18,9 +18,9 @@ import {
     OPEN_DIALOG,
     CLOSE_DIALOG,
     INC_SELECTED_TIME,
-    UPDATE_SETTINGS,
+    UPDATE_SETTINGS, SET_MAP_INTERACTION,
 } from '../actions/controlActions';
-import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE } from "../actions/dataActions";
+import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, REMOVE_USER_PLACE } from "../actions/dataActions";
 import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
@@ -73,9 +73,9 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         case SELECT_PLACE: {
             const selectedPlaceId = action.selectedPlaceId;
             let flyTo = state.flyTo;
-            if (selectedPlaceId) {
-                const place = findDatasetOrUserPlace(action.datasets, action.userPlaceGroup, selectedPlaceId);
-                if (place !== null) {
+            if (selectedPlaceId && action.showInMap) {
+                const place = action.places.find(p => p.id === selectedPlaceId);
+                if (place) {
                     if (place.bbox && place.bbox.length === 4) {
                         flyTo = place.bbox as [number, number, number, number];
                     } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
@@ -174,6 +174,31 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                 ...state,
                 selectedPlaceGroupIds,
                 selectedPlaceId: action.id,
+            };
+        }
+        case REMOVE_USER_PLACE: {
+            const {id, places} = action;
+            if (id === state.selectedPlaceId) {
+                let selectedPlaceId = null;
+                const index = places.findIndex(p => p.id === id);
+                if (index >= 0) {
+                    if (index < places.length - 1) {
+                        selectedPlaceId = places[index + 1].id;
+                    } else if (index > 0) {
+                        selectedPlaceId = places[index - 1].id;
+                    }
+                }
+                return {
+                    ...state,
+                    selectedPlaceId
+                };
+            }
+            return state;
+        }
+        case SET_MAP_INTERACTION: {
+            return {
+                ...state,
+                mapInteraction: action.mapInteraction
             };
         }
         case ADD_ACTIVITY: {

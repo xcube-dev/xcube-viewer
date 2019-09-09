@@ -5,6 +5,6 @@ import Viewer from './Viewer';
 
 it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Viewer userPlaceGroup={{type: 'FeatureCollection', id: 'user', title: '', features: []}}/>, div);
+    ReactDOM.render(<Viewer userPlaceGroup={{type: 'FeatureCollection', id: 'user', title: '', features: []}} places={[]} mapInteraction={'Select'}/>, div);
     ReactDOM.unmountComponentAtNode(div);
 });

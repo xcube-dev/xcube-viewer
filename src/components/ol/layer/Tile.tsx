@@ -34,8 +34,10 @@ export class Tile extends MapComponent<ol.layer.Tile, TileProps> {
     addMapObject(map: ol.Map): ol.layer.Tile {
         const layer = new ol.layer.Tile(this.props);
 
-        // Attempt to avoid image smoothing so crisp image pixels are drawn.
+        // TODO (forman): Issue #86: The following is an attempt to avoid image smoothing
+        //                so crisp image pixels are drawn. But it still doesn't work.
         // See https://stackoverflow.com/questions/54083424/preventing-smoothing-of-tileimage-layer
+        // See https://stackoverflow.com/questions/35875270/turn-off-image-smoothing-in-openlayers-3
         // See https://openlayers.org/en/latest/examples/layer-spy.html
         //
         layer.on('precompose', (event: any) => {

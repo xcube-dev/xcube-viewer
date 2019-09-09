@@ -163,10 +163,10 @@ export const timeSeriesPlaceInfosSelector = createSelector(
     placeGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
         const placeInfos = {};
-        forEachPlace(placeGroups, (placeGroup, place, placeLabel) => {
+        forEachPlace(placeGroups, (placeGroup, place, label, color) => {
             for (let timeSeriesGroup of timeSeriesGroups) {
                 if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {
-                    placeInfos[place.id] = {placeGroup, place, placeLabel};
+                    placeInfos[place.id] = {placeGroup, place, label, color};
                     break;
                 }
             }
@@ -180,8 +180,8 @@ export const selectedPlaceGroupPlaceLabelsSelector = createSelector(
     selectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): string[] => {
         const placeLabels: string[] = [];
-        forEachPlace(placeGroups, (placeGroup, place, placeLabel) => {
-            placeLabels.push(placeLabel);
+        forEachPlace(placeGroups, (placeGroup, place, label) => {
+            placeLabels.push(label);
         });
         return placeLabels;
     }

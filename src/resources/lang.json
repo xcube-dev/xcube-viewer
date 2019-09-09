@@ -113,6 +113,20 @@
       "se": "Punkt"
     },
     {
+      "en": "Polygon",
+      "de": "Polygon",
+      "it": "Poligono",
+      "ro": "Poligon",
+      "se": "Polygon"
+    },
+    {
+      "en": "Circle",
+      "de": "Kreis",
+      "it": "Cerchio",
+      "ro": "Cerc",
+      "se": "Cirkel"
+    },
+    {
       "en": "Multi",
       "de": "Multi",
       "it": "Multi",

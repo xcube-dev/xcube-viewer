@@ -10,26 +10,25 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar
+    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar, DotProps
 } from 'recharts';
-import {Theme, createStyles, withStyles, WithStyles} from '@material-ui/core/styles';
+import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import { CircularProgress } from "@material-ui/core";
 
-import {equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint} from '../model/timeSeries';
-import {utcTimeToLocalDateString, utcTimeToLocalDateTimeString} from '../util/time';
+import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
+import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
 import {
     I18N,
     LINE_CHART_STROKE_SHADE_DARK_THEME,
     LINE_CHART_STROKE_SHADE_LIGHT_THEME,
     USER_PLACES_COLORS
 } from '../config';
-import {WithLocale} from '../util/lang';
-import {PlaceInfo} from "../model/place";
-//import LinearProgress from "@material-ui/core/LinearProgress";
-import {CircularProgress} from "@material-ui/core";
+import { WithLocale } from '../util/lang';
+import { Place, PlaceInfo } from '../model/place';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -105,6 +104,9 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     completed: number[];
 
     placeInfos?: { [placeId: string]: PlaceInfo };
+
+    selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
+    places: Place[];
 }
 
 interface TimeSeriesChartState {
@@ -152,15 +154,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             if (placeInfos) {
                 const placeInfo = placeInfos[source.placeId];
                 if (placeInfo) {
-                    const {place, placeLabel} = placeInfo;
+                    const {place, label, color} = placeInfo;
                     if (place.geometry.type === 'Point') {
                         const lon = place.geometry.coordinates[0];
                         const lat = place.geometry.coordinates[1];
-                        lineName += ` (${placeLabel}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
+                        lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
                     } else {
-                        lineName += ` (${placeLabel})`;
+                        lineName += ` (${label})`;
                     }
-                    lineColor = (place.properties || {}) ['color'] || lineColor;
+                    lineColor = color;
                 }
             }
 
@@ -185,14 +187,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     }
                 }
             });
+            const shadedLineColor = USER_PLACES_COLORS[lineColor][strokeShade];
             let errorBar;
             if (showErrorBars && hasErrorBars) {
                 errorBar = (
                     <ErrorBar
                         dataKey="uncertainty"
                         width={4}
-                        strokeWidth={2}
-                        stroke={USER_PLACES_COLORS[lineColor][strokeShade]}
+                        strokeWidth={1}
+                        stroke={shadedLineColor}
                     />
                 );
             }
@@ -204,9 +207,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     unit={source.variableUnits}
                     data={data}
                     dataKey="average"
-                    dot={true}
-                    activeDot={true}
-                    stroke={showPointsOnly ? '#00000000' : USER_PLACES_COLORS[lineColor][strokeShade]}
+                    dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
+                    activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
+                    stroke={showPointsOnly ? '#00000000' :shadedLineColor}
                     strokeWidth={3 * (ts.dataProgress || 1)}
                     isAnimationActive={ts.dataProgress === 1.0}
                     onClick={() => this.handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
@@ -322,11 +325,12 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     };
 
     readonly handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
-        const {selectTimeSeries} = this.props;
+        const {selectTimeSeries, selectPlace, places} = this.props;
         console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
+        selectPlace(timeSeries.source.placeId, places, true);
     };
 
     readonly handleMouseDown = (event: any) => {
@@ -449,4 +453,33 @@ class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip);
 
+interface CustomizedDotProps extends DotProps {
+    radius: number;
+    stroke: string;
+    strokeWidth: number;
+    fill: string;
+}
 
+
+const CustomizedDot = (props: CustomizedDotProps) => {
+
+    const {cx, cy, radius, stroke, fill, strokeWidth} = props;
+
+    const vpSize = 1024;
+    const totalRadius = radius + 0.5 * strokeWidth;
+    const totalDiameter = 2 * totalRadius;
+
+    const r = Math.floor(100 * radius / totalDiameter + 0.5) + '%';
+    const sw = Math.floor(100 * strokeWidth / totalDiameter + 0.5) + '%';
+
+    // noinspection SuspiciousTypeOfGuard
+    if (typeof cx === 'number' && typeof cy === 'number') {
+        return (
+            <svg x={cx - totalRadius} y={cy - totalRadius} width={totalDiameter} height={totalDiameter}
+                 viewBox={`0 0 ${vpSize} ${vpSize}`}>
+                <circle cx='50%' cy='50%' r={r} strokeWidth={sw} stroke={stroke} fill={fill}/>
+            </svg>
+        );
+    }
+    return null;
+};

@@ -102,7 +102,6 @@ export class Map extends React.Component<MapProps, MapState> {
         if (this.props.isStale) {
             const mapObject = this.contextValue.mapObjects[id];
             if (mapObject && mapObject['addControl'] && mapObject['addLayer'] && mapObject['setTarget']) {
-                console.log('Map.componentDidMount: reusing stale map');
                 map = mapObject as ol.Map;
                 map.setTarget(mapDiv);
             }
