@@ -50,12 +50,20 @@ interface SettingsDialogProps {
 
     settings: ControlState;
     selectedServer: Server;
+    viewerVersion: string;
+    serverVersion: string;
     updateSettings: (settings: ControlState) => void;
     changeLocale: (locale: string) => void;
     openDialog: (dialogId: string) => void;
 }
 
-export default function SettingsDialog({open, closeDialog, settings, selectedServer, updateSettings, changeLocale, openDialog}: SettingsDialogProps) {
+export default function SettingsDialog(
+    {
+        open, closeDialog, settings, selectedServer,
+        updateSettings, changeLocale, openDialog,
+        viewerVersion, serverVersion
+    }: SettingsDialogProps
+) {
     const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
     const classes = useStyles();
 
@@ -162,6 +170,12 @@ export default function SettingsDialog({open, closeDialog, settings, selectedSer
                         </SettingsSubPanel>
                     </SettingsPanel>
 
+                    <SettingsPanel title={I18N.get('System-Info')}>
+                        <SettingsSubPanel label={I18N.get('Xcube Viewer version')}
+                                          value={viewerVersion}/>
+                        <SettingsSubPanel label={I18N.get('Xcube Server version')}
+                                          value={serverVersion}/>
+                    </SettingsPanel>
                 </DialogContent>
             </Dialog>
 
