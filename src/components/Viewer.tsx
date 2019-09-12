@@ -30,7 +30,7 @@ const USER_LAYER_SOURCE = new ol.source.Vector();
 const SELECTION_LAYER_SOURCE = new ol.source.Vector();
 
 
-const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, left: 10, bottom: 65, position: 'relative'};
+const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, left: 10, bottom: 75, position: 'relative'};
 
 const SELECTION_LAYER_STROKE = new ol.style.Stroke({
                                                        color: [255, 200, 0, 1.0],
