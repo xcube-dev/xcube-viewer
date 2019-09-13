@@ -26,7 +26,7 @@ export function callApi<T>(endpointUrl: string, queryComponents?: QueryComponent
             if (error instanceof TypeError) {
                 console.error(`Server did not respond for ${endpointUrl}. `
                               +  "May be caused by timeout, refused connection, network error, etc.", error);
-                throw new Error(I18N.get("Server did not respond"));
+                throw new Error(I18N.get("Cannot reach server"));
             } else {
                 console.error(error);
             }
