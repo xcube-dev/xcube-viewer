@@ -13,6 +13,10 @@
   - Places are also selected if a time-series line is clicked.
     (However, that doesn't work nicely yet due to issues in the Recharts lib).
 * Minor fixes:
+  * Fixed (actually avoided) problem indicated by text "something went wrong" appearing instead of map
+    after server change. 
+  * Changed user setting "show graph after adding point" to be on by default.
+  * Added translations for message "server did not respond".
   * Time-series charts now have constant spacing;
   * A loading icon is shown, while time-series are being loaded.
   * Restrict zooming out, so that only a single world is shown. (#79)

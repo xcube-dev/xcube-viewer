@@ -27,7 +27,16 @@ export class Control extends MapComponent<ol.control.Control , ControlProps> {
     }
 
     removeMapObject(map: ol.Map, control: ol.control.Control): void {
-        map.removeControl(control);
+        for (let addedControl of map.getControls().getArray()) {
+            if (addedControl === control) {
+                console.warn(`NOT removing control '${this.props.id}'`);
+                // TODO (forman): when we uncomment following line, we later receive error:
+                //                NotFoundError: Failed to execute 'removeChild' on 'Node':
+                //                The node to be removed is not a child of this node.
+                // map.removeControl(control);
+                break;
+            }
+        }
     }
 
     render() {
