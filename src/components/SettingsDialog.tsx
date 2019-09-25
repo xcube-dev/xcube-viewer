@@ -170,11 +170,11 @@ export default function SettingsDialog(
                         </SettingsSubPanel>
                     </SettingsPanel>
 
-                    <SettingsPanel title={I18N.get('System-Info')}>
-                        <SettingsSubPanel label={I18N.get('xcube Viewer version')}
+                    <SettingsPanel title={I18N.get('System Information')}>
+                        <SettingsSubPanel label={`xcube Viewer ${I18N.get('version')}`}
                                           value={viewerVersion}/>
-                        <SettingsSubPanel label={I18N.get('xcube Server version')}
-                                          value={serverInfo ? serverInfo.version : 'not connected'}/>
+                        <SettingsSubPanel label={`xcube Server ${I18N.get('version')}`}
+                                          value={serverInfo ? serverInfo.version : I18N.get('Cannot reach server')}/>
                     </SettingsPanel>
                 </DialogContent>
             </Dialog>
