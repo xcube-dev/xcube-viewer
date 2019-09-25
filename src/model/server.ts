@@ -4,3 +4,13 @@ export interface Server {
     url: string;
 }
 
+export interface ServerInfo {
+    name: string;
+    description: string;
+    version: string;
+    configTime: string;
+    serverTime: string;
+}
+
+
+
