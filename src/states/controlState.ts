@@ -45,7 +45,7 @@ export function newControlState(): ControlState {
         timeSeriesUpdateMode: 'add',
         timeAnimationActive: false,
         timeAnimationInterval: 1000,
-        autoShowTimeSeries: false,
+        autoShowTimeSeries: true,
         showTimeSeriesPointsOnly: false,
         showTimeSeriesErrorBars: true,
         flyTo: null,
