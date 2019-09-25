@@ -295,6 +295,7 @@ export function configureServers(servers: Server[], selectedServerId: string) {
         if (getState().controlState.selectedServerId !== selectedServerId) {
             dispatch(removeAllTimeSeries());
             dispatch(_configureServers(servers, selectedServerId));
+            dispatch(updateServerInfo());
             dispatch(updateDatasets());
             dispatch(updateColorBars());
         } else if (getState().dataState.userServers !== servers) {

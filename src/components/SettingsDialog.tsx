@@ -17,7 +17,7 @@ import { I18N } from '../config';
 import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { Server } from '../model/server';
+import { Server, ServerInfo } from '../model/server';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 
 const useStyles = makeStyles(theme => ({
@@ -51,17 +51,17 @@ interface SettingsDialogProps {
     settings: ControlState;
     selectedServer: Server;
     viewerVersion: string;
-    serverVersion: string;
     updateSettings: (settings: ControlState) => void;
     changeLocale: (locale: string) => void;
     openDialog: (dialogId: string) => void;
+    serverInfo: ServerInfo | null;
 }
 
 export default function SettingsDialog(
     {
         open, closeDialog, settings, selectedServer,
         updateSettings, changeLocale, openDialog,
-        viewerVersion, serverVersion
+        viewerVersion, serverInfo
     }: SettingsDialogProps
 ) {
     const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
@@ -171,10 +171,10 @@ export default function SettingsDialog(
                     </SettingsPanel>
 
                     <SettingsPanel title={I18N.get('System-Info')}>
-                        <SettingsSubPanel label={I18N.get('Xcube Viewer version')}
+                        <SettingsSubPanel label={I18N.get('xcube Viewer version')}
                                           value={viewerVersion}/>
-                        <SettingsSubPanel label={I18N.get('Xcube Server version')}
-                                          value={serverVersion}/>
+                        <SettingsSubPanel label={I18N.get('xcube Server version')}
+                                          value={serverInfo ? serverInfo.version : 'not connected'}/>
                     </SettingsPanel>
                 </DialogContent>
             </Dialog>

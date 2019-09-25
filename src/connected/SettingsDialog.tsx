@@ -4,6 +4,7 @@ import { AppState } from '../states/appState';
 import SettingsDialog from '../components/SettingsDialog';
 import { changeLocale, closeDialog, openDialog, updateSettings } from '../actions/controlActions';
 import { selectedServerSelector } from "../selectors/controlSelectors";
+import { VIEWER_VERSION } from '../config';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -12,8 +13,8 @@ const mapStateToProps = (state: AppState) => {
         open: state.controlState.dialogOpen['settings'],
         settings: state.controlState,
         selectedServer: selectedServerSelector(state),
-        viewerVersion: "0.2.3-dev2",
-        serverVersion: "0.2.0.dev"
+        viewerVersion: VIEWER_VERSION,
+        serverInfo: state.dataState.serverInfo,
     };
 };
 
