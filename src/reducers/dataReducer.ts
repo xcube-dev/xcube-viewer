@@ -1,4 +1,5 @@
-import * as ol from 'openlayers';
+import {  OlVectorLayer } from '../components/ol/types';
+
 
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
@@ -138,7 +139,7 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
 
 function removeUserPlacesFromLayer(userPlaceIds: string[]) {
     if (MAP_OBJECTS.userLayer) {
-        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
         const source = userLayer.getSource();
         userPlaceIds.forEach(placeId => {
             const feature = source.getFeatureById(placeId);

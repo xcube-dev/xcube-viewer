@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ol from 'openlayers';
+import { OlMap, OlControl } from '../types';
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 
@@ -9,24 +9,24 @@ interface ControlProps extends MapComponentProps {
     className?: string;
 }
 
-export class Control extends MapComponent<ol.control.Control , ControlProps> {
+export class Control extends MapComponent<OlControl, ControlProps> {
     divRef: HTMLDivElement | null;
 
     handleDivRef = (divRef: HTMLDivElement | null) => {
         this.divRef = divRef;
     };
 
-    addMapObject(map: ol.Map): ol.control.Control {
-        const control = new ol.control.Control({element: this.divRef!, target: this.context.mapDiv!});
+    addMapObject(map: OlMap): OlControl {
+        const control = new OlControl({element: this.divRef!, target: this.context.mapDiv!});
         map.addControl(control);
         return control;
     }
 
-    updateMapObject(map: ol.Map, control: ol.control.Control, prevProps: Readonly<ControlProps>): ol.control.Control {
+    updateMapObject(map: OlMap, control: OlControl, prevProps: Readonly<ControlProps>): OlControl {
         return control;
     }
 
-    removeMapObject(map: ol.Map, control: ol.control.Control): void {
+    removeMapObject(map: OlMap, control: OlControl): void {
         for (let addedControl of map.getControls().getArray()) {
             if (addedControl === control) {
                 console.warn(`NOT removing control '${this.props.id}'`);

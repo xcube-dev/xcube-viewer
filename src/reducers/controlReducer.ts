@@ -1,4 +1,4 @@
-import * as ol from 'openlayers';
+import { OlGeoJSONFormat } from '../components/ol/types';
 
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { ControlState, newControlState } from '../states/controlState';
@@ -79,7 +79,7 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                     if (place.bbox && place.bbox.length === 4) {
                         flyTo = place.bbox as [number, number, number, number];
                     } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
-                        flyTo = new ol.format.GeoJSON().readGeometry(place.geometry) as ol.geom.SimpleGeometry;
+                        flyTo = new OlGeoJSONFormat().readGeometry(place.geometry);
                     }
                 }
             }

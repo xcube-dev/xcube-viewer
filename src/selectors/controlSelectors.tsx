@@ -9,7 +9,9 @@ import {
     userPlaceGroupSelector,
     timeSeriesGroupsSelector
 } from './dataSelectors';
-import * as ol from 'openlayers';
+
+
+import { OlGeoJSONFormat, OlTileGrid, OlVectorSource, OlXYZSource, olProjGet } from '../components/ol/types';
 
 import {
     Dataset,
@@ -251,22 +253,21 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             }
             url += `?time=${timeString}`;
         }
-        const attributions = [
-            new ol.Attribution(
-                {
-                    html: '&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Consult GmbH</a>'
-                }
-            ),
-        ];
+        // const attribution = new ol_control.Attribution(
+        //         {
+        //             target: 'https://www.brockmann-consult.de',
+        //             label: 'Brockmann Consult GmbH'
+        //         }
+        //     );
         // TODO: get attributions from dataset metadata
-        const source = new ol.source.XYZ(
+        const source = new OlXYZSource(
             {
                 url,
-                projection: ol.proj.get(options.projection),
+                projection: olProjGet(options.projection),
                 minZoom: options.minZoom,
                 maxZoom: options.maxZoom,
-                tileGrid: new ol.tilegrid.TileGrid(options.tileGrid),
-                attributions,
+                tileGrid: new OlTileGrid(options.tileGrid),
+                // attributions: attribution,
                 // @ts-ignore
                 transition: timeAnimationActive ? 0 : 250,
             });
@@ -289,12 +290,12 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                     <Vector
                         key={index}
                         id={`placeGroup.${placeGroup.id}`}
-                        source={new ol.source.Vector(
+                        source={new OlVectorSource(
                             {
-                                features: new ol.format.GeoJSON({
-                                                                    defaultDataProjection: 'EPSG:4326',
-                                                                    featureProjection: 'EPSG:3857'
-                                                                }).readFeatures(placeGroup),
+                                features: new OlGeoJSONFormat({
+                                                                  dataProjection: 'EPSG:4326',
+                                                                  featureProjection: 'EPSG:3857'
+                                                              }).readFeatures(placeGroup),
                             })}
                     />);
             }

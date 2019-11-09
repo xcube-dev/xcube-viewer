@@ -1,22 +1,22 @@
-import * as ol from 'openlayers';
-import { olx } from 'openlayers';
+import { OlMap, OlDrawInteraction, OlDrawInteractionOptions, OlDrawEvent, OlVectorLayer } from '../types';
+
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
-export type DrawEvent = ol.interaction.Draw.Event;
+export type DrawEvent = OlDrawEvent;
 export type DrawListener = ((event: DrawEvent) => void) | ((event: DrawEvent) => boolean);
 
-interface DrawProps extends MapComponentProps, olx.interaction.DrawOptions {
+interface DrawProps extends MapComponentProps, OlDrawInteractionOptions {
     layerId?: string;
     active?: boolean;
     onDrawStart?: DrawListener;
     onDrawEnd?: DrawListener;
 }
 
-export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
+export class Draw extends MapComponent<OlDrawInteraction, DrawProps> {
 
-    addMapObject(map: ol.Map): ol.interaction.Draw {
-        const draw = new ol.interaction.Draw(this.getOptions());
+    addMapObject(map: OlMap): OlDrawInteraction {
+        const draw = new OlDrawInteraction(this.getOptions());
         let active = !!this.props.active;
         draw.setActive(active);
         map.addInteraction(draw);
@@ -26,7 +26,7 @@ export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
         return draw;
     }
 
-    updateMapObject(map: ol.Map, draw: ol.interaction.Draw, prevProps: Readonly<DrawProps>): ol.interaction.Draw {
+    updateMapObject(map: OlMap, draw: OlDrawInteraction, prevProps: Readonly<DrawProps>): OlDrawInteraction {
         draw.setProperties(this.getOptions());
         let active = !!this.props.active;
         draw.setActive(active);
@@ -37,12 +37,12 @@ export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
         return draw;
     }
 
-    removeMapObject(map: ol.Map, draw: ol.interaction.Draw): void {
+    removeMapObject(map: OlMap, draw: OlDrawInteraction): void {
         this.unlisten(draw, this.props);
         map.removeInteraction(draw);
     }
 
-    getOptions(): olx.interaction.DrawOptions {
+    getOptions(): OlDrawInteractionOptions {
         let options = super.getOptions();
         delete options['layerId'];
         delete options['active'];
@@ -52,13 +52,13 @@ export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
         if (layerId && !options.source) {
             const vectorLayer = this.getMapObject(layerId);
             if (vectorLayer) {
-                options['source'] = (vectorLayer as ol.layer.Vector).getSource();
+                options['source'] = (vectorLayer as OlVectorLayer).getSource();
             }
         }
         return options;
     }
 
-    private listen(draw: ol.interaction.Draw, props: Readonly<DrawProps>) {
+    private listen(draw: OlDrawInteraction, props: Readonly<DrawProps>) {
         const {onDrawStart, onDrawEnd} = props;
         if (onDrawStart) {
             draw.on('drawstart', onDrawStart);
@@ -68,7 +68,7 @@ export class Draw extends MapComponent<ol.interaction.Draw, DrawProps> {
         }
     }
 
-    private unlisten(draw: ol.interaction.Draw, props: Readonly<DrawProps>) {
+    private unlisten(draw: OlDrawInteraction, props: Readonly<DrawProps>) {
         const {onDrawStart, onDrawEnd} = props;
         if (onDrawStart) {
             draw.un('drawstart', onDrawStart);
