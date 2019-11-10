@@ -26,6 +26,7 @@ import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
 import { findIndexCloseTo } from "../util/find";
 import { storeUserSettings } from '../states/userSettings';
+import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -37,6 +38,9 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
     switch (action.type) {
         case UPDATE_SETTINGS:
             storeUserSettings(action.settings);
+            if (action.settings.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
+                setGlobalCanvasImageSmoothing(action.settings.imageSmoothingEnabled);
+            }
             return action.settings;
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;

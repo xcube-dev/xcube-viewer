@@ -30,6 +30,7 @@ export interface ControlState {
     dialogOpen: { [dialogId: string]: boolean };
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
+    imageSmoothingEnabled: boolean;
 }
 
 
@@ -55,6 +56,7 @@ export function newControlState(): ControlState {
         dialogOpen: {},
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
+        imageSmoothingEnabled: false,
     };
     return loadUserSettings(state);
 }

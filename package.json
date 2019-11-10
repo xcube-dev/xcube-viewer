@@ -16,7 +16,7 @@
     "@material-ui/pickers": "^3.2.4",
     "classnames": "^2.2.6",
     "date-fns": "^2.0.1",
-    "ol": "^5.3.3",
+    "ol": "^6.1.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-redux": "^6.0.0",

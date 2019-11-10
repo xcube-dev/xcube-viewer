@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {OlMap, OlTileLayer, OlTileLayerOptions, OlXYZSource, OlOSMSource, OlRenderEvent } from '../types';
+import { OlMap, OlTileLayer, OlTileLayerOptions, OlXYZSource, OlOSMSource } from '../types';
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
 
@@ -31,29 +31,6 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
 
     addMapObject(map: OlMap): OlTileLayer {
         const layer = new OlTileLayer(this.props);
-
-        // TODO (forman): Issue #86: The following is an attempt to avoid image smoothing
-        //                so crisp image pixels are drawn. But it still doesn't work.
-        // See https://stackoverflow.com/questions/54083424/preventing-smoothing-of-tileimage-layer
-        // See https://stackoverflow.com/questions/35875270/turn-off-image-smoothing-in-openlayers-3
-        // See https://openlayers.org/en/latest/examples/layer-spy.html
-        //
-        layer.on('precompose', (event: OlRenderEvent) => {
-            const ctx = event.context;
-            //ctx.save();
-            ctx.imageSmoothingEnabled = false;
-            const ctxAny = ctx as any;
-            ctxAny.webkitImageSmoothingEnabled = false;
-            ctxAny.mozImageSmoothingEnabled = false;
-            ctxAny.msImageSmoothingEnabled = false;
-            // console.log(`canvas prerender: `, event.context);
-        });
-        layer.on('postcompose', (event: OlRenderEvent) => {
-            //const ctx = event.context;
-            //ctx.restore();
-            //console.log(`canvas postcompose: imageSmoothingEnabled = ${ctx.imageSmoothingEnabled}`);
-        });
-
         map.getLayers().push(layer);
         return layer;
     }
