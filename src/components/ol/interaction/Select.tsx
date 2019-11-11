@@ -100,8 +100,8 @@ const SELECT_STROKE_COLOR: OlColor = [255, 255, 0, 0.7];
 
 
 function styleFunction(feature: (OlFeature | OlRenderFeature), resolution: number) {
-    console.log('style func: properties: ', feature.getProperties());
-    console.log('style func: style: ', (feature as any).getStyle());
+    // console.log('style func: properties: ', feature.getProperties());
+    // console.log('style func: style: ', (feature as any).getStyle());
 
     let defaultFill = OL_DEFAULT_FILL;
     let defaultStroke = OL_DEFAULT_STROKE;

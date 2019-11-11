@@ -319,7 +319,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
 
     readonly handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
         const {selectTimeSeries, selectPlace, places} = this.props;
-        console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
+        // console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
