@@ -17,7 +17,8 @@ export class Control extends MapComponent<OlControl, ControlProps> {
     };
 
     addMapObject(map: OlMap): OlControl {
-        const control = new OlControl({element: this.divRef!, target: this.context.mapDiv!});
+        // console.log(`Control: added control '${this.props.id}'`);
+        const control = new OlControl({element: this.divRef!});
         map.addControl(control);
         return control;
     }
@@ -29,11 +30,8 @@ export class Control extends MapComponent<OlControl, ControlProps> {
     removeMapObject(map: OlMap, control: OlControl): void {
         for (let addedControl of map.getControls().getArray()) {
             if (addedControl === control) {
-                console.warn(`NOT removing control '${this.props.id}'`);
-                // TODO (forman): when we uncomment following line, we later receive error:
-                //                NotFoundError: Failed to execute 'removeChild' on 'Node':
-                //                The node to be removed is not a child of this node.
-                // map.removeControl(control);
+                // console.log(`Control: removing control '${this.props.id}'`);
+                map.removeControl(control);
                 break;
             }
         }
@@ -41,7 +39,8 @@ export class Control extends MapComponent<OlControl, ControlProps> {
 
     render() {
         const {children, style, className} = this.props;
-        return <div style={style} className={className} ref={this.handleDivRef}>{children}</div>;
+        const _className = (className ? className + ' ' : '') + 'ol-unselectable ol-control';
+        return <div style={style} className={_className} ref={this.handleDivRef}>{children}</div>;
     }
 }
 
