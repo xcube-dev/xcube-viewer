@@ -36,6 +36,8 @@ export { default as OlCircleStyle } from 'ol/style/Circle';
 export { default as OlOSMSource } from 'ol/source/OSM';
 export { default as OlEvent } from 'ol/events/Event';
 export { default as OlRenderEvent } from 'ol/render/Event';
+export { default as OlScaleLineControl } from 'ol/control/ScaleLine';
+export { Options as OlScaleLineControlOptions } from 'ol/control/ScaleLine';
 export {
     get as olProjGet,
     transformExtent as olProjTransformExtent,

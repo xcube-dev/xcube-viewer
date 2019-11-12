@@ -38,6 +38,7 @@ import {
     OlVectorLayer,
     OlGeoJSONFormat
 } from './ol/types';
+import { ScaleLine } from "./ol/control/ScaleLine";
 
 
 // noinspection JSUnusedLocalSymbols
@@ -48,7 +49,7 @@ const USER_LAYER_SOURCE = new OlVectorSource();
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
 
-const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, left: 10, bottom: 85};
+const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, right: 264, top: 10};
 
 const SELECTION_LAYER_STROKE = new OlStrokeStyle({
                                                      color: [255, 200, 0, 1.0],
@@ -269,6 +270,7 @@ class Viewer extends React.Component<ViewerProps> {
                         onDrawEnd={this.handleDrawEnd}
                     />
                     {colorBarControl}
+                    <ScaleLine bar={false}/>
                 </Map>
             </ErrorBoundary>
         );
