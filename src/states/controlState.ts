@@ -1,4 +1,5 @@
-import * as ol from 'openlayers';
+import {  OlGeometry , OlExtent, OlBaseObject } from '../components/ol/types';
+
 import { Time, TimeRange } from '../model/timeSeries';
 import { VIEWER_DEFAULT_API_SERVER } from '../config';
 import { loadUserSettings } from './userSettings';
@@ -23,12 +24,13 @@ export interface ControlState {
     autoShowTimeSeries: boolean;
     showTimeSeriesPointsOnly: boolean;
     showTimeSeriesErrorBars: boolean;
-    flyTo: ol.geom.SimpleGeometry | ol.Extent | null;
+    flyTo: OlGeometry | OlExtent | null;
     activities: { [id: string]: string };
     locale: string;
     dialogOpen: { [dialogId: string]: boolean };
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
+    imageSmoothingEnabled: boolean;
 }
 
 
@@ -54,6 +56,7 @@ export function newControlState(): ControlState {
         dialogOpen: {},
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
+        imageSmoothingEnabled: false,
     };
     return loadUserSettings(state);
 }
@@ -61,4 +64,4 @@ export function newControlState(): ControlState {
 // We cannot keep "MAP_OBJECTS" in control state object, because these objects are (1) not serializable
 // and (2) logging actions will cause the browsers to crash
 
-export const MAP_OBJECTS: { [id: string]: ol.Object } = {};
+export const MAP_OBJECTS: { [id: string]: OlBaseObject } = {};

@@ -13,12 +13,16 @@ import { getCurrentLocale } from "./util/lang";
 
 import './index.css';
 import { I18N } from "./config";
-
+import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
 
 I18N.locale = getCurrentLocale();
 
 const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
 const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
+
+if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
+    setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
+}
 
 store.dispatch(changeLocale(I18N.locale) as any);
 store.dispatch(updateServerInfo() as any);

@@ -11,14 +11,16 @@ import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import { I18N } from '../config';
-import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { Server, ServerInfo } from '../model/server';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
+
+import { I18N } from '../config';
+import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
+import { Server, ServerInfo } from '../model/server';
+
 
 const useStyles = makeStyles(theme => ({
         settingsPanelTitle: {
@@ -164,6 +166,17 @@ export default function SettingsDialog(
                                           value={getOnOff(settings.showTimeSeriesErrorBars)}>
                             <ToggleSetting
                                 propertyName={'showTimeSeriesErrorBars'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                    </SettingsPanel>
+
+                    <SettingsPanel title={I18N.get('Map')}>
+                        <SettingsSubPanel label={I18N.get('Image smoothing')}
+                                          value={getOnOff(settings.imageSmoothingEnabled)}>
+                            <ToggleSetting
+                                propertyName={'imageSmoothingEnabled'}
                                 settings={settings}
                                 updateSettings={updateSettings}
                             />

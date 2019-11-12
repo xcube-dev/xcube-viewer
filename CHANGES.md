@@ -1,5 +1,12 @@
 ## Changes in version 0.2.1 (in development)
 
+### Enhancements
+
+* A new setting allows to turn image smoothing of image layers on and off.
+  By default it is off now, so that crisp image pixels are shown without any blurring. (#86)
+* The color bar legend uses 5 tick marks instead of the two.
+* Now using OpenLayers 6.1.1.
+
 
 ## Changes in version 0.2
 

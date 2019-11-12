@@ -1,28 +1,40 @@
-import * as ol from 'openlayers';
-import { olx } from 'openlayers';
+import {
+    OlMap,
+    OlSelectInteraction,
+    OlSelectInteractionOptions,
+    OlSelectEvent,
+    OlVectorLayer,
+    OlFeature,
+    OlRenderFeature,
+    OlColor,
+    OlStyle,
+    OlFillStyle,
+    OlCircleStyle,
+    OlStrokeStyle,
+} from '../types';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
-export type SelectEvent = ol.interaction.Select.Event;
+export type SelectEvent = OlSelectEvent;
 export type SelectListener = ((event: SelectEvent) => void) | ((event: SelectEvent) => boolean);
 
-interface SelectProps extends MapComponentProps, olx.interaction.SelectOptions {
+interface SelectProps extends MapComponentProps, OlSelectInteractionOptions {
     onSelect?: SelectListener;
     selectedFeaturesIds?: string[];
 }
 
 
-export class Select extends MapComponent<ol.interaction.Select, SelectProps> {
+export class Select extends MapComponent<OlSelectInteraction, SelectProps> {
 
-    addMapObject(map: ol.Map): ol.interaction.Select {
-        const select = new ol.interaction.Select({style: styleFunction, ...this.getOptions()});
+    addMapObject(map: OlMap): OlSelectInteraction {
+        const select = new OlSelectInteraction({style: styleFunction, ...this.getOptions()});
         map.addInteraction(select);
         this.updateSelection(select);
         this.listen(select, this.props);
         return select;
     }
 
-    updateMapObject(map: ol.Map, select: ol.interaction.Select, prevProps: Readonly<SelectProps>): ol.interaction.Select {
+    updateMapObject(map: OlMap, select: OlSelectInteraction, prevProps: Readonly<SelectProps>): OlSelectInteraction {
         select.setProperties(this.getOptions());
         this.updateSelection(select);
         this.unlisten(select, prevProps);
@@ -30,35 +42,35 @@ export class Select extends MapComponent<ol.interaction.Select, SelectProps> {
         return select;
     }
 
-    removeMapObject(map: ol.Map, select: ol.interaction.Select): void {
+    removeMapObject(map: OlMap, select: OlSelectInteraction): void {
         this.unlisten(select, this.props);
         map.removeInteraction(select);
     }
 
-    getOptions(): olx.interaction.DrawOptions {
+    getOptions(): OlSelectInteractionOptions {
         let options = super.getOptions();
         delete options['onSelect'];
         delete options['selectedFeaturesIds'];
         return options;
     }
 
-    private listen(select: ol.interaction.Select, props: Readonly<SelectProps>) {
+    private listen(select: OlSelectInteraction, props: Readonly<SelectProps>) {
         const {onSelect} = props;
         if (onSelect) {
             select.on('select', onSelect);
         }
     }
 
-    private unlisten(select: ol.interaction.Select, props: Readonly<SelectProps>) {
+    private unlisten(select: OlSelectInteraction, props: Readonly<SelectProps>) {
         const {onSelect} = props;
         if (onSelect) {
             select.un('select', onSelect);
         }
     }
 
-    private updateSelection(select: ol.interaction.Select) {
+    private updateSelection(select: OlSelectInteraction) {
         if (this.context.map && this.props.selectedFeaturesIds) {
-            const selectedFeatures = findFeaturesByIds(this.context.map!, this.props.selectedFeaturesIds).filter(f => f !== null) as ol.Feature[];
+            const selectedFeatures = findFeaturesByIds(this.context.map!, this.props.selectedFeaturesIds).filter(f => f !== null) as OlFeature[];
             // console.log("Select: ", this.props.selectedFeaturesIds, selectedFeatures);
             if (selectedFeatures.length > 0) {
                 // TODO (forman): must get around OpenLayers weirdness here: Selection style function is called only
@@ -73,23 +85,23 @@ export class Select extends MapComponent<ol.interaction.Select, SelectProps> {
 }
 
 
-const OL_DEFAULT_FILL = new ol.style.Fill({
-                                              color: [255, 255, 255, 0.4]
-                                          });
+const OL_DEFAULT_FILL = new OlFillStyle({
+                                            color: [255, 255, 255, 0.4]
+                                        });
 const OL_DEFAULT_STROKE_WIDTH = 1.25;
-const OL_DEFAULT_STROKE = new ol.style.Stroke({
-                                                  color: '#3399CC',
-                                                  width: OL_DEFAULT_STROKE_WIDTH
-                                              });
+const OL_DEFAULT_STROKE = new OlStrokeStyle({
+                                                color: '#3399CC',
+                                                width: OL_DEFAULT_STROKE_WIDTH
+                                            });
 const OL_DEFAULT_CIRCLE_RADIUS = 5;
 
 
-const SELECT_STROKE_COLOR: ol.Color = [255, 255, 0, 0.7];
+const SELECT_STROKE_COLOR: OlColor = [255, 255, 0, 0.7];
 
 
-function styleFunction(feature: (ol.Feature | ol.render.Feature), resolution: number) {
-    console.log('style func: properties: ', feature.getProperties());
-    console.log('style func: style: ', (feature as any).getStyle());
+function styleFunction(feature: (OlFeature | OlRenderFeature), resolution: number) {
+    // console.log('style func: properties: ', feature.getProperties());
+    // console.log('style func: style: ', (feature as any).getStyle());
 
     let defaultFill = OL_DEFAULT_FILL;
     let defaultStroke = OL_DEFAULT_STROKE;
@@ -106,13 +118,13 @@ function styleFunction(feature: (ol.Feature | ol.render.Feature), resolution: nu
             && typeof styleObj['getFill'] === 'function'
             && typeof styleObj['getStroke'] === 'function'
             && typeof styleObj['getImage'] === 'function') {
-            const defaultStyle = styleObj as ol.style.Style;
+            const defaultStyle = styleObj as OlStyle;
             const imageObj = defaultStyle.getImage();
             if (imageObj
                 && typeof imageObj['getFill'] === 'function'
                 && typeof imageObj['getStroke'] === 'function'
                 && typeof imageObj['getRadius'] === 'function') {
-                const circle = imageObj as ol.style.Circle;
+                const circle = imageObj as OlCircleStyle;
                 defaultFill = circle.getFill();
                 defaultStroke = circle.getStroke();
                 defaultRadius = circle.getRadius();
@@ -125,26 +137,27 @@ function styleFunction(feature: (ol.Feature | ol.render.Feature), resolution: nu
 
     const styleOptions = {
         fill: defaultFill,
-        stroke: new ol.style.Stroke({width: 1.5 * defaultStroke.getWidth(), color: SELECT_STROKE_COLOR})
+        stroke: new OlStrokeStyle({width: 1.5 * (defaultStroke.getWidth() || 1), color: SELECT_STROKE_COLOR})
     };
-    if (feature.getGeometry().getType() === 'Point') {
-        return new ol.style.Style({image: new ol.style.Circle({radius: 1.5 * defaultRadius, ...styleOptions})});
+    const geometry = feature.getGeometry();
+    if (geometry && geometry.getType() === 'Point') {
+        return new OlStyle({image: new OlCircleStyle({radius: 1.5 * defaultRadius, ...styleOptions})});
     } else {
-        return new ol.style.Style(styleOptions);
+        return new OlStyle(styleOptions);
     }
 }
 
 type FeatureId = string | number;
 
 
-function findFeaturesByIds(map: ol.Map, featureIds: FeatureId[]): (ol.Feature | null)[] {
+function findFeaturesByIds(map: OlMap, featureIds: FeatureId[]): (OlFeature | null)[] {
     return featureIds.map(featureId => findFeatureById(map, featureId));
 }
 
-function findFeatureById(map: ol.Map, featureId: FeatureId): ol.Feature | null {
+function findFeatureById(map: OlMap, featureId: FeatureId): OlFeature | null {
     for (let layer of map.getLayers().getArray()) {
-        if (layer instanceof ol.layer.Vector) {
-            const vectorLayer = layer as ol.layer.Vector;
+        if (layer instanceof OlVectorLayer) {
+            const vectorLayer = layer as OlVectorLayer;
             const feature = vectorLayer.getSource().getFeatureById(featureId);
             if (feature) {
                 return feature;

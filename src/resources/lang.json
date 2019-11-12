@@ -349,6 +349,20 @@
       "it": "Accetta e continua",
       "ro": "Acceptați și continuați",
       "se": "Acceptera och fortsätt"
+    },
+    {
+      "en": "Map",
+      "de": "Karte",
+      "it": "Carta",
+      "ro": "Hartă",
+      "se": "Karta"
+    },
+    {
+      "en": "Image smoothing",
+      "de": "Bildglättung",
+      "it": "Levigatura dell'immagine",
+      "ro": "Netezirea imaginii",
+      "se": "Bildutjämning"
     }
   ]
 }
