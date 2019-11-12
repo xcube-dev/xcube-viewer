@@ -1,4 +1,4 @@
-## Changes in version 0.2.1 (in development)
+## Changes in version 0.2.1
 
 ### Enhancements
 
@@ -6,10 +6,13 @@
   By default it is off now, so that crisp image pixels are shown without any blurring. (#86)
 * The color bar legend uses 5 tick marks instead of the two.
 * Added simple scale indicator to map.
+
+### Other changes
+
 * Now using OpenLayers 6.1.1.
 
 
-## Changes in version 0.2
+## Changes in version 0.2.0
 
 * Users can now draw polygons and circles and show respective time-series. (#32)
   In total there are now 4 new interactions with the map:
