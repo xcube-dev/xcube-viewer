@@ -4,6 +4,7 @@ import { getQueryParameterByName } from './util/qparam';
 import lang from './resources/lang.json';
 
 export const VIEWER_APP_NAME = 'xcube Viewer';
+export const VIEWER_VERSION = '0.2.2-dev.0';
 
 
 export const VIEWER_DEFAULT_API_SERVER_NAME = 'Default Server';

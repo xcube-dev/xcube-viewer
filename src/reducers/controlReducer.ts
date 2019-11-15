@@ -1,4 +1,4 @@
-import * as ol from 'openlayers';
+import { OlGeoJSONFormat } from '../components/ol/types';
 
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { ControlState, newControlState } from '../states/controlState';
@@ -26,6 +26,7 @@ import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
 import { findIndexCloseTo } from "../util/find";
 import { storeUserSettings } from '../states/userSettings';
+import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
 
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
@@ -37,6 +38,9 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
     switch (action.type) {
         case UPDATE_SETTINGS:
             storeUserSettings(action.settings);
+            if (action.settings.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
+                setGlobalCanvasImageSmoothing(action.settings.imageSmoothingEnabled);
+            }
             return action.settings;
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;
@@ -79,7 +83,7 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                     if (place.bbox && place.bbox.length === 4) {
                         flyTo = place.bbox as [number, number, number, number];
                     } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
-                        flyTo = new ol.format.GeoJSON().readGeometry(place.geometry) as ol.geom.SimpleGeometry;
+                        flyTo = new OlGeoJSONFormat().readGeometry(place.geometry);
                     }
                 }
             }

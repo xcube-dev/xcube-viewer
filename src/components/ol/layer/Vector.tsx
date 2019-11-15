@@ -1,22 +1,21 @@
-import * as ol from 'openlayers';
-import { olx } from 'openlayers';
+import { OlMap, OlVectorLayer, OlVectorLayerOptions } from '../types';
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 
 
-interface VectorProps extends MapComponentProps, olx.layer.VectorOptions {
+interface VectorProps extends MapComponentProps, OlVectorLayerOptions {
 }
 
-export class Vector extends MapComponent<ol.layer.Vector, VectorProps> {
-    addMapObject(map: ol.Map): ol.layer.Vector {
-        const layer = new ol.layer.Vector(this.props);
+export class Vector extends MapComponent<OlVectorLayer, VectorProps> {
+    addMapObject(map: OlMap): OlVectorLayer {
+        const layer = new OlVectorLayer(this.props);
         map.getLayers().push(layer);
         return layer;
     }
 
-    updateMapObject(map: ol.Map, layer: ol.layer.Vector, prevProps: Readonly<VectorProps>): ol.layer.Vector {
+    updateMapObject(map: OlMap, layer: OlVectorLayer, prevProps: Readonly<VectorProps>): OlVectorLayer {
         // TODO: Code duplication in ./Tile.tsx
-        if (this.props.source !== prevProps.source) {
+        if (this.props.source !== prevProps.source && this.props.source) {
             layer.setSource(this.props.source);
         }
         if (this.props.visible && this.props.visible !== prevProps.visible) {
@@ -37,7 +36,7 @@ export class Vector extends MapComponent<ol.layer.Vector, VectorProps> {
         return layer;
     }
 
-    removeMapObject(map: ol.Map, layer: ol.layer.Vector): void {
+    removeMapObject(map: OlMap, layer: OlVectorLayer): void {
         map.getLayers().remove(layer);
     }
 }

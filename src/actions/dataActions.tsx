@@ -1,4 +1,3 @@
-///<reference path="../model/dataset.ts"/>
 import { Dispatch } from 'redux';
 
 import { AppState } from '../states/appState';
@@ -22,12 +21,45 @@ import {
     selectedDatasetVariableSelector, selectedPlaceIdSelector, selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
-import { Server } from '../model/server';
+import { Server, ServerInfo } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
 import { placeGroupsSelector } from '../selectors/dataSelectors';
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_SERVER_INFO = 'UPDATE_SERVER_INFO';
+export type UPDATE_SERVER_INFO = typeof UPDATE_SERVER_INFO;
+
+export interface UpdateServerInfo {
+    type: UPDATE_SERVER_INFO;
+    serverInfo: ServerInfo;
+}
+
+export function updateServerInfo() {
+    return (dispatch: Dispatch<UpdateServerInfo | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
+        const apiServer = selectedServerSelector(getState());
+
+        dispatch(addActivity(UPDATE_SERVER_INFO, I18N.get('Connecting to server')));
+
+        api.getServerInfo(apiServer.url)
+            .then((serverInfo: ServerInfo) => {
+                dispatch(_updateServerInfo(serverInfo));
+            })
+            .catch(error => {
+                dispatch(postMessage('error', error + ''));
+            })
+            // 'then' because Microsoft Edge does not understand method finally
+            .then(() => {
+                dispatch(removeActivity(UPDATE_SERVER_INFO));
+            });
+    };
+}
+export function _updateServerInfo(serverInfo: ServerInfo): UpdateServerInfo {
+    return {type: UPDATE_SERVER_INFO, serverInfo};
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -263,6 +295,7 @@ export function configureServers(servers: Server[], selectedServerId: string) {
         if (getState().controlState.selectedServerId !== selectedServerId) {
             dispatch(removeAllTimeSeries());
             dispatch(_configureServers(servers, selectedServerId));
+            dispatch(updateServerInfo());
             dispatch(updateDatasets());
             dispatch(updateColorBars());
         } else if (getState().dataState.userServers !== servers) {
@@ -307,7 +340,8 @@ export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type DataAction =
-    UpdateDatasets
+    UpdateServerInfo
+    | UpdateDatasets
     | UpdateDatasetPlaceGroup
     | AddUserPlace
     | RemoveUserPlace

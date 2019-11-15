@@ -1,5 +1,21 @@
+## Changes in version 0.2.2 (in development)
 
-## Changes in version 0.2 (in dev.)
+
+## Changes in version 0.2.1
+
+### Enhancements
+
+* A new setting allows to turn image smoothing of image layers on and off.
+  By default it is off now, so that crisp image pixels are shown without any blurring. (#86)
+* The color bar legend uses 5 tick marks instead of the two.
+* Added simple scale indicator to map.
+
+### Other changes
+
+* Now using OpenLayers 6.1.1.
+
+
+## Changes in version 0.2.0
 
 * Users can now draw polygons and circles and show respective time-series. (#32)
   In total there are now 4 new interactions with the map:
@@ -31,13 +47,14 @@
   Removing time series, on the other hand, does no longer remove user added places.
 * Selection of exact time steps has been improved. Introduced new time picker and user can also
   select move forward and backward in time by single steps. (#58)
-* User can now adjust preferences in a new settings dialog:
+* User can now browse settings and adjust them according to preferences in a new settings dialog:
   * xcube servers;
   * UI language;
   * whether to connect points by line (#62);
   * whether to show error bars / whether to compute stdev yes/no;
   * auto-play speed / time interval in millis;
-  * whether to auto-add time-series chart if point is added (#46).
+  * whether to auto-add time-series chart if point is added (#46);
+  * system-information (#93).
 * Removed dummy app bar icons ("Notifications", "Avatar") and menu entry ("Settings...")
 * Place groups dropdown menus are no longer displayed if a dataset has no 
   place groups and the places dropdown is no longer shown if no place group is selected. 

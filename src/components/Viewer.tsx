@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as geojson from 'geojson';
-import * as ol from 'openlayers';
 import { createStyles, Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 
 import { newId } from '../util/id';
@@ -20,34 +19,54 @@ import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
+import {
+    OlMap,
+    OlMapBrowserEvent,
+    OlVectorSource,
+    OlStyle,
+    OlStrokeStyle,
+    OlFillStyle,
+    OlCircleStyle,
+    OlColor,
+    OlFeature,
+    OlSimpleGeometry,
+    olPolygonFromCircle,
+    olProjTransformExtent,
+    OlGeometryType,
+    OlExtent,
+    OlCircleGeometry,
+    OlVectorLayer,
+    OlGeoJSONFormat
+} from './ol/types';
+import { ScaleLine } from "./ol/control/ScaleLine";
 
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
 
 // TODO (forman): no good design, store in some state instead:
-const USER_LAYER_SOURCE = new ol.source.Vector();
-const SELECTION_LAYER_SOURCE = new ol.source.Vector();
+const USER_LAYER_SOURCE = new OlVectorSource();
+const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
 
-const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, left: 10, bottom: 75, position: 'relative'};
+const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, right: 264, top: 10};
 
-const SELECTION_LAYER_STROKE = new ol.style.Stroke({
-                                                       color: [255, 200, 0, 1.0],
-                                                       width: 3
-                                                   });
-const SELECTION_LAYER_FILL = new ol.style.Fill({
-                                                   color: [255, 200, 0, 0.05]
-                                               });
-const SELECTION_LAYER_STYLE = new ol.style.Style({
-                                                     stroke: SELECTION_LAYER_STROKE,
-                                                     fill: SELECTION_LAYER_FILL,
-                                                     image: new ol.style.Circle({
-                                                                                    radius: 10,
-                                                                                    stroke: SELECTION_LAYER_STROKE,
-                                                                                    fill: SELECTION_LAYER_FILL,
-                                                                                })
+const SELECTION_LAYER_STROKE = new OlStrokeStyle({
+                                                     color: [255, 200, 0, 1.0],
+                                                     width: 3
                                                  });
+const SELECTION_LAYER_FILL = new OlFillStyle({
+                                                 color: [255, 200, 0, 0.05]
+                                             });
+const SELECTION_LAYER_STYLE = new OlStyle({
+                                              stroke: SELECTION_LAYER_STROKE,
+                                              fill: SELECTION_LAYER_FILL,
+                                              image: new OlCircleStyle({
+                                                                           radius: 10,
+                                                                           stroke: SELECTION_LAYER_STROKE,
+                                                                           fill: SELECTION_LAYER_FILL,
+                                                                       })
+                                          });
 
 
 interface ViewerProps extends WithStyles<typeof styles> {
@@ -60,15 +79,15 @@ interface ViewerProps extends WithStyles<typeof styles> {
     userPlaceGroup: PlaceGroup;
     selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
-    flyTo?: ol.geom.SimpleGeometry | ol.Extent | null;
+    flyTo?: OlSimpleGeometry | OlExtent | null;
     places: Place[];
 }
 
 class Viewer extends React.Component<ViewerProps> {
 
-    map: ol.Map | null;
+    map: OlMap | null;
 
-    handleMapClick = (event: ol.MapBrowserEvent) => {
+    handleMapClick = (event: OlMapBrowserEvent) => {
         const {selectPlace, mapInteraction, places} = this.props;
         if (mapInteraction === 'Select') {
             const map = event.map;
@@ -93,17 +112,23 @@ class Viewer extends React.Component<ViewerProps> {
         // TODO (forman): too much logic here! put the following code into an action + reducer.
         if (this.map !== null && addUserPlace && mapInteraction !== 'Select') {
             const feature = event.feature;
+            let geometry = feature.getGeometry();
+            if (!geometry) {
+                return;
+            }
+
             const placeId = `User-${mapInteraction}-${newId()}`;
             const projection = this.map.getView().getProjection();
 
-            if (feature.getGeometry() instanceof ol.geom.Circle) {
-                const polygon = ol.geom.Polygon.fromCircle(feature.getGeometry() as ol.geom.Circle);
+
+            if (geometry instanceof OlCircleGeometry) {
+                const polygon = olPolygonFromCircle(geometry as OlCircleGeometry);
                 feature.setGeometry(polygon);
             }
 
             // Beware: transform() is an in-place op
-            const geometry = feature.clone().getGeometry().transform(projection, 'EPSG:4326');
-            const geoJSONGeometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
+            geometry = feature.clone().getGeometry()!.transform(projection, 'EPSG:4326');
+            const geoJSONGeometry = new OlGeoJSONFormat().writeGeometryObject(geometry) as any;
             feature.setId(placeId);
             let colorIndex = 0;
             if (MAP_OBJECTS.userLayer) {
@@ -133,7 +158,7 @@ class Viewer extends React.Component<ViewerProps> {
         return true;
     };
 
-    handleMapRef = (map: ol.Map | null) => {
+    handleMapRef = (map: OlMap | null) => {
         this.map = map;
     };
 
@@ -152,11 +177,11 @@ class Viewer extends React.Component<ViewerProps> {
             // noinspection JSDeprecatedSymbols
             if (Array.isArray(flyToCurr)) {
                 // Fly to extent (bounding box)
-                flyToTarget = ol.proj.transformExtent(flyToCurr, 'EPSG:4326', projection);
+                flyToTarget = olProjTransformExtent(flyToCurr, 'EPSG:4326', projection);
                 map.getView().fit(flyToTarget, {size: map.getSize()});
             } else {
                 // Transform Geometry object
-                flyToTarget = flyToCurr.transform('EPSG:4326', projection) as ol.geom.SimpleGeometry;
+                flyToTarget = flyToCurr.transform('EPSG:4326', projection) as OlSimpleGeometry;
                 if (flyToTarget.getType() == 'Point') {
                     // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
                     map.getView().setCenter(flyToTarget.getFirstCoordinate());
@@ -210,7 +235,8 @@ class Viewer extends React.Component<ViewerProps> {
                     <Layers>
                         <OSMBlackAndWhite/>
                         {variableLayer}
-                        <Vector id='userLayer' opacity={1} zIndex={500} source={USER_LAYER_SOURCE}/>
+                        <Vector id='userLayer' opacity={1} zIndex={500}
+                                source={USER_LAYER_SOURCE}/>
                         <Vector id='selectionLayer' opacity={0.7} zIndex={510} style={SELECTION_LAYER_STYLE}
                                 source={SELECTION_LAYER_SOURCE}/>
                     </Layers>
@@ -220,7 +246,7 @@ class Viewer extends React.Component<ViewerProps> {
                         id="drawPoint"
                         layerId={'userLayer'}
                         active={mapInteraction === 'Point'}
-                        type={'Point'}
+                        type={OlGeometryType.POINT}
                         wrapX={true}
                         stopClick={true}
                         onDrawEnd={this.handleDrawEnd}
@@ -229,7 +255,7 @@ class Viewer extends React.Component<ViewerProps> {
                         id="drawPolygon"
                         layerId={'userLayer'}
                         active={mapInteraction === 'Polygon'}
-                        type={'Polygon'}
+                        type={OlGeometryType.POLYGON}
                         wrapX={true}
                         stopClick={true}
                         onDrawEnd={this.handleDrawEnd}
@@ -238,12 +264,13 @@ class Viewer extends React.Component<ViewerProps> {
                         id="drawCircle"
                         layerId={'userLayer'}
                         active={mapInteraction === 'Circle'}
-                        type={'Circle'}
+                        type={OlGeometryType.CIRCLE}
                         wrapX={true}
                         stopClick={true}
                         onDrawEnd={this.handleDrawEnd}
                     />
                     {colorBarControl}
+                    <ScaleLine bar={false}/>
                 </Map>
             </ErrorBoundary>
         );
@@ -253,43 +280,43 @@ class Viewer extends React.Component<ViewerProps> {
 export default withStyles(styles, {withTheme: true})(Viewer);
 
 
-function createPointGeometryStyle(radius: number, fillColor: string, strokeColor: string, strokeWidth: number): ol.style.Style {
-    let fill = new ol.style.Fill(
+function createPointGeometryStyle(radius: number, fillColor: string, strokeColor: string, strokeWidth: number): OlStyle {
+    let fill = new OlFillStyle(
         {
             color: fillColor,
         });
-    let stroke = new ol.style.Stroke(
+    let stroke = new OlStrokeStyle(
         {
             color: strokeColor,
             width: strokeWidth,
         }
     );
-    return new ol.style.Style(
+    return new OlStyle(
         {
-            image: new ol.style.Circle({radius, fill, stroke})
+            image: new OlCircleStyle({radius, fill, stroke})
         }
     );
 }
 
-function createGeometryStyle(fillColor: string | ol.Color, strokeColor: string | ol.Color, strokeWidth: number): ol.style.Style {
-    const fill = new ol.style.Fill(
+function createGeometryStyle(fillColor: string | OlColor, strokeColor: string | OlColor, strokeWidth: number): OlStyle {
+    const fill = new OlFillStyle(
         {
             color: fillColor,
         });
-    const stroke = new ol.style.Stroke(
+    const stroke = new OlStrokeStyle(
         {
             color: strokeColor,
             width: strokeWidth,
 
         }
     );
-    return new ol.style.Style({fill, stroke});
+    return new OlStyle({fill, stroke});
 }
 
-function findFeatureById(map: ol.Map, featureId: string | number): ol.Feature | null {
+function findFeatureById(map: OlMap, featureId: string | number): OlFeature | null {
     for (let layer of map.getLayers().getArray()) {
-        if (layer instanceof ol.layer.Vector) {
-            const vectorLayer = layer as ol.layer.Vector;
+        if (layer instanceof OlVectorLayer) {
+            const vectorLayer = layer as OlVectorLayer;
             const feature = vectorLayer.getSource().getFeatureById(featureId);
             if (feature) {
                 return feature;

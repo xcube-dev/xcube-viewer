@@ -82,6 +82,7 @@ Find outputs in `./build`.
 
 ## More
 
+* [User Guide](https://xcube.readthedocs.io/en/latest/viewer.html#)
 * [Planned Enhancements](https://github.com/dcs4cop/xcube-viewer/labels/enhancement)
 * [Known Issues](https://github.com/dcs4cop/xcube-viewer/labels/bug)
 

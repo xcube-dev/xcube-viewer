@@ -2,12 +2,12 @@ import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup, } from '../model/place';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
-import { Server } from "../model/server";
+import { Server, ServerInfo } from "../model/server";
 import { I18N, VIEWER_API_SERVERS } from "../config";
 import { loadUserServers } from './userSettings';
 
-
 export interface DataState {
+    serverInfo: ServerInfo | null;
     datasets: Dataset[];
     colorBars: ColorBars | null;
     timeSeriesGroups: TimeSeriesGroup[];
@@ -24,6 +24,7 @@ export function newDataState(): DataState {
         }
     });
     return {
+        serverInfo: null,
         datasets: [],
         colorBars: null,
         timeSeriesGroups: [],

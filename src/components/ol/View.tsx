@@ -1,22 +1,21 @@
-import * as ol from 'openlayers';
-
+import {OlMap, OlView, OlViewOptions} from './types';
 import { MapComponent, MapComponentProps } from "./MapComponent";
 
 
-interface ViewProps extends MapComponentProps, ol.olx.ViewOptions {
+interface ViewProps extends MapComponentProps, OlViewOptions {
 }
 
-export class View extends MapComponent<ol.View, ViewProps> {
+export class View extends MapComponent<OlView, ViewProps> {
 
-    addMapObject(map: ol.Map): ol.View {
+    addMapObject(map: OlMap): OlView {
         map.getView().setProperties(this.props);
         return map.getView();
     }
 
-    removeMapObject(map: ol.Map, object: ol.View): void {
+    removeMapObject(map: OlMap, object: OlView): void {
     }
 
-    updateMapObject(map: ol.Map, object: ol.View): ol.View {
+    updateMapObject(map: OlMap, object: OlView): OlView {
         map.getView().setProperties(this.props);
         return map.getView();
     }

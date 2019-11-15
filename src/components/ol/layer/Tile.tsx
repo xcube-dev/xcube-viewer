@@ -1,7 +1,5 @@
 import * as React from 'react';
-import * as ol from 'openlayers';
-import { olx } from 'openlayers';
-
+import { OlMap, OlTileLayer, OlTileLayerOptions, OlXYZSource, OlOSMSource } from '../types';
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
 
@@ -26,41 +24,20 @@ export function OSMBlackAndWhite(): JSX.Element {
 }
 
 
-interface TileProps extends MapComponentProps, olx.layer.TileOptions {
+interface TileProps extends MapComponentProps, OlTileLayerOptions {
 }
 
-export class Tile extends MapComponent<ol.layer.Tile, TileProps> {
+export class Tile extends MapComponent<OlTileLayer, TileProps> {
 
-    addMapObject(map: ol.Map): ol.layer.Tile {
-        const layer = new ol.layer.Tile(this.props);
-
-        // TODO (forman): Issue #86: The following is an attempt to avoid image smoothing
-        //                so crisp image pixels are drawn. But it still doesn't work.
-        // See https://stackoverflow.com/questions/54083424/preventing-smoothing-of-tileimage-layer
-        // See https://stackoverflow.com/questions/35875270/turn-off-image-smoothing-in-openlayers-3
-        // See https://openlayers.org/en/latest/examples/layer-spy.html
-        //
-        layer.on('precompose', (event: any) => {
-            const ctx = event.context as any; // CanvasRenderingContext2D;
-            ctx.save();
-            ctx.imageSmoothingQuality = 'low';
-            ctx.imageSmoothingEnabled = false;
-            ctx.webkitImageSmoothingEnabled = false;
-            ctx.mozImageSmoothingEnabled = false;
-            ctx.msImageSmoothingEnabled = false;
-        });
-        layer.on('postcompose', (event: any) => {
-            const ctx = event.context;
-            ctx.restore();
-        });
-
+    addMapObject(map: OlMap): OlTileLayer {
+        const layer = new OlTileLayer(this.props);
         map.getLayers().push(layer);
         return layer;
     }
 
-    updateMapObject(map: ol.Map, layer: ol.layer.Tile, prevProps: Readonly<TileProps>): ol.layer.Tile {
+    updateMapObject(map: OlMap, layer: OlTileLayer, prevProps: Readonly<TileProps>): OlTileLayer {
         // TODO: Code duplication in ./Vector.tsx
-        if (this.props.source !== prevProps.source) {
+        if (this.props.source !== prevProps.source && this.props.source) {
             layer.setSource(this.props.source);
         }
         if (this.props.visible && this.props.visible !== prevProps.visible) {
@@ -82,12 +59,12 @@ export class Tile extends MapComponent<ol.layer.Tile, TileProps> {
         return layer;
     }
 
-    removeMapObject(map: ol.Map, layer: ol.layer.Tile): void {
+    removeMapObject(map: OlMap, layer: OlTileLayer): void {
         map.getLayers().remove(layer);
     }
 }
 
-const NATURAL_EARTH_2_SOURCE = new ol.source.XYZ(
+const NATURAL_EARTH_2_SOURCE = new OlXYZSource(
     {
         url: 'https://a.tiles.mapbox.com/v3/mapbox.natural-earth-2/{z}/{x}/{y}.png',
         attributions: [
@@ -96,7 +73,7 @@ const NATURAL_EARTH_2_SOURCE = new ol.source.XYZ(
         ],
     });
 
-const BATHYMETRY_SOURCE = new ol.source.XYZ(
+const BATHYMETRY_SOURCE = new OlXYZSource(
     {
         url: 'https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/gebco_2014_contours/MapServer/tile/{z}/{y}/{x}',
         attributions: [
@@ -105,9 +82,9 @@ const BATHYMETRY_SOURCE = new ol.source.XYZ(
         ]
     });
 
-const OSM_SOURCE = new ol.source.OSM();
+const OSM_SOURCE = new OlOSMSource();
 
-const OSM_BW_SOURCE = new ol.source.XYZ(
+const OSM_BW_SOURCE = new OlXYZSource(
     {
         url: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
         attributions: [

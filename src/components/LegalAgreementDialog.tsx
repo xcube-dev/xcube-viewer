@@ -49,7 +49,7 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
             <DialogTitle>{I18N.get('Legal Agreement')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {I18N.get('We use „HTML5 local storage” to save and restore your settings. 3rd parties will never see your data. Note we not use „cookies” at all.')}
+                    {I18N.get('We use „HTML5 local storage” to save and restore your settings. 3rd parties will never see your data. Note we do not use „cookies” at all.')}
                 </DialogContentText>
                 <DialogContentText>
                     {I18N.get('Find out more')}{' '}

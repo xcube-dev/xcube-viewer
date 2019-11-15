@@ -1,26 +1,26 @@
 import * as React from 'react';
-import * as ol from 'openlayers';
 
-import 'openlayers/css/ol.css';
+import 'ol/ol.css';
 import './Map.css';
 
+import { OlMap, OlMapOptions, OlMapBrowserEvent, OlView, OlBaseObject, OlEvent, olProjFromLonLat } from './types';
 
 export type MapElement = React.ReactElement<any> | null | undefined;
 
 export interface MapContext {
-    map?: ol.Map;
+    map?: OlMap;
     mapDiv?: HTMLDivElement | null;
-    mapObjects: { [id: string]: ol.Object };
+    mapObjects: { [id: string]: OlBaseObject };
 }
 
 export const MapContextType = React.createContext<MapContext>({mapObjects: {}});
 
-interface MapProps extends ol.olx.MapOptions {
+interface MapProps extends OlMapOptions {
     id: string;
     children?: React.ReactNode;
-    mapObjects?: { [id: string]: ol.Object };
-    onClick?: (event: ol.MapBrowserEvent) => void;
-    onMapRef?: (map: ol.Map | null) => void;
+    mapObjects?: { [id: string]: OlBaseObject };
+    onClick?: (event: OlMapBrowserEvent) => void;
+    onMapRef?: (map: OlMap | null) => void;
     isStale?: boolean;
 }
 
@@ -40,7 +40,7 @@ export class Map extends React.Component<MapProps, MapState> {
         const {id, mapObjects} = props;
         if (mapObjects) {
             this.contextValue = {
-                map: mapObjects[id] as ol.Map || undefined,
+                map: mapObjects[id] as OlMap || undefined,
                 mapObjects: mapObjects
             };
         } else {
@@ -50,17 +50,17 @@ export class Map extends React.Component<MapProps, MapState> {
         }
     }
 
-    private getMapOptions(): ol.olx.MapOptions {
+    private getMapOptions(): OlMapOptions {
         const mapOptions = {...this.props};
         delete mapOptions['children'];
         delete mapOptions['onClick'];
         return mapOptions;
     }
 
-    private handleClick = (event: ol.events.Event) => {
+    private handleClick = (event: OlEvent) => {
         const onClick = this.props.onClick;
         if (onClick) {
-            onClick(event as ol.MapBrowserEvent);
+            onClick(event as OlMapBrowserEvent);
         }
     };
 
@@ -98,27 +98,27 @@ export class Map extends React.Component<MapProps, MapState> {
         const {id} = this.props;
         const mapDiv = this.contextValue.mapDiv!;
 
-        let map: ol.Map | undefined;
+        let map: OlMap | undefined;
         if (this.props.isStale) {
             const mapObject = this.contextValue.mapObjects[id];
             if (mapObject && mapObject['addControl'] && mapObject['addLayer'] && mapObject['setTarget']) {
-                map = mapObject as ol.Map;
+                map = mapObject as OlMap;
                 map.setTarget(mapDiv);
             }
         }
 
         if (!map) {
             const initialZoom = this.getMinZoom(mapDiv);
-            const view = new ol.View({
-                                         center: ol.proj.fromLonLat([0, 0]),
-                                         minZoom: initialZoom,
-                                         zoom: initialZoom,
-                                     });
-            map = new ol.Map({
-                                 view,
-                                 ...this.getMapOptions(),
-                                 target: mapDiv
-                             });
+            const view = new OlView({
+                                        center: olProjFromLonLat([0, 0]),
+                                        minZoom: initialZoom,
+                                        zoom: initialZoom,
+                                    });
+            map = new OlMap({
+                                view,
+                                ...this.getMapOptions(),
+                                target: mapDiv
+                            });
         }
 
         this.contextValue.map = map;
