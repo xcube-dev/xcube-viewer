@@ -49,7 +49,7 @@ const USER_LAYER_SOURCE = new OlVectorSource();
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
 
-const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, right: 264, top: 10};
+const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, right: 272, top: 10};
 
 const SELECTION_LAYER_STROKE = new OlStrokeStyle({
                                                      color: [255, 200, 0, 1.0],
