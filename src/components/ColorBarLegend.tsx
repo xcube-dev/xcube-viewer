@@ -3,15 +3,18 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Popover from '@material-ui/core/Popover';
 import Slider, { Mark } from '@material-ui/core/Slider';
 import Box from '@material-ui/core/Box';
+import Tooltip from '@material-ui/core/Tooltip';
+import Checkbox from '@material-ui/core/Checkbox';
 
-// import { arange } from '../util/label'
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
 import { ColorBars } from '../model/colorBar';
-import Tooltip from '@material-ui/core/Tooltip';
+import { I18N } from '../config';
 
 const HOR_SLIDER_MARGIN = 5;
 const COLOR_BAR_BOX_MARGIN = 1;
 const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
+
+const ALPHA_SUFFIX = '_alpha';
 
 const useStyles = makeStyles(theme => ({
         title: {
@@ -53,6 +56,7 @@ const useStyles = makeStyles(theme => ({
         },
         colorBarGroupTitle: {
             marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
+            color: theme.palette.grey[400],
         },
         colorBarGroupItemBox: {
             marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
@@ -95,6 +99,12 @@ export default function ColorBarLegend({
         return null;
     }
 
+    const variableColorBarAlpha = variableColorBarName.endsWith(ALPHA_SUFFIX);
+    let variableColorBarBaseName = variableColorBarName;
+    if (variableColorBarAlpha) {
+        variableColorBarBaseName = variableColorBarName.slice(0, variableColorBarName.length - ALPHA_SUFFIX.length);
+    }
+
     const imageData = colorBars.images[variableColorBarName];
 
     const handleOpenColorBarMinMaxEditor = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -128,7 +138,18 @@ export default function ColorBarLegend({
     };
 
     const handleColorBarNameChange = (variableColorBarName: string) => {
+        if (variableColorBarAlpha) {
+            variableColorBarName += ALPHA_SUFFIX;
+        }
         updateVariableColorBar(variableColorBarMinMax, variableColorBarName);
+    };
+
+    const handleColorBarAlpha = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.currentTarget.checked) {
+            updateVariableColorBar(variableColorBarMinMax, variableColorBarBaseName + ALPHA_SUFFIX);
+        } else {
+            updateVariableColorBar(variableColorBarMinMax, variableColorBarBaseName);
+        }
     };
 
     const title = `${variableName} (${variableUnits || '-'})`;
@@ -205,27 +226,39 @@ export default function ColorBarLegend({
                 </Tooltip>
             );
             for (let name of cbg.names) {
-                entries.push(<Box
-                    className={classes.colorBarGroupItemBox}
-                    border={name === variableColorBarName ? 1.5 : 1}
-                    borderColor={name === variableColorBarName ? 'orange' : 'black'}
-                    width={240}
-                    height={20}
-                >
-                    <Tooltip title={name} placement="left">
-                        <img
-                            src={`data:image/png;base64,${colorBars.images[name]}`}
-                            width={'100%'}
-                            height={'100%'}
-                            onClick={() => {
-                                handleColorBarNameChange(name);
-                            }}
-                        />
-                    </Tooltip>
-                </Box>);
+                if (!name.endsWith(ALPHA_SUFFIX)) {
+                    entries.push(<Box
+                        className={classes.colorBarGroupItemBox}
+                        border={name === variableColorBarBaseName ? 1 : 1}
+                        borderColor={name === variableColorBarBaseName ? 'orange' : 'black'}
+                        width={240}
+                        height={20}
+                    >
+                        <Tooltip title={name} placement="left">
+                            <img
+                                src={`data:image/png;base64,${colorBars.images[name]}`}
+                                width={'100%'}
+                                height={'100%'}
+                                onClick={() => {
+                                    handleColorBarNameChange(name);
+                                }}
+                            />
+                        </Tooltip>
+                    </Box>);
+                }
             }
         }
-        colorBarNameEditor = (<Box className={classes.colorBarBox}>{entries}</Box>);
+        colorBarNameEditor = (
+            <Box className={classes.colorBarBox}>
+                <Box component="span">
+                    <Checkbox color="primary"
+                              checked={variableColorBarAlpha}
+                              onChange={handleColorBarAlpha}/>
+                    <Box component="span">{I18N.get('Hide lower values')}</Box>
+                </Box>
+                {entries}
+            </Box>
+        );
     }
 
     return (
