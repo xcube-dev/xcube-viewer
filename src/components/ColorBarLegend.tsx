@@ -1,12 +1,12 @@
 import * as React from 'react';
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import Popover from "@material-ui/core/Popover";
-import Slider, { Mark } from "@material-ui/core/Slider";
-import Box from "@material-ui/core/Box";
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import Popover from '@material-ui/core/Popover';
+import Slider, { Mark } from '@material-ui/core/Slider';
+import Box from '@material-ui/core/Box';
 
 // import { arange } from '../util/label'
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
-import { ColorBars } from "../model/colorBar";
+import { ColorBars } from '../model/colorBar';
 
 const HOR_MARGIN = 5;
 
@@ -67,7 +67,8 @@ export default function ColorBarLegend({
                                            updateVariableColorBar,
                                            colorBars,
                                            width, height,
-                                           numTicks}: ColorBarLegendProps) {
+                                           numTicks
+                                       }: ColorBarLegendProps) {
     const classes = useStyles();
     const [colorBarMinMaxAnchorEl, setColorBarMinMaxAnchorEl] = React.useState<HTMLDivElement | null>(null);
     const [currentColorBarMinMax, setCurrentColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
@@ -103,20 +104,40 @@ export default function ColorBarLegend({
     };
 
     const handleOpenColorBarNameEditor = () => {
-        console.log("Color bar clicked!");
+        console.log('Color bar clicked!');
     };
 
     const title = `${variableName} (${variableUnits || '-'})`;
 
     let colorBarMinMaxEditor;
     if (colorBarMinMaxEditorOpen) {
-        const [original1, original2] = originalColorBarMinMax;
-        let delta = original2 - original1;
-        delta = delta > 0 ? delta : 1.0;
-        const total1 = original1 - 0.5 * delta;
-        const total2 = original2 + 0.5 * delta;
 
-        // const values = arange(total1, total2, 9);
+        const [original1, original2] = originalColorBarMinMax;
+        const dist = original1 < original2 ? (original2 - original1) : 1;
+        const distExp = Math.floor(Math.log10(dist));
+        const distNorm = dist * Math.pow(10, -distExp);
+
+        let numStepsInner = null;
+        for (let delta of [0.25, 0.2, 0.15, 0.125, 0.1]) {
+            let numStepsFloat = distNorm / delta;
+            let numStepsInt = Math.floor(numStepsFloat);
+            if (Math.abs(numStepsInt - numStepsFloat) < 1e-10) {
+                numStepsInner = numStepsInt;
+                break;
+            }
+        }
+
+        const numStepsOuter = 4;
+        if (numStepsInner === null) {
+            numStepsInner = 8;
+        }
+
+        const delta = original1 < original2 ? dist / numStepsInner : 0.5;
+        const numSteps = numStepsInner + 2 * numStepsOuter;
+        const total1 = original1 - numStepsOuter * delta;
+        const total2 = original2 + numStepsOuter * delta;
+        const step = (total2 - total1) / numSteps;
+
         const values = [
             total1,
             original1,
@@ -137,7 +158,7 @@ export default function ColorBarLegend({
                         max={total2}
                         value={currentColorBarMinMax}
                         marks={marks}
-                        step={(total2 - total1) / 8}
+                        step={step}
                         onChange={handleColorBarMinMaxChange}
                         onChangeCommitted={handleColorBarMinMaxChangeCommitted}
                         valueLabelDisplay="auto"
