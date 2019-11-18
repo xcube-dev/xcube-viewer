@@ -7,8 +7,11 @@ import Box from '@material-ui/core/Box';
 // import { arange } from '../util/label'
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
 import { ColorBars } from '../model/colorBar';
+import Tooltip from '@material-ui/core/Tooltip';
 
-const HOR_MARGIN = 5;
+const HOR_SLIDER_MARGIN = 5;
+const COLOR_BAR_BOX_MARGIN = 1;
+const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
 const useStyles = makeStyles(theme => ({
         title: {
@@ -37,12 +40,23 @@ const useStyles = makeStyles(theme => ({
         },
         sliderBox: {
             marginTop: theme.spacing(1),
-            marginLeft: theme.spacing(HOR_MARGIN),
-            marginRight: theme.spacing(HOR_MARGIN),
+            marginLeft: theme.spacing(HOR_SLIDER_MARGIN),
+            marginRight: theme.spacing(HOR_SLIDER_MARGIN),
             minWidth: 300,
-            width: `calc(100% - ${theme.spacing(2 * (HOR_MARGIN + 1))}px)`,
+            width: `calc(100% - ${theme.spacing(2 * (HOR_SLIDER_MARGIN + 1))}px)`,
         },
-
+        colorBarBox: {
+            marginTop: theme.spacing(COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_BOX_MARGIN),
+            marginLeft: theme.spacing(COLOR_BAR_BOX_MARGIN),
+            marginRight: theme.spacing(COLOR_BAR_BOX_MARGIN),
+            marginBottom: theme.spacing(COLOR_BAR_BOX_MARGIN),
+        },
+        colorBarGroupTitle: {
+            marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
+        },
+        colorBarGroupItemBox: {
+            marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
+        },
     }
 ));
 
@@ -71,9 +85,11 @@ export default function ColorBarLegend({
                                        }: ColorBarLegendProps) {
     const classes = useStyles();
     const [colorBarMinMaxAnchorEl, setColorBarMinMaxAnchorEl] = React.useState<HTMLDivElement | null>(null);
+    const [colorBarNameAnchorEl, setColorBarNameAnchorEl] = React.useState<HTMLDivElement | null>(null);
     const [currentColorBarMinMax, setCurrentColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
     const [originalColorBarMinMax, setOriginalColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
     const colorBarMinMaxEditorOpen = Boolean(colorBarMinMaxAnchorEl);
+    const colorBarNameEditorOpen = Boolean(colorBarNameAnchorEl);
 
     if (!colorBars) {
         return null;
@@ -103,8 +119,16 @@ export default function ColorBarLegend({
         }
     };
 
-    const handleOpenColorBarNameEditor = () => {
-        console.log('Color bar clicked!');
+    const handleOpenColorBarNameEditor = (event: React.MouseEvent<HTMLDivElement>) => {
+        setColorBarNameAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseColorBarNameEditor = () => {
+        setColorBarNameAnchorEl(null);
+    };
+
+    const handleColorBarNameChange = (variableColorBarName: string) => {
+        updateVariableColorBar(variableColorBarMinMax, variableColorBarName);
     };
 
     const title = `${variableName} (${variableUnits || '-'})`;
@@ -168,6 +192,42 @@ export default function ColorBarLegend({
         );
     }
 
+    let colorBarNameEditor;
+    if (colorBarNameEditorOpen) {
+
+        const entries = [];
+        for (let cbg of colorBars.groups) {
+            entries.push(
+                <Tooltip title={cbg.description} placement="left">
+                    <Box className={classes.colorBarGroupTitle}>
+                        {cbg.title}
+                    </Box>
+                </Tooltip>
+            );
+            for (let name of cbg.names) {
+                entries.push(<Box
+                    className={classes.colorBarGroupItemBox}
+                    border={name === variableColorBarName ? 1.5 : 1}
+                    borderColor={name === variableColorBarName ? 'orange' : 'black'}
+                    width={240}
+                    height={20}
+                >
+                    <Tooltip title={name} placement="left">
+                        <img
+                            src={`data:image/png;base64,${colorBars.images[name]}`}
+                            width={'100%'}
+                            height={'100%'}
+                            onClick={() => {
+                                handleColorBarNameChange(name);
+                            }}
+                        />
+                    </Tooltip>
+                </Box>);
+            }
+        }
+        colorBarNameEditor = (<Box className={classes.colorBarBox}>{entries}</Box>);
+    }
+
     return (
         <div className={'ol-control ' + classes.container}>
             <div className={classes.title}>
@@ -200,6 +260,21 @@ export default function ColorBarLegend({
                 }}
             >
                 {colorBarMinMaxEditor}
+            </Popover>
+            <Popover
+                anchorEl={colorBarNameAnchorEl}
+                open={colorBarNameEditorOpen}
+                onClose={handleCloseColorBarNameEditor}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+            >
+                {colorBarNameEditor}
             </Popover>
         </div>
     );
