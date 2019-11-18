@@ -45,18 +45,19 @@ export function updateServerInfo() {
         dispatch(addActivity(UPDATE_SERVER_INFO, I18N.get('Connecting to server')));
 
         api.getServerInfo(apiServer.url)
-            .then((serverInfo: ServerInfo) => {
-                dispatch(_updateServerInfo(serverInfo));
-            })
-            .catch(error => {
-                dispatch(postMessage('error', error + ''));
-            })
-            // 'then' because Microsoft Edge does not understand method finally
-            .then(() => {
-                dispatch(removeActivity(UPDATE_SERVER_INFO));
-            });
+           .then((serverInfo: ServerInfo) => {
+               dispatch(_updateServerInfo(serverInfo));
+           })
+           .catch(error => {
+               dispatch(postMessage('error', error + ''));
+           })
+           // 'then' because Microsoft Edge does not understand method finally
+           .then(() => {
+               dispatch(removeActivity(UPDATE_SERVER_INFO));
+           });
     };
 }
+
 export function _updateServerInfo(serverInfo: ServerInfo): UpdateServerInfo {
     return {type: UPDATE_SERVER_INFO, serverInfo};
 }
@@ -339,6 +340,37 @@ export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+export const UPDATE_VARIABLE_COLOR_BAR = 'UPDATE_VARIABLE_COLOR_BAR';
+export type UPDATE_VARIABLE_COLOR_BAR = typeof UPDATE_VARIABLE_COLOR_BAR;
+
+export interface UpdateVariableColorBar {
+    type: UPDATE_VARIABLE_COLOR_BAR;
+    datasetId: string;
+    variableName: string;
+    colorBarMinMax: [number, number];
+    colorBarName: string;
+}
+
+export function updateVariableColorBar(colorBarMinMax: [number, number], colorBarName: string) {
+    return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
+        const selectedDatasetId = getState().controlState.selectedDatasetId;
+        const selectedVariableName = getState().controlState.selectedVariableName;
+        if (selectedDatasetId && selectedVariableName) {
+            dispatch(_updateVariableColorBar(selectedDatasetId, selectedVariableName, colorBarMinMax, colorBarName));
+        }
+    };
+}
+
+export function _updateVariableColorBar(datasetId: string,
+                                        variableName: string,
+                                        colorBarMinMax: [number, number],
+                                        colorBarName: string): UpdateVariableColorBar {
+    return {type: UPDATE_VARIABLE_COLOR_BAR, datasetId, variableName, colorBarMinMax, colorBarName};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type DataAction =
     UpdateServerInfo
     | UpdateDatasets
@@ -350,4 +382,5 @@ export type DataAction =
     | RemoveTimeSeriesGroup
     | RemoveAllTimeSeries
     | ConfigureServers
-    | UpdateColorBars;
+    | UpdateColorBars
+    | UpdateVariableColorBar;

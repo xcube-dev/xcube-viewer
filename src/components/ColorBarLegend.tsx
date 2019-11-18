@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { defaultMemoize } from 'reselect'
-
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Popover from "@material-ui/core/Popover";
-import ValueRangeSlider from "./ValueRangeSlider";
-import { MouseEvent } from "react";
+import Slider, { Mark } from "@material-ui/core/Slider";
+import Box from "@material-ui/core/Box";
+
+// import { arange } from '../util/label'
+import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
+import { ColorBars } from "../model/colorBar";
+
+const HOR_MARGIN = 5;
 
 const useStyles = makeStyles(theme => ({
         title: {
@@ -31,46 +35,117 @@ const useStyles = makeStyles(theme => ({
             paddingTop: theme.spacing(0.5),
             color: 'black',
         },
+        sliderBox: {
+            marginTop: theme.spacing(1),
+            marginLeft: theme.spacing(HOR_MARGIN),
+            marginRight: theme.spacing(HOR_MARGIN),
+            minWidth: 300,
+            width: `calc(100% - ${theme.spacing(2 * (HOR_MARGIN + 1))}px)`,
+        },
+
     }
 ));
 
 
 interface ColorBarLegendProps {
-    name: string;
-    units: string;
-    imageData: string;
-    minValue: number;
-    maxValue: number;
+    variableName: string;
+    variableUnits: string;
+    variableColorBarMinMax: [number, number];
+    variableColorBarName: string;
+    updateVariableColorBar: (colorBarMinMax: [number, number], colorBarName: string) => void;
+    colorBars: ColorBars;
     width?: number | string;
     height?: number | string;
     numTicks?: number;
 }
 
-export default function ColorBarLegend({name, units, imageData, minValue, maxValue, width, height, numTicks}: ColorBarLegendProps) {
+export default function ColorBarLegend({
+                                           variableName,
+                                           variableUnits,
+                                           variableColorBarMinMax,
+                                           variableColorBarName,
+                                           updateVariableColorBar,
+                                           colorBars,
+                                           width, height,
+                                           numTicks}: ColorBarLegendProps) {
     const classes = useStyles();
-    const [labelAnchorEl, setLabelAnchorEl] = React.useState<HTMLDivElement | null>(null);
-    const [selectedValueRange, setSelectedValueRange] = React.useState<[number, number]>([minValue, maxValue]);
-    const labelEditorOpen = Boolean(labelAnchorEl);
+    const [colorBarMinMaxAnchorEl, setColorBarMinMaxAnchorEl] = React.useState<HTMLDivElement | null>(null);
+    const [currentColorBarMinMax, setCurrentColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
+    const [originalColorBarMinMax, setOriginalColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
+    const colorBarMinMaxEditorOpen = Boolean(colorBarMinMaxAnchorEl);
 
-    const handleCloseLabelEditor = () => {
-        setLabelAnchorEl(null);
+    if (!colorBars) {
+        return null;
+    }
+
+    const imageData = colorBars.images[variableColorBarName];
+
+    const handleOpenColorBarMinMaxEditor = (event: React.MouseEvent<HTMLDivElement>) => {
+        setColorBarMinMaxAnchorEl(event.currentTarget);
+        setCurrentColorBarMinMax(variableColorBarMinMax);
+        setOriginalColorBarMinMax(variableColorBarMinMax);
     };
 
-    const handleOpenLabelEditor = (event: MouseEvent<HTMLDivElement>) => {
-        setLabelAnchorEl(event.currentTarget);
-        console.log("Label clicked!");
-        // if (openValueRangeEditor) {
-        //     openValueRangeEditor();
-        // }
+    const handleCloseColorBarMinMaxEditor = () => {
+        setColorBarMinMaxAnchorEl(null);
     };
 
-    const handleOpenColorBarEditor = () => {
+    const handleColorBarMinMaxChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        if (Array.isArray(value)) {
+            setCurrentColorBarMinMax([value[0], value[1]]);
+        }
+    };
+
+    const handleColorBarMinMaxChangeCommitted = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        if (Array.isArray(value)) {
+            updateVariableColorBar([value[0], value[1]], variableColorBarName);
+        }
+    };
+
+    const handleOpenColorBarNameEditor = () => {
         console.log("Color bar clicked!");
     };
 
-    const ticks = computeTicks(minValue, maxValue, numTicks);
+    const title = `${variableName} (${variableUnits || '-'})`;
 
-    const title = `${name} (${units || '-'})`;
+    let colorBarMinMaxEditor;
+    if (colorBarMinMaxEditorOpen) {
+        const [original1, original2] = originalColorBarMinMax;
+        let delta = original2 - original1;
+        delta = delta > 0 ? delta : 1.0;
+        const total1 = original1 - 0.5 * delta;
+        const total2 = original2 + 0.5 * delta;
+
+        // const values = arange(total1, total2, 9);
+        const values = [
+            total1,
+            original1,
+            original2,
+            total2,
+        ];
+
+        const marks: Mark[] = getLabelsFromArray(values).map((label, i) => {
+            return {value: values[i], label};
+        });
+
+        colorBarMinMaxEditor = (
+            <div style={{marginTop: 18}}>
+                <span style={{paddingLeft: 14}}>{title}</span>
+                <Box className={classes.sliderBox}>
+                    <Slider
+                        min={total1}
+                        max={total2}
+                        value={currentColorBarMinMax}
+                        marks={marks}
+                        step={(total2 - total1) / 8}
+                        onChange={handleColorBarMinMaxChange}
+                        onChangeCommitted={handleColorBarMinMaxChangeCommitted}
+                        valueLabelDisplay="auto"
+                    />
+                </Box>
+            </div>
+        );
+    }
 
     return (
         <div className={'ol-control ' + classes.container}>
@@ -81,18 +156,19 @@ export default function ColorBarLegend({name, units, imageData, minValue, maxVal
                 src={`data:image/png;base64,${imageData}`}
                 width={width || 240}
                 height={height || 24}
-                onClick={handleOpenColorBarEditor}
+                onClick={handleOpenColorBarNameEditor}
             />
             <div
                 className={classes.label}
-                onClick={handleOpenLabelEditor}
+                onClick={handleOpenColorBarMinMaxEditor}
             >
-                {ticks}
+                <Labels minValue={variableColorBarMinMax[0]} maxValue={variableColorBarMinMax[1]}
+                        count={numTicks || 5}/>
             </div>
             <Popover
-                anchorEl={labelAnchorEl}
-                open={labelEditorOpen}
-                onClose={handleCloseLabelEditor}
+                anchorEl={colorBarMinMaxAnchorEl}
+                open={colorBarMinMaxEditorOpen}
+                onClose={handleCloseColorBarMinMaxEditor}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',
@@ -102,34 +178,23 @@ export default function ColorBarLegend({name, units, imageData, minValue, maxVal
                     horizontal: 'center',
                 }}
             >
-                <div style={{marginTop: 18}}>
-                    <span style={{paddingLeft: 14}}>{title}</span>
-                    <ValueRangeSlider
-                        originalValueRange={[minValue, maxValue]}
-                        selectedValueRange={selectedValueRange}
-                        selectValueRange={setSelectedValueRange}
-                    />
-                </div>
+                {colorBarMinMaxEditor}
             </Popover>
         </div>
     );
 }
 
 
-function _computeTicks(minValue: number, maxValue: number, numTicks: number = 5): number[] {
-    const fractionDigits = Math.min(10, Math.max(2, Math.round(-Math.log10(maxValue - minValue))));
-    const delta = (maxValue - minValue) / (numTicks - 1);
-    const ticks = new Array(numTicks);
-    for (let i = 0; i < numTicks; i++) {
-        let v = minValue + i * delta;
-        let vr = Math.round(v);
-        if (Math.abs(vr - v) < 1e-8) {
-            ticks[i] = (<span key={i}>{vr}</span>);
-        } else {
-            ticks[i] = (<span key={i}>{v.toFixed(fractionDigits)}</span>);
-        }
-    }
-    return ticks;
+interface LabelsProps {
+    minValue: number;
+    maxValue: number;
+    count: number;
 }
 
-const computeTicks = defaultMemoize(_computeTicks);
+function Labels({minValue, maxValue, count}: LabelsProps) {
+    return (
+        <React.Fragment>
+            {getLabelsFromRange(minValue, maxValue, count).map((label, i) => <span key={i}>{label}</span>)}
+        </React.Fragment>
+    );
+}
