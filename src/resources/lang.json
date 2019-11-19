@@ -363,6 +363,13 @@
       "it": "Levigatura dell'immagine",
       "ro": "Netezirea imaginii",
       "se": "Bildutjämning"
+    },
+    {
+      "en": "Hide lower values",
+      "de": "Niedrigere Werte ausblenden",
+      "it": "Nascondi valori più bassi",
+      "ro": "Ascundeți valori mai mici",
+      "se": "Dölj lägre värden"
     }
   ]
 }
