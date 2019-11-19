@@ -172,8 +172,11 @@ export default function ColorBarLegend({
             }
         }
 
-        const numStepsOuter = 4;
-        if (numStepsInner === null) {
+        let numStepsOuter;
+        if (numStepsInner !== null && numStepsInner >= 2) {
+            numStepsOuter = Math.max(2, Math.round(numStepsInner / 2));
+        } else {
+            numStepsOuter = 4;
             numStepsInner = 8;
         }
 

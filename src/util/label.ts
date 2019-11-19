@@ -1,6 +1,11 @@
 export function getLabelsFromArray(values: number[]): string[] {
-    const fractionDigits = Math.min(10, Math.max(2, Math.round(-Math.log10(values[values.length - 1] - values[0]))));
-    return values.map(formatValue, fractionDigits);
+    const min = values[0];
+    const max = values[values.length - 1];
+    const fractionDigits = Math.min(10, Math.max(2, Math.round(-Math.log10(max - min))));
+    function _formatValue(value: number): string {
+        return formatValue(value, fractionDigits);
+    }
+    return values.map(_formatValue);
 }
 
 export function getLabelsFromRange(minValue: number, maxValue: number, count: number = 5): string[] {
@@ -8,7 +13,7 @@ export function getLabelsFromRange(minValue: number, maxValue: number, count: nu
 }
 
 function formatValue(value: number, fractionDigits: number): string {
-    let valueRounded = Math.round(value);
+    const valueRounded = Math.round(value);
     if (Math.abs(valueRounded - value) < 1e-8) {
         return valueRounded + '';
     } else {
