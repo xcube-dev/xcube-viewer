@@ -1,4 +1,4 @@
-import {  OlVectorLayer } from '../components/ol/types';
+import {  OlVectorLayer, OlGeoJSONFormat, OlStyle, OlStrokeStyle, OlFillStyle } from '../components/ol/types';
 
 
 import { DataState, newDataState } from '../states/dataState';
@@ -11,7 +11,7 @@ import {
     UPDATE_COLOR_BARS,
     UPDATE_DATASETS,
     UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES, UPDATE_SERVER_INFO,
-    UPDATE_VARIABLE_COLOR_BAR
+    UPDATE_VARIABLE_COLOR_BAR,
     ADD_USER_PLACE_2
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
@@ -171,13 +171,13 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
 
 function addUserPlaceToLayer(place: Place) {
     if (MAP_OBJECTS.userLayer) {
-        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
         const source = userLayer.getSource();
-        const feature = new ol.format.GeoJSON().readFeature(place);
-        feature.setStyle(new ol.style.Style(
+        const feature = new OlGeoJSONFormat().readFeature(place);
+        feature.setStyle(new OlStyle(
             {
-                stroke: new ol.style.Stroke({color: (place.properties || {}).color || 'red'}),
-                fill: new ol.style.Fill({color: '#ffffff80'}),
+                stroke: new OlStrokeStyle({color: (place.properties || {}).color || 'red'}),
+                fill: new OlFillStyle({color: '#ffffff80'}),
             }
         ));
         source.addFeature(feature);

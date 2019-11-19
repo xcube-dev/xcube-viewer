@@ -20,8 +20,7 @@ import {
     INC_SELECTED_TIME,
     UPDATE_SETTINGS, SET_MAP_INTERACTION,
 } from '../actions/controlActions';
-import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, REMOVE_USER_PLACE } from "../actions/dataActions";
-import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, ADD_USER_PLACE_2 } from '../actions/dataActions';
+import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, ADD_USER_PLACE_2, REMOVE_USER_PLACE } from "../actions/dataActions";
 import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";

@@ -20,8 +20,7 @@ const styles = (theme: Theme) => createStyles(
         select: {
             minWidth: '5em',
         },
-        button: {
-        },
+        button: {},
     });
 
 interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
@@ -76,39 +75,38 @@ class PlaceSelect extends React.Component<PlaceSelectProps> {
                 </InputLabel>
             );
 
-        const placeSelect = (
-            <Select
-                value={selectedPlaceId}
-                onChange={this.handlePlaceChange}
-                input={<Input name="place" id="place-select"/>}
-                displayEmpty
-                name="place"
-                className={classes.select}
-            >
-                {places.map((place, i) => (
-                    <MenuItem
-                        key={place.id}
-                        value={place.id}
-                        selected={place.id === selectedPlaceId}
-                    >
-                        {placeLabels[i]}
-                    </MenuItem>
-                ))}
-            </Select>
-        );
+            placeSelect = (
+                <Select
+                    value={selectedPlaceId}
+                    onChange={this.handlePlaceChange}
+                    input={<Input name="place" id="place-select"/>}
+                    displayEmpty
+                    name="place"
+                    className={classes.select}
+                >
+                    {places.map((place, i) => (
+                        <MenuItem
+                            key={place.id}
+                            value={place.id}
+                            selected={place.id === selectedPlaceId}
+                        >
+                            {placeLabels[i]}
+                        </MenuItem>
+                    ))}
+                </Select>
+            );
 
-        const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
-                              && selectedPlaceId !== '';
-        const placeRemoveButton = (
-            <IconButton
-                className={classes.button}
-                disabled={!removeEnabled}
-                onClick={this.handleRemoveButtonClick}
-            >
-                {<RemoveCircleOutlineIcon/>}
-            </IconButton>
-        );
-
+            const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
+                                  && selectedPlaceId !== '';
+            placeRemoveButton = (
+                <IconButton
+                    className={classes.button}
+                    disabled={!removeEnabled}
+                    onClick={this.handleRemoveButtonClick}
+                >
+                    {<RemoveCircleOutlineIcon/>}
+                </IconButton>
+            );
         }
 
         const placeAddButton = (

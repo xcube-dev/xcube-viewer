@@ -1,5 +1,7 @@
 import { Dispatch } from 'redux';
+import * as geojson from 'geojson';
 
+import { OlGeoJSONFormat } from '../components/ol/types';
 import { AppState } from '../states/appState';
 import * as api from '../api'
 import {
@@ -18,13 +20,12 @@ import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
 import {
     selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
-    selectedDatasetVariableSelector, selectedPlaceIdSelector, selectedPlaceSelector,
+    selectedDatasetVariableSelector, selectedPlaceGroupPlacesSelector, selectedPlaceIdSelector, selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
 import { Server, ServerInfo } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
-import * as geojson from 'geojson';
 import { placeGroupsSelector } from '../selectors/dataSelectors';
 import { newId } from '../util/id';
 
@@ -164,12 +165,12 @@ export function addUserPlace2(place: Place, selectPlace: boolean): AddUserPlace2
 export function addUserPlaceFromText(geometryText: string) {
     return (dispatch: Dispatch<AddUserPlace2 | SelectPlaceGroups | SelectPlace>, getState: () => AppState) => {
 
-        const geometry = new ol.format.GeoJSON().readGeometry(geometryText);
-        const geoJSONGeometry: geojson.Geometry = new ol.format.GeoJSON().writeGeometryObject(geometry) as any;
+        const geometry = new OlGeoJSONFormat().readGeometry(geometryText);
+        const geoJSONGeometry: geojson.Geometry = new OlGeoJSONFormat().writeGeometryObject(geometry) as any;
 
         const placeId = `User-GeoJSON-${newId()}`;
 
-        const place:Place = {
+        const place: Place = {
             type: 'Feature',
             id: placeId,
             geometry: geoJSONGeometry,
@@ -178,7 +179,7 @@ export function addUserPlaceFromText(geometryText: string) {
 
         dispatch(addUserPlace2(place, false));
         dispatch(selectPlaceGroups(['user']) as any);
-        dispatch(selectPlace(placeId, getState().dataState.datasets, getState().dataState.userPlaceGroup));
+        dispatch(selectPlace(placeId, selectedPlaceGroupPlacesSelector(getState()), true));
         if (getState().controlState.autoShowTimeSeries) {
             dispatch(addTimeSeries() as any);
         }
