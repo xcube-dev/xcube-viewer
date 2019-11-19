@@ -227,24 +227,26 @@ export default function ColorBarLegend({
             );
             for (let name of cbg.names) {
                 if (!name.endsWith(ALPHA_SUFFIX)) {
-                    entries.push(<Box
-                        className={classes.colorBarGroupItemBox}
-                        border={name === variableColorBarBaseName ? 1 : 1}
-                        borderColor={name === variableColorBarBaseName ? 'orange' : 'black'}
-                        width={240}
-                        height={20}
-                    >
-                        <Tooltip title={name} placement="left">
-                            <img
-                                src={`data:image/png;base64,${colorBars.images[name]}`}
-                                width={'100%'}
-                                height={'100%'}
-                                onClick={() => {
-                                    handleColorBarNameChange(name);
-                                }}
-                            />
-                        </Tooltip>
-                    </Box>);
+                    entries.push(
+                        <Box
+                            className={classes.colorBarGroupItemBox}
+                            border={name === variableColorBarBaseName ? 1 : 1}
+                            borderColor={name === variableColorBarBaseName ? 'orange' : 'black'}
+                            width={240}
+                            height={20}
+                        >
+                            <Tooltip title={name} placement="left">
+                                <img
+                                    src={`data:image/png;base64,${colorBars.images[name]}`}
+                                    width={'100%'}
+                                    height={'100%'}
+                                    onClick={() => {
+                                        handleColorBarNameChange(name);
+                                    }}
+                                />
+                            </Tooltip>
+                        </Box>
+                    );
                 }
             }
         }
@@ -304,7 +306,7 @@ export default function ColorBarLegend({
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'center',
+                    horizontal: 'left',
                 }}
             >
                 {colorBarNameEditor}
