@@ -218,14 +218,14 @@ export default function ColorBarLegend({
 
     let colorBarNameEditor;
     if (colorBarNameEditorOpen) {
-
+        let key = 0;
         const entries = [];
         for (let cbg of colorBars.groups) {
             if (!cbg.names || cbg.names.length === 0) {
                 continue;
             }
             entries.push(
-                <Tooltip title={cbg.description} placement="left">
+                <Tooltip key={key++} title={cbg.description} placement="left">
                     <Box className={classes.colorBarGroupTitle}>
                         {cbg.title}
                     </Box>
@@ -235,6 +235,7 @@ export default function ColorBarLegend({
                 if (!name.endsWith(ALPHA_SUFFIX)) {
                     entries.push(
                         <Box
+                            key={key++}
                             className={classes.colorBarGroupItemBox}
                             border={name === variableColorBarBaseName ? 1 : 1}
                             borderColor={name === variableColorBarBaseName ? 'orange' : 'black'}
