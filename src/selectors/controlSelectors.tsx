@@ -31,8 +31,8 @@ import { MapElement } from '../components/ol/Map';
 import { Tile } from '../components/ol/layer/Tile';
 import { Vector } from '../components/ol/layer/Vector';
 import { Layers } from '../components/ol/layer/Layers';
-import { findIndexCloseTo } from "../util/find";
-import { Server } from "../model/server";
+import { findIndexCloseTo } from '../util/find';
+import { Server } from '../model/server';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -310,7 +310,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
                 transition: timeAnimationActive ? 0 : 250,
             });
         return (
-            <Tile id={"variable"} source={source}/>
+            <Tile id={'variable'} source={source}/>
         );
     }
 );
