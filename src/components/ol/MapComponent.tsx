@@ -1,5 +1,6 @@
 import * as React from 'react';
-import * as ol from 'openlayers';
+
+import { OlMap, OlBaseObject } from './types';
 
 import { MapContext, MapContextType } from './Map';
 
@@ -8,19 +9,19 @@ export interface MapComponentProps {
     id?: string;
 }
 
-export abstract class MapComponent<T extends ol.Object, P extends MapComponentProps, S = {}> extends React.PureComponent<P, S> {
+export abstract class MapComponent<T extends OlBaseObject, P extends MapComponentProps, S = {}> extends React.PureComponent<P, S> {
     // noinspection JSUnusedGlobalSymbols
     static contextType = MapContextType;
     context: MapContext;
     object: T | null;
 
-    abstract addMapObject(map: ol.Map): T;
+    abstract addMapObject(map: OlMap): T;
 
-    abstract updateMapObject(map: ol.Map, object: T, prevProps: Readonly<P>): T;
+    abstract updateMapObject(map: OlMap, object: T, prevProps: Readonly<P>): T;
 
-    abstract removeMapObject(map: ol.Map, object: T): void;
+    abstract removeMapObject(map: OlMap, object: T): void;
 
-    getMapObject(id: string): ol.Object | null {
+    getMapObject(id: string): OlBaseObject | null {
         return (this.context.mapObjects && this.context.mapObjects[id]) || null;
     }
 

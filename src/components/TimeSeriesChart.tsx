@@ -10,13 +10,14 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar
+    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar, DotProps
 } from 'recharts';
 import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import { CircularProgress } from "@material-ui/core";
 
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
@@ -27,28 +28,25 @@ import {
     USER_PLACES_COLORS
 } from '../config';
 import { WithLocale } from '../util/lang';
-import { PlaceInfo } from "../model/place";
+import { Place, PlaceInfo } from '../model/place';
+import Box from "@material-ui/core/Box";
 
 
 const styles = (theme: Theme) => createStyles(
     {
         chartContainer: {
             // userSelect: 'none',
-            position: 'relative',
+            marginTop: theme.spacing(1),
             width: '99%',
-            height: '40vh',
+            height: '32vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-stretch',
         },
-        zoomOutButton: {
-            position: 'absolute',
-            right: 8 * theme.spacing(1),
-            margin: theme.spacing(1),
-            zIndex: 1000,
-            opacity: 0.8,
+        responsiveContainer: {
+            flexGrow: 1,
         },
-        removeTimeSeriesGroup: {
-            position: 'absolute',
-            right: theme.spacing(1),
-            margin: theme.spacing(1),
+        actionButton: {
             zIndex: 1000,
             opacity: 0.8,
         },
@@ -87,8 +85,12 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     selectTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => void;
 
     removeTimeSeriesGroup?: (id: string) => void;
+    completed: number[];
 
     placeInfos?: { [placeId: string]: PlaceInfo };
+
+    selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
+    places: Place[];
 }
 
 interface TimeSeriesChartState {
@@ -136,15 +138,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             if (placeInfos) {
                 const placeInfo = placeInfos[source.placeId];
                 if (placeInfo) {
-                    const {place, placeLabel} = placeInfo;
+                    const {place, label, color} = placeInfo;
                     if (place.geometry.type === 'Point') {
                         const lon = place.geometry.coordinates[0];
                         const lat = place.geometry.coordinates[1];
-                        lineName += ` (${placeLabel}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
+                        lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
                     } else {
-                        lineName += ` (${placeLabel})`;
+                        lineName += ` (${label})`;
                     }
-                    lineColor = (place.properties || {}) ['color'] || lineColor;
+                    lineColor = color;
                 }
             }
 
@@ -169,14 +171,15 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     }
                 }
             });
+            const shadedLineColor = USER_PLACES_COLORS[lineColor][strokeShade];
             let errorBar;
             if (showErrorBars && hasErrorBars) {
                 errorBar = (
                     <ErrorBar
                         dataKey="uncertainty"
                         width={4}
-                        strokeWidth={2}
-                        stroke={USER_PLACES_COLORS[lineColor][strokeShade]}
+                        strokeWidth={1}
+                        stroke={shadedLineColor}
                     />
                 );
             }
@@ -188,9 +191,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     unit={source.variableUnits}
                     data={data}
                     dataKey="average"
-                    dot={true}
-                    activeDot={true}
-                    stroke={showPointsOnly ? '#00000000' : USER_PLACES_COLORS[lineColor][strokeShade]}
+                    dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
+                    activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
+                    stroke={showPointsOnly ? '#00000000' : shadedLineColor}
                     strokeWidth={3 * (ts.dataProgress || 1)}
                     isAnimationActive={ts.dataProgress === 1.0}
                     onClick={() => this.handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
@@ -218,7 +221,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             const zoomOutButton = (
                 <IconButton
                     key={'zoomOutButton'}
-                    className={classes.zoomOutButton}
+                    className={classes.actionButton}
                     aria-label="Zoom Out"
                     onClick={this.handleZoomOutButtonClick}
                 >
@@ -227,17 +230,31 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             );
             actionButtons.push(zoomOutButton);
         }
+        const progress = this.props.completed.reduce((a: number, b: number) => a + b, 0) / this.props.completed.length;
+        const loading = !!(progress > 0 && progress < 100);
 
-        const removeAllButton = (
-            <IconButton
-                key={'removeTimeSeriesGroup'}
-                className={classes.removeTimeSeriesGroup}
-                aria-label="Close"
-                onClick={this.handleRemoveTimeSeriesGroupClick}
-            >
-                <CloseIcon/>
-            </IconButton>
-        );
+        let removeAllButton;
+        if (loading) {
+            removeAllButton = (
+                <CircularProgress
+                    size={24}
+                    className={classes.actionButton}
+                    color={"secondary"}
+                />
+            );
+        } else {
+            removeAllButton = (
+                <IconButton
+                    key={'removeTimeSeriesGroup'}
+                    className={classes.actionButton}
+                    aria-label="Close"
+                    onClick={this.handleRemoveTimeSeriesGroupClick}
+                >
+                    <CloseIcon/>
+                </IconButton>
+            );
+        }
+
         actionButtons.push(removeAllButton);
 
         const timeSeriesText = I18N.get('Time-Series');
@@ -247,9 +264,13 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         // 99% per https://github.com/recharts/recharts/issues/172
         return (
             <div className={classes.chartContainer}>
-                <Typography className={classes.chartTitle}>{chartTitle}</Typography>
-                {actionButtons}
-                <ResponsiveContainer width="99%" height={320}>
+                <Box display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
+                    <Typography className={classes.chartTitle}>{chartTitle}</Typography>
+                    <Box display='flex' flexDirection='row' flexWrap='nowrap' alignItems='center'>
+                        {actionButtons}
+                    </Box>
+                </Box>
+                <ResponsiveContainer width="99%" className={classes.responsiveContainer}>
                     <LineChart onMouseDown={this.handleMouseDown}
                                onMouseMove={this.handleMouseMove}
                                onMouseUp={this.handleMouseUp}
@@ -297,11 +318,12 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     };
 
     readonly handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
-        const {selectTimeSeries} = this.props;
-        console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
+        const {selectTimeSeries, selectPlace, places} = this.props;
+        // console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
+        selectPlace(timeSeries.source.placeId, places, true);
     };
 
     readonly handleMouseDown = (event: any) => {
@@ -328,6 +350,9 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
     readonly handleRemoveTimeSeriesGroupClick = () => {
         if (this.props.removeTimeSeriesGroup) {
             this.props.removeTimeSeriesGroup(this.props.timeSeriesGroup.id);
+            this.setState(TimeSeriesChart.newState(this.state.isDragging,
+                                                   this.state.firstTime,
+                                                   this.state.secondTime))
         }
     };
 
@@ -356,7 +381,8 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
         });
     };
 
-    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null): TimeSeriesChartState {
+    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null):
+        TimeSeriesChartState {
         return {isDragging, firstTime, secondTime};
     }
 
@@ -420,4 +446,33 @@ class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip);
 
+interface CustomizedDotProps extends DotProps {
+    radius: number;
+    stroke: string;
+    strokeWidth: number;
+    fill: string;
+}
 
+
+const CustomizedDot = (props: CustomizedDotProps) => {
+
+    const {cx, cy, radius, stroke, fill, strokeWidth} = props;
+
+    const vpSize = 1024;
+    const totalRadius = radius + 0.5 * strokeWidth;
+    const totalDiameter = 2 * totalRadius;
+
+    const r = Math.floor(100 * radius / totalDiameter + 0.5) + '%';
+    const sw = Math.floor(100 * strokeWidth / totalDiameter + 0.5) + '%';
+
+    // noinspection SuspiciousTypeOfGuard
+    if (typeof cx === 'number' && typeof cy === 'number') {
+        return (
+            <svg x={cx - totalRadius} y={cy - totalRadius} width={totalDiameter} height={totalDiameter}
+                 viewBox={`0 0 ${vpSize} ${vpSize}`}>
+                <circle cx='50%' cy='50%' r={r} strokeWidth={sw} stroke={stroke} fill={fill}/>
+            </svg>
+        );
+    }
+    return null;
+};

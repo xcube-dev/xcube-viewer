@@ -3,7 +3,7 @@
     "en": "English",
     "de": "Deutsch",
     "it": "Italiano",
-    "ro": "Rumeno",
+    "ro": "Romanian",
     "se": "Svenska"
   },
   "dictionary": [
@@ -113,6 +113,20 @@
       "se": "Punkt"
     },
     {
+      "en": "Polygon",
+      "de": "Polygon",
+      "it": "Poligono",
+      "ro": "Poligon",
+      "se": "Polygon"
+    },
+    {
+      "en": "Circle",
+      "de": "Kreis",
+      "it": "Cerchio",
+      "ro": "Cerc",
+      "se": "Cirkel"
+    },
+    {
       "en": "Multi",
       "de": "Multi",
       "it": "Multi",
@@ -176,6 +190,13 @@
       "se": "Laddar data"
     },
     {
+      "en": "Connecting to server",
+      "de": "Verbindung zum Server wird hergestellt",
+      "it": "Connessione al server",
+      "ro": "Conectare la server",
+      "se": "Ansluta till servern"
+    },
+    {
       "en": "Cannot reach server",
       "de": "Kann Server nicht erreichen",
       "it": "Impossibile raggiungere il server",
@@ -202,6 +223,20 @@
       "it": "Generalmente",
       "ro": "General",
       "se": "Allmänhet"
+    },
+    {
+      "en": "System Information",
+      "de": "System Information",
+      "it": "Informazioni di Sistema ",
+      "ro": "Informatii despre Sistem",
+      "se": "Systeminformation"
+    },
+    {
+      "en": "version",
+      "de": "Version",
+      "it": "versione",
+      "ro": "versiune",
+      "se": "Version"
     },
     {
       "en": "Server",
@@ -253,11 +288,11 @@
       "se": "Spelarens tidsintervall"
     },
     {
-      "en": "Show graph after adding a point",
-      "de": "Grafik anzeigen, nachdem ein Punkt hinzugefügt wurde",
-      "it": "Mostra grafico dopo aver aggiunto un punto",
-      "ro": "Afișează grafic după adăugarea unui punct",
-      "se": "Visa graf efter att ha lagt till en punkt"
+      "en": "Show graph after adding a place",
+      "de": "Grafik anzeigen, nachdem ein Ort hinzugefügt wurde",
+      "it": "Mostra grafico dopo aver aggiunto un posto",
+      "ro": "Afișează grafic după adăugarea unui loc",
+      "se": "Visa graf efter att ha lagt till en plats"
     },
     {
       "en": "Show data points only",
@@ -314,6 +349,27 @@
       "it": "Accetta e continua",
       "ro": "Acceptați și continuați",
       "se": "Acceptera och fortsätt"
+    },
+    {
+      "en": "Map",
+      "de": "Karte",
+      "it": "Carta",
+      "ro": "Hartă",
+      "se": "Karta"
+    },
+    {
+      "en": "Image smoothing",
+      "de": "Bildglättung",
+      "it": "Levigatura dell'immagine",
+      "ro": "Netezirea imaginii",
+      "se": "Bildutjämning"
+    },
+    {
+      "en": "Hide lower values",
+      "de": "Niedrigere Werte ausblenden",
+      "it": "Nascondi valori più bassi",
+      "ro": "Ascundeți valori mai mici",
+      "se": "Dölj lägre värden"
     }
   ]
 }

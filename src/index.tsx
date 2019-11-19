@@ -5,18 +5,27 @@ import * as Redux from 'redux';
 import thunk from 'redux-thunk';
 import * as ReduxLogger from 'redux-logger';
 import { appReducer } from './reducers/appReducer';
-import { updateDatasets, updateColorBars } from './actions/dataActions';
+import { updateDatasets, updateColorBars, updateServerInfo } from './actions/dataActions';
 import { changeLocale } from "./actions/controlActions";
 import App from './connected/App';
 import registerServiceWorker from './registerServiceWorker';
 import { getCurrentLocale } from "./util/lang";
 
 import './index.css';
+import { I18N } from "./config";
+import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
+
+I18N.locale = getCurrentLocale();
 
 const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
 const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
 
-store.dispatch(changeLocale(getCurrentLocale()) as any);
+if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
+    setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
+}
+
+store.dispatch(changeLocale(I18N.locale) as any);
+store.dispatch(updateServerInfo() as any);
 store.dispatch(updateDatasets() as any);
 store.dispatch(updateColorBars() as any);
 

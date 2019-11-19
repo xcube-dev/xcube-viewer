@@ -1,5 +1,5 @@
 import { Variable } from './variable';
-import { findPlaceInPlaceGroup, findPlaceInPlaceGroups, Place, PlaceGroup } from './place';
+import { PlaceGroup } from './place';
 import { TimeRange } from './timeSeries';
 import {
     assertArrayNotEmpty,
@@ -44,24 +44,6 @@ export function findDataset(datasets: Dataset[], selectedDatasetId: string | nul
 
 export function findDatasetVariable(dataset: Dataset, variableName: string | null): Variable | null {
     return (variableName && dataset.variables.find(variable => variable.name === variableName)) || null;
-}
-
-export function findDatasetPlace(dataset: Dataset, placeId: string | null): Place | null {
-    return (placeId && dataset.placeGroups && findPlaceInPlaceGroups(dataset.placeGroups, placeId)) || null;
-}
-
-export function findDatasetOrUserPlace(datasets: Dataset[], userPlaceGroup: PlaceGroup, placeId: string): Place | null {
-    const place = findPlaceInPlaceGroup(userPlaceGroup, placeId);
-    if (place) {
-        return place;
-    }
-    for (let dataset of datasets) {
-        const place = findDatasetPlace(dataset, placeId);
-        if (place !== null) {
-            return place;
-        }
-    }
-    return null;
 }
 
 export function getDatasetTimeDimension(dataset: Dataset): TimeDimension {

@@ -15,18 +15,11 @@ import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
 
 
+// noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
-        formControl: {
-            marginRight: theme.spacing(2),
-            marginBottom: theme.spacing(1),
-            minWidth: 120,
-        },
-        selectEmpty: {
-            marginTop: theme.spacing(2),
-        },
-        button: {
-            margin: theme.spacing(0.1),
+        select: {
+            minWidth: '5em',
         },
     });
 
@@ -48,7 +41,7 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
         selectPlaceGroups(event.target.value as any as string[] || null);
     };
 
-    handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    handleRemoveButtonClick = () => {
         const {removeAllUserPlaces} = this.props;
         removeAllUserPlaces();
     };
@@ -63,7 +56,7 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
         const placeGroups = this.props.placeGroups || [];
         const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
 
-        if (placeGroups.length === 0) {
+        if (placeGroups.length == 0 || placeGroups.length == 1 && placeGroups[0].id == 'user') {
             return null;
         }
 
@@ -79,11 +72,13 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
         const placeGroupsSelect = (
             <Select
                 multiple
+                displayEmpty
                 onChange={this.handlePlaceGroupsChange}
                 input={<Input name="place-groups" id="place-groups-select"/>}
                 value={selectedPlaceGroupIds}
                 renderValue={this.renderSelectedPlaceGroupsTitle}
                 name="place-groups"
+                className={classes.select}
             >
                 {placeGroups.map(placeGroup => (
                     <MenuItem
@@ -100,9 +95,7 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
         const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user';
         const placeGroupRemoveButton = (
             <IconButton
-                className={classes.button}
                 disabled={!removeEnabled}
-                aria-label={I18N.get('Delete all places')}
                 onClick={this.handleRemoveButtonClick}
             >
                 {<RemoveCircleOutlineIcon/>}

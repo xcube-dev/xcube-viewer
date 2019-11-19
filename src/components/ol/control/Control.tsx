@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ol from 'openlayers';
+import { OlMap, OlControl } from '../types';
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 
@@ -9,31 +9,38 @@ interface ControlProps extends MapComponentProps {
     className?: string;
 }
 
-export class Control extends MapComponent<ol.control.Control , ControlProps> {
+export class Control extends MapComponent<OlControl, ControlProps> {
     divRef: HTMLDivElement | null;
 
     handleDivRef = (divRef: HTMLDivElement | null) => {
         this.divRef = divRef;
     };
 
-    addMapObject(map: ol.Map): ol.control.Control {
-        const control = new ol.control.Control({element: this.divRef!, target: map.getTarget()});
+    addMapObject(map: OlMap): OlControl {
+        // console.log(`Control: added control '${this.props.id}'`);
+        const control = new OlControl({element: this.divRef!});
         map.addControl(control);
         return control;
     }
 
-    updateMapObject(map: ol.Map, control: ol.control.Control, prevProps: Readonly<ControlProps>): ol.control.Control {
+    updateMapObject(map: OlMap, control: OlControl, prevProps: Readonly<ControlProps>): OlControl {
         return control;
     }
 
-    removeMapObject(map: ol.Map, control: ol.control.Control): void {
-        // TODO: This will cause React to crash, but it should be correct!
-        // map.removeControl(control);
+    removeMapObject(map: OlMap, control: OlControl): void {
+        for (let addedControl of map.getControls().getArray()) {
+            if (addedControl === control) {
+                // console.log(`Control: removing control '${this.props.id}'`);
+                map.removeControl(control);
+                break;
+            }
+        }
     }
 
     render() {
         const {children, style, className} = this.props;
-        return <div style={style} className={className} ref={this.handleDivRef}>{children}</div>;
+        const _className = (className ? className + ' ' : '') + 'ol-unselectable ol-control';
+        return <div style={style} className={_className} ref={this.handleDivRef}>{children}</div>;
     }
 }
 

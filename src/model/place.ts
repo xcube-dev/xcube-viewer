@@ -1,4 +1,5 @@
 import * as  GeoJSON from 'geojson';
+import { USER_PLACES_COLOR_NAMES } from '../config';
 
 
 /**
@@ -24,7 +25,8 @@ export interface PlaceGroup extends GeoJSON.FeatureCollection {
 export interface PlaceInfo {
     placeGroup: PlaceGroup;
     place: Place;
-    placeLabel: string;
+    label: string;
+    color: string;
 }
 
 
@@ -33,13 +35,12 @@ export const DEFAULT_LABEL_PROPERTY_NAMES = ['label', 'LABEL', 'Label',
                                              'name', 'NAME', 'Name',
                                              'id', 'ID', 'Id'];
 
-export function forEachPlace(placeGroups: PlaceGroup[], callback: (placeGroup: PlaceGroup, place: Place, placeLabel: string) => void) {
+export function forEachPlace(placeGroups: PlaceGroup[], callback: (placeGroup: PlaceGroup, place: Place, label: string, color: string) => void) {
     placeGroups.forEach(placeGroup => {
         if (isValidPlaceGroup(placeGroup)) {
             const labelPropNames = getPlaceGroupLabelPropertyNames(placeGroup);
             placeGroup.features.forEach((place: Place) => {
-                const placeLabel = getPlaceLabel(place, labelPropNames);
-                callback(placeGroup, place, placeLabel);
+                callback(placeGroup, place, getPlaceLabel(place, labelPropNames), getPlaceColor(place));
             });
         }
     });
@@ -64,6 +65,25 @@ function getPlaceLabel(place: Place, labelPropertyNames: string []) {
         }
     }
     return '' + place.id;
+}
+
+function getPlaceColor(place: Place) {
+    return place.properties && place.properties['color']
+           || USER_PLACES_COLOR_NAMES[getPlaceHash(place) % USER_PLACES_COLOR_NAMES.length]
+}
+
+function getPlaceHash(place: Place): number {
+    const id = place.id + '';
+    let hash = 0, i, c;
+    if (id.length === 0) {
+        return hash;
+    }
+    for (i = 0; i < id.length; i++) {
+        c = id.charCodeAt(i);
+        hash = ((hash << 5) - hash) + c;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
 }
 
 export function isValidPlaceGroup(placeGroup: PlaceGroup): boolean {

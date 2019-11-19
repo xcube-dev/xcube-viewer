@@ -26,4 +26,3 @@ class ControlBar extends React.Component<ControlBarProps> {
 }
 
 export default withStyles(styles)(ControlBar);
-

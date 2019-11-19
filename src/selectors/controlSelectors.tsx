@@ -4,12 +4,13 @@ import { createSelector } from 'reselect'
 import { AppState } from '../states/appState';
 import {
     datasetsSelector,
-    colorBarsSelector,
     userServersSelector,
     userPlaceGroupSelector,
     timeSeriesGroupsSelector
 } from './dataSelectors';
-import * as ol from 'openlayers';
+
+
+import { OlGeoJSONFormat, OlTileGrid, OlVectorSource, OlXYZSource, olProjGet } from '../components/ol/types';
 
 import {
     Dataset,
@@ -26,14 +27,12 @@ import {
     PlaceInfo, forEachPlace,
 } from '../model/place';
 import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import ColorBarLegend from '../components/ColorBarLegend';
 import { MapElement } from '../components/ol/Map';
-import { ColorBars } from '../model/colorBar';
 import { Tile } from '../components/ol/layer/Tile';
 import { Vector } from '../components/ol/layer/Vector';
 import { Layers } from '../components/ol/layer/Layers';
-import { findIndexCloseTo } from "../util/find";
-import { Server } from "../model/server";
+import { findIndexCloseTo } from '../util/find';
+import { Server } from '../model/server';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -54,6 +53,38 @@ export const selectedDatasetVariablesSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): Variable[] => {
         return (dataset && dataset.variables) || [];
+    }
+);
+
+export const selectedVariableSelector = createSelector(
+    selectedDatasetSelector,
+    selectedVariableNameSelector,
+    (dataset: Dataset | null, varName: string | null): Variable | null => {
+        if (!dataset || !varName) {
+            return null;
+        }
+        return dataset.variables.find(v => v.name === varName) || null;
+    }
+);
+
+export const selectedVariableUnitsSelector = createSelector(
+    selectedVariableSelector,
+    (variable: Variable | null): string => {
+        return variable && variable.units || '-';
+    }
+);
+
+export const selectedVariableColorBarMinMaxSelector = createSelector(
+    selectedVariableSelector,
+    (variable: Variable | null): [number, number] => {
+        return variable ? [variable.colorBarMin, variable.colorBarMax] : [0, 1];
+    }
+);
+
+export const selectedVariableColorBarNameSelector = createSelector(
+    selectedVariableSelector,
+    (variable: Variable | null): string => {
+        return variable && variable.colorBarName || 'viridis';
     }
 );
 
@@ -163,10 +194,10 @@ export const timeSeriesPlaceInfosSelector = createSelector(
     placeGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
         const placeInfos = {};
-        forEachPlace(placeGroups, (placeGroup, place, placeLabel) => {
+        forEachPlace(placeGroups, (placeGroup, place, label, color) => {
             for (let timeSeriesGroup of timeSeriesGroups) {
                 if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {
-                    placeInfos[place.id] = {placeGroup, place, placeLabel};
+                    placeInfos[place.id] = {placeGroup, place, label, color};
                     break;
                 }
             }
@@ -180,8 +211,8 @@ export const selectedPlaceGroupPlaceLabelsSelector = createSelector(
     selectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): string[] => {
         const placeLabels: string[] = [];
-        forEachPlace(placeGroups, (placeGroup, place, placeLabel) => {
-            placeLabels.push(placeLabel);
+        forEachPlace(placeGroups, (placeGroup, place, label) => {
+            placeLabels.push(label);
         });
         return placeLabels;
     }
@@ -228,15 +259,20 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    selectedVariableColorBarMinMaxSelector,
+    selectedVariableColorBarNameSelector,
     (variable: Variable | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
-     timeAnimationActive: boolean): MapElement => {
+     timeAnimationActive: boolean,
+     colorBarMinMax: [number, number],
+     colorBarName: string,
+    ): MapElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
         const options = variable.tileSourceOptions;
-        let url = options.url;
+        let queryParams = `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`;
         if (time !== null) {
             let timeString;
             if (timeDimension) {
@@ -249,29 +285,32 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             if (!timeString) {
                 timeString = new Date(time).toISOString();
             }
-            url += `?time=${timeString}`;
+            queryParams += `&time=${timeString}`;
         }
-        const attributions = [
-            new ol.Attribution(
-                {
-                    html: '&copy; <a href=&quot;https://www.brockmann-consult.de&quot;>Brockmann Consult GmbH</a>'
-                }
-            ),
-        ];
+        const url = `${options.url}?${queryParams}`;
+        //console.log(`Variable layer URL: ${url}`);
+
         // TODO: get attributions from dataset metadata
-        const source = new ol.source.XYZ(
+        // const attribution = new ol_control.Attribution(
+        //         {
+        //             target: 'https://www.brockmann-consult.de',
+        //             label: 'Brockmann Consult GmbH'
+        //         }
+        //     );
+
+        const source = new OlXYZSource(
             {
                 url,
-                projection: ol.proj.get(options.projection),
+                projection: olProjGet(options.projection),
                 minZoom: options.minZoom,
                 maxZoom: options.maxZoom,
-                tileGrid: new ol.tilegrid.TileGrid(options.tileGrid),
-                attributions,
+                tileGrid: new OlTileGrid(options.tileGrid),
+                // attributions: attribution,
                 // @ts-ignore
                 transition: timeAnimationActive ? 0 : 250,
             });
         return (
-            <Tile id={"variable"} source={source}/>
+            <Tile id={'variable'} source={source}/>
         );
     }
 );
@@ -289,12 +328,12 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                     <Vector
                         key={index}
                         id={`placeGroup.${placeGroup.id}`}
-                        source={new ol.source.Vector(
+                        source={new OlVectorSource(
                             {
-                                features: new ol.format.GeoJSON({
-                                                                    defaultDataProjection: 'EPSG:4326',
-                                                                    featureProjection: 'EPSG:3857'
-                                                                }).readFeatures(placeGroup),
+                                features: new OlGeoJSONFormat({
+                                                                  dataProjection: 'EPSG:4326',
+                                                                  featureProjection: 'EPSG:3857'
+                                                              }).readFeatures(placeGroup),
                             })}
                     />);
             }
@@ -303,26 +342,6 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     }
 );
 
-export const selectedColorBarLegendSelector = createSelector(
-    selectedDatasetVariableSelector,
-    colorBarsSelector,
-    (variable: Variable | null, colorBars: ColorBars | null): MapElement => {
-        if (!variable || !colorBars) {
-            return null;
-        }
-        const {name, units, colorBarName, colorBarMin, colorBarMax} = variable;
-        const imageData = colorBars.images[colorBarName];
-        return (
-            <ColorBarLegend
-                name={name}
-                units={units}
-                imageData={imageData}
-                minValue={colorBarMin}
-                maxValue={colorBarMax}
-            />
-        );
-    }
-);
 
 export const activityMessagesSelector = createSelector(
     activitiesSelector,

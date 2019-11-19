@@ -40,6 +40,7 @@ export function storeUserSettings(settings: ControlState) {
             _storeProperty(storage, 'showTimeSeriesErrorBars', settings);
             _storeProperty(storage, 'showTimeSeriesPointsOnly', settings);
             _storeProperty(storage, 'timeAnimationInterval', settings);
+            _storeProperty(storage, 'imageSmoothingEnabled', settings);
         } catch (e) {
             console.warn(`failed to store user settings: ${e}`);
         }
@@ -56,6 +57,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             _loadBooleanProperty(storage, 'showTimeSeriesErrorBars', settings, defaultSettings);
             _loadBooleanProperty(storage, 'showTimeSeriesPointsOnly', settings, defaultSettings);
             _loadIntProperty(storage, 'timeAnimationInterval', settings, defaultSettings);
+            _loadBooleanProperty(storage, 'imageSmoothingEnabled', settings, defaultSettings);
         } catch (e) {
             console.warn(`failed to load user settings: ${e}`);
         }

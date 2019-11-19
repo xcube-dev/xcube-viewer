@@ -1,4 +1,3 @@
-import * as ol from 'openlayers';
 import { Dispatch } from 'redux';
 
 import { AppState } from '../states/appState';
@@ -22,13 +21,47 @@ import {
     selectedDatasetVariableSelector, selectedPlaceIdSelector, selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
-import { Server } from '../model/server';
+import { Server, ServerInfo } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
 import { placeGroupsSelector } from '../selectors/dataSelectors';
 import { newId } from '../util/id';
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_SERVER_INFO = 'UPDATE_SERVER_INFO';
+export type UPDATE_SERVER_INFO = typeof UPDATE_SERVER_INFO;
+
+export interface UpdateServerInfo {
+    type: UPDATE_SERVER_INFO;
+    serverInfo: ServerInfo;
+}
+
+export function updateServerInfo() {
+    return (dispatch: Dispatch<UpdateServerInfo | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
+        const apiServer = selectedServerSelector(getState());
+
+        dispatch(addActivity(UPDATE_SERVER_INFO, I18N.get('Connecting to server')));
+
+        api.getServerInfo(apiServer.url)
+           .then((serverInfo: ServerInfo) => {
+               dispatch(_updateServerInfo(serverInfo));
+           })
+           .catch(error => {
+               dispatch(postMessage('error', error + ''));
+           })
+           // 'then' because Microsoft Edge does not understand method finally
+           .then(() => {
+               dispatch(removeActivity(UPDATE_SERVER_INFO));
+           });
+    };
+}
+
+export function _updateServerInfo(serverInfo: ServerInfo): UpdateServerInfo {
+    return {type: UPDATE_SERVER_INFO, serverInfo};
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -161,10 +194,11 @@ export type REMOVE_USER_PLACE = typeof REMOVE_USER_PLACE;
 export interface RemoveUserPlace {
     type: REMOVE_USER_PLACE;
     id: string;
+    places: Place[];
 }
 
-export function removeUserPlace(id: string): RemoveUserPlace {
-    return {type: REMOVE_USER_PLACE, id};
+export function removeUserPlace(id: string, places: Place[]): RemoveUserPlace {
+    return {type: REMOVE_USER_PLACE, id, places};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,6 +341,7 @@ export function configureServers(servers: Server[], selectedServerId: string) {
         if (getState().controlState.selectedServerId !== selectedServerId) {
             dispatch(removeAllTimeSeries());
             dispatch(_configureServers(servers, selectedServerId));
+            dispatch(updateServerInfo());
             dispatch(updateDatasets());
             dispatch(updateColorBars());
         } else if (getState().dataState.userServers !== servers) {
@@ -350,8 +385,40 @@ export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+export const UPDATE_VARIABLE_COLOR_BAR = 'UPDATE_VARIABLE_COLOR_BAR';
+export type UPDATE_VARIABLE_COLOR_BAR = typeof UPDATE_VARIABLE_COLOR_BAR;
+
+export interface UpdateVariableColorBar {
+    type: UPDATE_VARIABLE_COLOR_BAR;
+    datasetId: string;
+    variableName: string;
+    colorBarMinMax: [number, number];
+    colorBarName: string;
+}
+
+export function updateVariableColorBar(colorBarMinMax: [number, number], colorBarName: string) {
+    return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
+        const selectedDatasetId = getState().controlState.selectedDatasetId;
+        const selectedVariableName = getState().controlState.selectedVariableName;
+        if (selectedDatasetId && selectedVariableName) {
+            dispatch(_updateVariableColorBar(selectedDatasetId, selectedVariableName, colorBarMinMax, colorBarName));
+        }
+    };
+}
+
+export function _updateVariableColorBar(datasetId: string,
+                                        variableName: string,
+                                        colorBarMinMax: [number, number],
+                                        colorBarName: string): UpdateVariableColorBar {
+    return {type: UPDATE_VARIABLE_COLOR_BAR, datasetId, variableName, colorBarMinMax, colorBarName};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export type DataAction =
-    UpdateDatasets
+    UpdateServerInfo
+    | UpdateDatasets
     | UpdateDatasetPlaceGroup
     | AddUserPlace
     | AddUserPlace2
@@ -361,4 +428,5 @@ export type DataAction =
     | RemoveTimeSeriesGroup
     | RemoveAllTimeSeries
     | ConfigureServers
-    | UpdateColorBars;
+    | UpdateColorBars
+    | UpdateVariableColorBar;

@@ -14,9 +14,9 @@ import {
     updateDatasetPlaceGroup, UPDATE_DATASET_PLACE_GROUP,
     UpdateDatasetPlaceGroup,
 } from './dataActions';
-import { isValidPlaceGroup, PlaceGroup } from '../model/place';
+import { isValidPlaceGroup, Place, PlaceGroup } from '../model/place';
 import { I18N } from '../config';
-import { ControlState, TimeAnimationInterval } from "../states/controlState";
+import { ControlState, MapInteraction, TimeAnimationInterval } from "../states/controlState";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -63,7 +63,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                     const datasetId = dataset!.id;
                     const placeGroupId = placeGroup.id;
                     const activitityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
-                    dispatch(addActivity(activitityId, I18N.get('Loading place group')));
+                    dispatch(addActivity(activitityId, I18N.get('Loading places')));
                     api.getDatasetPlaceGroup(apiServer.url, datasetId, placeGroupId)
                        .then((placeGroup: PlaceGroup) => {
                            dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
@@ -92,14 +92,13 @@ export type SELECT_PLACE = typeof SELECT_PLACE;
 export interface SelectPlace {
     type: SELECT_PLACE;
     selectedPlaceId: string | null;
-    // TODO: Having datasets in here is ugly, but we need it in the reducer.
-    datasets: Dataset[];
-    // TODO: Having userPlaceGroup in here is ugly, but we need it in the reducer.
-    userPlaceGroup: PlaceGroup;
+    // TODO: Having places in here is ugly, but we need it in the reducer.
+    places: Place[];
+    showInMap: boolean;
 }
 
-export function selectPlace(selectedPlaceId: string | null, datasets: Dataset[], userPlaceGroup: PlaceGroup): SelectPlace {
-    return {type: SELECT_PLACE, selectedPlaceId, datasets, userPlaceGroup};
+export function selectPlace(selectedPlaceId: string | null, places: Place[], showInMap: boolean): SelectPlace {
+    return {type: SELECT_PLACE, selectedPlaceId, places, showInMap};
 }
 
 
@@ -186,6 +185,19 @@ export interface UpdateTimeAnimation {
 
 export function updateTimeAnimation(timeAnimationActive: boolean, timeAnimationInterval: TimeAnimationInterval): UpdateTimeAnimation {
     return {type: UPDATE_TIME_ANIMATION, timeAnimationActive, timeAnimationInterval};
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SET_MAP_INTERACTION = 'SET_MAP_INTERACTION';
+export type SET_MAP_INTERACTION = typeof SET_MAP_INTERACTION;
+
+export interface SetMapInteraction {
+    type: SET_MAP_INTERACTION;
+    mapInteraction: MapInteraction;
+}
+
+export function setMapInteraction(mapInteraction: MapInteraction): SetMapInteraction {
+    return {type: SET_MAP_INTERACTION, mapInteraction};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,6 +298,7 @@ export type ControlAction =
     | SelectTimeRange
     | SelectTimeSeriesUpdateMode
     | UpdateTimeAnimation
+    | SetMapInteraction
     | AddActivity
     | RemoveActivity
     | ChangeLocale

@@ -1,4 +1,5 @@
-import * as ol from 'openlayers';
+import {  OlVectorLayer } from '../components/ol/types';
+
 
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
@@ -9,7 +10,9 @@ import {
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES, ADD_USER_PLACE_2
+    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES, UPDATE_SERVER_INFO,
+    UPDATE_VARIABLE_COLOR_BAR
+    ADD_USER_PLACE_2
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
@@ -22,8 +25,32 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         state = newDataState();
     }
     switch (action.type) {
+        case UPDATE_SERVER_INFO: {
+            return {...state, serverInfo: action.serverInfo};
+        }
         case UPDATE_DATASETS: {
             return {...state, datasets: action.datasets};
+        }
+        case UPDATE_VARIABLE_COLOR_BAR: {
+            const datasetIndex = state.datasets.findIndex(ds => ds.id === action.datasetId);
+            if (datasetIndex >= 0) {
+                let dataset = state.datasets[datasetIndex];
+                const variableIndex = dataset.variables.findIndex(v => v.name === action.variableName);
+                if (variableIndex >= 0) {
+                    let variable = dataset.variables[variableIndex];
+                    let datasets = state.datasets.slice();
+                    let variables = dataset.variables.slice();
+                    variables[variableIndex] = {
+                        ...variable,
+                        colorBarMin: action.colorBarMinMax[0],
+                        colorBarMax: action.colorBarMinMax[1],
+                        colorBarName: action.colorBarName
+                    };
+                    datasets[datasetIndex] = {...dataset, variables};
+                    return {...state, datasets};
+                }
+            }
+            return state;
         }
         case UPDATE_DATASET_PLACE_GROUP: {
             const datasetIndex = state.datasets.findIndex(ds => ds.id === action.datasetId);
@@ -159,7 +186,7 @@ function addUserPlaceToLayer(place: Place) {
 
 function removeUserPlacesFromLayer(userPlaceIds: string[]) {
     if (MAP_OBJECTS.userLayer) {
-        const userLayer = MAP_OBJECTS.userLayer as ol.layer.Vector;
+        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
         const source = userLayer.getSource();
         userPlaceIds.forEach(placeId => {
             const feature = source.getFeatureById(placeId);

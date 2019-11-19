@@ -11,14 +11,16 @@ import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import { I18N } from '../config';
-import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { Server } from '../model/server';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
+
+import { I18N } from '../config';
+import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
+import { Server, ServerInfo } from '../model/server';
+
 
 const useStyles = makeStyles(theme => ({
         settingsPanelTitle: {
@@ -50,12 +52,20 @@ interface SettingsDialogProps {
 
     settings: ControlState;
     selectedServer: Server;
+    viewerVersion: string;
     updateSettings: (settings: ControlState) => void;
     changeLocale: (locale: string) => void;
     openDialog: (dialogId: string) => void;
+    serverInfo: ServerInfo | null;
 }
 
-export default function SettingsDialog({open, closeDialog, settings, selectedServer, updateSettings, changeLocale, openDialog}: SettingsDialogProps) {
+export default function SettingsDialog(
+    {
+        open, closeDialog, settings, selectedServer,
+        updateSettings, changeLocale, openDialog,
+        viewerVersion, serverInfo
+    }: SettingsDialogProps
+) {
     const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
     const classes = useStyles();
 
@@ -136,7 +146,7 @@ export default function SettingsDialog({open, closeDialog, settings, selectedSer
                     </SettingsPanel>
 
                     <SettingsPanel title={I18N.get('Time-Series')}>
-                        <SettingsSubPanel label={I18N.get('Show graph after adding a point')}
+                        <SettingsSubPanel label={I18N.get('Show graph after adding a place')}
                                           value={getOnOff(settings.autoShowTimeSeries)}>
                             <ToggleSetting
                                 propertyName={'autoShowTimeSeries'}
@@ -162,6 +172,23 @@ export default function SettingsDialog({open, closeDialog, settings, selectedSer
                         </SettingsSubPanel>
                     </SettingsPanel>
 
+                    <SettingsPanel title={I18N.get('Map')}>
+                        <SettingsSubPanel label={I18N.get('Image smoothing')}
+                                          value={getOnOff(settings.imageSmoothingEnabled)}>
+                            <ToggleSetting
+                                propertyName={'imageSmoothingEnabled'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                    </SettingsPanel>
+
+                    <SettingsPanel title={I18N.get('System Information')}>
+                        <SettingsSubPanel label={`xcube Viewer ${I18N.get('version')}`}
+                                          value={viewerVersion}/>
+                        <SettingsSubPanel label={`xcube Server ${I18N.get('version')}`}
+                                          value={serverInfo ? serverInfo.version : I18N.get('Cannot reach server')}/>
+                    </SettingsPanel>
                 </DialogContent>
             </Dialog>
 
