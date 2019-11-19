@@ -221,6 +221,9 @@ export default function ColorBarLegend({
 
         const entries = [];
         for (let cbg of colorBars.groups) {
+            if (!cbg.names || cbg.names.length === 0) {
+                continue;
+            }
             entries.push(
                 <Tooltip title={cbg.description} placement="left">
                     <Box className={classes.colorBarGroupTitle}>
