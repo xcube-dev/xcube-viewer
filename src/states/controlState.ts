@@ -31,6 +31,7 @@ export interface ControlState {
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
     imageSmoothingEnabled: boolean;
+    baseMapName: string;
 }
 
 
@@ -57,6 +58,7 @@ export function newControlState(): ControlState {
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
         imageSmoothingEnabled: false,
+        baseMapName: 'OSMBW',
     };
     return loadUserSettings(state);
 }

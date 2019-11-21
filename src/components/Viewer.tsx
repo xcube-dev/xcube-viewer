@@ -17,7 +17,7 @@ import { Layers } from './ol/layer/Layers';
 import { View } from './ol/View';
 import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
-import { OSMBlackAndWhite } from './ol/layer/Tile';
+import { Bathymetry, NaturalEarth2, OSM, OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
 import {
     OlMap,
@@ -81,6 +81,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     selectedPlaceId?: string | null;
     flyTo?: OlSimpleGeometry | OlExtent | null;
     places: Place[];
+    baseMapName?: string;
 }
 
 class Viewer extends React.Component<ViewerProps> {
@@ -211,7 +212,7 @@ class Viewer extends React.Component<ViewerProps> {
     }
 
     public render() {
-        const {variableLayer, placeGroupLayers, colorBarLegend, mapInteraction} = this.props;
+        const {variableLayer, placeGroupLayers, colorBarLegend, mapInteraction, baseMapName} = this.props;
 
         let colorBarControl = null;
         if (colorBarLegend) {
@@ -220,6 +221,17 @@ class Viewer extends React.Component<ViewerProps> {
                     {colorBarLegend}
                 </Control>
             );
+        }
+
+        let baseMapLayer;
+        if (baseMapName === 'NaturalEarth2') {
+            baseMapLayer = <NaturalEarth2/>;
+        } else if (baseMapName === 'Bathymetry') {
+            baseMapLayer = <Bathymetry/>;
+        } else if (baseMapName === 'OSMBW') {
+            baseMapLayer = <OSMBlackAndWhite/>;
+        } else {
+            baseMapLayer = <OSM/>;
         }
 
         return (
@@ -233,7 +245,7 @@ class Viewer extends React.Component<ViewerProps> {
                 >
                     <View id="view"/>
                     <Layers>
-                        <OSMBlackAndWhite/>
+                        {baseMapLayer}
                         {variableLayer}
                         <Vector id='userLayer' opacity={1} zIndex={500}
                                 source={USER_LAYER_SOURCE}/>

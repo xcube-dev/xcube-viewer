@@ -24,6 +24,7 @@ const mapStateToProps = (state: AppState) => {
         flyTo: state.controlState.flyTo,
         selectedPlaceId: state.controlState.selectedPlaceId,
         places: selectedPlaceGroupPlacesSelector(state),
+        baseMapName: state.controlState.baseMapName,
     }
 };
 

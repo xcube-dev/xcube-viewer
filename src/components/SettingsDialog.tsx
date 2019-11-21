@@ -59,6 +59,19 @@ interface SettingsDialogProps {
     serverInfo: ServerInfo | null;
 }
 
+interface Choice {
+    value: string;
+    label: string;
+}
+
+
+const BASE_MAP_CHOICES: Choice[] = [
+    {value: 'NaturalEarth2', label: 'Natural Earth 2'},
+    {value: 'Bathymetry', label: 'Bathymetry'},
+    {value: 'OSM', label: 'Open Street Map'},
+    {value: 'OSMBW', label: 'Open Street Map Black&White'},
+];
+
 export default function SettingsDialog(
     {
         open, closeDialog, settings, selectedServer,
@@ -67,6 +80,7 @@ export default function SettingsDialog(
     }: SettingsDialogProps
 ) {
     const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
+    const [baseMapMenuAnchor, setBaseMapMenuAnchor] = React.useState(null);
     const classes = useStyles();
 
     if (!open) {
@@ -107,6 +121,34 @@ export default function SettingsDialog(
         setLanguageMenuAnchor(null);
     }
 
+    const baseMapMenuItems = BASE_MAP_CHOICES.map((choice, i) => {
+        const value = choice.value;
+        const label = I18N.get(choice.label);
+        return (
+            <MenuItem
+                button
+                key={i}
+                selected={value === settings.baseMapName}
+                onClick={() => updateSettings({...settings, baseMapName: value})}>
+                <ListItemText primary={label}/>
+            </MenuItem>
+        );
+    });
+
+    function handleBaseMapMenuOpen(event: any) {
+        setBaseMapMenuAnchor(event.currentTarget);
+    }
+
+    function handleBaseMapMenuClose() {
+        setBaseMapMenuAnchor(null);
+    }
+
+    const choice = BASE_MAP_CHOICES.find(choice => choice.value === settings.baseMapName);
+    let baseMapLabel = '?';
+    if (choice) {
+        baseMapLabel = I18N.get(choice.label);
+    }
+
     return (
         <div>
             <Dialog
@@ -138,8 +180,8 @@ export default function SettingsDialog(
                                 onChange={handleTimeAnimationIntervalChange}
                                 margin="normal"
                             >
-                                {TIME_ANIMATION_INTERVALS.map(value => (
-                                    <MenuItem key={value} value={value}>{value + ' ms'}</MenuItem>
+                                {TIME_ANIMATION_INTERVALS.map((value, i) => (
+                                    <MenuItem key={i} value={value}>{value + ' ms'}</MenuItem>
                                 ))}
                             </TextField>
                         </SettingsSubPanel>
@@ -181,6 +223,11 @@ export default function SettingsDialog(
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
+                        <SettingsSubPanel
+                            label={I18N.get('Base map')}
+                            value={baseMapLabel}
+                            onClick={handleBaseMapMenuOpen}>
+                        </SettingsSubPanel>
                     </SettingsPanel>
 
                     <SettingsPanel title={I18N.get('System Information')}>
@@ -199,6 +246,15 @@ export default function SettingsDialog(
                 onClose={handleLanguageMenuClose}
             >
                 {localeMenuItems}
+            </Menu>
+
+            <Menu
+                anchorEl={baseMapMenuAnchor}
+                keepMounted
+                open={Boolean(baseMapMenuAnchor)}
+                onClose={handleBaseMapMenuClose}
+            >
+                {baseMapMenuItems}
             </Menu>
 
         </div>
