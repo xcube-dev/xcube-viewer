@@ -1,9 +1,12 @@
-## Changes in version 0.2.2 (in development)
+## Changes in version 0.3.0
 
 ### Enhancements
 
 * It is now possible to adjust the color bar min/max value and the colors. (#29)
 
+### Other changes
+
+* Now requires xcube 0.3.0 as backend.
 
 ## Changes in version 0.2.1
 
