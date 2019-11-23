@@ -5,15 +5,15 @@
     "datasets": [
       {
         "name": "OSM Mapnik",
-        "endpoint": "http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+        "endpoint": "http://a.tile.osm.org/{z}/{x}/{y}.png"
       },
       {
         "name": "OSM Humanitarian",
-        "endpoint": "http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+        "endpoint": "http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
       },
       {
         "name": "OSM Landscape",
-        "endpoint": "http://{s}.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png"
+        "endpoint": "http://a.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png"
       },
       {
         "name": "OSM Black & White",
@@ -113,29 +113,29 @@
     "datasets": [
       {
         "name": "Positron",
-        "endpoint": "http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
+        "endpoint": "http://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
       },
       {
         "name": "Dark Matter",
-        "endpoint": "http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+        "endpoint": "http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
       },
       {
         "name": "Positron (No Labels)",
-        "endpoint": "http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
+        "endpoint": "http://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
       },
       {
         "name": "Dark Matter (No Labels)",
-        "endpoint": "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
+        "endpoint": "http://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
       }
     ],
     "overlays": [
       {
         "name": "Positron Labels",
-        "endpoint": "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
+        "endpoint": "http://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
       },
       {
         "name": "Dark Matter Labels",
-        "endpoint": "http://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
+        "endpoint": "http://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
       }
     ]
   },
@@ -166,43 +166,43 @@
     "datasets": [
       {
         "name": "Blue Marble (January)",
-        "endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jan/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jan/{z}/{x}/{y}.png"
       },
       {
         "name": "Blue Marble (July)",
-        "endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul/{z}/{x}/{y}.png"
       },
       {
         "name": "Blue Marble Topo & Bathy B/W (July)",
-        "endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul-bw/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul-bw/{z}/{x}/{y}.png"
       },
       {
         "name": "Control Room",
-        "endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png"
       },
       {
         "name": "Geography Class",
-        "endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.geography-class/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.geography-class/{z}/{x}/{y}.png"
       },
       {
         "name": "World Dark",
-        "endpoint": "https://{s}.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png"
       },
       {
         "name": "World Light",
-        "endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-light/{z}/{x}/{y}.png"
+        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-light/{z}/{x}/{y}.png"
       },
       {
         "name": "World Glass",
-        "endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-glass/{z}/{x}/{y}.png"
+        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-glass/{z}/{x}/{y}.png"
       },
       {
         "name": "World Print",
-        "endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-print/{z}/{x}/{y}.png"
+        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-print/{z}/{x}/{y}.png"
       },
       {
         "name": "World Blue",
-        "endpoint": "https:{s}.tiles.mapbox.com/v3/mapbox.world-blue/{z}/{x}/{y}.png"
+        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-blue/{z}/{x}/{y}.png"
       }
     ],
     "overlays": [

@@ -34,3 +34,12 @@ export const USER_PLACES_COLORS = {green, red, blue, yellow, purple, pink, orang
 export const USER_PLACES_COLOR_NAMES = Object.keys(USER_PLACES_COLORS);
 
 export const I18N = new LanguageDictionary(lang);
+
+// See resources/maps.json
+export const TILE_ACCESS = {
+    'Mapbox': {
+        param: 'access_token',
+        token: 'pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg'
+    },
+};
+

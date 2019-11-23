@@ -1,5 +1,8 @@
 ## Changes in version 0.4.0 (in development)
 
+### Enhancements
+
+* It is now possible to change the base map layer from settings. (#30)
 
 
 ## Changes in version 0.3.0

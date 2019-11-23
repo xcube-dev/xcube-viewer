@@ -88,19 +88,22 @@ export default function SettingsDialog(
         updateSettings({...settings, timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
     }
 
-    const localeMenuItems = Object.getOwnPropertyNames(I18N.languages).map(langLocale => {
-        const langName = I18N.languages[langLocale];
-        return (
-            <MenuItem
-                button
-                key={langLocale}
-                selected={langLocale === settings.locale}
-                onClick={() => changeLocale(langLocale)}
-            >
-                <ListItemText primary={langName}/>
-            </MenuItem>
-        );
-    });
+    let localeMenuItems = null;
+    if (Boolean(languageMenuAnchor)) {
+        localeMenuItems = Object.getOwnPropertyNames(I18N.languages).map(langLocale => {
+            const langName = I18N.languages[langLocale];
+            return (
+                <MenuItem
+                    button
+                    key={langLocale}
+                    selected={langLocale === settings.locale}
+                    onClick={() => changeLocale(langLocale)}
+                >
+                    <ListItemText primary={langName}/>
+                </MenuItem>
+            );
+        });
+    }
 
     function handleLanguageMenuOpen(event: any) {
         setLanguageMenuAnchor(event.currentTarget);
@@ -110,21 +113,24 @@ export default function SettingsDialog(
         setLanguageMenuAnchor(null);
     }
 
-    const baseMapMenuItems: React.ReactElement[] = [];
-    maps.forEach((mapGroup: MapGroup, i: number) => {
-        baseMapMenuItems.push(<ListSubheader key={i}>{mapGroup.name}</ListSubheader>);
-        mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
-            baseMapMenuItems.push(
-                <MenuItem
-                    button
-                    key={i + '.' + j}
-                    selected={settings.baseMapUrl === mapSource.endpoint}
-                    onClick={() => updateSettings({...settings, baseMapUrl: mapSource.endpoint})}>
-                    <ListItemText primary={mapSource.name}/>
-                </MenuItem>
-            );
+    let baseMapMenuItems: null | React.ReactElement[] = null;
+    if (Boolean(baseMapMenuAnchor)) {
+        baseMapMenuItems = [];
+        maps.forEach((mapGroup: MapGroup, i: number) => {
+            baseMapMenuItems!.push(<ListSubheader key={i} disableSticky={true}>{mapGroup.name}</ListSubheader>);
+            mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
+                baseMapMenuItems!.push(
+                    <MenuItem
+                        button
+                        key={i + '.' + j}
+                        selected={settings.baseMapUrl === mapSource.endpoint}
+                        onClick={() => updateSettings({...settings, baseMapUrl: mapSource.endpoint})}>
+                        <ListItemText primary={mapSource.name}/>
+                    </MenuItem>
+                );
+            });
         });
-    });
+    }
 
     function handleBaseMapMenuOpen(event: any) {
         setBaseMapMenuAnchor(event.currentTarget);
@@ -209,6 +215,11 @@ export default function SettingsDialog(
                     </SettingsPanel>
 
                     <SettingsPanel title={I18N.get('Map')}>
+                        <SettingsSubPanel
+                            label={I18N.get('Base map')}
+                            value={baseMapLabel}
+                            onClick={handleBaseMapMenuOpen}>
+                        </SettingsSubPanel>
                         <SettingsSubPanel label={I18N.get('Image smoothing')}
                                           value={getOnOff(settings.imageSmoothingEnabled)}>
                             <ToggleSetting
@@ -216,11 +227,6 @@ export default function SettingsDialog(
                                 settings={settings}
                                 updateSettings={updateSettings}
                             />
-                        </SettingsSubPanel>
-                        <SettingsSubPanel
-                            label={I18N.get('Base map')}
-                            value={baseMapLabel}
-                            onClick={handleBaseMapMenuOpen}>
                         </SettingsSubPanel>
                     </SettingsPanel>
 

@@ -34,6 +34,7 @@ import { Layers } from '../components/ol/layer/Layers';
 import { findIndexCloseTo } from '../util/find';
 import { Server } from '../model/server';
 import { MapGroup, maps, MapSource } from "../util/maps";
+import { TILE_ACCESS } from '../config';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -383,9 +384,10 @@ export const baseMapLayerSelector = createSelector(
     (baseMapUrl: string): JSX.Element | null => {
         const map = findMap(baseMapUrl);
         if (map) {
+            const access = TILE_ACCESS[map.group.name];
             const source = new OlXYZSource(
                 {
-                    url: map.dataset.endpoint,
+                    url: map.dataset.endpoint + (access ? `?${access.param}=${access.token}` : ''),
                     attributions: [
                         `&copy; <a href=&quot;${map.group.link}&quot;>${map.group.name}</a>`,
                     ]
