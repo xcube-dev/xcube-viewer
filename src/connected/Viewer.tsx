@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
 import {
+    baseMapLayerSelector,
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetVariableLayerSelector, selectedPlaceGroupPlacesSelector
 } from '../selectors/controlSelectors';
@@ -24,7 +25,7 @@ const mapStateToProps = (state: AppState) => {
         flyTo: state.controlState.flyTo,
         selectedPlaceId: state.controlState.selectedPlaceId,
         places: selectedPlaceGroupPlacesSelector(state),
-        baseMapName: state.controlState.baseMapName,
+        baseMapLayer: baseMapLayerSelector(state),
     }
 };
 

@@ -31,7 +31,7 @@ export interface ControlState {
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
     imageSmoothingEnabled: boolean;
-    baseMapName: string;
+    baseMapUrl: string;
 }
 
 
@@ -58,7 +58,7 @@ export function newControlState(): ControlState {
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
         imageSmoothingEnabled: false,
-        baseMapName: 'OSMBW',
+        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
     };
     return loadUserSettings(state);
 }

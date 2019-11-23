@@ -11,6 +11,7 @@ import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListSubheader from "@material-ui/core/ListSubheader";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Paper from '@material-ui/core/Paper';
@@ -20,6 +21,7 @@ import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 import { I18N } from '../config';
 import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
 import { Server, ServerInfo } from '../model/server';
+import { maps, MapGroup, MapSource } from '../util/maps';
 
 
 const useStyles = makeStyles(theme => ({
@@ -58,19 +60,6 @@ interface SettingsDialogProps {
     openDialog: (dialogId: string) => void;
     serverInfo: ServerInfo | null;
 }
-
-interface Choice {
-    value: string;
-    label: string;
-}
-
-
-const BASE_MAP_CHOICES: Choice[] = [
-    {value: 'NaturalEarth2', label: 'Natural Earth 2'},
-    {value: 'Bathymetry', label: 'Bathymetry'},
-    {value: 'OSM', label: 'Open Street Map'},
-    {value: 'OSMBW', label: 'Open Street Map Black&White'},
-];
 
 export default function SettingsDialog(
     {
@@ -121,18 +110,20 @@ export default function SettingsDialog(
         setLanguageMenuAnchor(null);
     }
 
-    const baseMapMenuItems = BASE_MAP_CHOICES.map((choice, i) => {
-        const value = choice.value;
-        const label = I18N.get(choice.label);
-        return (
-            <MenuItem
-                button
-                key={i}
-                selected={value === settings.baseMapName}
-                onClick={() => updateSettings({...settings, baseMapName: value})}>
-                <ListItemText primary={label}/>
-            </MenuItem>
-        );
+    const baseMapMenuItems: React.ReactElement[] = [];
+    maps.forEach((mapGroup: MapGroup, i: number) => {
+        baseMapMenuItems.push(<ListSubheader key={i}>{mapGroup.name}</ListSubheader>);
+        mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
+            baseMapMenuItems.push(
+                <MenuItem
+                    button
+                    key={i + '.' + j}
+                    selected={settings.baseMapUrl === mapSource.endpoint}
+                    onClick={() => updateSettings({...settings, baseMapUrl: mapSource.endpoint})}>
+                    <ListItemText primary={mapSource.name}/>
+                </MenuItem>
+            );
+        });
     });
 
     function handleBaseMapMenuOpen(event: any) {
@@ -143,11 +134,14 @@ export default function SettingsDialog(
         setBaseMapMenuAnchor(null);
     }
 
-    const choice = BASE_MAP_CHOICES.find(choice => choice.value === settings.baseMapName);
-    let baseMapLabel = '?';
-    if (choice) {
-        baseMapLabel = I18N.get(choice.label);
-    }
+    let baseMapLabel = settings.baseMapUrl;
+    maps.forEach((mapGroup: MapGroup) => {
+        mapGroup.datasets.forEach((mapSource: MapSource) => {
+            if (mapSource.endpoint === settings.baseMapUrl) {
+                baseMapLabel = `${mapGroup.name} / ${mapSource.name}`;
+            }
+        });
+    });
 
     return (
         <div>
