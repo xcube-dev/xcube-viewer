@@ -1,6 +1,8 @@
 ## Changes in version 0.4.0 (in development)
 
+## Changes in version 0.3.1
 
+Fixed translation of legal agreement.
 
 ## Changes in version 0.3.0
 
