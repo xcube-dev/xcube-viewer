@@ -4,6 +4,9 @@
 
 * It is now possible to change the base map layer from settings. (#30)
 
+## Changes in version 0.3.1
+
+Fixed translation of legal agreement.
 
 ## Changes in version 0.3.0
 
