@@ -4,16 +4,30 @@ import * as ReactDOM from 'react-dom';
 import * as Redux from 'redux';
 import thunk from 'redux-thunk';
 import * as ReduxLogger from 'redux-logger';
+
 import { appReducer } from './reducers/appReducer';
 import { updateDatasets, updateColorBars, updateServerInfo } from './actions/dataActions';
 import { changeLocale } from "./actions/controlActions";
 import App from './connected/App';
 import registerServiceWorker from './registerServiceWorker';
 import { getCurrentLocale } from "./util/lang";
-
-import './index.css';
 import { I18N } from "./config";
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
+import { Auth0Provider } from "./components/Auth0Provider";
+import history from './util/history';
+import authConfig from './resources/auth.json';
+
+import './index.css';
+
+// A function that routes the user to the right place
+// after login
+const onRedirectCallback = (appState: any) => {
+    history.push(
+        appState && appState.targetUrl
+        ? appState.targetUrl
+        : window.location.pathname
+    );
+};
 
 I18N.locale = getCurrentLocale();
 
@@ -31,7 +45,15 @@ store.dispatch(updateColorBars() as any);
 
 ReactDOM.render(
     <Provider store={store}>
-        <App/>
+        <Auth0Provider
+            domain={authConfig.domain}
+            client_id={authConfig.clientId}
+            audience={authConfig.audience}
+            redirect_uri={window.location.origin}
+            onRedirectCallback={onRedirectCallback}
+        >
+            <App/>
+        </Auth0Provider>
     </Provider>,
     document.getElementById('root') as HTMLElement
 );

@@ -1,5 +1,7 @@
 ## Changes in version 0.4.0 (in development)
 
+* Users can now login. (#22)
+
 ## Changes in version 0.3.1
 
 Fixed translation of legal agreement.

@@ -81,7 +81,7 @@ export default function SettingsDialog(
         openDialog('server');
     }
 
-    function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLSelectElement>) {
+    function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         updateSettings({...settings, timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
     }
 
