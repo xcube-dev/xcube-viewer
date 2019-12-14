@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth0 } from './Auth0Provider';
 
-const Profile: React.FC = () => {
+const UserProfile: React.FC = () => {
     const {loading, user} = useAuth0();
 
     if (loading || !user) {
@@ -9,14 +9,14 @@ const Profile: React.FC = () => {
     }
 
     return (
-        <React.Fragment>
+        <div>
             <img src={user.picture} alt="Profile"/>
 
-            <h2>{user.name}</h2>
+            <h4>{user.name}</h4>
             <p>{user.email}</p>
             <code>{JSON.stringify(user, null, 2)}</code>
-        </React.Fragment>
+        </div>
     );
 };
 
-export default Profile;
+export default UserProfile;

@@ -1,20 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
+import {
+    Theme,
+    WithStyles,
+    createStyles,
+    withStyles,
+} from '@material-ui/core';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
-import FaceIcon from '@material-ui/icons/Face';
-import Avatar from '@material-ui/core/Avatar';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-import { canUseAuth0, useAuth0 } from '../components/Auth0Provider';
 import { AppState } from '../states/appState';
 import logo from '../resources/logo.png';
 import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
+import UserControl from './UserControl';
 import { openDialog } from '../actions/controlActions';
 
 
@@ -41,6 +42,7 @@ const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
             backgroundColor: VIEWER_HEADER_BACKGROUND_COLOR,
+            paddingRight: theme.spacing(1)
         },
         toolbarIcon: {
             display: 'flex',
@@ -63,7 +65,15 @@ const styles = (theme: Theme) => createStyles(
             flexGrow: 1,
             marginLeft: theme.spacing(1),
         },
-        orangeAvatar: {
+        imageAvatar: {
+            width: 24,
+            height: 24,
+            color: '#fff',
+            backgroundColor: deepOrange[300],
+        },
+        letterAvatar: {
+            width: 24,
+            height: 24,
             color: '#fff',
             backgroundColor: deepOrange[300],
         },
@@ -85,57 +95,9 @@ const styles = (theme: Theme) => createStyles(
 
 const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarProps) => {
 
-    const handleSettingsButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSettingsButtonClicked = () => {
         openDialog('settings');
     };
-
-    let userButton;
-    if (canUseAuth0()) {
-
-        const {isAuthenticated, user, loginWithRedirect, loading} = useAuth0();
-
-        const handleSignInButtonCLicked = () => {
-            loginWithRedirect({});
-        };
-
-        if (isAuthenticated) {
-            let avatarContent: React.ReactNode = <FaceIcon/>;
-            if (!user) {
-                userButton = <Avatar className={classes.orangeAvatar}>?</Avatar>;
-            } else if (user.picture) {
-                userButton = <Avatar src={user.picture} alt={user.name}/>;
-            } else {
-                const name1 = user.given_name || user.name || user.nickname;
-                const name2 = user.family_name;
-                let letters: string | null = null;
-                if (name1 && name2) {
-                    letters = name1[0] + name2[0];
-                } else if (name1) {
-                    letters = name1[0];
-                } else if (name2) {
-                    letters = name2[0];
-                }
-                if (letters !== null) {
-                    avatarContent = letters.toUpperCase();
-                }
-                userButton = <Avatar className={classes.orangeAvatar}>{avatarContent}</Avatar>;
-            }
-        } else {
-            userButton = (
-                <IconButton onClick={loading ? undefined : handleSignInButtonCLicked}>
-                    <FaceIcon/>
-                </IconButton>
-            );
-            if (loading) {
-                userButton = (
-                    <div className={classes.signInWrapper}>
-                        {userButton}
-                        <CircularProgress size={30} className={classes.signInProgress}/>
-                    </div>
-                );
-            }
-        }
-    }
 
     return (
         <AppBar
@@ -147,10 +109,10 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                     {appName}
                 </Typography>
-                {userButton}
                 <IconButton onClick={handleSettingsButtonClicked}>
                     <SettingsApplicationsIcon/>
                 </IconButton>
+                <UserControl/>
             </Toolbar>
             <ServerDialog/>
             <SettingsDialog/>
