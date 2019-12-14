@@ -24,7 +24,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, path, 
         fn();
     }, [loading, isAuthenticated, loginWithRedirect, path]);
 
-    const render = (props: any) => isAuthenticated === true ? <Component {...props} /> : null;
+    const render = (props: any) => isAuthenticated ? <Component {...props} /> : null;
 
     return <Route path={path} render={render} {...rest} />;
 };

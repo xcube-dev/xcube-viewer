@@ -23,7 +23,32 @@ interface Auth0ProviderProps extends Auth0ClientOptions {
     onRedirectCallback?: (result?: RedirectLoginResult) => void;
 }
 
-export const Auth0Context = React.createContext<Auth0ProviderContext>({} as Auth0ProviderContext);
+export interface AuthConfig {
+    domain: string;
+    clientId: string;
+    audience: string;
+}
+
+let auth0Config: AuthConfig | null = null;
+if (process.env.REACT_APP_AUTH0_DOMAIN
+    && process.env.REACT_APP_AUTH0_CLIENT_ID
+    && process.env.REACT_APP_AUTH0_AUDIENCE) {
+    auth0Config = {
+        domain: process.env.REACT_APP_AUTH0_DOMAIN,
+        clientId: process.env.REACT_APP_AUTH0_CLIENT_ID,
+        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+    };
+}
+
+export function canUseAuth0(): boolean {
+    return auth0Config !== null;
+}
+
+export function getAuth0Config(): AuthConfig | null {
+    return auth0Config;
+}
+
+const Auth0Context = React.createContext<Auth0ProviderContext>({} as Auth0ProviderContext);
 
 export const useAuth0 = () => useContext(Auth0Context);
 

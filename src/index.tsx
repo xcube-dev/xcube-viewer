@@ -13,9 +13,8 @@ import registerServiceWorker from './registerServiceWorker';
 import { getCurrentLocale } from "./util/lang";
 import { I18N } from "./config";
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
-import { Auth0Provider } from "./components/Auth0Provider";
+import { Auth0Provider, getAuth0Config } from "./components/Auth0Provider";
 import history from './util/history';
-import authConfig from './resources/auth.json';
 
 import './index.css';
 
@@ -43,18 +42,25 @@ store.dispatch(updateServerInfo() as any);
 store.dispatch(updateDatasets() as any);
 store.dispatch(updateColorBars() as any);
 
-ReactDOM.render(
-    <Provider store={store}>
+let app = <App/>;
+
+const auth0Config = getAuth0Config();
+if (auth0Config !== null) {
+    app = (
         <Auth0Provider
-            domain={authConfig.domain}
-            client_id={authConfig.clientId}
-            audience={authConfig.audience}
+            domain={auth0Config.domain}
+            client_id={auth0Config.clientId}
+            audience={auth0Config.audience}
             redirect_uri={window.location.origin}
             onRedirectCallback={onRedirectCallback}
         >
-            <App/>
+            {app}
         </Auth0Provider>
-    </Provider>,
+    );
+}
+
+ReactDOM.render(
+    <Provider store={store}>{app}</Provider>,
     document.getElementById('root') as HTMLElement
 );
 

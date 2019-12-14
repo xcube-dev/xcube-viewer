@@ -9,7 +9,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { useAuth0 } from '../components/Auth0Provider';
+import { canUseAuth0, useAuth0 } from '../components/Auth0Provider';
 import { AppState } from '../states/appState';
 import logo from '../resources/logo.png';
 import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
@@ -85,52 +85,55 @@ const styles = (theme: Theme) => createStyles(
 
 const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarProps) => {
 
-    const {isAuthenticated, user, loginWithRedirect, loading} = useAuth0();
-
     const handleSettingsButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
         openDialog('settings');
     };
 
-    const handleSignInButtonCLicked = () => {
-        loginWithRedirect({});
-    };
-
     let userButton;
-    if (isAuthenticated) {
-        let avatarContent: React.ReactNode = <FaceIcon/>;
-        if (!user) {
-            userButton = <Avatar className={classes.orangeAvatar}>?</Avatar>;
-        } else if (user.picture) {
-            userButton = <Avatar src={user.picture} alt={user.name}/>;
+    if (canUseAuth0()) {
+
+        const {isAuthenticated, user, loginWithRedirect, loading} = useAuth0();
+
+        const handleSignInButtonCLicked = () => {
+            loginWithRedirect({});
+        };
+
+        if (isAuthenticated) {
+            let avatarContent: React.ReactNode = <FaceIcon/>;
+            if (!user) {
+                userButton = <Avatar className={classes.orangeAvatar}>?</Avatar>;
+            } else if (user.picture) {
+                userButton = <Avatar src={user.picture} alt={user.name}/>;
+            } else {
+                const name1 = user.given_name || user.name || user.nickname;
+                const name2 = user.family_name;
+                let letters: string | null = null;
+                if (name1 && name2) {
+                    letters = name1[0] + name2[0];
+                } else if (name1) {
+                    letters = name1[0];
+                } else if (name2) {
+                    letters = name2[0];
+                }
+                if (letters !== null) {
+                    avatarContent = letters.toUpperCase();
+                }
+                userButton = <Avatar className={classes.orangeAvatar}>{avatarContent}</Avatar>;
+            }
         } else {
-            const name1 = user.given_name || user.name || user.nickname;
-            const name2 = user.family_name;
-            let letters: string | null = null;
-            if (name1 && name2) {
-                letters = name1[0] + name2[0];
-            } else if (name1) {
-                letters = name1[0];
-            } else if (name2) {
-                letters = name2[0];
-            }
-            if (letters !== null) {
-                avatarContent = letters.toUpperCase();
-            }
-            userButton = <Avatar className={classes.orangeAvatar}>{avatarContent}</Avatar>;
-        }
-    } else {
-        userButton = (
-            <IconButton onClick={loading ? undefined : handleSignInButtonCLicked}>
-                <FaceIcon/>
-            </IconButton>
-        );
-        if (loading) {
             userButton = (
-                <div className={classes.signInWrapper}>
-                    {userButton}
-                    <CircularProgress size={30} className={classes.signInProgress}/>
-                </div>
+                <IconButton onClick={loading ? undefined : handleSignInButtonCLicked}>
+                    <FaceIcon/>
+                </IconButton>
             );
+            if (loading) {
+                userButton = (
+                    <div className={classes.signInWrapper}>
+                        {userButton}
+                        <CircularProgress size={30} className={classes.signInProgress}/>
+                    </div>
+                );
+            }
         }
     }
 
