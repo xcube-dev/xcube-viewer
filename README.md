@@ -60,13 +60,26 @@ Update, install, and run:
     $ yarn start
 
 
-Build `xcube-viewer` for deployment:
+Build `xcube-viewer` for deployment with `default` branding:
 
     $ cd xcube-viewer
     $ git pull
     $ yarn build
+    
+Find outputs in `./build`. To build different branding targets, create a file `.env.local` and specify
+the branding, e.g.
 
-Find outputs in `./build`.
+    REACT_APP_BRANDING=eodatabee
+    
+will build target `eodatabee`. Available targets are `default`, `cyanoalert`, `eodatabee`, `esdl`.
+
+To add a new branding, choose a branding name and create directories with that name in `public` 
+and in `src/resources`. It is easiest to copy the `default` branding and rename it. 
+Then alter what need be branded, e.g. typically the logos.
+
+You will also need to add a new entry in object named `brandings` in `src/config.ts` 
+using your branding name as key. Also here, it is best to copy the `default` one and adapt it
+to your needs.       
 
 ## Features
 

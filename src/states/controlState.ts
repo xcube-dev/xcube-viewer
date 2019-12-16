@@ -3,8 +3,9 @@ import { Geometry as OlGeometry } from 'ol/geom';
 import { Extent as OlExtent } from 'ol/extent';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { VIEWER_DEFAULT_API_SERVER } from '../config';
 import { loadUserSettings } from './userSettings';
+import { getDefaultApiServer } from '../config';
+
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000, 2500];
@@ -43,7 +44,7 @@ export function newControlState(): ControlState {
         selectedPlaceGroupIds: ['user'],
         selectedPlaceId: null,
         selectedUserPlaceId: null,
-        selectedServerId: VIEWER_DEFAULT_API_SERVER.id,
+        selectedServerId: getDefaultApiServer().id,
         selectedTime: null,
         selectedTimeRange: null,
         timeSeriesUpdateMode: 'add',

@@ -7,13 +7,12 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 
 import { AppState } from '../states/appState';
-import { VIEWER_BRANDING, VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
+import { getBranding } from '../config';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
 import { openDialog } from '../actions/controlActions';
 
-const logo = require(`../resources/${VIEWER_BRANDING}/logo.png`);
 
 interface AppBarProps extends WithStyles<typeof styles> {
     appName: string;
@@ -25,7 +24,7 @@ interface AppBarProps extends WithStyles<typeof styles> {
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-        appName: VIEWER_APP_NAME,
+        appName: getBranding().appBarTitle,
     };
 };
 
@@ -37,7 +36,7 @@ const mapDispatchToProps = {
 const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
-            backgroundColor: VIEWER_HEADER_BACKGROUND_COLOR,
+            backgroundColor: getBranding().headerBackgroundColor,
             paddingRight: theme.spacing(1)
         },
         toolbarIcon: {
@@ -95,6 +94,34 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
         openDialog('settings');
     };
 
+    render() {
+        const {classes, appName} = this.props;
+        return (
+            <AppBar
+                position="absolute"
+                className={classNames(classes.appBar)}
+            >
+                <Toolbar disableGutters={true} className={classes.toolbar}>
+                    <img
+                        src={getBranding().logoPath}
+                        width={getBranding().logoWidth}
+                        alt={'xcube logo'}
+                        className={classes.logo}
+                    />
+                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                        {appName}
+                    </Typography>
+                    <IconButton onClick={handleSettingsButtonClicked}>
+                        <SettingsApplicationsIcon/>
+                    </IconButton>
+                    <UserControl/>
+                </Toolbar>
+                <ServerDialog/>
+                <SettingsDialog/>
+            </AppBar>
+        );
+    }
+}
     return (
         <AppBar
             position="absolute"

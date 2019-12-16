@@ -3,7 +3,7 @@ import { Place, PlaceGroup, } from '../model/place';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { Server, ServerInfo } from "../model/server";
-import { I18N, VIEWER_API_SERVERS } from "../config";
+import { getApiServers, I18N } from '../config';
 import { loadUserServers } from './userSettings';
 
 export interface DataState {
@@ -17,7 +17,7 @@ export interface DataState {
 
 export function newDataState(): DataState {
     const extraUserServers = loadUserServers();
-    const userServers = [...VIEWER_API_SERVERS];
+    const userServers = [...getApiServers()];
     extraUserServers.forEach(extraUserServer => {
         if (!userServers.find(userServer => userServer.id === extraUserServer.id)) {
             userServers.push(extraUserServer);
