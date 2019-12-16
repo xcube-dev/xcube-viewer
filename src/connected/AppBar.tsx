@@ -36,6 +36,7 @@ const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
             backgroundColor: getBranding().headerBackgroundColor,
+            paddingRight: theme.spacing(1),
         },
         toolbarIcon: {
             display: 'flex',
