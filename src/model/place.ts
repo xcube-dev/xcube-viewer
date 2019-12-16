@@ -7,6 +7,8 @@ import { USER_PLACES_COLOR_NAMES } from '../config';
  */
 export interface Place extends GeoJSON.Feature {
     id: string;
+
+    [name: string]: any;
 }
 
 /**
@@ -15,6 +17,7 @@ export interface Place extends GeoJSON.Feature {
 export interface PlaceGroup extends GeoJSON.FeatureCollection {
     id: string;
     title: string;
+    features: Place[];
     propertyMapping?: { [role: string]: string };
     placeGroups?: { [placeId: string]: PlaceGroup }; // placeGroups in placeGroups are not yet supported
 }
@@ -68,7 +71,7 @@ function getPlaceLabel(place: Place, labelPropertyNames: string []) {
 }
 
 function getPlaceColor(place: Place) {
-    return place.properties && place.properties['color']
+    return (place.properties && place.properties['color'])
            || USER_PLACES_COLOR_NAMES[getPlaceHash(place) % USER_PLACES_COLOR_NAMES.length]
 }
 

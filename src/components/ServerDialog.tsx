@@ -108,7 +108,7 @@ class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState>
         this.doClose();
     };
 
-    handleSelectServer = (event: any) => {
+    handleSelectServer = (event: React.ChangeEvent<{ name?: string; value: any; }>, child: React.ReactNode) => {
         const selectedServerId = event.target.value;
         const selectedServer = this.state.servers.find(server => server.id === selectedServerId)!;
         this.setState({selectedServer});

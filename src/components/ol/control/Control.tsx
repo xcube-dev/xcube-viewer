@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { OlMap, OlControl } from '../types';
+import { default as OlMap } from 'ol/Map';
+import { Control as OlControl } from 'ol/control';
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 
@@ -10,7 +11,7 @@ interface ControlProps extends MapComponentProps {
 }
 
 export class Control extends MapComponent<OlControl, ControlProps> {
-    divRef: HTMLDivElement | null;
+    divRef: HTMLDivElement | null = null;
 
     handleDivRef = (divRef: HTMLDivElement | null) => {
         this.divRef = divRef;

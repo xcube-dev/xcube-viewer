@@ -36,7 +36,7 @@ interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
 
 class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
 
-    handlePlaceGroupsChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    handlePlaceGroupsChange = (event: React.ChangeEvent<{ name?: string; value: any; }>, child: React.ReactNode) => {
         const {selectPlaceGroups} = this.props;
         selectPlaceGroups(event.target.value as any as string[] || null);
     };
@@ -56,7 +56,7 @@ class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
         const placeGroups = this.props.placeGroups || [];
         const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
 
-        if (placeGroups.length == 0 || placeGroups.length == 1 && placeGroups[0].id == 'user') {
+        if (placeGroups.length === 0 || (placeGroups.length === 1 && placeGroups[0].id === 'user')) {
             return null;
         }
 

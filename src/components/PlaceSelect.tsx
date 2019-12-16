@@ -37,7 +37,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
 
 class PlaceSelect extends React.Component<PlaceSelectProps> {
 
-    handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    handlePlaceChange = (event: React.ChangeEvent<{ name?: string; value: any; }>, child: React.ReactNode) => {
         this.props.selectPlace(event.target.value || null, this.props.places, true);
     };
 

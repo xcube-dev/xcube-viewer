@@ -284,8 +284,8 @@ const ToggleSetting = (props: ToggleSettingProps) => {
     const {propertyName, settings, updateSettings} = props;
     return (
         <Switch
-            checked={settings[propertyName]}
-            onChange={() => updateSettings({...settings, [propertyName]: !props.settings[propertyName]})}
+            checked={(settings as any)[propertyName]}
+            onChange={() => updateSettings({...settings, [propertyName]: !((settings as any)[propertyName])})}
         />
     );
 };

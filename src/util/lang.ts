@@ -23,7 +23,7 @@ export class LanguageDictionary {
             throw new Error(`Internal error: locale "en" must be included in supported languages`)
         }
 
-        const content = {};
+        const content: any = {};
         json.dictionary.forEach((entry, index) => {
             locales.forEach(locale => {
                 if (!entry[locale]) {
@@ -95,7 +95,7 @@ export const getCurrentLocale = (): string => {
     if (navigator.languages && navigator.languages.length > 0) {
         locale = navigator.languages[0];
     } else {
-        locale = navigator["userLanguage"] || navigator["language"] || navigator["browserLanguage"] || 'en';
+        locale = navigator.language || (navigator as any).userLanguage || (navigator as any).browserLanguage || 'en';
     }
     return locale.split('-')[0];
 };

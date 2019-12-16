@@ -9,7 +9,7 @@ export function getColorBars(apiServerUrl: string): Promise<ColorBars> {
 
 function parseColorBars(colorBarGroups: any): ColorBars {
     const groups: ColorBarGroup[] = [];
-    const images = {};
+    const images: any = {};
     colorBarGroups.forEach((colorBarGroup: [string, string, any[]]) => {
         const title = colorBarGroup[0];
         const description = colorBarGroup[1];

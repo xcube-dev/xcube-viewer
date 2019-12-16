@@ -13,7 +13,7 @@ export const placeGroupsSelector = createSelector(
     datasetsSelector,
     userPlaceGroupSelector,
     (datasets: Dataset[], userPlaceGroup: PlaceGroup): PlaceGroup[] => {
-        const placeGroups = {};
+        const placeGroups: any = {};
         const placeGroupsArray = [userPlaceGroup];
         datasets.forEach(dataset => {
             if (dataset.placeGroups) {

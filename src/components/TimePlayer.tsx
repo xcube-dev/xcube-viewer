@@ -12,6 +12,7 @@ import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
 
 import { Time, TimeRange } from '../model/timeSeries';
+import { TimeAnimationInterval } from '../states/controlState';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 
@@ -32,8 +33,8 @@ interface TimePlayerProps extends WithStyles<typeof styles>, WithLocale {
     incSelectedTime: (increment: -1 | 1) => void;
     selectedTimeRange: TimeRange | null;
     timeAnimationActive: boolean;
-    timeAnimationInterval: number;
-    updateTimeAnimation: (active: boolean, interval: number) => void;
+    timeAnimationInterval: TimeAnimationInterval;
+    updateTimeAnimation: (active: boolean, interval: TimeAnimationInterval) => void;
 }
 
 

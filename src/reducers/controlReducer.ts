@@ -1,4 +1,4 @@
-import { OlGeoJSONFormat } from '../components/ol/types';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { ControlState, newControlState } from '../states/controlState';
@@ -31,8 +31,8 @@ import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '..
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
-export function controlReducer(state: ControlState, action: ControlAction | DataAction, appState: AppState): ControlState {
-    if (typeof state === 'undefined') {
+export function controlReducer(state: ControlState | undefined, action: ControlAction | DataAction, appState: AppState | undefined): ControlState {
+    if (state === undefined) {
         state = newControlState();
     }
     switch (action.type) {
@@ -101,7 +101,7 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         }
         case SELECT_TIME: {
             let {selectedTime} = action;
-            if (selectedTime !== null) {
+            if (selectedTime !== null && appState) {
                 const timeCoordinates = timeCoordinatesSelector(appState)!;
                 const index = timeCoordinates ? findIndexCloseTo(timeCoordinates, selectedTime) : -1;
                 if (index >= 0) {
@@ -117,31 +117,33 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             return state;
         }
         case INC_SELECTED_TIME: {
-            let index = selectedTimeIndexSelector(appState);
-            if (index >= 0) {
-                const timeCoordinates = timeCoordinatesSelector(appState)!;
-                index += action.increment;
-                if (index < 0) {
-                    index = timeCoordinates.length - 1;
-                }
-                if (index > timeCoordinates.length - 1) {
-                    index = 0;
-                }
-                let selectedTime = timeCoordinates[index];
-                let selectedTimeRange = state.selectedTimeRange;
-                if (selectedTimeRange !== null) {
-                    if (selectedTime < selectedTimeRange[0]) {
-                        selectedTime = selectedTimeRange[0];
+            if (appState) {
+                let index = selectedTimeIndexSelector(appState);
+                if (index >= 0) {
+                    const timeCoordinates = timeCoordinatesSelector(appState)!;
+                    index += action.increment;
+                    if (index < 0) {
+                        index = timeCoordinates.length - 1;
                     }
-                    if (selectedTime > selectedTimeRange[1]) {
-                        selectedTime = selectedTimeRange[1];
+                    if (index > timeCoordinates.length - 1) {
+                        index = 0;
                     }
-                }
-                if (state.selectedTime !== selectedTime) {
-                    return {
-                        ...state,
-                        selectedTime,
-                    };
+                    let selectedTime = timeCoordinates[index];
+                    let selectedTimeRange = state.selectedTimeRange;
+                    if (selectedTimeRange !== null) {
+                        if (selectedTime < selectedTimeRange[0]) {
+                            selectedTime = selectedTimeRange[0];
+                        }
+                        if (selectedTime > selectedTimeRange[1]) {
+                            selectedTime = selectedTimeRange[1];
+                        }
+                    }
+                    if (state.selectedTime !== selectedTime) {
+                        return {
+                            ...state,
+                            selectedTime,
+                        };
+                    }
                 }
             }
             return state;

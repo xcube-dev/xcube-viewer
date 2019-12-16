@@ -1,6 +1,6 @@
 import * as React from 'react';
-
-import { OlMap, OlBaseObject } from './types';
+import { default as OlBaseObject } from 'ol/Object';
+import { default as OlMap } from 'ol/Map';
 
 import { MapContext, MapContextType } from './Map';
 
@@ -12,8 +12,8 @@ export interface MapComponentProps {
 export abstract class MapComponent<T extends OlBaseObject, P extends MapComponentProps, S = {}> extends React.PureComponent<P, S> {
     // noinspection JSUnusedGlobalSymbols
     static contextType = MapContextType;
-    context: MapContext;
-    object: T | null;
+    context: MapContext = {} as MapContext;
+    object: T | null = null;
 
     abstract addMapObject(map: OlMap): T;
 

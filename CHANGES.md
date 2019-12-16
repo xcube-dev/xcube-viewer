@@ -1,5 +1,7 @@
 ## Changes in version 0.4.0 (in development)
 
+* Different deployments can now be configured through `.env.local` file. (#24)
+
 * Users can now login. (#22)
 
 ## Changes in version 0.3.1
