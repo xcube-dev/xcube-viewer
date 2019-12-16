@@ -1,5 +1,8 @@
-import { OlMap, OlDrawInteraction, OlDrawInteractionOptions, OlDrawEvent, OlVectorLayer } from '../types';
-
+import { default as OlMap } from 'ol/Map';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlDrawInteraction } from 'ol/interaction/Draw';
+import { DrawEvent as OlDrawEvent } from 'ol/interaction/Draw';
+import { Options as OlDrawInteractionOptions } from 'ol/interaction/Draw';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 

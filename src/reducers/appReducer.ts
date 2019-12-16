@@ -7,7 +7,7 @@ import { ControlAction } from "../actions/controlActions";
 import { MessageLogAction } from "../actions/messageLogActions";
 
 
-export function appReducer(state: AppState, action: DataAction & ControlAction & MessageLogAction): AppState {
+export function appReducer(state: AppState | undefined, action: DataAction & ControlAction & MessageLogAction): AppState {
     // Not using redux.combineReducers(), because we need to pass app state into controlReducer()
     return {
         dataState: dataReducer(state && state.dataState, action),

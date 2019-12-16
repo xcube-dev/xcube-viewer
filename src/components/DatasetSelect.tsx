@@ -30,7 +30,7 @@ interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
 
 class DatasetSelect extends React.Component<DatasetSelectProps> {
 
-    handleDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    handleDatasetChange = (event: React.ChangeEvent<{ name?: string; value: any; }>, child: React.ReactNode) => {
         this.props.selectDataset(event.target.value || null, this.props.datasets);
     };
 

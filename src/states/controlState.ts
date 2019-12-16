@@ -1,4 +1,6 @@
-import {  OlGeometry , OlExtent, OlBaseObject } from '../components/ol/types';
+import { default as OlBaseObject } from 'ol/Object';
+import { Geometry as OlGeometry } from 'ol/geom';
+import { Extent as OlExtent } from 'ol/extent';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { VIEWER_DEFAULT_API_SERVER } from '../config';

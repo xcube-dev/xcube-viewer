@@ -75,7 +75,7 @@ function _storeProperty(storage: Storage, propertyName: string, source: any) {
 function _loadBooleanProperty(storage: Storage, propertyName: string, target: any, defaultObj: any) {
     const value = storage.getItem(`xcube.${propertyName}`);
     if (value !== null) {
-        target[propertyName] = value == 'true';
+        target[propertyName] = value === 'true';
     } else {
         target[propertyName] = !!defaultObj[propertyName];
     }

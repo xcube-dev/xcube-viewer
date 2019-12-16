@@ -37,7 +37,7 @@ interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
 
 class VariableSelect extends React.Component<VariableSelectProps> {
 
-    handleVariableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    handleVariableChange = (event: React.ChangeEvent<{ name?: string; value: any; }>, child: React.ReactNode) => {
         this.props.selectVariable(event.target.value || null);
     };
 

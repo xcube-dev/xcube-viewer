@@ -1,4 +1,7 @@
-import {OlMap, OlView, OlViewOptions} from './types';
+import { default as OlMap } from 'ol/Map';
+import { default as OlView } from 'ol/View';
+import { ViewOptions as OlViewOptions } from 'ol/View';
+
 import { MapComponent, MapComponentProps } from "./MapComponent";
 
 
