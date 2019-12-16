@@ -88,12 +88,6 @@ class _AppBar extends React.Component<AppBarProps> {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         {appName}
                     </Typography>
-                    {/*<IconButton>*/}
-                    {/*<Badge badgeContent={4} color={"secondary"}>*/}
-                    {/*<NotificationsIcon/>*/}
-                    {/*</Badge>*/}
-                    {/*</IconButton>*/}
-                    {/*<Avatar className={classes.orangeAvatar}>CL</Avatar>*/}
                     <IconButton onClick={this.handleSettingsButtonClicked}>
                         <SettingsApplicationsIcon/>
                     </IconButton>
