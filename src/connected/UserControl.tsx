@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import Transition from 'react-transition-group/Transition';
 import {
     Theme,
     WithStyles,
@@ -14,7 +15,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import Transition from 'react-transition-group/Transition';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -70,12 +70,11 @@ const styles = (theme: Theme) => createStyles(
 const UserControl: React.FC<UserControlProps> = ({classes}: UserControlProps) => {
     const [userMenuAnchorEl, setUserMenuAnchorEl] = React.useState<null | HTMLElement>(null);
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
+    const {isAuthenticated, loading, user, loginWithPopup, logout} = useAuth0();
 
     if (!canUseAuth0()) {
         return null;
     }
-
-    const {isAuthenticated, loading, user, loginWithPopup, logout} = useAuth0();
 
     const handleUserProfileMenuItemClicked = () => {
         handleUserMenuClose();
@@ -146,7 +145,7 @@ const UserControl: React.FC<UserControlProps> = ({classes}: UserControlProps) =>
                 </Menu>
                 <Dialog
                     open={profileDialogOpen}
-                    TransitionComponent={Transition}
+                    TransitionComponent={Transition as any}
                     keepMounted
                     onClose={handleUserProfileDialogClose}
                     aria-labelledby="alert-dialog-slide-title"
