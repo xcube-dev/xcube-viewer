@@ -4,6 +4,9 @@ import { LanguageDictionary } from './util/lang';
 import { getQueryParameterByName } from './util/qparam';
 import lang from './resources/lang.json';
 
+const VIEWER_BRANDING = process.env.REACT_APP_BRANDING || 'default';
+console.log('VIEWER_BRANDING:', VIEWER_BRANDING);
+
 export const VIEWER_APP_NAME = 'xcube Viewer';
 export const VIEWER_VERSION = '0.4.0-dev.0';
 
