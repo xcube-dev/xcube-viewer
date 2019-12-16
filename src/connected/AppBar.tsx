@@ -1,23 +1,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import {
-    Theme,
-    WithStyles,
-    createStyles,
-    withStyles,
-} from '@material-ui/core';
+import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+
 import { AppState } from '../states/appState';
-import logo from '../resources/logo.png';
-import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
+import { VIEWER_BRANDING, VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
 import { openDialog } from '../actions/controlActions';
 
+const logo = require(`../resources/${VIEWER_BRANDING}/logo.png`);
 
 interface AppBarProps extends WithStyles<typeof styles> {
     appName: string;
