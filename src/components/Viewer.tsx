@@ -1,16 +1,29 @@
 import * as React from 'react';
 import * as geojson from 'geojson';
-import { createStyles, Theme, withStyles, WithStyles } from "@material-ui/core/styles";
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { default as OlMap } from 'ol/Map';
+import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlGeometry } from 'ol/geom/Geometry';
+import { default as OlSimpleGeometry } from 'ol/geom/SimpleGeometry';
+import { default as OlGeometryType } from 'ol/geom/GeometryType';
+import { default as OlCircleGeometry } from 'ol/geom/Circle';
+import { default as OlFeature } from 'ol/Feature';
+import { default as OlStyle } from 'ol/style/Style';
+import { default as OlFillStyle } from 'ol/style/Fill';
+import { default as OlStrokeStyle } from 'ol/style/Stroke';
+import { default as OlCircleStyle } from 'ol/style/Circle';
+import { Extent as OlExtent } from 'ol/extent';
+import { Color as OlColor } from 'ol/color';
+import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
+import { transformExtent as olProjTransformExtent } from 'ol/proj'
 
 import { newId } from '../util/id';
 import { Place, PlaceGroup } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
-import {
-    I18N,
-    LINE_CHART_STROKE_SHADE_DARK_THEME,
-    LINE_CHART_STROKE_SHADE_LIGHT_THEME,
-    USER_PLACES_COLOR_NAMES, USER_PLACES_COLORS
-} from '../config';
+import { getUserPlaceColor, getUserPlaceColorName, I18N } from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
@@ -18,27 +31,7 @@ import { View } from './ol/View';
 import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { Control } from './ol/control/Control';
-import {
-    OlMap,
-    OlMapBrowserEvent,
-    OlVectorSource,
-    OlStyle,
-    OlStrokeStyle,
-    OlFillStyle,
-    OlCircleStyle,
-    OlColor,
-    OlFeature,
-    OlSimpleGeometry,
-    olPolygonFromCircle,
-    olProjTransformExtent,
-    OlGeometryType,
-    OlExtent,
-    OlCircleGeometry,
-    OlVectorLayer,
-    OlGeoJSONFormat
-} from './ol/types';
-import { ScaleLine } from "./ol/control/ScaleLine";
-
+import { ScaleLine } from './ol/control/ScaleLine';
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
@@ -79,13 +72,13 @@ interface ViewerProps extends WithStyles<typeof styles> {
     userPlaceGroup: PlaceGroup;
     selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
-    flyTo?: OlSimpleGeometry | OlExtent | null;
+    flyTo?: OlGeometry | OlExtent | null;
     places: Place[];
 }
 
 class Viewer extends React.Component<ViewerProps> {
 
-    map: OlMap | null;
+    map: OlMap | null = null;
 
     handleMapClick = (event: OlMapBrowserEvent) => {
         const {selectPlace, mapInteraction, places} = this.props;
@@ -133,11 +126,10 @@ class Viewer extends React.Component<ViewerProps> {
             let colorIndex = 0;
             if (MAP_OBJECTS.userLayer) {
                 const features = USER_LAYER_SOURCE.getFeatures();
-                colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
+                colorIndex = features.length;
             }
-            const strokeShade = theme.palette.type === 'light' ? LINE_CHART_STROKE_SHADE_LIGHT_THEME : LINE_CHART_STROKE_SHADE_DARK_THEME;
-            const color = USER_PLACES_COLOR_NAMES[colorIndex];
-            const shadedColor = USER_PLACES_COLORS[color][strokeShade];
+            const color = getUserPlaceColorName(colorIndex);
+            const shadedColor = getUserPlaceColor(color, theme.palette.type);
             if (mapInteraction === 'Point') {
                 feature.setStyle(createPointGeometryStyle(7, shadedColor, 'white', 1));
             } else {
@@ -145,9 +137,10 @@ class Viewer extends React.Component<ViewerProps> {
             }
 
             const nameBase = I18N.get(mapInteraction);
-            let label: string;
+            let label: string = '';
             for (let index = 1; ; index++) {
                 label = `${nameBase} ${index}`;
+                // eslint-disable-next-line
                 if (!userPlaceGroup.features.find(p => (p.properties || {})['label'] === label)) {
                     break;
                 }
@@ -182,7 +175,7 @@ class Viewer extends React.Component<ViewerProps> {
             } else {
                 // Transform Geometry object
                 flyToTarget = flyToCurr.transform('EPSG:4326', projection) as OlSimpleGeometry;
-                if (flyToTarget.getType() == 'Point') {
+                if (flyToTarget.getType() === 'Point') {
                     // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
                     map.getView().setCenter(flyToTarget.getFirstCoordinate());
                 } else {

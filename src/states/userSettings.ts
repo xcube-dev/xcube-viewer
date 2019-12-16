@@ -75,7 +75,7 @@ function _storeProperty(storage: Storage, propertyName: string, source: any) {
 }
 
 function _loadBooleanProperty(storage: Storage, propertyName: string, target: any, defaultObj: any) {
-    _loadProperty(storage, propertyName, target, defaultObj, (value) => value == 'true');
+    _loadProperty(storage, propertyName, target, defaultObj, (value) => value === 'true');
 }
 
 function _loadIntProperty(storage: Storage, propertyName: string, target: any, defaultObj: any) {

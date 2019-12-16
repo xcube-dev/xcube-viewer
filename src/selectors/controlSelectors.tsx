@@ -1,6 +1,12 @@
 ///<reference path="../util/find.ts"/>
 import * as React from 'react';
 import { createSelector } from 'reselect'
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
+import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlXYZSource } from 'ol/source/XYZ';
+import { get as olProjGet } from 'ol/proj'
+
 import { AppState } from '../states/appState';
 import {
     datasetsSelector,
@@ -8,10 +14,6 @@ import {
     userPlaceGroupSelector,
     timeSeriesGroupsSelector
 } from './dataSelectors';
-
-
-import { OlGeoJSONFormat, OlTileGrid, OlVectorSource, OlXYZSource, olProjGet } from '../components/ol/types';
-
 import {
     Dataset,
     findDataset,
@@ -73,7 +75,7 @@ export const selectedVariableSelector = createSelector(
 export const selectedVariableUnitsSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
-        return variable && variable.units || '-';
+        return (variable && variable.units) || '-';
     }
 );
 
@@ -87,7 +89,7 @@ export const selectedVariableColorBarMinMaxSelector = createSelector(
 export const selectedVariableColorBarNameSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
-        return variable && variable.colorBarName || 'viridis';
+        return (variable && variable.colorBarName) || 'viridis';
     }
 );
 
@@ -196,7 +198,7 @@ export const timeSeriesPlaceInfosSelector = createSelector(
     timeSeriesGroupsSelector,
     placeGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
-        const placeInfos = {};
+        const placeInfos: any = {};
         forEachPlace(placeGroups, (placeGroup, place, label, color) => {
             for (let timeSeriesGroup of timeSeriesGroups) {
                 if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {

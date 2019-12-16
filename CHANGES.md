@@ -4,6 +4,8 @@
 
 * It is now possible to change the base map layer from settings. (#30)
 
+* Different deployments can now be configured through `.env.local` file. (#24)
+
 ## Changes in version 0.3.1
 
 Fixed translation of legal agreement.

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { OlMap, OlTileLayer, OlTileLayerOptions, OlXYZSource, OlOSMSource } from '../types';
+import { default as OlMap } from 'ol/Map';
+import { default as OlTileLayer } from 'ol/layer/Tile';
+import { default as OlXYZSource } from 'ol/source/XYZ';
+import { default as OlOSMSource } from 'ol/source/OSM';
+import { Options as OlTileLayerOptions } from 'ol/layer/Tile';
+
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
 

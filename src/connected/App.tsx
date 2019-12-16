@@ -16,7 +16,7 @@ import AppPane from './AppPane';
 import LoadingDialog from './LoadingDialog';
 import LegalAgreementDialog from './LegalAgreementDialog';
 import MessageLog from './MessageLog';
-import { VIEWER_PRIMARY_COLOR, VIEWER_SECONDARY_COLOR, VIEWER_THEME } from "../config";
+import { getBranding } from '../config';
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -36,9 +36,9 @@ const theme = createMuiTheme(
             htmlFontSize: 14,
         },
         palette: {
-            type: VIEWER_THEME,
-            primary: VIEWER_PRIMARY_COLOR,
-            secondary: VIEWER_SECONDARY_COLOR,
+            type: getBranding().themeName,
+            primary: getBranding().primaryColor,
+            secondary: getBranding().secondaryColor,
         },
     });
 

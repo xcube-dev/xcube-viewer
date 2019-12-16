@@ -84,7 +84,7 @@ export default function SettingsDialog(
         openDialog('server');
     }
 
-    function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLSelectElement>) {
+    function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         updateSettings({...settings, timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
     }
 
@@ -340,8 +340,8 @@ const ToggleSetting = (props: ToggleSettingProps) => {
     const {propertyName, settings, updateSettings} = props;
     return (
         <Switch
-            checked={settings[propertyName]}
-            onChange={() => updateSettings({...settings, [propertyName]: !props.settings[propertyName]})}
+            checked={(settings as any)[propertyName]}
+            onChange={() => updateSettings({...settings, [propertyName]: !((settings as any)[propertyName])})}
         />
     );
 };

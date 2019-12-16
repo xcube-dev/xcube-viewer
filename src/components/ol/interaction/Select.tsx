@@ -1,17 +1,16 @@
-import {
-    OlMap,
-    OlSelectInteraction,
-    OlSelectInteractionOptions,
-    OlSelectEvent,
-    OlVectorLayer,
-    OlFeature,
-    OlRenderFeature,
-    OlColor,
-    OlStyle,
-    OlFillStyle,
-    OlCircleStyle,
-    OlStrokeStyle,
-} from '../types';
+import { default as OlMap } from 'ol/Map';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlSelectInteraction } from 'ol/interaction/Select';
+import { default as OlFeature } from 'ol/Feature';
+import { default as OlRenderFeature } from 'ol/render/Feature';
+import CircleStyle from 'ol/style/Circle';
+import { default as OlStyle } from 'ol/style/Style';
+import { default as OlFillStyle } from 'ol/style/Fill';
+import { default as OlStrokeStyle } from 'ol/style/Stroke';
+import { default as OlCircleStyle } from 'ol/style/Circle';
+import { Color as OlColor } from 'ol/color';
+import { SelectEvent as OlSelectEvent } from 'ol/interaction/Select';
+import { Options as OlSelectInteractionOptions } from 'ol/interaction/Select';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
@@ -107,30 +106,22 @@ function styleFunction(feature: (OlFeature | OlRenderFeature), resolution: numbe
     let defaultStroke = OL_DEFAULT_STROKE;
     let defaultRadius = OL_DEFAULT_CIRCLE_RADIUS;
 
-    if (typeof feature['getStyle'] === 'function') {
-        let styleObj = feature['getStyle']();
-        if (Array.isArray(styleObj)) {
-            styleObj = styleObj[0];
-        } else if (typeof styleObj === 'function') {
-            styleObj = styleObj(feature);
+    if (feature instanceof OlFeature) {
+        let style = feature.getStyle();
+        if (Array.isArray(style)) {
+            style = style[0];
+        } else if (typeof style === 'function') {
+            style = style(feature, 0);
         }
-        if (styleObj
-            && typeof styleObj['getFill'] === 'function'
-            && typeof styleObj['getStroke'] === 'function'
-            && typeof styleObj['getImage'] === 'function') {
-            const defaultStyle = styleObj as OlStyle;
-            const imageObj = defaultStyle.getImage();
-            if (imageObj
-                && typeof imageObj['getFill'] === 'function'
-                && typeof imageObj['getStroke'] === 'function'
-                && typeof imageObj['getRadius'] === 'function') {
-                const circle = imageObj as OlCircleStyle;
-                defaultFill = circle.getFill();
-                defaultStroke = circle.getStroke();
-                defaultRadius = circle.getRadius();
+        if (style instanceof OlStyle) {
+            const imageStyle = style.getImage() as any;
+            if (imageStyle instanceof OlCircleStyle) {
+                defaultFill = imageStyle.getFill();
+                defaultStroke = imageStyle.getStroke();
+                defaultRadius = imageStyle.getRadius();
             } else {
-                defaultFill = defaultStyle.getFill();
-                defaultStroke = defaultStyle.getStroke();
+                defaultFill = style.getFill();
+                defaultStroke = style.getStroke();
             }
         }
     }

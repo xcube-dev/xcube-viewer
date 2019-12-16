@@ -1,4 +1,6 @@
-import { OlMap, OlVectorLayer, OlVectorLayerOptions } from '../types';
+import { default as OlMap } from 'ol/Map';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { Options as OlVectorLayerOptions } from 'ol/layer/Vector';
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 
