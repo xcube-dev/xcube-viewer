@@ -62,6 +62,12 @@ the branding, e.g.
     
 will build target `eodatabee`. Available targets are `default`, `cyanoalert`, `eodatabee`, `esdl`.
 
+To add a new branding, create directories with same name as brandings in `public` and in `src/resources`. 
+It is easiest to copying the `default` branding and rename it. Then alter what need be branded.
+
+You will also need to add a new entry in object named `brandings` in `src/config.ts` 
+using your branding name as key. Also here, it is best to copy the `default` one and adapting it.       
+
 ## Features
 
 * Select dataset, update variable and places list, fly to bounding box
