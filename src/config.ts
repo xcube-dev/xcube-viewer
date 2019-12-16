@@ -34,6 +34,7 @@ interface Branding {
     headerBackgroundColor?: string;
     logoPath: any;
     logoWidth: number;
+    baseMapUrl?: string;
 }
 
 const brandings: { [name: string]: Branding } = {
@@ -49,6 +50,7 @@ const brandings: { [name: string]: Branding } = {
         headerBackgroundColor: undefined,
         logoPath: require('./resources/default/logo.png'),
         logoWidth: 32,
+        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
     },
     'eodatabee': {
         appBarTitle: 'Viewer',
@@ -67,6 +69,7 @@ const brandings: { [name: string]: Branding } = {
         headerBackgroundColor: undefined,
         logoPath: require('./resources/eodatabee/logo.png'),
         logoWidth: 150,
+        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
     },
     'cyanoalert': {
         appBarTitle: '',
@@ -85,6 +88,7 @@ const brandings: { [name: string]: Branding } = {
         headerBackgroundColor: undefined,
         logoPath: require('./resources/cyanoalert/logo.png'),
         logoWidth: 120,
+        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
     },
 };
 
@@ -103,14 +107,11 @@ if (branding.windowTitle) {
 
 export const I18N = new LanguageDictionary(lang);
 
-// See resources/maps.json
-export const TILE_ACCESS = {
-    'Mapbox': {
-        param: 'access_token',
-        token: 'pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg'
-    },
-};
 
+interface TileAccess {
+    param: string;
+    token: string;
+}
 
 
 const defaultApiServer = {
@@ -169,3 +170,15 @@ export function getUserPlaceColor(colorName: string, paletteType: PaletteType): 
     return userPlaceColors[colorName][shade];
 }
 
+// See resources/maps.json
+const tileAccess: { [name:string]: TileAccess } = {
+    'Mapbox': {
+        param: 'access_token',
+        token: 'pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg'
+    },
+};
+
+
+export function getTileAccess(groupName: string) {
+    return tileAccess[groupName];
+}
