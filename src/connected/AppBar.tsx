@@ -5,17 +5,14 @@ import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
-// import { AppBar, Toolbar, Typography, IconButton, Badge } from '@material-ui/core';
-// import NotificationsIcon from '@material-ui/icons/Notifications';
-// import Avatar from '@material-ui/core/Avatar';
 
 import { AppState } from '../states/appState';
-import logo from '../resources/logo.png';
-import { VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
+import { VIEWER_BRANDING, VIEWER_LOGO_WIDTH, VIEWER_HEADER_BACKGROUND_COLOR, VIEWER_APP_NAME } from '../config';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import { openDialog } from '../actions/controlActions';
 
+const logo = require(`../resources/${VIEWER_BRANDING}/logo.png`);
 
 interface AppBarProps extends WithStyles<typeof styles> {
     appName: string;
@@ -71,7 +68,7 @@ const styles = (theme: Theme) => createStyles(
 
 class _AppBar extends React.Component<AppBarProps> {
 
-    handleSettingsButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    handleSettingsButtonClicked = () => {
         this.props.openDialog('settings');
     };
 
