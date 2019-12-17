@@ -365,6 +365,13 @@
       "se": "Bildutjämning"
     },
     {
+      "en": "Base map",
+      "de": "Basiskarte",
+      "it": "Mappa di base",
+      "ro": "Harta de bază",
+      "se": "Grundkarta"
+    },
+    {
       "en": "Hide lower values",
       "de": "Niedrigere Werte ausblenden",
       "it": "Nascondi valori più bassi",

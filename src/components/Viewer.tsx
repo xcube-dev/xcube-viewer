@@ -30,7 +30,6 @@ import { Layers } from './ol/layer/Layers';
 import { View } from './ol/View';
 import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
-import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
 import { ScaleLine } from './ol/control/ScaleLine';
 
@@ -65,6 +64,7 @@ const SELECTION_LAYER_STYLE = new OlStyle({
 interface ViewerProps extends WithStyles<typeof styles> {
     theme: Theme;
     mapInteraction: MapInteraction;
+    baseMapLayer?: MapElement;
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
@@ -204,7 +204,7 @@ class Viewer extends React.Component<ViewerProps> {
     }
 
     public render() {
-        const {variableLayer, placeGroupLayers, colorBarLegend, mapInteraction} = this.props;
+        const {variableLayer, placeGroupLayers, colorBarLegend, mapInteraction, baseMapLayer} = this.props;
 
         let colorBarControl = null;
         if (colorBarLegend) {
@@ -226,7 +226,7 @@ class Viewer extends React.Component<ViewerProps> {
                 >
                     <View id="view"/>
                     <Layers>
-                        <OSMBlackAndWhite/>
+                        {baseMapLayer}
                         {variableLayer}
                         <Vector id='userLayer' opacity={1} zIndex={500}
                                 source={USER_LAYER_SOURCE}/>
