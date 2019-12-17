@@ -1,3 +1,4 @@
+import { getBrandingName } from '../config';
 import { Storage, getLocalStorage } from '../util/storage';
 import { Server } from '../model/server';
 import { ControlState } from './controlState';
@@ -70,7 +71,8 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
 
 
 function _storeProperty(storage: Storage, propertyName: string, source: any) {
-    storage.setItem(`xcube.${propertyName}`, source[propertyName] + '');
+    const brandingName = getBrandingName();
+    storage.setItem(`xcube.${brandingName}.${propertyName}`, source[propertyName] + '');
     // console.log(`stored xcube.${propertyName}`, source);
 }
 
@@ -91,7 +93,8 @@ function _loadProperty(storage: Storage,
                        target: any,
                        defaultObj: any,
                        converter: (value: string) => any) {
-    const value = storage.getItem(`xcube.${propertyName}`);
+    const brandingName = getBrandingName();
+    const value = storage.getItem(`xcube.${brandingName}.${propertyName}`);
     if (value !== null) {
         target[propertyName] = converter(value);
     } else {

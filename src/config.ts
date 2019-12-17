@@ -50,7 +50,7 @@ const brandings: { [name: string]: Branding } = {
         headerBackgroundColor: undefined,
         logoPath: require('./resources/default/logo.png'),
         logoWidth: 32,
-        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+        baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     },
     'eodatabee': {
         appBarTitle: 'Viewer',
@@ -69,7 +69,7 @@ const brandings: { [name: string]: Branding } = {
         headerBackgroundColor: undefined,
         logoPath: require('./resources/eodatabee/logo.png'),
         logoWidth: 150,
-        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+        baseMapUrl: 'http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
     },
     'cyanoalert': {
         appBarTitle: '',
@@ -127,6 +127,10 @@ const apiServers = [
 
 export function getVersion() {
     return version;
+}
+
+export function getBrandingName() {
+    return brandingName;
 }
 
 export function getBranding() {

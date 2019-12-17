@@ -4,7 +4,7 @@ import { Extent as OlExtent } from 'ol/extent';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
-import { getDefaultApiServer } from '../config';
+import { getBranding, getDefaultApiServer } from '../config';
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -39,6 +39,7 @@ export interface ControlState {
 
 
 export function newControlState(): ControlState {
+    const branding = getBranding();
     const state: ControlState = {
         selectedDatasetId: 'local',
         selectedVariableName: 'conc_chl',
@@ -61,7 +62,7 @@ export function newControlState(): ControlState {
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
         imageSmoothingEnabled: false,
-        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+        baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
     };
     return loadUserSettings(state);
 }
