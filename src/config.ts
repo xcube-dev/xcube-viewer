@@ -53,8 +53,8 @@ const brandings: { [name: string]: Branding } = {
         baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     },
     'eodatabee': {
-        appBarTitle: 'Viewer',
-        windowTitle: 'EODataBee Viewer',
+        appBarTitle: 'Demo Viewer',
+        windowTitle: 'EODataBee Demo Viewer',
         defaultApiServerId: 'eodatabee',
         defaultApiServerName: 'EODataBee Server',
         defaultApiServerUrl: 'https://xcube2.dcs4cop.eu/dcs4cop-dev/api/latest',
