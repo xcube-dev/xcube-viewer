@@ -17,19 +17,14 @@ import IconButton from '@material-ui/core/IconButton';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import { CircularProgress } from "@material-ui/core";
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
 import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import {
-    I18N,
-    LINE_CHART_STROKE_SHADE_DARK_THEME,
-    LINE_CHART_STROKE_SHADE_LIGHT_THEME,
-    USER_PLACES_COLORS
-} from '../config';
+import { getUserPlaceColor, I18N } from '../config';
 import { WithLocale } from '../util/lang';
 import { Place, PlaceInfo } from '../model/place';
-import Box from "@material-ui/core/Box";
 
 
 const styles = (theme: Theme) => createStyles(
@@ -117,7 +112,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             dataTimeRange, theme, placeInfos, showErrorBars, showPointsOnly,
         } = this.props;
 
-        const strokeShade = theme.palette.type === 'light' ? LINE_CHART_STROKE_SHADE_LIGHT_THEME : LINE_CHART_STROKE_SHADE_DARK_THEME;
+        const paletteType = theme.palette.type;
         const lightStroke = theme.palette.primary.light;
         const mainStroke = theme.palette.primary.main;
         const labelTextColor = theme.palette.primary.contrastText;
@@ -171,7 +166,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                     }
                 }
             });
-            const shadedLineColor = USER_PLACES_COLORS[lineColor][strokeShade];
+            const shadedLineColor = getUserPlaceColor(lineColor, paletteType);
             let errorBar;
             if (showErrorBars && hasErrorBars) {
                 errorBar = (
@@ -231,7 +226,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
             actionButtons.push(zoomOutButton);
         }
         const progress = this.props.completed.reduce((a: number, b: number) => a + b, 0) / this.props.completed.length;
-        const loading = !!(progress > 0 && progress < 100);
+        const loading = (progress > 0 && progress < 100);
 
         let removeAllButton;
         if (loading) {
@@ -239,7 +234,7 @@ class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesCh
                 <CircularProgress
                     size={24}
                     className={classes.actionButton}
-                    color={"secondary"}
+                    color={'secondary'}
                 />
             );
         } else {

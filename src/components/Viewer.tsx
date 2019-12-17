@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as geojson from 'geojson';
-import { createStyles, Theme, withStyles, WithStyles } from "@material-ui/core/styles";
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { default as OlMap } from 'ol/Map';
 import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
@@ -23,12 +23,7 @@ import { transformExtent as olProjTransformExtent } from 'ol/proj'
 import { newId } from '../util/id';
 import { Place, PlaceGroup } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
-import {
-    I18N,
-    LINE_CHART_STROKE_SHADE_DARK_THEME,
-    LINE_CHART_STROKE_SHADE_LIGHT_THEME,
-    USER_PLACES_COLOR_NAMES, USER_PLACES_COLORS
-} from '../config';
+import { getUserPlaceColor, getUserPlaceColorName, I18N } from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
@@ -37,7 +32,7 @@ import { Draw, DrawEvent } from './ol/interaction/Draw';
 import { Vector } from './ol/layer/Vector';
 import { OSMBlackAndWhite } from './ol/layer/Tile';
 import { Control } from './ol/control/Control';
-import { ScaleLine } from "./ol/control/ScaleLine";
+import { ScaleLine } from './ol/control/ScaleLine';
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
@@ -131,11 +126,10 @@ class Viewer extends React.Component<ViewerProps> {
             let colorIndex = 0;
             if (MAP_OBJECTS.userLayer) {
                 const features = USER_LAYER_SOURCE.getFeatures();
-                colorIndex = features.length % USER_PLACES_COLOR_NAMES.length;
+                colorIndex = features.length;
             }
-            const strokeShade = theme.palette.type === 'light' ? LINE_CHART_STROKE_SHADE_LIGHT_THEME : LINE_CHART_STROKE_SHADE_DARK_THEME;
-            const color = USER_PLACES_COLOR_NAMES[colorIndex];
-            const shadedColor = USER_PLACES_COLORS[color][strokeShade];
+            const color = getUserPlaceColorName(colorIndex);
+            const shadedColor = getUserPlaceColor(color, theme.palette.type);
             if (mapInteraction === 'Point') {
                 feature.setStyle(createPointGeometryStyle(7, shadedColor, 'white', 1));
             } else {

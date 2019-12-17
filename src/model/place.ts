@@ -1,5 +1,5 @@
 import * as  GeoJSON from 'geojson';
-import { USER_PLACES_COLOR_NAMES } from '../config';
+import { getUserPlaceColorName } from '../config';
 
 
 /**
@@ -71,8 +71,7 @@ function getPlaceLabel(place: Place, labelPropertyNames: string []) {
 }
 
 function getPlaceColor(place: Place) {
-    return (place.properties && place.properties['color'])
-           || USER_PLACES_COLOR_NAMES[getPlaceHash(place) % USER_PLACES_COLOR_NAMES.length]
+    return (place.properties && place.properties['color']) || getUserPlaceColorName(getPlaceHash(place))
 }
 
 function getPlaceHash(place: Place): number {
