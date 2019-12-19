@@ -1,7 +1,11 @@
+import { Slide } from '@material-ui/core';
+import { TransitionProps } from '@material-ui/core/transitions';
 import * as React from 'react';
 import classNames from 'classnames';
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -12,8 +16,6 @@ import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 
 import { MessageLogEntry } from '../states/messageLogState';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
 
 
 const variantIcon = {
@@ -69,12 +71,13 @@ const SNACKBAR_ANCHOR_ORIGIN: SnackbarOrigin = {
     horizontal: 'center',
 };
 
+function SlideTransition(props: TransitionProps) {
+    return <Slide {...props} direction="up"/>;
+}
+
 class MessageLog extends React.Component<MessageLogProps> {
 
     handleClose = (event: React.SyntheticEvent<any>, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
         this.props.hideMessage(this.props.message!.id);
     };
 
@@ -89,9 +92,12 @@ class MessageLog extends React.Component<MessageLogProps> {
 
         return (
             <Snackbar
+                key={message.type + ':' + message.text}
                 open={true}
                 anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
+                autoHideDuration={5000}
                 onClose={this.handleClose}>
+                {/*TransitionComponent={SlideTransition}*/}
                 <SnackbarContent
                     className={classNames(classes[message.type], className)}
                     aria-describedby="client-snackbar"

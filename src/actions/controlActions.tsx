@@ -69,7 +69,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                            dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
                        })
                        .catch(error => {
-                           dispatch(postMessage('error', error + ''));
+                           dispatch(postMessage('error', error));
                        })
                        .finally(() => {
                            dispatch(removeActivity(activitityId));
