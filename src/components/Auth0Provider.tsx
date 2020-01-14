@@ -7,6 +7,7 @@ const DEFAULT_REDIRECT_CALLBACK = () =>
 interface Auth0ProviderContext {
     isAuthenticated: boolean;
     user: IdToken;
+    token: any;
     loading: boolean;
     popupOpen: boolean;
     loginWithPopup: any;
@@ -59,6 +60,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
                                                             }: Auth0ProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = useState();
     const [user, setUser] = useState();
+    const [token, setToken] = useState();
     const [auth0Client, setAuth0] = useState();
     const [loading, setLoading] = useState(true);
     const [popupOpen, setPopupOpen] = useState(false);
@@ -68,7 +70,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
             const auth0FromHook = await createAuth0Client(initOptions);
             setAuth0(auth0FromHook);
 
-            if (window.location.search.includes("code=")) {
+            if (window.location.search.includes('code=')) {
                 const {appState} = await auth0FromHook.handleRedirectCallback();
                 onRedirectCallback(appState);
             }
@@ -98,7 +100,9 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
             setPopupOpen(false);
         }
         const user = await auth0Client.getUser();
+        const token = await auth0Client.getTokenSilently();
         setUser(user);
+        setToken(token);
         setIsAuthenticated(true);
     };
 
@@ -116,6 +120,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
             value={{
                 isAuthenticated,
                 user,
+                token,
                 loading,
                 popupOpen,
                 loginWithPopup,
