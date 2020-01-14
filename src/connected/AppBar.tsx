@@ -66,38 +66,35 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-class _AppBar extends React.Component<AppBarProps> {
+const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}) => {
 
-    handleSettingsButtonClicked = () => {
-        this.props.openDialog('settings');
+    const handleSettingsButtonClicked = () => {
+        openDialog('settings');
     };
 
-    render() {
-        const {classes, appName} = this.props;
-        return (
-            <AppBar
-                position="absolute"
-                className={classNames(classes.appBar)}
-            >
-                <Toolbar disableGutters={true} className={classes.toolbar}>
-                    <img
-                        src={getBranding().logoPath}
-                        width={getBranding().logoWidth}
-                        alt={'xcube logo'}
-                        className={classes.logo}
-                    />
-                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        {appName}
-                    </Typography>
-                    <IconButton onClick={this.handleSettingsButtonClicked}>
-                        <SettingsApplicationsIcon/>
-                    </IconButton>
-                </Toolbar>
-                <ServerDialog/>
-                <SettingsDialog/>
-            </AppBar>
-        );
-    }
-}
+    return (
+        <AppBar
+            position="absolute"
+            className={classNames(classes.appBar)}
+        >
+            <Toolbar disableGutters={true} className={classes.toolbar}>
+                <img
+                    src={getBranding().logoPath}
+                    width={getBranding().logoWidth}
+                    alt={'xcube logo'}
+                    className={classes.logo}
+                />
+                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                    {appName}
+                </Typography>
+                <IconButton onClick={handleSettingsButtonClicked}>
+                    <SettingsApplicationsIcon/>
+                </IconButton>
+            </Toolbar>
+            <ServerDialog/>
+            <SettingsDialog/>
+        </AppBar>
+    );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(_AppBar));

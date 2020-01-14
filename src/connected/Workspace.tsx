@@ -63,28 +63,25 @@ const styles = (theme: Theme) => createStyles(
 
     });
 
-class Workspace extends React.Component<WorkspaceProps> {
-    render() {
-        const {classes, hasTimeseries} = this.props;
-        if (hasTimeseries) {
-            return (
-                <div className={classes.contentContainer}>
-                    <div className={classes.viewerContainer}>
-                        <Viewer/>
-                    </div>
-                    <div className={classes.chartContainer}>
-                        <TimeSeriesCharts/>
-                    </div>
-                </div>
-            );
-        } else {
-            return (
-                <div className={classes.viewerContainer2}>
+const Workspace: React.FC<WorkspaceProps> = ({classes, hasTimeseries}) => {
+    if (hasTimeseries) {
+        return (
+            <div className={classes.contentContainer}>
+                <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>
-            );
-        }
+                <div className={classes.chartContainer}>
+                    <TimeSeriesCharts/>
+                </div>
+            </div>
+        );
+    } else {
+        return (
+            <div className={classes.viewerContainer2}>
+                <Viewer/>
+            </div>
+        );
     }
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Workspace));

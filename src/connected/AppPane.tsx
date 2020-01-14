@@ -36,19 +36,14 @@ const styles = (theme: Theme) => createStyles(
         appBarSpacer: theme.mixins.toolbar,
     });
 
-class AppPane extends React.Component<AppPaneProps> {
-
-    render() {
-        const {classes} = this.props;
-
-        return (
-            <main className={classes.main}>
-                <div className={classes.appBarSpacer}/>
-                <ControlBar/>
-                <Workspace/>
-            </main>
-        );
-    }
-}
+const AppPane: React.FC<AppPaneProps> = ({classes}) => {
+    return (
+        <main className={classes.main}>
+            <div className={classes.appBarSpacer}/>
+            <ControlBar/>
+            <Workspace/>
+        </main>
+    );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppPane));
