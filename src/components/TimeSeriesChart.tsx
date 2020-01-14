@@ -393,51 +393,48 @@ export default withStyles(styles, {withTheme: true})(TimeSeriesChart);
 interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
 }
 
-class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
-    render() {
-        const {classes, active, label, payload} = this.props;
-        if (!active) {
+const _CustomTooltip: React.FC<_CustomTooltipProps> = ({classes, active, label, payload}) => {
+    if (!active) {
+        return null;
+    }
+    if (typeof label !== 'number') {
+        return null;
+    }
+    if (!payload || payload.length === 0) {
+        return null;
+    }
+    const items = payload.map((p: TooltipPayload, index: number) => {
+        let {name, value, color, unit} = p;
+        if (typeof value !== 'number') {
             return null;
         }
-        if (typeof label !== 'number') {
-            return null;
-        }
-        if (!payload || payload.length === 0) {
-            return null;
-        }
-        const items = payload.map((p: TooltipPayload, index: number) => {
-            let {name, value, color, unit} = p;
-            if (typeof value !== 'number') {
-                return null;
-            }
-            // let valueText;
-            // if (typeof p.uncertainty === 'number') {
-            //     valueText = `${value.toFixed(2)} ±${p.uncertainty.toFixed(2)} (uncertainty)`;
-            // } else {
-            //     valueText = value.toFixed(3);
-            // }
-            const valueText = value.toFixed(3);
-            return (
-                <div key={index}>
-                    <span>{name}:&nbsp;</span>
-                    <span className={classes.toolTipValue} style={{color: color}}>{valueText}</span>
-                    <span>&nbsp;{unit}</span>
-                </div>
-            );
-        });
-
-        if (!items) {
-            return null;
-        }
-
+        // let valueText;
+        // if (typeof p.uncertainty === 'number') {
+        //     valueText = `${value.toFixed(2)} ±${p.uncertainty.toFixed(2)} (uncertainty)`;
+        // } else {
+        //     valueText = value.toFixed(3);
+        // }
+        const valueText = value.toFixed(3);
         return (
-            <div className={classes.toolTipContainer}>
-                <span className={classes.toolTipLabel}>{`${utcTimeToLocalDateTimeString(label)}`}</span>
-                {items}
+            <div key={index}>
+                <span>{name}:&nbsp;</span>
+                <span className={classes.toolTipValue} style={{color: color}}>{valueText}</span>
+                <span>&nbsp;{unit}</span>
             </div>
         );
+    });
+
+    if (!items) {
+        return null;
     }
-}
+
+    return (
+        <div className={classes.toolTipContainer}>
+            <span className={classes.toolTipLabel}>{`${utcTimeToLocalDateTimeString(label)}`}</span>
+            {items}
+        </div>
+    );
+};
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip);
 
