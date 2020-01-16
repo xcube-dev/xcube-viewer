@@ -73,7 +73,7 @@
     {
       "en": "My places",
       "de": "Meine Orte",
-      "it": "Miei posti",
+      "it": "Miei Siti",
       "ro": "Locurile mele",
       "se": "Mina platser"
     },
@@ -87,14 +87,14 @@
     {
       "en": "Places",
       "de": "Orte",
-      "it": "Posti",
+      "it": "Siti",
       "ro": "Locuri",
       "se": "Platser"
     },
     {
       "en": "Place",
       "de": "Ort",
-      "it": "Posto",
+      "it": "Sito",
       "ro": "Loc",
       "se": "Plats"
     },
@@ -363,6 +363,13 @@
       "it": "Levigatura dell'immagine",
       "ro": "Netezirea imaginii",
       "se": "Bildutjämning"
+    },
+    {
+      "en": "Base map",
+      "de": "Basiskarte",
+      "it": "Mappa di base",
+      "ro": "Harta de bază",
+      "se": "Grundkarta"
     },
     {
       "en": "Hide lower values",

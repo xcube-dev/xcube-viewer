@@ -7,10 +7,10 @@ import DatasetSelect from './DatasetSelect';
 import VariableSelect from './VariableSelect';
 import PlaceGroupsSelect from './PlaceGroupsSelect';
 import PlaceSelect from './PlaceSelect';
-import MapInteractionsBar from "./MapInteractionsBar";
+import MapInteractionsBar from './MapInteractionsBar';
 import TimeSelect from './TimeSelect';
 import TimeSlider from './TimeSlider';
-import TimePlayer from "./TimePlayer";
+import TimePlayer from './TimePlayer';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -21,21 +21,19 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-class _ControlBar extends React.Component {
-    render() {
-        return (
-            <ControlBar>
-                <DatasetSelect/>
-                <VariableSelect/>
-                <PlaceGroupsSelect/>
-                <PlaceSelect/>
-                <MapInteractionsBar/>
-                <TimeSelect/>
-                <TimePlayer/>
-                <TimeSlider/>
-            </ControlBar>
-        );
-    }
-}
+const _ControlBar: React.FC = () => {
+    return (
+        <ControlBar>
+            <DatasetSelect/>
+            <VariableSelect/>
+            <PlaceGroupsSelect/>
+            <PlaceSelect/>
+            <MapInteractionsBar/>
+            <TimeSelect/>
+            <TimePlayer/>
+            <TimeSlider/>
+        </ControlBar>
+    );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(_ControlBar);

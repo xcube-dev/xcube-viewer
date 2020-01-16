@@ -69,53 +69,50 @@ const SNACKBAR_ANCHOR_ORIGIN: SnackbarOrigin = {
     horizontal: 'center',
 };
 
-class MessageLog extends React.Component<MessageLogProps> {
+const MessageLog: React.FC<MessageLogProps> = ({classes, className, message, hideMessage}) => {
 
-    handleClose = (event: React.SyntheticEvent<any>, reason?: string) => {
+    const handleClose = (event: React.SyntheticEvent<any>, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-        this.props.hideMessage(this.props.message!.id);
+        hideMessage(message!.id);
     };
 
-    render() {
-        const {classes, className, message} = this.props;
 
-        if (!message) {
-            return null;
-        }
-
-        const MessageIcon = variantIcon[message.type];
-
-        return (
-            <Snackbar
-                open={true}
-                anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
-                onClose={this.handleClose}>
-                <SnackbarContent
-                    className={classNames(classes[message.type], className)}
-                    aria-describedby="client-snackbar"
-                    message={
-                        <span id="client-snackbar" className={classes.message}>
-                            <MessageIcon className={classNames(classes.icon, classes.iconVariant)}/>
-                            {message.text}
-                        </span>
-                    }
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon className={classes.icon}/>
-                        </IconButton>,
-                    ]}
-                />
-            </Snackbar>
-        );
+    if (!message) {
+        return null;
     }
-}
+
+    const MessageIcon = variantIcon[message.type];
+
+    return (
+        <Snackbar
+            open={true}
+            anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
+            onClose={handleClose}>
+            <SnackbarContent
+                className={classNames(classes[message.type], className)}
+                aria-describedby="client-snackbar"
+                message={
+                    <span id="client-snackbar" className={classes.message}>
+                            <MessageIcon className={classNames(classes.icon, classes.iconVariant)}/>
+                        {message.text}
+                        </span>
+                }
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        className={classes.close}
+                        onClick={handleClose}
+                    >
+                        <CloseIcon className={classes.icon}/>
+                    </IconButton>,
+                ]}
+            />
+        </Snackbar>
+    );
+};
 
 export default withStyles(styles)(MessageLog);

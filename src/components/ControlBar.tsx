@@ -13,16 +13,12 @@ const styles = (theme: Theme) => createStyles(
 interface ControlBarProps extends WithStyles<typeof styles> {
 }
 
-class ControlBar extends React.Component<ControlBarProps> {
-
-    render() {
-        const {classes, children} = this.props;
-        return (
-            <form className={classes.root} autoComplete="off">
-                {children}
-            </form>
-        );
-    }
-}
+const ControlBar: React.FC<ControlBarProps> = ({classes, children}) => {
+    return (
+        <form className={classes.root} autoComplete="off">
+            {children}
+        </form>
+    );
+};
 
 export default withStyles(styles)(ControlBar);
