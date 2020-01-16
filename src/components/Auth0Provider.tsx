@@ -110,9 +110,11 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
         setLoading(true);
         await auth0Client.handleRedirectCallback();
         const user = await auth0Client.getUser();
+        const token = await auth0Client.getTokenSilently();
         setLoading(false);
         setIsAuthenticated(true);
         setUser(user);
+        setToken(token);
     };
 
     return (
