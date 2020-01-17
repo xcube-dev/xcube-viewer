@@ -3,7 +3,7 @@ import { ColorBars, ColorBarGroup } from "../model/colorBar";
 
 
 export function getColorBars(apiServerUrl: string): Promise<ColorBars> {
-    return callJsonApi<ColorBars>(apiServerUrl + '/colorbars')
+    return callJsonApi<ColorBars>(`${apiServerUrl}/colorbars`)
         .then(parseColorBars);
 }
 

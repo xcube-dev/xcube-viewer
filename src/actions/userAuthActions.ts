@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import * as auth from '../util/auth'
+import { updateDatasets } from './dataActions';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -42,6 +43,7 @@ export function signIn() {
                       const idToken = await authClient.getUser();
                       const accessToken = await authClient.getTokenSilently();
                       dispatch(receiveSignIn(idToken, accessToken));
+                      dispatch(updateDatasets() as any);
                   })
                   .catch((error) => {
                       // TODO (forman): handle error here!

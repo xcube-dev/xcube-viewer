@@ -1,18 +1,18 @@
-import { callJsonApi } from './callApi';
+import { callJsonApi, makeRequestInit, makeRequestUrl } from './callApi';
 import { Dataset, Dimension, TimeDimension } from '../model/dataset';
 
 
-export function getDatasets(apiServerUrl: string): Promise<Dataset[]> {
-    return callJsonApi<Dataset[]>(apiServerUrl + '/datasets?details=1&tiles=ol4')
+export function getDatasets(apiServerUrl: string, accessToken: string | null): Promise<Dataset[]> {
+    const url = makeRequestUrl(`${apiServerUrl}/datasets`, [['details', '1'], ['tiles','ol4']]);
+    const init = makeRequestInit(accessToken);
+    return callJsonApi<Dataset[]>(url, init)
         .then((result: any) => result['datasets'])
         .then(adjustTimeDimensionsForDatasets);
 }
 
-
 function adjustTimeDimensionsForDatasets(datasets: Dataset[]): Dataset[] {
     return datasets.map(adjustTimeDimensionsForDataset);
 }
-
 
 function adjustTimeDimensionsForDataset(dataset: Dataset): Dataset {
     if (dataset.dimensions && dataset.dimensions.length) {
