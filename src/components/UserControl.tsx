@@ -58,6 +58,7 @@ interface UserControlProps extends WithStyles<typeof styles> {
     hasAuthClient: boolean;
     isBusy: boolean,
     idToken: auth.IdToken | null;
+    accessToken: string | null;
     signIn: () => void;
     signOut: () => void;
 }
@@ -67,6 +68,7 @@ const UserControl: React.FC<UserControlProps> = ({
                                                      hasAuthClient,
                                                      isBusy,
                                                      idToken,
+                                                     accessToken,
                                                      signIn,
                                                      signOut,
                                                  }) => {
@@ -158,7 +160,7 @@ const UserControl: React.FC<UserControlProps> = ({
                         <DialogContentText id="alert-dialog-slide-description">
                             Here, users will be able to see and alter their profile data.
                         </DialogContentText>
-                        <UserProfile/>
+                        <UserProfile idToken={idToken!} accessToken={accessToken}/>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleUserProfileDialogClose} color="primary">

@@ -1,26 +1,27 @@
 import React from 'react';
-import { useAuth0 } from './Auth0Provider';
 
-const UserProfile: React.FC = () => {
-    const {loading, user, token} = useAuth0();
+import * as auth from '../util/auth';
 
-    if (loading || !user) {
-        return <div>Loading...</div>;
-    }
+interface UserProfileProps {
+    idToken: auth.IdToken;
+    accessToken: string | null;
+}
+
+const UserProfile: React.FC<UserProfileProps> = ({idToken, accessToken}) => {
 
     return (
         <div>
-            <img src={user.picture} alt="Profile"/>
+            <img src={idToken.picture} alt="Profile"/>
 
-            <h4>{user.name}</h4>
-            <p>{user.email}</p>
+            <h4>{idToken.name}</h4>
+            <p>{idToken.email}</p>
 
 
             <h5>ID Token</h5>
-            <code>{JSON.stringify(user, null, 2)}</code>
+            <code>{JSON.stringify(idToken, null, 2)}</code>
 
-            <p>Access Token</p>
-            <code>{token}</code>
+            <h5>Access Token</h5>
+            <code>{accessToken || '---'}</code>
 
         </div>
     );

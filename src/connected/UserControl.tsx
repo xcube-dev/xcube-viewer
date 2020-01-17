@@ -12,6 +12,7 @@ const mapStateToProps = (state: AppState) => {
         hasAuthClient: !!userAuthState.hasAuthClient,
         isBusy: userAuthState.status === UserAuthStatus.REQUESTING_SIGN_IN || userAuthState.status === UserAuthStatus.REQUESTING_SIGN_OUT,
         idToken: userAuthState.idToken,
+        accessToken: userAuthState.accessToken,
     };
 };
 
