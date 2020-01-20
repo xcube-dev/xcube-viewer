@@ -28,55 +28,51 @@ interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
 }
 
 
-class TimeSelect extends React.Component<TimeSelectProps> {
+const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange, selectTime}) => {
 
-    private handleTimeChange = (date: MaterialUiPickersDate | null, value?: string | null) => {
-        this.props.selectTime(value ? dateTimeStringToUtcTime(value!) : null);
+    const handleTimeChange = (date: MaterialUiPickersDate | null, value?: string | null) => {
+        selectTime(value ? dateTimeStringToUtcTime(value!) : null);
     };
 
-    render() {
-        let {selectedTime, selectedTimeRange} = this.props;
+    const timeInputLabel = (
+        <InputLabel
+            shrink
+            htmlFor="time-select"
+        >
+            {I18N.get('Time')}
+        </InputLabel>
+    );
 
-        const timeInputLabel = (
-            <InputLabel
-                shrink
-                htmlFor="time-select"
-            >
-                {I18N.get('Time')}
-            </InputLabel>
-        );
+    const isValid = typeof selectedTime === 'number';
+    const timeText = isValid ? utcTimeToLocalIsoDateTimeString(selectedTime!) : null;
 
-        const isValid = typeof selectedTime === 'number';
-        const timeText = isValid ? utcTimeToLocalIsoDateTimeString(selectedTime!) : null;
-
-        let minTimeText, maxTimeText;
-        if (Array.isArray(selectedTimeRange)) {
-            minTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[0]);
-            maxTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[1]);
-        }
-
-        const timeInput = (
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDateTimePicker
-                    //disableToolbar
-                    variant="inline"
-                    format="yyyy-MM-dd hh:mm:ss"
-                    id="time-select"
-                    value={timeText}
-                    minDate={minTimeText}
-                    maxDate={maxTimeText}
-                    onChange={this.handleTimeChange}
-                />
-            </MuiPickersUtilsProvider>
-        );
-
-        return (
-            <ControlBarItem
-                label={timeInputLabel}
-                control={timeInput}
-            />
-        );
+    let minTimeText, maxTimeText;
+    if (Array.isArray(selectedTimeRange)) {
+        minTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[0]);
+        maxTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[1]);
     }
-}
+
+    const timeInput = (
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDateTimePicker
+                //disableToolbar
+                variant="inline"
+                format="yyyy-MM-dd hh:mm:ss"
+                id="time-select"
+                value={timeText}
+                minDate={minTimeText}
+                maxDate={maxTimeText}
+                onChange={handleTimeChange}
+            />
+        </MuiPickersUtilsProvider>
+    );
+
+    return (
+        <ControlBarItem
+            label={timeInputLabel}
+            control={timeInput}
+        />
+    );
+};
 
 export default withStyles(styles)(TimeSelect);

@@ -5,23 +5,24 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import { Theme, WithStyles } from "@material-ui/core";
-import createStyles from "@material-ui/core/styles/createStyles";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import TextField from "@material-ui/core/TextField";
+import { Theme, WithStyles } from '@material-ui/core';
+import createStyles from '@material-ui/core/styles/createStyles';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import InputLabel from '@material-ui/core/InputLabel/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import TextField from '@material-ui/core/TextField';
 
-import { WithLocale } from "../util/lang";
-import { I18N } from "../config";
-import { Server } from "../model/server";
+import { WithLocale } from '../util/lang';
+import { I18N } from '../config';
+import { Server } from '../model/server';
 import { newId } from '../util/id';
+import { useEffect, useRef, useState } from 'react';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -48,12 +49,6 @@ const styles = (theme: Theme) => createStyles(
     });
 
 
-interface ServerDialogState {
-    servers: Server[];
-    selectedServer: Server;
-    dialogMode: "select" | "add" | "edit";
-}
-
 interface ServerDialogProps extends WithStyles<typeof styles>, WithLocale {
     open: boolean;
     servers: Server[];
@@ -62,241 +57,228 @@ interface ServerDialogProps extends WithStyles<typeof styles>, WithLocale {
     closeDialog: (dialogId: string) => void;
 }
 
-class ServerDialog extends React.Component<ServerDialogProps, ServerDialogState> {
+const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, selectedServer, closeDialog, configureServers}) => {
+    const ref = useRef(false);
+    const [servers_, setServers_] = useState(servers);
+    const [selectedServer_, setSelectedServer_] = useState(selectedServer);
+    const [dialogMode, setDialogMode] = useState('select');
 
-    constructor(props: ServerDialogProps) {
-        super(props);
-        this.state = ServerDialog.deriveState(props);
-    }
-
-    static deriveState(props: ServerDialogProps): ServerDialogState {
-        const {servers, selectedServer} = props;
-        return {servers, selectedServer, dialogMode: "select"};
-    }
-
-    componentDidUpdate(prevProps: Readonly<ServerDialogProps>): void {
-        if (prevProps.servers !== this.props.servers
-            || prevProps.selectedServer !== this.props.selectedServer) {
-            this.setState(ServerDialog.deriveState(this.props));
+    useEffect(() => {
+        if (ref.current) {
+            setServers_(servers);
+            setSelectedServer_(selectedServer);
         }
-    }
+        ref.current = true;
+    }, [servers, selectedServer]);
 
-    handleConfirm = () => {
-        const {servers, selectedServer, dialogMode} = this.state;
-        if (dialogMode === "select") {
-            const {closeDialog, configureServers} = this.props;
-            closeDialog("server");
-            configureServers(servers, selectedServer.id);
-        } else if (dialogMode === "add") {
-            this.doAddServer();
-        } else if (dialogMode === "edit") {
-            this.doEditServer();
+    const handleConfirm = () => {
+        if (dialogMode === 'select') {
+            closeDialog('server');
+            configureServers(servers_, selectedServer_.id);
+        } else if (dialogMode === 'add') {
+            doAddServer();
+        } else if (dialogMode === 'edit') {
+            doEditServer();
         }
     };
 
-    handleCancel = () => {
-        const {dialogMode} = this.state;
-        if (dialogMode === "select") {
-            this.doClose();
-            this.setState(ServerDialog.deriveState(this.props))
+    const handleCancel = () => {
+        if (dialogMode === 'select') {
+            doClose();
         } else {
-            this.cancelAddOrEditMode();
+            cancelAddOrEditMode();
         }
     };
 
-    handleClose = () => {
-        this.doClose();
+    const handleClose = () => {
+        doClose();
     };
 
-    handleSelectServer = (event: any) => {
+    const handleSelectServer = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
         const selectedServerId = event.target.value;
-        const selectedServer = this.state.servers.find(server => server.id === selectedServerId)!;
-        this.setState({selectedServer});
+        const selectedServer = servers_.find(server => server.id === selectedServerId)!;
+        setSelectedServer_(selectedServer);
     };
 
-    handleServerNameChange = (event: any) => {
+    const handleServerNameChange = (event: any) => {
         const selectedServerName = event.target.value;
-        const selectedServer = {...this.state.selectedServer, name: selectedServerName};
-        this.setState({selectedServer});
+        const selectedServer = {...selectedServer_, name: selectedServerName};
+        setSelectedServer_(selectedServer);
     };
 
-    handleServerURLChange = (event: any) => {
+    const handleServerURLChange = (event: any) => {
         const selectedServerURL = event.target.value;
-        const selectedServer = {...this.state.selectedServer, url: selectedServerURL};
-        this.setState({selectedServer});
+        const selectedServer = {...selectedServer_, url: selectedServerURL};
+        setSelectedServer_(selectedServer);
     };
 
-    handleAddMode = () => {
-        this.setState({dialogMode: "add"});
+    const handleAddMode = () => {
+        setDialogMode('add');
     };
 
-    handleEditMode = () => {
-        this.setState({dialogMode: "edit"});
+    const handleEditMode = () => {
+        setDialogMode('edit');
     };
 
-    handleRemoveServer = () => {
-        this.doRemoveServer();
+    const handleRemoveServer = () => {
+        doRemoveServer();
     };
 
-    doClose() {
-        const {closeDialog} = this.props;
-        closeDialog("server");
+    const doClose = () => {
+        closeDialog('server');
     };
 
-    getSelectedServerIndex(): number {
-        const selectedServerId = this.state.selectedServer.id;
-        return this.state.servers.findIndex(server => server.id === selectedServerId)!;
-    }
+    const getSelectedServerIndex = (): number => {
+        const selectedServerId = selectedServer_.id;
+        return servers_.findIndex(server => server.id === selectedServerId)!;
+    };
 
-    setSelectedServer(selectedServerIndex: number, selectedServer: Server) {
-        const servers = [...this.state.servers];
+    const setSelectedServer = (selectedServerIndex: number, selectedServer: Server) => {
+        const servers = [...servers_];
         servers[selectedServerIndex] = selectedServer;
-        this.setServers(servers, selectedServer);
+        setServers_(servers);
+        setSelectedServer_(selectedServer);
+        setDialogMode('select');
     };
 
-    setServers(servers: Server[], selectedServer: Server) {
-        this.setState({servers, selectedServer, dialogMode: "select"});
+    const setServers = (servers: Server[], selectedServer: Server) => {
+        setServers_(servers);
+        setSelectedServer_(selectedServer);
+        setDialogMode('select');
     };
 
-    doAddServer() {
-        const selectedServer = {...this.state.selectedServer, id: newId()};
-        const servers = [...this.state.servers, selectedServer];
-        this.setServers(servers, selectedServer);
+    const doAddServer = () => {
+        const selectedServer = {...selectedServer_, id: newId()};
+        const servers = [...servers_, selectedServer];
+        setServers(servers, selectedServer);
     };
 
-    doEditServer() {
-        this.setSelectedServer(this.getSelectedServerIndex(), {...this.state.selectedServer});
+    const doEditServer = () => {
+        setSelectedServer(getSelectedServerIndex(), {...selectedServer_});
     };
 
-    cancelAddOrEditMode() {
-        const selectedServerIndex = this.getSelectedServerIndex();
-        this.setSelectedServer(this.getSelectedServerIndex(), this.state.servers[selectedServerIndex]);
-    }
+    const cancelAddOrEditMode = () => {
+        const selectedServerIndex = getSelectedServerIndex();
+        setSelectedServer(getSelectedServerIndex(), servers_[selectedServerIndex]);
+    };
 
-    doRemoveServer() {
-        const servers = [...this.state.servers];
+    const doRemoveServer = () => {
+        const servers = [...servers_];
         if (servers.length < 2) {
-            throw new Error("internal error: server list cannot be emptied");
+            throw new Error('internal error: server list cannot be emptied');
         }
-        const selectedServerIndex = this.getSelectedServerIndex();
+        const selectedServerIndex = getSelectedServerIndex();
         const selectedServer = servers[selectedServerIndex + (selectedServerIndex > 0 ? -1 : 1)];
         servers.splice(selectedServerIndex, 1);
-        this.setServers(servers, selectedServer);
+        setServers(servers, selectedServer);
     };
 
-    render() {
-        const {classes, open} = this.props;
-        const {servers, selectedServer, dialogMode} = this.state;
+    const menuItems = servers_.map((server, index) => (
+        <MenuItem key={index} value={server.id}>{server.name}</MenuItem>
+    ));
 
-        const menuItems = servers.map((server, index) => (
-            <MenuItem key={index} value={server.id}>{server.name}</MenuItem>
-        ));
+    let okButtonName;
+    if (dialogMode === 'add') {
+        okButtonName = I18N.get('Add');
+    } else if (dialogMode === 'edit') {
+        okButtonName = I18N.get('Save');
+    } else {
+        okButtonName = I18N.get('OK');
+    }
 
-        // TODO (forman): I18N
-        let okButtonName;
-        if (dialogMode === "add") {
-            okButtonName = I18N.get("Add");
-        } else if (dialogMode === "edit") {
-            okButtonName = I18N.get("Save");
-        } else {
-            okButtonName = I18N.get("OK");
-        }
+    let dialogTitle;
+    if (dialogMode === 'add') {
+        dialogTitle = I18N.get('Add Server');
+    } else if (dialogMode === 'edit') {
+        dialogTitle = I18N.get('Edit Server');
+    } else {
+        dialogTitle = I18N.get('Select Server');
+    }
 
-        // TODO (forman): I18N
-        let dialogTitle;
-        if (dialogMode === "add") {
-            dialogTitle = I18N.get("Add Server");
-        } else if (dialogMode === "edit") {
-            dialogTitle = I18N.get("Edit Server");
-        } else {
-            dialogTitle = I18N.get("Select Server");
-        }
-
-        let dialogContent;
-        if (dialogMode === "add" || dialogMode === "edit") {
-            dialogContent = (
-                <DialogContent dividers>
-                    <TextField
-                        required
-                        id="server-name"
-                        label="Name"
-                        className={classes.textField}
-                        margin="normal"
-                        value={selectedServer.name}
-                        onChange={this.handleServerNameChange}
-                    />
-                    <br/>
-                    <TextField
-                        required
-                        id="server-url"
-                        label="URL"
-                        className={classes.textField2}
-                        margin="normal"
-                        value={selectedServer.url}
-                        onChange={this.handleServerURLChange}
-                    />
-                </DialogContent>
-            );
-        } else {
-            dialogContent = (
-                <DialogContent dividers>
-                    <div>
-                        <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="server-name">Name</InputLabel>
-                            <Select
-                                value={selectedServer.id}
-                                onChange={this.handleSelectServer}
-                                inputProps={{
-                                    name: 'server-name',
-                                    id: 'server-name',
-                                }}>
-                                {menuItems}
-                            </Select>
-                            <FormHelperText>{selectedServer.url}</FormHelperText>
-                        </FormControl>
-                        <IconButton
-                            className={classes.button}
-                            aria-label="Add"
-                            color="primary"
-                            onClick={this.handleAddMode}
-                        >
-                            <AddIcon fontSize="small"/>
-                        </IconButton>
-                        <IconButton
-                            className={classes.button}
-                            aria-label="Edit"
-                            onClick={this.handleEditMode}
-                        >
-                            <EditIcon fontSize="small"/>
-                        </IconButton>
-                        <IconButton
-                            className={classes.button}
-                            aria-label="Delete"
-                            disabled={servers.length < 2}
-                            onClick={this.handleRemoveServer}
-                        >
-                            <DeleteIcon fontSize="small"/>
-                        </IconButton>
-                    </div>
-                </DialogContent>
-            );
-        }
-
-        return (
-            <Dialog
-                open={open}
-                onClose={this.handleClose}
-                aria-labelledby="server-dialog-title"
-            >
-                <DialogTitle id="server-dialog-title">{dialogTitle}</DialogTitle>
-                {dialogContent}
-                <DialogActions>
-                    <Button onClick={this.handleCancel}>{I18N.get("Cancel")}</Button>
-                    <Button onClick={this.handleConfirm} autoFocus color="primary">{okButtonName}</Button>
-                </DialogActions>
-            </Dialog>
+    let dialogContent;
+    if (dialogMode === 'add' || dialogMode === 'edit') {
+        dialogContent = (
+            <DialogContent dividers>
+                <TextField
+                    required
+                    id="server-name"
+                    label="Name"
+                    className={classes.textField}
+                    margin="normal"
+                    value={selectedServer_.name}
+                    onChange={handleServerNameChange}
+                />
+                <br/>
+                <TextField
+                    required
+                    id="server-url"
+                    label="URL"
+                    className={classes.textField2}
+                    margin="normal"
+                    value={selectedServer_.url}
+                    onChange={handleServerURLChange}
+                />
+            </DialogContent>
+        );
+    } else {
+        dialogContent = (
+            <DialogContent dividers>
+                <div>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="server-name">Name</InputLabel>
+                        <Select
+                            value={selectedServer_.id}
+                            onChange={handleSelectServer}
+                            inputProps={{
+                                name: 'server-name',
+                                id: 'server-name',
+                            }}>
+                            {menuItems}
+                        </Select>
+                        <FormHelperText>{selectedServer_.url}</FormHelperText>
+                    </FormControl>
+                    <IconButton
+                        className={classes.button}
+                        aria-label="Add"
+                        color="primary"
+                        onClick={handleAddMode}
+                    >
+                        <AddIcon fontSize="small"/>
+                    </IconButton>
+                    <IconButton
+                        className={classes.button}
+                        aria-label="Edit"
+                        onClick={handleEditMode}
+                    >
+                        <EditIcon fontSize="small"/>
+                    </IconButton>
+                    <IconButton
+                        className={classes.button}
+                        aria-label="Delete"
+                        disabled={servers_.length < 2}
+                        onClick={handleRemoveServer}
+                    >
+                        <DeleteIcon fontSize="small"/>
+                    </IconButton>
+                </div>
+            </DialogContent>
         );
     }
-}
+
+    return (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="server-dialog-title"
+        >
+            <DialogTitle id="server-dialog-title">{dialogTitle}</DialogTitle>
+            {dialogContent}
+            <DialogActions>
+                <Button onClick={handleCancel}>{I18N.get('Cancel')}</Button>
+                <Button onClick={handleConfirm} autoFocus color="primary">{okButtonName}</Button>
+            </DialogActions>
+        </Dialog>
+    );
+};
 
 export default withStyles(styles)(ServerDialog);

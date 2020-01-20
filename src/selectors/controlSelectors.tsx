@@ -1,6 +1,12 @@
 ///<reference path="../util/find.ts"/>
 import * as React from 'react';
 import { createSelector } from 'reselect'
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
+import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlXYZSource } from 'ol/source/XYZ';
+import { get as olProjGet } from 'ol/proj'
+
 import { AppState } from '../states/appState';
 import {
     datasetsSelector,
@@ -8,10 +14,6 @@ import {
     userPlaceGroupSelector,
     timeSeriesGroupsSelector
 } from './dataSelectors';
-
-
-import { OlGeoJSONFormat, OlTileGrid, OlVectorSource, OlXYZSource, olProjGet } from '../components/ol/types';
-
 import {
     Dataset,
     findDataset,
@@ -33,6 +35,8 @@ import { Vector } from '../components/ol/layer/Vector';
 import { Layers } from '../components/ol/layer/Layers';
 import { findIndexCloseTo } from '../util/find';
 import { Server } from '../model/server';
+import { MapGroup, maps, MapSource } from '../util/maps';
+import { getTileAccess } from '../config';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -42,6 +46,7 @@ export const selectedTimeSelector = (state: AppState) => state.controlState.sele
 export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
 export const timeAnimationActiveSelector = (state: AppState) => state.controlState.timeAnimationActive;
+export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -70,7 +75,7 @@ export const selectedVariableSelector = createSelector(
 export const selectedVariableUnitsSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
-        return variable && variable.units || '-';
+        return (variable && variable.units) || '-';
     }
 );
 
@@ -84,7 +89,7 @@ export const selectedVariableColorBarMinMaxSelector = createSelector(
 export const selectedVariableColorBarNameSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
-        return variable && variable.colorBarName || 'viridis';
+        return (variable && variable.colorBarName) || 'viridis';
     }
 );
 
@@ -193,7 +198,7 @@ export const timeSeriesPlaceInfosSelector = createSelector(
     timeSeriesGroupsSelector,
     placeGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
-        const placeInfos = {};
+        const placeInfos: any = {};
         forEachPlace(placeGroups, (placeGroup, place, label, color) => {
             for (let timeSeriesGroup of timeSeriesGroups) {
                 if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {
@@ -310,7 +315,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
                 transition: timeAnimationActive ? 0 : 250,
             });
         return (
-            <Tile id={'variable'} source={source}/>
+            <Tile id={'variable'} source={source} zIndex={10}/>
         );
     }
 );
@@ -365,3 +370,46 @@ export const selectedServerSelector = createSelector(
     }
 );
 
+export const baseMapLabelSelector = createSelector(
+    baseMapUrlSelector,
+    (baseMapUrl: string): string => {
+        const map = findMap(baseMapUrl);
+        if (map) {
+            return `${map.group.name} / ${map.dataset.name}`;
+        }
+        return baseMapUrl;
+    }
+);
+
+export const baseMapLayerSelector = createSelector(
+    baseMapUrlSelector,
+    (baseMapUrl: string): JSX.Element | null => {
+        const map = findMap(baseMapUrl);
+        if (map) {
+            const access = getTileAccess(map.group.name);
+            const source = new OlXYZSource(
+                {
+                    url: map.dataset.endpoint + (access ? `?${access.param}=${access.token}` : ''),
+                    attributions: [
+                        `&copy; <a href=&quot;${map.group.link}&quot;>${map.group.name}</a>`,
+                    ]
+                });
+            return <Tile id={map.group.name + '-' + map.dataset.name} source={source} zIndex={0}/>;
+        }
+        if (baseMapUrl) {
+            const source = new OlXYZSource({url: baseMapUrl});
+            return <Tile id={baseMapUrl} source={source} zIndex={0}/>;
+        }
+        return null;
+    }
+);
+
+function findMap(endpoint: string): { group: MapGroup, dataset: MapSource } | null {
+    for (let group of maps) {
+        const dataset = group.datasets.find(dataset => dataset.endpoint === endpoint);
+        if (dataset) {
+            return {group, dataset};
+        }
+    }
+    return null;
+}

@@ -25,9 +25,9 @@ export function findIndexCloseTo(array: number[], value: number): number {
     for (let i = 0; i < n; i++) {
         otherValue = array[i2];
         if (value < otherValue) {
-            [i1, i2, i3] = [i1, Math.floor((i1 + i2) / 2), i2];
+            [i2, i3] = [Math.floor((i1 + i2) / 2), i2];
         } else if (value > otherValue) {
-            [i1, i2, i3] = [i2, Math.floor((i2 + i3) / 2), i3];
+            [i1, i2] = [i2, Math.floor((i2 + i3) / 2)];
         } else {
             return i2;
         }

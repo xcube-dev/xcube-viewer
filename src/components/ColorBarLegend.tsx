@@ -66,12 +66,12 @@ const useStyles = makeStyles(theme => ({
 
 
 interface ColorBarLegendProps {
-    variableName: string;
+    variableName: string | null;
     variableUnits: string;
     variableColorBarMinMax: [number, number];
     variableColorBarName: string;
     updateVariableColorBar: (colorBarMinMax: [number, number], colorBarName: string) => void;
-    colorBars: ColorBars;
+    colorBars: ColorBars | null;
     width?: number | string;
     height?: number | string;
     numTicks?: number;
@@ -95,7 +95,7 @@ export default function ColorBarLegend({
     const colorBarMinMaxEditorOpen = Boolean(colorBarMinMaxAnchorEl);
     const colorBarNameEditorOpen = Boolean(colorBarNameAnchorEl);
 
-    if (!colorBars) {
+    if (!variableName || !colorBars) {
         return null;
     }
 
@@ -245,6 +245,7 @@ export default function ColorBarLegend({
                             <Tooltip title={name} placement="left">
                                 <img
                                     src={`data:image/png;base64,${colorBars.images[name]}`}
+                                    alt={'Color Bar'}
                                     width={'100%'}
                                     height={'100%'}
                                     onClick={() => {
@@ -277,6 +278,7 @@ export default function ColorBarLegend({
             </div>
             <img
                 src={`data:image/png;base64,${imageData}`}
+                alt={'Color Bar'}
                 width={width || 240}
                 height={height || 24}
                 onClick={handleOpenColorBarNameEditor}

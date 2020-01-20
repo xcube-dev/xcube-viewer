@@ -1,4 +1,6 @@
-import { OlMap, OlScaleLineControl, OlScaleLineControlOptions } from '../types';
+import { default as OlMap } from 'ol/Map';
+import { default as OlScaleLineControl } from 'ol/control/ScaleLine';
+import { Options as OlScaleLineControlOptions} from 'ol/control/ScaleLine';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 

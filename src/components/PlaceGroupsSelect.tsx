@@ -34,82 +34,83 @@ interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
     language?: string;
 }
 
-class PlaceGroupsSelect extends React.Component<PlaceGroupSelectProps> {
+const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
+                                                                classes,
+                                                                placeGroups,
+                                                                selectPlaceGroups,
+                                                                selectedPlaceGroupIds,
+                                                                selectedPlaceGroupsTitle,
+                                                                removeAllUserPlaces,
+                                                            }) => {
 
-    handlePlaceGroupsChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const {selectPlaceGroups} = this.props;
+    const handlePlaceGroupsChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
         selectPlaceGroups(event.target.value as any as string[] || null);
     };
 
-    handleRemoveButtonClick = () => {
-        const {removeAllUserPlaces} = this.props;
+    const handleRemoveButtonClick = () => {
         removeAllUserPlaces();
     };
 
-    renderSelectedPlaceGroupsTitle = () => {
-        return this.props.selectedPlaceGroupsTitle;
+    const renderSelectedPlaceGroupsTitle = () => {
+        return selectedPlaceGroupsTitle;
     };
 
-    render() {
-        const {classes} = this.props;
+    placeGroups = placeGroups || [];
+    selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-        const placeGroups = this.props.placeGroups || [];
-        const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
-
-        if (placeGroups.length == 0 || placeGroups.length == 1 && placeGroups[0].id == 'user') {
-            return null;
-        }
-
-        const placeGroupsSelectLabel = (
-            <InputLabel
-                shrink
-                htmlFor="place-groups-select"
-            >
-                {I18N.get('Places')}
-            </InputLabel>
-        );
-
-        const placeGroupsSelect = (
-            <Select
-                multiple
-                displayEmpty
-                onChange={this.handlePlaceGroupsChange}
-                input={<Input name="place-groups" id="place-groups-select"/>}
-                value={selectedPlaceGroupIds}
-                renderValue={this.renderSelectedPlaceGroupsTitle}
-                name="place-groups"
-                className={classes.select}
-            >
-                {placeGroups.map(placeGroup => (
-                    <MenuItem
-                        key={placeGroup.id}
-                        value={placeGroup.id}
-                    >
-                        <Checkbox checked={selectedPlaceGroupIds.indexOf(placeGroup.id) > -1}/>
-                        <ListItemText primary={placeGroup.title}/>
-                    </MenuItem>
-                ))}
-            </Select>
-        );
-
-        const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user';
-        const placeGroupRemoveButton = (
-            <IconButton
-                disabled={!removeEnabled}
-                onClick={this.handleRemoveButtonClick}
-            >
-                {<RemoveCircleOutlineIcon/>}
-            </IconButton>
-        );
-
-        return (
-            <ControlBarItem
-                label={placeGroupsSelectLabel}
-                control={placeGroupsSelect}
-                actions={placeGroupRemoveButton}
-            />
-        );
+    if (placeGroups.length === 0 || (placeGroups.length === 1 && placeGroups[0].id === 'user')) {
+        return null;
     }
-}
+
+    const placeGroupsSelectLabel = (
+        <InputLabel
+            shrink
+            htmlFor="place-groups-select"
+        >
+            {I18N.get('Places')}
+        </InputLabel>
+    );
+
+    const placeGroupsSelect = (
+        <Select
+            multiple
+            displayEmpty
+            onChange={handlePlaceGroupsChange}
+            input={<Input name="place-groups" id="place-groups-select"/>}
+            value={selectedPlaceGroupIds}
+            renderValue={renderSelectedPlaceGroupsTitle}
+            name="place-groups"
+            className={classes.select}
+        >
+            {placeGroups.map(placeGroup => (
+                <MenuItem
+                    key={placeGroup.id}
+                    value={placeGroup.id}
+                >
+                    <Checkbox checked={selectedPlaceGroupIds!.indexOf(placeGroup.id) > -1}/>
+                    <ListItemText primary={placeGroup.title}/>
+                </MenuItem>
+            ))}
+        </Select>
+    );
+
+    const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user';
+    const placeGroupRemoveButton = (
+        <IconButton
+            disabled={!removeEnabled}
+            onClick={handleRemoveButtonClick}
+        >
+            {<RemoveCircleOutlineIcon/>}
+        </IconButton>
+    );
+
+    return (
+        <ControlBarItem
+            label={placeGroupsSelectLabel}
+            control={placeGroupsSelect}
+            actions={placeGroupRemoveButton}
+        />
+    );
+};
 
 export default withStyles(styles)(PlaceGroupsSelect);

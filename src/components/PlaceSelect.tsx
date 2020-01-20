@@ -14,13 +14,13 @@ import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
 
 
+// noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
         select: {
             minWidth: '5em',
         },
-        button: {
-        },
+        button: {},
     });
 
 interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
@@ -35,82 +35,85 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     removeUserPlace: (placeId: string, places: Place[]) => void;
 }
 
-class PlaceSelect extends React.Component<PlaceSelectProps> {
+const PlaceSelect: React.FC<PlaceSelectProps> = ({
+                                                     classes,
+                                                     selectPlace,
+                                                     placeLabels,
+                                                     selectedPlaceId,
+                                                     selectedPlaceGroupIds,
+                                                     removeUserPlace,
+                                                     places,
+                                                 }) => {
 
-    handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectPlace(event.target.value || null, this.props.places, true);
+    const handlePlaceChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
+        selectPlace(event.target.value || null, places, true);
     };
 
-    handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-        const {removeUserPlace, selectedPlaceId, places} = this.props;
+    const handleRemoveButtonClick = () => {
         if (selectedPlaceId !== null) {
             removeUserPlace(selectedPlaceId, places);
         }
     };
 
-    render() {
-        const {classes} = this.props;
+    places = places || [];
+    placeLabels = placeLabels || [];
+    selectedPlaceId = selectedPlaceId || '';
+    selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-        const places = this.props.places || [];
-        const placeLabels = this.props.placeLabels || [];
-        const selectedPlaceId = this.props.selectedPlaceId || '';
-        const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
-
-        if (places.length === 0) {
-            return null;
-        }
-
-        const placeSelectLabel = (
-            <InputLabel
-                shrink
-                htmlFor="place-select"
-            >
-                {I18N.get('Place')}
-            </InputLabel>
-        );
-
-        const placeSelect = (
-            <Select
-                value={selectedPlaceId}
-                onChange={this.handlePlaceChange}
-                input={<Input name="place" id="place-select"/>}
-                displayEmpty
-                name="place"
-                className={classes.select}
-            >
-                {places.map((place, i) => (
-                    <MenuItem
-                        key={place.id}
-                        value={place.id}
-                        selected={place.id === selectedPlaceId}
-                    >
-                        {placeLabels[i]}
-                    </MenuItem>
-                ))}
-            </Select>
-        );
-
-        const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
-                              && selectedPlaceId !== '';
-        const placeRemoveButton = (
-            <IconButton
-                className={classes.button}
-                disabled={!removeEnabled}
-                onClick={this.handleRemoveButtonClick}
-            >
-                {<RemoveCircleOutlineIcon/>}
-            </IconButton>
-        );
-
-        return (
-            <ControlBarItem
-                label={placeSelectLabel}
-                control={placeSelect}
-                actions={placeRemoveButton}
-            />
-        );
+    if (places.length === 0) {
+        return null;
     }
-}
+
+    const placeSelectLabel = (
+        <InputLabel
+            shrink
+            htmlFor="place-select"
+        >
+            {I18N.get('Place')}
+        </InputLabel>
+    );
+
+    const placeSelect = (
+        <Select
+            value={selectedPlaceId}
+            onChange={handlePlaceChange}
+            input={<Input name="place" id="place-select"/>}
+            displayEmpty
+            name="place"
+            className={classes.select}
+        >
+            {places.map((place, i) => (
+                <MenuItem
+                    key={place.id}
+                    value={place.id}
+                    selected={place.id === selectedPlaceId}
+                >
+                    {placeLabels[i]}
+                </MenuItem>
+            ))}
+        </Select>
+    );
+
+    const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
+                          && selectedPlaceId !== '';
+    const placeRemoveButton = (
+        <IconButton
+            className={classes.button}
+            disabled={!removeEnabled}
+            onClick={handleRemoveButtonClick}
+        >
+            {<RemoveCircleOutlineIcon/>}
+        </IconButton>
+    );
+
+    return (
+        <ControlBarItem
+            label={placeSelectLabel}
+            control={placeSelect}
+            actions={placeRemoveButton}
+        />
+    );
+};
 
 export default withStyles(styles)(PlaceSelect);
 

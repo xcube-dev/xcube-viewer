@@ -4,7 +4,7 @@ import { Dataset, Dimension, TimeDimension } from '../model/dataset';
 
 export function getDatasets(apiServerUrl: string): Promise<Dataset[]> {
     return callJsonApi<Dataset[]>(apiServerUrl + '/datasets?details=1&tiles=ol4')
-        .then(result => result['datasets'])
+        .then((result: any) => result['datasets'])
         .then(adjustTimeDimensionsForDatasets);
 }
 

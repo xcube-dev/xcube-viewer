@@ -8,7 +8,7 @@ import { appReducer } from './reducers/appReducer';
 import { updateDatasets, updateColorBars, updateServerInfo } from './actions/dataActions';
 import { changeLocale } from "./actions/controlActions";
 import App from './connected/App';
-import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker';
 import { getCurrentLocale } from "./util/lang";
 
 import './index.css';
@@ -36,4 +36,7 @@ ReactDOM.render(
     document.getElementById('root') as HTMLElement
 );
 
-registerServiceWorker();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();

@@ -18,8 +18,7 @@ const styles = (theme: Theme) => createStyles(
             marginBottom: theme.spacing(1),
             minWidth: 120,
         },
-        selectEmpty: {
-        },
+        selectEmpty: {},
     });
 
 interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
@@ -28,53 +27,49 @@ interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectDataset: (datasetId: string | null, dataset: Dataset[]) => void;
 }
 
-class DatasetSelect extends React.Component<DatasetSelectProps> {
+const DatasetSelect: React.FC<DatasetSelectProps> = ({classes, selectedDatasetId, datasets, selectDataset}) => {
 
-    handleDatasetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectDataset(event.target.value || null, this.props.datasets);
+    const handleDatasetChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
+        selectDataset(event.target.value || null, datasets);
     };
 
-    render() {
-        const {classes} = this.props;
+    selectedDatasetId = selectedDatasetId || '';
+    datasets = datasets || [];
 
-        const selectedDatasetId = this.props.selectedDatasetId || '';
-        const datasets = this.props.datasets || [];
-
-        const datasetSelectLabel = (
-            <InputLabel shrink htmlFor="dataset-select">
+    const datasetSelectLabel = (
+        <InputLabel shrink htmlFor="dataset-select">
             {I18N.get('Dataset')}
         </InputLabel>
-        );
+    );
 
-        const datasetSelect = (
-            <Select
-                value={selectedDatasetId}
-                onChange={this.handleDatasetChange}
-                input={<Input name="dataset" id="dataset-select"/>}
-                displayEmpty
-                name="dataset"
-                className={classes.selectEmpty}
-            >
-                {datasets.map(dataset => (
-                    <MenuItem
-                        key={dataset.id}
-                        value={dataset.id}
-                        selected={dataset.id === selectedDatasetId}
-                    >
-                        {dataset.title}
-                    </MenuItem>
-                ))}
-            </Select>
-        );
+    const datasetSelect = (
+        <Select
+            value={selectedDatasetId}
+            onChange={handleDatasetChange}
+            input={<Input name="dataset" id="dataset-select"/>}
+            displayEmpty
+            name="dataset"
+            className={classes.selectEmpty}
+        >
+            {datasets.map(dataset => (
+                <MenuItem
+                    key={dataset.id}
+                    value={dataset.id}
+                    selected={dataset.id === selectedDatasetId}
+                >
+                    {dataset.title}
+                </MenuItem>
+            ))}
+        </Select>
+    );
 
-        return (
-            <ControlBarItem
-                label={datasetSelectLabel}
-                control={datasetSelect}
-            />
-        );
-    }
-}
+    return (
+        <ControlBarItem
+            label={datasetSelectLabel}
+            control={datasetSelect}
+        />
+    );
+};
 
 export default withStyles(styles)(DatasetSelect);
 

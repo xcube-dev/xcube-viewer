@@ -11,6 +11,7 @@ import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListSubheader from "@material-ui/core/ListSubheader";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Paper from '@material-ui/core/Paper';
@@ -20,6 +21,7 @@ import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 import { I18N } from '../config';
 import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
 import { Server, ServerInfo } from '../model/server';
+import { maps, MapGroup, MapSource } from '../util/maps';
 
 
 const useStyles = makeStyles(theme => ({
@@ -67,6 +69,7 @@ export default function SettingsDialog(
     }: SettingsDialogProps
 ) {
     const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
+    const [baseMapMenuAnchor, setBaseMapMenuAnchor] = React.useState(null);
     const classes = useStyles();
 
     if (!open) {
@@ -81,23 +84,26 @@ export default function SettingsDialog(
         openDialog('server');
     }
 
-    function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLSelectElement>) {
+    function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         updateSettings({...settings, timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
     }
 
-    const localeMenuItems = Object.getOwnPropertyNames(I18N.languages).map(langLocale => {
-        const langName = I18N.languages[langLocale];
-        return (
-            <MenuItem
-                button
-                key={langLocale}
-                selected={langLocale === settings.locale}
-                onClick={() => changeLocale(langLocale)}
-            >
-                <ListItemText primary={langName}/>
-            </MenuItem>
-        );
-    });
+    let localeMenuItems = null;
+    if (Boolean(languageMenuAnchor)) {
+        localeMenuItems = Object.getOwnPropertyNames(I18N.languages).map(langLocale => {
+            const langName = I18N.languages[langLocale];
+            return (
+                <MenuItem
+                    button
+                    key={langLocale}
+                    selected={langLocale === settings.locale}
+                    onClick={() => changeLocale(langLocale)}
+                >
+                    <ListItemText primary={langName}/>
+                </MenuItem>
+            );
+        });
+    }
 
     function handleLanguageMenuOpen(event: any) {
         setLanguageMenuAnchor(event.currentTarget);
@@ -106,6 +112,42 @@ export default function SettingsDialog(
     function handleLanguageMenuClose() {
         setLanguageMenuAnchor(null);
     }
+
+    let baseMapMenuItems: null | React.ReactElement[] = null;
+    if (Boolean(baseMapMenuAnchor)) {
+        baseMapMenuItems = [];
+        maps.forEach((mapGroup: MapGroup, i: number) => {
+            baseMapMenuItems!.push(<ListSubheader key={i} disableSticky={true}>{mapGroup.name}</ListSubheader>);
+            mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
+                baseMapMenuItems!.push(
+                    <MenuItem
+                        button
+                        key={i + '.' + j}
+                        selected={settings.baseMapUrl === mapSource.endpoint}
+                        onClick={() => updateSettings({...settings, baseMapUrl: mapSource.endpoint})}>
+                        <ListItemText primary={mapSource.name}/>
+                    </MenuItem>
+                );
+            });
+        });
+    }
+
+    function handleBaseMapMenuOpen(event: any) {
+        setBaseMapMenuAnchor(event.currentTarget);
+    }
+
+    function handleBaseMapMenuClose() {
+        setBaseMapMenuAnchor(null);
+    }
+
+    let baseMapLabel = settings.baseMapUrl;
+    maps.forEach((mapGroup: MapGroup) => {
+        mapGroup.datasets.forEach((mapSource: MapSource) => {
+            if (mapSource.endpoint === settings.baseMapUrl) {
+                baseMapLabel = `${mapGroup.name} / ${mapSource.name}`;
+            }
+        });
+    });
 
     return (
         <div>
@@ -138,8 +180,8 @@ export default function SettingsDialog(
                                 onChange={handleTimeAnimationIntervalChange}
                                 margin="normal"
                             >
-                                {TIME_ANIMATION_INTERVALS.map(value => (
-                                    <MenuItem key={value} value={value}>{value + ' ms'}</MenuItem>
+                                {TIME_ANIMATION_INTERVALS.map((value, i) => (
+                                    <MenuItem key={i} value={value}>{value + ' ms'}</MenuItem>
                                 ))}
                             </TextField>
                         </SettingsSubPanel>
@@ -173,6 +215,11 @@ export default function SettingsDialog(
                     </SettingsPanel>
 
                     <SettingsPanel title={I18N.get('Map')}>
+                        <SettingsSubPanel
+                            label={I18N.get('Base map')}
+                            value={baseMapLabel}
+                            onClick={handleBaseMapMenuOpen}>
+                        </SettingsSubPanel>
                         <SettingsSubPanel label={I18N.get('Image smoothing')}
                                           value={getOnOff(settings.imageSmoothingEnabled)}>
                             <ToggleSetting
@@ -199,6 +246,15 @@ export default function SettingsDialog(
                 onClose={handleLanguageMenuClose}
             >
                 {localeMenuItems}
+            </Menu>
+
+            <Menu
+                anchorEl={baseMapMenuAnchor}
+                keepMounted
+                open={Boolean(baseMapMenuAnchor)}
+                onClose={handleBaseMapMenuClose}
+            >
+                {baseMapMenuItems}
             </Menu>
 
         </div>
@@ -284,8 +340,8 @@ const ToggleSetting = (props: ToggleSettingProps) => {
     const {propertyName, settings, updateSettings} = props;
     return (
         <Switch
-            checked={settings[propertyName]}
-            onChange={() => updateSettings({...settings, [propertyName]: !props.settings[propertyName]})}
+            checked={(settings as any)[propertyName]}
+            onChange={() => updateSettings({...settings, [propertyName]: !((settings as any)[propertyName])})}
         />
     );
 };

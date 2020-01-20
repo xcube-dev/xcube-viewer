@@ -20,8 +20,7 @@ const styles = (theme: Theme) => createStyles(
             marginBottom: theme.spacing(1),
             minWidth: 120,
         },
-        selectEmpty: {
-        },
+        selectEmpty: {},
         button: {
             margin: theme.spacing(0.1),
         },
@@ -35,67 +34,71 @@ interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
     addTimeSeries: () => void;
 }
 
-class VariableSelect extends React.Component<VariableSelectProps> {
+const VariableSelect: React.FC<VariableSelectProps> = ({
+                                                           classes,
+                                                           canAddTimeSeries,
+                                                           selectedVariableName,
+                                                           variables,
+                                                           selectVariable,
+                                                           addTimeSeries
+                                                       }) => {
 
-    handleVariableChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectVariable(event.target.value || null);
+    const handleVariableChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
+        selectVariable(event.target.value || null);
     };
 
-    handleAddTimeSeriesButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-        this.props.addTimeSeries();
+    const handleAddTimeSeriesButtonClick = () => {
+        addTimeSeries();
     };
 
-    render() {
-        const {classes, canAddTimeSeries} = this.props;
 
-        const selectedVariableName = this.props.selectedVariableName || '';
-        const variables = this.props.variables || [];
+    selectedVariableName = selectedVariableName || '';
+    variables = variables || [];
 
-        const variableSelectLabel = (
-            <InputLabel shrink htmlFor="variable-select">
-                {I18N.get('Variable')}
-            </InputLabel>
-        );
+    const variableSelectLabel = (
+        <InputLabel shrink htmlFor="variable-select">
+            {I18N.get('Variable')}
+        </InputLabel>
+    );
 
-        const variableSelect = (
-            <Select
-                className={classes.selectEmpty}
-                value={selectedVariableName}
-                onChange={this.handleVariableChange}
-                input={<Input name="variable" id="variable-select"/>}
-                displayEmpty
-                name="variable"
-            >
-                {variables.map(variable => (
-                    <MenuItem
-                        key={variable.name}
-                        value={variable.name}
-                        selected={variable.name === selectedVariableName}
-                    >
-                        {variable.title || variable.name}
-                    </MenuItem>
-                ))}
-            </Select>
-        );
-        const timeSeriesButton = (
-            <IconButton
-                className={classes.button}
-                disabled={!canAddTimeSeries}
-                onClick={this.handleAddTimeSeriesButtonClick}
-            >
-                {<TimelineIcon/>}
-            </IconButton>
-        );
+    const variableSelect = (
+        <Select
+            className={classes.selectEmpty}
+            value={selectedVariableName}
+            onChange={handleVariableChange}
+            input={<Input name="variable" id="variable-select"/>}
+            displayEmpty
+            name="variable"
+        >
+            {variables.map(variable => (
+                <MenuItem
+                    key={variable.name}
+                    value={variable.name}
+                    selected={variable.name === selectedVariableName}
+                >
+                    {variable.title || variable.name}
+                </MenuItem>
+            ))}
+        </Select>
+    );
+    const timeSeriesButton = (
+        <IconButton
+            className={classes.button}
+            disabled={!canAddTimeSeries}
+            onClick={handleAddTimeSeriesButtonClick}
+        >
+            {<TimelineIcon/>}
+        </IconButton>
+    );
 
-        return (
-            <ControlBarItem
-                label={variableSelectLabel}
-                control={variableSelect}
-                actions={timeSeriesButton}
-            />
-        );
-    }
-}
+    return (
+        <ControlBarItem
+            label={variableSelectLabel}
+            control={variableSelect}
+            actions={timeSeriesButton}
+        />
+    );
+};
 
 export default withStyles(styles)(VariableSelect);
 

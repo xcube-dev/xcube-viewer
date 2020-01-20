@@ -1,9 +1,14 @@
 import * as React from 'react';
+import { default as OlMap } from 'ol/Map';
+import { default as OlBaseObject } from 'ol/Object';
+import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
+import { default as OlView } from 'ol/View';
+import { default as OlEvent } from 'ol/events/Event';
+import { MapOptions as OlMapOptions } from 'ol/PluggableMap';
+import { fromLonLat as olProjFromLonLat } from 'ol/proj';
 
 import 'ol/ol.css';
 import './Map.css';
-
-import { OlMap, OlMapOptions, OlMapBrowserEvent, OlView, OlBaseObject, OlEvent, olProjFromLonLat } from './types';
 
 export type MapElement = React.ReactElement<any> | null | undefined;
 
@@ -100,9 +105,8 @@ export class Map extends React.Component<MapProps, MapState> {
 
         let map: OlMap | undefined;
         if (this.props.isStale) {
-            const mapObject = this.contextValue.mapObjects[id];
-            if (mapObject && mapObject['addControl'] && mapObject['addLayer'] && mapObject['setTarget']) {
-                map = mapObject as OlMap;
+            const map = this.contextValue.mapObjects[id];
+            if (map instanceof OlMap) {
                 map.setTarget(mapDiv);
             }
         }
