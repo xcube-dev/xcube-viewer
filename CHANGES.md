@@ -1,5 +1,12 @@
 ## Changes in version 0.4.0 (in development)
 
+* Users can now login and sign on (#22). 
+
+
+### Enhancements
+
+## Changes in version 0.3.2
+
 ### Enhancements
 
 * It is now possible to change the base map layer from settings. (#30)
