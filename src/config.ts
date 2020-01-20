@@ -18,7 +18,7 @@ import { LanguageDictionary } from './util/lang';
 import { getQueryParameterByName } from './util/qparam';
 import lang from './resources/lang.json';
 
-const version = '0.4.0-dev.0';
+const version = '0.3.2';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
