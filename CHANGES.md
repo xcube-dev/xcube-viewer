@@ -2,6 +2,8 @@
 
 ### Enhancements
 
+* Notification "snackbars" will now disappear after 5 seconds (#107).
+
 ## Changes in version 0.3.2
 
 ### Enhancements
