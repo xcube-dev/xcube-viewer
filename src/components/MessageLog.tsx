@@ -1,11 +1,7 @@
-import { Slide } from '@material-ui/core';
-import { TransitionProps } from '@material-ui/core/transitions';
 import * as React from 'react';
 import classNames from 'classnames';
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -16,6 +12,8 @@ import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 
 import { MessageLogEntry } from '../states/messageLogState';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
 
 
 const variantIcon = {
@@ -71,57 +69,50 @@ const SNACKBAR_ANCHOR_ORIGIN: SnackbarOrigin = {
     horizontal: 'center',
 };
 
-function SlideTransition(props: TransitionProps) {
-    return <Slide {...props} direction="up"/>;
-}
+const MessageLog: React.FC<MessageLogProps> = ({classes, className, message, hideMessage}) => {
 
-class MessageLog extends React.Component<MessageLogProps> {
-
-    handleClose = (event: React.SyntheticEvent<any>, reason?: string) => {
-        this.props.hideMessage(this.props.message!.id);
+    const handleClose = (event: React.SyntheticEvent<any>, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        hideMessage(message!.id);
     };
 
-    render() {
-        const {classes, className, message} = this.props;
 
-        if (!message) {
-            return null;
-        }
-
-        const MessageIcon = variantIcon[message.type];
-
-        return (
-            <Snackbar
-                key={message.type + ':' + message.text}
-                open={true}
-                anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
-                autoHideDuration={5000}
-                onClose={this.handleClose}>
-                {/*TransitionComponent={SlideTransition}*/}
-                <SnackbarContent
-                    className={classNames(classes[message.type], className)}
-                    aria-describedby="client-snackbar"
-                    message={
-                        <span id="client-snackbar" className={classes.message}>
-                            <MessageIcon className={classNames(classes.icon, classes.iconVariant)}/>
-                            {message.text}
-                        </span>
-                    }
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon className={classes.icon}/>
-                        </IconButton>,
-                    ]}
-                />
-            </Snackbar>
-        );
+    if (!message) {
+        return null;
     }
-}
+
+    const MessageIcon = variantIcon[message.type];
+
+    return (
+        <Snackbar
+            open={true}
+            anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
+            onClose={handleClose}>
+            <SnackbarContent
+                className={classNames(classes[message.type], className)}
+                aria-describedby="client-snackbar"
+                message={
+                    <span id="client-snackbar" className={classes.message}>
+                            <MessageIcon className={classNames(classes.icon, classes.iconVariant)}/>
+                        {message.text}
+                        </span>
+                }
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        className={classes.close}
+                        onClick={handleClose}
+                    >
+                        <CloseIcon className={classes.icon}/>
+                    </IconButton>,
+                ]}
+            />
+        </Snackbar>
+    );
+};
 
 export default withStyles(styles)(MessageLog);

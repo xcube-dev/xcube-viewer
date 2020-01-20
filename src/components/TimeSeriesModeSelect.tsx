@@ -3,8 +3,8 @@ import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/s
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import { WithLocale } from "../util/lang";
-import { I18N } from "../config";
+import { WithLocale } from '../util/lang';
+import { I18N } from '../config';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -15,25 +15,22 @@ interface TimeSeriesModeSelectProps extends WithStyles<typeof styles>, WithLocal
     selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: 'add' | 'replace') => void;
 }
 
-class TimeSeriesModeSelect extends React.Component<TimeSeriesModeSelectProps> {
+const TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({timeSeriesUpdateMode, selectTimeSeriesUpdateMode}) => {
 
-    handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.selectTimeSeriesUpdateMode(event.target.checked ? 'add' : 'replace');
+    const handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        selectTimeSeriesUpdateMode(event.target.checked ? 'add' : 'replace');
     };
 
-    render() {
-        const {timeSeriesUpdateMode} = this.props;
-        return (
-            <FormControlLabel label={I18N.get("Multi")} control={
-                <Switch
-                    color={"primary"}
-                    checked={timeSeriesUpdateMode === 'add'}
-                    onChange={this.handleTimeSeriesUpdateModeChange}
-                />
-            }/>
-        );
-    }
-}
+    return (
+        <FormControlLabel label={I18N.get('Multi')} control={
+            <Switch
+                color={'primary'}
+                checked={timeSeriesUpdateMode === 'add'}
+                onChange={handleTimeSeriesUpdateModeChange}
+            />
+        }/>
+    );
+};
 
 export default withStyles(styles)(TimeSeriesModeSelect);
 

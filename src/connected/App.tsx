@@ -50,23 +50,19 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-class App extends React.PureComponent<DashboardProps> {
-
-    render() {
-        const {classes} = this.props;
-        return (
-            <MuiThemeProvider theme={theme}>
-                <div className={classes.root}>
-                    <CssBaseline/>
-                    <AppBar/>
-                    <AppPane/>
-                    <LoadingDialog/>
-                    <MessageLog/>
-                    <LegalAgreementDialog/>
-                </div>
-            </MuiThemeProvider>
-        );
-    }
-}
+const App: React.FC<DashboardProps> = ({classes}) => {
+    return (
+        <MuiThemeProvider theme={theme}>
+            <div className={classes.root}>
+                <CssBaseline/>
+                <AppBar/>
+                <AppPane/>
+                <LoadingDialog/>
+                <MessageLog/>
+                <LegalAgreementDialog/>
+            </div>
+        </MuiThemeProvider>
+    );
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App));
