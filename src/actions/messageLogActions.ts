@@ -11,8 +11,8 @@ export interface PostMessage {
     messageText: string;
 }
 
-export function postMessage(messageType: MessageType, messageText: string): PostMessage {
-    return {type: POST_MESSAGE, messageType, messageText};
+export function postMessage(messageType: MessageType, messageText: string | Error): PostMessage {
+    return {type: POST_MESSAGE, messageType, messageText: (messageText as any).message || messageText + ''};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

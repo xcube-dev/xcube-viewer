@@ -30,8 +30,9 @@ export function makeRequestUrl(url: string, query: QueryComponent[]) {
 
 export function callApi<T>(url: string, init?: RequestInit): Promise<Response> {
 
-    // TODO (forman): enable debug logging by switch
-    console.debug('Calling API: ', url, init);
+    if (process.env.NODE_ENV === 'development') {
+        console.debug('Calling API: ', url);
+    }
 
     return fetch(url, init)
         .then(response => {
@@ -47,8 +48,8 @@ export function callApi<T>(url: string, init?: RequestInit): Promise<Response> {
                 throw new Error(I18N.get("Cannot reach server"));
             } else {
                 console.error(error);
+                throw error;
             }
-            throw error;
         });
 }
 

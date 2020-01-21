@@ -9,6 +9,12 @@
 
 ### Enhancements
 
+* Notification "snackbars" will now disappear after 5 seconds (#107).
+
+## Changes in version 0.3.2
+
+### Enhancements
+
 * It is now possible to change the base map layer from settings. (#30)
 * Different deployments can now be configured through `.env.local` file. (#24)
 

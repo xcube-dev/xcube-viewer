@@ -2,6 +2,8 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -12,8 +14,6 @@ import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 
 import { MessageLogEntry } from '../states/messageLogState';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
 
 
 const variantIcon = {
@@ -69,15 +69,12 @@ const SNACKBAR_ANCHOR_ORIGIN: SnackbarOrigin = {
     horizontal: 'center',
 };
 
+
 const MessageLog: React.FC<MessageLogProps> = ({classes, className, message, hideMessage}) => {
 
-    const handleClose = (event: React.SyntheticEvent<any>, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+    const handleClose = () => {
         hideMessage(message!.id);
     };
-
 
     if (!message) {
         return null;
@@ -87,8 +84,10 @@ const MessageLog: React.FC<MessageLogProps> = ({classes, className, message, hid
 
     return (
         <Snackbar
+            key={message.type + ':' + message.text}
             open={true}
             anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
+            autoHideDuration={5000}
             onClose={handleClose}>
             <SnackbarContent
                 className={classNames(classes[message.type], className)}
