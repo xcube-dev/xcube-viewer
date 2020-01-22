@@ -5,7 +5,7 @@ import {
     RECEIVE_SIGN_IN,
     RECEIVE_SIGN_OUT,
     UserAuthAction
-} from "../actions/userAuthActions";
+} from '../actions/userAuthActions';
 import { newUserAuthState, UserAuthState, UserAuthStatus } from '../states/userAuthState';
 
 

@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import * as auth from '../util/auth'
 import { updateDatasets } from './dataActions';
+import { PostMessage, postMessage } from './messageLogActions';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,25 +30,24 @@ function _initAuthClient(hasAuthClient: boolean): InitAuthClient {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function signIn() {
-    return (dispatch: Dispatch<RequestSignIn | ReceiveSignIn>) => {
+    return (dispatch: Dispatch<RequestSignIn | ReceiveSignIn | ReceiveSignOut | PostMessage>) => {
         const authClient = auth.getAuthClient();
         if (!authClient) {
             // Should never get here...
             return;
         }
 
-        dispatch(requestSignIn());
-
         authClient.loginWithPopup()
                   .then(async () => {
+                      dispatch(requestSignIn());
                       const idToken = await authClient.getUser();
                       const accessToken = await authClient.getTokenSilently();
                       dispatch(receiveSignIn(idToken, accessToken));
                       dispatch(updateDatasets() as any);
                   })
                   .catch((error) => {
-                      // TODO (forman): handle error here!
-                      console.log(error);
+                      dispatch(receiveSignOut());
+                      dispatch(postMessage('error', error));
                   });
     };
 }
