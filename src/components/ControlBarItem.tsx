@@ -20,7 +20,12 @@ interface ControlBarItemProps extends WithStyles<typeof styles>, WithLocale {
     actions?: React.ReactNode | null;
 }
 
-const ControlBarItem: React.FC<ControlBarItemProps> = ({classes, label, control, actions}) => {
+const ControlBarItem: React.FC<ControlBarItemProps> = ({
+                                                           classes,
+                                                           label,
+                                                           control,
+                                                           actions
+                                                       }) => {
     return (
         <FormControl className={classes.formControl}>
             <Box>

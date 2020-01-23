@@ -1,42 +1,35 @@
-import IconButton from '@material-ui/core/IconButton';
 import React, { useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
 import WidgetsIcon from '@material-ui/icons/Widgets';
 import LayersIcon from '@material-ui/icons/Layers';
 import PlaceIcon from '@material-ui/icons/Place';
 import CloseIcon from '@material-ui/icons/Close';
+import CodeIcon from '@material-ui/icons/Code';
+import InfoIcon from '@material-ui/icons/Info';
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles(
         {
             card: {
                 maxWidth: '100%',
+                marginBottom: theme.spacing(1),
+                marginRight: theme.spacing(1),
             },
-            media: {
-                height: 0,
-                paddingTop: '56.25%', // 16:9
+            info: {
+                marginRight: theme.spacing(1),
             },
-            expand: {
-                transform: 'rotate(0deg)',
+            close: {
                 marginLeft: 'auto',
-                transition: theme.transitions.create('transform', {
-                    duration: theme.transitions.duration.shortest,
-                }),
-            },
-            expandOpen: {
-                transform: 'rotate(180deg)',
-            },
-            avatar: {
-                backgroundColor: red[500],
-            },
+            }
         }
     );
 });
@@ -66,31 +59,31 @@ const InfoCard: React.FC<InfoCardProps> = ({
         showInfoCard(false);
     };
 
-    const actions = [
-        <ToggleButtonGroup key={0} size="small" value={infoElements} onChange={handleInfoElementsChanges}>
-            <ToggleButton key={0} value="dataset">
-                <WidgetsIcon/>
-            </ToggleButton>
-            <ToggleButton key={1} value="variable">
-                <LayersIcon/>
-            </ToggleButton>
-            <ToggleButton key={2} value="place">
-                <PlaceIcon/>
-            </ToggleButton>
-        </ToggleButtonGroup>,
-        <IconButton key={1} onClick={handleInfoCardClose}>
-            {<CloseIcon/>}
-        </IconButton>,
-    ];
-
     return (
         <Card className={classes.card}>
-            <CardHeader
-                title="Information"
-                subheader={infoElements.join(' - ')}
-                action={actions}
-            />
+            <CardActions disableSpacing>
+                <InfoIcon fontSize={'large'} className={classes.info}/>
+                <ToggleButtonGroup key={0} size="small" value={infoElements} onChange={handleInfoElementsChanges}>
+                    <ToggleButton key={0} value="dataset">
+                        <WidgetsIcon/>
+                    </ToggleButton>
+                    <ToggleButton key={1} value="variable">
+                        <LayersIcon/>
+                    </ToggleButton>
+                    <ToggleButton key={2} value="place">
+                        <PlaceIcon/>
+                    </ToggleButton>
+                </ToggleButtonGroup>
+                <IconButton key={1} onClick={handleInfoCardClose} className={classes.close}>
+                    {<CloseIcon/>}
+                </IconButton>
+            </CardActions>
             <Collapse in={infoElements.includes('dataset')} timeout="auto" unmountOnExit>
+                <CardHeader
+                    title="Dataset Info"
+                    subheader={infoElements.join(' - ')}
+                    action={<IconButton><CodeIcon/></IconButton>}
+                />
                 <CardContent>
                     <Typography paragraph>Dataset:</Typography>
                     <Typography paragraph>
@@ -100,6 +93,11 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 </CardContent>
             </Collapse>
             <Collapse in={infoElements.includes('variable')} timeout="auto" unmountOnExit>
+                <CardHeader
+                    title="Variable Info"
+                    subheader={infoElements.join(' - ')}
+                    action={<IconButton><CodeIcon/></IconButton>}
+                />
                 <CardContent>
                     <Typography paragraph>Variable:</Typography>
                     <Typography paragraph>
@@ -113,8 +111,12 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 </CardContent>
             </Collapse>
             <Collapse in={infoElements.includes('place')} timeout="auto" unmountOnExit>
+                <CardHeader
+                    title="Place Info"
+                    subheader={infoElements.join(' - ')}
+                    action={<IconButton><CodeIcon/></IconButton>}
+                />
                 <CardContent>
-                    <Typography paragraph>Place:</Typography>
                     <Typography paragraph>
                         Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
                         without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to

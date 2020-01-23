@@ -11,6 +11,7 @@ import MapInteractionsBar from './MapInteractionsBar';
 import TimeSelect from './TimeSelect';
 import TimeSlider from './TimeSlider';
 import TimePlayer from './TimePlayer';
+import InfoCardSwitch from './InfoCardSwitch';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -32,6 +33,7 @@ const _ControlBar: React.FC = () => {
             <TimeSelect/>
             <TimePlayer/>
             <TimeSlider/>
+            <InfoCardSwitch/>
         </ControlBar>
     );
 };

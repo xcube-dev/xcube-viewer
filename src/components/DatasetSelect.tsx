@@ -5,7 +5,6 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import InfoIcon from '@material-ui/icons/Info';
 import MyLocationIcon from '@material-ui/icons/MyLocation';
 
 import { Dataset } from '../model/dataset';
@@ -79,31 +78,14 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
         flyToDataset(selectedDatasetId, datasets);
     };
 
-    const handleInfoButtonClick = () => {
-        showInfoCard(true);
-    };
-
     return (
         <ControlBarItem
             label={datasetSelectLabel}
             control={datasetSelect}
             actions={
-                [
-                    (<IconButton
-                        key={0}
-                        disabled={selectedDatasetId === ''}
-                        onClick={handleLocateButtonClick}
-                    >
-                        {<MyLocationIcon/>}
-                    </IconButton>),
-                    (<IconButton
-                        key={1}
-                        disabled={selectedDatasetId === ''}
-                        onClick={handleInfoButtonClick}
-                    >
-                        {<InfoIcon/>}
-                    </IconButton>)
-                ]
+                (<IconButton disabled={selectedDatasetId === ''} onClick={handleLocateButtonClick}>
+                    {<MyLocationIcon/>}
+                </IconButton>)
             }
         />
     );
