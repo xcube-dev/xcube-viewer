@@ -37,6 +37,24 @@ export function selectDataset(selectedDatasetId: string | null, datasets: Datase
     return {type: SELECT_DATASET, selectedDatasetId, datasets};
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const FLY_TO_DATASET = 'FLY_TO_DATASET';
+export type FLY_TO_DATASET = typeof FLY_TO_DATASET;
+
+export interface FlyToDataset {
+    type: FLY_TO_DATASET;
+    selectedDatasetId: string | null;
+    // TODO: Having datasets in here is ugly, but we need it in the reducer.
+    // See
+    // - https://medium.com/@williamjoshualacey/refactoring-redux-using-react-context-aa29fa16f4b7
+    // - https://codeburst.io/the-ugly-side-of-redux-6591fde68200
+    datasets: Dataset[];
+}
+
+export function flyToDataset(selectedDatasetId: string | null, datasets: Dataset[]): FlyToDataset {
+    return {type: FLY_TO_DATASET, selectedDatasetId, datasets};
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -186,6 +204,7 @@ export interface UpdateTimeAnimation {
 export function updateTimeAnimation(timeAnimationActive: boolean, timeAnimationInterval: TimeAnimationInterval): UpdateTimeAnimation {
     return {type: UPDATE_TIME_ANIMATION, timeAnimationActive, timeAnimationInterval};
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const SET_MAP_INTERACTION = 'SET_MAP_INTERACTION';
@@ -198,6 +217,20 @@ export interface SetMapInteraction {
 
 export function setMapInteraction(mapInteraction: MapInteraction): SetMapInteraction {
     return {type: SET_MAP_INTERACTION, mapInteraction};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SHOW_INFO_CARD = 'SHOW_INFO_CARD';
+export type SHOW_INFO_CARD = typeof SHOW_INFO_CARD;
+
+export interface ShowInfoCard {
+    type: SHOW_INFO_CARD;
+    infoCardOpen: boolean;
+}
+
+export function showInfoCard(infoCardOpen: boolean): ShowInfoCard {
+    return {type: SHOW_INFO_CARD, infoCardOpen};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,6 +322,7 @@ export function updateSettings(settings: ControlState): UpdateSettings {
 
 export type ControlAction =
     SelectDataset
+    | FlyToDataset
     | UpdateDatasetPlaceGroup
     | SelectVariable
     | SelectPlaceGroups
@@ -304,4 +338,5 @@ export type ControlAction =
     | ChangeLocale
     | UpdateSettings
     | OpenDialog
-    | CloseDialog;
+    | CloseDialog
+    | ShowInfoCard;

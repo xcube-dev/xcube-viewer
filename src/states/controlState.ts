@@ -33,6 +33,7 @@ export interface ControlState {
     dialogOpen: { [dialogId: string]: boolean };
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
+    infoCardOpen: boolean;
     imageSmoothingEnabled: boolean;
     baseMapUrl: string;
 }
@@ -61,6 +62,7 @@ export function newControlState(): ControlState {
         dialogOpen: {},
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
+        infoCardOpen: false,
         imageSmoothingEnabled: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
     };

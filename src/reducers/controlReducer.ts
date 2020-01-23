@@ -1,37 +1,40 @@
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
-
-import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
-import { ControlState, newControlState } from '../states/controlState';
 import {
-    SELECT_DATASET,
-    SELECT_VARIABLE,
-    SELECT_PLACE_GROUPS,
-    SELECT_PLACE,
-    SELECT_TIME,
-    SELECT_TIME_SERIES_UPDATE_MODE,
-    ControlAction,
-    SELECT_TIME_RANGE,
-    UPDATE_TIME_ANIMATION,
     ADD_ACTIVITY,
-    REMOVE_ACTIVITY,
     CHANGE_LOCALE,
-    OPEN_DIALOG,
     CLOSE_DIALOG,
+    ControlAction,
+    FLY_TO_DATASET,
     INC_SELECTED_TIME,
-    UPDATE_SETTINGS, SET_MAP_INTERACTION,
+    OPEN_DIALOG,
+    REMOVE_ACTIVITY,
+    SELECT_DATASET,
+    SELECT_PLACE,
+    SELECT_PLACE_GROUPS,
+    SELECT_TIME,
+    SELECT_TIME_RANGE,
+    SELECT_TIME_SERIES_UPDATE_MODE,
+    SELECT_VARIABLE,
+    SET_MAP_INTERACTION,
+    SHOW_INFO_CARD,
+    UPDATE_SETTINGS,
+    UPDATE_TIME_ANIMATION,
 } from '../actions/controlActions';
 import {
+    ADD_USER_PLACE,
     CONFIGURE_SERVERS,
     DataAction,
-    ADD_USER_PLACE,
     REMOVE_USER_PLACE,
     UPDATE_DATASETS
 } from "../actions/dataActions";
 import { I18N } from "../config";
-import { AppState } from "../states/appState";
+
+import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
-import { findIndexCloseTo } from "../util/find";
+import { AppState } from "../states/appState";
+import { ControlState, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
+import { findIndexCloseTo } from "../util/find";
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
 
 
@@ -95,6 +98,17 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
                 selectedVariableName,
                 selectedTimeRange,
                 selectedTime,
+                flyTo,
+            };
+        }
+        case FLY_TO_DATASET: {
+            const selectedDataset = findDataset(action.datasets, action.selectedDatasetId)!;
+            let flyTo = state.flyTo;
+            if (selectedDataset.bbox) {
+                flyTo = selectedDataset.bbox;
+            }
+            return {
+                ...state,
                 flyTo,
             };
         }
@@ -238,6 +252,12 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
             return {
                 ...state,
                 mapInteraction: action.mapInteraction
+            };
+        }
+        case SHOW_INFO_CARD: {
+            return {
+                ...state,
+                infoCardOpen: action.infoCardOpen,
             };
         }
         case ADD_ACTIVITY: {
