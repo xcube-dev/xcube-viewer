@@ -4,6 +4,8 @@ import { default as OlBaseObject } from 'ol/Object';
 import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
 import { default as OlView } from 'ol/View';
 import { default as OlEvent } from 'ol/events/Event';
+import { unByKey } from 'ol/Observable';
+import { EventsKey as OlEventsKey } from 'ol/events';
 import { MapOptions as OlMapOptions } from 'ol/PluggableMap';
 import { fromLonLat as olProjFromLonLat } from 'ol/proj';
 
@@ -37,6 +39,7 @@ const DEFAULT_CONTAINER_SYTLE: React.CSSProperties = {height: '100%'};
 export class Map extends React.Component<MapProps, MapState> {
 
     private readonly contextValue: MapContext;
+    private clickEventsKey: OlEventsKey | null = null;
 
     constructor(props: MapProps) {
         super(props);
@@ -128,8 +131,8 @@ export class Map extends React.Component<MapProps, MapState> {
         this.contextValue.map = map;
         this.contextValue.mapObjects[id] = map;
 
-        map.set('objectId', this.props.id);
-        map.on('click', this.handleClick);
+        //map.set('objectId', this.props.id);
+        this.clickEventsKey = map.on('click', this.handleClick);
         map.updateSize();
 
         // Force update so we can pass this.map as context to all children in next render()
@@ -158,6 +161,11 @@ export class Map extends React.Component<MapProps, MapState> {
         const mapOptions = this.getMapOptions();
         map.setProperties({...mapOptions});
         map.setTarget(mapDiv);
+        // if (this.clickEventsKey) {
+        //     unByKey(this.clickEventsKey);
+        // }
+        // this.clickEventsKey = map.on('click', this.handleClick);
+        console.log('Map: ', this.handleClick, this.clickEventsKey);
         map.updateSize();
     }
 
@@ -169,6 +177,10 @@ export class Map extends React.Component<MapProps, MapState> {
 
         // Remove resize listener so we can adjust the view's minZoom.
         window.removeEventListener('resize', this.handleResize);
+
+        // if (this.clickEventsKey) {
+        //     unByKey(this.clickEventsKey);
+        // }
 
         const onMapRef = this.props.onMapRef;
         if (onMapRef) {

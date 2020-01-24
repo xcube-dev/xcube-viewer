@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import * as geojson from 'geojson';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { default as OlMap } from 'ol/Map';
@@ -76,12 +77,77 @@ interface ViewerProps extends WithStyles<typeof styles> {
     places: Place[];
 }
 
-class Viewer extends React.Component<ViewerProps> {
+const Viewer: React.FC<ViewerProps> = ({
+                                           theme,
+                                           mapInteraction,
+                                           baseMapLayer,
+                                           variableLayer,
+                                           placeGroupLayers,
+                                           colorBarLegend,
+                                           addUserPlace,
+                                           userPlaceGroup,
+                                           selectPlace,
+                                           selectedPlaceId,
+                                           flyTo,
+                                           places,
+                                       }) => {
 
-    map: OlMap | null = null;
+    const [map, setMap] = useState<OlMap | null>(null);
+    const [flyToPrev, setFlyToPrev] = useState<OlGeometry | OlExtent | null>(flyTo || null);
+    const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(selectedPlaceId || null);
 
-    handleMapClick = (event: OlMapBrowserEvent) => {
-        const {selectPlace, mapInteraction, places} = this.props;
+    useEffect(() => {
+        if (map) {
+            const flyToCurr = flyTo || null;
+            if (flyToCurr !== null && flyToCurr !== flyToPrev) {
+                // TODO (forman): too much logic here! put the following code into selector(s) and pass stuff as props.
+                const projection = map.getView().getProjection();
+                let flyToTarget;
+                // noinspection JSDeprecatedSymbols
+                if (Array.isArray(flyToCurr)) {
+                    // Fly to extent (bounding box)
+                    flyToTarget = olProjTransformExtent(flyToCurr, 'EPSG:4326', projection);
+                    map.getView().fit(flyToTarget, {size: map.getSize()});
+                } else {
+                    // Transform Geometry object
+                    flyToTarget = flyToCurr.transform('EPSG:4326', projection) as OlSimpleGeometry;
+                    if (flyToTarget.getType() === 'Point') {
+                        // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
+                        map.getView().setCenter(flyToTarget.getFirstCoordinate());
+                    } else {
+                        // Fly to shape
+                        map.getView().fit(flyToTarget, {size: map.getSize()});
+                    }
+                }
+                setFlyToPrev(flyToCurr);
+            }
+        }
+    }, [map, flyTo, flyToPrev]);
+
+    useEffect(() => {
+        if (map) {
+            const selectedPlaceIdCurr = selectedPlaceId || null;
+            if (selectedPlaceIdCurr !== selectedPlaceIdPrev) {
+                SELECTION_LAYER_SOURCE.clear();
+                if (selectedPlaceIdCurr) {
+                    const selectedFeature = findFeatureById(map, selectedPlaceIdCurr);
+                    if (selectedFeature) {
+                        // We clone so feature so we can set a new ID and clear the style, so the selection
+                        // layer style is used instead as default.
+                        const displayFeature = selectedFeature.clone();
+                        displayFeature.setId('Select-' + selectedFeature.getId());
+                        displayFeature.setStyle(null);
+                        SELECTION_LAYER_SOURCE.addFeature(displayFeature);
+                    }
+                }
+                setSelectedPlaceIdPrev(selectedPlaceIdCurr);
+            }
+        }
+    }, [map, selectedPlaceId, selectedPlaceIdPrev]);
+
+    const handleMapClick = (event: OlMapBrowserEvent) => {
+        // TODO (forman): stale closure problem here, mapInteraction only initialised by initial render
+        console.log('Click!', event, mapInteraction);
         if (mapInteraction === 'Select') {
             const map = event.map;
             let selectedPlaceId: string | null = null;
@@ -100,10 +166,9 @@ class Viewer extends React.Component<ViewerProps> {
         }
     };
 
-    handleDrawEnd = (event: DrawEvent) => {
-        const {theme, addUserPlace, mapInteraction, userPlaceGroup} = this.props;
+    const handleDrawEnd = (event: DrawEvent) => {
         // TODO (forman): too much logic here! put the following code into an action + reducer.
-        if (this.map !== null && addUserPlace && mapInteraction !== 'Select') {
+        if (map !== null && addUserPlace && mapInteraction !== 'Select') {
             const feature = event.feature;
             let geometry = feature.getGeometry();
             if (!geometry) {
@@ -111,8 +176,7 @@ class Viewer extends React.Component<ViewerProps> {
             }
 
             const placeId = `User-${mapInteraction}-${newId()}`;
-            const projection = this.map.getView().getProjection();
-
+            const projection = map.getView().getProjection();
 
             if (geometry instanceof OlCircleGeometry) {
                 const polygon = olPolygonFromCircle(geometry as OlCircleGeometry);
@@ -151,124 +215,70 @@ class Viewer extends React.Component<ViewerProps> {
         return true;
     };
 
-    handleMapRef = (map: OlMap | null) => {
-        this.map = map;
-    };
-
-    componentDidUpdate(prevProps: Readonly<ViewerProps>, prevState: Readonly<{}>, snapshot?: any): void {
-        if (this.map === null) {
-            return;
-        }
-        const map = this.map!;
-
-        const flyToCurr = this.props.flyTo || null;
-        const flyToPrev = prevProps.flyTo || null;
-        if (flyToCurr !== null && flyToCurr !== flyToPrev) {
-            // TODO (forman): too much logic here! put the following code into selector(s) and pass stuff as props.
-            const projection = map.getView().getProjection();
-            let flyToTarget;
-            // noinspection JSDeprecatedSymbols
-            if (Array.isArray(flyToCurr)) {
-                // Fly to extent (bounding box)
-                flyToTarget = olProjTransformExtent(flyToCurr, 'EPSG:4326', projection);
-                map.getView().fit(flyToTarget, {size: map.getSize()});
-            } else {
-                // Transform Geometry object
-                flyToTarget = flyToCurr.transform('EPSG:4326', projection) as OlSimpleGeometry;
-                if (flyToTarget.getType() === 'Point') {
-                    // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
-                    map.getView().setCenter(flyToTarget.getFirstCoordinate());
-                } else {
-                    // Fly to shape
-                    map.getView().fit(flyToTarget, {size: map.getSize()});
-                }
-            }
-        }
-
-        const selectedPlaceIdCurr = this.props.selectedPlaceId;
-        const selectedPlaceIdPrev = prevProps.selectedPlaceId;
-        if (selectedPlaceIdCurr !== selectedPlaceIdPrev) {
-            SELECTION_LAYER_SOURCE.clear();
-            if (selectedPlaceIdCurr) {
-                const selectedFeature = findFeatureById(this.map!, selectedPlaceIdCurr);
-                if (selectedFeature) {
-                    // We clone so feature so we can set a new ID and clear the style, so the selection
-                    // layer style is used instead as default.
-                    const displayFeature = selectedFeature.clone();
-                    displayFeature.setId('Select-' + selectedFeature.getId());
-                    displayFeature.setStyle(null);
-                    SELECTION_LAYER_SOURCE.addFeature(displayFeature);
-                }
-            }
-        }
-    }
-
-    public render() {
-        const {variableLayer, placeGroupLayers, colorBarLegend, mapInteraction, baseMapLayer} = this.props;
-
-        let colorBarControl = null;
-        if (colorBarLegend) {
-            colorBarControl = (
-                <Control id="legend" style={COLOR_LEGEND_STYLE}>
-                    {colorBarLegend}
-                </Control>
-            );
-        }
-
-        return (
-            <ErrorBoundary>
-                <Map
-                    id="map"
-                    onClick={this.handleMapClick}
-                    onMapRef={this.handleMapRef}
-                    mapObjects={MAP_OBJECTS}
-                    isStale={true}
-                >
-                    <View id="view"/>
-                    <Layers>
-                        {baseMapLayer}
-                        {variableLayer}
-                        <Vector id='userLayer' opacity={1} zIndex={500}
-                                source={USER_LAYER_SOURCE}/>
-                        <Vector id='selectionLayer' opacity={0.7} zIndex={510} style={SELECTION_LAYER_STYLE}
-                                source={SELECTION_LAYER_SOURCE}/>
-                    </Layers>
-                    {placeGroupLayers}
-                    {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={this.handleSelect}/>*/}
-                    <Draw
-                        id="drawPoint"
-                        layerId={'userLayer'}
-                        active={mapInteraction === 'Point'}
-                        type={OlGeometryType.POINT}
-                        wrapX={true}
-                        stopClick={true}
-                        onDrawEnd={this.handleDrawEnd}
-                    />
-                    <Draw
-                        id="drawPolygon"
-                        layerId={'userLayer'}
-                        active={mapInteraction === 'Polygon'}
-                        type={OlGeometryType.POLYGON}
-                        wrapX={true}
-                        stopClick={true}
-                        onDrawEnd={this.handleDrawEnd}
-                    />
-                    <Draw
-                        id="drawCircle"
-                        layerId={'userLayer'}
-                        active={mapInteraction === 'Circle'}
-                        type={OlGeometryType.CIRCLE}
-                        wrapX={true}
-                        stopClick={true}
-                        onDrawEnd={this.handleDrawEnd}
-                    />
-                    {colorBarControl}
-                    <ScaleLine bar={false}/>
-                </Map>
-            </ErrorBoundary>
+    let colorBarControl = null;
+    if (colorBarLegend) {
+        colorBarControl = (
+            <Control id="legend" style={COLOR_LEGEND_STYLE}>
+                {colorBarLegend}
+            </Control>
         );
     }
-}
+
+    console.log('Viewer:', mapInteraction);
+
+    return (
+        <ErrorBoundary>
+            <Map
+                id="map"
+                onClick={(event) => handleMapClick(event)}
+                onMapRef={setMap}
+                mapObjects={MAP_OBJECTS}
+                isStale={true}
+            >
+                <View id="view"/>
+                <Layers>
+                    {baseMapLayer}
+                    {variableLayer}
+                    <Vector id='userLayer' opacity={1} zIndex={500}
+                            source={USER_LAYER_SOURCE}/>
+                    <Vector id='selectionLayer' opacity={0.7} zIndex={510} style={SELECTION_LAYER_STYLE}
+                            source={SELECTION_LAYER_SOURCE}/>
+                </Layers>
+                {placeGroupLayers}
+                {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={handleSelect}/>*/}
+                <Draw
+                    id="drawPoint"
+                    layerId={'userLayer'}
+                    active={mapInteraction === 'Point'}
+                    type={OlGeometryType.POINT}
+                    wrapX={true}
+                    stopClick={true}
+                    onDrawEnd={handleDrawEnd}
+                />
+                <Draw
+                    id="drawPolygon"
+                    layerId={'userLayer'}
+                    active={mapInteraction === 'Polygon'}
+                    type={OlGeometryType.POLYGON}
+                    wrapX={true}
+                    stopClick={true}
+                    onDrawEnd={handleDrawEnd}
+                />
+                <Draw
+                    id="drawCircle"
+                    layerId={'userLayer'}
+                    active={mapInteraction === 'Circle'}
+                    type={OlGeometryType.CIRCLE}
+                    wrapX={true}
+                    stopClick={true}
+                    onDrawEnd={handleDrawEnd}
+                />
+                {colorBarControl}
+                <ScaleLine bar={false}/>
+            </Map>
+        </ErrorBoundary>
+    );
+};
 
 export default withStyles(styles, {withTheme: true})(Viewer);
 
