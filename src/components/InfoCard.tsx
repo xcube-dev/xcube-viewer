@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -21,15 +21,17 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 
 import { Dataset } from '../model/dataset';
 import { Variable } from '../model/variable';
 import { DEFAULT_LABEL_PROPERTY_NAMES, getPlaceLabel, Place } from '../model/place';
 
-// TODO (forman): let xcube serve publish ds and var attributes
-// TODO (forman): use dataset, var, place group specific lable, description, and image mappings for rendering
-// TODO (forman): put view settings (ds, var, place: panel on/aff, code on/of) in store and local storage
+
+// TODO (forman): let xcube serve publish dataset and variable attributes
+// TODO (forman): use dataset, variable, place group specific label, description, and image mappings for rendering
+// TODO (forman): I18N
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
@@ -45,84 +47,97 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
             marginLeft: 'auto',
         },
         table: {},
+        keyValueTableContainer: {
+            background: theme.palette.divider,
+        },
+        variableHtmlReprContainer: {
+            background: theme.palette.divider,
+            padding: theme.spacing(1),
+            marginTop: theme.spacing(1),
+            marginBottom: theme.spacing(1),
+        },
     }
 ));
 
+
 interface InfoCardProps {
     infoCardOpen: boolean;
+    showInfoCard: (infoCardOpen: boolean) => void;
+    visibleInfoCardElements: string[];
+    setVisibleInfoCardElements: (visibleInfoCardElements: string[]) => void;
+    infoCardElementCodeModes: { [elementType: string]: boolean };
+    updateInfoCardElementCodeMode: (elementType: string, visible: boolean) => void;
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
     selectedPlace: Place | null;
-    showInfoCard: (infoCardOpen: boolean) => void;
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
                                                infoCardOpen,
+                                               showInfoCard,
+                                               visibleInfoCardElements,
+                                               setVisibleInfoCardElements,
+                                               infoCardElementCodeModes,
+                                               updateInfoCardElementCodeMode,
                                                selectedDataset,
                                                selectedVariable,
                                                selectedPlace,
-                                               showInfoCard,
                                            }) => {
-
     const classes = useStyles();
-    const [infoElements, setInfoElements] = useState<string[]>(["dataset", "variable", "place"]);
-    const [datasetCodeMode, setDatasetCodeMode] = useState(false);
-    const [variableCodeMode, setVariableCodeMode] = useState(false);
-    const [placeCodeMode, setPlaceCodeMode] = useState(false);
 
     if (!infoCardOpen) {
         return null;
     }
 
-    const handleInfoElementsChanges = (event: React.MouseEvent<HTMLElement>, value: any) => {
-        setInfoElements(value);
+    const handleInfoElementsChanges = (event: React.MouseEvent<HTMLElement>, visibleElementTypes: string[]) => {
+        setVisibleInfoCardElements(visibleElementTypes);
     };
 
     const handleInfoCardClose = () => {
         showInfoCard(false);
     };
 
-    let effectiveInfoElements = [];
+    // TODO (forman): fix ugly code duplication below!
     let datasetInfoContent;
     let variableInfoContent;
     let placeInfoContent;
-
     if (selectedDataset) {
-        const isIn = infoElements.includes('dataset');
-        if (isIn) {
-            effectiveInfoElements.push('dataset');
-        }
+        const elementType = 'dataset';
+        const codeMode = infoCardElementCodeModes[elementType];
+        const setCodeMode = (codeMode: boolean) => updateInfoCardElementCodeMode(elementType, codeMode);
+        const isVisible = visibleInfoCardElements.includes(elementType);
         datasetInfoContent = (
             <DatasetInfoContent
-                isIn={isIn}
-                codeMode={datasetCodeMode}
-                setCodeMode={setDatasetCodeMode}
+                isIn={isVisible}
+                codeMode={codeMode}
+                setCodeMode={setCodeMode}
                 dataset={selectedDataset}/>
         );
     }
     if (selectedVariable) {
-        const isIn = infoElements.includes('variable');
-        if (isIn) {
-            effectiveInfoElements.push('variable');
-        }
+        const elementType = 'variable';
+        const codeMode = infoCardElementCodeModes[elementType];
+        const setCodeMode = (codeMode: boolean) => updateInfoCardElementCodeMode(elementType, codeMode);
+        const isVisible = visibleInfoCardElements.includes(elementType);
         variableInfoContent = (
             <VariableInfoContent
-                isIn={isIn}
-                codeMode={variableCodeMode}
-                setCodeMode={setVariableCodeMode}
-                variable={selectedVariable}/>
+                isIn={isVisible}
+                codeMode={codeMode}
+                setCodeMode={setCodeMode}
+                variable={selectedVariable}
+            />
         );
     }
     if (selectedPlace) {
-        const isIn = infoElements.includes('place');
-        if (isIn) {
-            effectiveInfoElements.push('place');
-        }
+        const elementType = 'place';
+        const codeMode = infoCardElementCodeModes[elementType];
+        const setCodeMode = (codeMode: boolean) => updateInfoCardElementCodeMode(elementType, codeMode);
+        const isVisible = visibleInfoCardElements.includes(elementType);
         placeInfoContent = (
             <PlaceInfoContent
-                isIn={isIn}
-                codeMode={placeCodeMode}
-                setCodeMode={setPlaceCodeMode}
+                isIn={isVisible}
+                codeMode={codeMode}
+                setCodeMode={setCodeMode}
                 place={selectedPlace}/>
         );
     }
@@ -131,16 +146,23 @@ const InfoCard: React.FC<InfoCardProps> = ({
         <Card className={classes.card}>
             <CardActions disableSpacing>
                 <InfoIcon fontSize={'large'} className={classes.info}/>
-                <ToggleButtonGroup key={0} size="small" value={effectiveInfoElements}
+                <ToggleButtonGroup key={0} size="small" value={visibleInfoCardElements}
                                    onChange={handleInfoElementsChanges}>
+                    {/*TODO (forman): fix ugly code duplication below!*/}
                     <ToggleButton key={0} value="dataset" disabled={selectedDataset === null}>
-                        <WidgetsIcon/>
+                        <Tooltip title={'Show dataset information'}>
+                            <WidgetsIcon/>
+                        </Tooltip>
                     </ToggleButton>
                     <ToggleButton key={1} value="variable" disabled={selectedVariable === null}>
-                        <LayersIcon/>
+                        <Tooltip title={'Show variable information'}>
+                            <LayersIcon/>
+                        </Tooltip>
                     </ToggleButton>
                     <ToggleButton key={2} value="place" disabled={selectedPlace === null}>
-                        <PlaceIcon/>
+                        <Tooltip title={'Show place information'}>
+                            <PlaceIcon/>
+                        </Tooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>
                 <IconButton key={1} onClick={handleInfoCardClose} className={classes.close}>
@@ -172,17 +194,17 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, codeMode, 
         content = (<code>{JSON.stringify(dataset, ['id', 'title', 'dimensions', 'bbox'], 2)}</code>);
     } else {
         const data: KeyValue[] = [
-            ['Dimension Names', dataset.dimensions.map(d => d.name).join(', ')],
-            ['Dimension Sizes', dataset.dimensions.map(d => d.size).join(', ')],
-            ['Dimension Data Types', dataset.dimensions.map(d => d.dtype).join(', ')],
-            ['Bounding Box', dataset.bbox.map(x => x + '').join(', ')],
+            ['Dimension names', dataset.dimensions.map(d => d.name).join(', ')],
+            ['Dimension data types', dataset.dimensions.map(d => d.dtype).join(', ')],
+            ['Dimension sizes', dataset.dimensions.map(d => d.size).join(', ')],
+            ['Bounding box (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
         ];
         content = <KeyValueTable data={data}/>;
     }
     return (
         <InfoCardContent
-            title={dataset.title}
-            subheader={`${dataset.id}`}
+            title={dataset.title || '- missing title -'}
+            subheader={dataset.title && `ID: ${dataset.id}`}
             isIn={isIn}
             codeMode={codeMode}
             setCodeMode={setCodeMode}
@@ -203,13 +225,16 @@ interface VariableInfoContentProps {
 }
 
 const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode, setCodeMode, variable}) => {
-    // const classes = useStyles();
+    const classes = useStyles();
     let content;
     if (codeMode) {
         content = (
             <code>
                 {JSON.stringify(variable,
-                                ['id', 'name', 'title', 'units', 'shape', 'dtype', 'colorBarMin', 'colorBarMax', 'colorBarName'],
+                                ['id', 'name', 'title', 'units', 'shape', 'dtype',
+                                 'colorBarMin',
+                                 'colorBarMax',
+                                 'colorBarName'],
                                 2)}
             </code>
         );
@@ -219,21 +244,31 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode
             ['Title', variable.title],
             ['Units', variable.units],
             ['Shape', variable.shape],
-            ['Data Type', variable.dtype],
+            ['Data type', variable.dtype],
             ['Default display min/max', `${variable.colorBarMin}, ${variable.colorBarMax}`],
             ['Default colour bar', variable.colorBarName],
         ];
         content = <KeyValueTable data={data}/>;
     }
+    let htmlReprPaper;
+    if (variable.htmlRepr) {
+        const handleRef = (element: HTMLDivElement | null) => {
+            if (element && variable.htmlRepr) {
+                element.innerHTML = variable.htmlRepr;
+            }
+        };
+        htmlReprPaper = (<Paper ref={handleRef} className={classes.variableHtmlReprContainer}/>);
+    }
     return (
         <InfoCardContent
-            title={variable.name}
-            subheader={`${variable.shape}`}
+            title={variable.title || variable.name}
+            subheader={variable.title && <code>{variable.name}</code>}
             isIn={isIn}
             codeMode={codeMode}
             setCodeMode={setCodeMode}
         >
             {content}
+            {htmlReprPaper}
         </InfoCardContent>
     );
 };
@@ -328,7 +363,7 @@ interface KeyValueTableProps {
 const KeyValueTable: React.FC<KeyValueTableProps> = ({data}) => {
     const classes = useStyles();
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className={classes.keyValueTableContainer}>
             <Table className={classes.table} size="small">
                 <TableBody>
                     {

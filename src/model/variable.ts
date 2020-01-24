@@ -10,5 +10,5 @@ export interface Variable {
     colorBarName: string;
     colorBarMin: number;
     colorBarMax: number;
+    htmlRepr?: string;
 }
-

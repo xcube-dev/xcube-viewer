@@ -16,7 +16,9 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_VARIABLE,
     SET_MAP_INTERACTION,
+    SET_VISIBLE_INFO_CARD_ELEMENTS,
     SHOW_INFO_CARD,
+    UPDATE_INFO_CARD_ELEMENT_CODE_MODE,
     UPDATE_SETTINGS,
     UPDATE_TIME_ANIMATION,
 } from '../actions/controlActions';
@@ -26,15 +28,15 @@ import {
     DataAction,
     REMOVE_USER_PLACE,
     UPDATE_DATASETS
-} from "../actions/dataActions";
-import { I18N } from "../config";
+} from '../actions/dataActions';
+import { I18N } from '../config';
 
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
-import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
-import { AppState } from "../states/appState";
+import { selectedTimeIndexSelector, timeCoordinatesSelector } from '../selectors/controlSelectors';
+import { AppState } from '../states/appState';
 import { ControlState, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
-import { findIndexCloseTo } from "../util/find";
+import { findIndexCloseTo } from '../util/find';
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
 
 
@@ -258,6 +260,28 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
             return {
                 ...state,
                 infoCardOpen: action.infoCardOpen,
+            };
+        }
+        case SET_VISIBLE_INFO_CARD_ELEMENTS: {
+            const infoCardElementStates = {...state.infoCardElementStates};
+            Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
+                infoCardElementStates[e] = {...infoCardElementStates[e], visible: action.visibleElements.includes(e)};
+            });
+            return {
+                ...state,
+                infoCardElementStates,
+            };
+        }
+        case UPDATE_INFO_CARD_ELEMENT_CODE_MODE: {
+            return {
+                ...state,
+                infoCardElementStates: {
+                    ...state.infoCardElementStates,
+                    [action.elementType]: {
+                        ...state.infoCardElementStates[action.elementType],
+                        codeMode: action.codeMode
+                    }
+                },
             };
         }
         case ADD_ACTIVITY: {

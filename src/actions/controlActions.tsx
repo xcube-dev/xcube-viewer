@@ -16,7 +16,7 @@ import {
 } from './dataActions';
 import { isValidPlaceGroup, Place, PlaceGroup } from '../model/place';
 import { I18N } from '../config';
-import { ControlState, MapInteraction, TimeAnimationInterval } from "../states/controlState";
+import { ControlState, MapInteraction, TimeAnimationInterval } from '../states/controlState';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -235,6 +235,35 @@ export function showInfoCard(infoCardOpen: boolean): ShowInfoCard {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const SET_VISIBLE_INFO_CARD_ELEMENTS = 'SET_VISIBLE_INFO_CARD_ELEMENTS';
+export type SET_VISIBLE_INFO_CARD_ELEMENTS = typeof SET_VISIBLE_INFO_CARD_ELEMENTS;
+
+export interface SetVisibleInfoCardElements {
+    type: SET_VISIBLE_INFO_CARD_ELEMENTS;
+    visibleElements: string[];
+}
+
+export function setVisibleInfoCardElements(visibleElements: string[]): SetVisibleInfoCardElements {
+    return {type: SET_VISIBLE_INFO_CARD_ELEMENTS, visibleElements};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_INFO_CARD_ELEMENT_CODE_MODE = 'UPDATE_INFO_CARD_ELEMENT_CODE_MODE';
+export type UPDATE_INFO_CARD_ELEMENT_CODE_MODE = typeof UPDATE_INFO_CARD_ELEMENT_CODE_MODE;
+
+export interface UpdateInfoCardElementCodeMode {
+    type: UPDATE_INFO_CARD_ELEMENT_CODE_MODE;
+    elementType: string;
+    codeMode: boolean;
+}
+
+export function updateInfoCardElementCodeMode(elementType: string, codeMode: boolean): UpdateInfoCardElementCodeMode {
+    return {type: UPDATE_INFO_CARD_ELEMENT_CODE_MODE, elementType, codeMode};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const ADD_ACTIVITY = 'ADD_ACTIVITY';
 export type ADD_ACTIVITY = typeof ADD_ACTIVITY;
 
@@ -339,4 +368,6 @@ export type ControlAction =
     | UpdateSettings
     | OpenDialog
     | CloseDialog
-    | ShowInfoCard;
+    | ShowInfoCard
+    | SetVisibleInfoCardElements
+    | UpdateInfoCardElementCodeMode;

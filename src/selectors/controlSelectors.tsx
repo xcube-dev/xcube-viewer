@@ -47,6 +47,7 @@ export const selectedServerIdSelector = (state: AppState) => state.controlState.
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
 export const timeAnimationActiveSelector = (state: AppState) => state.controlState.timeAnimationActive;
 export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
+export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -347,6 +348,29 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     }
 );
 
+export const visibleInfoCardElementsSelector = createSelector(
+    infoCardElementStatesSelector,
+    (infoCardElementStates): string[] => {
+        const visibleInfoCardElements: string[] = [];
+        Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
+            if (!!infoCardElementStates[e].visible) {
+                visibleInfoCardElements.push(e);
+            }
+        });
+        return visibleInfoCardElements;
+    }
+);
+
+export const infoCardElementCodeModesSelector = createSelector(
+    infoCardElementStatesSelector,
+    (infoCardElementStates): { [elementType: string]: boolean } => {
+        const infoCardElementCodeModes: { [elementType: string]: boolean } = {};
+        Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
+            infoCardElementCodeModes[e] = !!infoCardElementStates[e].codeMode;
+        });
+        return infoCardElementCodeModes;
+    }
+);
 
 export const activityMessagesSelector = createSelector(
     activitiesSelector,

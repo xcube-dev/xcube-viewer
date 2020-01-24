@@ -36,14 +36,15 @@ export function storeUserSettings(settings: ControlState) {
     const storage = getLocalStorage();
     if (storage) {
         try {
-            _storeProperty(storage, 'legalAgreementAccepted', settings);
-            _storeProperty(storage, 'autoShowTimeSeries', settings);
-            _storeProperty(storage, 'showTimeSeriesErrorBars', settings);
-            _storeProperty(storage, 'showTimeSeriesPointsOnly', settings);
-            _storeProperty(storage, 'timeAnimationInterval', settings);
-            _storeProperty(storage, 'imageSmoothingEnabled', settings);
-            _storeProperty(storage, 'infoCardOpen', settings);
-            _storeProperty(storage, 'baseMapUrl', settings);
+            _storePrimitiveProperty(storage, 'legalAgreementAccepted', settings);
+            _storePrimitiveProperty(storage, 'autoShowTimeSeries', settings);
+            _storePrimitiveProperty(storage, 'showTimeSeriesErrorBars', settings);
+            _storePrimitiveProperty(storage, 'showTimeSeriesPointsOnly', settings);
+            _storePrimitiveProperty(storage, 'timeAnimationInterval', settings);
+            _storePrimitiveProperty(storage, 'imageSmoothingEnabled', settings);
+            _storePrimitiveProperty(storage, 'infoCardOpen', settings);
+            _storeObjectProperty(storage, 'infoCardElementStates', settings);
+            _storePrimitiveProperty(storage, 'baseMapUrl', settings);
         } catch (e) {
             console.warn(`failed to store user settings: ${e}`);
         }
@@ -62,6 +63,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             _loadIntProperty(storage, 'timeAnimationInterval', settings, defaultSettings);
             _loadBooleanProperty(storage, 'imageSmoothingEnabled', settings, defaultSettings);
             _loadBooleanProperty(storage, 'infoCardOpen', settings, defaultSettings);
+            _loadObjectProperty(storage, 'infoCardElementStates', settings, defaultSettings);
             _loadStringProperty(storage, 'baseMapUrl', settings, defaultSettings);
         } catch (e) {
             console.warn(`failed to load user settings: ${e}`);
@@ -72,9 +74,15 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
 }
 
 
-function _storeProperty(storage: Storage, propertyName: string, source: any) {
+function _storePrimitiveProperty(storage: Storage, propertyName: string, source: any) {
     const brandingName = getBrandingName();
     storage.setItem(`xcube.${brandingName}.${propertyName}`, source[propertyName] + '');
+    // console.log(`stored xcube.${propertyName}`, source);
+}
+
+function _storeObjectProperty(storage: Storage, propertyName: string, source: any) {
+    const brandingName = getBrandingName();
+    storage.setItem(`xcube.${brandingName}.${propertyName}`, JSON.stringify(source[propertyName]));
     // console.log(`stored xcube.${propertyName}`, source);
 }
 
@@ -88,6 +96,10 @@ function _loadIntProperty(storage: Storage, propertyName: string, target: any, d
 
 function _loadStringProperty(storage: Storage, propertyName: string, target: any, defaultObj: any) {
     _loadProperty(storage, propertyName, target, defaultObj, (value) => value);
+}
+
+function _loadObjectProperty(storage: Storage, propertyName: string, target: any, defaultObj: any) {
+    _loadProperty(storage, propertyName, target, defaultObj, (value) => JSON.parse(value));
 }
 
 function _loadProperty(storage: Storage,
