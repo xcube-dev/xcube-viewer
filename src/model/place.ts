@@ -57,7 +57,7 @@ function getPlaceGroupLabelPropertyNames(placeGroup: PlaceGroup): string[] {
     return DEFAULT_LABEL_PROPERTY_NAMES;
 }
 
-function getPlaceLabel(place: Place, labelPropertyNames: string []) {
+export function getPlaceLabel(place: Place, labelPropertyNames: string []) {
     if (place.properties) {
         let label;
         for (let propName of labelPropertyNames) {

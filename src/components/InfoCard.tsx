@@ -16,10 +16,20 @@ import CloseIcon from '@material-ui/icons/Close';
 import CodeIcon from '@material-ui/icons/Code';
 import InfoIcon from '@material-ui/icons/Info';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 import { Dataset } from '../model/dataset';
-import { Place } from '../model/place';
 import { Variable } from '../model/variable';
+import { DEFAULT_LABEL_PROPERTY_NAMES, getPlaceLabel, Place } from '../model/place';
+
+// TODO (forman): let xcube serve publish ds and var attributes
+// TODO (forman): use dataset, var, place group specific lable, description, and image mappings for rendering
+// TODO (forman): put view settings (ds, var, place: panel on/aff, code on/of) in store and local storage
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
@@ -33,7 +43,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
         },
         close: {
             marginLeft: 'auto',
-        }
+        },
+        table: {},
     }
 ));
 
@@ -160,24 +171,13 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, codeMode, 
     if (codeMode) {
         content = (<code>{JSON.stringify(dataset, ['id', 'title', 'dimensions', 'bbox'], 2)}</code>);
     } else {
-        let rows = [
+        const data: KeyValue[] = [
             ['Dimension Names', dataset.dimensions.map(d => d.name).join(', ')],
             ['Dimension Sizes', dataset.dimensions.map(d => d.size).join(', ')],
             ['Dimension Data Types', dataset.dimensions.map(d => d.dtype).join(', ')],
             ['Bounding Box', dataset.bbox.map(x => x + '').join(', ')],
-        ].map((entry, index) => {
-            return (
-                <tr key={index}>
-                    <td><b>{entry[0]}</b></td>
-                    <td>{entry[1]}</td>
-                </tr>
-            );
-        });
-        content = (
-            <table>
-                {rows}
-            </table>
-        );
+        ];
+        content = <KeyValueTable data={data}/>;
     }
     return (
         <InfoCardContent
@@ -214,7 +214,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode
             </code>
         );
     } else {
-        let rows = [
+        const data: KeyValue[] = [
             ['Name', variable.name],
             ['Title', variable.title],
             ['Units', variable.units],
@@ -222,19 +222,8 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode
             ['Data Type', variable.dtype],
             ['Default display min/max', `${variable.colorBarMin}, ${variable.colorBarMax}`],
             ['Default colour bar', variable.colorBarName],
-        ].map((entry, index) => {
-            return (
-                <tr key={index}>
-                    <td><b>{entry[0]}</b></td>
-                    <td>{entry[1]}</td>
-                </tr>
-            );
-        });
-        content = (
-            <table>
-                {rows}
-            </table>
-        );
+        ];
+        content = <KeyValueTable data={data}/>;
     }
     return (
         <InfoCardContent
@@ -259,33 +248,23 @@ interface PlaceInfoContentProps {
 }
 
 const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, codeMode, setCodeMode, place}) => {
-    // const classes = useStyles();
     let content;
     if (codeMode) {
         content = <code>{JSON.stringify(place, null, 2)}</code>;
     } else {
         if (!!place.properties) {
-            let rows = Object.getOwnPropertyNames(place.properties).map((name, index) => {
-                return (
-                    <tr key={index}>
-                        <td><b>{name}</b></td>
-                        <td>{place.properties![name]}</td>
-                    </tr>
-                );
-            });
-            content = (
-                <table>
-                    {rows}
-                </table>
+            const data: KeyValue[] = Object.getOwnPropertyNames(place.properties).map(
+                (name: any) => [name, place.properties![name]]
             );
+            content = <KeyValueTable data={data}/>;
         } else {
             content = <Typography>This place has no properties.</Typography>;
         }
     }
     return (
         <InfoCardContent
-            title={place.id}
-            subheader={place.geometry.type}
+            title={getPlaceLabel(place, DEFAULT_LABEL_PROPERTY_NAMES)}
+            subheader={`Type: ${place.geometry.type}`}
             isIn={isIn}
             codeMode={codeMode}
             setCodeMode={setCodeMode}
@@ -337,5 +316,35 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
     );
 };
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+type KeyValue = [any, any];
+
+interface KeyValueTableProps {
+    data: KeyValue[];
+}
+
+const KeyValueTable: React.FC<KeyValueTableProps> = ({data}) => {
+    const classes = useStyles();
+    return (
+        <TableContainer component={Paper}>
+            <Table className={classes.table} size="small">
+                <TableBody>
+                    {
+                        data.map((kv, index) => {
+                            return (
+                                <TableRow key={index}>
+                                    <TableCell>{kv[0]}</TableCell>
+                                    <TableCell align="right">{kv[1]}</TableCell>
+                                </TableRow>
+                            );
+                        })
+                    }
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
