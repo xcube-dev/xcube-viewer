@@ -1,12 +1,17 @@
+import { Extent as OlExtent } from 'ol/extent';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { Geometry as OlGeometry } from 'ol/geom';
 import { Dispatch } from 'redux';
 
 import {
+    selectedDatasetIdSelector,
     selectedDatasetSelectedPlaceGroupsSelector,
-    selectedDatasetSelector,
+    selectedDatasetSelector, selectedPlaceGroupsSelector, selectedPlaceIdSelector,
     selectedServerSelector,
 } from '../selectors/controlSelectors';
-import { Dataset } from '../model/dataset';
+import { Dataset, findDataset } from '../model/dataset';
 import { Time, TimeRange } from '../model/timeSeries';
+import { datasetsSelector } from '../selectors/dataSelectors';
 import { AppState } from '../states/appState';
 import * as api from '../api'
 import { MessageLogAction, postMessage } from './messageLogActions';
@@ -14,7 +19,7 @@ import {
     updateDatasetPlaceGroup, UPDATE_DATASET_PLACE_GROUP,
     UpdateDatasetPlaceGroup,
 } from './dataActions';
-import { isValidPlaceGroup, Place, PlaceGroup } from '../model/place';
+import { findPlaceInPlaceGroups, isValidPlaceGroup, Place, PlaceGroup } from '../model/place';
 import { I18N } from '../config';
 import { ControlState, MapInteraction, TimeAnimationInterval } from '../states/controlState';
 
@@ -33,27 +38,76 @@ export interface SelectDataset {
     datasets: Dataset[];
 }
 
-export function selectDataset(selectedDatasetId: string | null, datasets: Dataset[]): SelectDataset {
+export function selectDataset(selectedDatasetId: string | null, datasets: Dataset[], showInMap: boolean) {
+    return (dispatch: Dispatch<SelectDataset>, getState: () => AppState) => {
+        dispatch(_selectDataset(selectedDatasetId, datasets));
+        if (selectedDatasetId && showInMap) {
+            dispatch(flyToDataset(selectedDatasetId) as any);
+        }
+    }
+}
+
+export function _selectDataset(selectedDatasetId: string | null, datasets: Dataset[]): SelectDataset {
     return {type: SELECT_DATASET, selectedDatasetId, datasets};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const FLY_TO_DATASET = 'FLY_TO_DATASET';
-export type FLY_TO_DATASET = typeof FLY_TO_DATASET;
-
-export interface FlyToDataset {
-    type: FLY_TO_DATASET;
-    selectedDatasetId: string | null;
-    // TODO: Having datasets in here is ugly, but we need it in the reducer.
-    // See
-    // - https://medium.com/@williamjoshualacey/refactoring-redux-using-react-context-aa29fa16f4b7
-    // - https://codeburst.io/the-ugly-side-of-redux-6591fde68200
-    datasets: Dataset[];
+export function flyToDataset(selectedDatasetId: string) {
+    return (dispatch: Dispatch<FlyTo>, getState: () => AppState) => {
+        const datasets = datasetsSelector(getState());
+        const dataset = findDataset(datasets, selectedDatasetId);
+        if (dataset && dataset.bbox) {
+            dispatch(flyTo(dataset.bbox));
+        }
+    }
 }
 
-export function flyToDataset(selectedDatasetId: string | null, datasets: Dataset[]): FlyToDataset {
-    return {type: FLY_TO_DATASET, selectedDatasetId, datasets};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
+
+export function flyToPlace(selectedPlaceId: string) {
+    return (dispatch: Dispatch<FlyTo>, getState: () => AppState) => {
+        const placeGroups = selectedPlaceGroupsSelector(getState());
+        const place = findPlaceInPlaceGroups(placeGroups, selectedPlaceId);
+        if (place) {
+            if (place.bbox) {
+                dispatch(flyTo(place.bbox));
+            } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
+                dispatch(flyTo(new OlGeoJSONFormat().readGeometry(place.geometry)));
+            }
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function flyToSelectedObject() {
+    return (dispatch: Dispatch, getState: () => AppState) => {
+        const placeId = selectedPlaceIdSelector(getState());
+        const datasetId = selectedDatasetIdSelector(getState());
+        if (placeId) {
+            dispatch(flyToPlace(placeId) as any);
+        } else if (datasetId) {
+            dispatch(flyToDataset(datasetId) as any);
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const FLY_TO = 'FLY_TO';
+export type FLY_TO = typeof FLY_TO;
+
+export interface FlyTo {
+    type: FLY_TO;
+    mapId: string;
+    location: OlGeometry | OlExtent | null;
+}
+
+export function flyTo(location: OlGeometry | OlExtent | null): FlyTo {
+    return {type: FLY_TO, mapId: 'map', location};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,13 +166,21 @@ export interface SelectPlace {
     selectedPlaceId: string | null;
     // TODO: Having places in here is ugly, but we need it in the reducer.
     places: Place[];
-    showInMap: boolean;
 }
 
-export function selectPlace(selectedPlaceId: string | null, places: Place[], showInMap: boolean): SelectPlace {
-    return {type: SELECT_PLACE, selectedPlaceId, places, showInMap};
+
+export function selectPlace(selectedPlaceId: string | null, places: Place[], showInMap: boolean) {
+    return (dispatch: Dispatch<SelectPlace>, getState: () => AppState) => {
+        dispatch(_selectPlace(selectedPlaceId, places));
+        if (showInMap && selectedPlaceId) {
+            dispatch(flyToPlace(selectedPlaceId) as any);
+        }
+    }
 }
 
+function _selectPlace(selectedPlaceId: string | null, places: Place[]): SelectPlace {
+    return {type: SELECT_PLACE, selectedPlaceId, places};
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -351,7 +413,6 @@ export function updateSettings(settings: ControlState): UpdateSettings {
 
 export type ControlAction =
     SelectDataset
-    | FlyToDataset
     | UpdateDatasetPlaceGroup
     | SelectVariable
     | SelectPlaceGroups
@@ -370,4 +431,5 @@ export type ControlAction =
     | CloseDialog
     | ShowInfoCard
     | SetVisibleInfoCardElements
-    | UpdateInfoCardElementCodeMode;
+    | UpdateInfoCardElementCodeMode
+    | FlyTo;

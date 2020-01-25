@@ -1,10 +1,11 @@
-import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlSimpleGeometry } from 'ol/geom/SimpleGeometry';
+import { default as OlMap } from 'ol/Map';
+import { transformExtent as olProjTransformExtent } from 'ol/proj';
 import {
     ADD_ACTIVITY,
     CHANGE_LOCALE,
     CLOSE_DIALOG,
-    ControlAction,
-    FLY_TO_DATASET,
+    ControlAction, FLY_TO,
     INC_SELECTED_TIME,
     OPEN_DIALOG,
     REMOVE_ACTIVITY,
@@ -34,7 +35,7 @@ import { I18N } from '../config';
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from '../selectors/controlSelectors';
 import { AppState } from '../states/appState';
-import { ControlState, newControlState } from '../states/controlState';
+import { ControlState, MAP_OBJECTS, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
@@ -48,8 +49,6 @@ import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '..
 //                  for the select (name="dataset") component.
 //                  Consider providing a value that matches one of the available options or ''.
 //                  The available values are "".
-
-const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
 export function controlReducer(state: ControlState | undefined, action: ControlAction | DataAction, appState: AppState | undefined): ControlState {
     if (state === undefined) {
@@ -87,10 +86,6 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
             if (!selectedVariable && selectedDataset.variables.length > 0) {
                 selectedVariableName = selectedDataset.variables[0].name;
             }
-            let flyTo = state.flyTo;
-            if (selectedDataset.bbox) {
-                flyTo = selectedDataset.bbox;
-            }
             const selectedDatasetId = action.selectedDatasetId;
             const selectedTimeRange = getDatasetTimeRange(selectedDataset);
             const selectedTime = selectedTimeRange ? selectedTimeRange[1] : null;
@@ -100,19 +95,39 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
                 selectedVariableName,
                 selectedTimeRange,
                 selectedTime,
-                flyTo,
             };
         }
-        case FLY_TO_DATASET: {
-            const selectedDataset = findDataset(action.datasets, action.selectedDatasetId)!;
-            let flyTo = state.flyTo;
-            if (selectedDataset.bbox) {
-                flyTo = selectedDataset.bbox;
+        case FLY_TO: {
+            const mapObject = MAP_OBJECTS[action.mapId];
+            const flyToCurr = action.location;
+            if (mapObject instanceof OlMap && flyToCurr !== null) {
+                const map = mapObject;
+                const projection = map.getView().getProjection();
+                let flyToTarget;
+                // noinspection JSDeprecatedSymbols
+                if (Array.isArray(flyToCurr)) {
+                    // Fly to extent (bounding box)
+                    flyToTarget = olProjTransformExtent(flyToCurr, 'EPSG:4326', projection);
+                    map.getView().fit(flyToTarget, {size: map.getSize()});
+                } else {
+                    // Transform Geometry object
+                    flyToTarget = flyToCurr.transform('EPSG:4326', projection) as OlSimpleGeometry;
+                    if (flyToTarget.getType() === 'Point') {
+                        // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
+                        map.getView().setCenter(flyToTarget.getFirstCoordinate());
+                    } else {
+                        // Fly to shape
+                        map.getView().fit(flyToTarget, {size: map.getSize()});
+                    }
+                }
             }
-            return {
-                ...state,
-                flyTo,
-            };
+            if (state.flyTo !== action.location) {
+                return {
+                    ...state,
+                    flyTo: action.location,
+                };
+            }
+            return state;
         }
         case SELECT_PLACE_GROUPS: {
             const selectedPlaceGroupIds = action.selectedPlaceGroupIds;
@@ -125,21 +140,9 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
         }
         case SELECT_PLACE: {
             const selectedPlaceId = action.selectedPlaceId;
-            let flyTo = state.flyTo;
-            if (selectedPlaceId && action.showInMap) {
-                const place = action.places.find(p => p.id === selectedPlaceId);
-                if (place) {
-                    if (place.bbox && place.bbox.length === 4) {
-                        flyTo = place.bbox as [number, number, number, number];
-                    } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
-                        flyTo = new OlGeoJSONFormat().readGeometry(place.geometry);
-                    }
-                }
-            }
             return {
                 ...state,
                 selectedPlaceId,
-                flyTo
             };
         }
         case SELECT_VARIABLE: {

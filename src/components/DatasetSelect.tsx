@@ -1,11 +1,9 @@
-import IconButton from '@material-ui/core/IconButton';
 import * as React from 'react';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import MyLocationIcon from '@material-ui/icons/MyLocation';
 
 import { Dataset } from '../model/dataset';
 import { WithLocale } from '../util/lang';
@@ -26,9 +24,7 @@ const styles = (theme: Theme) => createStyles(
 interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedDatasetId: string | null;
     datasets: Dataset[];
-    selectDataset: (datasetId: string | null, datasets: Dataset[]) => void;
-    flyToDataset: (datasetId: string | null, datasets: Dataset[]) => void;
-    showInfoCard: (open: boolean) => void;
+    selectDataset: (datasetId: string | null, datasets: Dataset[], showInMap: boolean) => void;
 }
 
 const DatasetSelect: React.FC<DatasetSelectProps> = ({
@@ -36,12 +32,11 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
                                                          selectedDatasetId,
                                                          datasets,
                                                          selectDataset,
-                                                         flyToDataset,
-                                                         showInfoCard,
                                                      }) => {
 
     const handleDatasetChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
-        selectDataset(event.target.value || null, datasets);
+        const datasetId = event.target.value || null;
+        selectDataset(datasetId, datasets, true);
     };
 
     selectedDatasetId = selectedDatasetId || '';
@@ -74,19 +69,10 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
         </Select>
     );
 
-    const handleLocateButtonClick = () => {
-        flyToDataset(selectedDatasetId, datasets);
-    };
-
     return (
         <ControlBarItem
             label={datasetSelectLabel}
             control={datasetSelect}
-            actions={
-                (<IconButton disabled={selectedDatasetId === ''} onClick={handleLocateButtonClick}>
-                    {<MyLocationIcon/>}
-                </IconButton>)
-            }
         />
     );
 };

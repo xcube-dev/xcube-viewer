@@ -2,17 +2,18 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
 import InfoCardSwitch from '../components/InfoCardSwitch';
-import { showInfoCard } from '../actions/controlActions';
+import { showInfoCard, flyToSelectedObject } from '../actions/controlActions';
 
 const mapStateToProps = (state: AppState) => {
     return {
-        selectedDatasetId: state.controlState.selectedDatasetId,
+        visible: !!(state.controlState.selectedDatasetId || state.controlState.selectedPlaceId),
         infoCardOpen: state.controlState.infoCardOpen,
     }
 };
 
 const mapDispatchToProps = {
-    showInfoCard
+    showInfoCard,
+    flyToSelectedObject,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfoCardSwitch);

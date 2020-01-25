@@ -1,3 +1,4 @@
+import MyLocationIcon from '@material-ui/icons/MyLocation';
 import * as React from 'react';
 import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -19,32 +20,44 @@ const styles = (theme: Theme) => createStyles(
     });
 
 interface InfoCardSwitchProps extends WithStyles<typeof styles>, WithLocale {
-    selectedDatasetId: string | null;
+    visible: boolean;
+    flyToSelectedObject: () => void;
     infoCardOpen: boolean;
     showInfoCard: (open: boolean) => void;
 }
 
 const InfoCardSwitch: React.FC<InfoCardSwitchProps> = ({
                                                            classes,
-                                                           selectedDatasetId,
+                                                           visible,
+                                                           flyToSelectedObject,
                                                            infoCardOpen,
                                                            showInfoCard,
                                                        }) => {
 
-    if (!selectedDatasetId || infoCardOpen) {
+    if (!visible) {
         return null;
     }
 
-    const handleInfoButtonClick = () => {
-        showInfoCard(true);
-    };
+    const flyToButton = (
+        <IconButton onClick={flyToSelectedObject}>
+            <MyLocationIcon/>
+        </IconButton>
+    );
+
+    let infoButton;
+    if (!infoCardOpen) {
+        infoButton = (
+            <IconButton onClick={() => showInfoCard(true)}>
+                {<InfoIcon/>}
+            </IconButton>
+        );
+    }
 
     return (
         <FormControl className={classes.formControl}>
             <Box>
-                <IconButton disabled={selectedDatasetId === ''} onClick={handleInfoButtonClick}>
-                    {<InfoIcon/>}
-                </IconButton>
+                {flyToButton}
+                {infoButton}
             </Box>
         </FormControl>
     );
