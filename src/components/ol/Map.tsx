@@ -106,15 +106,17 @@ export class Map extends React.Component<MapProps, MapState> {
         const {id} = this.props;
         const mapDiv = this.contextValue.mapDiv!;
 
-        let map: OlMap | undefined;
+        let map: OlMap | null = null;
         if (this.props.isStale) {
-            const map = this.contextValue.mapObjects[id];
-            if (map instanceof OlMap) {
+            const mapObject = this.contextValue.mapObjects[id];
+            if (mapObject instanceof OlMap) {
+                map = mapObject;
                 map.setTarget(mapDiv);
             }
         }
 
         if (!map) {
+            console.info("Heeeeeeeeeeeeeeee! Created map!!!");
             const initialZoom = this.getMinZoom(mapDiv);
             const view = new OlView({
                                         center: olProjFromLonLat([0, 0]),
@@ -165,7 +167,7 @@ export class Map extends React.Component<MapProps, MapState> {
         //     unByKey(this.clickEventsKey);
         // }
         // this.clickEventsKey = map.on('click', this.handleClick);
-        console.log('Map: ', this.handleClick, this.clickEventsKey);
+        // console.log('Map: ', this.handleClick, this.clickEventsKey);
         map.updateSize();
     }
 
