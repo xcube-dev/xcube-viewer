@@ -146,8 +146,6 @@ const Viewer: React.FC<ViewerProps> = ({
     }, [map, selectedPlaceId, selectedPlaceIdPrev]);
 
     const handleMapClick = (event: OlMapBrowserEvent) => {
-        // TODO (forman): stale closure problem here, mapInteraction only initialised by initial render
-        console.log('Click!', event, mapInteraction);
         if (mapInteraction === 'Select') {
             const map = event.map;
             let selectedPlaceId: string | null = null;
@@ -223,8 +221,6 @@ const Viewer: React.FC<ViewerProps> = ({
             </Control>
         );
     }
-
-    console.log('Viewer:', mapInteraction);
 
     return (
         <ErrorBoundary>

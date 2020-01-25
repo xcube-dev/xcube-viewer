@@ -4,7 +4,6 @@ import { default as OlBaseObject } from 'ol/Object';
 import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
 import { default as OlView } from 'ol/View';
 import { default as OlEvent } from 'ol/events/Event';
-import { unByKey } from 'ol/Observable';
 import { EventsKey as OlEventsKey } from 'ol/events';
 import { MapOptions as OlMapOptions } from 'ol/PluggableMap';
 import { fromLonLat as olProjFromLonLat } from 'ol/proj';
@@ -12,7 +11,7 @@ import { fromLonLat as olProjFromLonLat } from 'ol/proj';
 import 'ol/ol.css';
 import './Map.css';
 
-export type MapElement = React.ReactElement<any> | null | undefined;
+export type MapElement = React.ReactElement | null | undefined;
 
 export interface MapContext {
     map?: OlMap;
@@ -112,11 +111,13 @@ export class Map extends React.Component<MapProps, MapState> {
             if (mapObject instanceof OlMap) {
                 map = mapObject;
                 map.setTarget(mapDiv);
+                if (this.clickEventsKey) {
+                    map.un('click', this.clickEventsKey.listener)
+                }
             }
         }
 
         if (!map) {
-            console.info("Heeeeeeeeeeeeeeee! Created map!!!");
             const initialZoom = this.getMinZoom(mapDiv);
             const view = new OlView({
                                         center: olProjFromLonLat([0, 0]),
@@ -128,13 +129,15 @@ export class Map extends React.Component<MapProps, MapState> {
                                 ...this.getMapOptions(),
                                 target: mapDiv
                             });
+
         }
 
         this.contextValue.map = map;
         this.contextValue.mapObjects[id] = map;
 
-        //map.set('objectId', this.props.id);
         this.clickEventsKey = map.on('click', this.handleClick);
+
+        //map.set('objectId', this.props.id);
         map.updateSize();
 
         // Force update so we can pass this.map as context to all children in next render()
