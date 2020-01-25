@@ -12,8 +12,9 @@ export function callApi<T>(endpointUrl: string, queryComponents?: QueryComponent
         url += '?' + queryString;
     }
 
-    // TODO (forman): enable debug logging by switch
-    // console.debug('Calling API: ', url);
+    if (process.env.NODE_ENV === 'development') {
+        console.debug('Calling API: ', url);
+    }
 
     return fetch(url, init)
         .then(response => {
@@ -29,8 +30,8 @@ export function callApi<T>(endpointUrl: string, queryComponents?: QueryComponent
                 throw new Error(I18N.get("Cannot reach server"));
             } else {
                 console.error(error);
+                throw error;
             }
-            throw error;
         });
 }
 

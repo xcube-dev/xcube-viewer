@@ -20,7 +20,13 @@ import {
     INC_SELECTED_TIME,
     UPDATE_SETTINGS, SET_MAP_INTERACTION,
 } from '../actions/controlActions';
-import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, REMOVE_USER_PLACE } from "../actions/dataActions";
+import {
+    CONFIGURE_SERVERS,
+    DataAction,
+    ADD_USER_PLACE,
+    REMOVE_USER_PLACE,
+    UPDATE_DATASETS
+} from "../actions/dataActions";
 import { I18N } from "../config";
 import { AppState } from "../states/appState";
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
@@ -28,6 +34,15 @@ import { findIndexCloseTo } from "../util/find";
 import { storeUserSettings } from '../states/userSettings';
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
 
+
+// TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
+//                so they produce a consistent state. E.g. on selected dataset change, ensure selected
+//                places and variables are still valid. Write tests for that.
+//                We currently still receiving error logs from Material-UI, e.g.:
+//                  SelectInput.js:304 Material-UI: you have provided an out-of-range value `local`
+//                  for the select (name="dataset") component.
+//                  Consider providing a value that matches one of the available options or ''.
+//                  The available values are "".
 
 const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
 
@@ -42,19 +57,37 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
                 setGlobalCanvasImageSmoothing(action.settings.imageSmoothingEnabled);
             }
             return action.settings;
+        case UPDATE_DATASETS: {
+            let selectedDatasetId = state!.selectedDatasetId;
+            let selectedVariableName = state!.selectedVariableName;
+            const selectedDataset = findDataset(action.datasets, selectedDatasetId);
+            const selectedVariable = (selectedDataset
+                                      && findDatasetVariable(selectedDataset, selectedVariableName))
+                                     || null;
+            if (selectedDataset) {
+                if (selectedVariable) {
+                    return state;
+                } else {
+                    selectedVariableName = selectedDataset.variables.length ? selectedDataset.variables[0].name : null;
+                }
+            } else {
+                selectedDatasetId = action.datasets.length ? action.datasets[0].id : null;
+            }
+            return {...state, selectedDatasetId, selectedVariableName};
+        }
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;
-            const dataset = findDataset(action.datasets, action.selectedDatasetId)!;
-            const variable = findDatasetVariable(dataset, selectedVariableName);
-            if (!variable && dataset.variables.length > 0) {
-                selectedVariableName = dataset.variables[0].name;
+            const selectedDataset = findDataset(action.datasets, action.selectedDatasetId)!;
+            const selectedVariable = findDatasetVariable(selectedDataset, selectedVariableName);
+            if (!selectedVariable && selectedDataset.variables.length > 0) {
+                selectedVariableName = selectedDataset.variables[0].name;
             }
             let flyTo = state.flyTo;
-            if (dataset.bbox) {
-                flyTo = dataset.bbox;
+            if (selectedDataset.bbox) {
+                flyTo = selectedDataset.bbox;
             }
             const selectedDatasetId = action.selectedDatasetId;
-            const selectedTimeRange = getDatasetTimeRange(dataset);
+            const selectedTimeRange = getDatasetTimeRange(selectedDataset);
             const selectedTime = selectedTimeRange ? selectedTimeRange[1] : null;
             return {
                 ...state,
