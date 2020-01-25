@@ -4,13 +4,14 @@ import { default as OlBaseObject } from 'ol/Object';
 import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
 import { default as OlView } from 'ol/View';
 import { default as OlEvent } from 'ol/events/Event';
+import { EventsKey as OlEventsKey } from 'ol/events';
 import { MapOptions as OlMapOptions } from 'ol/PluggableMap';
 import { fromLonLat as olProjFromLonLat } from 'ol/proj';
 
 import 'ol/ol.css';
 import './Map.css';
 
-export type MapElement = React.ReactElement<any> | null | undefined;
+export type MapElement = React.ReactElement | null | undefined;
 
 export interface MapContext {
     map?: OlMap;
@@ -37,6 +38,7 @@ const DEFAULT_CONTAINER_SYTLE: React.CSSProperties = {height: '100%'};
 export class Map extends React.Component<MapProps, MapState> {
 
     private readonly contextValue: MapContext;
+    private clickEventsKey: OlEventsKey | null = null;
 
     constructor(props: MapProps) {
         super(props);
@@ -103,11 +105,15 @@ export class Map extends React.Component<MapProps, MapState> {
         const {id} = this.props;
         const mapDiv = this.contextValue.mapDiv!;
 
-        let map: OlMap | undefined;
+        let map: OlMap | null = null;
         if (this.props.isStale) {
-            const map = this.contextValue.mapObjects[id];
-            if (map instanceof OlMap) {
+            const mapObject = this.contextValue.mapObjects[id];
+            if (mapObject instanceof OlMap) {
+                map = mapObject;
                 map.setTarget(mapDiv);
+                if (this.clickEventsKey) {
+                    map.un('click', this.clickEventsKey.listener)
+                }
             }
         }
 
@@ -123,13 +129,15 @@ export class Map extends React.Component<MapProps, MapState> {
                                 ...this.getMapOptions(),
                                 target: mapDiv
                             });
+
         }
 
         this.contextValue.map = map;
         this.contextValue.mapObjects[id] = map;
 
-        map.set('objectId', this.props.id);
-        map.on('click', this.handleClick);
+        this.clickEventsKey = map.on('click', this.handleClick);
+
+        //map.set('objectId', this.props.id);
         map.updateSize();
 
         // Force update so we can pass this.map as context to all children in next render()
@@ -158,6 +166,11 @@ export class Map extends React.Component<MapProps, MapState> {
         const mapOptions = this.getMapOptions();
         map.setProperties({...mapOptions});
         map.setTarget(mapDiv);
+        // if (this.clickEventsKey) {
+        //     unByKey(this.clickEventsKey);
+        // }
+        // this.clickEventsKey = map.on('click', this.handleClick);
+        // console.log('Map: ', this.handleClick, this.clickEventsKey);
         map.updateSize();
     }
 
@@ -169,6 +182,10 @@ export class Map extends React.Component<MapProps, MapState> {
 
         // Remove resize listener so we can adjust the view's minZoom.
         window.removeEventListener('resize', this.handleResize);
+
+        // if (this.clickEventsKey) {
+        //     unByKey(this.clickEventsKey);
+        // }
 
         const onMapRef = this.props.onMapRef;
         if (onMapRef) {

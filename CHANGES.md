@@ -7,6 +7,10 @@
 * Added a tool button to locate the selected dataset in the map.
 * Notification "snackbars" will now disappear after 5 seconds (#107).
 
+### Fixes
+
+* Fixed broken map selection interaction and fly-to introduced in v0.3.2 (#115).  
+
 ## Changes in version 0.3.2
 
 ### Enhancements
