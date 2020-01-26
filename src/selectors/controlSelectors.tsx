@@ -26,7 +26,7 @@ import {
     Place,
     PlaceGroup,
     isValidPlaceGroup,
-    PlaceInfo, forEachPlace,
+    PlaceInfo, forEachPlace, getPlaceInfo, findPlaceInfo,
 } from '../model/place';
 import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
 import { MapElement } from '../components/ol/Map';
@@ -159,7 +159,6 @@ export const selectedPlaceGroupPlacesSelector = createSelector(
     }
 );
 
-
 export const selectedPlaceSelector = createSelector(
     selectedPlaceGroupPlacesSelector,
     selectedPlaceIdSelector,
@@ -168,6 +167,16 @@ export const selectedPlaceSelector = createSelector(
     }
 );
 
+export const selectedPlaceInfoSelector = createSelector(
+    selectedPlaceGroupsSelector,
+    selectedPlaceIdSelector,
+    (placeGroups: PlaceGroup[], placeId: string | null): PlaceInfo | null => {
+        if (placeGroups.length === 0 || placeId === null) {
+            return null;
+        }
+        return findPlaceInfo(placeGroups, (placeGroup, place) => place.id === placeId);
+    }
+);
 
 export const canAddTimeSeriesSelector = createSelector(
     timeSeriesGroupsSelector,
@@ -200,10 +209,10 @@ export const timeSeriesPlaceInfosSelector = createSelector(
     placeGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
         const placeInfos: any = {};
-        forEachPlace(placeGroups, (placeGroup, place, label, color) => {
+        forEachPlace(placeGroups, (placeGroup, place) => {
             for (let timeSeriesGroup of timeSeriesGroups) {
                 if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {
-                    placeInfos[place.id] = {placeGroup, place, label, color};
+                    placeInfos[place.id] = getPlaceInfo(placeGroup, place);
                     break;
                 }
             }
@@ -217,8 +226,8 @@ export const selectedPlaceGroupPlaceLabelsSelector = createSelector(
     selectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): string[] => {
         const placeLabels: string[] = [];
-        forEachPlace(placeGroups, (placeGroup, place, label) => {
-            placeLabels.push(label);
+        forEachPlace(placeGroups, (placeGroup, place) => {
+            placeLabels.push(getPlaceInfo(placeGroup, place).label);
         });
         return placeLabels;
     }

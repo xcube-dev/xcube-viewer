@@ -1,3 +1,4 @@
+import { CardMedia } from '@material-ui/core';
 import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -23,15 +24,16 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
+import { I18N } from '../config';
 
 import { Dataset } from '../model/dataset';
 import { Variable } from '../model/variable';
-import { DEFAULT_LABEL_PROPERTY_NAMES, getPlaceLabel, Place } from '../model/place';
+import { PlaceInfo } from '../model/place';
+import { WithLocale } from '../util/lang';
 
 
 // TODO (forman): let xcube serve publish dataset and variable attributes
-// TODO (forman): use dataset, variable, place group specific label, description, and image mappings for rendering
-// TODO (forman): I18N
+// TODO (forman): use a dataset's and variable's specific label, description mappings for rendering
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
 ));
 
 
-interface InfoCardProps {
+interface InfoCardProps extends WithLocale {
     infoCardOpen: boolean;
     showInfoCard: (infoCardOpen: boolean) => void;
     visibleInfoCardElements: string[];
@@ -69,7 +71,7 @@ interface InfoCardProps {
     updateInfoCardElementCodeMode: (elementType: string, visible: boolean) => void;
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
-    selectedPlace: Place | null;
+    selectedPlaceInfo: PlaceInfo | null;
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -81,7 +83,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
                                                updateInfoCardElementCodeMode,
                                                selectedDataset,
                                                selectedVariable,
-                                               selectedPlace,
+                                               selectedPlaceInfo,
                                            }) => {
     const classes = useStyles();
 
@@ -128,7 +130,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
             />
         );
     }
-    if (selectedPlace) {
+    if (selectedPlaceInfo) {
         const elementType = 'place';
         const codeMode = infoCardElementCodeModes[elementType];
         const setCodeMode = (codeMode: boolean) => updateInfoCardElementCodeMode(elementType, codeMode);
@@ -138,7 +140,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 isIn={isVisible}
                 codeMode={codeMode}
                 setCodeMode={setCodeMode}
-                place={selectedPlace}/>
+                placeInfo={selectedPlaceInfo}/>
         );
     }
 
@@ -150,17 +152,17 @@ const InfoCard: React.FC<InfoCardProps> = ({
                                    onChange={handleInfoElementsChanges}>
                     {/*TODO (forman): fix ugly code duplication below!*/}
                     <ToggleButton key={0} value="dataset" disabled={selectedDataset === null}>
-                        <Tooltip title={'Show dataset information'}>
+                        <Tooltip title={I18N.get('Dataset information')}>
                             <WidgetsIcon/>
                         </Tooltip>
                     </ToggleButton>
                     <ToggleButton key={1} value="variable" disabled={selectedVariable === null}>
-                        <Tooltip title={'Show variable information'}>
+                        <Tooltip title={I18N.get('Variable information')}>
                             <LayersIcon/>
                         </Tooltip>
                     </ToggleButton>
-                    <ToggleButton key={2} value="place" disabled={selectedPlace === null}>
-                        <Tooltip title={'Show place information'}>
+                    <ToggleButton key={2} value="place" disabled={selectedPlaceInfo === null}>
+                        <Tooltip title={I18N.get('Place information')}>
                             <PlaceIcon/>
                         </Tooltip>
                     </ToggleButton>
@@ -191,19 +193,20 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, codeMode, 
     // const classes = useStyles();
     let content;
     if (codeMode) {
-        content = (<code>{JSON.stringify(dataset, ['id', 'title', 'dimensions', 'bbox'], 2)}</code>);
+        content = (
+            <CardContent><code>{JSON.stringify(dataset, ['id', 'title', 'dimensions', 'bbox'], 2)}</code></CardContent>);
     } else {
         const data: KeyValue[] = [
-            ['Dimension names', dataset.dimensions.map(d => d.name).join(', ')],
-            ['Dimension data types', dataset.dimensions.map(d => d.dtype).join(', ')],
-            ['Dimension sizes', dataset.dimensions.map(d => d.size).join(', ')],
-            ['Bounding box (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
+            [I18N.get('Dimension names'), dataset.dimensions.map(d => d.name).join(', ')],
+            [I18N.get('Dimension data types'), dataset.dimensions.map(d => d.dtype).join(', ')],
+            [I18N.get('Dimension lengths'), dataset.dimensions.map(d => d.size).join(', ')],
+            [I18N.get('Geographical extent') + ' (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
         ];
-        content = <KeyValueTable data={data}/>;
+        content = <CardContent><KeyValueTable data={data}/></CardContent>;
     }
     return (
         <InfoCardContent
-            title={dataset.title || '- missing title -'}
+            title={dataset.title || '?'}
             subheader={dataset.title && `ID: ${dataset.id}`}
             isIn={isIn}
             codeMode={codeMode}
@@ -227,42 +230,43 @@ interface VariableInfoContentProps {
 const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode, setCodeMode, variable}) => {
     const classes = useStyles();
     let content;
+    let htmlReprPaper;
     if (codeMode) {
         content = (
-            <code>
+            <CardContent><code>
                 {JSON.stringify(variable,
                                 ['id', 'name', 'title', 'units', 'shape', 'dtype',
                                  'colorBarMin',
                                  'colorBarMax',
                                  'colorBarName'],
                                 2)}
-            </code>
+            </code></CardContent>
         );
     } else {
         const data: KeyValue[] = [
-            ['Name', variable.name],
-            ['Title', variable.title],
-            ['Units', variable.units],
-            ['Shape', variable.shape],
-            ['Data type', variable.dtype],
-            ['Default display min/max', `${variable.colorBarMin}, ${variable.colorBarMax}`],
-            ['Default colour bar', variable.colorBarName],
+            [I18N.get('Title'), variable.title],
+            [I18N.get('Name'), variable.name],
+            [I18N.get('Units'), variable.units],
+            [I18N.get('Data type'), variable.dtype],
+            [I18N.get('Dimension names'), variable.dims.join(', ')],
+            [I18N.get('Dimension lengths'), variable.shape.map(s => s + '').join(', ')],
         ];
-        content = <KeyValueTable data={data}/>;
-    }
-    let htmlReprPaper;
-    if (variable.htmlRepr) {
-        const handleRef = (element: HTMLDivElement | null) => {
-            if (element && variable.htmlRepr) {
-                element.innerHTML = variable.htmlRepr;
-            }
-        };
-        htmlReprPaper = (<Paper ref={handleRef} className={classes.variableHtmlReprContainer}/>);
+        content = (<CardContent><KeyValueTable data={data}/></CardContent>);
+        if (variable.htmlRepr) {
+            const handleRef = (element: HTMLDivElement | null) => {
+                if (element && variable.htmlRepr) {
+                    element.innerHTML = variable.htmlRepr;
+                }
+            };
+            htmlReprPaper = (
+                <CardContent><Paper ref={handleRef} className={classes.variableHtmlReprContainer}/></CardContent>
+            );
+        }
     }
     return (
         <InfoCardContent
             title={variable.title || variable.name}
-            subheader={variable.title && <code>{variable.name}</code>}
+            subheader={`${I18N.get('Name')}: ${variable.name}`}
             isIn={isIn}
             codeMode={codeMode}
             setCodeMode={setCodeMode}
@@ -279,31 +283,43 @@ interface PlaceInfoContentProps {
     isIn: boolean;
     codeMode: boolean;
     setCodeMode: (code: boolean) => void;
-    place: Place;
+    placeInfo: PlaceInfo;
 }
 
-const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, codeMode, setCodeMode, place}) => {
+const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, codeMode, setCodeMode, placeInfo}) => {
+    const place = placeInfo.place;
     let content;
+    let image;
+    let description;
     if (codeMode) {
-        content = <code>{JSON.stringify(place, null, 2)}</code>;
+        content = <CardContent><code>{JSON.stringify(place, null, 2)}</code></CardContent>;
     } else {
+        if (placeInfo.image && placeInfo.image.startsWith('http')) {
+            image = <CardMedia src={placeInfo.image} title={placeInfo.label}/>;
+        }
+        if (placeInfo.description) {
+            description = <CardContent><Typography>{placeInfo.description}</Typography></CardContent>;
+        }
         if (!!place.properties) {
             const data: KeyValue[] = Object.getOwnPropertyNames(place.properties).map(
                 (name: any) => [name, place.properties![name]]
             );
-            content = <KeyValueTable data={data}/>;
+            content = <CardContent><KeyValueTable data={data}/></CardContent>;
         } else {
-            content = <Typography>This place has no properties.</Typography>;
+            content =
+                <CardContent><Typography>{I18N.get('There is no information available for this location.')}</Typography></CardContent>;
         }
     }
     return (
         <InfoCardContent
-            title={getPlaceLabel(place, DEFAULT_LABEL_PROPERTY_NAMES)}
-            subheader={`Type: ${place.geometry.type}`}
+            title={placeInfo.label}
+            subheader={`${I18N.get('Geometry type')}: ${I18N.get(place.geometry.type)}`}
             isIn={isIn}
             codeMode={codeMode}
             setCodeMode={setCodeMode}
         >
+            {image}
+            {description}
             {content}
         </InfoCardContent>
     );
@@ -344,9 +360,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                     </IconButton>
                 }
             />
-            <CardContent>
-                {children}
-            </CardContent>
+            {children}
         </Collapse>
     );
 };

@@ -2,8 +2,9 @@ import { connect } from 'react-redux';
 import {
     infoCardElementCodeModesSelector,
     selectedDatasetSelector,
-    selectedPlaceSelector,
-    selectedVariableSelector, visibleInfoCardElementsSelector
+    selectedPlaceInfoSelector,
+    selectedVariableSelector,
+    visibleInfoCardElementsSelector
 } from '../selectors/controlSelectors';
 
 import { AppState } from '../states/appState';
@@ -17,12 +18,13 @@ import InfoCard from '../components/InfoCard';
 
 const mapStateToProps = (state: AppState) => {
     return {
+        locale: state.controlState.locale,
         infoCardOpen: state.controlState.infoCardOpen,
         visibleInfoCardElements: visibleInfoCardElementsSelector(state),
         infoCardElementCodeModes: infoCardElementCodeModesSelector(state),
         selectedDataset: selectedDatasetSelector(state),
         selectedVariable: selectedVariableSelector(state),
-        selectedPlace: selectedPlaceSelector(state),
+        selectedPlaceInfo: selectedPlaceInfoSelector(state),
     }
 };
 

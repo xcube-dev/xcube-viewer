@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import InfoCardSwitch from '../components/InfoCardSwitch';
+import ControlBarActions from '../components/ControlBarActions';
 import { showInfoCard, flyToSelectedObject } from '../actions/controlActions';
 
 const mapStateToProps = (state: AppState) => {
@@ -16,4 +16,4 @@ const mapDispatchToProps = {
     flyToSelectedObject,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InfoCardSwitch);
+export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);

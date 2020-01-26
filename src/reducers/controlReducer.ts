@@ -260,23 +260,27 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
             };
         }
         case SHOW_INFO_CARD: {
-            return {
+            state = {
                 ...state,
                 infoCardOpen: action.infoCardOpen,
             };
+            storeUserSettings(state);
+            return state;
         }
         case SET_VISIBLE_INFO_CARD_ELEMENTS: {
             const infoCardElementStates = {...state.infoCardElementStates};
             Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
                 infoCardElementStates[e] = {...infoCardElementStates[e], visible: action.visibleElements.includes(e)};
             });
-            return {
+            state = {
                 ...state,
                 infoCardElementStates,
             };
+            storeUserSettings(state);
+            return state;
         }
         case UPDATE_INFO_CARD_ELEMENT_CODE_MODE: {
-            return {
+            state = {
                 ...state,
                 infoCardElementStates: {
                     ...state.infoCardElementStates,
@@ -286,6 +290,8 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
                     }
                 },
             };
+            storeUserSettings(state);
+            return state;
         }
         case ADD_ACTIVITY: {
             return {

@@ -106,6 +106,13 @@
       "se": "Tid"
     },
     {
+      "en": "Geometry type",
+      "de": "Geometry-Typ",
+      "it": "Tipo di geometria",
+      "ro": "Tip de geometrie",
+      "se": "Geometri typ"
+    },
+    {
       "en": "Point",
       "de": "Punkt",
       "it": "Punto",
@@ -377,6 +384,90 @@
       "it": "Nascondi valori più bassi",
       "ro": "Ascundeți valori mai mici",
       "se": "Dölj lägre värden"
+    },
+    {
+      "en": "Dataset information",
+      "de": "Informationen zum Datensatz",
+      "it": "Informazioni sul set di dati",
+      "ro": "Informații despre setul de date",
+      "se": "Information om dataset"
+    },
+    {
+      "en": "Variable information",
+      "de": "Informationen zur Variablen",
+      "it": "Informazioni sulla variabile",
+      "ro": "Informații despre variabilă",
+      "se": "Information om variabeln"
+    },
+    {
+      "en": "Place information",
+      "de": "Informationen zum Ort",
+      "it": "Informazioni sulla posizione",
+      "ro": "Informații despre locație",
+      "se": "Platsinformation"
+    },
+    {
+      "en": "Dimension names",
+      "de": "Namen der Dimensionen",
+      "it": "Nomi delle dimensioni",
+      "ro": "Numele dimensiunilor",
+      "se": "Dimensioner namn"
+    },
+    {
+      "en": "Dimension data types",
+      "de": "Datentypen der Dimensionen",
+      "it": "Tipi di dati dimensione",
+      "ro": "Tipuri de date cu dimensiuni",
+      "se": "Dimensionsdatatyper"
+    },
+    {
+      "en": "Dimension lengths",
+      "de": "Länge der Dimensionen",
+      "it": "Lunghezza delle dimensioni",
+      "ro": "Lungimea dimensiunilor",
+      "se": "Måttlängder"
+    },
+    {
+      "en": "Geographical extent",
+      "de": "Geografische Ausdehnung",
+      "it": "Estensione geografica",
+      "ro": "Mărimea geografică",
+      "se": "Geografisk omfattning"
+    },
+    {
+      "en": "Name",
+      "de": "Name",
+      "it": "Nome",
+      "ro": "Nume",
+      "se": "Namn"
+    },
+    {
+      "en": "Title",
+      "de": "Titel",
+      "it": "Titolo",
+      "ro": "Titlu",
+      "se": "Titel"
+    },
+    {
+      "en": "Units",
+      "de": "Einheiten",
+      "it": "Unità",
+      "ro": "Unități",
+      "se": "Enheter"
+    },
+    {
+      "en": "Data type",
+      "de": "Datentyp",
+      "it": "Tipo di dati",
+      "ro": "Tipul de date",
+      "se": "Datatyp"
+    },
+    {
+      "en": "There is no information available for this location.",
+      "de": "Zu diesem Ort sind keine keine Informationen vorhanden.",
+      "it": "Non ci sono informazioni disponibili per questa posizione.",
+      "ro": "Nu există informații disponibile pentru această locație.",
+      "se": "Det finns ingen information tillgänglig för den här platsen."
     }
   ]
 }

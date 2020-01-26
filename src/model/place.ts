@@ -1,4 +1,5 @@
 import * as  GeoJSON from 'geojson';
+import { defaultMemoize } from 'reselect';
 import { getUserPlaceColorName } from '../config';
 
 
@@ -23,55 +24,101 @@ export interface PlaceGroup extends GeoJSON.FeatureCollection {
 }
 
 /**
- * Precomputed stuff.
+ * Computed place information.
  */
 export interface PlaceInfo {
     placeGroup: PlaceGroup;
     place: Place;
     label: string;
     color: string;
+    image: string | null;
+    description: string | null;
 }
 
+export const DEFAULT_LABEL_PROPERTY_NAMES = mkCases(['label', 'title', 'name', 'id']);
+export const DEFAULT_DESCRIPTION_PROPERTY_NAMES = mkCases(['description', 'desc', 'abstract', 'comment']);
+export const DEFAULT_COLOR_PROPERTY_NAMES = mkCases(['color']);
+export const DEFAULT_IMAGE_PROPERTY_NAMES = mkCases(['image', 'img', 'picture', 'pic']);
 
-export const DEFAULT_LABEL_PROPERTY_NAMES = ['label', 'LABEL', 'Label',
-                                             'title', 'TITLE', 'Title',
-                                             'name', 'NAME', 'Name',
-                                             'id', 'ID', 'Id'];
+export function computePlaceInfo(placeGroup: PlaceGroup, place: Place): PlaceInfo {
+    const infoObj = {};
+    updatePlaceInfo(infoObj, placeGroup, place, 'label', place.id + '',
+                    DEFAULT_LABEL_PROPERTY_NAMES);
+    updatePlaceInfo(infoObj, placeGroup, place, 'color', getUserPlaceColorName(getPlaceHash(place)),
+                    DEFAULT_COLOR_PROPERTY_NAMES);
+    updatePlaceInfo(infoObj, placeGroup, place, 'image', null,
+                    DEFAULT_IMAGE_PROPERTY_NAMES);
+    updatePlaceInfo(infoObj, placeGroup, place, 'description', null,
+                    DEFAULT_DESCRIPTION_PROPERTY_NAMES);
+    return {placeGroup, place, ...infoObj} as PlaceInfo;
+}
 
-export function forEachPlace(placeGroups: PlaceGroup[], callback: (placeGroup: PlaceGroup, place: Place, label: string, color: string) => void) {
+export const getPlaceInfo = defaultMemoize(computePlaceInfo);
+
+
+function updatePlaceInfo(infoObj: { [name: string]: any },
+                         placeGroup: PlaceGroup,
+                         place: Place,
+                         propertyName: string,
+                         defaultValue: any,
+                         defaultPropertyNames: string[]) {
+    let propertyValue;
+    const effectivePropertyName = placeGroup.propertyMapping && placeGroup.propertyMapping[propertyName];
+    if (effectivePropertyName
+        && defaultPropertyNames.length > 0
+        && defaultPropertyNames[0] !== effectivePropertyName) {
+        defaultPropertyNames = [effectivePropertyName, ...defaultPropertyNames];
+    }
+    if (place.properties) {
+        propertyValue = getPropertyValue(place.properties, defaultPropertyNames);
+    }
+    if (propertyValue === undefined) {
+        propertyValue = getPropertyValue(place, defaultPropertyNames);
+    }
+    infoObj[propertyName] = propertyValue || defaultValue;
+}
+
+function getPropertyValue(container: any, propertyNames: string[]) {
+    let value;
+    for (let propertyName of propertyNames) {
+        if (propertyName in container) {
+            return container[propertyName];
+        }
+    }
+    // noinspection JSUnusedAssignment
+    return value;
+}
+
+function mkCases(names: string[]): string[] {
+    let nameCases: string[] = [];
+    for (let name of names) {
+        nameCases = nameCases.concat(name.toLowerCase(),
+                                     name.toUpperCase(),
+                                     name[0].toUpperCase() + name.substr(1).toLowerCase())
+    }
+    return nameCases;
+}
+
+export function forEachPlace(placeGroups: PlaceGroup[], callback: (placeGroup: PlaceGroup, place: Place) => void) {
     placeGroups.forEach(placeGroup => {
         if (isValidPlaceGroup(placeGroup)) {
-            const labelPropNames = getPlaceGroupLabelPropertyNames(placeGroup);
             placeGroup.features.forEach((place: Place) => {
-                callback(placeGroup, place, getPlaceLabel(place, labelPropNames), getPlaceColor(place));
+                callback(placeGroup, place);
             });
         }
     });
 }
 
-function getPlaceGroupLabelPropertyNames(placeGroup: PlaceGroup): string[] {
-    const propertyMapping = placeGroup.propertyMapping;
-    if (propertyMapping && propertyMapping['label']) {
-        return [propertyMapping['label'], ...DEFAULT_LABEL_PROPERTY_NAMES];
-    }
-    return DEFAULT_LABEL_PROPERTY_NAMES;
-}
-
-export function getPlaceLabel(place: Place, labelPropertyNames: string []) {
-    if (place.properties) {
-        let label;
-        for (let propName of labelPropertyNames) {
-            label = place.properties[propName];
-            if (label) {
-                return label;
+export function findPlaceInfo(placeGroups: PlaceGroup[], predicate: (placeGroup: PlaceGroup, place: Place) => boolean): PlaceInfo | null {
+    for (let placeGroup of placeGroups) {
+        if (isValidPlaceGroup(placeGroup)) {
+            const place = placeGroup.features.find((place: Place) => predicate(placeGroup, place));
+            if (place) {
+                return getPlaceInfo(placeGroup, place);
             }
         }
     }
-    return '' + place.id;
-}
-
-function getPlaceColor(place: Place) {
-    return (place.properties && place.properties['color']) || getUserPlaceColorName(getPlaceHash(place))
+    return null;
 }
 
 function getPlaceHash(place: Place): number {
@@ -91,7 +138,6 @@ function getPlaceHash(place: Place): number {
 export function isValidPlaceGroup(placeGroup: PlaceGroup): boolean {
     return !!placeGroup.features;
 }
-
 
 export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | null): Place | null {
     if (!placeId || !isValidPlaceGroup(placeGroup)) {

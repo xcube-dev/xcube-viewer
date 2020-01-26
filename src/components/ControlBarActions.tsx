@@ -19,14 +19,14 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-interface InfoCardSwitchProps extends WithStyles<typeof styles>, WithLocale {
+interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     visible: boolean;
     flyToSelectedObject: () => void;
     infoCardOpen: boolean;
     showInfoCard: (open: boolean) => void;
 }
 
-const InfoCardSwitch: React.FC<InfoCardSwitchProps> = ({
+const ControlBarActions: React.FC<ControlBarActionsProps> = ({
                                                            classes,
                                                            visible,
                                                            flyToSelectedObject,
@@ -63,4 +63,4 @@ const InfoCardSwitch: React.FC<InfoCardSwitchProps> = ({
     );
 };
 
-export default withStyles(styles)(InfoCardSwitch);
+export default withStyles(styles)(ControlBarActions);
