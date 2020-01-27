@@ -33,7 +33,6 @@ import { PlaceInfo } from '../model/place';
 import { WithLocale } from '../util/lang';
 
 
-// TODO (forman): let xcube serve publish dataset and variable attributes
 // TODO (forman): use a dataset's and variable's specific label, description mappings for rendering
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
