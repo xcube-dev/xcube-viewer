@@ -17,6 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import CodeIcon from '@material-ui/icons/Code';
 import InfoIcon from '@material-ui/icons/Info';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -67,8 +68,8 @@ interface InfoCardProps extends WithLocale {
     showInfoCard: (infoCardOpen: boolean) => void;
     visibleInfoCardElements: string[];
     setVisibleInfoCardElements: (visibleInfoCardElements: string[]) => void;
-    infoCardElementCodeModes: { [elementType: string]: boolean };
-    updateInfoCardElementCodeMode: (elementType: string, visible: boolean) => void;
+    infoCardElementViewModes: { [elementType: string]: string };
+    updateInfoCardElementViewMode: (elementType: string, viewMode: string) => void;
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
     selectedPlaceInfo: PlaceInfo | null;
@@ -79,8 +80,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
                                                showInfoCard,
                                                visibleInfoCardElements,
                                                setVisibleInfoCardElements,
-                                               infoCardElementCodeModes,
-                                               updateInfoCardElementCodeMode,
+                                               infoCardElementViewModes,
+                                               updateInfoCardElementViewMode,
                                                selectedDataset,
                                                selectedVariable,
                                                selectedPlaceInfo,
@@ -105,41 +106,41 @@ const InfoCard: React.FC<InfoCardProps> = ({
     let placeInfoContent;
     if (selectedDataset) {
         const elementType = 'dataset';
-        const codeMode = infoCardElementCodeModes[elementType];
-        const setCodeMode = (codeMode: boolean) => updateInfoCardElementCodeMode(elementType, codeMode);
+        const viewMode = infoCardElementViewModes[elementType];
+        const setViewMode = (viewMode: string) => updateInfoCardElementViewMode(elementType, viewMode);
         const isVisible = visibleInfoCardElements.includes(elementType);
         datasetInfoContent = (
             <DatasetInfoContent
                 isIn={isVisible}
-                codeMode={codeMode}
-                setCodeMode={setCodeMode}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
                 dataset={selectedDataset}/>
         );
     }
     if (selectedVariable) {
         const elementType = 'variable';
-        const codeMode = infoCardElementCodeModes[elementType];
-        const setCodeMode = (codeMode: boolean) => updateInfoCardElementCodeMode(elementType, codeMode);
+        const viewMode = infoCardElementViewModes[elementType];
+        const setViewMode = (viewMode: string) => updateInfoCardElementViewMode(elementType, viewMode);
         const isVisible = visibleInfoCardElements.includes(elementType);
         variableInfoContent = (
             <VariableInfoContent
                 isIn={isVisible}
-                codeMode={codeMode}
-                setCodeMode={setCodeMode}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
                 variable={selectedVariable}
             />
         );
     }
     if (selectedPlaceInfo) {
         const elementType = 'place';
-        const codeMode = infoCardElementCodeModes[elementType];
-        const setCodeMode = (codeMode: boolean) => updateInfoCardElementCodeMode(elementType, codeMode);
+        const viewMode = infoCardElementViewModes[elementType];
+        const setViewMode = (viewMode: string) => updateInfoCardElementViewMode(elementType, viewMode);
         const isVisible = visibleInfoCardElements.includes(elementType);
         placeInfoContent = (
             <PlaceInfoContent
                 isIn={isVisible}
-                codeMode={codeMode}
-                setCodeMode={setCodeMode}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
                 placeInfo={selectedPlaceInfo}/>
         );
     }
@@ -184,18 +185,18 @@ export default InfoCard;
 
 interface DatasetInfoContentProps {
     isIn: boolean;
-    codeMode: boolean;
-    setCodeMode: (code: boolean) => void;
+    viewMode: string;
+    setViewMode: (viewMode: string) => void;
     dataset: Dataset;
 }
 
-const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, codeMode, setCodeMode, dataset}) => {
+const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, setViewMode, dataset}) => {
     // const classes = useStyles();
     let content;
-    if (codeMode) {
+    if (viewMode === 'code') {
         content = (
             <CardContent><code>{JSON.stringify(dataset, ['id', 'title', 'dimensions', 'bbox'], 2)}</code></CardContent>);
-    } else {
+    } else if (viewMode === 'text') {
         const data: KeyValue[] = [
             [I18N.get('Dimension names'), dataset.dimensions.map(d => d.name).join(', ')],
             [I18N.get('Dimension data types'), dataset.dimensions.map(d => d.dtype).join(', ')],
@@ -203,14 +204,16 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, codeMode, 
             [I18N.get('Geographical extent') + ' (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
         ];
         content = <CardContent><KeyValueTable data={data}/></CardContent>;
+    } else {
+        content = <CardContent><Typography>Coming soon...</Typography></CardContent>;
     }
     return (
         <InfoCardContent
             title={dataset.title || '?'}
             subheader={dataset.title && `ID: ${dataset.id}`}
             isIn={isIn}
-            codeMode={codeMode}
-            setCodeMode={setCodeMode}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
         >
             {content}
         </InfoCardContent>
@@ -222,27 +225,27 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, codeMode, 
 
 interface VariableInfoContentProps {
     isIn: boolean;
-    codeMode: boolean;
-    setCodeMode: (code: boolean) => void;
+    viewMode: string;
+    setViewMode: (viewMode: string) => void;
     variable: Variable;
 }
 
-const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode, setCodeMode, variable}) => {
+const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode, setViewMode, variable}) => {
     const classes = useStyles();
     let content;
     let htmlReprPaper;
-    if (codeMode) {
+    if (viewMode === 'code') {
         content = (
             <CardContent><code>
                 {JSON.stringify(variable,
                                 ['id', 'name', 'title', 'units', 'shape', 'dtype',
-                                 'colorBarMin',
-                                 'colorBarMax',
-                                 'colorBarName'],
+                                    'colorBarMin',
+                                    'colorBarMax',
+                                    'colorBarName'],
                                 2)}
             </code></CardContent>
         );
-    } else {
+    } else if (viewMode === 'text') {
         const data: KeyValue[] = [
             [I18N.get('Title'), variable.title],
             [I18N.get('Name'), variable.name],
@@ -262,14 +265,16 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode
                 <CardContent><Paper ref={handleRef} className={classes.variableHtmlReprContainer}/></CardContent>
             );
         }
+    } else {
+        content = <CardContent><Typography>Coming soon...</Typography></CardContent>;
     }
     return (
         <InfoCardContent
             title={variable.title || variable.name}
             subheader={`${I18N.get('Name')}: ${variable.name}`}
             isIn={isIn}
-            codeMode={codeMode}
-            setCodeMode={setCodeMode}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
         >
             {content}
             {htmlReprPaper}
@@ -281,25 +286,26 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, codeMode
 
 interface PlaceInfoContentProps {
     isIn: boolean;
-    codeMode: boolean;
-    setCodeMode: (code: boolean) => void;
+    viewMode: string;
+    setViewMode: (viewMode: string) => void;
     placeInfo: PlaceInfo;
 }
 
-const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, codeMode, setCodeMode, placeInfo}) => {
+const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setViewMode, placeInfo}) => {
     const place = placeInfo.place;
     let content;
     let image;
     let description;
-    if (codeMode) {
+    if (viewMode === 'code') {
         content = <CardContent><code>{JSON.stringify(place, null, 2)}</code></CardContent>;
-    } else {
+    } else if (viewMode === 'text') {
         if (placeInfo.image && placeInfo.image.startsWith('http')) {
             image = <CardMedia src={placeInfo.image} title={placeInfo.label}/>;
         }
         if (placeInfo.description) {
             description = <CardContent><Typography>{placeInfo.description}</Typography></CardContent>;
         }
+    } else {
         if (!!place.properties) {
             const data: KeyValue[] = Object.getOwnPropertyNames(place.properties).map(
                 (name: any) => [name, place.properties![name]]
@@ -315,8 +321,8 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, codeMode, setC
             title={placeInfo.label}
             subheader={`${I18N.get('Geometry type')}: ${I18N.get(place.geometry.type)}`}
             isIn={isIn}
-            codeMode={codeMode}
-            setCodeMode={setCodeMode}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
         >
             {image}
             {description}
@@ -331,22 +337,22 @@ interface InfoCardContentProps {
     isIn: boolean;
     title: React.ReactNode;
     subheader?: React.ReactNode;
-    codeMode: boolean;
-    setCodeMode: (code: boolean) => void;
+    viewMode: string;
+    setViewMode: (viewMode: string) => void;
 }
 
 const InfoCardContent: React.FC<InfoCardContentProps> = ({
                                                              isIn,
                                                              title,
                                                              subheader,
-                                                             codeMode,
-                                                             setCodeMode,
+                                                             viewMode,
+                                                             setViewMode,
                                                              children,
                                                          }) => {
     // const classes = useStyles();
 
-    const handleCodeModeClick = () => {
-        setCodeMode(!codeMode);
+    const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, viewMode: string) => {
+        setViewMode(viewMode);
     };
 
     return (
@@ -355,9 +361,21 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                 title={title}
                 subheader={subheader}
                 action={
-                    <IconButton onClick={handleCodeModeClick}>
-                        {codeMode ? <TextFieldsIcon/> : <CodeIcon/>}
-                    </IconButton>
+                    <ToggleButtonGroup key={0}
+                                       size="small"
+                                       value={viewMode}
+                                       exclusive={true}
+                                       onChange={handleViewModeChange}>
+                        <ToggleButton key={0} value="text">
+                            <TextFieldsIcon/>
+                        </ToggleButton>
+                        <ToggleButton key={1} value="list">
+                            <ListAltIcon/>
+                        </ToggleButton>
+                        <ToggleButton key={2} value="code">
+                            <CodeIcon/>
+                        </ToggleButton>
+                    </ToggleButtonGroup>
                 }
             />
             {children}

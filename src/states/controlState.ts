@@ -15,7 +15,7 @@ export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle';
 
 export interface InfoCardElementState {
     visible?: boolean;
-    codeMode?: boolean;
+    viewMode?: string;
 }
 
 export interface InfoCardElementStates {
@@ -75,9 +75,9 @@ export function newControlState(): ControlState {
         mapInteraction: 'Point',
         infoCardOpen: false,
         infoCardElementStates: {
-            dataset: {visible: true, codeMode: false},
-            variable: {visible: true, codeMode: false},
-            place: {visible: true, codeMode: false},
+            dataset: {visible: true, viewMode: 'text'},
+            variable: {visible: true, viewMode: 'text'},
+            place: {visible: true, viewMode: 'text'},
         },
         imageSmoothingEnabled: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',

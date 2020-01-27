@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import {
-    infoCardElementCodeModesSelector,
+    infoCardElementViewModesSelector,
     selectedDatasetSelector,
     selectedPlaceInfoSelector,
     selectedVariableSelector,
@@ -11,7 +11,7 @@ import { AppState } from '../states/appState';
 import {
     setVisibleInfoCardElements,
     showInfoCard,
-    updateInfoCardElementCodeMode,
+    updateInfoCardElementViewMode,
 } from '../actions/controlActions';
 import InfoCard from '../components/InfoCard';
 
@@ -21,7 +21,7 @@ const mapStateToProps = (state: AppState) => {
         locale: state.controlState.locale,
         infoCardOpen: state.controlState.infoCardOpen,
         visibleInfoCardElements: visibleInfoCardElementsSelector(state),
-        infoCardElementCodeModes: infoCardElementCodeModesSelector(state),
+        infoCardElementViewModes: infoCardElementViewModesSelector(state),
         selectedDataset: selectedDatasetSelector(state),
         selectedVariable: selectedVariableSelector(state),
         selectedPlaceInfo: selectedPlaceInfoSelector(state),
@@ -31,7 +31,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
     showInfoCard,
     setVisibleInfoCardElements,
-    updateInfoCardElementCodeMode,
+    updateInfoCardElementViewMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfoCard);

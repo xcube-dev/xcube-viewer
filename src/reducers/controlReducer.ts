@@ -19,7 +19,7 @@ import {
     SET_MAP_INTERACTION,
     SET_VISIBLE_INFO_CARD_ELEMENTS,
     SHOW_INFO_CARD,
-    UPDATE_INFO_CARD_ELEMENT_CODE_MODE,
+    UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
     UPDATE_SETTINGS,
     UPDATE_TIME_ANIMATION,
 } from '../actions/controlActions';
@@ -279,14 +279,14 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
             storeUserSettings(state);
             return state;
         }
-        case UPDATE_INFO_CARD_ELEMENT_CODE_MODE: {
+        case UPDATE_INFO_CARD_ELEMENT_VIEW_MODE: {
             state = {
                 ...state,
                 infoCardElementStates: {
                     ...state.infoCardElementStates,
                     [action.elementType]: {
                         ...state.infoCardElementStates[action.elementType],
-                        codeMode: action.codeMode
+                        viewMode: action.viewMode
                     }
                 },
             };

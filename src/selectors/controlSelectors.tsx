@@ -370,12 +370,12 @@ export const visibleInfoCardElementsSelector = createSelector(
     }
 );
 
-export const infoCardElementCodeModesSelector = createSelector(
+export const infoCardElementViewModesSelector = createSelector(
     infoCardElementStatesSelector,
-    (infoCardElementStates): { [elementType: string]: boolean } => {
-        const infoCardElementCodeModes: { [elementType: string]: boolean } = {};
+    (infoCardElementStates): { [elementType: string]: string } => {
+        const infoCardElementCodeModes: { [elementType: string]: string } = {};
         Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
-            infoCardElementCodeModes[e] = !!infoCardElementStates[e].codeMode;
+            infoCardElementCodeModes[e] = infoCardElementStates[e].viewMode || 'text';
         });
         return infoCardElementCodeModes;
     }

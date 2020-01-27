@@ -311,17 +311,17 @@ export function setVisibleInfoCardElements(visibleElements: string[]): SetVisibl
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const UPDATE_INFO_CARD_ELEMENT_CODE_MODE = 'UPDATE_INFO_CARD_ELEMENT_CODE_MODE';
-export type UPDATE_INFO_CARD_ELEMENT_CODE_MODE = typeof UPDATE_INFO_CARD_ELEMENT_CODE_MODE;
+export const UPDATE_INFO_CARD_ELEMENT_VIEW_MODE = 'UPDATE_INFO_CARD_ELEMENT_VIEW_MODE';
+export type UPDATE_INFO_CARD_ELEMENT_VIEW_MODE = typeof UPDATE_INFO_CARD_ELEMENT_VIEW_MODE;
 
 export interface UpdateInfoCardElementCodeMode {
-    type: UPDATE_INFO_CARD_ELEMENT_CODE_MODE;
+    type: UPDATE_INFO_CARD_ELEMENT_VIEW_MODE;
     elementType: string;
-    codeMode: boolean;
+    viewMode: string;
 }
 
-export function updateInfoCardElementCodeMode(elementType: string, codeMode: boolean): UpdateInfoCardElementCodeMode {
-    return {type: UPDATE_INFO_CARD_ELEMENT_CODE_MODE, elementType, codeMode};
+export function updateInfoCardElementViewMode(elementType: string, viewMode: string): UpdateInfoCardElementCodeMode {
+    return {type: UPDATE_INFO_CARD_ELEMENT_VIEW_MODE, elementType, viewMode};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
