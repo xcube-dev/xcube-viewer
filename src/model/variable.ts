@@ -11,4 +11,5 @@ export interface Variable {
     colorBarMin: number;
     colorBarMax: number;
     htmlRepr?: string;
+    attrs: { [name: string]: any };
 }

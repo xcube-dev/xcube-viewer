@@ -35,6 +35,7 @@ export interface Dataset {
     dimensions: Dimension[];
     variables: Variable[];
     placeGroups?: PlaceGroup[];
+    attrs: { [name: string]: any };
 }
 
 
