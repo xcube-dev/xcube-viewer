@@ -25,15 +25,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
-import { I18N } from '../config';
 
+import { I18N } from '../config';
 import { Dataset } from '../model/dataset';
 import { Variable } from '../model/variable';
 import { PlaceInfo } from '../model/place';
 import { WithLocale } from '../util/lang';
 
-
-// TODO (forman): use a dataset's and variable's specific label, description mappings for rendering
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
@@ -57,6 +55,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
             padding: theme.spacing(1),
             marginTop: theme.spacing(1),
             marginBottom: theme.spacing(1),
+        },
+        media: {
+            height: 200,
         },
     }
 ));
@@ -302,6 +303,7 @@ interface PlaceInfoContentProps {
 }
 
 const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setViewMode, placeInfo}) => {
+    const classes = useStyles();
     const place = placeInfo.place;
     let content;
     let image;
@@ -320,7 +322,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setV
         }
     } else {
         if (placeInfo.image && placeInfo.image.startsWith('http')) {
-            image = <CardMedia src={placeInfo.image} title={placeInfo.label}/>;
+            image = <CardMedia className={classes.media} image={placeInfo.image} title={placeInfo.label}/>;
         }
         if (placeInfo.description) {
             description = <Typography>{placeInfo.description}</Typography>;

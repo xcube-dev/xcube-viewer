@@ -63,11 +63,15 @@ function updatePlaceInfo(infoObj: { [name: string]: any },
                          defaultValue: any,
                          defaultPropertyNames: string[]) {
     let propertyValue;
-    const effectivePropertyName = placeGroup.propertyMapping && placeGroup.propertyMapping[propertyName];
-    if (effectivePropertyName
-        && defaultPropertyNames.length > 0
-        && defaultPropertyNames[0] !== effectivePropertyName) {
-        defaultPropertyNames = [effectivePropertyName, ...defaultPropertyNames];
+    const mappedPropertyValue = placeGroup.propertyMapping && placeGroup.propertyMapping[propertyName];
+    if (mappedPropertyValue) {
+        if (mappedPropertyValue.includes('${')) {
+            infoObj[propertyName] = getInterpolatedPropertyValue(place, mappedPropertyValue);
+            return;
+        }
+        if (defaultPropertyNames.length > 0 && defaultPropertyNames[0] !== mappedPropertyValue) {
+            defaultPropertyNames = [mappedPropertyValue, ...defaultPropertyNames];
+        }
     }
     if (place.properties) {
         propertyValue = getPropertyValue(place.properties, defaultPropertyNames);
@@ -76,6 +80,22 @@ function updatePlaceInfo(infoObj: { [name: string]: any },
         propertyValue = getPropertyValue(place, defaultPropertyNames);
     }
     infoObj[propertyName] = propertyValue || defaultValue;
+}
+
+function getInterpolatedPropertyValue(place: Place, propertyValue: string) {
+    let interpolatedValue = propertyValue;
+    if (place.properties) {
+        for (let name of Object.getOwnPropertyNames(place.properties)) {
+            if (!interpolatedValue.includes('${')) {
+                break;
+            }
+            const placeHolder = '${' + name + '}';
+            if (interpolatedValue.includes(placeHolder)) {
+                interpolatedValue = interpolatedValue.replace(placeHolder, `${place.properties[name]}`);
+            }
+        }
+    }
+    return interpolatedValue;
 }
 
 function getPropertyValue(container: any, propertyNames: string[]) {
@@ -94,7 +114,7 @@ function mkCases(names: string[]): string[] {
     for (let name of names) {
         nameCases = nameCases.concat(name.toLowerCase(),
                                      name.toUpperCase(),
-                                     name[0].toUpperCase() + name.substr(1).toLowerCase())
+            name[0].toUpperCase() + name.substr(1).toLowerCase())
     }
     return nameCases;
 }
