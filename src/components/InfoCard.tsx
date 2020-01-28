@@ -1,4 +1,3 @@
-import { CardMedia } from '@material-ui/core';
 import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,6 +7,8 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Link from '@material-ui/core/Link';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import WidgetsIcon from '@material-ui/icons/Widgets';
@@ -58,6 +59,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
         },
         media: {
             height: 200,
+        },
+        cardContent: {
+            padding: 8,
+        },
+        code: {
+            fontFamily: 'Monospace'
         },
     }
 ));
@@ -151,7 +158,6 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 <InfoIcon fontSize={'large'} className={classes.info}/>
                 <ToggleButtonGroup key={0} size="small" value={visibleInfoCardElements}
                                    onChange={handleInfoElementsChanges}>
-                    {/*TODO (forman): fix ugly code duplication below!*/}
                     <ToggleButton key={0} value="dataset" disabled={selectedDataset === null}>
                         <Tooltip title={I18N.get('Dataset information')}>
                             <WidgetsIcon/>
@@ -191,20 +197,24 @@ interface DatasetInfoContentProps {
 }
 
 const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, setViewMode, dataset}) => {
-    // const classes = useStyles();
+    const classes = useStyles();
     let content;
     if (viewMode === 'code') {
         const jsonDimensions = selectObj(dataset.dimensions, ['name', 'size', 'dtype']);
         const jsonDataset = selectObj(dataset, ['id', 'title', 'bbox', 'attrs']);
         jsonDataset['dimensions'] = jsonDimensions;
         content = (
-            <code>{JSON.stringify(jsonDataset, null, 2)}</code>
+            <CardContent2>
+                <Typography className={classes.code}>{JSON.stringify(jsonDataset, null, 2)}</Typography>
+            </CardContent2>
         );
     } else if (viewMode === 'list') {
         content = (
-            <KeyValueTable
-                data={Object.getOwnPropertyNames(dataset.attrs).map(name => [name, dataset.attrs[name]])}
-            />
+            <CardContent2>
+                <KeyValueTable
+                    data={Object.getOwnPropertyNames(dataset.attrs).map(name => [name, dataset.attrs[name]])}
+                />
+            </CardContent2>
         );
     } else {
         const data: KeyValue[] = [
@@ -213,7 +223,11 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
             [I18N.get('Dimension lengths'), dataset.dimensions.map(d => d.size).join(', ')],
             [I18N.get('Geographical extent') + ' (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
         ];
-        content = <KeyValueTable data={data}/>;
+        content = (
+            <CardContent2>
+                <KeyValueTable data={data}/>
+            </CardContent2>
+        );
     }
     return (
         <InfoCardContent
@@ -249,15 +263,18 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
                                                   'colorBarName',
                                                   'attrs']);
         content = (
-            <code>
-                {JSON.stringify(jsonVariable, null, 2)}
-            </code>
+            <CardContent2>
+                <Typography className={classes.code}>{JSON.stringify(jsonVariable, null, 2)}</Typography>
+            </CardContent2>
         );
     } else if (viewMode === 'list') {
         content = (
-            <KeyValueTable
-                data={Object.getOwnPropertyNames(variable.attrs).map(name => [name, variable.attrs[name]])}
-            />);
+            <CardContent2>
+                <KeyValueTable
+                    data={Object.getOwnPropertyNames(variable.attrs).map(name => [name, variable.attrs[name]])}
+                />
+            </CardContent2>
+        );
         if (variable.htmlRepr) {
             const handleRef = (element: HTMLDivElement | null) => {
                 if (element && variable.htmlRepr) {
@@ -265,7 +282,9 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
                 }
             };
             htmlReprPaper = (
-                <Paper ref={handleRef} className={classes.variableHtmlReprContainer}/>
+                <CardContent2>
+                    <Paper ref={handleRef} className={classes.variableHtmlReprContainer}/>
+                </CardContent2>
             );
         }
     } else {
@@ -277,7 +296,11 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
             [I18N.get('Dimension names'), variable.dims.join(', ')],
             [I18N.get('Dimension lengths'), variable.shape.map(s => s + '').join(', ')],
         ];
-        content = (<KeyValueTable data={data}/>);
+        content = (
+            <CardContent2>
+                <KeyValueTable data={data}/>
+            </CardContent2>
+        );
     }
     return (
         <InfoCardContent
@@ -287,8 +310,8 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
             viewMode={viewMode}
             setViewMode={setViewMode}
         >
-            {content}
             {htmlReprPaper}
+            {content}
         </InfoCardContent>
     );
 };
@@ -309,26 +332,42 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setV
     let image;
     let description;
     if (viewMode === 'code') {
-        content = <code>{JSON.stringify(place, null, 2)}</code>;
+        content = (
+            <CardContent2>
+                <Typography className={classes.code}>{JSON.stringify(place, null, 2)}</Typography>
+            </CardContent2>
+        );
     } else if (viewMode === 'list') {
         if (!!place.properties) {
             const data: KeyValue[] = Object.getOwnPropertyNames(place.properties).map(
                 (name: any) => [name, place.properties![name]]
             );
-            content = <KeyValueTable data={data}/>;
+            content = (
+                <CardContent2>
+                    <KeyValueTable data={data}/>
+                </CardContent2>
+            );
         } else {
-            content =
-                <Typography>{I18N.get('There is no information available for this location.')}</Typography>;
+            content = (
+                <CardContent2>
+                    <Typography>{I18N.get('There is no information available for this location.')}</Typography>
+                </CardContent2>
+            );
         }
     } else {
         if (placeInfo.image && placeInfo.image.startsWith('http')) {
-            image = <CardMedia className={classes.media} image={placeInfo.image} title={placeInfo.label}/>;
+            image = (
+                <CardMedia className={classes.media} image={placeInfo.image} title={placeInfo.label}/>
+            );
         }
         if (placeInfo.description) {
-            description = <Typography>{placeInfo.description}</Typography>;
+            description = (
+                <CardContent2>
+                    <Typography>{placeInfo.description}</Typography>
+                </CardContent2>
+            );
         }
     }
-    // TODO (forman): indicate place color
     return (
         <InfoCardContent
             title={placeInfo.label}
@@ -362,7 +401,6 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                                                              setViewMode,
                                                              children,
                                                          }) => {
-    // const classes = useStyles();
 
     const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, viewMode: string) => {
         setViewMode(viewMode);
@@ -391,9 +429,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                     </ToggleButtonGroup>
                 }
             />
-            <CardContent>
-                {children}
-            </CardContent>
+            {children}
         </Collapse>
     );
 };
@@ -415,10 +451,17 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({data}) => {
                 <TableBody>
                     {
                         data.map((kv, index) => {
+                            const [key, value] = kv;
+                            let renderedValue = value;
+                            if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
+                                renderedValue = (<Link href={value}>{value}</Link>);
+                            } else if (Array.isArray(value)) {
+                                renderedValue = '[' + value.map(v => v + '').join(', ') + ']';
+                            }
                             return (
                                 <TableRow key={index}>
-                                    <TableCell>{kv[0]}</TableCell>
-                                    <TableCell align="right">{kv[1]}</TableCell>
+                                    <TableCell>{key}</TableCell>
+                                    <TableCell align="right">{renderedValue}</TableCell>
                                 </TableRow>
                             );
                         })
@@ -427,6 +470,13 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({data}) => {
             </Table>
         </TableContainer>
     );
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const CardContent2: React.FC = ({children}) => {
+    const classes = useStyles();
+    return <CardContent className={classes.cardContent}>{children}</CardContent>
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
