@@ -6,7 +6,9 @@ const styles = (theme: Theme) => createStyles(
         root: {
             display: 'flex',
             flexWrap: 'wrap',
-            padding: theme.spacing(1),
+            paddingTop: theme.spacing(1),
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
         },
     });
 

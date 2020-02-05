@@ -88,6 +88,7 @@ export function updateDatasets() {
            })
            .catch(error => {
                dispatch(postMessage('error', error));
+               dispatch(_updateDatasets([]));
            })
             // 'then' because Microsoft Edge does not understand method finally
            .then(() => {

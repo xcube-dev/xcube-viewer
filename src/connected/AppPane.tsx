@@ -36,9 +36,9 @@ const styles = (theme: Theme) => createStyles(
     });
 
 const AppPane: React.FC<AppPaneProps> = ({classes}) => {
+    // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
     return (
         <main className={classes.main}>
-            // Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
             <Toolbar/>
             <ControlBar/>
             <Workspace/>

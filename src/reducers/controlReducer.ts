@@ -64,7 +64,8 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
         case UPDATE_DATASETS: {
             let selectedDatasetId = state!.selectedDatasetId;
             let selectedVariableName = state!.selectedVariableName;
-            const selectedDataset = findDataset(action.datasets, selectedDatasetId);
+            let mapInteraction = state!.mapInteraction;
+            let selectedDataset = findDataset(action.datasets, selectedDatasetId);
             const selectedVariable = (selectedDataset
                                       && findDatasetVariable(selectedDataset, selectedVariableName))
                                      || null;
@@ -75,9 +76,20 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
                     selectedVariableName = selectedDataset.variables.length ? selectedDataset.variables[0].name : null;
                 }
             } else {
-                selectedDatasetId = action.datasets.length ? action.datasets[0].id : null;
+                selectedDatasetId = null;
+                selectedVariableName = null;
+                selectedDataset = action.datasets.length ? action.datasets[0] : null;
+                if (selectedDataset) {
+                    selectedDatasetId = selectedDataset.id;
+                    if (selectedDataset.variables.length > 0) {
+                        selectedVariableName = selectedDataset.variables[0].name;
+                    }
+                }
             }
-            return {...state, selectedDatasetId, selectedVariableName};
+            if (!selectedDatasetId) {
+                mapInteraction = 'Select';
+            }
+            return {...state, selectedDatasetId, selectedVariableName, mapInteraction};
         }
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;
