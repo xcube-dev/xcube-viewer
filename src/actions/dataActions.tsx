@@ -51,7 +51,7 @@ export function updateServerInfo() {
            .catch(error => {
                dispatch(postMessage('error', error));
            })
-           // 'then' because Microsoft Edge does not understand method finally
+            // 'then' because Microsoft Edge does not understand method finally
            .then(() => {
                dispatch(removeActivity(UPDATE_SERVER_INFO));
            });
@@ -82,13 +82,15 @@ export function updateDatasets() {
            .then((datasets: Dataset[]) => {
                dispatch(_updateDatasets(datasets));
                if (datasets.length > 0) {
-                   dispatch(selectDataset(datasets[0].id, datasets));
+                   const selectedDatasetId = datasets[0].id;
+                   dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
                }
            })
            .catch(error => {
                dispatch(postMessage('error', error));
+               dispatch(_updateDatasets([]));
            })
-           // 'then' because Microsoft Edge does not understand method finally
+            // 'then' because Microsoft Edge does not understand method finally
            .then(() => {
                dispatch(removeActivity(UPDATE_DATASETS));
            });

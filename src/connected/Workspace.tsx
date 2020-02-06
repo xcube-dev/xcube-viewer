@@ -5,15 +5,18 @@ import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
 import { AppState } from '../states/appState';
 import Viewer from './Viewer';
 import TimeSeriesCharts from './TimeSeriesCharts';
+import InfoCard from './InfoCard';
 
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
+    infoCardOpen: boolean;
     hasTimeseries: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     return {
+        infoCardOpen: state.controlState.infoCardOpen,
         hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
     };
 };
@@ -63,14 +66,19 @@ const styles = (theme: Theme) => createStyles(
 
     });
 
-const Workspace: React.FC<WorkspaceProps> = ({classes, hasTimeseries}) => {
-    if (hasTimeseries) {
+const Workspace: React.FC<WorkspaceProps> = ({
+                                                 classes,
+                                                 infoCardOpen,
+                                                 hasTimeseries
+                                             }) => {
+    if (infoCardOpen || hasTimeseries) {
         return (
             <div className={classes.contentContainer}>
                 <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>
                 <div className={classes.chartContainer}>
+                    <InfoCard/>
                     <TimeSeriesCharts/>
                 </div>
             </div>

@@ -7,8 +7,6 @@ import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 import { default as OlVectorLayer } from 'ol/layer/Vector';
 import { default as OlVectorSource } from 'ol/source/Vector';
-import { default as OlGeometry } from 'ol/geom/Geometry';
-import { default as OlSimpleGeometry } from 'ol/geom/SimpleGeometry';
 import { default as OlGeometryType } from 'ol/geom/GeometryType';
 import { default as OlCircleGeometry } from 'ol/geom/Circle';
 import { default as OlFeature } from 'ol/Feature';
@@ -16,10 +14,8 @@ import { default as OlStyle } from 'ol/style/Style';
 import { default as OlFillStyle } from 'ol/style/Fill';
 import { default as OlStrokeStyle } from 'ol/style/Stroke';
 import { default as OlCircleStyle } from 'ol/style/Circle';
-import { Extent as OlExtent } from 'ol/extent';
 import { Color as OlColor } from 'ol/color';
 import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
-import { transformExtent as olProjTransformExtent } from 'ol/proj'
 
 import { newId } from '../util/id';
 import { Place, PlaceGroup } from '../model/place';
@@ -64,6 +60,7 @@ const SELECTION_LAYER_STYLE = new OlStyle({
 
 interface ViewerProps extends WithStyles<typeof styles> {
     theme: Theme;
+    mapId: string;
     mapInteraction: MapInteraction;
     baseMapLayer?: MapElement;
     variableLayer?: MapElement;
@@ -73,12 +70,12 @@ interface ViewerProps extends WithStyles<typeof styles> {
     userPlaceGroup: PlaceGroup;
     selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
-    flyTo?: OlGeometry | OlExtent | null;
     places: Place[];
 }
 
 const Viewer: React.FC<ViewerProps> = ({
                                            theme,
+                                           mapId,
                                            mapInteraction,
                                            baseMapLayer,
                                            variableLayer,
@@ -88,41 +85,11 @@ const Viewer: React.FC<ViewerProps> = ({
                                            userPlaceGroup,
                                            selectPlace,
                                            selectedPlaceId,
-                                           flyTo,
                                            places,
                                        }) => {
 
     const [map, setMap] = useState<OlMap | null>(null);
-    const [flyToPrev, setFlyToPrev] = useState<OlGeometry | OlExtent | null>(flyTo || null);
     const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(selectedPlaceId || null);
-
-    useEffect(() => {
-        if (map) {
-            const flyToCurr = flyTo || null;
-            if (flyToCurr !== null && flyToCurr !== flyToPrev) {
-                // TODO (forman): too much logic here! put the following code into selector(s) and pass stuff as props.
-                const projection = map.getView().getProjection();
-                let flyToTarget;
-                // noinspection JSDeprecatedSymbols
-                if (Array.isArray(flyToCurr)) {
-                    // Fly to extent (bounding box)
-                    flyToTarget = olProjTransformExtent(flyToCurr, 'EPSG:4326', projection);
-                    map.getView().fit(flyToTarget, {size: map.getSize()});
-                } else {
-                    // Transform Geometry object
-                    flyToTarget = flyToCurr.transform('EPSG:4326', projection) as OlSimpleGeometry;
-                    if (flyToTarget.getType() === 'Point') {
-                        // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
-                        map.getView().setCenter(flyToTarget.getFirstCoordinate());
-                    } else {
-                        // Fly to shape
-                        map.getView().fit(flyToTarget, {size: map.getSize()});
-                    }
-                }
-                setFlyToPrev(flyToCurr);
-            }
-        }
-    }, [map, flyTo, flyToPrev]);
 
     useEffect(() => {
         if (map) {
@@ -225,7 +192,7 @@ const Viewer: React.FC<ViewerProps> = ({
     return (
         <ErrorBoundary>
             <Map
-                id="map"
+                id={mapId}
                 onClick={(event) => handleMapClick(event)}
                 onMapRef={setMap}
                 mapObjects={MAP_OBJECTS}

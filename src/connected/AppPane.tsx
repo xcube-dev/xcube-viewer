@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
+import { Theme, WithStyles, createStyles, withStyles, Toolbar } from '@material-ui/core';
 
 import { AppState } from '../states/appState';
 import ControlBar from './ControlBar';
@@ -33,13 +33,13 @@ const styles = (theme: Theme) => createStyles(
                 overflow: 'hidden',
             },
         },
-        appBarSpacer: theme.mixins.toolbar,
     });
 
 const AppPane: React.FC<AppPaneProps> = ({classes}) => {
+    // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
     return (
         <main className={classes.main}>
-            <div className={classes.appBarSpacer}/>
+            <Toolbar/>
             <ControlBar/>
             <Workspace/>
         </main>

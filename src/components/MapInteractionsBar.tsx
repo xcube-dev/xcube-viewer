@@ -1,14 +1,14 @@
 import * as React from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import RoomIcon from '@material-ui/icons/Room';
+import AddLocationIcon from '@material-ui/icons/AddLocation';
 import CategoryIcon from '@material-ui/icons/Category';
 import FormControl from '@material-ui/core/FormControl';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { WithLocale } from '../util/lang';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 import { MapInteraction } from "../states/controlState";
 
 
@@ -43,7 +43,7 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
                     <CenterFocusStrongIcon/>
                 </ToggleButton>
                 <ToggleButton key={1} value="Point">
-                    <RoomIcon/>
+                    <AddLocationIcon/>
                 </ToggleButton>
                 <ToggleButton key={2} value="Polygon">
                     <CategoryIcon/>

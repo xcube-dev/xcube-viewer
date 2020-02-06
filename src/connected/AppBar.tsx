@@ -38,13 +38,6 @@ const styles = (theme: Theme) => createStyles(
             backgroundColor: getBranding().headerBackgroundColor,
             paddingRight: theme.spacing(1),
         },
-        toolbarIcon: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            padding: '0 8px',
-            ...theme.mixins.toolbar,
-        },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
             transition: theme.transitions.create(['width', 'margin'], {

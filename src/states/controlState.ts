@@ -12,6 +12,16 @@ export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000
 
 export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle';
 
+
+export interface InfoCardElementState {
+    visible?: boolean;
+    viewMode?: string;
+}
+
+export interface InfoCardElementStates {
+    [key: string]: InfoCardElementState;
+}
+
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
@@ -33,6 +43,8 @@ export interface ControlState {
     dialogOpen: { [dialogId: string]: boolean };
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
+    infoCardOpen: boolean;
+    infoCardElementStates: InfoCardElementStates;
     imageSmoothingEnabled: boolean;
     baseMapUrl: string;
 }
@@ -61,6 +73,12 @@ export function newControlState(): ControlState {
         dialogOpen: {},
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
+        infoCardOpen: false,
+        infoCardElementStates: {
+            dataset: {visible: true, viewMode: 'text'},
+            variable: {visible: true, viewMode: 'text'},
+            place: {visible: true, viewMode: 'text'},
+        },
         imageSmoothingEnabled: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
     };

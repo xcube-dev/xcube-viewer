@@ -24,13 +24,19 @@ const styles = (theme: Theme) => createStyles(
 interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedDatasetId: string | null;
     datasets: Dataset[];
-    selectDataset: (datasetId: string | null, dataset: Dataset[]) => void;
+    selectDataset: (datasetId: string | null, datasets: Dataset[], showInMap: boolean) => void;
 }
 
-const DatasetSelect: React.FC<DatasetSelectProps> = ({classes, selectedDatasetId, datasets, selectDataset}) => {
+const DatasetSelect: React.FC<DatasetSelectProps> = ({
+                                                         classes,
+                                                         selectedDatasetId,
+                                                         datasets,
+                                                         selectDataset,
+                                                     }) => {
 
     const handleDatasetChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
-        selectDataset(event.target.value || null, datasets);
+        const datasetId = event.target.value || null;
+        selectDataset(datasetId, datasets, true);
     };
 
     selectedDatasetId = selectedDatasetId || '';

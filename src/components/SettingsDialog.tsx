@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FunctionComponent } from 'react';
+import React, { ChangeEvent } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -61,13 +61,17 @@ interface SettingsDialogProps {
     serverInfo: ServerInfo | null;
 }
 
-export default function SettingsDialog(
-    {
-        open, closeDialog, settings, selectedServer,
-        updateSettings, changeLocale, openDialog,
-        viewerVersion, serverInfo
-    }: SettingsDialogProps
-) {
+const SettingsDialog: React.FC<SettingsDialogProps> = ({
+                                                           open,
+                                                           closeDialog,
+                                                           settings,
+                                                           selectedServer,
+                                                           updateSettings,
+                                                           changeLocale,
+                                                           openDialog,
+                                                           viewerVersion,
+                                                           serverInfo
+                                                       }) => {
     const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
     const [baseMapMenuAnchor, setBaseMapMenuAnchor] = React.useState(null);
     const classes = useStyles();
@@ -259,13 +263,15 @@ export default function SettingsDialog(
 
         </div>
     );
-}
+};
+
+export default SettingsDialog;
 
 interface SettingsPanelProps {
     title: string;
 }
 
-const SettingsPanel: FunctionComponent<SettingsPanelProps> = (props) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = (props) => {
     const classes = useStyles();
 
     const childCount = React.Children.count(props.children);
@@ -298,7 +304,7 @@ interface SettingsSubPanelProps {
     onClick?: (event: any) => void;
 }
 
-const SettingsSubPanel: FunctionComponent<SettingsSubPanelProps> = (props) => {
+const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (props) => {
     const classes = useStyles();
 
     const listItemText = (<ListItemText primary={props.label} secondary={props.value}/>);
@@ -336,8 +342,7 @@ interface ToggleSettingProps {
     updateSettings: (settings: ControlState) => void;
 }
 
-const ToggleSetting = (props: ToggleSettingProps) => {
-    const {propertyName, settings, updateSettings} = props;
+const ToggleSetting: React.FC<ToggleSettingProps> = ({propertyName, settings, updateSettings}) => {
     return (
         <Switch
             checked={(settings as any)[propertyName]}

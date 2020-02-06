@@ -14,7 +14,7 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-    selectDataset,
+    selectDataset
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DatasetSelect);
