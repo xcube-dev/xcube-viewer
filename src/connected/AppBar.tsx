@@ -10,6 +10,7 @@ import { AppState } from '../states/appState';
 import { getBranding } from '../config';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
+import UserControl from './UserControl';
 import { openDialog } from '../actions/controlActions';
 
 
@@ -36,7 +37,7 @@ const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
             backgroundColor: getBranding().headerBackgroundColor,
-            paddingRight: theme.spacing(1),
+            paddingRight: theme.spacing(1)
         },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
@@ -52,14 +53,35 @@ const styles = (theme: Theme) => createStyles(
             flexGrow: 1,
             marginLeft: theme.spacing(1),
         },
-        orangeAvatar: {
-            margin: 10,
+        imageAvatar: {
+            width: 24,
+            height: 24,
             color: '#fff',
             backgroundColor: deepOrange[300],
         },
-    });
+        letterAvatar: {
+            width: 24,
+            height: 24,
+            color: '#fff',
+            backgroundColor: deepOrange[300],
+        },
+        signInWrapper: {
+            margin: theme.spacing(1),
+            position: 'relative',
+        },
+        signInProgress: {
+            color: deepOrange[300],
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            zIndex: 1,
+            marginTop: -12,
+            marginLeft: -12,
+        },
+    }
+);
 
-const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}) => {
+const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarProps) => {
 
     const handleSettingsButtonClicked = () => {
         openDialog('settings');
@@ -83,6 +105,7 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}) => {
                 <IconButton onClick={handleSettingsButtonClicked}>
                     <SettingsApplicationsIcon/>
                 </IconButton>
+                <UserControl/>
             </Toolbar>
             <ServerDialog/>
             <SettingsDialog/>

@@ -2,7 +2,7 @@ import * as geojson from 'geojson';
 
 import { Variable } from '../model/variable';
 import { TimeSeries } from '../model/timeSeries';
-import { callJsonApi, QueryComponent } from './callApi';
+import { callJsonApi, makeRequestInit, makeRequestUrl, QueryComponent } from './callApi';
 
 
 export function getTimeSeriesForGeometry(apiServerUrl: string,
@@ -12,20 +12,23 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
                                          geometry: geojson.Geometry,
                                          startDate: string | null,
                                          endDate: string | null,
-                                         inclStDev: boolean): Promise<TimeSeries | null> {
+                                         inclStDev: boolean,
+                                         accessToken: string | null): Promise<TimeSeries | null> {
 
-    const url = apiServerUrl + `/ts/${datasetId}/${variable.name}/geometry`;
+    const query: QueryComponent[] = [['inclStDev', inclStDev ? '1' : '0']];
+    if (startDate) {
+        query.push(['startDate', startDate]);
+    }
+    if (endDate) {
+        query.push(['endDate', endDate]);
+    }
+    const url = makeRequestUrl(`${apiServerUrl}/ts/${datasetId}/${variable.name}/geometry`, query);
+
     const init = {
+        ...makeRequestInit(accessToken),
         method: 'post',
         body: JSON.stringify(geometry),
     };
-    const queryComponents: QueryComponent[] = [['inclStDev', inclStDev ? '1' : '0']];
-    if (startDate) {
-        queryComponents.push(['startDate', startDate]);
-    }
-    if (endDate) {
-        queryComponents.push(['endDate', endDate]);
-    }
 
     const convertTimeSeriesResult = (result: { [name: string]: any }) => {
         const results = result['results'];
@@ -45,6 +48,6 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
         return {source, data, color: "green"};
     };
 
-    return callJsonApi<TimeSeries>(url, queryComponents, init)
+    return callJsonApi<TimeSeries>(url, init)
         .then(convertTimeSeriesResult);
 }

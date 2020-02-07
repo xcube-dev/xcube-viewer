@@ -1,5 +1,12 @@
 ## Changes in version 0.4.0 (in development)
 
+* Users can now login and sign on (#22). 
+
+
+### Enhancements
+
+## Changes in version 0.3.2
+
 ### Enhancements
 
 * Added a new panel to display information about the selected dataset, variable, 
@@ -24,6 +31,8 @@
 ### Other changes
 
 * Updated code to use latest React 16.8 features i.e. `React.FC` with hooks (#111)
+
+* Users can now login. (#22)
 
 ## Changes in version 0.3.1
 
