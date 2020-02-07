@@ -27,6 +27,8 @@ import { WithLocale } from '../util/lang';
 import { Place, PlaceInfo } from '../model/place';
 import { useState } from 'react';
 
+const INVISIBLE_LINE_COLOR = '#00000000';
+const SUBSTITUTE_LABEL_COLOR = '#FAFFDD';
 
 const styles = (theme: Theme) => createStyles(
     {
@@ -271,7 +273,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 dataKey="average"
                 dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
                 activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
-                stroke={showPointsOnly ? '#00000000' : shadedLineColor}
+                stroke={showPointsOnly ? INVISIBLE_LINE_COLOR : shadedLineColor}
                 strokeWidth={3 * (ts.dataProgress || 1)}
                 isAnimationActive={ts.dataProgress === 1.0}
                 onClick={() => handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
@@ -409,10 +411,13 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({classes, active, label, 
         //     valueText = value.toFixed(3);
         // }
         const valueText = value.toFixed(3);
+        if (color === INVISIBLE_LINE_COLOR) {
+            color = SUBSTITUTE_LABEL_COLOR;
+        }
         return (
             <div key={index}>
                 <span>{name}:&nbsp;</span>
-                <span className={classes.toolTipValue} style={{color: color}}>{valueText}</span>
+                <span className={classes.toolTipValue} style={{color}}>{valueText}</span>
                 <span>&nbsp;{unit}</span>
             </div>
         );

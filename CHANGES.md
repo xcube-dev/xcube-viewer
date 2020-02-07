@@ -16,6 +16,7 @@
 
 ### Fixes
 
+* When in "Show data points only" mode, values at chart points where no not shown. This now works (#120).   
 * Fixed broken map selection interaction and fly-to introduced in v0.3.2 (#115).  
 * If the server cannot be reached, the tool bar and colour legend are hidden 
   as datasets and variables are no longer available.
