@@ -41,6 +41,17 @@ Checkout `xcube-viewer` sources:
     $ yarn install
     $ yarn start
 
+
+Generate file `.env.local` with following content:
+
+    REACT_APP_TITLE=xcube Viewer (dev)
+
+The following entries are optional, but required when enabling user management through [auth0](https://auth0.com/):
+
+    REACT_APP_AUTH0_DOMAIN=<YOUR AUTH0 DOMAIN>
+    REACT_APP_AUTH0_CLIENT_ID=<YOUR AUTH0 CLIENT ID>
+    REACT_APP_AUTH0_AUDIENCE=<YOUR AUTH0 API ID>
+
 Update, install, and run:
 
     $ cd xcube-viewer
@@ -96,6 +107,7 @@ to your needs.
   - produce a unique vector layer in the map;
   - can specify their feature property fields that will provide the values for predefined roles:
     "label", "infoUrl" (not used yet);
+* User management
 
 ## More
 

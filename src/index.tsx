@@ -4,16 +4,19 @@ import * as ReactDOM from 'react-dom';
 import * as Redux from 'redux';
 import thunk from 'redux-thunk';
 import * as ReduxLogger from 'redux-logger';
+import { initAuthClient } from './actions/userAuthActions';
+
 import { appReducer } from './reducers/appReducer';
 import { updateDatasets, updateColorBars, updateServerInfo } from './actions/dataActions';
 import { changeLocale } from "./actions/controlActions";
 import App from './connected/App';
 import * as serviceWorker from './serviceWorker';
 import { getCurrentLocale } from "./util/lang";
-
-import './index.css';
 import { I18N } from "./config";
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
+
+import './index.css';
+
 
 I18N.locale = getCurrentLocale();
 
@@ -25,14 +28,13 @@ if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImage
 }
 
 store.dispatch(changeLocale(I18N.locale) as any);
+store.dispatch(initAuthClient() as any);
 store.dispatch(updateServerInfo() as any);
 store.dispatch(updateDatasets() as any);
 store.dispatch(updateColorBars() as any);
 
 ReactDOM.render(
-    <Provider store={store}>
-        <App/>
-    </Provider>,
+    <Provider store={store}>{<App/>}</Provider>,
     document.getElementById('root') as HTMLElement
 );
 

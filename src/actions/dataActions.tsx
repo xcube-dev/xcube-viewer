@@ -78,7 +78,7 @@ export function updateDatasets() {
 
         dispatch(addActivity(UPDATE_DATASETS, I18N.get('Loading data')));
 
-        api.getDatasets(apiServer.url)
+        api.getDatasets(apiServer.url, getState().userAuthState.accessToken)
            .then((datasets: Dataset[]) => {
                dispatch(_updateDatasets(datasets));
                if (datasets.length > 0) {
@@ -204,7 +204,8 @@ export function addTimeSeries() {
                                                     selectedPlace.geometry,
                                                     startDateLabel,
                                                     endDateLabel,
-                                                    inclStDev);
+                                                    inclStDev,
+                                                    getState().userAuthState.accessToken);
             };
 
             const successAction = (timeSeries: TimeSeries | null) => {
