@@ -63,7 +63,7 @@ const brandings: { [name: string]: Branding } = {
         secondaryColor: pink,
         headerBackgroundColor: undefined,
         logoPath: require('./resources/esdl/logo.png'),
-        logoWidth: 32,
+        logoWidth: 64,
         baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     },
     'eodatabee': {
