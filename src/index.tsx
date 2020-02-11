@@ -8,11 +8,11 @@ import { initAuthClient } from './actions/userAuthActions';
 
 import { appReducer } from './reducers/appReducer';
 import { updateDatasets, updateColorBars, updateServerInfo } from './actions/dataActions';
-import { changeLocale } from "./actions/controlActions";
+import { changeLocale } from './actions/controlActions';
 import App from './connected/App';
 import * as serviceWorker from './serviceWorker';
-import { getCurrentLocale } from "./util/lang";
-import { I18N } from "./config";
+import { getCurrentLocale } from './util/lang';
+import { I18N } from './config';
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
 
 import './index.css';

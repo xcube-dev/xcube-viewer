@@ -20,6 +20,8 @@ import lang from './resources/lang.json';
 
 const version = '0.4.0-dev.0';
 
+const defaultApiServerUrl = process.env.REACT_APP_XCUBE_API;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 interface Branding {
@@ -43,7 +45,7 @@ const brandings: { [name: string]: Branding } = {
         windowTitle: 'xcube Viewer',
         defaultApiServerId: 'local',
         defaultApiServerName: 'Local Server',
-        defaultApiServerUrl: 'http://localhost:8080',
+        defaultApiServerUrl: defaultApiServerUrl || 'http://localhost:8080',
         themeName: 'dark',
         primaryColor: blue,
         secondaryColor: pink,
@@ -57,7 +59,7 @@ const brandings: { [name: string]: Branding } = {
         windowTitle: 'EODataBee Demo Viewer',
         defaultApiServerId: 'eodatabee',
         defaultApiServerName: 'EODataBee Server',
-        defaultApiServerUrl: 'https://xcube2.dcs4cop.eu/dcs4cop-dev/api/latest',
+        defaultApiServerUrl: defaultApiServerUrl || 'https://xcube2.dcs4cop.eu/dcs4cop-dev/api/latest',
         themeName: 'dark',
         primaryColor: {
             light: '#ffd77c',
@@ -76,7 +78,7 @@ const brandings: { [name: string]: Branding } = {
         windowTitle: 'CyanoAlert Viewer',
         defaultApiServerId: 'cyanoalert',
         defaultApiServerName: 'CyanoAlert Server',
-        defaultApiServerUrl: 'https://cyanoalert.brockmann-consult.com/api/latest',
+        defaultApiServerUrl: defaultApiServerUrl || 'https://cyanoalert.brockmann-consult.com/api/latest',
         themeName: 'dark',
         primaryColor: {
             light: '#ceef64',
@@ -175,7 +177,7 @@ export function getUserPlaceColor(colorName: string, paletteType: PaletteType): 
 }
 
 // See resources/maps.json
-const tileAccess: { [name:string]: TileAccess } = {
+const tileAccess: { [name: string]: TileAccess } = {
     'Mapbox': {
         param: 'access_token',
         token: 'pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg'

@@ -6,10 +6,26 @@ import { PostMessage, postMessage } from './messageLogActions';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function initAuthClient() {
-    return (dispatch: Dispatch<InitAuthClient>) => {
-        auth.initAuthClient().then((authClient: auth.AuthClient | null) => {
-            dispatch(_initAuthClient(authClient !== null));
-        });
+    return async (dispatch: Dispatch<InitAuthClient | ReceiveSignIn>) => {
+        const authClient = await auth.initAuthClient();
+        dispatch(_initAuthClient(authClient !== null));
+        if (authClient !== null) {
+            let idToken: auth.IdToken;
+            try {
+                idToken = await authClient.getUser();
+            } finally {
+                // ok
+            }
+            let accessToken: string;
+            try {
+                accessToken = await authClient.getTokenSilently();
+            } finally {
+                // ok
+            }
+            if (idToken && accessToken) {
+                dispatch(receiveSignIn(idToken, accessToken));
+            }
+        }
     };
 }
 
