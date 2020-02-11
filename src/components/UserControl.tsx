@@ -18,10 +18,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContentText from '@material-ui/core/DialogContentText';
 
 import UserProfile from '../components/UserProfile';
 import * as auth from '../util/auth';
+import { I18N } from '../config';
+import { WithLocale } from '../util/lang';
 
 const styles = (theme: Theme) => createStyles(
     {
@@ -54,7 +55,7 @@ const styles = (theme: Theme) => createStyles(
 );
 
 
-interface UserControlProps extends WithStyles<typeof styles> {
+interface UserControlProps extends WithStyles<typeof styles>, WithLocale {
     hasAuthClient: boolean;
     isBusy: boolean,
     idToken: auth.IdToken | null;
@@ -144,8 +145,8 @@ const UserControl: React.FC<UserControlProps> = ({
                     open={Boolean(userMenuAnchorEl)}
                     onClose={handleUserMenuClose}
                 >
-                    <MenuItem onClick={handleUserProfileMenuItemClicked}>Profile</MenuItem>
-                    <MenuItem onClick={handleSignOutMenuItemClicked}>Sign Out</MenuItem>
+                    <MenuItem onClick={handleUserProfileMenuItemClicked}>{I18N.get('Profile')}</MenuItem>
+                    <MenuItem onClick={handleSignOutMenuItemClicked}>{I18N.get('Log out')}</MenuItem>
                 </Menu>
                 <Dialog
                     open={profileDialogOpen}
@@ -155,11 +156,8 @@ const UserControl: React.FC<UserControlProps> = ({
                     aria-labelledby="alert-dialog-slide-title"
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle id="alert-dialog-slide-title">{"User Profile"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-slide-title">{I18N.get('User Profile')}</DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-slide-description">
-                            Here, users will be able to see and alter their profile data.
-                        </DialogContentText>
                         <UserProfile idToken={idToken!} accessToken={accessToken}/>
                     </DialogContent>
                     <DialogActions>

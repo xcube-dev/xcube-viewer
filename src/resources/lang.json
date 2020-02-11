@@ -468,6 +468,62 @@
       "it": "Non ci sono informazioni disponibili per questa posizione.",
       "ro": "Nu există informații disponibile pentru această locație.",
       "se": "Det finns ingen information tillgänglig för den här platsen."
+    },
+    {
+      "en": "Log out",
+      "de": "Abmelden",
+      "it": "Disconnettersi",
+      "ro": "Deconectați-vă",
+      "se": "Logga ut"
+    },
+    {
+      "en": "Profile",
+      "de": "Profil",
+      "it": "Profilo",
+      "ro": "Profil",
+      "se": "Profil"
+    },
+    {
+      "en": "User Profile",
+      "de": "Nutzerprofil",
+      "it": "Profilo Utente",
+      "ro": "Profil de Utilizator",
+      "se": "Användarprofil"
+    },
+    {
+      "en": "User name",
+      "de": "Nutzername",
+      "it": "Nome utente",
+      "ro": "Nume de utilizator",
+      "se": "Användarnamn"
+    },
+    {
+      "en": "E-mail",
+      "de": "E-mail",
+      "it": "E-mail",
+      "ro": "E-mail",
+      "se": "E-post"
+    },
+    {
+      "en": "Nickname",
+      "de": "Spitzname",
+      "it": "Soprannome",
+      "ro": "Poreclă",
+      "se": "Smeknamn"
+    },
+    {
+      "en": "verified",
+      "de": "verifiziert",
+      "it": "verificata",
+      "ro": "verificat",
+      "se": "verified"
+    },
+    {
+      "en": "not verified",
+      "de": "nicht verifiziert",
+      "it": "non verificato",
+      "ro": "nu e verificat",
+      "se": "inte verifierad"
     }
   ]
 }
