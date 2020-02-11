@@ -13,6 +13,7 @@
   and place (#114).
 * Added a tool button to locate the selected dataset in the map.
 * Notification "snackbars" will now disappear after 5 seconds (#107).
+* Added branding for the [ESDL Viewer](http://viewer.earthsystemdatalab.net/) 
 
 ### Fixes
 
