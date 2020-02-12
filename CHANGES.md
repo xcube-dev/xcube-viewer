@@ -1,16 +1,10 @@
 ## Changes in version 0.4.0 (in development)
 
-* Users can now login and sign on (#22). 
-
-
 ### Enhancements
 
-## Changes in version 0.3.2
-
-### Enhancements
-
-* Added a new panel to display information about the selected dataset, variable, 
-  and place (#114).
+* Users can now login and sign on (#22)
+* Now displaying dataset attributions when clicking the lower right info button in the map.
+* Added a new panel to display information about the selected dataset, variable, and place (#114).
 * Added a tool button to locate the selected dataset in the map.
 * Notification "snackbars" will now disappear after 5 seconds (#107).
 

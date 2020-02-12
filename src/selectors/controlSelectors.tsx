@@ -270,13 +270,15 @@ export const selectedTimeIndexSelector = createSelector(
 );
 
 export const selectedDatasetVariableLayerSelector = createSelector(
+    selectedDatasetSelector,
     selectedDatasetVariableSelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
-    (variable: Variable | null,
+    (dataset: Dataset | null,
+     variable: Variable | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
@@ -303,15 +305,13 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             queryParams += `&time=${timeString}`;
         }
         const url = `${options.url}?${queryParams}`;
-        //console.log(`Variable layer URL: ${url}`);
 
-        // TODO: get attributions from dataset metadata
-        // const attribution = new ol_control.Attribution(
-        //         {
-        //             target: 'https://www.brockmann-consult.de',
-        //             label: 'Brockmann Consult GmbH'
-        //         }
-        //     );
+        let attributions;
+        let attributionsCollapsible = true;
+        if (dataset && dataset.attributions) {
+            attributions = dataset.attributions!;
+            // attributionsCollapsible = false;
+        }
 
         const source = new OlXYZSource(
             {
@@ -320,8 +320,8 @@ export const selectedDatasetVariableLayerSelector = createSelector(
                 minZoom: options.minZoom,
                 maxZoom: options.maxZoom,
                 tileGrid: new OlTileGrid(options.tileGrid),
-                // attributions: attribution,
-                // @ts-ignore
+                attributions,
+                attributionsCollapsible,
                 transition: timeAnimationActive ? 0 : 250,
             });
         return (
@@ -400,17 +400,6 @@ export const selectedServerSelector = createSelector(
             throw new Error(`internal error: server with ID "${serverId}" not found`);
         }
         return server;
-    }
-);
-
-export const baseMapLabelSelector = createSelector(
-    baseMapUrlSelector,
-    (baseMapUrl: string): string => {
-        const map = findMap(baseMapUrl);
-        if (map) {
-            return `${map.group.name} / ${map.dataset.name}`;
-        }
-        return baseMapUrl;
     }
 );
 
