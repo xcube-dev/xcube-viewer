@@ -9,14 +9,16 @@ import InfoCard from './InfoCard';
 
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
-    infoCardOpen: boolean;
+    hasInfoCard: boolean;
     hasTimeseries: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     return {
-        infoCardOpen: state.controlState.infoCardOpen,
+        hasInfoCard: state.controlState.infoCardOpen
+                     && state.controlState.selectedDatasetId !== null
+                     && state.dataState.datasets.length > 0,
         hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
     };
 };
@@ -68,10 +70,10 @@ const styles = (theme: Theme) => createStyles(
 
 const Workspace: React.FC<WorkspaceProps> = ({
                                                  classes,
-                                                 infoCardOpen,
+                                                 hasInfoCard,
                                                  hasTimeseries
                                              }) => {
-    if (infoCardOpen || hasTimeseries) {
+    if (hasInfoCard || hasTimeseries) {
         return (
             <div className={classes.contentContainer}>
                 <div className={classes.viewerContainer}>
