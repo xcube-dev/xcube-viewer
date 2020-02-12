@@ -24,6 +24,7 @@ export function initAuthClient() {
             }
             if (idToken && accessToken) {
                 dispatch(receiveSignIn(idToken!, accessToken!));
+                dispatch(updateDatasets() as any);
             }
         }
     };
