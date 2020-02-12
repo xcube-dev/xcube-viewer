@@ -14,13 +14,13 @@ export interface AuthClientConfig {
 let _authClientConfig: AuthClientConfig | null = null;
 let _authClient: AuthClient | null = null;
 
-if (process.env.REACT_APP_AUTH0_DOMAIN
-    && process.env.REACT_APP_AUTH0_CLIENT_ID
-    && process.env.REACT_APP_AUTH0_AUDIENCE) {
+if (process.env.REACT_APP_OAUTH2_DOMAIN
+    && process.env.REACT_APP_OAUTH2_CLIENT_ID
+    && process.env.REACT_APP_OAUTH2_AUDIENCE) {
     _authClientConfig = {
-        domain: process.env.REACT_APP_AUTH0_DOMAIN,
-        clientId: process.env.REACT_APP_AUTH0_CLIENT_ID,
-        audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+        domain: process.env.REACT_APP_OAUTH2_DOMAIN,
+        clientId: process.env.REACT_APP_OAUTH2_CLIENT_ID,
+        audience: process.env.REACT_APP_OAUTH2_AUDIENCE,
     };
 }
 

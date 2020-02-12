@@ -2,7 +2,13 @@
 
 ### Enhancements
 
-* Users can now login and sign on (#22)
+* Users can now login (and sign on) if the viewer is build with OAuth2 settings, if any, given 
+  in a `.env.local` file (#22): 
+  ```bash
+  REACT_APP_OAUTH2_DOMAIN=MY_DOMAIN
+  REACT_APP_OAUTH2_CLIENT_ID=MY_CLIENT_ID
+  REACT_APP_OAUTH2_AUDIENCE=MY_AUDIENCE
+  ``` 
 * Now displaying dataset attributions when clicking the lower right info button in the map.
 * Added a new panel to display information about the selected dataset, variable, and place (#114).
 * Added a tool button to locate the selected dataset in the map.
@@ -14,6 +20,15 @@
 * Fixed broken map selection interaction and fly-to introduced in v0.3.2 (#115).  
 * If the server cannot be reached, the tool bar and colour legend are hidden 
   as datasets and variables are no longer available.
+  
+### Other changes
+
+* Developers can now overwrite the branding's xcube web API server setting, if any, given in a `.env.local` file:
+  ```bash
+  REACT_APP_BRANDING=MY_BRANDING
+  REACT_APP_XCUBE_API=http://localhost:8080
+  ```  
+  This eases testing of yet undeployed xcube web API versions in the viewer. 
 
 ## Changes in version 0.3.2
 
