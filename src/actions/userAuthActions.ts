@@ -10,20 +10,20 @@ export function initAuthClient() {
         const authClient = await auth.initAuthClient();
         dispatch(_initAuthClient(authClient !== null));
         if (authClient !== null) {
-            let idToken: auth.IdToken;
+            let idToken = null;
             try {
                 idToken = await authClient.getUser();
-            } finally {
+            } catch (e) {
                 // ok
             }
-            let accessToken: string;
+            let accessToken = null;
             try {
                 accessToken = await authClient.getTokenSilently();
-            } finally {
+            } catch (e) {
                 // ok
             }
             if (idToken && accessToken) {
-                dispatch(receiveSignIn(idToken, accessToken));
+                dispatch(receiveSignIn(idToken!, accessToken!));
             }
         }
     };
