@@ -5,7 +5,8 @@ import {
     ADD_ACTIVITY,
     CHANGE_LOCALE,
     CLOSE_DIALOG,
-    ControlAction, FLY_TO,
+    ControlAction,
+    FLY_TO,
     INC_SELECTED_TIME,
     OPEN_DIALOG,
     REMOVE_ACTIVITY,
@@ -17,6 +18,7 @@ import {
     SELECT_TIME_SERIES_UPDATE_MODE,
     SELECT_VARIABLE,
     SET_MAP_INTERACTION,
+    SET_RGB_LAYER_VISIBILITY,
     SET_VISIBLE_INFO_CARD_ELEMENTS,
     SHOW_INFO_CARD,
     UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
@@ -161,6 +163,12 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
             return {
                 ...state,
                 selectedVariableName: action.selectedVariableName,
+            };
+        }
+        case SET_RGB_LAYER_VISIBILITY: {
+            return {
+                ...state,
+                showRgbLayer: action.showRgbLayer,
             };
         }
         case SELECT_TIME: {

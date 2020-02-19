@@ -39,7 +39,7 @@ export interface SelectDataset {
 }
 
 export function selectDataset(selectedDatasetId: string | null, datasets: Dataset[], showInMap: boolean) {
-    return (dispatch: Dispatch<SelectDataset>, getState: () => AppState) => {
+    return (dispatch: Dispatch<SelectDataset>) => {
         dispatch(_selectDataset(selectedDatasetId, datasets));
         if (selectedDatasetId && showInMap) {
             dispatch(flyToDataset(selectedDatasetId) as any);
@@ -173,7 +173,7 @@ export interface SelectPlace {
 
 
 export function selectPlace(selectedPlaceId: string | null, places: Place[], showInMap: boolean) {
-    return (dispatch: Dispatch<SelectPlace>, getState: () => AppState) => {
+    return (dispatch: Dispatch<SelectPlace>) => {
         dispatch(_selectPlace(selectedPlaceId, places));
         if (showInMap && selectedPlaceId) {
             dispatch(flyToPlace(selectedPlaceId) as any);
@@ -183,6 +183,20 @@ export function selectPlace(selectedPlaceId: string | null, places: Place[], sho
 
 function _selectPlace(selectedPlaceId: string | null, places: Place[]): SelectPlace {
     return {type: SELECT_PLACE, selectedPlaceId, places};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SET_RGB_LAYER_VISIBILITY = 'SET_RGB_LAYER_VISIBILITY';
+export type SET_RGB_LAYER_VISIBILITY = typeof SET_RGB_LAYER_VISIBILITY;
+
+export interface SetRgbLayerVisibility {
+    type: SET_RGB_LAYER_VISIBILITY;
+    showRgbLayer: boolean;
+}
+
+export function setRgbLayerVisibility(showRgbLayer: boolean): SetRgbLayerVisibility {
+    return {type: SET_RGB_LAYER_VISIBILITY, showRgbLayer};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,6 +256,8 @@ export function selectTimeRange(selectedTimeRange: TimeRange | null): SelectTime
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// TODO (forman): this action doesn't seem to be in use - remove!
 
 export const SELECT_TIME_SERIES_UPDATE_MODE = 'SELECT_TIME_SERIES_UPDATE_MODE';
 export type SELECT_TIME_SERIES_UPDATE_MODE = typeof SELECT_TIME_SERIES_UPDATE_MODE;
@@ -421,6 +437,7 @@ export type ControlAction =
     | SelectPlaceGroups
     | SelectPlace
     | SelectTime
+    | SetRgbLayerVisibility
     | IncSelectedTime
     | SelectTimeRange
     | SelectTimeSeriesUpdateMode

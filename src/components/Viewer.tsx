@@ -63,6 +63,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     mapId: string;
     mapInteraction: MapInteraction;
     baseMapLayer?: MapElement;
+    rgbLayer?: MapElement;
     variableLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
@@ -78,6 +79,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            mapId,
                                            mapInteraction,
                                            baseMapLayer,
+                                           rgbLayer,
                                            variableLayer,
                                            placeGroupLayers,
                                            colorBarLegend,
@@ -187,6 +189,11 @@ const Viewer: React.FC<ViewerProps> = ({
                 {colorBarLegend}
             </Control>
         );
+    }
+
+    // TODO (forman): fix me! this is a workaround to avoid that rgbLayer is never visible.
+    if (rgbLayer !== null) {
+        variableLayer = rgbLayer;
     }
 
     return (

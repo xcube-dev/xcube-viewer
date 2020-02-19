@@ -47,6 +47,7 @@ export interface ControlState {
     infoCardElementStates: InfoCardElementStates;
     imageSmoothingEnabled: boolean;
     baseMapUrl: string;
+    showRgbLayer: boolean;
 }
 
 
@@ -73,6 +74,7 @@ export function newControlState(): ControlState {
         dialogOpen: {},
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
+        showRgbLayer: false,
         infoCardOpen: false,
         infoCardElementStates: {
             dataset: {visible: true, viewMode: 'text'},

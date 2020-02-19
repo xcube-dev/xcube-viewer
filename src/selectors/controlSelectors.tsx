@@ -19,9 +19,10 @@ import {
     findDataset,
     findDatasetVariable,
     getDatasetTimeDimension,
-    getDatasetTimeRange, TimeDimension
+    getDatasetTimeRange, RgbSchema, TimeDimension
 } from '../model/dataset';
 import { Variable } from '../model/variable';
+import { TileSourceOptions } from '../model/tile';
 import {
     Place,
     PlaceGroup,
@@ -47,6 +48,7 @@ export const selectedServerIdSelector = (state: AppState) => state.controlState.
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
 export const timeAnimationActiveSelector = (state: AppState) => state.controlState.timeAnimationActive;
 export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
+export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
 
 export const selectedDatasetSelector = createSelector(
@@ -98,6 +100,13 @@ export const selectedDatasetTimeRangeSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): TimeRange | null => {
         return dataset !== null ? getDatasetTimeRange(dataset) : null;
+    }
+);
+
+export const selectedDatasetRgbSchemaSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): RgbSchema | null => {
+        return dataset !== null ? (dataset.rgbSchema || null) : null;
     }
 );
 
@@ -248,6 +257,13 @@ export const selectedDatasetTimeDimensionSelector = createSelector(
     }
 );
 
+export const selectedDatasetAttributionsSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): string[] | null => {
+        return (dataset && dataset.attributions) || null;
+    }
+);
+
 export const timeCoordinatesSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
     (timeDimension: TimeDimension | null): Time[] | null => {
@@ -269,66 +285,103 @@ export const selectedTimeIndexSelector = createSelector(
     }
 );
 
+function getTileLayer(layerId: string,
+                      tileSourceOptions: TileSourceOptions,
+                      queryParams: string,
+                      timeDimension: TimeDimension | null,
+                      time: number | null,
+                      timeAnimationActive: boolean,
+                      attributions: string[] | null) {
+    if (time !== null) {
+        let timeString;
+        if (timeDimension) {
+            const timeIndex = findIndexCloseTo(timeDimension.coordinates, time);
+            if (timeIndex > -1) {
+                timeString = timeDimension.labels[timeIndex];
+                // console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
+            }
+        }
+        if (!timeString) {
+            timeString = new Date(time).toISOString();
+        }
+        queryParams += `&time=${timeString}`;
+    }
+    if (queryParams.length > 0) {
+        queryParams = '?' + queryParams;
+    }
+    const url = tileSourceOptions.url + queryParams;
+
+    const source = new OlXYZSource(
+        {
+            url,
+            projection: olProjGet(tileSourceOptions.projection),
+            minZoom: tileSourceOptions.minZoom,
+            maxZoom: tileSourceOptions.maxZoom,
+            tileGrid: new OlTileGrid(tileSourceOptions.tileGrid),
+            attributions: attributions || undefined,
+            transition: timeAnimationActive ? 0 : 250,
+        });
+    return (
+        <Tile id={layerId} source={source} zIndex={10}/>
+    );
+}
+
 export const selectedDatasetVariableLayerSelector = createSelector(
-    selectedDatasetSelector,
     selectedDatasetVariableSelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
-    (dataset: Dataset | null,
-     variable: Variable | null,
+    selectedDatasetAttributionsSelector,
+    (variable: Variable | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
      colorBarMinMax: [number, number],
      colorBarName: string,
+     attributions: string[] | null,
     ): MapElement => {
         if (!variable || !variable.tileSourceOptions) {
             return null;
         }
-        const options = variable.tileSourceOptions;
-        let queryParams = `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`;
-        if (time !== null) {
-            let timeString;
-            if (timeDimension) {
-                const timeIndex = findIndexCloseTo(timeDimension.coordinates, time);
-                if (timeIndex > -1) {
-                    timeString = timeDimension.labels[timeIndex];
-                    // console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
-                }
-            }
-            if (!timeString) {
-                timeString = new Date(time).toISOString();
-            }
-            queryParams += `&time=${timeString}`;
-        }
-        const url = `${options.url}?${queryParams}`;
-
-        let attributions;
-        let attributionsCollapsible = true;
-        if (dataset && dataset.attributions) {
-            attributions = dataset.attributions!;
-            // attributionsCollapsible = false;
-        }
-
-        const source = new OlXYZSource(
-            {
-                url,
-                projection: olProjGet(options.projection),
-                minZoom: options.minZoom,
-                maxZoom: options.maxZoom,
-                tileGrid: new OlTileGrid(options.tileGrid),
-                attributions,
-                attributionsCollapsible,
-                transition: timeAnimationActive ? 0 : 250,
-            });
-        return (
-            <Tile id={'variable'} source={source} zIndex={10}/>
-        );
+        return getTileLayer('variable',
+                            variable.tileSourceOptions,
+                            `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
+                            timeDimension,
+                            time,
+                            timeAnimationActive,
+                            attributions);
     }
 );
+
+export const selectedDatasetRgbLayerSelector = createSelector(
+    showRgbLayerSelector,
+    selectedDatasetRgbSchemaSelector,
+    selectedDatasetTimeDimensionSelector,
+    selectedTimeSelector,
+    timeAnimationActiveSelector,
+    selectedDatasetAttributionsSelector,
+    (showRgbLayer: boolean,
+     rgbSchema: RgbSchema | null,
+     timeDimension: TimeDimension | null,
+     time: Time | null,
+     timeAnimationActive: boolean,
+     attributions: string[] | null,
+    ): MapElement => {
+        if (!showRgbLayer || !rgbSchema) {
+            return null;
+        }
+        return getTileLayer('rgb',
+                            rgbSchema.tileSourceOptions,
+                            '',
+                            timeDimension,
+                            time,
+                            timeAnimationActive,
+                            attributions);
+    }
+);
+
 
 export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
