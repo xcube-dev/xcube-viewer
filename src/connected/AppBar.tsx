@@ -102,10 +102,10 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                     {appName}
                 </Typography>
+                <UserControl/>
                 <IconButton onClick={handleSettingsButtonClicked}>
                     <SettingsApplicationsIcon/>
                 </IconButton>
-                <UserControl/>
             </Toolbar>
             <ServerDialog/>
             <SettingsDialog/>
