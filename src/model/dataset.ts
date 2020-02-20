@@ -1,3 +1,4 @@
+import { TileSourceOptions } from './tile';
 import { Variable } from './variable';
 import { PlaceGroup } from './place';
 import { TimeRange } from './timeSeries';
@@ -28,6 +29,14 @@ export interface TimeDimension extends Dimension {
     labels: string[];
 }
 
+export type NormRange = [number, number];
+
+export interface RgbSchema {
+    tileSourceOptions: TileSourceOptions;
+    varNames: [string, string, string];
+    normRanges: [NormRange, NormRange, NormRange];
+}
+
 export interface Dataset {
     id: string;
     title: string;
@@ -37,6 +46,7 @@ export interface Dataset {
     placeGroups?: PlaceGroup[];
     attributions?: string[];
     attrs: { [name: string]: any };
+    rgbSchema?: RgbSchema;
 }
 
 

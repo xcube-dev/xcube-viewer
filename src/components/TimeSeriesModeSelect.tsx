@@ -6,6 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 
+// TODO (forman): this component doesn't seem to be in use - remove!
 
 const styles = (theme: Theme) => createStyles(
     {});

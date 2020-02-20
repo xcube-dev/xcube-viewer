@@ -212,7 +212,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
         content = (
             <CardContent2>
                 <KeyValueTable
-                    data={Object.getOwnPropertyNames(dataset.attrs).map(name => [name, dataset.attrs[name]])}
+                    data={Object.getOwnPropertyNames(dataset.attrs || {}).map(name => [name, dataset.attrs[name]])}
                 />
             </CardContent2>
         );
@@ -271,7 +271,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
         content = (
             <CardContent2>
                 <KeyValueTable
-                    data={Object.getOwnPropertyNames(variable.attrs).map(name => [name, variable.attrs[name]])}
+                    data={Object.getOwnPropertyNames(variable.attrs || {}).map(name => [name, variable.attrs[name]])}
                 />
             </CardContent2>
         );

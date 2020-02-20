@@ -2,6 +2,9 @@
 
 ### Enhancements
 
+* Added a "RGB" switch to the app bar that is used to display the selected dataset's RGB layer, 
+  if any. Currently, RGB layers can only be configured through the xcube server. Later xcube viewer 
+  versions will allow users selecting three variables and their respective value ranges for normalisation.
 * Users can now login (and sign on) if the viewer is build with OAuth2 settings, if any, given 
   in a `.env.local` file (#22): 
   ```bash

@@ -1,3 +1,5 @@
+import { TileSourceOptions } from './tile';
+
 export interface Variable {
     id: string;
     name: string;
@@ -6,7 +8,7 @@ export interface Variable {
     dtype: string;
     units: string;
     title: string;
-    tileSourceOptions: any;
+    tileSourceOptions: TileSourceOptions;
     colorBarName: string;
     colorBarMin: number;
     colorBarMax: number;

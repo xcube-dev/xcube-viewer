@@ -524,6 +524,13 @@
       "it": "non verificato",
       "ro": "nu e verificat",
       "se": "inte verifierad"
+    },
+    {
+      "en": "RGB",
+      "de": "RGB",
+      "it": "RGB",
+      "ro": "RGB",
+      "se": "RGB"
     }
   ]
 }
