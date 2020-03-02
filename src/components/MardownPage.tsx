@@ -9,9 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 
-import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
-
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
@@ -34,7 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface MarkdownPageProps extends WithLocale {
+interface MarkdownPageProps {
     title: string;
     href: string;
     open: boolean;
@@ -64,9 +61,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
                     <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
                         <CloseIcon/>
                     </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        {I18N.get(title)}
-                    </Typography>
+                    <Typography variant="h6" className={classes.title}>{title}</Typography>
                 </Toolbar>
             </AppBar>
             <div className={classes.text}>
