@@ -26,6 +26,7 @@
   
 ### Other changes
 
+* Added Help-icon providing a sub-menu with User Manual (coming soon) and the obligatory imprint.
 * Developers can now overwrite the branding's xcube web API server setting, if any, given in a `.env.local` file:
   ```bash
   REACT_APP_BRANDING=MY_BRANDING

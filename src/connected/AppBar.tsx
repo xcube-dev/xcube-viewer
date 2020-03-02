@@ -1,20 +1,33 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
+import {
+    AppBar,
+    createStyles,
+    IconButton,
+    Menu,
+    MenuItem,
+    Theme,
+    Toolbar,
+    Typography,
+    WithStyles,
+    withStyles
+} from '@material-ui/core';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 
 import { AppState } from '../states/appState';
-import { getBranding } from '../config';
+import { getBranding, I18N } from '../config';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
 import { openDialog } from '../actions/controlActions';
+import { WithLocale } from '../util/lang';
+import MarkdownPage from '../components/MardownPage';
 
 
-interface AppBarProps extends WithStyles<typeof styles> {
+interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
     appName: string;
     openDialog: (dialogId: string) => void;
 }
@@ -82,9 +95,38 @@ const styles = (theme: Theme) => createStyles(
 );
 
 const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarProps) => {
+    const [helpMenuAnchorEl, setHelpMenuAnchorEl] = React.useState(null);
+    const [imprintOpen, setImprintOpen] = React.useState(false);
+    const [manualOpen, setManualOpen] = React.useState(false);
 
     const handleSettingsButtonClicked = () => {
         openDialog('settings');
+    };
+
+    const handleOpenHelpMenu = (event: any) => {
+        setHelpMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseHelpMenu = () => {
+        setHelpMenuAnchorEl(null);
+    };
+
+    const handleOpenManual = () => {
+        handleCloseHelpMenu();
+        setManualOpen(true);
+    };
+
+    const handleCloseManual = () => {
+        setManualOpen(false);
+    };
+
+    const handleOpenImprint = () => {
+        handleCloseHelpMenu();
+        setImprintOpen(true);
+    };
+
+    const handleCloseImprint = () => {
+        setImprintOpen(false);
     };
 
     return (
@@ -103,12 +145,34 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                     {appName}
                 </Typography>
                 <UserControl/>
+                <IconButton onClick={handleOpenHelpMenu}>
+                    <HelpOutlineIcon/>
+                </IconButton>
                 <IconButton onClick={handleSettingsButtonClicked}>
                     <SettingsApplicationsIcon/>
                 </IconButton>
             </Toolbar>
             <ServerDialog/>
             <SettingsDialog/>
+            <Menu
+                id="simple-menu"
+                anchorEl={helpMenuAnchorEl}
+                keepMounted
+                open={Boolean(helpMenuAnchorEl)}
+                onClose={handleCloseHelpMenu}
+                getContentAnchorEl={null}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                transformOrigin={{vertical: 'top', horizontal: 'center'}}
+            >
+                <MenuItem onClick={handleOpenManual}>{I18N.get('User Manual')}</MenuItem>
+                <MenuItem onClick={handleOpenImprint}>{I18N.get('Imprint')}</MenuItem>
+            </Menu>
+            <MarkdownPage title={I18N.get('User Manual')}
+                          href='manual.md'
+                          open={manualOpen} onClose={handleCloseManual}/>
+            <MarkdownPage title={I18N.get('Imprint')}
+                          href='imprint.md'
+                          open={imprintOpen} onClose={handleCloseImprint}/>
         </AppBar>
     );
 };

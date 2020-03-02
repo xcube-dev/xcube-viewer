@@ -531,6 +531,20 @@
       "it": "RGB",
       "ro": "RGB",
       "se": "RGB"
+    },
+    {
+      "en": "Imprint",
+      "de": "Impressum",
+      "it": "Impronta",
+      "ro": "Imprima",
+      "se": "Avtryck"
+    },
+    {
+      "en": "User Manual",
+      "de": "Benutzerhandbuch",
+      "it": "Manuale d'Uso",
+      "ro": "Manual de Utilizare",
+      "se": "Användarmanual"
     }
   ]
 }
