@@ -168,10 +168,10 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                 <MenuItem onClick={handleOpenImprint}>{I18N.get('Imprint')}</MenuItem>
             </Menu>
             <MarkdownPage title={I18N.get('User Manual')}
-                          href='./manual.md'
+                          href='manual.md'
                           open={manualOpen} onClose={handleCloseManual}/>
             <MarkdownPage title={I18N.get('Imprint')}
-                          href='./imprint.md'
+                          href='imprint.md'
                           open={imprintOpen} onClose={handleCloseImprint}/>
         </AppBar>
     );
