@@ -47,7 +47,8 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
     const [imprintText, setImprintText] = useState('');
 
     useEffect(() => {
-        fetch(window.location.href + href)
+        // fetch(window.location.href + href)
+        fetch(href)
             .then(response => response.text())
             .then(imprintText => setImprintText(imprintText));
     });
