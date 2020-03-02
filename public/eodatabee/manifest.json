@@ -1,6 +1,6 @@
 {
-  "short_name": "xcube Viewer",
-  "name": "xcube Viewer",
+  "short_name": "EODataBee Viewer",
+  "name": "EODataBee Viewer",
   "icons": [
     {
       "src": "eodatabee/favicon.ico",
