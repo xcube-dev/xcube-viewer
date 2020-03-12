@@ -49,7 +49,7 @@ export class Storage {
         return this.getItem(propertyName, defaultValue, (value) => JSON.parse(value));
     }
 
-    getBooleanProperty(propertyName: string, target: any, defaultObj: any) {
+    getBooleanProperty<T>(propertyName: keyof T, target: T, defaultObj: T) {
         this.getProperty(propertyName, target, defaultObj, (value) => value === 'true');
     }
 
@@ -57,19 +57,19 @@ export class Storage {
         this.getProperty(propertyName, target, defaultObj, parseInt);
     }
 
-    getStringProperty(propertyName: string, target: any, defaultObj: any) {
+    getStringProperty<T>(propertyName: keyof T, target: T, defaultObj: T) {
         this.getProperty(propertyName, target, defaultObj, (value) => value);
     }
 
-    getObjectProperty(propertyName: string, target: any, defaultObj: any) {
+    getObjectProperty<T>(propertyName: keyof T, target: T, defaultObj: T) {
         this.getProperty(propertyName, target, defaultObj, (value) => JSON.parse(value));
     }
 
-    private getProperty(propertyName: string,
-                        target: any,
-                        defaultObj: any,
+    private getProperty<T>(propertyName: keyof T,
+                        target: T,
+                        defaultObj: T,
                         parser: (value: string) => any) {
-        target[propertyName] = this.getItem(propertyName, defaultObj[propertyName], parser);
+        target[propertyName] = this.getItem(propertyName as string, defaultObj[propertyName], parser);
     }
 
     setItem(propertyName: string, value: any, formatter?: (value: any) => string) {
@@ -85,12 +85,12 @@ export class Storage {
         this.setItem(propertyName, value, (value) => JSON.stringify(value));
     }
 
-    setPrimitiveProperty(propertyName: string, source: any) {
-        this.setItem(propertyName, source[propertyName]);
+    setPrimitiveProperty<T>(propertyName: keyof T, source: T) {
+        this.setItem(propertyName as string, source[propertyName]);
     }
 
-    setObjectProperty(propertyName: string, source: any) {
-        this.setObjectItem(propertyName, source[propertyName]);
+    setObjectProperty<T>(propertyName: keyof T, source: T) {
+        this.setObjectItem(propertyName as string, source[propertyName]);
     }
 
     private makeKey(propertyName: string): string {
