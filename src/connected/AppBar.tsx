@@ -24,7 +24,7 @@ import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
 import { openDialog } from '../actions/controlActions';
 import { WithLocale } from '../util/lang';
-import MarkdownPage from '../components/MardownPage';
+import MarkdownPage from '../components/MarkdownPage';
 
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
