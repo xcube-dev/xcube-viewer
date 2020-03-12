@@ -34,6 +34,7 @@ export interface ControlState {
     timeSeriesUpdateMode: 'add' | 'replace';
     timeAnimationActive: boolean;
     timeAnimationInterval: TimeAnimationInterval;
+    timeChunkSize: number;
     autoShowTimeSeries: boolean;
     showTimeSeriesPointsOnly: boolean;
     showTimeSeriesErrorBars: boolean;
@@ -65,6 +66,7 @@ export function newControlState(): ControlState {
         timeSeriesUpdateMode: 'add',
         timeAnimationActive: false,
         timeAnimationInterval: 1000,
+        timeChunkSize: 20,
         autoShowTimeSeries: true,
         showTimeSeriesPointsOnly: false,
         showTimeSeriesErrorBars: true,

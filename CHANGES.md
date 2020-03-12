@@ -16,6 +16,7 @@
 * Added a new panel to display information about the selected dataset, variable, and place (#114).
 * Added a tool button to locate the selected dataset in the map.
 * Notification "snackbars" will now disappear after 5 seconds (#107).
+* The number of data points fetched within a time-series update can now be adjusted.
 
 ### Fixes
 
