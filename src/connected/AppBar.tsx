@@ -13,7 +13,7 @@ import {
     WithStyles,
     withStyles
 } from '@material-ui/core';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import SettingsIcon from '@material-ui/icons/Settings';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 
@@ -91,6 +91,9 @@ const styles = (theme: Theme) => createStyles(
             marginTop: -12,
             marginLeft: -12,
         },
+        iconButton: {
+            marginLeft: theme.spacing(2),
+        }
     }
 );
 
@@ -134,7 +137,7 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
             position="absolute"
             className={classNames(classes.appBar)}
         >
-            <Toolbar disableGutters={true} className={classes.toolbar}>
+            <Toolbar disableGutters className={classes.toolbar} variant="dense">
                 <img
                     src={getBranding().logoPath}
                     width={getBranding().logoWidth}
@@ -145,11 +148,11 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                     {appName}
                 </Typography>
                 <UserControl/>
-                <IconButton onClick={handleOpenHelpMenu}>
+                <IconButton onClick={handleOpenHelpMenu} size="small" className={classes.iconButton}>
                     <HelpOutlineIcon/>
                 </IconButton>
-                <IconButton onClick={handleSettingsButtonClicked}>
-                    <SettingsApplicationsIcon/>
+                <IconButton onClick={handleSettingsButtonClicked} size="small" className={classes.iconButton}>
+                    <SettingsIcon/>
                 </IconButton>
             </Toolbar>
             <ServerDialog/>

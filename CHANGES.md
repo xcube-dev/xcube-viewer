@@ -26,6 +26,8 @@
   
 ### Other changes
 
+* Made the app bar a little more dense (48 instead of 56px).
+* Using more intuitive icons for user login and settings.
 * Added Help-icon providing a sub-menu with User Manual (coming soon) and the obligatory imprint.
 * Developers can now overwrite the branding's xcube web API server setting, if any, given in a `.env.local` file:
   ```bash
