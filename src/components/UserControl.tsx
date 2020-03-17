@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import IconButton from '@material-ui/core/IconButton';
-import FaceIcon from '@material-ui/icons/Face';
+import PersonIcon from '@material-ui/icons/Person';
 import Avatar from '@material-ui/core/Avatar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Menu from '@material-ui/core/Menu';
@@ -51,6 +51,9 @@ const styles = (theme: Theme) => createStyles(
             marginTop: -12,
             marginLeft: -12,
         },
+        iconButton: {
+            padding: 0,
+        }
     }
 );
 
@@ -109,7 +112,7 @@ const UserControl: React.FC<UserControlProps> = ({
 
     if (idToken !== null) {
         let avatar;
-        let avatarContent: React.ReactNode = <FaceIcon/>;
+        let avatarContent: React.ReactNode = <PersonIcon/>;
         if (!idToken) {
             avatar = <Avatar className={classes.letterAvatar}>?</Avatar>;
         } else if (idToken.picture) {
@@ -135,7 +138,10 @@ const UserControl: React.FC<UserControlProps> = ({
                 <IconButton
                     onClick={handleUserMenuOpen}
                     aria-controls="user-menu"
-                    aria-haspopup="true">
+                    aria-haspopup="true"
+                    size="small"
+                    className={classes.iconButton}
+                >
                     {avatar}
                 </IconButton>
                 <Menu
@@ -170,8 +176,8 @@ const UserControl: React.FC<UserControlProps> = ({
         );
     } else {
         let userButton = (
-            <IconButton onClick={isBusy ? undefined : handleSignInButtonClicked}>
-                <FaceIcon/>
+            <IconButton onClick={isBusy ? undefined : handleSignInButtonClicked}  size="small">
+                <PersonIcon/>
             </IconButton>
         );
         if (isBusy) {
