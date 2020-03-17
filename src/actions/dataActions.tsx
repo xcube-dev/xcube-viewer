@@ -184,13 +184,16 @@ export function addTimeSeries() {
         const selectedPlace = selectedPlaceSelector(getState())!;
         const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
         const inclStDev = getState().controlState.showTimeSeriesErrorBars;
+        let timeChunkSize = getState().controlState.timeChunkSize;
 
         const placeGroups = placeGroupsSelector(getState());
 
         if (selectedDatasetId && selectedVariable && selectedPlaceId && selectedDatasetTimeDim) {
             const timeLabels = selectedDatasetTimeDim.labels;
             const numTimeLabels = timeLabels.length;
-            const timeChunkSize = 16;
+
+            timeChunkSize = timeChunkSize > 0 ? timeChunkSize : numTimeLabels;
+
             let endTimeIndex = numTimeLabels - 1;
             let startTimeIndex = endTimeIndex - timeChunkSize + 1;
 

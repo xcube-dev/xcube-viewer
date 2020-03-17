@@ -303,7 +303,7 @@
     },
     {
       "en": "Show data points only",
-      "de": "Nur Daten-Punkte anzeigen",
+      "de": "Nur Datenpunkte anzeigen",
       "it": "Mostra solo punti dati",
       "ro": "Afișați doar puncte de date",
       "se": "Visa endast datapunkter"
@@ -314,6 +314,13 @@
       "it": "Mostra barre di errore",
       "ro": "Afișează bare de eroare",
       "se": "Visa felstaplar"
+    },
+    {
+      "en": "Number of data points in a time series update",
+      "de": "Anzahl Datenpunkte in einer Zeitreihen-Aktualisierung",
+      "it": "Numero di punti dati in un aggiornamento di serie storiche",
+      "ro": "Numărul de puncte de date dintr-o actualizare a seriei de timp",
+      "se": "Antal datapunkter i en tidsserieuppdatering"
     },
     {
       "en": "Legal Agreement",

@@ -41,6 +41,12 @@ const useStyles = makeStyles(theme => ({
             marginRight: theme.spacing(1),
             fontSize: theme.typography.fontSize / 2
         },
+        intTextField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            fontSize: theme.typography.fontSize / 2,
+            width: theme.spacing(6),
+        },
 
         localeAvatar: {
             margin: 10,
@@ -74,7 +80,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                                        }) => {
     const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
     const [baseMapMenuAnchor, setBaseMapMenuAnchor] = React.useState(null);
+    const [timeChunkSize, setTimeChunkSize] = React.useState(settings.timeChunkSize + '');
     const classes = useStyles();
+
+    React.useEffect(() => {
+        const newTimeChunkSize = parseInt(timeChunkSize);
+        if (!Number.isNaN(newTimeChunkSize) && newTimeChunkSize !== settings.timeChunkSize) {
+            updateSettings({...settings, timeChunkSize: newTimeChunkSize});
+        }
+    }, [timeChunkSize, settings, updateSettings]);
 
     if (!open) {
         return null;
@@ -90,6 +104,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
     function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         updateSettings({...settings, timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
+    }
+
+    function handleTimeChunkSizeChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        setTimeChunkSize(event.target.value);
     }
 
     let localeMenuItems = null;
@@ -216,6 +234,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
+                        <SettingsSubPanel label={I18N.get('Number of data points in a time series update')}>
+                            <TextField
+                                className={classes.intTextField}
+                                value={timeChunkSize}
+                                onChange={handleTimeChunkSizeChange}
+                                margin="normal"
+                                size={'small'}
+                            />
+                        </SettingsSubPanel>
                     </SettingsPanel>
 
                     <SettingsPanel title={I18N.get('Map')}>
@@ -337,7 +364,7 @@ const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (props) => {
 
 
 interface ToggleSettingProps {
-    propertyName: string;
+    propertyName: keyof ControlState;
     settings: ControlState;
     updateSettings: (settings: ControlState) => void;
 }
@@ -345,8 +372,8 @@ interface ToggleSettingProps {
 const ToggleSetting: React.FC<ToggleSettingProps> = ({propertyName, settings, updateSettings}) => {
     return (
         <Switch
-            checked={(settings as any)[propertyName]}
-            onChange={() => updateSettings({...settings, [propertyName]: !((settings as any)[propertyName])})}
+            checked={!!settings[propertyName]}
+            onChange={() => updateSettings({...settings, [propertyName]: !settings[propertyName]})}
         />
     );
 };
