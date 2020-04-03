@@ -21,7 +21,7 @@ import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
-import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
+import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
 import { getUserPlaceColor, I18N } from '../config';
 import { WithLocale } from '../util/lang';
 import { Place, PlaceInfo } from '../model/place';
@@ -144,7 +144,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         if (typeof value !== 'number' || !Number.isFinite(value)) {
             return null;
         }
-        return utcTimeToLocalDateString(value);
+        return utcTimeToIsoDateString(value);
     };
 
     const handleClick = (event: any) => {
@@ -429,7 +429,7 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({classes, active, label, 
 
     return (
         <div className={classes.toolTipContainer}>
-            <span className={classes.toolTipLabel}>{`${utcTimeToLocalDateTimeString(label)}`}</span>
+            <span className={classes.toolTipLabel}>{`${utcTimeToIsoDateTimeString(label)} UTC`}</span>
             {items}
         </div>
     );

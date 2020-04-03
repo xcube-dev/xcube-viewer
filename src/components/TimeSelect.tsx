@@ -2,6 +2,7 @@ import * as React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
 import {
     MuiPickersUtilsProvider,
@@ -10,7 +11,7 @@ import {
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { dateTimeStringToUtcTime, utcTimeToLocalIsoDateTimeString } from '../util/time';
+import { dateTimeStringToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
@@ -39,17 +40,17 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
             shrink
             htmlFor="time-select"
         >
-            {I18N.get('Time')}
+            {I18N.get('Time (UTC)')}
         </InputLabel>
     );
 
     const isValid = typeof selectedTime === 'number';
-    const timeText = isValid ? utcTimeToLocalIsoDateTimeString(selectedTime!) : null;
+    const timeText = isValid ? utcTimeToIsoDateTimeString(selectedTime!) : null;
 
     let minTimeText, maxTimeText;
     if (Array.isArray(selectedTimeRange)) {
-        minTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[0]);
-        maxTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[1]);
+        minTimeText = utcTimeToIsoDateTimeString(selectedTimeRange[0]);
+        maxTimeText = utcTimeToIsoDateTimeString(selectedTimeRange[1]);
     }
 
     const timeInput = (
@@ -63,15 +64,18 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
                 minDate={minTimeText}
                 maxDate={maxTimeText}
                 onChange={handleTimeChange}
+
             />
         </MuiPickersUtilsProvider>
     );
 
     return (
-        <ControlBarItem
-            label={timeInputLabel}
-            control={timeInput}
-        />
+        <Tooltip title={I18N.get('Select current dataset UTC time')}>
+            <ControlBarItem
+                label={timeInputLabel}
+                control={timeInput}
+            />
+        </Tooltip>
     );
 };
 

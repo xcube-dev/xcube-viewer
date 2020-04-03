@@ -6,7 +6,7 @@ import Slider, { Mark } from '@material-ui/core/Slider';
 import Box from '@material-ui/core/Box';
 
 import { TimeRange, UNIT } from '../model/timeSeries';
-import { utcTimeToLocalIsoDateString } from '../util/time';
+import { utcTimeToIsoDateString } from '../util/time';
 
 const HOR_MARGIN = 5;
 
@@ -55,8 +55,8 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({classes, dataTimeRange
     }
 
     const marks: Mark[] = [
-        {value: dataTimeRange![0], label: utcTimeToLocalIsoDateString(dataTimeRange![0])},
-        {value: dataTimeRange![1], label: utcTimeToLocalIsoDateString(dataTimeRange![1])},
+        {value: dataTimeRange![0], label: utcTimeToIsoDateString(dataTimeRange![0])},
+        {value: dataTimeRange![1], label: utcTimeToIsoDateString(dataTimeRange![1])},
     ];
 
     return (

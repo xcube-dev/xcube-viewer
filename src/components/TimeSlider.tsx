@@ -6,8 +6,8 @@ import Slider, { Mark } from '@material-ui/core/Slider';
 
 import { Time, TimeRange, UNIT } from '../model/timeSeries';
 import {
-    utcTimeToLocalDateTimeString,
-    utcTimeToLocalIsoDateString,
+    utcTimeToIsoDateTimeString,
+    utcTimeToIsoDateString,
 } from '../util/time';
 import { useEffect, useState } from 'react';
 
@@ -63,12 +63,12 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     }
 
     const marks: Mark[] = [
-        {value: selectedTimeRange![0], label: utcTimeToLocalIsoDateString(selectedTimeRange![0])},
-        {value: selectedTimeRange![1], label: utcTimeToLocalIsoDateString(selectedTimeRange![1])},
+        {value: selectedTimeRange![0], label: utcTimeToIsoDateString(selectedTimeRange![0])},
+        {value: selectedTimeRange![1], label: utcTimeToIsoDateString(selectedTimeRange![1])},
     ];
 
     function valueLabelFormat(value: number) {
-        return utcTimeToLocalDateTimeString(value);
+        return utcTimeToIsoDateTimeString(value);
     }
 
     return (
