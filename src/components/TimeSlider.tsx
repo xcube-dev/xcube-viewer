@@ -1,15 +1,17 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Slider, { Mark } from '@material-ui/core/Slider';
+import Tooltip from '@material-ui/core/Tooltip';
 
+import { I18N } from '../config';
 import { Time, TimeRange, UNIT } from '../model/timeSeries';
 import {
-    utcTimeToLocalDateTimeString,
-    utcTimeToLocalIsoDateString,
+    utcTimeToIsoDateTimeString,
+    utcTimeToIsoDateString,
 } from '../util/time';
-import { useEffect, useState } from 'react';
 
 const HOR_MARGIN = 5;
 
@@ -63,27 +65,29 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     }
 
     const marks: Mark[] = [
-        {value: selectedTimeRange![0], label: utcTimeToLocalIsoDateString(selectedTimeRange![0])},
-        {value: selectedTimeRange![1], label: utcTimeToLocalIsoDateString(selectedTimeRange![1])},
+        {value: selectedTimeRange![0], label: utcTimeToIsoDateString(selectedTimeRange![0])},
+        {value: selectedTimeRange![1], label: utcTimeToIsoDateString(selectedTimeRange![1])},
     ];
 
     function valueLabelFormat(value: number) {
-        return utcTimeToLocalDateTimeString(value);
+        return utcTimeToIsoDateTimeString(value);
     }
 
     return (
         <Box className={classes.box}>
-            <Slider
-                disabled={!selectedTimeRangeValid}
-                min={selectedTimeRange![0]}
-                max={selectedTimeRange![1]}
-                value={selectedTime_ || 0}
-                valueLabelDisplay="off"
-                valueLabelFormat={valueLabelFormat}
-                marks={marks}
-                onChange={handleChange}
-                onChangeCommitted={handleChangeCommitted}
-            />
+            <Tooltip arrow title={I18N.get('Select time in dataset')}>
+                <Slider
+                    disabled={!selectedTimeRangeValid}
+                    min={selectedTimeRange![0]}
+                    max={selectedTimeRange![1]}
+                    value={selectedTime_ || 0}
+                    valueLabelDisplay="off"
+                    valueLabelFormat={valueLabelFormat}
+                    marks={marks}
+                    onChange={handleChange}
+                    onChangeCommitted={handleChangeCommitted}
+                />
+            </Tooltip>
         </Box>
     );
 };

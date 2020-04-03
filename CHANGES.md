@@ -17,9 +17,13 @@
 * Added a tool button to locate the selected dataset in the map.
 * Notification "snackbars" will now disappear after 5 seconds (#107).
 * The number of data points fetched within a time-series update can now be adjusted.
+* Attached tooltips to many prominent viewer functions.
+
 
 ### Fixes
 
+* Date/time displayed in the date/time select field and displayed in time-series plots
+  are now aligned. Both use Coordinated Universal Time (UTC) and ISO format (#133).  
 * When in "Show data points only" mode, values at chart points where no not shown. This now works (#120).   
 * Fixed broken map selection interaction and fly-to introduced in v0.3.2 (#115).  
 * If the server cannot be reached, the tool bar and colour legend are hidden 

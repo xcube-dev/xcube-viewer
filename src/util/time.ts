@@ -4,6 +4,24 @@ export function dateTimeStringToUtcTime(dateTimeString: string): number {
     return new Date(dateTimeString).getTime();
 }
 
+export function utcTimeToIsoDateString(utcTime: number, local: boolean = false) {
+    return new Date(utcTime + (local ? LOCAL_OFFSET : 0))
+        .toISOString()
+        .substr(0, 10);
+}
+
+export function utcTimeToIsoDateTimeString(utcTime: number, local: boolean = false, skipSeconds: boolean = false) {
+    return new Date(utcTime + (local ? LOCAL_OFFSET : 0))
+        .toISOString()
+        .substr(0, skipSeconds ? 16 : 19)
+        .replace("T", " ");
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// The use of the following functions has been discontinued as an intermediate step towards issue #133.
+
+/*
+
 export function utcTimeToLocalTimeString(utcTime: number) {
     return new Date(utcTime).toLocaleTimeString();
 }
@@ -16,30 +34,19 @@ export function utcTimeToLocalDateString(utcTime: number) {
     return new Date(utcTime).toLocaleDateString();
 }
 
+export function utcTimeToDateString(utcTime: number) {
+    return new Date(utcTime).toISOString().substr(0, 10);
+}
+
 export function utcTimeToLocalIsoDateString(utcTime: number) {
-    let isoString = new Date(utcTime + LOCAL_OFFSET).toISOString();
-    const index = isoString.indexOf("T");
-    if (index > 0) {
-        // Should always end up here!
-        isoString = isoString.substring(0, index);
-    }
-    return isoString;
+    return utcTimeToIsoDateString(utcTime, true);
 }
 
 export function utcTimeToLocalIsoDateTimeString(utcTime: number, skipSeconds?: boolean) {
-    let isoString = new Date(utcTime + LOCAL_OFFSET).toISOString();
-    if (skipSeconds) {
-        let index = isoString.lastIndexOf(":");
-        if (index > 0) {
-            const isoString2 = isoString.substring(0, index);
-            if (isoString2.indexOf(":") > 0) {
-                isoString = isoString2;
-            }
-        }
-    }
-    if (isoString.endsWith("Z")) {
-        // Should always end up here!
-        isoString = isoString.substr(0, isoString.length - 1);
-    }
-    return isoString.replace("T", " ");
+    return utcTimeToIsoDateTimeString(utcTime, true, skipSeconds);
 }
+
+*/
+
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////

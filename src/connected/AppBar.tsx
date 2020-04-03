@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import Tooltip from '@material-ui/core/Tooltip';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
@@ -148,12 +149,16 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                     {appName}
                 </Typography>
                 <UserControl/>
-                <IconButton onClick={handleOpenHelpMenu} size="small" className={classes.iconButton}>
-                    <HelpOutlineIcon/>
-                </IconButton>
-                <IconButton onClick={handleSettingsButtonClicked} size="small" className={classes.iconButton}>
-                    <SettingsIcon/>
-                </IconButton>
+                <Tooltip arrow title={I18N.get('Help')}>
+                    <IconButton onClick={handleOpenHelpMenu} size="small" className={classes.iconButton}>
+                        <HelpOutlineIcon/>
+                    </IconButton>
+                </Tooltip>
+                <Tooltip arrow title={I18N.get('Settings')}>
+                    <IconButton onClick={handleSettingsButtonClicked} size="small" className={classes.iconButton}>
+                        <SettingsIcon/>
+                    </IconButton>
+                </Tooltip>
             </Toolbar>
             <ServerDialog/>
             <SettingsDialog/>

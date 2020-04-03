@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
@@ -97,13 +98,15 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
                           && selectedPlaceId !== '';
     const placeRemoveButton = (
-        <IconButton
-            className={classes.button}
-            disabled={!removeEnabled}
-            onClick={handleRemoveButtonClick}
-        >
-            {<RemoveCircleOutlineIcon/>}
-        </IconButton>
+        <Tooltip arrow title={I18N.get('Remove place')}>
+            <IconButton
+                className={classes.button}
+                disabled={!removeEnabled}
+                onClick={handleRemoveButtonClick}
+            >
+                {<RemoveCircleOutlineIcon/>}
+            </IconButton>
+        </Tooltip>
     );
 
     return (

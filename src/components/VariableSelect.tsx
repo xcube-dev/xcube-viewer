@@ -6,6 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import IconButton from '@material-ui/core/IconButton';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
@@ -82,13 +83,15 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
         </Select>
     );
     const timeSeriesButton = (
-        <IconButton
-            className={classes.button}
-            disabled={!canAddTimeSeries}
-            onClick={handleAddTimeSeriesButtonClick}
-        >
-            {<TimelineIcon/>}
-        </IconButton>
+        <Tooltip arrow title={I18N.get('Show time-series diagram')}>
+            <IconButton
+                className={classes.button}
+                disabled={!canAddTimeSeries}
+                onClick={handleAddTimeSeriesButtonClick}
+            >
+                {<TimelineIcon/>}
+            </IconButton>
+        </Tooltip>
     );
 
     return (

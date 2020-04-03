@@ -8,6 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
@@ -96,12 +97,14 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
 
     const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user';
     const placeGroupRemoveButton = (
-        <IconButton
-            disabled={!removeEnabled}
-            onClick={handleRemoveButtonClick}
-        >
-            {<RemoveCircleOutlineIcon/>}
-        </IconButton>
+        <Tooltip arrow title={I18N.get('Remove places')}>
+            <IconButton
+                disabled={!removeEnabled}
+                onClick={handleRemoveButtonClick}
+            >
+                {<RemoveCircleOutlineIcon/>}
+            </IconButton>
+        </Tooltip>
     );
 
     return (

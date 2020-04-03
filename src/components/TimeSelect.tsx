@@ -3,14 +3,11 @@ import DateFnsUtils from '@date-io/date-fns';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDateTimePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { dateTimeStringToUtcTime, utcTimeToLocalIsoDateTimeString } from '../util/time';
+import { dateTimeStringToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
@@ -39,17 +36,17 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
             shrink
             htmlFor="time-select"
         >
-            {I18N.get('Time')}
+            {I18N.get('Time (UTC)')}
         </InputLabel>
     );
 
     const isValid = typeof selectedTime === 'number';
-    const timeText = isValid ? utcTimeToLocalIsoDateTimeString(selectedTime!) : null;
+    const timeText = isValid ? utcTimeToIsoDateTimeString(selectedTime!) : null;
 
     let minTimeText, maxTimeText;
     if (Array.isArray(selectedTimeRange)) {
-        minTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[0]);
-        maxTimeText = utcTimeToLocalIsoDateTimeString(selectedTimeRange[1]);
+        minTimeText = utcTimeToIsoDateTimeString(selectedTimeRange[0]);
+        maxTimeText = utcTimeToIsoDateTimeString(selectedTimeRange[1]);
     }
 
     const timeInput = (
@@ -63,6 +60,7 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
                 minDate={minTimeText}
                 maxDate={maxTimeText}
                 onChange={handleTimeChange}
+
             />
         </MuiPickersUtilsProvider>
     );

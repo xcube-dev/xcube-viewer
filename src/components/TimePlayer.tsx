@@ -10,6 +10,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { TimeAnimationInterval } from '../states/controlState';
@@ -108,13 +109,15 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
     const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
     const playButton = (
-        <IconButton
-            disabled={!isValid}
-            aria-label={playToolTip}
-            onClick={handlePlayButtonClick}
-        >
-            {playIcon}
-        </IconButton>
+        <Tooltip arrow title={I18N.get('Auto-step through times in the dataset')}>
+            <IconButton
+                disabled={!isValid}
+                aria-label={playToolTip}
+                onClick={handlePlayButtonClick}
+            >
+                {playIcon}
+            </IconButton>
+        </Tooltip>
     );
 
     const firstTimeStepButton = (

@@ -1,3 +1,4 @@
+import { DialogContent } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -12,6 +13,9 @@ import Slide from '@material-ui/core/Slide';
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
+        dialog: {
+            backgroundColor: theme.palette.grey[600]
+        },
         appBar: {
             position: 'relative',
         },
@@ -65,9 +69,11 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
                     <Typography variant="h6" className={classes.title}>{title}</Typography>
                 </Toolbar>
             </AppBar>
-            <div className={classes.text}>
-                <Markdown source={imprintText}/>
-            </div>
+            <DialogContent className={classes.dialog}>
+                <div className={classes.text}>
+                    <Markdown source={imprintText} linkTarget="_blank"/>
+                </div>
+            </DialogContent>
         </Dialog>
     );
 };
