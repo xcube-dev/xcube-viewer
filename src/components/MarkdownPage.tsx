@@ -66,7 +66,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
                 </Toolbar>
             </AppBar>
             <div className={classes.text}>
-                <Markdown source={imprintText}/>
+                <Markdown source={imprintText} linkTarget="_blank"/>
             </div>
         </Dialog>
     );
