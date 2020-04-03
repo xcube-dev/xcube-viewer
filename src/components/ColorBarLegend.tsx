@@ -225,7 +225,7 @@ export default function ColorBarLegend({
                 continue;
             }
             entries.push(
-                <Tooltip key={key++} title={cbg.description} placement="left">
+                <Tooltip arrow key={key++} title={cbg.description} placement="left">
                     <Box className={classes.colorBarGroupTitle}>
                         {cbg.title}
                     </Box>
@@ -242,7 +242,7 @@ export default function ColorBarLegend({
                             width={240}
                             height={20}
                         >
-                            <Tooltip title={name} placement="left">
+                            <Tooltip arrow title={name} placement="left">
                                 <img
                                     src={`data:image/png;base64,${colorBars.images[name]}`}
                                     alt={'Color Bar'}

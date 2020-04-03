@@ -295,11 +295,11 @@
       "se": "Spelarens tidsintervall"
     },
     {
-      "en": "Show graph after adding a place",
-      "de": "Grafik anzeigen, nachdem ein Ort hinzugefügt wurde",
-      "it": "Mostra grafico dopo aver aggiunto un posto",
-      "ro": "Afișează grafic după adăugarea unui loc",
-      "se": "Visa graf efter att ha lagt till en plats"
+      "en": "Show diagram after adding a place",
+      "de": "Diagramm anzeigen, nachdem ein Ort hinzugefügt wurde",
+      "it": "Mostra diagramma dopo aver aggiunto un luogo",
+      "ro": "Afișează diagrama după adăugarea unui loc",
+      "se": "Visa diagram efter att du har lagt till en plats"
     },
     {
       "en": "Show data points only",
@@ -552,6 +552,97 @@
       "it": "Manuale d'Uso",
       "ro": "Manual de Utilizare",
       "se": "Användarmanual"
+    },
+    {
+      "en": "Show time-series diagram",
+      "de": "Zeitserien-Diagramm anzeigen",
+      "it": "Mostra diagramma serie storiche",
+      "ro": "Afișează diagrama seriei de timp",
+      "se": "Visa tidsseriediagram"
+    },
+    {
+      "en": "Help",
+      "de": "Hilfe",
+      "it": "Aiuto",
+      "ro": "Ajutor",
+      "se": "Hjälp"
+    },
+    {
+      "en": "Show selected place in map",
+      "de": "Ausgewählten Ort in der Karte anzeigen",
+      "it": "Mostra il luogo selezionato sulla mappa",
+      "ro": "Afișați locația selectată pe hartă",
+      "se": "Visa vald plats på kartan"
+    },
+    {
+      "en": "Open information panel",
+      "de": "Informations-Feld öffnen",
+      "it": "Apri il pannello delle informazioni",
+      "ro": "Deschideți panoul de informații",
+      "se": "Öppet informationsfält"
+    },
+    {
+      "en": "Select a place in map",
+      "de": "Ort in der Karte auswählen",
+      "it": "Seleziona la posizione sulla mappa",
+      "ro": "Selectați locația pe hartă",
+      "se": "Välj plats på kartan"
+    },
+    {
+      "en": "Add a point location in map",
+      "de": "Punkt zur Karte hinzufügen",
+      "it": "Aggiungi punto alla mappa",
+      "ro": "Adăugați punct pe hartă",
+      "se": "Lägg till punkt på kartan"
+    },
+    {
+      "en": "Draw a polygon area in map",
+      "de": "Polygonale Fläche in der Karte zeichnen",
+      "it": "Disegna una superficie poligonale sulla mappa",
+      "ro": "Desenați o suprafață poligonală pe hartă",
+      "se": "Rita en polygonal yta på kartan"
+    },
+    {
+      "en": "Draw a circular area in map",
+      "de": "Kreisförmige Fläche in der Karte zeichnen",
+      "it": "Disegna un'area circolare sulla mappa",
+      "ro": "Desenați o zonă circulară pe hartă",
+      "se": "Rita ett cirkulärt område på kartan"
+    },
+    {
+      "en": "Remove place",
+      "de": "Ort entfernen",
+      "it": "Rimuovi posizione",
+      "ro": "Eliminați locația",
+      "se": "Ta bort plats"
+    },
+    {
+      "en": "Remove places",
+      "de": "Orte entfernen",
+      "it": "Rimuovi luoghi",
+      "ro": "Eliminați locurile",
+      "se": "Ta bort platser"
+    },
+    {
+      "en": "Show RGB layer instead",
+      "de": "Stattdessen RGB-Layer anzeigen",
+      "it": "Mostra invece il livello RGB",
+      "ro": "Afișează în schimb stratul RGB",
+      "se": "Visa RGB-lager istället"
+    },
+    {
+      "en": "Auto-step through times in the dataset",
+      "de": "Zeiten im Datensatz automatisch durchlaufen",
+      "it": "Esegui i tempi nel set di dati automaticamente",
+      "ro": "Rulați perioadele în înregistrarea de date în mod automat",
+      "se": "Kör automatiskt genom tider i dataposten"
+    },
+    {
+      "en": "Select time in dataset",
+      "de": "Datensatz-Zeit auswählen",
+      "it": "Seleziona l'ora nel set di dati",
+      "ro": "Selectați ora în setul de date",
+      "se": "Välj tid i dataset"
     }
   ]
 }

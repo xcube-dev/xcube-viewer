@@ -159,17 +159,17 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 <ToggleButtonGroup key={0} size="small" value={visibleInfoCardElements}
                                    onChange={handleInfoElementsChanges}>
                     <ToggleButton key={0} value="dataset" disabled={selectedDataset === null}>
-                        <Tooltip title={I18N.get('Dataset information')}>
+                        <Tooltip arrow  title={I18N.get('Dataset information')}>
                             <WidgetsIcon/>
                         </Tooltip>
                     </ToggleButton>
                     <ToggleButton key={1} value="variable" disabled={selectedVariable === null}>
-                        <Tooltip title={I18N.get('Variable information')}>
+                        <Tooltip arrow title={I18N.get('Variable information')}>
                             <LayersIcon/>
                         </Tooltip>
                     </ToggleButton>
                     <ToggleButton key={2} value="place" disabled={selectedPlaceInfo === null}>
-                        <Tooltip title={I18N.get('Place information')}>
+                        <Tooltip arrow title={I18N.get('Place information')}>
                             <PlaceIcon/>
                         </Tooltip>
                     </ToggleButton>

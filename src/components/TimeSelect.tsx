@@ -2,12 +2,8 @@ import * as React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-import Tooltip from '@material-ui/core/Tooltip';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDateTimePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
 import { Time, TimeRange } from '../model/timeSeries';
@@ -70,12 +66,10 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
     );
 
     return (
-        <Tooltip title={I18N.get('Select current dataset UTC time')}>
-            <ControlBarItem
-                label={timeInputLabel}
-                control={timeInput}
-            />
-        </Tooltip>
+        <ControlBarItem
+            label={timeInputLabel}
+            control={timeInput}
+        />
     );
 };
 
