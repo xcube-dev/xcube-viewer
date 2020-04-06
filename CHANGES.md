@@ -2,6 +2,9 @@
 
 ### Enhancements
 
+* Users can now switch between median and mean methods for the spatial aggregation of 
+  polygons when creating time-series. The setting is available in the settings dialog. 
+  (partly addresses #135). 
 * Added a "RGB" switch to the app bar that is used to display the selected dataset's RGB layer, 
   if any. Currently, RGB layers can only be configured through the xcube server. Later xcube viewer 
   versions will allow users selecting three variables and their respective value ranges for normalisation.

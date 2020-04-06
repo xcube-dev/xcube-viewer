@@ -183,6 +183,7 @@ export function addTimeSeries() {
         const selectedPlaceId = selectedPlaceIdSelector(getState());
         const selectedPlace = selectedPlaceSelector(getState())!;
         const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
+        const useMedian = getState().controlState.showTimeSeriesMedian;
         const inclStDev = getState().controlState.showTimeSeriesErrorBars;
         let timeChunkSize = getState().controlState.timeChunkSize;
 
@@ -207,6 +208,7 @@ export function addTimeSeries() {
                                                     selectedPlace.geometry,
                                                     startDateLabel,
                                                     endDateLabel,
+                                                    useMedian,
                                                     inclStDev,
                                                     getState().userAuthState.accessToken);
             };

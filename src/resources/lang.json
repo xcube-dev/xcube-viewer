@@ -316,6 +316,13 @@
       "se": "Visa felstaplar"
     },
     {
+      "en": "Show median instead of mean (disables error bars)",
+      "de": "Median statt Mittelwert anzeigen (deaktiviert Fehlerbalken)",
+      "it": "Mostra la mediana invece della media (disabilita le barre di errore)",
+      "ro": "Arată mediana în loc de medie (dezactivează barele de eroare)",
+      "se": "Visa median i stället för medelvärde (inaktiverar felfält)"
+    },
+    {
       "en": "Number of data points in a time series update",
       "de": "Anzahl Datenpunkte in einer Zeitreihen-Aktualisierung",
       "it": "Numero di punti dati in un aggiornamento di serie storiche",
