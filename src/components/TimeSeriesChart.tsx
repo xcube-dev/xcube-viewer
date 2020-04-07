@@ -416,7 +416,7 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({classes, active, label, 
         if (color === INVISIBLE_LINE_COLOR) {
             color = SUBSTITUTE_LABEL_COLOR;
         }
-        const isPoint = name.indexOf(':') != -1;
+        const isPoint = name.indexOf(':') !== -1;
         const suffix = isPoint ? '' : ` (${dataKey})`;
         return (
             <div key={index}>
