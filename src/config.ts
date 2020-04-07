@@ -37,6 +37,7 @@ interface Branding {
     logoPath: any;
     logoWidth: number;
     baseMapUrl?: string;
+    defaultAgg?: 'median' | 'mean';
 }
 
 const brandings: { [name: string]: Branding } = {
@@ -53,6 +54,7 @@ const brandings: { [name: string]: Branding } = {
         logoPath: require('./resources/default/logo.png'),
         logoWidth: 32,
         baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        defaultAgg: 'mean',
     },
     'esdl': {
         appBarTitle: 'ESDL Viewer',
@@ -67,6 +69,7 @@ const brandings: { [name: string]: Branding } = {
         logoPath: require('./resources/esdl/logo.png'),
         logoWidth: 64,
         baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        defaultAgg: 'mean',
     },
     'eodatabee': {
         appBarTitle: 'Demo Viewer',
@@ -86,6 +89,7 @@ const brandings: { [name: string]: Branding } = {
         logoPath: require('./resources/eodatabee/logo.png'),
         logoWidth: 150,
         baseMapUrl: 'http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+        defaultAgg: 'mean',
     },
     'cyanoalert': {
         appBarTitle: '',
@@ -105,6 +109,7 @@ const brandings: { [name: string]: Branding } = {
         logoPath: require('./resources/cyanoalert/logo.png'),
         logoWidth: 120,
         baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+        defaultAgg: 'median',
     },
 };
 

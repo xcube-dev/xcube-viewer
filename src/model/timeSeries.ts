@@ -1,4 +1,3 @@
-
 /**
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
  */
@@ -20,14 +19,20 @@ export interface TimeSeriesSource {
     variableName: string;
     variableUnits?: string;
     placeId: string;
+    valueDataKey: keyof TimeSeriesPoint;
+    errorDataKey: keyof TimeSeriesPoint | null;
 }
 
 export interface TimeSeriesPoint {
     time: Time;
-    totalCount: number;
-    validCount: number;
-    average: number | null;
-    uncertainty?: number | null;
+    countTot: number;
+    count?: number;
+    mean?: number | null;
+    median?: number | null;
+    std?: number | null;
+    min?: number | null;
+    max?: number | null;
+    standard_error?: number | null;
 }
 
 export interface TimeSeries {

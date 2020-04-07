@@ -35,6 +35,7 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('autoShowTimeSeries', settings);
             storage.setPrimitiveProperty('showTimeSeriesErrorBars', settings);
             storage.setPrimitiveProperty('showTimeSeriesPointsOnly', settings);
+            storage.setPrimitiveProperty('showTimeSeriesMedian', settings);
             storage.setPrimitiveProperty('timeAnimationInterval', settings);
             storage.setPrimitiveProperty('timeChunkSize', settings);
             storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
@@ -56,6 +57,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('autoShowTimeSeries', settings, defaultSettings);
             storage.getBooleanProperty('showTimeSeriesErrorBars', settings, defaultSettings);
             storage.getBooleanProperty('showTimeSeriesPointsOnly', settings, defaultSettings);
+            storage.getBooleanProperty('showTimeSeriesMedian', settings, defaultSettings);
             storage.getIntProperty('timeAnimationInterval', settings, defaultSettings);
             storage.getIntProperty('timeChunkSize', settings, defaultSettings);
             storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);

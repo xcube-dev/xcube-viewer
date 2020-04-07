@@ -234,6 +234,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
+                        <SettingsSubPanel label={I18N.get('Show median instead of mean (disables error bars)')}
+                                          value={getOnOff(settings.showTimeSeriesMedian)}>
+                            <ToggleSetting
+                                propertyName={'showTimeSeriesMedian'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
                         <SettingsSubPanel label={I18N.get('Number of data points in a time series update')}>
                             <TextField
                                 className={classes.intTextField}

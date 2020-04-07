@@ -38,6 +38,7 @@ export interface ControlState {
     autoShowTimeSeries: boolean;
     showTimeSeriesPointsOnly: boolean;
     showTimeSeriesErrorBars: boolean;
+    showTimeSeriesMedian: boolean;
     flyTo: OlGeometry | OlExtent | null;
     activities: { [id: string]: string };
     locale: string;
@@ -70,6 +71,7 @@ export function newControlState(): ControlState {
         autoShowTimeSeries: true,
         showTimeSeriesPointsOnly: false,
         showTimeSeriesErrorBars: true,
+        showTimeSeriesMedian: branding.defaultAgg === 'median',
         flyTo: null,
         activities: {},
         locale: 'en',

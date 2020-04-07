@@ -210,9 +210,12 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         }
     };
 
+    let commonValueDataKey: keyof TimeSeriesPoint | null = null;
+
     const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
 
         const source = ts.source;
+        const valueDataKey = source.valueDataKey;
         let lineName = source.variableName;
         let lineColor = 'yellow';
         if (placeInfos) {
@@ -231,9 +234,8 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         }
 
         const data: TimeSeriesPoint[] = [];
-        let hasErrorBars = false;
         ts.data.forEach(point => {
-            if (point.average !== null) {
+            if (point[valueDataKey] !== null) {
                 let time1Ok = true;
                 let time2Ok = true;
                 if (time1 !== null) {
@@ -244,19 +246,18 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 }
                 if (time1Ok && time2Ok) {
                     data.push(point);
-                    // noinspection SuspiciousTypeOfGuard
-                    if ((typeof point.uncertainty) === 'number') {
-                        hasErrorBars = true;
-                    }
                 }
             }
         });
+        if (commonValueDataKey === null) {
+            commonValueDataKey = valueDataKey;
+        }
         const shadedLineColor = getUserPlaceColor(lineColor, paletteType);
         let errorBar;
-        if (showErrorBars && hasErrorBars) {
+        if (valueDataKey && showErrorBars && source.errorDataKey) {
             errorBar = (
                 <ErrorBar
-                    dataKey="uncertainty"
+                    dataKey={source.errorDataKey}
                     width={4}
                     strokeWidth={1}
                     stroke={shadedLineColor}
@@ -270,7 +271,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 name={lineName}
                 unit={source.variableUnits}
                 data={data}
-                dataKey="average"
+                dataKey={valueDataKey}
                 dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
                 activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
                 stroke={showPointsOnly ? INVISIBLE_LINE_COLOR : shadedLineColor}
@@ -366,7 +367,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                            stroke={labelTextColor}
                            allowDuplicatedCategory={false}
                     />
-                    <YAxis dataKey="average"
+                    <YAxis dataKey={commonValueDataKey || "mean"}
                            type="number"
                            domain={Y_AXIS_DOMAIN}
                            stroke={labelTextColor}
@@ -400,13 +401,14 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({classes, active, label, 
         return null;
     }
     const items = payload.map((p: TooltipPayload, index: number) => {
-        let {name, value, color, unit} = p;
+        //console.log("payload:", p);
+        let {name, value, color, unit, dataKey} = p;
         if (typeof value !== 'number') {
             return null;
         }
         // let valueText;
-        // if (typeof p.uncertainty === 'number') {
-        //     valueText = `${value.toFixed(2)} ±${p.uncertainty.toFixed(2)} (uncertainty)`;
+        // if (typeof p.std === 'number') {
+        //     valueText = `${value.toFixed(2)} ±${p.std.toFixed(2)} (std)`;
         // } else {
         //     valueText = value.toFixed(3);
         // }
@@ -414,11 +416,13 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({classes, active, label, 
         if (color === INVISIBLE_LINE_COLOR) {
             color = SUBSTITUTE_LABEL_COLOR;
         }
+        const isPoint = name.indexOf(':') != -1;
+        const suffix = isPoint ? '' : ` (${dataKey})`;
         return (
             <div key={index}>
                 <span>{name}:&nbsp;</span>
                 <span className={classes.toolTipValue} style={{color}}>{valueText}</span>
-                <span>&nbsp;{unit}</span>
+                <span>&nbsp;{`${unit} ${suffix}`}</span>
             </div>
         );
     });
