@@ -1,5 +1,10 @@
 ## Changes in version 0.5.0-dev.0 (in development)
 
+### Other changes
+
+* Using Roboto font in UI which increases readability of text.
+
+
 ## Changes in version 0.4.0
 
 ### Enhancements
