@@ -1,4 +1,7 @@
-## Changes in version 0.4.1-dev.0 (in development)
+## Changes in version 0.4.1
+
+* Using Roboto font in UI which increases readability of text.
+
 
 ## Changes in version 0.4.0
 
