@@ -1,3 +1,7 @@
+## Changes in version 0.4.2
+
+* Fixed a problem during release process. No code changes.
+
 ## Changes in version 0.4.1
 
 * Using Roboto font in UI which increases readability of text.
