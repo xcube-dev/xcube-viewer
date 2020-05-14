@@ -1,15 +1,15 @@
 [
   {
     "name": "OpenStreetMap",
-    "link": "http://openstreetmap.org",
+    "link": "https://openstreetmap.org",
     "datasets": [
       {
         "name": "OSM Mapnik",
-        "endpoint": "http://a.tile.osm.org/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tile.osm.org/{z}/{x}/{y}.png"
       },
       {
         "name": "OSM Humanitarian",
-        "endpoint": "http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+        "endpoint": "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
       },
       {
         "name": "OSM Landscape",
@@ -29,81 +29,81 @@
     "datasets": [
       {
         "name": "Dark Gray Base",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "Light Gray Base",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Hillshade",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Ocean Base",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "DeLorme World Base Map",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Street Map",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Navigation Charts",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Specialty/World_Navigation_Charts/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Specialty/World_Navigation_Charts/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "National Geographic",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Imagery",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Physical Map",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Shaded Relief",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Terrain",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Topo Map",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
       }
     ],
     "overlays": [
       {
         "name": "Dark Gray Reference",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "Light Gray Reference",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Ocean Reference",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Boundaries & Places",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Reference Overlay",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Transportation",
-        "endpoint": "http://services.arcgisonline.com/arcgis/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}"
+        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}"
       }
     ]
   },
@@ -113,29 +113,29 @@
     "datasets": [
       {
         "name": "Positron",
-        "endpoint": "http://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
+        "endpoint": "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
       },
       {
         "name": "Dark Matter",
-        "endpoint": "http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
+        "endpoint": "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
       },
       {
         "name": "Positron (No Labels)",
-        "endpoint": "http://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
+        "endpoint": "https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
       },
       {
         "name": "Dark Matter (No Labels)",
-        "endpoint": "http://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
+        "endpoint": "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
       }
     ],
     "overlays": [
       {
         "name": "Positron Labels",
-        "endpoint": "http://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
+        "endpoint": "https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
       },
       {
         "name": "Dark Matter Labels",
-        "endpoint": "http://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
+        "endpoint": "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
       }
     ]
   },
