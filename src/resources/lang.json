@@ -650,6 +650,13 @@
       "it": "Seleziona l'ora nel set di dati",
       "ro": "Selectați ora în setul de date",
       "se": "Välj tid i dataset"
+    },
+    {
+      "en": "Time (UTC)",
+      "de": "Zeit (UTC)",
+      "it": "Tempo (UTC)",
+      "ro": "Timp (UTC)",
+      "se": "Tid (UTC)"
     }
   ]
 }

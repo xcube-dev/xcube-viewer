@@ -18,7 +18,7 @@ import { LanguageDictionary } from './util/lang';
 import { getQueryParameterByName } from './util/qparam';
 import lang from './resources/lang.json';
 
-const version = '0.4.2';
+const version = '0.4.3';
 
 const defaultApiServerUrl = process.env.REACT_APP_XCUBE_API;
 

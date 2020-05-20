@@ -276,13 +276,17 @@ export default function ColorBarLegend({
             <div className={classes.title}>
                 <span>{title}</span>
             </div>
-            <img
-                src={`data:image/png;base64,${imageData}`}
-                alt={'Color Bar'}
-                width={width || 240}
-                height={height || 24}
-                onClick={handleOpenColorBarNameEditor}
-            />
+            {Boolean(imageData) ? (
+                <img
+                    src={`data:image/png;base64,${imageData}`}
+                    alt={'Color Bar'}
+                    width={width || 240}
+                    height={height || 24}
+                    onClick={handleOpenColorBarNameEditor}
+                />
+            ) : (
+                 <div>{I18N.get('Unknown color bar') + `: ${variableColorBarName}`}</div>
+             )}
             <div
                 className={classes.label}
                 onClick={handleOpenColorBarMinMaxEditor}

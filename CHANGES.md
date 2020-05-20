@@ -1,3 +1,12 @@
+## Changes in version 0.4.3
+
+* Indicating invalid color bar name in map legend.
+* Added language translations for phrase "Time (UTC)".
+* Minor
+  - Fixed manifest icon paths.
+  - Removed unnecessary console dumps.
+
+
 ## Changes in version 0.4.2
 
 * Fixed a problem during release process. No code changes.

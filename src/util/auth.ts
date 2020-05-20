@@ -24,15 +24,11 @@ if (process.env.REACT_APP_OAUTH2_DOMAIN
     };
 }
 
-export function getAuthClientConfig(): AuthClientConfig | null {
-    return _authClientConfig;
-}
-
 export function getAuthClient(): AuthClient | null {
     return _authClient;
 }
 
-export async function initAuthClient(idTokenHint?: string): Promise<AuthClient | null> {
+export async function initAuthClient(): Promise<AuthClient | null> {
     if (!_authClientConfig) {
         return Promise.resolve(null);
     }
@@ -43,7 +39,7 @@ export async function initAuthClient(idTokenHint?: string): Promise<AuthClient |
                                                   audience: _authClientConfig.audience,
                                                   redirect_uri: window.location.origin,
                                               });
-
+        /*
         try {
             let isAuthenticated = await _authClient.isAuthenticated();
             console.log('isAuthenticated:', isAuthenticated);
@@ -62,6 +58,7 @@ export async function initAuthClient(idTokenHint?: string): Promise<AuthClient |
         } catch (e) {
             console.error(e);
         }
+        */
         if (window.location.search.includes('code=')) {
             const {appState} = await _authClient.handleRedirectCallback();
             handleRedirectCallback(appState);
