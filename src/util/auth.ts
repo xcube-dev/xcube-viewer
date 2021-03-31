@@ -46,19 +46,25 @@ export async function initAuthClient(idTokenHint?: string): Promise<AuthClient |
 
         try {
             let isAuthenticated = await _authClient.isAuthenticated();
-            console.log('isAuthenticated:', isAuthenticated);
+            if (process.env.NODE_ENV !== 'production') {
+                console.debug('isAuthenticated:', isAuthenticated);
+            }
         } catch (e) {
             console.error(e);
         }
         try {
             let user = await _authClient.getUser();
-            console.log('user:', user);
+            if (process.env.NODE_ENV !== 'production') {
+                console.debug('user:', user);
+            }
         } catch (e) {
             console.error(e);
         }
         try {
             let token = await _authClient.getTokenSilently();
-            console.log('token:', token);
+            if (process.env.NODE_ENV !== 'production') {
+                console.debug('token:', token);
+            }
         } catch (e) {
             console.error(e);
         }
