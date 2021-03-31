@@ -2,7 +2,9 @@
 
 * In the time-series charts with multiple graphs, dots have only been drawn
   for the last graph added. Now they are shown for existing graphs too. (#145)
-* Added translation for label "Time (UTC)".
+* Fixed some labels used in the UI:
+  - Renamed label "Show data points only" into "Show dots only, hide lines" (#148)
+  - Corrected translation for labels "Time (UTC)" and "Show graph after adding a place".
 * Updated [recharts](https://recharts.org/) package dependency to latest version 2.0.9. 
 
 ## Changes in version 0.4.2

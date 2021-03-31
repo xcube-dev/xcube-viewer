@@ -295,18 +295,18 @@
       "se": "Spelarens tidsintervall"
     },
     {
-      "en": "Show diagram after adding a place",
-      "de": "Diagramm anzeigen, nachdem ein Ort hinzugefügt wurde",
+      "en": "Show graph after adding a place",
+      "de": "Graph anzeigen, nachdem ein Ort hinzugefügt wurde",
       "it": "Mostra diagramma dopo aver aggiunto un luogo",
       "ro": "Afișează diagrama după adăugarea unui loc",
       "se": "Visa diagram efter att du har lagt till en plats"
     },
     {
-      "en": "Show data points only",
-      "de": "Nur Datenpunkte anzeigen",
-      "it": "Mostra solo punti dati",
-      "ro": "Afișați doar puncte de date",
-      "se": "Visa endast datapunkter"
+      "en": "Show dots only, hide lines",
+      "de": "Nur Punkte anzeigen, Linien ausblenden",
+      "it": "Mostra solo punti, nascondi linee",
+      "ro": "Arată doar puncte, ascunde liniile",
+      "se": "Visa bara punkter, dölj linjer"
     },
     {
       "en": "Show error bars",
