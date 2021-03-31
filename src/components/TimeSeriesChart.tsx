@@ -10,7 +10,11 @@ import {
     Legend,
     AxisDomain,
     TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar, DotProps
+    ReferenceArea,
+    ReferenceLine,
+    TooltipProps,
+    ErrorBar,
+    DotProps
 } from 'recharts';
 import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -213,6 +217,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     let commonValueDataKey: keyof TimeSeriesPoint | null = null;
 
     const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
+        console.log(ts);
 
         const source = ts.source;
         const valueDataKey = source.valueDataKey;
@@ -272,28 +277,42 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 unit={source.variableUnits}
                 data={data}
                 dataKey={valueDataKey}
-                dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
-                activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
+                dot={<CustomizedDot radius={3} stroke={shadedLineColor} fill={'white'} strokeWidth={2}/>}
+                activeDot={<CustomizedDot radius={3} stroke={'white'} fill={shadedLineColor} strokeWidth={2}/>}
                 stroke={showPointsOnly ? INVISIBLE_LINE_COLOR : shadedLineColor}
-                strokeWidth={3 * (ts.dataProgress || 1)}
-                isAnimationActive={ts.dataProgress === 1.0}
+                strokeWidth={2 * (ts.dataProgress || 1)}
+                // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
+                // isAnimationActive={ts.dataProgress === 1.0}
+                isAnimationActive={false}
                 onClick={() => handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
-            >{errorBar}</Line>
+            >
+                {errorBar}
+            </Line>
         );
     });
 
     let referenceLine = null;
     if (selectedTime !== null) {
         referenceLine =
-            <ReferenceLine isFront={true} x={selectedTime} stroke={mainStroke} strokeWidth={3}
-                           strokeOpacity={0.5}/>;
+            <ReferenceLine
+                isFront={true}
+                x={selectedTime}
+                stroke={mainStroke}
+                strokeWidth={3}
+                strokeOpacity={0.5}
+            />;
     }
 
     let referenceArea = null;
     if (isDragging && firstTime !== null && secondTime !== null) {
         referenceArea =
-            <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={lightStroke}
-                           fillOpacity={0.3}/>;
+            <ReferenceArea
+                x1={firstTime}
+                x2={secondTime}
+                strokeOpacity={0.3}
+                fill={lightStroke}
+                fillOpacity={0.3}
+            />;
     }
 
     const actionButtons = [];
@@ -352,25 +371,28 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 </Box>
             </Box>
             <ResponsiveContainer width="99%" className={classes.responsiveContainer}>
-                <LineChart onMouseDown={handleMouseDown}
-                           onMouseMove={handleMouseMove}
-                           onMouseUp={handleMouseUp}
-                           onClick={handleClick}
-                           syncId="anyId"
-                           style={{color: labelTextColor}}
+                <LineChart
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onClick={handleClick}
+                    syncId="anyId"
+                    style={{color: labelTextColor}}
                 >
-                    <XAxis dataKey="time"
-                           type="number"
-                           tickCount={6}
-                           domain={selectedTimeRange || X_AXIS_DOMAIN}
-                           tickFormatter={tickFormatter}
-                           stroke={labelTextColor}
-                           allowDuplicatedCategory={false}
+                    <XAxis
+                        dataKey="time"
+                        type="number"
+                        tickCount={6}
+                        domain={selectedTimeRange || X_AXIS_DOMAIN}
+                        tickFormatter={tickFormatter}
+                        stroke={labelTextColor}
+                        allowDuplicatedCategory={false}
                     />
-                    <YAxis dataKey={commonValueDataKey || "mean"}
-                           type="number"
-                           domain={Y_AXIS_DOMAIN}
-                           stroke={labelTextColor}
+                    <YAxis
+                        dataKey={commonValueDataKey || "mean"}
+                        type="number"
+                        domain={Y_AXIS_DOMAIN}
+                        stroke={labelTextColor}
                     />
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip content={<CustomTooltip/>}/>
@@ -390,7 +412,14 @@ export default withStyles(styles, {withTheme: true})(TimeSeriesChart);
 interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
 }
 
-const _CustomTooltip: React.FC<_CustomTooltipProps> = ({classes, active, label, payload}) => {
+const _CustomTooltip: React.FC<_CustomTooltipProps> = (
+    {
+        classes,
+        active,
+        label,
+        payload
+    }
+) => {
     if (!active) {
         return null;
     }
@@ -463,11 +492,24 @@ const CustomizedDot = (props: CustomizedDotProps) => {
     // noinspection SuspiciousTypeOfGuard
     if (typeof cx === 'number' && typeof cy === 'number') {
         return (
-            <svg x={cx - totalRadius} y={cy - totalRadius} width={totalDiameter} height={totalDiameter}
-                 viewBox={`0 0 ${vpSize} ${vpSize}`}>
-                <circle cx='50%' cy='50%' r={r} strokeWidth={sw} stroke={stroke} fill={fill}/>
+            <svg
+                x={cx - totalRadius}
+                y={cy - totalRadius}
+                width={totalDiameter}
+                height={totalDiameter}
+                viewBox={`0 0 ${vpSize} ${vpSize}`}
+            >
+                <circle
+                    cx='50%'
+                    cy='50%'
+                    r={r}
+                    strokeWidth={sw}
+                    stroke={stroke}
+                    fill={fill}
+                />
             </svg>
         );
     }
+
     return null;
 };
