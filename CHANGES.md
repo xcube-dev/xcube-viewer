@@ -1,4 +1,4 @@
-## Changes in version 0.4.3 (in development)
+## Changes in version 0.4.3
 
 * Time-series legends are now always shown. (#151)
 * In the time-series charts with multiple graphs, dots have only been drawn
