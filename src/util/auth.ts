@@ -46,7 +46,7 @@ export async function initAuthClient(idTokenHint?: string): Promise<AuthClient |
 
         try {
             let isAuthenticated = await _authClient.isAuthenticated();
-            if (process.env.NODE_ENV !== 'production') {
+            if (process.env.NODE_ENV === 'development') {
                 console.debug('isAuthenticated:', isAuthenticated);
             }
         } catch (e) {
@@ -54,7 +54,7 @@ export async function initAuthClient(idTokenHint?: string): Promise<AuthClient |
         }
         try {
             let user = await _authClient.getUser();
-            if (process.env.NODE_ENV !== 'production') {
+            if (process.env.NODE_ENV === 'development') {
                 console.debug('user:', user);
             }
         } catch (e) {
@@ -62,7 +62,7 @@ export async function initAuthClient(idTokenHint?: string): Promise<AuthClient |
         }
         try {
             let token = await _authClient.getTokenSilently();
-            if (process.env.NODE_ENV !== 'production') {
+            if (process.env.NODE_ENV === 'development') {
                 console.debug('token:', token);
             }
         } catch (e) {

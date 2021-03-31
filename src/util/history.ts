@@ -4,7 +4,9 @@ const history = createBrowserHistory();
 
 if (process.env.NODE_ENV === 'development') {
     history.listen((location: Location, action: Action,) => {
-        console.debug(`history ${action}:`, location);
+        if (process.env.NODE_ENV === 'development') {
+            console.debug(`history ${action}:`, location);
+        }
     });
 }
 
