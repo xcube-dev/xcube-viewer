@@ -28,7 +28,7 @@ export function makeRequestUrl(url: string, query: QueryComponent[]) {
     return url;
 }
 
-export function callApi<T>(url: string, init?: RequestInit): Promise<Response> {
+export function callApi(url: string, init?: RequestInit): Promise<Response> {
 
     if (process.env.NODE_ENV === 'development') {
         console.debug('Calling API: ', url);
