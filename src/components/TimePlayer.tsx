@@ -109,15 +109,15 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
     const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
     const playButton = (
-        <Tooltip arrow title={I18N.get('Auto-step through times in the dataset')}>
-            <IconButton
-                disabled={!isValid}
-                aria-label={playToolTip}
-                onClick={handlePlayButtonClick}
-            >
+        <IconButton
+            disabled={!isValid}
+            aria-label={playToolTip}
+            onClick={handlePlayButtonClick}
+        >
+            <Tooltip arrow title={I18N.get('Auto-step through times in the dataset')}>
                 {playIcon}
-            </IconButton>
-        </Tooltip>
+            </Tooltip>
+        </IconButton>
     );
 
     const firstTimeStepButton = (

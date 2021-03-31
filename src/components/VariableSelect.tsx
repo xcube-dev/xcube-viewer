@@ -83,15 +83,15 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
         </Select>
     );
     const timeSeriesButton = (
-        <Tooltip arrow title={I18N.get('Show time-series diagram')}>
-            <IconButton
-                className={classes.button}
-                disabled={!canAddTimeSeries}
-                onClick={handleAddTimeSeriesButtonClick}
-            >
+        <IconButton
+            className={classes.button}
+            disabled={!canAddTimeSeries}
+            onClick={handleAddTimeSeriesButtonClick}
+        >
+            <Tooltip arrow title={I18N.get('Show time-series diagram')}>
                 {<TimelineIcon/>}
-            </IconButton>
-        </Tooltip>
+            </Tooltip>
+        </IconButton>
     );
 
     return (

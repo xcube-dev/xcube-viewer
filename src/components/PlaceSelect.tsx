@@ -98,15 +98,15 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
                           && selectedPlaceId !== '';
     const placeRemoveButton = (
-        <Tooltip arrow title={I18N.get('Remove place')}>
-            <IconButton
-                className={classes.button}
-                disabled={!removeEnabled}
-                onClick={handleRemoveButtonClick}
-            >
+        <IconButton
+            className={classes.button}
+            disabled={!removeEnabled}
+            onClick={handleRemoveButtonClick}
+        >
+            <Tooltip arrow title={I18N.get('Remove place')}>
                 {<RemoveCircleOutlineIcon/>}
-            </IconButton>
-        </Tooltip>
+            </Tooltip>
+        </IconButton>
     );
 
     return (

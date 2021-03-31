@@ -6,6 +6,10 @@
   - Renamed label "Show data points only" into "Show dots only, hide lines" (#148)
   - Corrected translation for labels "Time (UTC)" and "Show graph after adding a place".
 * Updated [recharts](https://recharts.org/) package dependency to latest version 2.0.9. 
+* Indicating invalid color bar name in map legend.
+* Minor
+  - Fixed manifest icon paths.
+  - Removed unnecessary console dumps.
 
 ## Changes in version 0.4.2
 

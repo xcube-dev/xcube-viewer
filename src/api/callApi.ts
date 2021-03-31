@@ -6,7 +6,6 @@ export type QueryComponent = [string, string];
 
 export function makeRequestInit(accessToken: string | null): RequestInit {
     if (accessToken) {
-        console.log(`Access token!!`);
         return {
             headers: [['Authorization', `Bearer ${accessToken}`]],
         };
