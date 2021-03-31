@@ -218,7 +218,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Show data points only')}
+                        <SettingsSubPanel label={I18N.get('Show dots only, hide lines')}
                                           value={getOnOff(settings.showTimeSeriesPointsOnly)}>
                             <ToggleSetting
                                 propertyName={'showTimeSeriesPointsOnly'}

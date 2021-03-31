@@ -120,7 +120,7 @@ export class Map extends React.Component<MapProps, MapState> {
         if (!map) {
             const initialZoom = this.getMinZoom(mapDiv);
             const view = new OlView({
-                                        projection: 'EPSG:4326',
+                                        // projection: 'EPSG:4326',
                                         center: olProjFromLonLat([0, 0]),
                                         minZoom: initialZoom,
                                         zoom: initialZoom,
