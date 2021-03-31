@@ -279,8 +279,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 dataKey={valueDataKey}
                 dot={<CustomizedDot radius={3} stroke={shadedLineColor} fill={'white'} strokeWidth={2}/>}
                 activeDot={<CustomizedDot radius={3} stroke={'white'} fill={shadedLineColor} strokeWidth={2}/>}
-                stroke={showPointsOnly ? INVISIBLE_LINE_COLOR : shadedLineColor}
-                strokeWidth={2 * (ts.dataProgress || 1)}
+                stroke={shadedLineColor}
+                strokeOpacity={showPointsOnly ? 0 : ts.dataProgress}
+                // strokeWidth={2 * (ts.dataProgress || 1)}
                 // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
                 // isAnimationActive={ts.dataProgress === 1.0}
                 isAnimationActive={false}
