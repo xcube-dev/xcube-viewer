@@ -1,4 +1,4 @@
-## Changes in version 0.4.3
+## Changes in version 0.4.4
 
 * Time-series legends are now always shown. (#151)
 * In the time-series charts with multiple graphs, dots have only been drawn
@@ -7,15 +7,19 @@
 * Fixed some labels used in the UI:
   - Renamed label "Show data points only" into "Show dots only, hide lines".
     (#148)
-  - Corrected translation for labels "Time (UTC)" and "Show graph after 
-    adding a place".
-* Now indicating invalid color bar name in map legend.
-* Minor
-  - Fixed manifest icon paths.
-  - Removed unnecessary console dumps.
+  - Corrected translation for "Show graph after adding a place".
 * Updated package dependencies:
   - [recharts](https://recharts.org/) 2.0.9
   - [react-scripts](https://github.com/facebook/create-react-app#readme) 4.0.3
+
+
+## Changes in version 0.4.3
+
+* Indicating invalid color bar name in map legend.
+* Added language translations for phrase "Time (UTC)".
+* Minor
+  - Fixed manifest icon paths.
+  - Removed unnecessary console dumps.
 
 ## Changes in version 0.4.2
 
