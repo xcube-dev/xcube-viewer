@@ -36,7 +36,7 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
             shrink
             htmlFor="time-select"
         >
-            {I18N.get('Time (UTC)')}
+            {`${I18N.get('Time')} (UTC)`}
         </InputLabel>
     );
 
