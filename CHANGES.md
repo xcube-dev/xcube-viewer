@@ -1,6 +1,11 @@
-## Changes in version 0.5.0-dev.1 (in development)
+## Changes in version 0.4.3 (in development)
 
-* Updated [recharts](https://recharts.org/) package dependency to latest version. (partly addresses #146) 
+* Updated [recharts](https://recharts.org/) package dependency to latest version 2.0.9. 
+  (hoping to address #145 and #146) 
+
+## Changes in version 0.4.2
+
+_Fixed a problem during release process. No code changes._
 
 ## Changes in version 0.4.1
 
