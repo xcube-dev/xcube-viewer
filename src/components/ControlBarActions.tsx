@@ -5,11 +5,16 @@ import MyLocationIcon from '@material-ui/icons/MyLocation';
 import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import InfoIcon from '@material-ui/icons/Info';
+import JSZip from 'jszip';
 
 import { I18N } from '../config';
+import { TimeSeriesGroup } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
+import { utcTimeToIsoDateString } from '../util/time';
 
+const saveAs = require('file-saver');
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
@@ -26,6 +31,7 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     flyToSelectedObject: () => void;
     infoCardOpen: boolean;
     showInfoCard: (open: boolean) => void;
+    timeSeriesGroups: TimeSeriesGroup[];
 }
 
 const ControlBarActions: React.FC<ControlBarActionsProps> = ({
@@ -34,10 +40,22 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
                                                                  flyToSelectedObject,
                                                                  infoCardOpen,
                                                                  showInfoCard,
+                                                                 timeSeriesGroups,
                                                              }) => {
 
     if (!visible) {
         return null;
+    }
+
+    let downloadButton;
+    if (timeSeriesGroups && timeSeriesGroups.length) {
+        downloadButton = (
+            <Tooltip arrow title={I18N.get('Download time-series data')}>
+                <IconButton onClick={() => downloadTimeSeries(timeSeriesGroups)}>
+                    {<CloudDownloadIcon/>}
+                </IconButton>
+            </Tooltip>
+        );
     }
 
     const flyToButton = (
@@ -62,6 +80,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
     return (
         <FormControl className={classes.formControl}>
             <Box>
+                {downloadButton}
                 {flyToButton}
                 {infoButton}
             </Box>
@@ -70,3 +89,25 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
 };
 
 export default withStyles(styles)(ControlBarActions);
+
+
+function downloadTimeSeries(timeSeriesGroups: TimeSeriesGroup[]) {
+    const replacer = (key: string, value: any) => {
+        if (key === 'time' && typeof value === 'number') {
+            return utcTimeToIsoDateString(value);
+        }
+        return value;
+    }
+
+    const zip = new JSZip();
+    for (let timeSeriesGroup of timeSeriesGroups) {
+        for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
+            const jsonContent = JSON.stringify(timeSeries, replacer, 2);
+            const fileName = `${timeSeries.source.datasetId}-${timeSeries.source.variableName}-${timeSeries.source.placeId}.json`;
+            zip.file(fileName, jsonContent)
+        }
+    }
+    zip.generateAsync({type: "blob"})
+       .then((content) => saveAs(content, "time-series.zip"));
+}
+

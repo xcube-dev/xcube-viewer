@@ -1,5 +1,8 @@
 ## Changes in version 0.4.5 (in development)
 
+* Users can now download time-series data as a Zip file
+  containing a JSON file for each time-series graph. (#20)
+
 
 ## Changes in version 0.4.4
 
