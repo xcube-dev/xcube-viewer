@@ -1,3 +1,6 @@
+## Changes in version 0.4.5 (in development)
+
+
 ## Changes in version 0.4.4
 
 * Time-series legends are now always shown. (#151)
