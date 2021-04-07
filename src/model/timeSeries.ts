@@ -1,3 +1,8 @@
+import * as geojson from 'geojson';
+
+import { utcTimeToIsoDateString } from '../util/time';
+
+
 /**
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
  */
@@ -19,6 +24,7 @@ export interface TimeSeriesSource {
     variableName: string;
     variableUnits?: string;
     placeId: string;
+    geometry: geojson.Geometry;
     valueDataKey: keyof TimeSeriesPoint;
     errorDataKey: keyof TimeSeriesPoint | null;
 }
@@ -56,3 +62,36 @@ export function equalTimeRanges(t1: TimeRange | null, t2: TimeRange | null) {
     return false;
 }
 
+
+export function timeSeriesGroupsToGeoJSON(timeSeriesGroups: TimeSeriesGroup[]): geojson.FeatureCollection {
+    const features: geojson.Feature[] = [];
+    for (let timeSeriesGroup of timeSeriesGroups) {
+        for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
+            features.push(timeSeriesToGeoJSON(timeSeries));
+        }
+    }
+    return {type: "FeatureCollection", features};
+}
+
+
+export function timeSeriesToGeoJSON(timeSeries: TimeSeries): geojson.Feature {
+    return {
+        type: "Feature",
+        id: `${timeSeries.source.datasetId}-${timeSeries.source.variableName}-${timeSeries.source.placeId}`,
+        geometry: timeSeries.source.geometry,
+        properties: {
+            datasetId: timeSeries.source.datasetId,
+            variableName: timeSeries.source.variableName,
+            variableUnits: timeSeries.source.variableUnits,
+            placeId: timeSeries.source.placeId,
+            valueDataKey: timeSeries.source.valueDataKey,
+            errorDataKey: timeSeries.source.errorDataKey,
+            data: timeSeries.data.map(p => {
+                return {
+                    ...p,
+                    time: utcTimeToIsoDateString(p.time)
+                };
+            })
+        }
+    };
+}

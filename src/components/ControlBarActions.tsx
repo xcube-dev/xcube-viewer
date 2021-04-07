@@ -10,9 +10,8 @@ import InfoIcon from '@material-ui/icons/Info';
 import JSZip from 'jszip';
 
 import { I18N } from '../config';
-import { TimeSeriesGroup } from '../model/timeSeries';
+import { TimeSeriesGroup, timeSeriesGroupsToGeoJSON } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
-import { utcTimeToIsoDateString } from '../util/time';
 
 const saveAs = require('file-saver');
 
@@ -91,20 +90,14 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
 export default withStyles(styles)(ControlBarActions);
 
 
-function downloadTimeSeries(timeSeriesGroups: TimeSeriesGroup[]) {
-    const replacer = (key: string, value: any) => {
-        if (key === 'time' && typeof value === 'number') {
-            return utcTimeToIsoDateString(value);
-        }
-        return value;
-    }
-
+function downloadTimeSeries(timeSeriesGroups: TimeSeriesGroup[], saveCollection: boolean = false) {
+    const featureCollection = timeSeriesGroupsToGeoJSON(timeSeriesGroups)
     const zip = new JSZip();
-    for (let timeSeriesGroup of timeSeriesGroups) {
-        for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
-            const jsonContent = JSON.stringify(timeSeries, replacer, 2);
-            const fileName = `${timeSeries.source.datasetId}-${timeSeries.source.variableName}-${timeSeries.source.placeId}.json`;
-            zip.file(fileName, jsonContent)
+    if (saveCollection) {
+        zip.file(`time-series.geojson`, JSON.stringify(featureCollection, null, 2))
+    } else {
+        for (let feature of featureCollection.features) {
+            zip.file(`${feature.id}.geojson`, JSON.stringify(feature, null, 2))
         }
     }
     zip.generateAsync({type: "blob"})
