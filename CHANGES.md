@@ -1,11 +1,15 @@
 ## Changes in version 0.4.5 (in development)
 
-* Users can now download time-series data as a Zip archive
-  containing a GeoJSON file for each time-series graph. (#20)
-
 * Default colour for dataset-related place groups now red while 
   initial user places colour is colour. (#153)
 * RGB layer no longer hides places. (#152)
+* Users can now download time-series data as a Zip archive
+  containing a GeoJSON file for each time-series graph. (#20)
+
+  Note, this new feature must be enabled in `.env`:
+  ```
+  REACT_APP_ALLOW_DOWNLOADS=1
+  ```
 
 
 ## Changes in version 0.4.4

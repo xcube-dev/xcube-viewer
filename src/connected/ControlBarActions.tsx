@@ -6,7 +6,7 @@ import { showInfoCard, flyToSelectedObject } from '../actions/controlActions';
 
 const mapStateToProps = (state: AppState) => {
     return {
-            locale: state.controlState.locale,
+        locale: state.controlState.locale,
         visible: !!(state.controlState.selectedDatasetId || state.controlState.selectedPlaceId),
         infoCardOpen: state.controlState.infoCardOpen,
         timeSeriesGroups: state.dataState.timeSeriesGroups,

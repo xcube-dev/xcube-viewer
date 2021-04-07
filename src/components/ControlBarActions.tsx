@@ -15,6 +15,11 @@ import { WithLocale } from '../util/lang';
 
 const saveAs = require('file-saver');
 
+
+const DOWNLOADS_ALLOWED = process.env.REACT_APP_ALLOW_DOWNLOADS === '1'
+                          || process.env.REACT_APP_ALLOW_DOWNLOADS === 'true';
+
+
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
@@ -47,34 +52,32 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
     }
 
     let downloadButton;
-    if (timeSeriesGroups && timeSeriesGroups.length) {
+    if (DOWNLOADS_ALLOWED) {
+        const downloadPossible = timeSeriesGroups && timeSeriesGroups.length;
         downloadButton = (
-            <Tooltip arrow title={I18N.get('Download time-series data')}>
-                <IconButton onClick={() => downloadTimeSeries(timeSeriesGroups)}>
+            <IconButton onClick={() => downloadTimeSeries(timeSeriesGroups)} disabled={!downloadPossible}>
+                <Tooltip arrow title={I18N.get('Download time-series data')}>
                     {<CloudDownloadIcon/>}
-                </IconButton>
-            </Tooltip>
+                </Tooltip>
+            </IconButton>
         );
     }
 
     const flyToButton = (
-        <Tooltip arrow title={I18N.get('Show selected place in map')}>
-            <IconButton onClick={flyToSelectedObject}>
+        <IconButton onClick={flyToSelectedObject}>
+            <Tooltip arrow title={I18N.get('Show selected place in map')}>
                 <MyLocationIcon/>
-            </IconButton>
-        </Tooltip>
+            </Tooltip>
+        </IconButton>
     );
 
-    let infoButton;
-    if (!infoCardOpen) {
-        infoButton = (
+    let infoButton = (
+        <IconButton onClick={() => showInfoCard(true)} disabled={infoCardOpen}>
             <Tooltip arrow title={I18N.get('Open information panel')}>
-                <IconButton onClick={() => showInfoCard(true)}>
-                    {<InfoIcon/>}
-                </IconButton>
+                {<InfoIcon/>}
             </Tooltip>
-        );
-    }
+        </IconButton>
+    );
 
     return (
         <FormControl className={classes.formControl}>
