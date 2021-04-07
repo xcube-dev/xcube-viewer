@@ -2,6 +2,8 @@
 
 * Default colour for dataset-related place groups now red while 
   initial user places colour is colour. (#153)
+* RGB layer no longer hides places. (#152)
+
 
 ## Changes in version 0.4.4
 

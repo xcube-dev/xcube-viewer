@@ -421,6 +421,7 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                         key={index}
                         id={`placeGroup.${placeGroup.id}`}
                         style={DEFAULT_PLACE_GROUP_STYLE}
+                        zIndex={100}
                         source={new OlVectorSource(
                             {
                                 features: new OlGeoJSONFormat({
