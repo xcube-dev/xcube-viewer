@@ -3,6 +3,10 @@
 * Users can now download time-series data as a Zip archive
   containing a GeoJSON file for each time-series graph. (#20)
 
+* Default colour for dataset-related place groups now red while 
+  initial user places colour is colour. (#153)
+* RGB layer no longer hides places. (#152)
+
 
 ## Changes in version 0.4.4
 
