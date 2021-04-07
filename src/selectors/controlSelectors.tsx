@@ -1,4 +1,8 @@
 ///<reference path="../util/find.ts"/>
+import { default as OlFillStyle } from 'ol/style/Fill';
+import { default as OlStrokeStyle } from 'ol/style/Stroke';
+import { default as OlStyle } from 'ol/style/Style';
+import { default as OlCircle } from 'ol/style/Circle';
 import * as React from 'react';
 import { createSelector } from 'reselect'
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
@@ -383,6 +387,26 @@ export const selectedDatasetRgbLayerSelector = createSelector(
 );
 
 
+const DEFAULT_STROKE = new OlStrokeStyle({
+                                             color: [200, 0, 0, 0.75],
+                                             width: 1.25
+                                         });
+const DEFAULT_FILL = new OlFillStyle({
+                                         color: [255, 0, 0, 0.25]
+                                     });
+const DEFAULT_IMAGE = new OlCircle({
+                                       fill: DEFAULT_FILL,
+                                       stroke: DEFAULT_STROKE,
+                                       radius: 6
+                                   })
+const DEFAULT_PLACE_GROUP_STYLE = new OlStyle(
+    {
+        image: DEFAULT_IMAGE,
+        stroke: DEFAULT_STROKE,
+        fill: DEFAULT_FILL,
+    }
+);
+
 export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): MapElement => {
@@ -396,6 +420,7 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                     <Vector
                         key={index}
                         id={`placeGroup.${placeGroup.id}`}
+                        style={DEFAULT_PLACE_GROUP_STYLE}
                         source={new OlVectorSource(
                             {
                                 features: new OlGeoJSONFormat({

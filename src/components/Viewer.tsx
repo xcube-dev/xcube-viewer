@@ -37,6 +37,7 @@ const styles = (theme: Theme) => createStyles({});
 const USER_LAYER_SOURCE = new OlVectorSource();
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
+// TODO (forman): move all map styles into dedicated module, so settings will be easier to find & adjust
 
 const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, right: 272, top: 10};
 
@@ -209,10 +210,19 @@ const Viewer: React.FC<ViewerProps> = ({
                 <Layers>
                     {baseMapLayer}
                     {variableLayer}
-                    <Vector id='userLayer' opacity={1} zIndex={500}
-                            source={USER_LAYER_SOURCE}/>
-                    <Vector id='selectionLayer' opacity={0.7} zIndex={510} style={SELECTION_LAYER_STYLE}
-                            source={SELECTION_LAYER_SOURCE}/>
+                    <Vector
+                        id='userLayer'
+                        opacity={1}
+                        zIndex={500}
+                        source={USER_LAYER_SOURCE}
+                    />
+                    <Vector
+                        id='selectionLayer'
+                        opacity={0.7}
+                        zIndex={510}
+                        style={SELECTION_LAYER_STYLE}
+                        source={SELECTION_LAYER_SOURCE}
+                    />
                 </Layers>
                 {placeGroupLayers}
                 {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={handleSelect}/>*/}

@@ -1,5 +1,6 @@
 import {
     blue,
+    lightBlue,
     green,
     grey,
     purple,
@@ -9,7 +10,8 @@ import {
     orange,
     cyan,
     indigo,
-    deepPurple
+    deepPurple,
+    lime,
 } from '@material-ui/core/colors';
 import { Color, PaletteType } from '@material-ui/core';
 import { PaletteColorOptions } from '@material-ui/core/styles/createPalette';
@@ -166,20 +168,30 @@ export function getApiServers() {
     return apiServers;
 }
 
-const userPlaceColors: { [name: string]: Color } = {
-    blue,
-    green,
-    grey,
-    purple,
-    red,
-    pink,
-    yellow,
-    orange,
-    cyan,
-    indigo,
-    deepPurple,
-};
-export const userPlaceColorNames = Object.keys(userPlaceColors);
+// Array of user place colors in stable order (see #153)
+const userPlaceColorsArray: [string, Color][] = [
+    ["yellow", yellow],
+    ["red", red],
+    ["pink", pink],
+    ["lightBlue", lightBlue],
+    ["green", green],
+    ["orange", orange],
+    ["lime", lime],
+    ["purple", purple],
+    ["indigo", indigo],
+    ["cyan", cyan],
+    ["deepPurple", deepPurple],
+];
+
+const userPlaceColors: { [name: string]: Color } = (() => {
+    const obj: { [name: string]: Color } = {};
+    userPlaceColorsArray.forEach(([name, color]) => {
+        obj[name] = color;
+    });
+    return obj;
+})();
+
+export const userPlaceColorNames = userPlaceColorsArray.map(([name, _]) => name);
 
 
 export function getStrokeShade(paletteType: PaletteType) {
