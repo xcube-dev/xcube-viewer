@@ -16,11 +16,12 @@ import { default as OlStrokeStyle } from 'ol/style/Stroke';
 import { default as OlCircleStyle } from 'ol/style/Circle';
 import { Color as OlColor } from 'ol/color';
 import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
+import rgba from 'color-rgba';
 
 import { newId } from '../util/id';
 import { Place, PlaceGroup } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
-import { getUserPlaceColor, getUserPlaceColorName, I18N } from '../config';
+import { getBranding, getUserPlaceColor, getUserPlaceColorName, I18N } from '../config';
 import ErrorBoundary from './ErrorBoundary';
 import { Map, MapElement } from './ol/Map';
 import { Layers } from './ol/layer/Layers';
@@ -165,7 +166,14 @@ const Viewer: React.FC<ViewerProps> = ({
             if (mapInteraction === 'Point') {
                 feature.setStyle(createPointGeometryStyle(7, shadedColor, 'white', 1));
             } else {
-                feature.setStyle(createGeometryStyle([255, 255, 255, 0.25], shadedColor, 2));
+                const fillOpacity = getBranding().polygonFillOpacity || 0.25;
+                let fillColorRgba = rgba(shadedColor);
+                if (Array.isArray(fillColorRgba)) {
+                    fillColorRgba = [fillColorRgba[0], fillColorRgba[1], fillColorRgba[2], fillOpacity];
+                } else {
+                    fillColorRgba = [255, 255, 255, fillOpacity];
+                }
+                feature.setStyle(createGeometryStyle(fillColorRgba, shadedColor, 2));
             }
 
             const nameBase = I18N.get(mapInteraction);

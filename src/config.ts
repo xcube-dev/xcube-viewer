@@ -40,6 +40,7 @@ interface Branding {
     logoWidth: number;
     baseMapUrl?: string;
     defaultAgg?: 'median' | 'mean';
+    polygonFillOpacity?: number;
 }
 
 const brandings: { [name: string]: Branding } = {
@@ -112,6 +113,7 @@ const brandings: { [name: string]: Branding } = {
         logoWidth: 120,
         baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
         defaultAgg: 'median',
+        polygonFillOpacity: 0.025,
     },
 };
 

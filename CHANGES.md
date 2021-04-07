@@ -10,7 +10,8 @@
   ```
   REACT_APP_ALLOW_DOWNLOADS=1
   ```
-
+* The opacity of polygon fill colours has been made part the 
+  app's branding.
 
 ## Changes in version 0.4.4
 
