@@ -34,36 +34,37 @@ import * as auth from '../util/auth';
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
 
+
 interface UserProfileProps extends WithLocale {
-    idToken: auth.IdToken;
+    userInfo: auth.UserInfo;
     accessToken: string | null;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({idToken, accessToken}) => {
+const UserProfile: React.FC<UserProfileProps> = ({userInfo}) => {
 
     return (
         <Grid container justify="center" spacing={1}>
             <Grid item>
-                <img src={idToken.picture} width={84} alt={I18N.get('User Profile')}/>
+                <img src={userInfo.picture} width={84} alt={I18N.get('User Profile')}/>
             </Grid>
             <Grid item>
                 <Paper elevation={3}>
                     <List>
                         <ListItem>
                             <ListItemText
-                                primary={idToken.name}
+                                primary={userInfo.name}
                                 secondary={I18N.get('User name')}/>
                         </ListItem>
                         <Divider light/>
                         <ListItem>
                             <ListItemText
-                                primary={`${idToken.email} (${idToken.email_verified ? I18N.get('verified') : I18N.get('not verified')})`}
+                                primary={`${userInfo.email} (${userInfo.email_verified ? I18N.get('verified') : I18N.get('not verified')})`}
                                 secondary={I18N.get('E-mail')}/>
                         </ListItem>
                         <Divider light/>
                         <ListItem>
                             <ListItemText
-                                primary={idToken.nickname}
+                                primary={userInfo.nickname}
                                 secondary={I18N.get('Nickname')}/>
                         </ListItem>
                     </List>

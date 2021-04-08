@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import createAuth0Client from '@auth0/auth0-spa-js';
+import createAuth0Client, { User } from '@auth0/auth0-spa-js';
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
 import history from './history';
 
-export type IdToken = { [name: string]: any };
+export type UserInfo = User;
 export type AuthClient = Auth0Client;
 
 export interface AuthClientConfig {

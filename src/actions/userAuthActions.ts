@@ -23,7 +23,6 @@
  */
 
 import { Dispatch } from 'redux';
-import { AuthClient } from '../util/auth';
 import * as auth from '../util/auth'
 import { updateDatasets } from './dataActions';
 import { PostMessage, postMessage } from './messageLogActions';
@@ -35,9 +34,9 @@ export function initAuthClient() {
         const authClient = await auth.initAuthClient();
         dispatch(_initAuthClient(authClient !== null));
         if (authClient !== null) {
-            let idToken = null;
+            let userInfo = null;
             try {
-                idToken = await authClient.getUser();
+                userInfo = await authClient.getUser();
             } catch (e) {
                 // ok
             }
@@ -47,8 +46,8 @@ export function initAuthClient() {
             } catch (e) {
                 // ok
             }
-            if (idToken && accessToken) {
-                dispatch(receiveSignIn(idToken!, accessToken!));
+            if (userInfo && accessToken) {
+                dispatch(receiveSignIn(userInfo!, accessToken!));
                 dispatch(updateDatasets() as any);
             }
         }
@@ -82,9 +81,12 @@ export function signIn() {
         authClient.loginWithPopup()
                   .then(async () => {
                       dispatch(requestSignIn());
-                      const idToken = await authClient.getUser();
+                      const userInfo = await authClient.getUser();
+                      if (!userInfo) {
+                          throw new Error('Signing in failed, failed to retrieve user information.');
+                      }
                       const accessToken = await authClient.getTokenSilently();
-                      dispatch(receiveSignIn(idToken, accessToken));
+                      dispatch(receiveSignIn(userInfo!, accessToken));
                       dispatch(updateDatasets() as any);
                   })
                   .catch((error) => {
@@ -114,12 +116,12 @@ export type RECEIVE_SIGN_IN = typeof RECEIVE_SIGN_IN;
 
 export interface ReceiveSignIn {
     type: RECEIVE_SIGN_IN;
-    idToken: auth.IdToken;
+    userInfo: auth.UserInfo;
     accessToken: string;
 }
 
-function receiveSignIn(idToken: auth.IdToken, accessToken: string): ReceiveSignIn {
-    return {type: RECEIVE_SIGN_IN, idToken, accessToken};
+function receiveSignIn(userInfo: auth.UserInfo, accessToken: string): ReceiveSignIn {
+    return {type: RECEIVE_SIGN_IN, userInfo, accessToken};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -34,7 +34,7 @@ export enum UserAuthStatus {
 export interface UserAuthState {
     hasAuthClient: boolean | null;
     status: UserAuthStatus;
-    idToken: auth.IdToken | null;
+    userInfo: auth.UserInfo | null;
     accessToken: string | null;
 }
 
@@ -42,7 +42,7 @@ export function newUserAuthState(): UserAuthState {
     return {
         hasAuthClient: null,
         status: UserAuthStatus.NOT_SIGNED_IN,
-        idToken: null,
+        userInfo: null,
         accessToken: null,
     }
 }
