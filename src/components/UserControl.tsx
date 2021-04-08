@@ -48,6 +48,7 @@ import * as auth from '../util/auth';
 import { I18N } from '../config';
 import { WithLocale } from '../util/lang';
 
+
 const styles = (theme: Theme) => createStyles(
     {
         imageAvatar: {
@@ -85,7 +86,7 @@ const styles = (theme: Theme) => createStyles(
 interface UserControlProps extends WithStyles<typeof styles>, WithLocale {
     hasAuthClient: boolean;
     isBusy: boolean,
-    idToken: auth.IdToken | null;
+    userInfo: auth.UserInfo | null;
     accessToken: string | null;
     signIn: () => void;
     signOut: () => void;
@@ -95,7 +96,7 @@ const UserControl: React.FC<UserControlProps> = ({
                                                      classes,
                                                      hasAuthClient,
                                                      isBusy,
-                                                     idToken,
+                                                     userInfo,
                                                      accessToken,
                                                      signIn,
                                                      signOut,
@@ -134,16 +135,16 @@ const UserControl: React.FC<UserControlProps> = ({
         signOut();
     };
 
-    if (idToken !== null) {
+    if (userInfo !== null) {
         let avatar;
         let avatarContent: React.ReactNode = <PersonIcon/>;
-        if (!idToken) {
+        if (!userInfo) {
             avatar = <Avatar className={classes.letterAvatar}>?</Avatar>;
-        } else if (idToken.picture) {
-            avatar = <Avatar className={classes.imageAvatar} src={idToken.picture} alt={idToken.name}/>;
+        } else if (userInfo.picture) {
+            avatar = <Avatar className={classes.imageAvatar} src={userInfo.picture} alt={userInfo.name}/>;
         } else {
-            const name1 = idToken.given_name || idToken.name || idToken.nickname;
-            const name2 = idToken.family_name;
+            const name1 = userInfo.given_name || userInfo.name || userInfo.nickname;
+            const name2 = userInfo.family_name;
             let letters: string | null = null;
             if (name1 && name2) {
                 letters = name1[0] + name2[0];
@@ -188,7 +189,7 @@ const UserControl: React.FC<UserControlProps> = ({
                 >
                     <DialogTitle id="alert-dialog-slide-title">{I18N.get('User Profile')}</DialogTitle>
                     <DialogContent>
-                        <UserProfile idToken={idToken!} accessToken={accessToken}/>
+                        <UserProfile userInfo={userInfo!} accessToken={accessToken}/>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleUserProfileDialogClose} color="primary">

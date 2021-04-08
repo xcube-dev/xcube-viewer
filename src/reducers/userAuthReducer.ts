@@ -48,14 +48,14 @@ export function userAuthReducer(state: UserAuthState | undefined, action: UserAu
             return {
                 ...state,
                 status: UserAuthStatus.SIGNED_IN,
-                idToken: action.idToken,
+                userInfo: action.userInfo,
                 accessToken: action.accessToken,
             };
         case RECEIVE_SIGN_OUT:
             return {
                 ...state,
                 status: UserAuthStatus.NOT_SIGNED_IN,
-                idToken: null,
+                userInfo: null,
                 accessToken: null,
             };
     }
