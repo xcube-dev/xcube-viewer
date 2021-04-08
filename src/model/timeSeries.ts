@@ -1,6 +1,6 @@
 import * as geojson from 'geojson';
 
-import { utcTimeToIsoDateString } from '../util/time';
+import { utcTimeToIsoDateTimeString } from '../util/time';
 
 
 /**
@@ -89,7 +89,7 @@ export function timeSeriesToGeoJSON(timeSeries: TimeSeries): geojson.Feature {
             data: timeSeries.data.map(p => {
                 return {
                     ...p,
-                    time: utcTimeToIsoDateString(p.time)
+                    time: utcTimeToIsoDateTimeString(p.time)
                 };
             })
         }
