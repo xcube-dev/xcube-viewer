@@ -1,5 +1,7 @@
 ## Changes in version 0.4.5 (in development)
 
+* After logging out, the browser now correctly redirects to the 
+  viewer's origin. (#142)
 * Default colour for dataset-related place groups now red while 
   initial user places colour is yellow. (#153)
 * RGB layer no longer hides places. (#152)

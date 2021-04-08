@@ -23,6 +23,7 @@
  */
 
 import { Dispatch } from 'redux';
+import { AuthClient } from '../util/auth';
 import * as auth from '../util/auth'
 import { updateDatasets } from './dataActions';
 import { PostMessage, postMessage } from './messageLogActions';
@@ -130,8 +131,12 @@ export function signOut() {
             // Should never get here...
             return;
         }
+        const logoutOptions = {
+            returnTo: window.location.origin,
+            federated: true,
+        };
         dispatch(requestSignOut());
-        authClient.logout();
+        authClient.logout(logoutOptions);
         dispatch(receiveSignOut());
     };
 }
