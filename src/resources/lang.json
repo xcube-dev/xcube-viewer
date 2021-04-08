@@ -575,11 +575,53 @@
       "se": "Hjälp"
     },
     {
-      "en": "Download time-series data",
-      "de": "Zeitserien-Daten herunterladen",
-      "it": "Scarica i dati delle serie temporali",
-      "ro": "Descărcați datele din seria temporală",
-      "se": "Ladda ner tidsseriedata"
+      "en": "Export time-series data",
+      "de": "Zeitserien-Daten exportieren",
+      "it": "Esporta i dati delle serie temporali",
+      "ro": "Exportați datele seriilor temporale",
+      "se": "Exportera tidsseriedata"
+    },
+    {
+      "en": "Export Settings",
+      "de": "Export Einstellungen",
+      "it": "Esporta Impostazioni",
+      "ro": "Exportați Setările",
+      "se": "Exportera Inställningar"
+    },
+    {
+      "en": "File format",
+      "de": "Dateiformat",
+      "it": "Formato del file",
+      "ro": "Tipul fisierului",
+      "se": "Filformat"
+    },
+    {
+      "en": "File name",
+      "de": "Dateiname",
+      "it": "Nome del file",
+      "ro": "Nume de fișier",
+      "se": "Filnamn"
+    },
+    {
+      "en": "One file per graph",
+      "de": "Eine Datei pro Graph",
+      "it": "Un file per grafico",
+      "ro": "Un fișier pe grafic",
+      "se": "En fil per graf"
+    },
+    {
+      "en": "As ZIP archive",
+      "de": "Als ZIP-Archiv",
+      "it": "Come archivio ZIP",
+      "ro": "Ca arhivă ZIP",
+      "se": "Som ett ZIP-arkiv"
+    },
+    {
+      "en": "Download",
+      "de": "Herunterladen",
+      "it": "Scarica",
+      "ro": "Descarca",
+      "se": "Ladda ner"
     },
     {
       "en": "Show selected place in map",

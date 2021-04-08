@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import JSZip from 'jszip';
 import { Dispatch } from 'redux';
 
 import { AppState } from '../states/appState';
@@ -37,7 +38,7 @@ import {
 import {
     Dataset,
 } from '../model/dataset';
-import { TimeSeries } from '../model/timeSeries';
+import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToGeoJSON } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
 import {
@@ -50,6 +51,8 @@ import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
 import { placeGroupsSelector } from '../selectors/dataSelectors';
+
+const saveAs = require('file-saver');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -399,6 +402,54 @@ export function _updateVariableColorBar(datasetId: string,
                                         colorBarMinMax: [number, number],
                                         colorBarName: string): UpdateVariableColorBar {
     return {type: UPDATE_VARIABLE_COLOR_BAR, datasetId, variableName, colorBarMinMax, colorBarName};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function downloadTimeSeries() {
+    return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
+        _downloadTimeSeries(getState().dataState.timeSeriesGroups,
+                            getState().controlState.exportFormat,
+                            getState().controlState.exportFileName,
+                            getState().controlState.exportMultiFile,
+                            getState().controlState.exportZipArchive);
+    };
+}
+
+function _downloadTimeSeries(timeSeriesGroups: TimeSeriesGroup[],
+                             format: 'GeoJSON' | 'CSV',
+                             fileName: string = 'time-series',
+                             multiFile: boolean = true,
+                             zipArchive: boolean = true) {
+    const featureCollection = timeSeriesGroupsToGeoJSON(timeSeriesGroups);
+
+    if (format === 'GeoJSON') {
+        if (zipArchive) {
+            const zip = new JSZip();
+            if (multiFile) {
+                zip.file(`${fileName}.geojson`,
+                         JSON.stringify(featureCollection, null, 2));
+            } else {
+                for (let feature of featureCollection.features) {
+                    zip.file(`${feature.id}.geojson`,
+                             JSON.stringify(feature, null, 2));
+                }
+            }
+            zip.generateAsync({type: "blob"})
+               .then((content) => saveAs(content, `${fileName}.zip`));
+        } else {
+            if (multiFile) {
+                throw new Error('Cannot download multi-file exports');
+            }
+            const blob = new Blob([JSON.stringify(featureCollection, null, 2)],
+                                  {type: "text/plain;charset=utf-8"});
+            saveAs(blob, `${fileName}.geojson`);
+        }
+    } else {
+        // TODO (forman): implement CSV export
+        throw new Error(`Download as ${format} is not yet implemented`);
+    }
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

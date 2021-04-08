@@ -22,25 +22,53 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import React from 'react';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import { AppState } from '../states/appState';
-import ControlBarActions from '../components/ControlBarActions';
-import { showInfoCard, flyToSelectedObject, openDialog } from '../actions/controlActions';
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        visible: !!(state.controlState.selectedDatasetId || state.controlState.selectedPlaceId),
-        infoCardOpen: state.controlState.infoCardOpen,
-        timeSeriesGroups: state.dataState.timeSeriesGroups,
+interface SettingsSubPanelProps {
+    label: string;
+    value?: string | number;
+    onClick?: (event: any) => void;
+}
+
+const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (
+    {
+        label,
+        value,
+        onClick,
+        children,
     }
+) => {
+
+    const listItemText = (<ListItemText primary={label} secondary={value}/>);
+
+    let listItemSecondaryAction;
+    if (children) {
+        listItemSecondaryAction = (
+            <ListItemSecondaryAction>
+                {children}
+            </ListItemSecondaryAction>
+        );
+    }
+
+    if (!!onClick) {
+        return (
+            <ListItem button onClick={onClick}>
+                {listItemText}
+                {listItemSecondaryAction}
+            </ListItem>
+        );
+    }
+
+    return (
+        <ListItem>
+            {listItemText}
+            {listItemSecondaryAction}
+        </ListItem>
+    );
 };
 
-const mapDispatchToProps = {
-    showInfoCard,
-    flyToSelectedObject,
-    openDialog,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);
+export default SettingsSubPanel;

@@ -62,10 +62,14 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('showTimeSeriesMedian', settings);
             storage.setPrimitiveProperty('timeAnimationInterval', settings);
             storage.setPrimitiveProperty('timeChunkSize', settings);
-            storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
             storage.setPrimitiveProperty('infoCardOpen', settings);
             storage.setObjectProperty('infoCardElementStates', settings);
+            storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
             storage.setPrimitiveProperty('baseMapUrl', settings);
+            storage.setPrimitiveProperty('exportFormat', settings);
+            storage.setPrimitiveProperty('exportMultiFile', settings);
+            storage.setPrimitiveProperty('exportZipArchive', settings);
+            storage.setPrimitiveProperty('exportFileName', settings);
         } catch (e) {
             console.warn(`failed to store user settings: ${e}`);
         }
@@ -84,10 +88,14 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('showTimeSeriesMedian', settings, defaultSettings);
             storage.getIntProperty('timeAnimationInterval', settings, defaultSettings);
             storage.getIntProperty('timeChunkSize', settings, defaultSettings);
-            storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);
             storage.getBooleanProperty('infoCardOpen', settings, defaultSettings);
             storage.getObjectProperty('infoCardElementStates', settings, defaultSettings);
+            storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);
             storage.getStringProperty('baseMapUrl', settings, defaultSettings);
+            storage.getStringProperty('exportFormat', settings, defaultSettings);
+            storage.getBooleanProperty('exportMultiFile', settings, defaultSettings);
+            storage.getBooleanProperty('exportZipArchive', settings, defaultSettings);
+            storage.getStringProperty('exportFileName', settings, defaultSettings);
         } catch (e) {
             console.warn(`failed to load user settings: ${e}`);
         }

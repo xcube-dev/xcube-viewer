@@ -31,13 +31,10 @@ import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import InfoIcon from '@material-ui/icons/Info';
-import JSZip from 'jszip';
 
 import { I18N } from '../config';
-import { TimeSeriesGroup, timeSeriesGroupsToGeoJSON } from '../model/timeSeries';
+import { TimeSeriesGroup } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
-
-const saveAs = require('file-saver');
 
 
 const DOWNLOADS_ALLOWED = process.env.REACT_APP_ALLOW_DOWNLOADS === '1'
@@ -60,6 +57,7 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     infoCardOpen: boolean;
     showInfoCard: (open: boolean) => void;
     timeSeriesGroups: TimeSeriesGroup[];
+    openDialog: (dialogId: string) => void;
 }
 
 const ControlBarActions: React.FC<ControlBarActionsProps> = ({
@@ -69,6 +67,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
                                                                  infoCardOpen,
                                                                  showInfoCard,
                                                                  timeSeriesGroups,
+                                                                 openDialog,
                                                              }) => {
 
     if (!visible) {
@@ -79,8 +78,8 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
     if (DOWNLOADS_ALLOWED) {
         const downloadPossible = timeSeriesGroups && timeSeriesGroups.length;
         downloadButton = (
-            <IconButton onClick={() => downloadTimeSeries(timeSeriesGroups)} disabled={!downloadPossible}>
-                <Tooltip arrow title={I18N.get('Download time-series data')}>
+            <IconButton onClick={() => openDialog('export')} disabled={!downloadPossible}>
+                <Tooltip arrow title={I18N.get('Export time-series data')}>
                     {<CloudDownloadIcon/>}
                 </Tooltip>
             </IconButton>
@@ -116,18 +115,4 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
 
 export default withStyles(styles)(ControlBarActions);
 
-
-function downloadTimeSeries(timeSeriesGroups: TimeSeriesGroup[], saveCollection: boolean = false) {
-    const featureCollection = timeSeriesGroupsToGeoJSON(timeSeriesGroups)
-    const zip = new JSZip();
-    if (saveCollection) {
-        zip.file(`time-series.geojson`, JSON.stringify(featureCollection, null, 2))
-    } else {
-        for (let feature of featureCollection.features) {
-            zip.file(`${feature.id}.geojson`, JSON.stringify(feature, null, 2))
-        }
-    }
-    zip.generateAsync({type: "blob"})
-       .then((content) => saveAs(content, "time-series.zip"));
-}
 

@@ -46,6 +46,12 @@ export interface InfoCardElementStates {
     [key: string]: InfoCardElementState;
 }
 
+export interface ExportSettings {
+    format: "GeoJSON" | "CSV";
+    multiFile: boolean;
+    zipArchive: boolean;
+}
+
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
@@ -74,6 +80,10 @@ export interface ControlState {
     imageSmoothingEnabled: boolean;
     baseMapUrl: string;
     showRgbLayer: boolean;
+    exportFormat: "GeoJSON" | "CSV";
+    exportMultiFile: boolean;
+    exportZipArchive: boolean;
+    exportFileName: string;
 }
 
 
@@ -111,6 +121,10 @@ export function newControlState(): ControlState {
         },
         imageSmoothingEnabled: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
+        exportFormat: branding.exportFormat || 'GeoJSON',
+        exportMultiFile: true,
+        exportZipArchive: true,
+        exportFileName: 'time-series',
     };
     return loadUserSettings(state);
 }
