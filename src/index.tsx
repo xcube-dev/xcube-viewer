@@ -51,7 +51,7 @@ if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImage
     setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
 }
 
-store.dispatch(changeLocale(I18N.locale) as any);
+store.dispatch(changeLocale(store.getState().controlState.locale) as any);
 store.dispatch(initAuthClient() as any);
 store.dispatch(updateServerInfo() as any);
 store.dispatch(updateDatasets() as any);
