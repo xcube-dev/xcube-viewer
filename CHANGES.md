@@ -14,6 +14,8 @@
   ```
 * The opacity of polygon fill colours has been made part the 
   app's branding.
+* Language setting is now correctly preserved and will be 
+  used on page reload. (#158)
 
 ## Changes in version 0.4.4
 

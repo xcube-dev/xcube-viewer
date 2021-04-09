@@ -354,10 +354,11 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
         case CHANGE_LOCALE: {
             const locale = action.locale;
             I18N.locale = locale;
-            return {
-                ...state,
-                locale,
-            };
+            if (locale !== state.locale) {
+                state = {...state, locale};
+                storeUserSettings(state);
+            }
+            return state;
         }
         case OPEN_DIALOG: {
             const dialogId = action.dialogId;
