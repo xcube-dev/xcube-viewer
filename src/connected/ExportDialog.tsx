@@ -27,7 +27,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../states/appState';
 import ExportDialog from '../components/ExportDialog';
 import { closeDialog, updateSettings } from '../actions/controlActions';
-import { downloadTimeSeries } from '../actions/dataActions';
+import { exportData } from '../actions/dataActions';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -41,7 +41,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
     closeDialog,
     updateSettings,
-    downloadTimeSeries,
+    downloadTimeSeries: exportData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportDialog);

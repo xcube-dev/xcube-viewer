@@ -89,7 +89,16 @@ export function flyToDataset(selectedDatasetId: string) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
+const SIMPLE_GEOMETRY_TYPES = [
+    'Point',
+    'LineString',
+    'LinearRing',
+    'Polygon',
+    'MultiPoint',
+    'MultiLineString',
+    'MultiPolygon',
+    'Circle'
+];
 
 export function flyToPlace(selectedPlaceId: string) {
     return (dispatch: Dispatch<FlyTo>, getState: () => AppState) => {

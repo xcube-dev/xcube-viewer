@@ -65,7 +65,6 @@ interface Branding {
     baseMapUrl?: string;
     defaultAgg?: 'median' | 'mean';
     polygonFillOpacity?: number;
-    exportFormat?: 'GeoJSON' | 'CSV';
 }
 
 const brandings: { [name: string]: Branding } = {
@@ -139,7 +138,6 @@ const brandings: { [name: string]: Branding } = {
         baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
         defaultAgg: 'median',
         polygonFillOpacity: 0.025,
-        exportFormat: 'CSV'
     },
 };
 

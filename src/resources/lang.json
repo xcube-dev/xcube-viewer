@@ -575,25 +575,32 @@
       "se": "Hjälp"
     },
     {
-      "en": "Export time-series data",
-      "de": "Zeitserien-Daten exportieren",
-      "it": "Esporta i dati delle serie temporali",
-      "ro": "Exportați datele seriilor temporale",
-      "se": "Exportera tidsseriedata"
+      "en": "Export data",
+      "de": "Daten exportieren",
+      "it": "Esporta dati",
+      "ro": "Export de date",
+      "se": "Exportera data"
     },
     {
       "en": "Export Settings",
-      "de": "Export Einstellungen",
+      "de": "Export-Einstellungen",
       "it": "Esporta Impostazioni",
       "ro": "Exportați Setările",
       "se": "Exportera Inställningar"
     },
     {
-      "en": "File format",
-      "de": "Dateiformat",
-      "it": "Formato del file",
-      "ro": "Tipul fisierului",
-      "se": "Filformat"
+      "en": "Include time-series data",
+      "de": "Zeitseriendaten einschließen",
+      "it": "Includi dati di serie temporali",
+      "ro": "Includeți datele seriilor temporale",
+      "se": "Inkludera tidsseriedata"
+    },
+    {
+      "en": "Include places data",
+      "de": "Ortsdaten einschließen",
+      "it": "Includere i dati sui luoghi",
+      "ro": "Include date despre locuri",
+      "se": "Inkludera platsdata"
     },
     {
       "en": "File name",
@@ -603,11 +610,18 @@
       "se": "Filnamn"
     },
     {
-      "en": "One file per graph",
-      "de": "Eine Datei pro Graph",
-      "it": "Un file per grafico",
-      "ro": "Un fișier pe grafic",
-      "se": "En fil per graf"
+      "en": "Separator for time-series data",
+      "de": "Trennzeichen für Zeitreihendaten",
+      "it": "Separatore per dati di serie temporali",
+      "ro": "Separator pentru datele din seria temporală",
+      "se": "Separator för tidsseriedata"
+    },
+    {
+      "en": "Combine place data in one file",
+      "de": "Ortsdaten in einer Datei zusammenfassen",
+      "it": "Combina i dati sulla posizione in un file",
+      "ro": "Combinați datele despre locație într-un singur fișier",
+      "se": "Kombinera platsdata i en fil"
     },
     {
       "en": "As ZIP archive",

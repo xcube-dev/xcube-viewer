@@ -80,8 +80,10 @@ export interface ControlState {
     imageSmoothingEnabled: boolean;
     baseMapUrl: string;
     showRgbLayer: boolean;
-    exportFormat: "GeoJSON" | "CSV";
-    exportMultiFile: boolean;
+    exportTimeSeries: boolean;
+    exportPlaces: boolean;
+    exportTimeSeriesSeparator: string;
+    exportPlacesAsCollection: boolean;
     exportZipArchive: boolean;
     exportFileName: string;
 }
@@ -121,10 +123,12 @@ export function newControlState(): ControlState {
         },
         imageSmoothingEnabled: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
-        exportFormat: branding.exportFormat || 'GeoJSON',
-        exportMultiFile: true,
+        exportTimeSeries: true,
+        exportTimeSeriesSeparator: 'TAB',
+        exportPlaces: true,
+        exportPlacesAsCollection: true,
         exportZipArchive: true,
-        exportFileName: 'time-series',
+        exportFileName: 'export',
     };
     return loadUserSettings(state);
 }

@@ -29,9 +29,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 
 import { I18N } from '../config';
 import { ControlState } from '../states/controlState';
@@ -40,7 +37,13 @@ import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
 
 const useStyles = makeStyles(theme => ({
-        textField: {
+        separatorTextField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            fontSize: theme.typography.fontSize / 2,
+            maxWidth: '6em',
+        },
+        fileNameTextField: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
             fontSize: theme.typography.fontSize / 2
@@ -63,7 +66,6 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                                                        updateSettings,
                                                        downloadTimeSeries,
                                                    }) => {
-    const [formatMenuAnchor, setFormatMenuAnchor] = React.useState(null);
     const classes = useStyles();
 
     const handleCloseDialog = () => {
@@ -74,42 +76,13 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
         updateSettings({exportFileName: event.target.value});
     }
 
-    const handleFormatChange = (exportFormat: "GeoJSON" | "CSV") => {
-        handleFormatMenuClose();
-        updateSettings({exportFormat});
-    }
-
-    const handleFormatMenuOpen = (event: any) => {
-        setFormatMenuAnchor(event.currentTarget);
-    }
-
-    const handleFormatMenuClose = () => {
-        setFormatMenuAnchor(null);
+    function handleSeparatorChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        updateSettings({exportTimeSeriesSeparator: event.target.value});
     }
 
     const handleDoExport = () => {
         handleCloseDialog();
         downloadTimeSeries();
-    }
-
-    let formatMenuItems: null | React.ReactElement[] = null;
-    if (Boolean(formatMenuAnchor)) {
-        formatMenuItems = [
-            <MenuItem
-                button
-                selected={settings.exportFormat === "GeoJSON"}
-                onClick={() => handleFormatChange("GeoJSON")}
-            >
-                <ListItemText primary={"GeoJSON"}/>
-            </MenuItem>,
-            <MenuItem
-                button
-                selected={settings.exportFormat === "CSV"}
-                onClick={() => handleFormatChange("CSV")}
-            >
-                <ListItemText primary={"CSV"}/>
-            </MenuItem>
-        ];
     }
 
     return (
@@ -124,34 +97,61 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                 <DialogContent>
                     <SettingsPanel title={I18N.get('Export Settings')}>
                         <SettingsSubPanel
-                            label={I18N.get('File format')}
-                            value={settings.exportFormat}
-                            onClick={handleFormatMenuOpen}
-                        />
-                        <SettingsSubPanel
-                            label={I18N.get('One file per graph')}
-                            value={getOnOff(settings.exportMultiFile)}
+                            label={I18N.get('Include time-series data') + ' (*.txt)'}
+                            value={getOnOff(settings.exportTimeSeries)}
                         >
                             <ToggleSetting
-                                propertyName={'exportMultiFile'}
+                                propertyName={'exportTimeSeries'}
                                 settings={settings}
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
                         <SettingsSubPanel
+                            label={I18N.get('Separator for time-series data')}
+                        >
+                            <TextField
+                                className={classes.separatorTextField}
+                                value={settings.exportTimeSeriesSeparator}
+                                onChange={handleSeparatorChange}
+                                disabled={!settings.exportTimeSeries}
+                                margin="normal"
+                                size={'small'}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel
+                            label={I18N.get('Include places data') + ' (*.geojson)'}
+                            value={getOnOff(settings.exportPlaces)}
+                        >
+                            <ToggleSetting
+                                propertyName={'exportPlaces'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel
+                            label={I18N.get('Combine place data in one file')}
+                            value={getOnOff(settings.exportPlacesAsCollection)}
+                        >
+                            <ToggleSetting
+                                propertyName={'exportPlacesAsCollection'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                                disabled={!settings.exportPlaces}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel
                             label={I18N.get('As ZIP archive')}
-                            value={getOnOff(settings.exportZipArchive || settings.exportMultiFile)}
+                            value={getOnOff(settings.exportZipArchive)}
                         >
                             <ToggleSetting
                                 propertyName={'exportZipArchive'}
                                 settings={settings}
                                 updateSettings={updateSettings}
-                                disabled={settings.exportMultiFile}
                             />
                         </SettingsSubPanel>
                         <SettingsSubPanel label={I18N.get('File name')}>
                             <TextField
-                                className={classes.textField}
+                                className={classes.fileNameTextField}
                                 value={settings.exportFileName}
                                 onChange={handleFileNameChange}
                                 margin="normal"
@@ -173,13 +173,6 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
 
             </Dialog>
 
-            <Menu
-                anchorEl={formatMenuAnchor}
-                open={Boolean(formatMenuAnchor)}
-                onClose={handleFormatMenuClose}
-            >
-                {formatMenuItems}
-            </Menu>
 
         </div>
     );
@@ -196,8 +189,12 @@ const isValidFileName = (fileName: string) => {
     return /^[0-9a-zA-Z_-]+$/.test(fileName);
 }
 
+const isValidSeparator = (separator: string) => {
+    return separator.toUpperCase() === 'TAB' || separator.length === 1;
+}
+
 const canDownload = (settings: ControlState) => {
-    return isValidFileName(settings.exportFileName)
-           // TODO (forman): implement CSV export
-           && settings.exportFormat === "GeoJSON";
+    return (settings.exportTimeSeries || settings.exportPlaces)
+           && isValidFileName(settings.exportFileName)
+           && (!settings.exportTimeSeries || isValidSeparator(settings.exportTimeSeriesSeparator));
 }

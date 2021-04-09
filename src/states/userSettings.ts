@@ -66,8 +66,10 @@ export function storeUserSettings(settings: ControlState) {
             storage.setObjectProperty('infoCardElementStates', settings);
             storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
             storage.setPrimitiveProperty('baseMapUrl', settings);
-            storage.setPrimitiveProperty('exportFormat', settings);
-            storage.setPrimitiveProperty('exportMultiFile', settings);
+            storage.setPrimitiveProperty('exportTimeSeries', settings);
+            storage.setPrimitiveProperty('exportTimeSeriesSeparator', settings);
+            storage.setPrimitiveProperty('exportPlaces', settings);
+            storage.setPrimitiveProperty('exportPlacesAsCollection', settings);
             storage.setPrimitiveProperty('exportZipArchive', settings);
             storage.setPrimitiveProperty('exportFileName', settings);
         } catch (e) {
@@ -92,8 +94,10 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getObjectProperty('infoCardElementStates', settings, defaultSettings);
             storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);
             storage.getStringProperty('baseMapUrl', settings, defaultSettings);
-            storage.getStringProperty('exportFormat', settings, defaultSettings);
-            storage.getBooleanProperty('exportMultiFile', settings, defaultSettings);
+            storage.getBooleanProperty('exportTimeSeries', settings, defaultSettings);
+            storage.getStringProperty('exportTimeSeriesSeparator', settings, defaultSettings);
+            storage.getBooleanProperty('exportPlaces', settings, defaultSettings);
+            storage.getBooleanProperty('exportPlacesAsCollection', settings, defaultSettings);
             storage.getBooleanProperty('exportZipArchive', settings, defaultSettings);
             storage.getStringProperty('exportFileName', settings, defaultSettings);
         } catch (e) {

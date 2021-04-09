@@ -76,10 +76,9 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
 
     let downloadButton;
     if (DOWNLOADS_ALLOWED) {
-        const downloadPossible = timeSeriesGroups && timeSeriesGroups.length;
         downloadButton = (
-            <IconButton onClick={() => openDialog('export')} disabled={!downloadPossible}>
-                <Tooltip arrow title={I18N.get('Export time-series data')}>
+            <IconButton onClick={() => openDialog('export')}>
+                <Tooltip arrow title={I18N.get('Export data')}>
                     {<CloudDownloadIcon/>}
                 </Tooltip>
             </IconButton>

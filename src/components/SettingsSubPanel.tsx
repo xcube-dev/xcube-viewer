@@ -43,6 +43,11 @@ const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (
     }
 ) => {
 
+    let listItemStyle;
+    if (!value) {
+        listItemStyle = {marginBottom: 10};
+    }
+
     const listItemText = (<ListItemText primary={label} secondary={value}/>);
 
     let listItemSecondaryAction;
@@ -56,7 +61,7 @@ const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (
 
     if (!!onClick) {
         return (
-            <ListItem button onClick={onClick}>
+            <ListItem style={listItemStyle} button onClick={onClick}>
                 {listItemText}
                 {listItemSecondaryAction}
             </ListItem>
@@ -64,7 +69,7 @@ const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (
     }
 
     return (
-        <ListItem>
+        <ListItem style={listItemStyle}>
             {listItemText}
             {listItemSecondaryAction}
         </ListItem>
