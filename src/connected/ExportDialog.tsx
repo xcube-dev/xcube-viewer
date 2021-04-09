@@ -33,7 +33,7 @@ import { exportData } from '../actions/dataActions';
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-        open: state.controlState.dialogOpen['export'],
+        open: Boolean(state.controlState.dialogOpen['export']),
         settings: state.controlState,
     };
 };
