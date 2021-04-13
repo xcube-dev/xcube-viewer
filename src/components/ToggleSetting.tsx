@@ -22,25 +22,34 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import React from 'react';
+import Switch from '@material-ui/core/Switch';
 
-import { AppState } from '../states/appState';
-import ControlBarActions from '../components/ControlBarActions';
-import { showInfoCard, flyToSelectedObject, openDialog } from '../actions/controlActions';
+import { ControlState } from '../states/controlState';
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        visible: !!(state.controlState.selectedDatasetId || state.controlState.selectedPlaceId),
-        infoCardOpen: state.controlState.infoCardOpen,
-        timeSeriesGroups: state.dataState.timeSeriesGroups,
+
+interface ToggleSettingProps {
+    propertyName: keyof ControlState;
+    settings: ControlState;
+    updateSettings: (settings: ControlState) => void;
+    disabled?: boolean;
+}
+
+const ToggleSetting: React.FC<ToggleSettingProps> = (
+    {
+        propertyName,
+        settings,
+        updateSettings,
+        disabled
     }
+) => {
+    return (
+        <Switch
+            checked={!!settings[propertyName]}
+            onChange={() => updateSettings({...settings, [propertyName]: !settings[propertyName]})}
+            disabled={disabled}
+        />
+    );
 };
 
-const mapDispatchToProps = {
-    showInfoCard,
-    flyToSelectedObject,
-    openDialog,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);
+export default ToggleSetting;

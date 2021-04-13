@@ -44,6 +44,7 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 
 import { AppState } from '../states/appState';
 import { getBranding, I18N } from '../config';
+import ExportDialog from './ExportDialog';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
@@ -186,6 +187,7 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
             </Toolbar>
             <ServerDialog/>
             <SettingsDialog/>
+            <ExportDialog/>
             <Menu
                 id="simple-menu"
                 anchorEl={helpMenuAnchorEl}

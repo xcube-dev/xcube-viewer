@@ -575,11 +575,67 @@
       "se": "Hjälp"
     },
     {
-      "en": "Download time-series data",
-      "de": "Zeitserien-Daten herunterladen",
-      "it": "Scarica i dati delle serie temporali",
-      "ro": "Descărcați datele din seria temporală",
-      "se": "Ladda ner tidsseriedata"
+      "en": "Export data",
+      "de": "Daten exportieren",
+      "it": "Esporta dati",
+      "ro": "Export de date",
+      "se": "Exportera data"
+    },
+    {
+      "en": "Export Settings",
+      "de": "Export-Einstellungen",
+      "it": "Esporta Impostazioni",
+      "ro": "Exportați Setările",
+      "se": "Exportera Inställningar"
+    },
+    {
+      "en": "Include time-series data",
+      "de": "Zeitseriendaten einschließen",
+      "it": "Includi dati di serie temporali",
+      "ro": "Includeți datele seriilor temporale",
+      "se": "Inkludera tidsseriedata"
+    },
+    {
+      "en": "Include places data",
+      "de": "Ortsdaten einschließen",
+      "it": "Includere i dati sui luoghi",
+      "ro": "Include date despre locuri",
+      "se": "Inkludera platsdata"
+    },
+    {
+      "en": "File name",
+      "de": "Dateiname",
+      "it": "Nome del file",
+      "ro": "Nume de fișier",
+      "se": "Filnamn"
+    },
+    {
+      "en": "Separator for time-series data",
+      "de": "Trennzeichen für Zeitreihendaten",
+      "it": "Separatore per dati di serie temporali",
+      "ro": "Separator pentru datele din seria temporală",
+      "se": "Separator för tidsseriedata"
+    },
+    {
+      "en": "Combine place data in one file",
+      "de": "Ortsdaten in einer Datei zusammenfassen",
+      "it": "Combina i dati sulla posizione in un file",
+      "ro": "Combinați datele despre locație într-un singur fișier",
+      "se": "Kombinera platsdata i en fil"
+    },
+    {
+      "en": "As ZIP archive",
+      "de": "Als ZIP-Archiv",
+      "it": "Come archivio ZIP",
+      "ro": "Ca arhivă ZIP",
+      "se": "Som ett ZIP-arkiv"
+    },
+    {
+      "en": "Download",
+      "de": "Herunterladen",
+      "it": "Scarica",
+      "ro": "Descarca",
+      "se": "Ladda ner"
     },
     {
       "en": "Show selected place in map",

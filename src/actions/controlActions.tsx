@@ -89,7 +89,16 @@ export function flyToDataset(selectedDatasetId: string) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
+const SIMPLE_GEOMETRY_TYPES = [
+    'Point',
+    'LineString',
+    'LinearRing',
+    'Polygon',
+    'MultiPoint',
+    'MultiLineString',
+    'MultiPolygon',
+    'Circle'
+];
 
 export function flyToPlace(selectedPlaceId: string) {
     return (dispatch: Dispatch<FlyTo>, getState: () => AppState) => {
@@ -445,10 +454,10 @@ export type UPDATE_SETTINGS = typeof UPDATE_SETTINGS;
 
 export interface UpdateSettings {
     type: UPDATE_SETTINGS;
-    settings: ControlState;
+    settings: Partial<ControlState>;
 }
 
-export function updateSettings(settings: ControlState): UpdateSettings {
+export function updateSettings(settings: Partial<ControlState>): UpdateSettings {
     return {type: UPDATE_SETTINGS, settings};
 }
 

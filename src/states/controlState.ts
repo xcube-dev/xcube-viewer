@@ -46,6 +46,12 @@ export interface InfoCardElementStates {
     [key: string]: InfoCardElementState;
 }
 
+export interface ExportSettings {
+    format: "GeoJSON" | "CSV";
+    multiFile: boolean;
+    zipArchive: boolean;
+}
+
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
@@ -74,6 +80,12 @@ export interface ControlState {
     imageSmoothingEnabled: boolean;
     baseMapUrl: string;
     showRgbLayer: boolean;
+    exportTimeSeries: boolean;
+    exportPlaces: boolean;
+    exportTimeSeriesSeparator: string;
+    exportPlacesAsCollection: boolean;
+    exportZipArchive: boolean;
+    exportFileName: string;
 }
 
 
@@ -111,6 +123,12 @@ export function newControlState(): ControlState {
         },
         imageSmoothingEnabled: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
+        exportTimeSeries: true,
+        exportTimeSeriesSeparator: 'TAB',
+        exportPlaces: true,
+        exportPlacesAsCollection: true,
+        exportZipArchive: true,
+        exportFileName: 'export',
     };
     return loadUserSettings(state);
 }

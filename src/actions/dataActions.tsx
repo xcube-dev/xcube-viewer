@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import JSZip from 'jszip';
 import { Dispatch } from 'redux';
 
 import { AppState } from '../states/appState';
@@ -34,22 +35,30 @@ import {
     SelectDataset,
     selectDataset,
 } from './controlActions';
+import { Dataset } from '../model/dataset';
 import {
-    Dataset,
-} from '../model/dataset';
-import { TimeSeries } from '../model/timeSeries';
+    TimeSeries,
+    TimeSeriesGroup,
+    timeSeriesGroupsToTable
+} from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
 import { I18N } from '../config';
 import {
-    selectedDatasetIdSelector, selectedDatasetTimeDimensionSelector,
-    selectedDatasetVariableSelector, selectedPlaceIdSelector, selectedPlaceSelector,
+    selectedDatasetIdSelector,
+    selectedDatasetTimeDimensionSelector,
+    selectedDatasetVariableSelector,
+    selectedPlaceGroupsSelector,
+    selectedPlaceIdSelector,
+    selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
 import { Server, ServerInfo } from '../model/server';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
-import { placeGroupsSelector } from '../selectors/dataSelectors';
+import { datasetsSelector, placeGroupsSelector, userPlaceGroupSelector } from '../selectors/dataSelectors';
+
+const saveAs = require('file-saver');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -400,6 +409,208 @@ export function _updateVariableColorBar(datasetId: string,
                                         colorBarName: string): UpdateVariableColorBar {
     return {type: UPDATE_VARIABLE_COLOR_BAR, datasetId, variableName, colorBarMinMax, colorBarName};
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function exportData() {
+    return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
+        const {
+            exportTimeSeries,
+            exportTimeSeriesSeparator,
+            exportPlaces,
+            exportPlacesAsCollection,
+            exportZipArchive,
+            exportFileName,
+        } = getState().controlState;
+
+        let placeGroups: PlaceGroup[] = [];
+
+        if (exportTimeSeries) {
+            // Time series may reference any place, so collect all known place groups.
+            placeGroups = [];
+            const datasets = datasetsSelector(getState());
+            datasets.forEach(dataset => {
+                if (dataset.placeGroups) {
+                    placeGroups = placeGroups.concat(dataset.placeGroups);
+                }
+            });
+            placeGroups.push(userPlaceGroupSelector(getState()));
+        } else if (exportPlaces) {
+            // Just export all visible places.
+            placeGroups = selectedPlaceGroupsSelector(getState());
+        }
+
+        _exportData(getState().dataState.timeSeriesGroups,
+                    placeGroups,
+                    {
+                        includeTimeSeries: exportTimeSeries,
+                        includePlaces: exportPlaces,
+                        separator: exportTimeSeriesSeparator,
+                        placesAsCollection: exportPlacesAsCollection,
+                        zip: exportZipArchive,
+                        fileName: exportFileName,
+                    }
+        );
+    };
+}
+
+
+abstract class Exporter {
+    abstract write(path: string, content: string): any;
+
+    abstract close(): any;
+}
+
+class ZipExporter extends Exporter {
+    fileName: string;
+    zipArchive: JSZip;
+
+    constructor(fileName: string) {
+        super();
+        this.fileName = fileName;
+        this.zipArchive = new JSZip();
+    }
+
+    write(path: string, content: string) {
+        this.zipArchive.file(path, content);
+    }
+
+    close() {
+        this.zipArchive.generateAsync({type: "blob"})
+            .then((content) => saveAs(content, this.fileName));
+    }
+}
+
+class FileExporter extends Exporter {
+
+    write(path: string, content: string) {
+        const blob = new Blob([content],
+                              {type: "text/plain;charset=utf-8"});
+        saveAs(blob, path);
+    }
+
+    close() {
+    }
+}
+
+interface ExportOptions {
+    includeTimeSeries?: boolean;
+    separator?: string;
+    includePlaces?: boolean;
+    fileName?: string;
+    placesAsCollection?: boolean;
+    zip?: boolean;
+}
+
+function _exportData(timeSeriesGroups: TimeSeriesGroup[],
+                     placeGroups: PlaceGroup[],
+                     options: ExportOptions) {
+
+    let {
+        includeTimeSeries,
+        separator,
+        includePlaces,
+        fileName,
+        placesAsCollection,
+        zip,
+    } = options;
+
+    separator = separator || 'TAB';
+    if (separator.toUpperCase() === 'TAB') {
+        separator = '\t';
+    }
+
+    fileName = fileName || 'export';
+
+    if (!includeTimeSeries && !includePlaces) {
+        return;
+    }
+
+    let exporter: Exporter;
+    if (zip) {
+        exporter = new ZipExporter(`${fileName}.zip`);
+    } else {
+        exporter = new FileExporter();
+    }
+
+    let placesToExport: { [placeId: string]: Place };
+
+    if (includeTimeSeries) {
+        const {colNames, dataRows, referencedPlaces} = timeSeriesGroupsToTable(timeSeriesGroups, placeGroups);
+        const validTypes: { [typeName: string]: boolean } = {number: true, string: true};
+        const csvHeaderRow = colNames.join(separator);
+        const csvDataRows = dataRows.map(row => row.map(value => validTypes[typeof value] ? value + '' : '').join(separator));
+        const csvText = [csvHeaderRow].concat(csvDataRows).join('\n');
+        exporter.write(`${fileName}.txt`, csvText);
+        placesToExport = referencedPlaces;
+    } else {
+        placesToExport = {};
+        placeGroups.forEach(placeGroup => {
+            if (placeGroup.features) {
+                placeGroup.features.forEach(place => {
+                    placesToExport[place.id] = place;
+                });
+            }
+        });
+    }
+
+    if (includePlaces) {
+        if (placesAsCollection) {
+            const collection = {
+                type: "FeatureCollection",
+                features: Object.keys(placesToExport).map(placeId => placesToExport![placeId])
+            };
+            exporter.write(`${fileName}.geojson`,
+                           JSON.stringify(collection, null, 2));
+        } else {
+            Object.keys(placesToExport).forEach(placeId => {
+                exporter.write(`${placeId}.geojson`,
+                               JSON.stringify(placesToExport![placeId], null, 2));
+            });
+        }
+    }
+
+    exporter.close();
+}
+
+/*
+function _downloadTimeSeriesGeoJSON(timeSeriesGroups: TimeSeriesGroup[],
+                                    placeGroups: PlaceGroup[],
+                                    format: 'GeoJSON' | 'CSV',
+                                    fileName: string = 'time-series',
+                                    multiFile: boolean = true,
+                                    zipArchive: boolean = true) {
+    const featureCollection = timeSeriesGroupsToGeoJSON(timeSeriesGroups);
+
+    if (format === 'GeoJSON') {
+        if (zipArchive) {
+            const zip = new JSZip();
+            if (multiFile) {
+                zip.file(`${fileName}.geojson`,
+                         JSON.stringify(featureCollection, null, 2));
+            } else {
+                for (let feature of featureCollection.features) {
+                    zip.file(`${feature.id}.geojson`,
+                             JSON.stringify(feature, null, 2));
+                }
+            }
+            zip.generateAsync({type: "blob"})
+               .then((content) => saveAs(content, `${fileName}.zip`));
+        } else {
+            if (multiFile) {
+                throw new Error('Cannot download multi-file exports');
+            }
+            const blob = new Blob([JSON.stringify(featureCollection, null, 2)],
+                                  {type: "text/plain;charset=utf-8"});
+            saveAs(blob, `${fileName}.geojson`);
+        }
+    } else {
+        // TODO (forman): implement CSV export
+        throw new Error(`Download as ${format} is not yet implemented`);
+    }
+
+}
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

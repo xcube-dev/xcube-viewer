@@ -81,12 +81,14 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
         state = newControlState();
     }
     switch (action.type) {
-        case UPDATE_SETTINGS:
-            storeUserSettings(action.settings);
-            if (action.settings.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
-                setGlobalCanvasImageSmoothing(action.settings.imageSmoothingEnabled);
+        case UPDATE_SETTINGS: {
+            const settings = {...state, ...action.settings};
+            storeUserSettings(settings);
+            if (settings.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
+                setGlobalCanvasImageSmoothing(settings.imageSmoothingEnabled);
             }
-            return action.settings;
+            return settings;
+        }
         case UPDATE_DATASETS: {
             let selectedDatasetId = state!.selectedDatasetId;
             let selectedVariableName = state!.selectedVariableName;
