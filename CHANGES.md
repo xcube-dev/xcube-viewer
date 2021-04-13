@@ -1,3 +1,7 @@
+## Changes in version 0.4.6 (in development)
+
+
+
 ## Changes in version 0.4.5
 
 * After logging out, the browser now correctly redirects to the 
