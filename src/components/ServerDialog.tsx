@@ -22,31 +22,31 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
 import { Theme, WithStyles } from '@material-ui/core';
-import createStyles from '@material-ui/core/styles/createStyles';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import InputLabel from '@material-ui/core/InputLabel/InputLabel';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import { withStyles } from '@material-ui/core/styles';
+import createStyles from '@material-ui/core/styles/createStyles';
 import TextField from '@material-ui/core/TextField';
-
-import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
+import i18n from '../i18n';
 import { ApiServerConfig } from '../model/apiServer';
 import { newId } from '../util/id';
-import { useEffect, useRef, useState } from 'react';
+
+import { WithLocale } from '../util/lang';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -203,20 +203,20 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
 
     let okButtonName;
     if (dialogMode === 'add') {
-        okButtonName = I18N.get('Add');
+        okButtonName = i18n.get('Add');
     } else if (dialogMode === 'edit') {
-        okButtonName = I18N.get('Save');
+        okButtonName = i18n.get('Save');
     } else {
-        okButtonName = I18N.get('OK');
+        okButtonName = i18n.get('OK');
     }
 
     let dialogTitle;
     if (dialogMode === 'add') {
-        dialogTitle = I18N.get('Add Server');
+        dialogTitle = i18n.get('Add Server');
     } else if (dialogMode === 'edit') {
-        dialogTitle = I18N.get('Edit Server');
+        dialogTitle = i18n.get('Edit Server');
     } else {
-        dialogTitle = I18N.get('Select Server');
+        dialogTitle = i18n.get('Select Server');
     }
 
     let dialogContent;
@@ -298,7 +298,7 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
             <DialogTitle id="server-dialog-title">{dialogTitle}</DialogTitle>
             {dialogContent}
             <DialogActions>
-                <Button onClick={handleCancel}>{I18N.get('Cancel')}</Button>
+                <Button onClick={handleCancel}>{i18n.get('Cancel')}</Button>
                 <Button onClick={handleConfirm} autoFocus color="primary">{okButtonName}</Button>
             </DialogActions>
         </Dialog>

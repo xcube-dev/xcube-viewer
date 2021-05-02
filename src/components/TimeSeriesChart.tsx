@@ -22,38 +22,39 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import {
-    ResponsiveContainer,
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    AxisDomain,
-    TooltipPayload,
-    ReferenceArea,
-    ReferenceLine,
-    TooltipProps,
-    ErrorBar,
-    DotProps
-} from 'recharts';
-import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import AllOutIcon from '@material-ui/icons/AllOut';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import AllOutIcon from '@material-ui/icons/AllOut';
+import CloseIcon from '@material-ui/icons/Close';
+import * as React from 'react';
+import { useState } from 'react';
+import {
+    AxisDomain,
+    CartesianGrid,
+    DotProps,
+    ErrorBar,
+    Legend,
+    Line,
+    LineChart,
+    ReferenceArea,
+    ReferenceLine,
+    ResponsiveContainer,
+    Tooltip,
+    TooltipPayload,
+    TooltipProps,
+    XAxis,
+    YAxis
+} from 'recharts';
+import { getUserPlaceColor } from '../config';
+import i18n from '../i18n';
+import { Place, PlaceInfo } from '../model/place';
 
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
-import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
-import { getUserPlaceColor, I18N } from '../config';
 import { WithLocale } from '../util/lang';
-import { Place, PlaceInfo } from '../model/place';
-import { useState } from 'react';
+import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
 
 const INVISIBLE_LINE_COLOR = '#00000000';
 const SUBSTITUTE_LABEL_COLOR = '#FAFFDD';
@@ -382,8 +383,8 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
 
     actionButtons.push(removeAllButton);
 
-    const timeSeriesText = I18N.get('Time-Series');
-    const unitsText = timeSeriesGroup.variableUnits || I18N.get('unknown units');
+    const timeSeriesText = i18n.get('Time-Series');
+    const unitsText = timeSeriesGroup.variableUnits || i18n.get('unknown units');
     const chartTitle = `${timeSeriesText} (${unitsText})`;
 
     // 99% per https://github.com/recharts/recharts/issues/172

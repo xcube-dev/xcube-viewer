@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import i18n from '../i18n';
 
 import { Dataset } from '../model/dataset';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -68,7 +68,7 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
 
     const datasetSelectLabel = (
         <InputLabel shrink htmlFor="dataset-select">
-            {I18N.get('Dataset')}
+            {i18n.get('Dataset')}
         </InputLabel>
     );
 

@@ -23,10 +23,10 @@
  */
 
 import * as React from 'react';
+import i18n from '../i18n';
+import { WithLocale } from '../util/lang';
 
 import './ErrorBoundary.css';
-import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 
 
 interface ErrorBoundaryProps extends WithLocale {
@@ -65,7 +65,7 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
             return (
                 /*Database*/
                 <div>
-                    <h2 className="errorBoundary-header">{I18N.get("Something went wrong.")}</h2>
+                    <h2 className="errorBoundary-header">{i18n.get("Something went wrong.")}</h2>
                     <details className="errorBoundary-details" style={{whiteSpace: 'pre-wrap'}}>
                         {this.state.error.toString()}
                         <br/>

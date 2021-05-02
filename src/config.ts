@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { Color, PaletteType } from '@material-ui/core';
 import {
     cyan,
     deepPurple,
@@ -35,99 +36,81 @@ import {
     red,
     yellow,
 } from '@material-ui/core/colors';
-
-import { Color, PaletteType } from '@material-ui/core';
-import { Branding, parseBranding } from './util/branding';
 import { ApiServerConfig } from './model/apiServer';
-import { AuthClientConfig } from './util/auth';
-
-import { LanguageDictionary } from './util/lang';
-import lang from './resources/lang.json';
 import rawDefaultConfig from './resources/config.json';
+import { AuthClientConfig } from './util/auth';
+import { Branding, parseBranding } from './util/branding';
 
-const version = '0.5.0-dev.0';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO (forman): Turn Config into singleton class.
+export class Config {
+    readonly name: string;
+    readonly server: ApiServerConfig;
+    readonly branding: Branding;
+    readonly authClient?: AuthClientConfig;
+    private static _instance: Config;
 
-export interface Config {
-    name: string;
-    server: ApiServerConfig;
-    branding: Branding;
-    authClient?: AuthClientConfig;
-}
-
-const urlParams = new URLSearchParams(window.location.search);
-let _config: Config | null = null;
-
-export async function loadConfiguration(): Promise<Config> {
-    let configPath = urlParams.get('configPath') || 'config';
-    let rawConfig;
-    try {
-        const configUrl = window.location.origin + `/${configPath}/config.json`;
-        rawConfig = await fetch(configUrl);
-        rawConfig = await rawConfig.json();
-        console.info(`Configuration loaded.`);
-    } catch (e) {
-        configPath = '';
-        rawConfig = rawDefaultConfig;
-        console.info(`Using default configuration.`);
+    constructor(
+        name: string,
+        server: ApiServerConfig,
+        branding: Branding,
+        authClient?: AuthClientConfig
+    ) {
+        this.name = name;
+        this.server = server;
+        this.branding = branding;
+        this.authClient = authClient;
     }
 
-    const name = rawConfig.name || 'default';
-    const authClient = rawConfig.authClient && {...rawConfig.authClient};
-    const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
-    server.id = urlParams.get('serverId') || server.id;
-    server.name = urlParams.get('serverName') || server.name;
-    server.url = urlParams.get('serverUrl') || server.url;
-    const branding = parseBranding({...rawDefaultConfig.branding, ...rawConfig.branding},
-                                   configPath);
-    _config = {name, authClient, server, branding};
-    console.debug('Configuration:', _config);
-    return _config;
+    static async load(): Promise<Config> {
+        const urlParams = new URLSearchParams(window.location.search);
+        let configPath = urlParams.get('configPath') || 'config';
+        let rawConfig;
+        try {
+            const configUrl = window.location.origin + `/${configPath}/config.json`;
+            rawConfig = await fetch(configUrl);
+            rawConfig = await rawConfig.json();
+            console.info(`Configuration loaded.`);
+        } catch (e) {
+            configPath = '';
+            rawConfig = rawDefaultConfig;
+            console.info(`Using default configuration.`);
+        }
+
+        const name = rawConfig.name || 'default';
+        const authClient = rawConfig.authClient && {...rawConfig.authClient};
+        const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
+        server.id = urlParams.get('serverId') || server.id;
+        server.name = urlParams.get('serverName') || server.name;
+        server.url = urlParams.get('serverUrl') || server.url;
+        const branding = parseBranding({...rawDefaultConfig.branding, ...rawConfig.branding},
+                                       configPath);
+        Config._instance = new Config(name, server, branding, authClient);
+        console.debug('Configuration:', Config._instance);
+        return Config._instance;
+    }
+
+    static get instance(): Config {
+        Config.assertConfigLoaded();
+        return Config._instance;
+    }
+
+    private static assertConfigLoaded() {
+        if (!Config._instance) {
+            throw new Error('internal error: configuration not available yet');
+        }
+    }
 }
 
-export const I18N = new LanguageDictionary(lang);
+// TODO (forman): The following functions should be made part of the configuration.
+
 
 interface TileAccess {
     param: string;
     token: string;
 }
 
-export function getVersion() {
-    return version;
-}
-
-export function getConfig(): Config {
-    assertConfigLoaded();
-    return _config!;
-}
-
-export function getConfigName() {
-    return getConfig().name;
-}
-
-export function getBranding() {
-    assertConfigLoaded();
-    return getConfig().branding;
-}
-
-export function getAuthClientConfig() {
-    return getConfig().authClient;
-}
-
-export function getApiServerConfig() {
-    assertConfigLoaded();
-    return getConfig().server;
-}
-
-export function getApiServers() {
-    assertConfigLoaded();
-    return [
-        {...getApiServerConfig()},
-    ];
-}
 
 // Array of user place colors in stable order (see #153)
 const userPlaceColorsArray: [string, Color][] = [
@@ -181,9 +164,4 @@ export function getTileAccess(groupName: string) {
     return tileAccess[groupName];
 }
 
-function assertConfigLoaded() {
-    if (!_config) {
-        throw new Error('configuration not loaded yet');
-    }
-}
 

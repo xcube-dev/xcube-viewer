@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import MyLocationIcon from '@material-ui/icons/MyLocation';
 import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import InfoIcon from '@material-ui/icons/Info';
+import MyLocationIcon from '@material-ui/icons/MyLocation';
+import * as React from 'react';
 
-import { getBranding, I18N } from '../config';
+import { Config } from '../config';
+import i18n from '../i18n';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
 
@@ -71,10 +72,10 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
     }
 
     let downloadButton;
-    if (getBranding().allowDownloads) {
+    if (Config.instance.branding.allowDownloads) {
         downloadButton = (
             <IconButton onClick={() => openDialog('export')}>
-                <Tooltip arrow title={I18N.get('Export data')}>
+                <Tooltip arrow title={i18n.get('Export data')}>
                     {<CloudDownloadIcon/>}
                 </Tooltip>
             </IconButton>
@@ -83,7 +84,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
 
     const flyToButton = (
         <IconButton onClick={flyToSelectedObject}>
-            <Tooltip arrow title={I18N.get('Show selected place in map')}>
+            <Tooltip arrow title={i18n.get('Show selected place in map')}>
                 <MyLocationIcon/>
             </Tooltip>
         </IconButton>
@@ -91,7 +92,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
 
     let infoButton = (
         <IconButton onClick={() => showInfoCard(true)} disabled={infoCardOpen}>
-            <Tooltip arrow title={I18N.get('Open information panel')}>
+            <Tooltip arrow title={i18n.get('Open information panel')}>
                 {<InfoIcon/>}
             </Tooltip>
         </IconButton>

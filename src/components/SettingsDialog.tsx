@@ -22,24 +22,24 @@
  * SOFTWARE.
  */
 
-import React, { ChangeEvent } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import TextField from '@material-ui/core/TextField';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from "@material-ui/core/ListSubheader";
-import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import TextField from '@material-ui/core/TextField';
+import React, { ChangeEvent } from 'react';
+import i18n from '../i18n';
+import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
+import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
+import { MapGroup, maps, MapSource } from '../util/maps';
 
 import SettingsPanel from './SettingsPanel';
 import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
-import { I18N } from '../config';
-import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
-import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
-import { maps, MapGroup, MapSource } from '../util/maps';
 
 
 const useStyles = makeStyles(theme => ({
@@ -118,8 +118,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
     let localeMenuItems = null;
     if (Boolean(languageMenuAnchor)) {
-        localeMenuItems = Object.getOwnPropertyNames(I18N.languages).map(langLocale => {
-            const langName = I18N.languages[langLocale];
+        localeMenuItems = Object.getOwnPropertyNames(i18n.languages).map(langLocale => {
+            const langName = i18n.languages[langLocale];
             return (
                 <MenuItem
                     button
@@ -186,21 +186,21 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 onClose={handleCloseDialog}
                 scroll='body'
             >
-                <DialogTitle>{I18N.get('Settings')}</DialogTitle>
+                <DialogTitle>{i18n.get('Settings')}</DialogTitle>
                 <DialogContent>
 
-                    <SettingsPanel title={I18N.get('General')}>
+                    <SettingsPanel title={i18n.get('General')}>
                         <SettingsSubPanel
-                            label={I18N.get('Server')}
+                            label={i18n.get('Server')}
                             value={selectedServer.name}
                             onClick={handleOpenServerDialog}>
                         </SettingsSubPanel>
                         <SettingsSubPanel
-                            label={I18N.get('Language')}
-                            value={I18N.languages[settings.locale]}
+                            label={i18n.get('Language')}
+                            value={i18n.languages[settings.locale]}
                             onClick={handleLanguageMenuOpen}>
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Time interval of the player')}>
+                        <SettingsSubPanel label={i18n.get('Time interval of the player')}>
                             <TextField
                                 select
                                 className={classes.textField}
@@ -215,8 +215,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </SettingsSubPanel>
                     </SettingsPanel>
 
-                    <SettingsPanel title={I18N.get('Time-Series')}>
-                        <SettingsSubPanel label={I18N.get('Show graph after adding a place')}
+                    <SettingsPanel title={i18n.get('Time-Series')}>
+                        <SettingsSubPanel label={i18n.get('Show graph after adding a place')}
                                           value={getOnOff(settings.autoShowTimeSeries)}>
                             <ToggleSetting
                                 propertyName={'autoShowTimeSeries'}
@@ -224,7 +224,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Show dots only, hide lines')}
+                        <SettingsSubPanel label={i18n.get('Show dots only, hide lines')}
                                           value={getOnOff(settings.showTimeSeriesPointsOnly)}>
                             <ToggleSetting
                                 propertyName={'showTimeSeriesPointsOnly'}
@@ -232,7 +232,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Show error bars')}
+                        <SettingsSubPanel label={i18n.get('Show error bars')}
                                           value={getOnOff(settings.showTimeSeriesErrorBars)}>
                             <ToggleSetting
                                 propertyName={'showTimeSeriesErrorBars'}
@@ -240,7 +240,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Show median instead of mean (disables error bars)')}
+                        <SettingsSubPanel label={i18n.get('Show median instead of mean (disables error bars)')}
                                           value={getOnOff(settings.showTimeSeriesMedian)}>
                             <ToggleSetting
                                 propertyName={'showTimeSeriesMedian'}
@@ -248,7 +248,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Number of data points in a time series update')}>
+                        <SettingsSubPanel label={i18n.get('Number of data points in a time series update')}>
                             <TextField
                                 className={classes.intTextField}
                                 value={timeChunkSize}
@@ -259,13 +259,13 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </SettingsSubPanel>
                     </SettingsPanel>
 
-                    <SettingsPanel title={I18N.get('Map')}>
+                    <SettingsPanel title={i18n.get('Map')}>
                         <SettingsSubPanel
-                            label={I18N.get('Base map')}
+                            label={i18n.get('Base map')}
                             value={baseMapLabel}
                             onClick={handleBaseMapMenuOpen}>
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('Image smoothing')}
+                        <SettingsSubPanel label={i18n.get('Image smoothing')}
                                           value={getOnOff(settings.imageSmoothingEnabled)}>
                             <ToggleSetting
                                 propertyName={'imageSmoothingEnabled'}
@@ -275,11 +275,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </SettingsSubPanel>
                     </SettingsPanel>
 
-                    <SettingsPanel title={I18N.get('System Information')}>
-                        <SettingsSubPanel label={`xcube Viewer ${I18N.get('version')}`}
+                    <SettingsPanel title={i18n.get('System Information')}>
+                        <SettingsSubPanel label={`xcube Viewer ${i18n.get('version')}`}
                                           value={viewerVersion}/>
-                        <SettingsSubPanel label={`xcube Server ${I18N.get('version')}`}
-                                          value={serverInfo ? serverInfo.version : I18N.get('Cannot reach server')}/>
+                        <SettingsSubPanel label={`xcube Server ${i18n.get('version')}`}
+                                          value={serverInfo ? serverInfo.version : i18n.get('Cannot reach server')}/>
                     </SettingsPanel>
                 </DialogContent>
             </Dialog>
@@ -309,6 +309,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 export default SettingsDialog;
 
 const getOnOff = (state: boolean): string => {
-    return state ? I18N.get('On') : I18N.get('Off');
+    return state ? i18n.get('On') : i18n.get('Off');
 };
 

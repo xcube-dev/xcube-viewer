@@ -22,27 +22,16 @@
  * SOFTWARE.
  */
 
+import * as geojson from 'geojson';
 import JSZip from 'jszip';
 import { Dispatch } from 'redux';
-
-import { AppState } from '../states/appState';
 import * as api from '../api'
-import {
-    AddActivity,
-    addActivity,
-    RemoveActivity,
-    removeActivity,
-    SelectDataset,
-    selectDataset,
-} from './controlActions';
-import { Dataset } from '../model/dataset';
-import {
-    TimeSeries,
-    TimeSeriesGroup,
-    timeSeriesGroupsToTable
-} from '../model/timeSeries';
+import i18n from '../i18n';
+import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { ColorBars } from '../model/colorBar';
-import { I18N } from '../config';
+import { Dataset } from '../model/dataset';
+import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
+import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
     selectedDatasetIdSelector,
     selectedDatasetTimeDimensionSelector,
@@ -52,11 +41,18 @@ import {
     selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
-import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
-import { MessageLogAction, postMessage } from './messageLogActions';
-import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
-import * as geojson from 'geojson';
 import { datasetsSelector, placeGroupsSelector, userPlaceGroupSelector } from '../selectors/dataSelectors';
+
+import { AppState } from '../states/appState';
+import {
+    AddActivity,
+    addActivity,
+    RemoveActivity,
+    removeActivity,
+    SelectDataset,
+    selectDataset,
+} from './controlActions';
+import { MessageLogAction, postMessage } from './messageLogActions';
 
 const saveAs = require('file-saver');
 
@@ -75,7 +71,7 @@ export function updateServerInfo() {
     return (dispatch: Dispatch<UpdateServerInfo | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        dispatch(addActivity(UPDATE_SERVER_INFO, I18N.get('Connecting to server')));
+        dispatch(addActivity(UPDATE_SERVER_INFO, i18n.get('Connecting to server')));
 
         api.getServerInfo(apiServer.url)
            .then((serverInfo: ApiServerInfo) => {
@@ -109,7 +105,7 @@ export function updateDatasets() {
     return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        dispatch(addActivity(UPDATE_DATASETS, I18N.get('Loading data')));
+        dispatch(addActivity(UPDATE_DATASETS, i18n.get('Loading data')));
 
         api.getDatasets(apiServer.url, getState().userAuthState.accessToken)
            .then((datasets: Dataset[]) => {

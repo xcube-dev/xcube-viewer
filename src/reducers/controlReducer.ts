@@ -56,7 +56,7 @@ import {
     REMOVE_USER_PLACE,
     UPDATE_DATASETS
 } from '../actions/dataActions';
-import { I18N } from '../config';
+import i18n from '../i18n';
 
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from '../selectors/controlSelectors';
@@ -355,7 +355,7 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
         }
         case CHANGE_LOCALE: {
             const locale = action.locale;
-            I18N.locale = locale;
+            i18n.locale = locale;
             if (locale !== state.locale) {
                 state = {...state, locale};
                 storeUserSettings(state);

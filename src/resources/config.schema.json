@@ -105,7 +105,7 @@
     "branding": {"$ref": "#/definitions/Branding"}
   },
 
-  "required": ["server", "branding"],
+  "required": ["name", "server", "branding"],
 
   "additionalProperties": false
 }

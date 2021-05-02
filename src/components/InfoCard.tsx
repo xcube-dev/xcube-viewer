@@ -22,39 +22,38 @@
  * SOFTWARE.
  */
 
-import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import Link from '@material-ui/core/Link';
 import Collapse from '@material-ui/core/Collapse';
-import Typography from '@material-ui/core/Typography';
-import WidgetsIcon from '@material-ui/icons/Widgets';
-import LayersIcon from '@material-ui/icons/Layers';
-import PlaceIcon from '@material-ui/icons/Place';
-import CloseIcon from '@material-ui/icons/Close';
-import CodeIcon from '@material-ui/icons/Code';
-import InfoIcon from '@material-ui/icons/Info';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import ListAltIcon from '@material-ui/icons/ListAlt';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
-import Paper from '@material-ui/core/Paper';
-
-import { I18N } from '../config';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import CodeIcon from '@material-ui/icons/Code';
+import InfoIcon from '@material-ui/icons/Info';
+import LayersIcon from '@material-ui/icons/Layers';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import PlaceIcon from '@material-ui/icons/Place';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+import WidgetsIcon from '@material-ui/icons/Widgets';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import React from 'react';
+import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
-import { Variable } from '../model/variable';
 import { PlaceInfo } from '../model/place';
+import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
 
 
@@ -183,17 +182,17 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 <ToggleButtonGroup key={0} size="small" value={visibleInfoCardElements}
                                    onChange={handleInfoElementsChanges}>
                     <ToggleButton key={0} value="dataset" disabled={selectedDataset === null}>
-                        <Tooltip arrow  title={I18N.get('Dataset information')}>
+                        <Tooltip arrow  title={i18n.get('Dataset information')}>
                             <WidgetsIcon/>
                         </Tooltip>
                     </ToggleButton>
                     <ToggleButton key={1} value="variable" disabled={selectedVariable === null}>
-                        <Tooltip arrow title={I18N.get('Variable information')}>
+                        <Tooltip arrow title={i18n.get('Variable information')}>
                             <LayersIcon/>
                         </Tooltip>
                     </ToggleButton>
                     <ToggleButton key={2} value="place" disabled={selectedPlaceInfo === null}>
-                        <Tooltip arrow title={I18N.get('Place information')}>
+                        <Tooltip arrow title={i18n.get('Place information')}>
                             <PlaceIcon/>
                         </Tooltip>
                     </ToggleButton>
@@ -242,10 +241,10 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
         );
     } else {
         const data: KeyValue[] = [
-            [I18N.get('Dimension names'), dataset.dimensions.map(d => d.name).join(', ')],
-            [I18N.get('Dimension data types'), dataset.dimensions.map(d => d.dtype).join(', ')],
-            [I18N.get('Dimension lengths'), dataset.dimensions.map(d => d.size).join(', ')],
-            [I18N.get('Geographical extent') + ' (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
+            [i18n.get('Dimension names'), dataset.dimensions.map(d => d.name).join(', ')],
+            [i18n.get('Dimension data types'), dataset.dimensions.map(d => d.dtype).join(', ')],
+            [i18n.get('Dimension lengths'), dataset.dimensions.map(d => d.size).join(', ')],
+            [i18n.get('Geographical extent') + ' (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
         ];
         content = (
             <CardContent2>
@@ -313,12 +312,12 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
         }
     } else {
         const data: KeyValue[] = [
-            [I18N.get('Title'), variable.title],
-            [I18N.get('Name'), variable.name],
-            [I18N.get('Units'), variable.units],
-            [I18N.get('Data type'), variable.dtype],
-            [I18N.get('Dimension names'), variable.dims.join(', ')],
-            [I18N.get('Dimension lengths'), variable.shape.map(s => s + '').join(', ')],
+            [i18n.get('Title'), variable.title],
+            [i18n.get('Name'), variable.name],
+            [i18n.get('Units'), variable.units],
+            [i18n.get('Data type'), variable.dtype],
+            [i18n.get('Dimension names'), variable.dims.join(', ')],
+            [i18n.get('Dimension lengths'), variable.shape.map(s => s + '').join(', ')],
         ];
         content = (
             <CardContent2>
@@ -329,7 +328,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
     return (
         <InfoCardContent
             title={variable.title || variable.name}
-            subheader={`${I18N.get('Name')}: ${variable.name}`}
+            subheader={`${i18n.get('Name')}: ${variable.name}`}
             isIn={isIn}
             viewMode={viewMode}
             setViewMode={setViewMode}
@@ -374,7 +373,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setV
         } else {
             content = (
                 <CardContent2>
-                    <Typography>{I18N.get('There is no information available for this location.')}</Typography>
+                    <Typography>{i18n.get('There is no information available for this location.')}</Typography>
                 </CardContent2>
             );
         }
@@ -395,7 +394,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setV
     return (
         <InfoCardContent
             title={placeInfo.label}
-            subheader={`${I18N.get('Geometry type')}: ${I18N.get(place.geometry.type)}`}
+            subheader={`${i18n.get('Geometry type')}: ${i18n.get(place.geometry.type)}`}
             isIn={isIn}
             viewMode={viewMode}
             setViewMode={setViewMode}

@@ -1,4 +1,5 @@
 {
+  "name": "esdl",
   "server": {
     "id": "esdl",
     "name": "ESDL Server",

@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { connect } from 'react-redux';
-import classNames from 'classnames';
 import {
     AppBar,
     createStyles,
@@ -37,20 +34,24 @@ import {
     WithStyles,
     withStyles
 } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import Tooltip from '@material-ui/core/Tooltip';
 import deepOrange from '@material-ui/core/colors/deepOrange';
+import Tooltip from '@material-ui/core/Tooltip';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import SettingsIcon from '@material-ui/icons/Settings';
+import classNames from 'classnames';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { openDialog } from '../actions/controlActions';
+import MarkdownPage from '../components/MarkdownPage';
+import { Config } from '../config';
+import i18n from '../i18n';
 
 import { AppState } from '../states/appState';
-import { getBranding, I18N } from '../config';
+import { WithLocale } from '../util/lang';
 import ExportDialog from './ExportDialog';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
-import { openDialog } from '../actions/controlActions';
-import { WithLocale } from '../util/lang';
-import MarkdownPage from '../components/MarkdownPage';
 
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
@@ -63,7 +64,7 @@ interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-        appName: getBranding().appBarTitle,
+        appName: Config.instance.branding.appBarTitle,
     };
 };
 
@@ -75,7 +76,7 @@ const mapDispatchToProps = {
 const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
-            backgroundColor: getBranding().headerBackgroundColor,
+            backgroundColor: Config.instance.branding.headerBackgroundColor,
             paddingRight: theme.spacing(1)
         },
         appBar: {
@@ -165,8 +166,8 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
         >
             <Toolbar disableGutters className={classes.toolbar} variant="dense">
                 <img
-                    src={getBranding().logoImage}
-                    width={getBranding().logoWidth}
+                    src={Config.instance.branding.logoImage}
+                    width={Config.instance.branding.logoWidth}
                     alt={'xcube resources'}
                     className={classes.logo}
                 />
@@ -174,12 +175,12 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                     {appName}
                 </Typography>
                 <UserControl/>
-                <Tooltip arrow title={I18N.get('Help')}>
+                <Tooltip arrow title={i18n.get('Help')}>
                     <IconButton onClick={handleOpenHelpMenu} size="small" className={classes.iconButton}>
                         <HelpOutlineIcon/>
                     </IconButton>
                 </Tooltip>
-                <Tooltip arrow title={I18N.get('Settings')}>
+                <Tooltip arrow title={i18n.get('Settings')}>
                     <IconButton onClick={handleSettingsButtonClicked} size="small" className={classes.iconButton}>
                         <SettingsIcon/>
                     </IconButton>
@@ -198,13 +199,13 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                 anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
                 transformOrigin={{vertical: 'top', horizontal: 'center'}}
             >
-                <MenuItem onClick={handleOpenManual}>{I18N.get('User Manual')}</MenuItem>
-                <MenuItem onClick={handleOpenImprint}>{I18N.get('Imprint')}</MenuItem>
+                <MenuItem onClick={handleOpenManual}>{i18n.get('User Manual')}</MenuItem>
+                <MenuItem onClick={handleOpenImprint}>{i18n.get('Imprint')}</MenuItem>
             </Menu>
-            <MarkdownPage title={I18N.get('User Manual')}
+            <MarkdownPage title={i18n.get('User Manual')}
                           href='manual.md'
                           open={manualOpen} onClose={handleCloseManual}/>
-            <MarkdownPage title={I18N.get('Imprint')}
+            <MarkdownPage title={i18n.get('Imprint')}
                           href='imprint.md'
                           open={imprintOpen} onClose={handleCloseImprint}/>
         </AppBar>

@@ -26,26 +26,25 @@ import { Extent as OlExtent } from 'ol/extent';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 import { Geometry as OlGeometry } from 'ol/geom';
 import { Dispatch } from 'redux';
+import * as api from '../api'
+import i18n from '../i18n';
+import { Dataset, findDataset } from '../model/dataset';
+import { findPlaceInPlaceGroups, isValidPlaceGroup, Place, PlaceGroup } from '../model/place';
+import { Time, TimeRange } from '../model/timeSeries';
 
 import {
     selectedDatasetIdSelector,
     selectedDatasetSelectedPlaceGroupsSelector,
-    selectedDatasetSelector, selectedPlaceGroupsSelector, selectedPlaceIdSelector,
+    selectedDatasetSelector,
+    selectedPlaceGroupsSelector,
+    selectedPlaceIdSelector,
     selectedServerSelector,
 } from '../selectors/controlSelectors';
-import { Dataset, findDataset } from '../model/dataset';
-import { Time, TimeRange } from '../model/timeSeries';
 import { datasetsSelector } from '../selectors/dataSelectors';
 import { AppState } from '../states/appState';
-import * as api from '../api'
-import { MessageLogAction, postMessage } from './messageLogActions';
-import {
-    updateDatasetPlaceGroup, UPDATE_DATASET_PLACE_GROUP,
-    UpdateDatasetPlaceGroup,
-} from './dataActions';
-import { findPlaceInPlaceGroups, isValidPlaceGroup, Place, PlaceGroup } from '../model/place';
-import { I18N } from '../config';
 import { ControlState, MapInteraction, TimeAnimationInterval } from '../states/controlState';
+import { UPDATE_DATASET_PLACE_GROUP, updateDatasetPlaceGroup, UpdateDatasetPlaceGroup, } from './dataActions';
+import { MessageLogAction, postMessage } from './messageLogActions';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -168,7 +167,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                     const datasetId = dataset!.id;
                     const placeGroupId = placeGroup.id;
                     const activitityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
-                    dispatch(addActivity(activitityId, I18N.get('Loading places')));
+                    dispatch(addActivity(activitityId, i18n.get('Loading places')));
                     api.getDatasetPlaceGroup(apiServer.url,
                                              datasetId,
                                              placeGroupId,

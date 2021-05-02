@@ -22,19 +22,19 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import IconButton from '@material-ui/core/IconButton';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import * as React from 'react';
+import i18n from '../i18n';
 
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -82,7 +82,7 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
 
     const variableSelectLabel = (
         <InputLabel shrink htmlFor="variable-select">
-            {I18N.get('Variable')}
+            {i18n.get('Variable')}
         </InputLabel>
     );
 
@@ -112,7 +112,7 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
             disabled={!canAddTimeSeries}
             onClick={handleAddTimeSeriesButtonClick}
         >
-            <Tooltip arrow title={I18N.get('Show time-series diagram')}>
+            <Tooltip arrow title={i18n.get('Show time-series diagram')}>
                 {<TimelineIcon/>}
             </Tooltip>
         </IconButton>

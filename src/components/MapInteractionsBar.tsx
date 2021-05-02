@@ -22,20 +22,19 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
+import FormControl from '@material-ui/core/FormControl';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import Tooltip from '@material-ui/core/Tooltip';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
 import CategoryIcon from '@material-ui/icons/Category';
-import FormControl from '@material-ui/core/FormControl';
+import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import { I18N } from '../config';
-import { WithLocale } from '../util/lang';
+import * as React from 'react';
+import i18n from '../i18n';
 import { MapInteraction } from "../states/controlState";
+import { WithLocale } from '../util/lang';
 
 
 const useStyles = makeStyles(theme => ({
@@ -66,22 +65,22 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
         <FormControl className={classes.formControl}>
             <ToggleButtonGroup size="small" value={mapInteraction} exclusive onChange={handleChange}>
                 <ToggleButton key={0} value="Select">
-                    <Tooltip arrow title={I18N.get('Select a place in map')}>
+                    <Tooltip arrow title={i18n.get('Select a place in map')}>
                         <CenterFocusStrongIcon/>
                     </Tooltip>
                 </ToggleButton>
                 <ToggleButton key={1} value="Point">
-                    <Tooltip arrow title={I18N.get('Add a point location in map')}>
+                    <Tooltip arrow title={i18n.get('Add a point location in map')}>
                         <AddLocationIcon/>
                     </Tooltip>
                 </ToggleButton>
                 <ToggleButton key={2} value="Polygon">
-                    <Tooltip arrow title={I18N.get('Draw a polygon area in map')}>
+                    <Tooltip arrow title={i18n.get('Draw a polygon area in map')}>
                         <CategoryIcon/>
                     </Tooltip>
                 </ToggleButton>
                 <ToggleButton key={3} value="Circle">
-                    <Tooltip arrow title={I18N.get('Draw a circular area in map')}>
+                    <Tooltip arrow title={i18n.get('Draw a circular area in map')}>
                         <FiberManualRecordIcon/>
                     </Tooltip>
                 </ToggleButton>

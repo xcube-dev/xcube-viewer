@@ -22,20 +22,20 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import IconButton from '@material-ui/core/IconButton';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import * as React from 'react';
+import i18n from '../i18n';
 
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -94,7 +94,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
             shrink
             htmlFor="place-select"
         >
-            {I18N.get('Place')}
+            {i18n.get('Place')}
         </InputLabel>
     );
 
@@ -127,7 +127,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
             disabled={!removeEnabled}
             onClick={handleRemoveButtonClick}
         >
-            <Tooltip arrow title={I18N.get('Remove place')}>
+            <Tooltip arrow title={i18n.get('Remove place')}>
                 {<RemoveCircleOutlineIcon/>}
             </Tooltip>
         </IconButton>

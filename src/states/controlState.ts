@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import { default as OlBaseObject } from 'ol/Object';
-import { Geometry as OlGeometry } from 'ol/geom';
 import { Extent as OlExtent } from 'ol/extent';
+import { Geometry as OlGeometry } from 'ol/geom';
+import { default as OlBaseObject } from 'ol/Object';
+import { Config } from '../config';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
-import { getBranding, getApiServerConfig } from '../config';
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -90,14 +90,14 @@ export interface ControlState {
 
 
 export function newControlState(): ControlState {
-    const branding = getBranding();
+    const branding = Config.instance.branding;
     const state: ControlState = {
         selectedDatasetId: 'local',
         selectedVariableName: 'conc_chl',
         selectedPlaceGroupIds: ['user'],
         selectedPlaceId: null,
         selectedUserPlaceId: null,
-        selectedServerId: getApiServerConfig().id,
+        selectedServerId: Config.instance.server.id,
         selectedTime: null,
         selectedTimeRange: null,
         timeSeriesUpdateMode: 'add',

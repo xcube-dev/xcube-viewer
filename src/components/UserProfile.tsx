@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-import React from 'react';
+import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
+import React from 'react';
+import i18n from '../i18n';
 
 import * as auth from '../util/auth';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 
 
 interface UserProfileProps extends WithLocale {
@@ -45,7 +45,7 @@ const UserProfile: React.FC<UserProfileProps> = ({userInfo}) => {
     return (
         <Grid container justify="center" spacing={1}>
             <Grid item>
-                <img src={userInfo.picture} width={84} alt={I18N.get('User Profile')}/>
+                <img src={userInfo.picture} width={84} alt={i18n.get('User Profile')}/>
             </Grid>
             <Grid item>
                 <Paper elevation={3}>
@@ -53,19 +53,19 @@ const UserProfile: React.FC<UserProfileProps> = ({userInfo}) => {
                         <ListItem>
                             <ListItemText
                                 primary={userInfo.name}
-                                secondary={I18N.get('User name')}/>
+                                secondary={i18n.get('User name')}/>
                         </ListItem>
                         <Divider light/>
                         <ListItem>
                             <ListItemText
-                                primary={`${userInfo.email} (${userInfo.email_verified ? I18N.get('verified') : I18N.get('not verified')})`}
-                                secondary={I18N.get('E-mail')}/>
+                                primary={`${userInfo.email} (${userInfo.email_verified ? i18n.get('verified') : i18n.get('not verified')})`}
+                                secondary={i18n.get('E-mail')}/>
                         </ListItem>
                         <Divider light/>
                         <ListItem>
                             <ListItemText
                                 primary={userInfo.nickname}
-                                secondary={I18N.get('Nickname')}/>
+                                secondary={i18n.get('Nickname')}/>
                         </ListItem>
                     </List>
                 </Paper>

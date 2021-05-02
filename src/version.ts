@@ -22,31 +22,7 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
-import { changeLocale, closeDialog, openDialog, updateSettings } from '../actions/controlActions';
-import SettingsDialog from '../components/SettingsDialog';
-import { selectedServerSelector } from "../selectors/controlSelectors";
+const version = '0.5.0-dev.0';
 
-import { AppState } from '../states/appState';
-import version from '../version';
+export default version;
 
-
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        open: state.controlState.dialogOpen['settings'],
-        settings: state.controlState,
-        selectedServer: selectedServerSelector(state),
-        viewerVersion: version,
-        serverInfo: state.dataState.serverInfo,
-    };
-};
-
-const mapDispatchToProps = {
-    closeDialog,
-    updateSettings,
-    changeLocale,
-    openDialog,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsDialog);

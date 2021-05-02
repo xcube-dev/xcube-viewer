@@ -1,4 +1,5 @@
 {
+  "name": "default",
   "server": {
     "id": "local",
     "name": "Local Server",
