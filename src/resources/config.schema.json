@@ -76,7 +76,7 @@
         "logoWidth": { "type": "integer", "example": 32, "minimum": 0 },
         "baseMapUrl": {
           "type": "string",
-          "format": "uri",
+          "format": "uri-template",
           "example": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         },
         "defaultAgg": {
