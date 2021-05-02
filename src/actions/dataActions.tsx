@@ -52,7 +52,7 @@ import {
     selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
-import { Server, ServerInfo } from '../model/server';
+import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import * as geojson from 'geojson';
@@ -68,7 +68,7 @@ export type UPDATE_SERVER_INFO = typeof UPDATE_SERVER_INFO;
 
 export interface UpdateServerInfo {
     type: UPDATE_SERVER_INFO;
-    serverInfo: ServerInfo;
+    serverInfo: ApiServerInfo;
 }
 
 export function updateServerInfo() {
@@ -78,7 +78,7 @@ export function updateServerInfo() {
         dispatch(addActivity(UPDATE_SERVER_INFO, I18N.get('Connecting to server')));
 
         api.getServerInfo(apiServer.url)
-           .then((serverInfo: ServerInfo) => {
+           .then((serverInfo: ApiServerInfo) => {
                dispatch(_updateServerInfo(serverInfo));
            })
            .catch(error => {
@@ -91,7 +91,7 @@ export function updateServerInfo() {
     };
 }
 
-export function _updateServerInfo(serverInfo: ServerInfo): UpdateServerInfo {
+export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
     return {type: UPDATE_SERVER_INFO, serverInfo};
 }
 
@@ -328,11 +328,11 @@ export type CONFIGURE_SERVERS = typeof CONFIGURE_SERVERS;
 
 export interface ConfigureServers {
     type: CONFIGURE_SERVERS;
-    servers: Server[];
+    servers: ApiServerConfig[];
     selectedServerId: string;
 }
 
-export function configureServers(servers: Server[], selectedServerId: string) {
+export function configureServers(servers: ApiServerConfig[], selectedServerId: string) {
     return (dispatch: Dispatch<any>, getState: () => AppState) => {
         if (getState().controlState.selectedServerId !== selectedServerId) {
             dispatch(removeAllTimeSeries());
@@ -346,7 +346,7 @@ export function configureServers(servers: Server[], selectedServerId: string) {
     };
 }
 
-export function _configureServers(servers: Server[], selectedServerId: string): ConfigureServers {
+export function _configureServers(servers: ApiServerConfig[], selectedServerId: string): ConfigureServers {
     return {type: CONFIGURE_SERVERS, servers, selectedServerId};
 }
 

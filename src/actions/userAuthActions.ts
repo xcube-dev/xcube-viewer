@@ -23,6 +23,7 @@
  */
 
 import { Dispatch } from 'redux';
+import { getAuthClientConfig } from '../config';
 import * as auth from '../util/auth'
 import { updateDatasets } from './dataActions';
 import { PostMessage, postMessage } from './messageLogActions';
@@ -31,7 +32,7 @@ import { PostMessage, postMessage } from './messageLogActions';
 
 export function initAuthClient() {
     return async (dispatch: Dispatch<InitAuthClient | ReceiveSignIn>) => {
-        const authClient = await auth.initAuthClient();
+        const authClient = await auth.initAuthClient(getAuthClientConfig());
         dispatch(_initAuthClient(authClient !== null));
         if (authClient !== null) {
             let userInfo = null;

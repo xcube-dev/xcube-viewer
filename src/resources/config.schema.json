@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+
+  "definitions": {
+
+    "AuthClientConfig":   {
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "type": "string",
+          "example": "PZ0lovaUSzY2sBaicz3MYK6Z6PzCNj3q"
+        },
+        "domain": {
+          "type": "string",
+          "format": "hostname",
+          "example": "blueants.eu.auth0.com"
+        },
+        "audience": {
+          "type": "string",
+          "format": "uri",
+          "example": "https://blueants.eu/api/"
+        }
+      },
+      "required": ["clientId", "domain", "audience"],
+      "additionalProperties": false
+    },
+
+    "ApiServerConfig": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "example": "local"},
+        "name": {"type": "string", "example": "Local Server"},
+        "url": {"type": "string", "format": "uri", "example": "https://blueants.eu/api/"}
+      },
+      "required": ["id", "name", "url"],
+      "additionalProperties": false
+    },
+
+    "ColorSchema": {
+      "oneOf": [
+        {
+          "type": "string",
+          "example": "lime",
+          "enum": [
+            "amber", "blue", "blueGrey", "brown",
+            "cyan", "deepOrange", "deepPurple", "green",
+            "grey", "indigo", "lightBlue", "lightGreen", "lime",
+            "orange", "pink", "purple", "red",
+            "teal", "yellow"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "light": { "type": "string", "example": "#ceef64" },
+            "main": { "type": "string", "example": "#9abc31" },
+            "dark": { "type": "string", "example": "#688c00" },
+            "contrastText": { "type": "string", "example": "#fff" }
+          },
+          "required": ["light","main", "dark", "contrastText"],
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "Branding": {
+      "type": "object",
+      "properties": {
+        "appBarTitle": {"type": "string", "example": "xcube Viewer"},
+        "windowTitle": {"type": "string", "example": "xcube Viewer"},
+        "themeName": {"type": "string", "example": "light", "enum": ["dark", "light"]},
+        "primaryColor": { "$ref": "#/definitions/ColorSchema" },
+        "secondaryColor": { "$ref": "#/definitions/ColorSchema" },
+        "headerBackgroundColor": {"type": "string", "example": "#fafafa"},
+        "logoImage": {"type": "string", "example": "images/logo.png"},
+        "logoWidth": { "type": "integer", "example": 32, "minimum": 0 },
+        "baseMapUrl": {
+          "type": "string",
+          "format": "uri",
+          "example": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        },
+        "defaultAgg": {
+          "type": "string",
+          "example": "mean",
+          "enum": ["mean", "median", "min", "max"]
+        },
+        "allowDownloads": {"type": "boolean", "example": true},
+        "polygonFillOpacity": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "example": 0.025
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "type": "object",
+
+  "properties": {
+    "name": {"type": "string"},
+    "authClient": {"$ref": "#/definitions/AuthClientConfig"},
+    "server": {"$ref": "#/definitions/ApiServerConfig"},
+    "branding": {"$ref": "#/definitions/Branding"}
+  },
+
+  "required": ["server", "branding"],
+
+  "additionalProperties": false
+}

@@ -23,8 +23,8 @@
  */
 
 import { callJsonApi } from './callApi';
-import { ServerInfo } from '../model/server';
+import { ApiServerInfo } from '../model/apiServer';
 
-export function getServerInfo(apiServerUrl: string): Promise<ServerInfo> {
-    return callJsonApi<ServerInfo>(`${apiServerUrl}/`);
+export function getServerInfo(apiServerUrl: string): Promise<ApiServerInfo> {
+    return callJsonApi<ApiServerInfo>(`${apiServerUrl}/`);
 }

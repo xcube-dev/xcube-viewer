@@ -36,7 +36,7 @@ import { changeLocale } from './actions/controlActions';
 import App from './connected/App';
 import * as serviceWorker from './serviceWorker';
 import { getCurrentLocale } from './util/lang';
-import { I18N } from './config';
+import { I18N, loadConfiguration } from './config';
 import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
 
 import './index.css';
@@ -44,25 +44,27 @@ import './index.css';
 
 I18N.locale = getCurrentLocale();
 
-const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
-const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
+loadConfiguration().then(() => {
+    const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
+    const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
 
-if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
-    setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
-}
+    if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
+        setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
+    }
 
-store.dispatch(changeLocale(store.getState().controlState.locale) as any);
-store.dispatch(initAuthClient() as any);
-store.dispatch(updateServerInfo() as any);
-store.dispatch(updateDatasets() as any);
-store.dispatch(updateColorBars() as any);
+    store.dispatch(changeLocale(store.getState().controlState.locale) as any);
+    store.dispatch(initAuthClient() as any);
+    store.dispatch(updateServerInfo() as any);
+    store.dispatch(updateDatasets() as any);
+    store.dispatch(updateColorBars() as any);
 
-ReactDOM.render(
-    <Provider store={store}>{<App/>}</Provider>,
-    document.getElementById('root') as HTMLElement
-);
+    ReactDOM.render(
+        <Provider store={store}>{<App/>}</Provider>,
+        document.getElementById('root') as HTMLElement
+    );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+    // If you want your app to work offline and load faster, you can change
+    // unregister() to register() below. Note this comes with some pitfalls.
+    // Learn more about service workers: https://bit.ly/CRA-PWA
+    serviceWorker.unregister();
+});

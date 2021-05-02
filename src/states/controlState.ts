@@ -28,7 +28,7 @@ import { Extent as OlExtent } from 'ol/extent';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
-import { getBranding, getDefaultApiServer } from '../config';
+import { getBranding, getApiServerConfig } from '../config';
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -97,7 +97,7 @@ export function newControlState(): ControlState {
         selectedPlaceGroupIds: ['user'],
         selectedPlaceId: null,
         selectedUserPlaceId: null,
-        selectedServerId: getDefaultApiServer().id,
+        selectedServerId: getApiServerConfig().id,
         selectedTime: null,
         selectedTimeRange: null,
         timeSeriesUpdateMode: 'add',

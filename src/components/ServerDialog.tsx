@@ -44,7 +44,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { WithLocale } from '../util/lang';
 import { I18N } from '../config';
-import { Server } from '../model/server';
+import { ApiServerConfig } from '../model/apiServer';
 import { newId } from '../util/id';
 import { useEffect, useRef, useState } from 'react';
 
@@ -75,9 +75,9 @@ const styles = (theme: Theme) => createStyles(
 
 interface ServerDialogProps extends WithStyles<typeof styles>, WithLocale {
     open: boolean;
-    servers: Server[];
-    selectedServer: Server;
-    configureServers: (servers: Server[], selectedServerId: string) => void;
+    servers: ApiServerConfig[];
+    selectedServer: ApiServerConfig;
+    configureServers: (servers: ApiServerConfig[], selectedServerId: string) => void;
     closeDialog: (dialogId: string) => void;
 }
 
@@ -157,7 +157,7 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
         return servers_.findIndex(server => server.id === selectedServerId)!;
     };
 
-    const setSelectedServer = (selectedServerIndex: number, selectedServer: Server) => {
+    const setSelectedServer = (selectedServerIndex: number, selectedServer: ApiServerConfig) => {
         const servers = [...servers_];
         servers[selectedServerIndex] = selectedServer;
         setServers_(servers);
@@ -165,7 +165,7 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
         setDialogMode('select');
     };
 
-    const setServers = (servers: Server[], selectedServer: Server) => {
+    const setServers = (servers: ApiServerConfig[], selectedServer: ApiServerConfig) => {
         setServers_(servers);
         setSelectedServer_(selectedServer);
         setDialogMode('select');

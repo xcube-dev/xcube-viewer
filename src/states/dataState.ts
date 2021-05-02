@@ -26,17 +26,17 @@ import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup, } from '../model/place';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { ColorBars } from '../model/colorBar';
-import { Server, ServerInfo } from "../model/server";
+import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
 import { getApiServers, I18N } from '../config';
 import { loadUserServers } from './userSettings';
 
 export interface DataState {
-    serverInfo: ServerInfo | null;
+    serverInfo: ApiServerInfo | null;
     datasets: Dataset[];
     colorBars: ColorBars | null;
     timeSeriesGroups: TimeSeriesGroup[];
     userPlaceGroup: PlaceGroup;
-    userServers: Server[];
+    userServers: ApiServerConfig[];
 }
 
 export function newDataState(): DataState {

@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-export interface Server {
+export interface ApiServerConfig {
     id: string;
     name: string;
     url: string;
 }
 
-export interface ServerInfo {
+export interface ApiServerInfo {
     name: string;
     description: string;
     version: string;

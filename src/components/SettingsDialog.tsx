@@ -38,7 +38,7 @@ import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
 import { I18N } from '../config';
 import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
-import { Server, ServerInfo } from '../model/server';
+import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { maps, MapGroup, MapSource } from '../util/maps';
 
 
@@ -65,12 +65,12 @@ interface SettingsDialogProps {
     closeDialog: (dialogId: string) => void;
 
     settings: ControlState;
-    selectedServer: Server;
+    selectedServer: ApiServerConfig;
     viewerVersion: string;
     updateSettings: (settings: ControlState) => void;
     changeLocale: (locale: string) => void;
     openDialog: (dialogId: string) => void;
-    serverInfo: ServerInfo | null;
+    serverInfo: ApiServerInfo | null;
 }
 
 const SettingsDialog: React.FC<SettingsDialogProps> = ({

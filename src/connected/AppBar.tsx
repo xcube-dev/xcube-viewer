@@ -165,9 +165,9 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
         >
             <Toolbar disableGutters className={classes.toolbar} variant="dense">
                 <img
-                    src={getBranding().logoPath}
+                    src={getBranding().logoImage}
                     width={getBranding().logoWidth}
-                    alt={'xcube logo'}
+                    alt={'xcube resources'}
                     className={classes.logo}
                 />
                 <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>

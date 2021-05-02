@@ -32,13 +32,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import InfoIcon from '@material-ui/icons/Info';
 
-import { I18N } from '../config';
+import { getBranding, I18N } from '../config';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
-
-
-const DOWNLOADS_ALLOWED = process.env.REACT_APP_ALLOW_DOWNLOADS === '1'
-                          || process.env.REACT_APP_ALLOW_DOWNLOADS === 'true';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -75,7 +71,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
     }
 
     let downloadButton;
-    if (DOWNLOADS_ALLOWED) {
+    if (getBranding().allowDownloads) {
         downloadButton = (
             <IconButton onClick={() => openDialog('export')}>
                 <Tooltip arrow title={I18N.get('Export data')}>

@@ -53,7 +53,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-const theme = createMuiTheme(
+const newTheme = () => createMuiTheme(
     {
         typography: {
             fontSize: 12,
@@ -76,7 +76,7 @@ const styles = (theme: Theme) => createStyles(
 
 const App: React.FC<DashboardProps> = ({classes}) => {
     return (
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={newTheme()}>
             <div className={classes.root}>
                 <CssBaseline/>
                 <AppBar/>

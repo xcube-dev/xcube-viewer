@@ -23,12 +23,12 @@
  */
 
 import { getLocalStorage } from '../util/storage';
-import { Server } from '../model/server';
+import { ApiServerConfig } from '../model/apiServer';
 import { ControlState } from './controlState';
-import { getBrandingName } from '../config';
+import { getConfigName } from '../config';
 
-export function storeUserServers(userServers: Server[]) {
-    const storage = getLocalStorage(getBrandingName());
+export function storeUserServers(userServers: ApiServerConfig[]) {
+    const storage = getLocalStorage(getConfigName());
     if (storage) {
         try {
             storage.setObjectItem('userServers', userServers);
@@ -38,8 +38,8 @@ export function storeUserServers(userServers: Server[]) {
     }
 }
 
-export function loadUserServers(): Server[] {
-    const storage = getLocalStorage(getBrandingName());
+export function loadUserServers(): ApiServerConfig[] {
+    const storage = getLocalStorage(getConfigName());
     if (storage) {
         try {
             return storage.getObjectItem('userServers', []);
@@ -52,7 +52,7 @@ export function loadUserServers(): Server[] {
 
 
 export function storeUserSettings(settings: ControlState) {
-    const storage = getLocalStorage(getBrandingName());
+    const storage = getLocalStorage(getConfigName());
     if (storage) {
         try {
             storage.setPrimitiveProperty('locale', settings);
@@ -80,7 +80,7 @@ export function storeUserSettings(settings: ControlState) {
 }
 
 export function loadUserSettings(defaultSettings: ControlState): ControlState {
-    const storage = getLocalStorage(getBrandingName());
+    const storage = getLocalStorage(getConfigName());
     if (storage) {
         const settings = {...defaultSettings};
         try {

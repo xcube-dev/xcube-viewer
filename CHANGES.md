@@ -1,6 +1,19 @@
-## Changes in version 0.4.6 (in development)
+## Changes in version 0.5.0 (in development)
 
-
+* Simplified use of xcube-viewer as a container. (#167)
+  The ultimate goal of this activity was to get rid of build-time
+  configuration and replace it by runtime configuration.
+  This introduced some breaking changes as follows.
+  We no longer use `.env` files for build-time configuration.
+  Instead, a runtime configuration is initially loaded: 
+  - If query parameter `configPath` is given, it is loaded from
+    `{origin}/{configPath}/config.json`.
+  - Otherwise, it is loaded from `{origin}/config/config.json`.
+  - If the configuration could not be fetched, the default configuration
+    `src/resources/config.json` is used instead.
+  
+  The JSON schema for the configuration is given in
+  `src/resources/config.schema.json`.
 
 ## Changes in version 0.4.5
 

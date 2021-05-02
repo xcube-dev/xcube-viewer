@@ -1,0 +1,20 @@
+{
+  "server": {
+    "id": "local",
+    "name": "Local Server",
+    "url": "http://localhost:8080"
+  },
+  "branding": {
+    "appBarTitle": "xcube Viewer",
+    "windowTitle": "xcube Viewer",
+    "themeName": "dark",
+    "primaryColor": "blue",
+    "secondaryColor": "pink",
+    "logoImage": "images/logo.png",
+    "logoWidth": 32,
+    "baseMapUrl": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "defaultAgg": "mean",
+    "allowDownloads": true,
+    "polygonFillOpacity": 0.2
+  }
+}

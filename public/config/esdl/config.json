@@ -1,0 +1,21 @@
+{
+  "server": {
+    "id": "esdl",
+    "name": "ESDL Server",
+    "url": "https://xcube.earthsystemdatalab.net"
+  },
+  "branding": {
+    "appBarTitle": "ESDL Viewer",
+    "windowTitle": "ESDL Viewer",
+    "themeName": "light",
+    "primaryColor": "grey",
+    "secondaryColor": "pink",
+    "headerBackgroundColor": "#fafafa",
+    "logoPath": "logo.png",
+    "logoWidth": 64,
+    "baseMapUrl": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "defaultAgg": "mean",
+    "allowDownloads": true
+  }
+}
+
