@@ -60,10 +60,9 @@ const saveAs = require('file-saver');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_SERVER_INFO = 'UPDATE_SERVER_INFO';
-export type UPDATE_SERVER_INFO = typeof UPDATE_SERVER_INFO;
 
 export interface UpdateServerInfo {
-    type: UPDATE_SERVER_INFO;
+    type: typeof UPDATE_SERVER_INFO;
     serverInfo: ApiServerInfo;
 }
 
@@ -94,10 +93,9 @@ export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_DATASETS = 'UPDATE_DATASETS';
-export type UPDATE_DATASETS = typeof UPDATE_DATASETS;
 
 export interface UpdateDatasets {
-    type: UPDATE_DATASETS;
+    type: typeof UPDATE_DATASETS;
     datasets: Dataset[];
 }
 
@@ -133,10 +131,9 @@ export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_DATASET_PLACE_GROUP = 'UPDATE_DATASET_PLACE_GROUP';
-export type UPDATE_DATASET_PLACE_GROUP = typeof UPDATE_DATASET_PLACE_GROUP;
 
 export interface UpdateDatasetPlaceGroup {
-    type: UPDATE_DATASET_PLACE_GROUP;
+    type: typeof UPDATE_DATASET_PLACE_GROUP;
     datasetId: string;
     placeGroup: PlaceGroup;
 }
@@ -149,10 +146,9 @@ export function updateDatasetPlaceGroup(datasetId: string,
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const ADD_USER_PLACE = 'ADD_USER_PLACE';
-export type ADD_USER_PLACE = typeof ADD_USER_PLACE;
 
 export interface AddUserPlace {
-    type: ADD_USER_PLACE;
+    type: typeof ADD_USER_PLACE;
     id: string;
     label: string;
     color: string;
@@ -175,10 +171,9 @@ export function _addUserPlace(id: string, label: string, color: string, geometry
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_USER_PLACE = 'REMOVE_USER_PLACE';
-export type REMOVE_USER_PLACE = typeof REMOVE_USER_PLACE;
 
 export interface RemoveUserPlace {
-    type: REMOVE_USER_PLACE;
+    type: typeof REMOVE_USER_PLACE;
     id: string;
     places: Place[];
 }
@@ -190,10 +185,9 @@ export function removeUserPlace(id: string, places: Place[]): RemoveUserPlace {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_ALL_USER_PLACES = 'REMOVE_ALL_USER_PLACES';
-export type REMOVE_ALL_USER_PLACES = typeof REMOVE_ALL_USER_PLACES;
 
 export interface RemoveAllUserPlaces {
-    type: REMOVE_ALL_USER_PLACES;
+    type: typeof REMOVE_ALL_USER_PLACES;
 }
 
 export function removeAllUserPlaces(): RemoveAllUserPlaces {
@@ -276,10 +270,9 @@ function isValidPlace(placeGroups: PlaceGroup[], placeId: string) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_TIME_SERIES = 'UPDATE_TIME_SERIES';
-export type UPDATE_TIME_SERIES = typeof UPDATE_TIME_SERIES;
 
 export interface UpdateTimeSeries {
-    type: UPDATE_TIME_SERIES;
+    type: typeof UPDATE_TIME_SERIES;
     timeSeries: TimeSeries;
     updateMode: 'add' | 'replace' | 'remove';
     dataMode: 'new' | 'append';
@@ -292,10 +285,9 @@ export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 're
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_TIME_SERIES_GROUP = 'REMOVE_TIME_SERIES_GROUP';
-export type REMOVE_TIME_SERIES_GROUP = typeof REMOVE_TIME_SERIES_GROUP;
 
 export interface RemoveTimeSeriesGroup {
-    type: REMOVE_TIME_SERIES_GROUP;
+    type: typeof REMOVE_TIME_SERIES_GROUP;
     id: string;
 }
 
@@ -306,10 +298,9 @@ export function removeTimeSeriesGroup(id: string): RemoveTimeSeriesGroup {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_ALL_TIME_SERIES = 'REMOVE_ALL_TIME_SERIES';
-export type REMOVE_ALL_TIME_SERIES = typeof REMOVE_ALL_TIME_SERIES;
 
 export interface RemoveAllTimeSeries {
-    type: REMOVE_ALL_TIME_SERIES;
+    type: typeof REMOVE_ALL_TIME_SERIES;
 }
 
 export function removeAllTimeSeries(): RemoveAllTimeSeries {
@@ -320,10 +311,9 @@ export function removeAllTimeSeries(): RemoveAllTimeSeries {
 
 
 export const CONFIGURE_SERVERS = 'CONFIGURE_SERVERS';
-export type CONFIGURE_SERVERS = typeof CONFIGURE_SERVERS;
 
 export interface ConfigureServers {
-    type: CONFIGURE_SERVERS;
+    type: typeof CONFIGURE_SERVERS;
     servers: ApiServerConfig[];
     selectedServerId: string;
 }
@@ -350,10 +340,9 @@ export function _configureServers(servers: ApiServerConfig[], selectedServerId: 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_COLOR_BARS = 'UPDATE_COLOR_BARS';
-export type UPDATE_COLOR_BARS = typeof UPDATE_COLOR_BARS;
 
 export interface UpdateColorBars {
-    type: UPDATE_COLOR_BARS;
+    type: typeof UPDATE_COLOR_BARS;
     colorBars: ColorBars;
 }
 
@@ -379,10 +368,9 @@ export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
 
 
 export const UPDATE_VARIABLE_COLOR_BAR = 'UPDATE_VARIABLE_COLOR_BAR';
-export type UPDATE_VARIABLE_COLOR_BAR = typeof UPDATE_VARIABLE_COLOR_BAR;
 
 export interface UpdateVariableColorBar {
-    type: UPDATE_VARIABLE_COLOR_BAR;
+    type: typeof UPDATE_VARIABLE_COLOR_BAR;
     datasetId: string;
     variableName: string;
     colorBarMinMax: [number, number];
