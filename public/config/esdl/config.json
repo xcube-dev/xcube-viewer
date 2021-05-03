@@ -12,7 +12,7 @@
     "primaryColor": "grey",
     "secondaryColor": "pink",
     "headerBackgroundColor": "#fafafa",
-    "logoPath": "logo.png",
+    "logoImage": "logo.png",
     "logoWidth": 64,
     "baseMapUrl": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     "defaultAgg": "mean",
