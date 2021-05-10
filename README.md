@@ -24,7 +24,7 @@ A simple viewer component for [xcube](https://xcube.readthedocs.io/).
     $ cd xcube
     $ git pull
     $ conda activate xcube  
-    $ xcube serve --verbose --traceperf --config xcube/webapi/res/demo/config.yml  
+    $ xcube serve --verbose --traceperf --config xcube/examples/serve/demo/config.yml  
 
 If errors occur, you may need to update the environment:
 
@@ -114,7 +114,6 @@ You can learn more in
 the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
 
 
 
