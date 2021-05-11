@@ -35,32 +35,22 @@ export interface AuthClientConfig {
     audience: string;
 }
 
-let _authClientConfig: AuthClientConfig | null = null;
 let _authClient: AuthClient | null = null;
 
-if (process.env.REACT_APP_OAUTH2_DOMAIN
-    && process.env.REACT_APP_OAUTH2_CLIENT_ID
-    && process.env.REACT_APP_OAUTH2_AUDIENCE) {
-    _authClientConfig = {
-        domain: process.env.REACT_APP_OAUTH2_DOMAIN,
-        clientId: process.env.REACT_APP_OAUTH2_CLIENT_ID,
-        audience: process.env.REACT_APP_OAUTH2_AUDIENCE,
-    };
-}
 
 export function getAuthClient(): AuthClient | null {
     return _authClient;
 }
 
-export async function initAuthClient(): Promise<AuthClient | null> {
-    if (!_authClientConfig) {
+export async function initAuthClient(authClientConfig?: AuthClientConfig): Promise<AuthClient | null> {
+    if (!authClientConfig) {
         return Promise.resolve(null);
     }
     if (!_authClient) {
         _authClient = await createAuth0Client({
-                                                  domain: _authClientConfig.domain,
-                                                  client_id: _authClientConfig.clientId,
-                                                  audience: _authClientConfig.audience,
+                                                  domain: authClientConfig.domain,
+                                                  client_id: authClientConfig.clientId,
+                                                  audience: authClientConfig.audience,
                                                   redirect_uri: window.location.origin,
                                               });
         /*

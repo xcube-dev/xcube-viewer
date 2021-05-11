@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel/InputLabel';
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import * as React from 'react';
+import i18n from '../i18n';
 
 import { Time, TimeRange } from '../model/timeSeries';
-import { dateTimeStringToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
+import { dateTimeStringToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -60,7 +60,7 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
             shrink
             htmlFor="time-select"
         >
-            {`${I18N.get('Time')} (UTC)`}
+            {`${i18n.get('Time')} (UTC)`}
         </InputLabel>
     );
 

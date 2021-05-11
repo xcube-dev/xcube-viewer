@@ -22,25 +22,25 @@
  * SOFTWARE.
  */
 
+import {
+    createMuiTheme,
+    createStyles,
+    CssBaseline,
+    MuiThemeProvider,
+    Theme,
+    withStyles,
+    WithStyles
+} from '@material-ui/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Theme,
-    WithStyles,
-    createStyles,
-    withStyles,
-    createMuiTheme,
-    CssBaseline,
-    MuiThemeProvider
-} from '@material-ui/core';
+import { Config } from '../config';
 
 import { AppState } from '../states/appState';
 import AppBar from './AppBar';
 import AppPane from './AppPane';
-import LoadingDialog from './LoadingDialog';
 import LegalAgreementDialog from './LegalAgreementDialog';
+import LoadingDialog from './LoadingDialog';
 import MessageLog from './MessageLog';
-import { getBranding } from '../config';
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -53,16 +53,16 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-const theme = createMuiTheme(
+const newTheme = () => createMuiTheme(
     {
         typography: {
             fontSize: 12,
             htmlFontSize: 14,
         },
         palette: {
-            type: getBranding().themeName,
-            primary: getBranding().primaryColor,
-            secondary: getBranding().secondaryColor,
+            type: Config.instance.branding.themeName,
+            primary: Config.instance.branding.primaryColor,
+            secondary: Config.instance.branding.secondaryColor,
         },
     });
 
@@ -76,7 +76,7 @@ const styles = (theme: Theme) => createStyles(
 
 const App: React.FC<DashboardProps> = ({classes}) => {
     return (
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={newTheme()}>
             <div className={classes.root}>
                 <CssBaseline/>
                 <AppBar/>

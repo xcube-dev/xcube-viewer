@@ -23,46 +23,44 @@
  */
 
 import * as React from 'react';
-import { Provider } from 'react-redux';
 import * as ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import * as Redux from 'redux';
-import thunk from 'redux-thunk';
 import * as ReduxLogger from 'redux-logger';
-import { initAuthClient } from './actions/userAuthActions';
-
-import { appReducer } from './reducers/appReducer';
-import { updateDatasets, updateColorBars, updateServerInfo } from './actions/dataActions';
-import { changeLocale } from './actions/controlActions';
-import App from './connected/App';
-import * as serviceWorker from './serviceWorker';
-import { getCurrentLocale } from './util/lang';
-import { I18N } from './config';
-import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
+import thunk from 'redux-thunk';
 
 import './index.css';
+import { changeLocale } from './actions/controlActions';
+import { updateColorBars, updateDatasets, updateServerInfo } from './actions/dataActions';
+import { initAuthClient } from './actions/userAuthActions';
+import { Config } from './config';
+import App from './connected/App';
+import { appReducer } from './reducers/appReducer';
+import * as serviceWorker from './serviceWorker';
+import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
 
 
-I18N.locale = getCurrentLocale();
+Config.load().then(() => {
+    const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
+    const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
 
-const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
-const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
+    if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
+        setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
+    }
 
-if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
-    setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
-}
+    store.dispatch(changeLocale(store.getState().controlState.locale) as any);
+    store.dispatch(initAuthClient() as any);
+    store.dispatch(updateServerInfo() as any);
+    store.dispatch(updateDatasets() as any);
+    store.dispatch(updateColorBars() as any);
 
-store.dispatch(changeLocale(store.getState().controlState.locale) as any);
-store.dispatch(initAuthClient() as any);
-store.dispatch(updateServerInfo() as any);
-store.dispatch(updateDatasets() as any);
-store.dispatch(updateColorBars() as any);
+    ReactDOM.render(
+        <Provider store={store}>{<App/>}</Provider>,
+        document.getElementById('root') as HTMLElement
+    );
 
-ReactDOM.render(
-    <Provider store={store}>{<App/>}</Provider>,
-    document.getElementById('root') as HTMLElement
-);
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+    // If you want your app to work offline and load faster, you can change
+    // unregister() to register() below. Note this comes with some pitfalls.
+    // Learn more about service workers: https://bit.ly/CRA-PWA
+    serviceWorker.unregister();
+});

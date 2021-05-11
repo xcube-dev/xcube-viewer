@@ -22,9 +22,19 @@
  * SOFTWARE.
  */
 
-import { callJsonApi } from './callApi';
-import { ApiServerInfo } from '../model/apiServer';
-
-export function getServerInfo(apiServerUrl: string): Promise<ApiServerInfo> {
-    return callJsonApi<ApiServerInfo>(`${apiServerUrl}/`);
+export interface ApiServerConfig {
+    id: string;
+    name: string;
+    url: string;
 }
+
+export interface ApiServerInfo {
+    name: string;
+    description: string;
+    version: string;
+    configTime: string;
+    serverTime: string;
+}
+
+
+

@@ -22,38 +22,39 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import * as geojson from 'geojson';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import rgba from 'color-rgba';
+import * as geojson from 'geojson';
+import { Color as OlColor } from 'ol/color';
+import { default as OlFeature } from 'ol/Feature';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlCircleGeometry } from 'ol/geom/Circle';
+import { default as OlGeometryType } from 'ol/geom/GeometryType';
+import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
 import { default as OlMap } from 'ol/Map';
 import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
-import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
-import { default as OlVectorLayer } from 'ol/layer/Vector';
 import { default as OlVectorSource } from 'ol/source/Vector';
-import { default as OlGeometryType } from 'ol/geom/GeometryType';
-import { default as OlCircleGeometry } from 'ol/geom/Circle';
-import { default as OlFeature } from 'ol/Feature';
-import { default as OlStyle } from 'ol/style/Style';
+import { default as OlCircleStyle } from 'ol/style/Circle';
 import { default as OlFillStyle } from 'ol/style/Fill';
 import { default as OlStrokeStyle } from 'ol/style/Stroke';
-import { default as OlCircleStyle } from 'ol/style/Circle';
-import { Color as OlColor } from 'ol/color';
-import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
-import rgba from 'color-rgba';
-
-import { newId } from '../util/id';
+import { default as OlStyle } from 'ol/style/Style';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { Config, getUserPlaceColor, getUserPlaceColorName } from '../config';
+import i18n from '../i18n';
 import { Place, PlaceGroup } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
-import { getBranding, getUserPlaceColor, getUserPlaceColorName, I18N } from '../config';
+
+import { newId } from '../util/id';
 import ErrorBoundary from './ErrorBoundary';
-import { Map, MapElement } from './ol/Map';
-import { Layers } from './ol/layer/Layers';
-import { View } from './ol/View';
-import { Draw, DrawEvent } from './ol/interaction/Draw';
-import { Vector } from './ol/layer/Vector';
 import { Control } from './ol/control/Control';
 import { ScaleLine } from './ol/control/ScaleLine';
+import { Draw, DrawEvent } from './ol/interaction/Draw';
+import { Layers } from './ol/layer/Layers';
+import { Vector } from './ol/layer/Vector';
+import { Map, MapElement } from './ol/Map';
+import { View } from './ol/View';
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
@@ -190,7 +191,7 @@ const Viewer: React.FC<ViewerProps> = ({
             if (mapInteraction === 'Point') {
                 feature.setStyle(createPointGeometryStyle(7, shadedColor, 'white', 1));
             } else {
-                const fillOpacity = getBranding().polygonFillOpacity || 0.25;
+                const fillOpacity = Config.instance.branding.polygonFillOpacity || 0.25;
                 let fillColorRgba = rgba(shadedColor);
                 if (Array.isArray(fillColorRgba)) {
                     fillColorRgba = [fillColorRgba[0], fillColorRgba[1], fillColorRgba[2], fillOpacity];
@@ -200,7 +201,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 feature.setStyle(createGeometryStyle(fillColorRgba, shadedColor, 2));
             }
 
-            const nameBase = I18N.get(mapInteraction);
+            const nameBase = i18n.get(mapInteraction);
             let label: string = '';
             for (let index = 1; ; index++) {
                 label = `${nameBase} ${index}`;

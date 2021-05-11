@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import Box from '@material-ui/core/Box';
+import Checkbox from '@material-ui/core/Checkbox';
 import Popover from '@material-ui/core/Popover';
 import Slider, { Mark } from '@material-ui/core/Slider';
-import Box from '@material-ui/core/Box';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Tooltip from '@material-ui/core/Tooltip';
-import Checkbox from '@material-ui/core/Checkbox';
+import * as React from 'react';
+import i18n from '../i18n';
+import { ColorBars } from '../model/colorBar';
 
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
-import { ColorBars } from '../model/colorBar';
-import { I18N } from '../config';
 
 const HOR_SLIDER_MARGIN = 5;
 const COLOR_BAR_BOX_MARGIN = 1;
@@ -288,7 +288,7 @@ export default function ColorBarLegend({
                     <Checkbox color="primary"
                               checked={variableColorBarAlpha}
                               onChange={handleColorBarAlpha}/>
-                    <Box component="span">{I18N.get('Hide lower values')}</Box>
+                    <Box component="span">{i18n.get('Hide lower values')}</Box>
                 </Box>
                 {entries}
             </Box>
@@ -309,7 +309,7 @@ export default function ColorBarLegend({
                     onClick={handleOpenColorBarNameEditor}
                 />
             ) : (
-                 <div>{I18N.get('Unknown color bar') + `: ${variableColorBarName}`}</div>
+                 <div>{i18n.get('Unknown color bar') + `: ${variableColorBarName}`}</div>
              )}
             <div
                 className={classes.label}

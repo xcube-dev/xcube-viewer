@@ -22,27 +22,16 @@
  * SOFTWARE.
  */
 
+import * as geojson from 'geojson';
 import JSZip from 'jszip';
 import { Dispatch } from 'redux';
-
-import { AppState } from '../states/appState';
 import * as api from '../api'
-import {
-    AddActivity,
-    addActivity,
-    RemoveActivity,
-    removeActivity,
-    SelectDataset,
-    selectDataset,
-} from './controlActions';
-import { Dataset } from '../model/dataset';
-import {
-    TimeSeries,
-    TimeSeriesGroup,
-    timeSeriesGroupsToTable
-} from '../model/timeSeries';
+import i18n from '../i18n';
+import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { ColorBars } from '../model/colorBar';
-import { I18N } from '../config';
+import { Dataset } from '../model/dataset';
+import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
+import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
     selectedDatasetIdSelector,
     selectedDatasetTimeDimensionSelector,
@@ -52,11 +41,18 @@ import {
     selectedPlaceSelector,
     selectedServerSelector
 } from '../selectors/controlSelectors';
-import { Server, ServerInfo } from '../model/server';
-import { MessageLogAction, postMessage } from './messageLogActions';
-import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
-import * as geojson from 'geojson';
 import { datasetsSelector, placeGroupsSelector, userPlaceGroupSelector } from '../selectors/dataSelectors';
+
+import { AppState } from '../states/appState';
+import {
+    AddActivity,
+    addActivity,
+    RemoveActivity,
+    removeActivity,
+    SelectDataset,
+    selectDataset,
+} from './controlActions';
+import { MessageLogAction, postMessage } from './messageLogActions';
 
 const saveAs = require('file-saver');
 
@@ -64,21 +60,20 @@ const saveAs = require('file-saver');
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_SERVER_INFO = 'UPDATE_SERVER_INFO';
-export type UPDATE_SERVER_INFO = typeof UPDATE_SERVER_INFO;
 
 export interface UpdateServerInfo {
-    type: UPDATE_SERVER_INFO;
-    serverInfo: ServerInfo;
+    type: typeof UPDATE_SERVER_INFO;
+    serverInfo: ApiServerInfo;
 }
 
 export function updateServerInfo() {
     return (dispatch: Dispatch<UpdateServerInfo | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        dispatch(addActivity(UPDATE_SERVER_INFO, I18N.get('Connecting to server')));
+        dispatch(addActivity(UPDATE_SERVER_INFO, i18n.get('Connecting to server')));
 
         api.getServerInfo(apiServer.url)
-           .then((serverInfo: ServerInfo) => {
+           .then((serverInfo: ApiServerInfo) => {
                dispatch(_updateServerInfo(serverInfo));
            })
            .catch(error => {
@@ -91,17 +86,16 @@ export function updateServerInfo() {
     };
 }
 
-export function _updateServerInfo(serverInfo: ServerInfo): UpdateServerInfo {
+export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
     return {type: UPDATE_SERVER_INFO, serverInfo};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_DATASETS = 'UPDATE_DATASETS';
-export type UPDATE_DATASETS = typeof UPDATE_DATASETS;
 
 export interface UpdateDatasets {
-    type: UPDATE_DATASETS;
+    type: typeof UPDATE_DATASETS;
     datasets: Dataset[];
 }
 
@@ -109,7 +103,7 @@ export function updateDatasets() {
     return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        dispatch(addActivity(UPDATE_DATASETS, I18N.get('Loading data')));
+        dispatch(addActivity(UPDATE_DATASETS, i18n.get('Loading data')));
 
         api.getDatasets(apiServer.url, getState().userAuthState.accessToken)
            .then((datasets: Dataset[]) => {
@@ -137,10 +131,9 @@ export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_DATASET_PLACE_GROUP = 'UPDATE_DATASET_PLACE_GROUP';
-export type UPDATE_DATASET_PLACE_GROUP = typeof UPDATE_DATASET_PLACE_GROUP;
 
 export interface UpdateDatasetPlaceGroup {
-    type: UPDATE_DATASET_PLACE_GROUP;
+    type: typeof UPDATE_DATASET_PLACE_GROUP;
     datasetId: string;
     placeGroup: PlaceGroup;
 }
@@ -153,10 +146,9 @@ export function updateDatasetPlaceGroup(datasetId: string,
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const ADD_USER_PLACE = 'ADD_USER_PLACE';
-export type ADD_USER_PLACE = typeof ADD_USER_PLACE;
 
 export interface AddUserPlace {
-    type: ADD_USER_PLACE;
+    type: typeof ADD_USER_PLACE;
     id: string;
     label: string;
     color: string;
@@ -179,10 +171,9 @@ export function _addUserPlace(id: string, label: string, color: string, geometry
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_USER_PLACE = 'REMOVE_USER_PLACE';
-export type REMOVE_USER_PLACE = typeof REMOVE_USER_PLACE;
 
 export interface RemoveUserPlace {
-    type: REMOVE_USER_PLACE;
+    type: typeof REMOVE_USER_PLACE;
     id: string;
     places: Place[];
 }
@@ -194,10 +185,9 @@ export function removeUserPlace(id: string, places: Place[]): RemoveUserPlace {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_ALL_USER_PLACES = 'REMOVE_ALL_USER_PLACES';
-export type REMOVE_ALL_USER_PLACES = typeof REMOVE_ALL_USER_PLACES;
 
 export interface RemoveAllUserPlaces {
-    type: REMOVE_ALL_USER_PLACES;
+    type: typeof REMOVE_ALL_USER_PLACES;
 }
 
 export function removeAllUserPlaces(): RemoveAllUserPlaces {
@@ -280,10 +270,9 @@ function isValidPlace(placeGroups: PlaceGroup[], placeId: string) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_TIME_SERIES = 'UPDATE_TIME_SERIES';
-export type UPDATE_TIME_SERIES = typeof UPDATE_TIME_SERIES;
 
 export interface UpdateTimeSeries {
-    type: UPDATE_TIME_SERIES;
+    type: typeof UPDATE_TIME_SERIES;
     timeSeries: TimeSeries;
     updateMode: 'add' | 'replace' | 'remove';
     dataMode: 'new' | 'append';
@@ -296,10 +285,9 @@ export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 're
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_TIME_SERIES_GROUP = 'REMOVE_TIME_SERIES_GROUP';
-export type REMOVE_TIME_SERIES_GROUP = typeof REMOVE_TIME_SERIES_GROUP;
 
 export interface RemoveTimeSeriesGroup {
-    type: REMOVE_TIME_SERIES_GROUP;
+    type: typeof REMOVE_TIME_SERIES_GROUP;
     id: string;
 }
 
@@ -310,10 +298,9 @@ export function removeTimeSeriesGroup(id: string): RemoveTimeSeriesGroup {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_ALL_TIME_SERIES = 'REMOVE_ALL_TIME_SERIES';
-export type REMOVE_ALL_TIME_SERIES = typeof REMOVE_ALL_TIME_SERIES;
 
 export interface RemoveAllTimeSeries {
-    type: REMOVE_ALL_TIME_SERIES;
+    type: typeof REMOVE_ALL_TIME_SERIES;
 }
 
 export function removeAllTimeSeries(): RemoveAllTimeSeries {
@@ -324,15 +311,14 @@ export function removeAllTimeSeries(): RemoveAllTimeSeries {
 
 
 export const CONFIGURE_SERVERS = 'CONFIGURE_SERVERS';
-export type CONFIGURE_SERVERS = typeof CONFIGURE_SERVERS;
 
 export interface ConfigureServers {
-    type: CONFIGURE_SERVERS;
-    servers: Server[];
+    type: typeof CONFIGURE_SERVERS;
+    servers: ApiServerConfig[];
     selectedServerId: string;
 }
 
-export function configureServers(servers: Server[], selectedServerId: string) {
+export function configureServers(servers: ApiServerConfig[], selectedServerId: string) {
     return (dispatch: Dispatch<any>, getState: () => AppState) => {
         if (getState().controlState.selectedServerId !== selectedServerId) {
             dispatch(removeAllTimeSeries());
@@ -346,7 +332,7 @@ export function configureServers(servers: Server[], selectedServerId: string) {
     };
 }
 
-export function _configureServers(servers: Server[], selectedServerId: string): ConfigureServers {
+export function _configureServers(servers: ApiServerConfig[], selectedServerId: string): ConfigureServers {
     return {type: CONFIGURE_SERVERS, servers, selectedServerId};
 }
 
@@ -354,10 +340,9 @@ export function _configureServers(servers: Server[], selectedServerId: string): 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_COLOR_BARS = 'UPDATE_COLOR_BARS';
-export type UPDATE_COLOR_BARS = typeof UPDATE_COLOR_BARS;
 
 export interface UpdateColorBars {
-    type: UPDATE_COLOR_BARS;
+    type: typeof UPDATE_COLOR_BARS;
     colorBars: ColorBars;
 }
 
@@ -383,10 +368,9 @@ export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
 
 
 export const UPDATE_VARIABLE_COLOR_BAR = 'UPDATE_VARIABLE_COLOR_BAR';
-export type UPDATE_VARIABLE_COLOR_BAR = typeof UPDATE_VARIABLE_COLOR_BAR;
 
 export interface UpdateVariableColorBar {
-    type: UPDATE_VARIABLE_COLOR_BAR;
+    type: typeof UPDATE_VARIABLE_COLOR_BAR;
     datasetId: string;
     variableName: string;
     colorBarMinMax: [number, number];

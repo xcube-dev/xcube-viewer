@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import CheckIcon from '@material-ui/icons/Check';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-
-import { I18N } from '../config';
-import { ControlState } from '../states/controlState';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Link from '@material-ui/core/Link';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import CheckIcon from '@material-ui/icons/Check';
+import React from 'react';
+import i18n from '../i18n';
+import { ControlState } from '../states/controlState';
 
 
 const useStyles = makeStyles(theme => ({
@@ -70,21 +69,21 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
             onClose={handleConfirm}
             scroll='body'
         >
-            <DialogTitle>{I18N.get('Legal Agreement')}</DialogTitle>
+            <DialogTitle>{i18n.get('Legal Agreement')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {I18N.get('We use „HTML5 local storage” to save and restore your settings. 3rd parties will never see your data. Note we do not use „cookies” at all.')}
+                    {i18n.get('We use „HTML5 local storage” to save and restore your settings. 3rd parties will never see your data. Note we do not use „cookies” at all.')}
                 </DialogContentText>
                 <DialogContentText>
-                    {I18N.get('Find out more')}{' '}
-                    <Link href={I18N.get("https://en.wikipedia.org/wiki/Web_storage")} target='_blank'>{I18N.get('here')}</Link>.
+                    {i18n.get('Find out more')}{' '}
+                    <Link href={i18n.get("https://en.wikipedia.org/wiki/Web_storage")} target='_blank'>{i18n.get('here')}</Link>.
                 </DialogContentText>
             </DialogContent>
 
             <DialogActions>
                 <Button onClick={handleConfirm} color="primary">
                     <CheckIcon className={classes.icon}/>
-                    {I18N.get('Accept and continue')}
+                    {i18n.get('Accept and continue')}
                 </Button>
             </DialogActions>
 

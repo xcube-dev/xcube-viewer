@@ -23,6 +23,7 @@
  */
 
 import { Dispatch } from 'redux';
+import { Config } from '../config';
 import * as auth from '../util/auth'
 import { updateDatasets } from './dataActions';
 import { PostMessage, postMessage } from './messageLogActions';
@@ -31,7 +32,7 @@ import { PostMessage, postMessage } from './messageLogActions';
 
 export function initAuthClient() {
     return async (dispatch: Dispatch<InitAuthClient | ReceiveSignIn>) => {
-        const authClient = await auth.initAuthClient();
+        const authClient = await auth.initAuthClient(Config.instance.authClient);
         dispatch(_initAuthClient(authClient !== null));
         if (authClient !== null) {
             let userInfo = null;
@@ -57,10 +58,9 @@ export function initAuthClient() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const INIT_AUTH_CLIENT = 'INIT_AUTH_CLIENT';
-export type INIT_AUTH_CLIENT = typeof INIT_AUTH_CLIENT;
 
 export interface InitAuthClient {
-    type: INIT_AUTH_CLIENT;
+    type: typeof INIT_AUTH_CLIENT;
     hasAuthClient: boolean;
 }
 
@@ -99,10 +99,9 @@ export function signIn() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REQUEST_SIGN_IN = 'REQUEST_SIGN_IN';
-export type REQUEST_SIGN_IN = typeof REQUEST_SIGN_IN;
 
 export interface RequestSignIn {
-    type: REQUEST_SIGN_IN;
+    type: typeof REQUEST_SIGN_IN;
 }
 
 function requestSignIn(): RequestSignIn {
@@ -112,10 +111,9 @@ function requestSignIn(): RequestSignIn {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const RECEIVE_SIGN_IN = 'RECEIVE_SIGN_IN';
-export type RECEIVE_SIGN_IN = typeof RECEIVE_SIGN_IN;
 
 export interface ReceiveSignIn {
-    type: RECEIVE_SIGN_IN;
+    type: typeof RECEIVE_SIGN_IN;
     userInfo: auth.UserInfo;
     accessToken: string;
 }
@@ -146,10 +144,9 @@ export function signOut() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const REQUEST_SIGN_OUT = 'REQUEST_SIGN_OUT';
-export type REQUEST_SIGN_OUT = typeof REQUEST_SIGN_OUT;
 
 export interface RequestSignOut {
-    type: REQUEST_SIGN_OUT;
+    type: typeof REQUEST_SIGN_OUT;
 }
 
 function requestSignOut(): RequestSignOut {
@@ -159,10 +156,9 @@ function requestSignOut(): RequestSignOut {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const RECEIVE_SIGN_OUT = 'RECEIVE_SIGN_OUT';
-export type RECEIVE_SIGN_OUT = typeof RECEIVE_SIGN_OUT;
 
 export interface ReceiveSignOut {
-    type: RECEIVE_SIGN_OUT;
+    type: typeof RECEIVE_SIGN_OUT;
 }
 
 function receiveSignOut(): ReceiveSignOut {

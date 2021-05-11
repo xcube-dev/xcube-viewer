@@ -22,25 +22,25 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
-import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
-import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import Box from '@material-ui/core/Box';
-import FormControl from '@material-ui/core/FormControl';
-import Tooltip from '@material-ui/core/Tooltip';
+import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
+import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
+import * as React from 'react';
+import { useEffect, useRef } from 'react';
+import i18n from '../i18n';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { TimeAnimationInterval } from '../states/controlState';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
-import { useEffect, useRef } from 'react';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -129,7 +129,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
 
     const isValid = typeof selectedTime === 'number';
 
-    const playToolTip = I18N.get(timeAnimationActive ? 'Stop' : 'Start');
+    const playToolTip = i18n.get(timeAnimationActive ? 'Stop' : 'Start');
     const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
     const playButton = (
@@ -138,7 +138,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
             aria-label={playToolTip}
             onClick={handlePlayButtonClick}
         >
-            <Tooltip arrow title={I18N.get('Auto-step through times in the dataset')}>
+            <Tooltip arrow title={i18n.get('Auto-step through times in the dataset')}>
                 {playIcon}
             </Tooltip>
         </IconButton>

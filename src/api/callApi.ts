@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
+import i18n from '../i18n';
 import { HTTPError } from './errors';
-import { I18N } from '../config';
 
 
 export type QueryComponent = [string, string];
@@ -68,7 +68,7 @@ export function callApi(url: string, init?: RequestInit): Promise<Response> {
             if (error instanceof TypeError) {
                 console.error(`Server did not respond for ${url}. `
                               +  "May be caused by timeout, refused connection, network error, etc.", error);
-                throw new Error(I18N.get("Cannot reach server"));
+                throw new Error(i18n.get("Cannot reach server"));
             } else {
                 console.error(error);
                 throw error;

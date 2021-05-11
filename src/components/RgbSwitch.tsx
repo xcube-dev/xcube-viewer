@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Switch from '@material-ui/core/Switch';
 import Tooltip from '@material-ui/core/Tooltip';
+import * as React from 'react';
+import i18n from '../i18n';
 
 import { RgbSchema } from '../model/dataset';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -50,8 +50,8 @@ const RgbSwitch: React.FC<RgbSwitchProps> = ({showRgbLayer, rgbSchema, setRgbLay
     };
 
     return (
-        <Tooltip arrow title={I18N.get('Show RGB layer instead')}>
-            <FormControlLabel label={I18N.get('RGB')} control={
+        <Tooltip arrow title={i18n.get('Show RGB layer instead')}>
+            <FormControlLabel label={i18n.get('RGB')} control={
                 <Switch
                     color={'primary'}
                     checked={rgbSchema !== null ? showRgbLayer : false}

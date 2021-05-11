@@ -1,0 +1,32 @@
+{
+  "name": "cyanoalert",
+  "authClient": {
+    "domain": "cyanoalert.eu.auth0.com",
+    "clientId": "UZ0gdtbUSzY9sBoacz3MYK6U6PzEMj6r",
+    "audience": "https://cyanoalert.eu/api/"
+  },
+  "server": {
+    "id": "CynaloAlert",
+    "name": "CyanoAlert Server",
+    "url": "https://service.cyanoalert.com/xcube/api/latest"
+"
+  },
+  "branding": {
+    "appBarTitle": "",
+    "windowTitle": "CyanoAlert Viewer",
+    "themeName": "dark",
+    "primaryColor": {
+      "light": "#ceef64",
+      "main": "#9abc31",
+      "dark": "#688c00",
+      "contrastText": "#fff"
+    },
+    "secondaryColor": "deepPurple",
+    "logoImage": "logo.png",
+    "logoWidth": 120,
+    "baseMapUrl": "https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png",
+    "defaultAgg": "median",
+    "polygonFillOpacity": 0.025,
+    "allowDownloads": false
+  }
+}

@@ -22,30 +22,25 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import Transition from 'react-transition-group/Transition';
-import {
-    Theme,
-    WithStyles,
-    createStyles,
-    withStyles,
-} from '@material-ui/core';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import IconButton from '@material-ui/core/IconButton';
-import PersonIcon from '@material-ui/icons/Person';
+import { createStyles, Theme, WithStyles, withStyles, } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import deepOrange from '@material-ui/core/colors/deepOrange';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
+import PersonIcon from '@material-ui/icons/Person';
+import * as React from 'react';
+import Transition from 'react-transition-group/Transition';
 
 import UserProfile from '../components/UserProfile';
+import i18n from '../i18n';
 import * as auth from '../util/auth';
-import { I18N } from '../config';
 import { WithLocale } from '../util/lang';
 
 
@@ -176,8 +171,8 @@ const UserControl: React.FC<UserControlProps> = ({
                     open={Boolean(userMenuAnchorEl)}
                     onClose={handleUserMenuClose}
                 >
-                    <MenuItem onClick={handleUserProfileMenuItemClicked}>{I18N.get('Profile')}</MenuItem>
-                    <MenuItem onClick={handleSignOutMenuItemClicked}>{I18N.get('Log out')}</MenuItem>
+                    <MenuItem onClick={handleUserProfileMenuItemClicked}>{i18n.get('Profile')}</MenuItem>
+                    <MenuItem onClick={handleSignOutMenuItemClicked}>{i18n.get('Log out')}</MenuItem>
                 </Menu>
                 <Dialog
                     open={profileDialogOpen}
@@ -187,7 +182,7 @@ const UserControl: React.FC<UserControlProps> = ({
                     aria-labelledby="alert-dialog-slide-title"
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle id="alert-dialog-slide-title">{I18N.get('User Profile')}</DialogTitle>
+                    <DialogTitle id="alert-dialog-slide-title">{i18n.get('User Profile')}</DialogTitle>
                     <DialogContent>
                         <UserProfile userInfo={userInfo!} accessToken={accessToken}/>
                     </DialogContent>

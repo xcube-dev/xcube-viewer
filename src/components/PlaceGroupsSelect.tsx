@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import * as React from 'react';
+import i18n from '../i18n';
 
 import { PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -92,7 +92,7 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
             shrink
             htmlFor="place-groups-select"
         >
-            {I18N.get('Places')}
+            {i18n.get('Places')}
         </InputLabel>
     );
 
@@ -125,7 +125,7 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
             disabled={!removeEnabled}
             onClick={handleRemoveButtonClick}
         >
-            <Tooltip arrow title={I18N.get('Remove places')}>
+            <Tooltip arrow title={i18n.get('Remove places')}>
                 {<RemoveCircleOutlineIcon/>}
             </Tooltip>
         </IconButton>

@@ -22,20 +22,16 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Slider, { Mark } from '@material-ui/core/Slider';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-
-import { I18N } from '../config';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import i18n from '../i18n';
 import { Time, TimeRange, UNIT } from '../model/timeSeries';
-import {
-    utcTimeToIsoDateTimeString,
-    utcTimeToIsoDateString,
-} from '../util/time';
+import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString, } from '../util/time';
 
 const HOR_MARGIN = 5;
 
@@ -99,7 +95,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
     return (
         <Box className={classes.box}>
-            <Tooltip arrow title={I18N.get('Select time in dataset')}>
+            <Tooltip arrow title={i18n.get('Select time in dataset')}>
                 <Slider
                     disabled={!selectedTimeRangeValid}
                     min={selectedTimeRange![0]}

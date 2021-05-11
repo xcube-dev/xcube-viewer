@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Switch from '@material-ui/core/Switch';
+import * as React from 'react';
+import i18n from '../i18n';
 
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 
 // TODO (forman): this component doesn't seem to be in use - remove!
 
@@ -47,7 +47,7 @@ const TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({timeSeriesUp
     };
 
     return (
-        <FormControlLabel label={I18N.get('Multi')} control={
+        <FormControlLabel label={i18n.get('Multi')} control={
             <Switch
                 color={'primary'}
                 checked={timeSeriesUpdateMode === 'add'}

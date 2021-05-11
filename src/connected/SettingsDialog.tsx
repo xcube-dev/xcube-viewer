@@ -23,12 +23,12 @@
  */
 
 import { connect } from 'react-redux';
+import { changeLocale, closeDialog, openDialog, updateSettings } from '../actions/controlActions';
+import SettingsDialog from '../components/SettingsDialog';
+import { selectedServerSelector } from "../selectors/controlSelectors";
 
 import { AppState } from '../states/appState';
-import SettingsDialog from '../components/SettingsDialog';
-import { changeLocale, closeDialog, openDialog, updateSettings } from '../actions/controlActions';
-import { selectedServerSelector } from "../selectors/controlSelectors";
-import { getVersion } from '../config';
+import version from '../version';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -37,7 +37,7 @@ const mapStateToProps = (state: AppState) => {
         open: state.controlState.dialogOpen['settings'],
         settings: state.controlState,
         selectedServer: selectedServerSelector(state),
-        viewerVersion: getVersion(),
+        viewerVersion: version,
         serverInfo: state.dataState.serverInfo,
     };
 };

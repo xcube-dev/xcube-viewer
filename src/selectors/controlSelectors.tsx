@@ -22,50 +22,55 @@
  * SOFTWARE.
  */
 
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { get as olProjGet } from 'ol/proj'
+import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlXYZSource } from 'ol/source/XYZ';
+import { default as OlCircle } from 'ol/style/Circle';
 ///<reference path="../util/find.ts"/>
 import { default as OlFillStyle } from 'ol/style/Fill';
 import { default as OlStrokeStyle } from 'ol/style/Stroke';
 import { default as OlStyle } from 'ol/style/Style';
-import { default as OlCircle } from 'ol/style/Circle';
+import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
 import * as React from 'react';
 import { createSelector } from 'reselect'
-import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
-import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
-import { default as OlVectorSource } from 'ol/source/Vector';
-import { default as OlXYZSource } from 'ol/source/XYZ';
-import { get as olProjGet } from 'ol/proj'
-
-import { AppState } from '../states/appState';
-import {
-    datasetsSelector,
-    userServersSelector,
-    userPlaceGroupSelector,
-    timeSeriesGroupsSelector
-} from './dataSelectors';
+import { Layers } from '../components/ol/layer/Layers';
+import { Tile } from '../components/ol/layer/Tile';
+import { Vector } from '../components/ol/layer/Vector';
+import { MapElement } from '../components/ol/Map';
+import { Config, getTileAccess } from '../config';
+import { ApiServerConfig } from '../model/apiServer';
 import {
     Dataset,
     findDataset,
     findDatasetVariable,
     getDatasetTimeDimension,
-    getDatasetTimeRange, RgbSchema, TimeDimension
+    getDatasetTimeRange,
+    RgbSchema,
+    TimeDimension
 } from '../model/dataset';
-import { Variable } from '../model/variable';
-import { TileSourceOptions } from '../model/tile';
 import {
+    findPlaceInfo,
+    forEachPlace,
+    getPlaceInfo,
+    isValidPlaceGroup,
     Place,
     PlaceGroup,
-    isValidPlaceGroup,
-    PlaceInfo, forEachPlace, getPlaceInfo, findPlaceInfo,
+    PlaceInfo,
 } from '../model/place';
+import { TileSourceOptions } from '../model/tile';
 import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import { MapElement } from '../components/ol/Map';
-import { Tile } from '../components/ol/layer/Tile';
-import { Vector } from '../components/ol/layer/Vector';
-import { Layers } from '../components/ol/layer/Layers';
+import { Variable } from '../model/variable';
+
+import { AppState } from '../states/appState';
 import { findIndexCloseTo } from '../util/find';
-import { Server } from '../model/server';
 import { MapGroup, maps, MapSource } from '../util/maps';
-import { getBranding, getTileAccess } from '../config';
+import {
+    datasetsSelector,
+    timeSeriesGroupsSelector,
+    userPlaceGroupSelector,
+    userServersSelector
+} from './dataSelectors';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -410,30 +415,39 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     }
 );
 
-const DEFAULT_FILL_OPACITY = getBranding().polygonFillOpacity || 0.25;
 
-const DEFAULT_STROKE = new OlStrokeStyle({
-                                             color: [200, 0, 0, 0.75],
-                                             width: 1.25
-                                         });
+export function getDefaultFillOpacity() {
+    return Config.instance.branding.polygonFillOpacity || 0.25;
+}
 
-const DEFAULT_FILL = new OlFillStyle({
-                                         color: [255, 0, 0, DEFAULT_FILL_OPACITY]
-                                     });
+export function getDefaultStyleImage() {
+    return new OlCircle({
+                            fill: getDefaultFillStyle(),
+                            stroke: getDefaultStrokeStyle(),
+                            radius: 6
+                        })
+}
 
-const DEFAULT_IMAGE = new OlCircle({
-                                       fill: DEFAULT_FILL,
-                                       stroke: DEFAULT_STROKE,
-                                       radius: 6
-                                   });
+export function getDefaultStrokeStyle() {
+    return new OlStrokeStyle({
+                                 color: [200, 0, 0, 0.75],
+                                 width: 1.25
+                             });
+}
 
-const DEFAULT_PLACE_GROUP_STYLE = new OlStyle(
-    {
-        image: DEFAULT_IMAGE,
-        stroke: DEFAULT_STROKE,
-        fill: DEFAULT_FILL,
-    }
-);
+export function getDefaultFillStyle() {
+    return new OlFillStyle({
+                               color: [255, 0, 0, getDefaultFillOpacity()]
+                           });
+}
+
+export function getDefaultPlaceGroupStyle() {
+    return new OlStyle({
+                           image: getDefaultStyleImage(),
+                           stroke: getDefaultStrokeStyle(),
+                           fill: getDefaultFillStyle(),
+                       });
+}
 
 export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
@@ -448,7 +462,7 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                     <Vector
                         key={index}
                         id={`placeGroup.${placeGroup.id}`}
-                        style={DEFAULT_PLACE_GROUP_STYLE}
+                        style={getDefaultPlaceGroupStyle()}
                         zIndex={100}
                         source={new OlVectorSource(
                             {
@@ -498,7 +512,7 @@ export const activityMessagesSelector = createSelector(
 export const selectedServerSelector = createSelector(
     userServersSelector,
     selectedServerIdSelector,
-    (userServers: Server[], serverId: string): Server => {
+    (userServers: ApiServerConfig[], serverId: string): ApiServerConfig => {
         if (userServers.length === 0) {
             throw new Error(`internal error: no servers configured`);
         }

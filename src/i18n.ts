@@ -22,9 +22,13 @@
  * SOFTWARE.
  */
 
-import { callJsonApi } from './callApi';
-import { ApiServerInfo } from '../model/apiServer';
+import { getCurrentLocale, LanguageDictionary } from './util/lang';
+import lang from './resources/lang.json';
 
-export function getServerInfo(apiServerUrl: string): Promise<ApiServerInfo> {
-    return callJsonApi<ApiServerInfo>(`${apiServerUrl}/`);
-}
+const i18n = new LanguageDictionary(lang);
+i18n.locale = getCurrentLocale();
+
+export default i18n;
+
+
+

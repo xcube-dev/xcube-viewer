@@ -22,139 +22,88 @@
  * SOFTWARE.
  */
 
+import { Color, PaletteType } from '@material-ui/core';
 import {
-    blue,
-    lightBlue,
+    cyan,
+    deepPurple,
     green,
-    grey,
+    indigo,
+    lightBlue,
+    lime,
+    orange,
+    pink,
     purple,
     red,
-    pink,
     yellow,
-    orange,
-    cyan,
-    indigo,
-    deepPurple,
-    lime,
 } from '@material-ui/core/colors';
-import { Color, PaletteType } from '@material-ui/core';
-import { PaletteColorOptions } from '@material-ui/core/styles/createPalette';
+import { ApiServerConfig } from './model/apiServer';
+import rawDefaultConfig from './resources/config.json';
+import { AuthClientConfig } from './util/auth';
+import { Branding, parseBranding } from './util/branding';
 
-import { LanguageDictionary } from './util/lang';
-import { getQueryParameterByName } from './util/qparam';
-import lang from './resources/lang.json';
-
-const version = '0.4.6-dev.0';
-
-const defaultApiServerUrl = process.env.REACT_APP_XCUBE_API;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-interface Branding {
-    appBarTitle: string;
-    windowTitle: string;
-    defaultApiServerId: string;
-    defaultApiServerName: string;
-    defaultApiServerUrl: string;
-    themeName: 'dark' | 'light';
-    primaryColor: PaletteColorOptions;
-    secondaryColor: PaletteColorOptions;
-    headerBackgroundColor?: string;
-    logoPath: any;
-    logoWidth: number;
-    baseMapUrl?: string;
-    defaultAgg?: 'median' | 'mean';
-    polygonFillOpacity?: number;
+export class Config {
+    readonly name: string;
+    readonly server: ApiServerConfig;
+    readonly branding: Branding;
+    readonly authClient?: AuthClientConfig;
+    private static _instance: Config;
+
+    constructor(
+        name: string,
+        server: ApiServerConfig,
+        branding: Branding,
+        authClient?: AuthClientConfig
+    ) {
+        this.name = name;
+        this.server = server;
+        this.branding = branding;
+        this.authClient = authClient;
+    }
+
+    static async load(): Promise<Config> {
+        const urlParams = new URLSearchParams(window.location.search);
+        let configPath = urlParams.get('configPath') || 'config';
+        let rawConfig;
+        try {
+            const configUrl = window.location.origin + `/${configPath}/config.json`;
+            rawConfig = await fetch(configUrl);
+            rawConfig = await rawConfig.json();
+            console.info(`Configuration loaded.`);
+        } catch (e) {
+            configPath = '';
+            rawConfig = rawDefaultConfig;
+            console.info(`Using default configuration.`);
+        }
+
+        const name = rawConfig.name || 'default';
+        const authClient = rawConfig.authClient && {...rawConfig.authClient};
+        const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
+        server.id = urlParams.get('serverId') || server.id;
+        server.name = urlParams.get('serverName') || server.name;
+        server.url = urlParams.get('serverUrl') || server.url;
+        const branding = parseBranding({...rawDefaultConfig.branding, ...rawConfig.branding},
+                                       configPath);
+        Config._instance = new Config(name, server, branding, authClient);
+        console.debug('Configuration:', Config._instance);
+        return Config._instance;
+    }
+
+    static get instance(): Config {
+        Config.assertConfigLoaded();
+        return Config._instance;
+    }
+
+    private static assertConfigLoaded() {
+        if (!Config._instance) {
+            throw new Error('internal error: configuration not available yet');
+        }
+    }
 }
 
-const brandings: { [name: string]: Branding } = {
-    'default': {
-        appBarTitle: 'xcube Viewer',
-        windowTitle: 'xcube Viewer',
-        defaultApiServerId: 'local',
-        defaultApiServerName: 'Local Server',
-        defaultApiServerUrl: defaultApiServerUrl || 'http://localhost:8080',
-        themeName: 'dark',
-        primaryColor: blue,
-        secondaryColor: pink,
-        headerBackgroundColor: undefined,
-        logoPath: require('./resources/default/logo.png').default,
-        logoWidth: 32,
-        baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        defaultAgg: 'mean',
-    },
-    'esdl': {
-        appBarTitle: 'ESDL Viewer',
-        windowTitle: 'ESDL Viewer',
-        defaultApiServerId: 'esdl',
-        defaultApiServerName: 'ESDL Server',
-        defaultApiServerUrl: 'https://xcube.earthsystemdatalab.net',
-        themeName: 'light',
-        primaryColor: grey,
-        secondaryColor: pink,
-        headerBackgroundColor: grey['50'],
-        logoPath: require('./resources/esdl/logo.png').default,
-        logoWidth: 64,
-        baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        defaultAgg: 'mean',
-    },
-    'eodatabee': {
-        appBarTitle: 'Demo Viewer',
-        windowTitle: 'EODataBee Demo Viewer',
-        defaultApiServerId: 'eodatabee',
-        defaultApiServerName: 'EODataBee Server',
-        defaultApiServerUrl: defaultApiServerUrl || 'https://xcube2.dcs4cop.eu/dcs4cop-dev/api/latest',
-        themeName: 'dark',
-        primaryColor: {
-            light: '#ffd77c',
-            main: '#ffc942',
-            dark: '#b78c2f',
-            contrastText: '#fff',
-        },
-        secondaryColor: pink,
-        headerBackgroundColor: undefined,
-        logoPath: require('./resources/eodatabee/logo.png').default,
-        logoWidth: 150,
-        baseMapUrl: 'http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-        defaultAgg: 'mean',
-    },
-    'cyanoalert': {
-        appBarTitle: '',
-        windowTitle: 'CyanoAlert Viewer',
-        defaultApiServerId: 'cyanoalert',
-        defaultApiServerName: 'CyanoAlert Server',
-        defaultApiServerUrl: defaultApiServerUrl || 'https://cyanoalert.brockmann-consult.com/api/latest',
-        themeName: 'dark',
-        primaryColor: {
-            light: '#ceef64',
-            main: '#9abc31',
-            dark: '#688c00',
-            contrastText: '#fff',
-        },
-        secondaryColor: deepPurple,
-        headerBackgroundColor: undefined,
-        logoPath: require('./resources/cyanoalert/logo.png').default,
-        logoWidth: 120,
-        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-        defaultAgg: 'median',
-        polygonFillOpacity: 0.025,
-    },
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const brandingName = process.env.REACT_APP_BRANDING || 'default';
-const branding = brandings[brandingName];
-
-if (!branding) {
-    throw new Error(`illegal branding "${brandingName}"!`);
-}
-
-if (branding.windowTitle) {
-    document.title = branding.windowTitle;
-}
-
-export const I18N = new LanguageDictionary(lang);
+// TODO (forman): The following functions should be made part of the configuration.
 
 
 interface TileAccess {
@@ -162,37 +111,6 @@ interface TileAccess {
     token: string;
 }
 
-
-const defaultApiServer = {
-    id: branding.defaultApiServerId,
-    name: getQueryParameterByName(null, 'serverName', branding.defaultApiServerName)!,
-    url: getQueryParameterByName(null, 'serverUrl', branding.defaultApiServerUrl)!,
-};
-
-const apiServers = [
-    {...defaultApiServer},
-];
-
-
-export function getVersion() {
-    return version;
-}
-
-export function getBrandingName() {
-    return brandingName;
-}
-
-export function getBranding() {
-    return branding;
-}
-
-export function getDefaultApiServer() {
-    return defaultApiServer;
-}
-
-export function getApiServers() {
-    return apiServers;
-}
 
 // Array of user place colors in stable order (see #153)
 const userPlaceColorsArray: [string, Color][] = [
@@ -245,3 +163,5 @@ const tileAccess: { [name: string]: TileAccess } = {
 export function getTileAccess(groupName: string) {
     return tileAccess[groupName];
 }
+
+

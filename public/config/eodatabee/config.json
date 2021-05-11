@@ -1,0 +1,26 @@
+{
+  "name": "eodatabee",
+  "server": {
+    "id": "eodatabee",
+    "name": "EODataBee Server",
+    "url": "https://xcube2.dcs4cop.eu/dcs4cop-dev/api/latest"
+  },
+  "branding": {
+    "appBarTitle": "Demo Viewer",
+    "windowTitle": "EODataBee Demo Viewer",
+    "themeName": "dark",
+    "primaryColor": {
+      "light": "#ffd77c",
+      "main": "#ffc942",
+      "dark": "#b78c2f",
+      "contrastText": "#fff"
+    },
+    "secondaryColor": "pink",
+    "logoImage": "logo.png",
+    "logoWidth": 150,
+    "baseMapUrl": "http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+    "defaultAgg": "mean",
+    "polygonFillOpacity": 0.025,
+    "allowDownloads": false
+  }
+}

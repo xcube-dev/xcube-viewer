@@ -22,19 +22,7 @@
  * SOFTWARE.
  */
 
-export interface Server {
-    id: string;
-    name: string;
-    url: string;
-}
+const version = '0.5.0-dev.0';
 
-export interface ServerInfo {
-    name: string;
-    description: string;
-    version: string;
-    configTime: string;
-    serverTime: string;
-}
-
-
+export default version;
 

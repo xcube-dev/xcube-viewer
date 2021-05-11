@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import React, { ChangeEvent } from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-
-import { I18N } from '../config';
+import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
 import SettingsPanel from './SettingsPanel';
 import SettingsSubPanel from './SettingsSubPanel';
@@ -95,9 +94,9 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                 scroll='body'
             >
                 <DialogContent>
-                    <SettingsPanel title={I18N.get('Export Settings')}>
+                    <SettingsPanel title={i18n.get('Export Settings')}>
                         <SettingsSubPanel
-                            label={I18N.get('Include time-series data') + ' (*.txt)'}
+                            label={i18n.get('Include time-series data') + ' (*.txt)'}
                             value={getOnOff(settings.exportTimeSeries)}
                         >
                             <ToggleSetting
@@ -107,7 +106,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                             />
                         </SettingsSubPanel>
                         <SettingsSubPanel
-                            label={I18N.get('Separator for time-series data')}
+                            label={i18n.get('Separator for time-series data')}
                         >
                             <TextField
                                 className={classes.separatorTextField}
@@ -119,7 +118,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                             />
                         </SettingsSubPanel>
                         <SettingsSubPanel
-                            label={I18N.get('Include places data') + ' (*.geojson)'}
+                            label={i18n.get('Include places data') + ' (*.geojson)'}
                             value={getOnOff(settings.exportPlaces)}
                         >
                             <ToggleSetting
@@ -129,7 +128,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                             />
                         </SettingsSubPanel>
                         <SettingsSubPanel
-                            label={I18N.get('Combine place data in one file')}
+                            label={i18n.get('Combine place data in one file')}
                             value={getOnOff(settings.exportPlacesAsCollection)}
                         >
                             <ToggleSetting
@@ -140,7 +139,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                             />
                         </SettingsSubPanel>
                         <SettingsSubPanel
-                            label={I18N.get('As ZIP archive')}
+                            label={i18n.get('As ZIP archive')}
                             value={getOnOff(settings.exportZipArchive)}
                         >
                             <ToggleSetting
@@ -149,7 +148,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={I18N.get('File name')}>
+                        <SettingsSubPanel label={i18n.get('File name')}>
                             <TextField
                                 className={classes.fileNameTextField}
                                 value={settings.exportFileName}
@@ -167,7 +166,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                         color={'primary'}
                         disabled={!canDownload(settings)}
                     >
-                        {I18N.get('Download')}
+                        {i18n.get('Download')}
                     </Button>
                 </DialogActions>
 
@@ -182,7 +181,7 @@ export default ExportDialog;
 
 
 const getOnOff = (state: boolean): string => {
-    return state ? I18N.get('On') : I18N.get('Off');
+    return state ? i18n.get('On') : i18n.get('Off');
 };
 
 const isValidFileName = (fileName: string) => {
