@@ -24,6 +24,8 @@
   
 * Fixed eslint warnings of type "'ACTION' is already defined" during build.  
 
+* The viewer's map now uses EPSG:4326 projection as default.
+
 ## Changes in version 0.4.5
 
 * After logging out, the browser now correctly redirects to the 
