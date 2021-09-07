@@ -375,9 +375,14 @@ export const selectedDatasetVariableLayerSelector = createSelector(
      colorBarName: string,
      attributions: string[] | null,
     ): MapElement => {
-        if (!variable || !variable.tileSourceOptions) {
+        if (!variable) {
             return null;
         }
+        if (!variable.tileSourceOptions) {
+            console.warn(`Variable ${variable.name} has no tileSourceOptions!`);
+            return null;
+        }
+        console.info(`Variable ${variable.name}.tileSourceOptions:`, variable.tileSourceOptions)
         return getTileLayer('variable',
                             variable.tileSourceOptions,
                             `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
