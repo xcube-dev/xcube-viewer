@@ -242,8 +242,6 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     let commonValueDataKey: keyof TimeSeriesPoint | null = null;
 
     const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
-        console.log(ts);
-
         const source = ts.source;
         const valueDataKey = source.valueDataKey;
         let lineName = source.variableName;

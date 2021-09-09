@@ -71,11 +71,15 @@ export class Config {
             const configUrl = window.location.origin + `/${configPath}/config.json`;
             rawConfig = await fetch(configUrl);
             rawConfig = await rawConfig.json();
-            console.info(`Configuration loaded.`);
+            if (process.env.NODE_ENV === 'development') {
+                console.debug(`Configuration loaded.`);
+            }
         } catch (e) {
             configPath = '';
             rawConfig = rawDefaultConfig;
-            console.info(`Using default configuration.`);
+            if (process.env.NODE_ENV === 'development') {
+                console.debug(`Using default configuration.`);
+            }
         }
 
         const name = rawConfig.name || 'default';
@@ -87,7 +91,9 @@ export class Config {
         const branding = parseBranding({...rawDefaultConfig.branding, ...rawConfig.branding},
                                        configPath);
         Config._instance = new Config(name, server, branding, authClient);
-        console.debug('Configuration:', Config._instance);
+        if (process.env.NODE_ENV === 'development') {
+            console.debug('Configuration:', Config._instance);
+        }
         return Config._instance;
     }
 

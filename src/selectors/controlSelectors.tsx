@@ -382,7 +382,6 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             console.warn(`Variable ${variable.name} has no tileSourceOptions!`);
             return null;
         }
-        console.info(`Variable ${variable.name}.tileSourceOptions:`, variable.tileSourceOptions)
         return getTileLayer('variable',
                             variable.tileSourceOptions,
                             `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
