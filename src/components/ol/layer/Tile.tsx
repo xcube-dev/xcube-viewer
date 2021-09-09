@@ -118,7 +118,7 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
                 replaceSource = true;
             }
 
-            if (!replaceSource) {
+            if (replaceSource) {
                 // Replace the entire source and accept layer flickering.
                 layer.setSource(newSource);
             }
