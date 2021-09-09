@@ -26,6 +26,10 @@
 
 * The viewer's map now uses EPSG:4326 projection as default.
 
+* Reduced layer flickering a new time step is selected. 
+  Layer transitions are now performed more smoothly. (#119)
+ 
+
 ## Changes in version 0.4.5
 
 * After logging out, the browser now correctly redirects to the 

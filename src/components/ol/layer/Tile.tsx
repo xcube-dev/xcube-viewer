@@ -25,6 +25,7 @@
 import * as React from 'react';
 import { default as OlMap } from 'ol/Map';
 import { default as OlTileLayer } from 'ol/layer/Tile';
+import { default as OlUrlTileSource } from 'ol/source/UrlTile';
 import { default as OlXYZSource } from 'ol/source/XYZ';
 import { default as OlOSMSource } from 'ol/source/OSM';
 import { Options as OlTileLayerOptions } from 'ol/layer/Tile';
@@ -67,7 +68,33 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
     updateMapObject(map: OlMap, layer: OlTileLayer, prevProps: Readonly<TileProps>): OlTileLayer {
         // TODO: Code duplication in ./Vector.tsx
         if (this.props.source !== prevProps.source && this.props.source) {
-            layer.setSource(this.props.source);
+            const source = layer.getSource();
+            if (source instanceof OlUrlTileSource && this.props.source instanceof OlUrlTileSource) {
+                // We don't expect anything to change in a XYZ source
+                // but the tile URL.
+                // Just setting source properties allows for
+                // smooth layer transitions.
+                // Replacing the entire source cause the layer
+                // to flicker in the map.
+                // See https://github.com/dcs4cop/xcube-viewer/issues/119
+                const xyzSourceOld: OlUrlTileSource = source;
+                const xyzSourceNew: OlUrlTileSource = this.props.source as OlUrlTileSource;
+                const newUrls = xyzSourceNew.getUrls();
+                if (newUrls) {
+                    xyzSourceOld.setUrls(newUrls!);
+                }
+                const newTileLoadFunction = xyzSourceNew.getTileLoadFunction();
+                if (newTileLoadFunction) {
+                    xyzSourceOld.setTileLoadFunction(newTileLoadFunction!);
+                }
+                const newTileUrlFunction = xyzSourceNew.getTileUrlFunction();
+                if (newTileUrlFunction) {
+                    xyzSourceOld.setTileUrlFunction(newTileUrlFunction!);
+                }
+            } else {
+                // Replace the entire source and accept layer flickering.
+                layer.setSource(this.props.source);
+            }
         }
         if (this.props.visible && this.props.visible !== prevProps.visible) {
             layer.setVisible(this.props.visible);
