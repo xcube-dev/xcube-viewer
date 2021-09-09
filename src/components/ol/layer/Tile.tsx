@@ -25,10 +25,11 @@
 import * as React from 'react';
 import { default as OlMap } from 'ol/Map';
 import { default as OlTileLayer } from 'ol/layer/Tile';
+import { default as OlTileSource } from 'ol/source/Tile';
 import { default as OlUrlTileSource } from 'ol/source/UrlTile';
 import { default as OlXYZSource } from 'ol/source/XYZ';
 import { default as OlOSMSource } from 'ol/source/OSM';
-import { Options as OlTileLayerOptions } from 'ol/layer/Tile';
+import { Options as OlTileLayerOptions } from 'ol/layer/BaseTile';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
@@ -66,36 +67,63 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
     }
 
     updateMapObject(map: OlMap, layer: OlTileLayer, prevProps: Readonly<TileProps>): OlTileLayer {
-        // TODO: Code duplication in ./Vector.tsx
-        if (this.props.source !== prevProps.source && this.props.source) {
-            const source = layer.getSource();
-            if (source instanceof OlUrlTileSource && this.props.source instanceof OlUrlTileSource) {
-                // We don't expect anything to change in a XYZ source
-                // but the tile URL.
-                // Just setting source properties allows for
-                // smooth layer transitions.
-                // Replacing the entire source cause the layer
-                // to flicker in the map.
-                // See https://github.com/dcs4cop/xcube-viewer/issues/119
-                const xyzSourceOld: OlUrlTileSource = source;
-                const xyzSourceNew: OlUrlTileSource = this.props.source as OlUrlTileSource;
-                const newUrls = xyzSourceNew.getUrls();
-                if (newUrls) {
-                    xyzSourceOld.setUrls(newUrls!);
+        const oldSource: OlTileSource = layer.getSource();
+        const newSource: OlTileSource | undefined = this.props.source;
+        if (newSource && oldSource !== newSource) {
+            // We don't expect anything to change in a XYZ source
+            // but the tile URL and the new imageSmoothing property.
+            // Just setting source properties allows for
+            // smooth layer transitions.
+            // Replacing the entire source cause the layer
+            // to flicker in the map.
+            // See https://github.com/dcs4cop/xcube-viewer/issues/119
+            //
+            // If the tile source's URL changes, we just set the URL.
+            // Otherwise we replace the source.
+            // Since we cannot detect which single source properties
+            // have changed, we assume here that the URL, if changed, is the
+            // only changed property. This is not a valid assumption
+            // in the general case.
+            //
+            let replaceSource = true;
+            if (oldSource instanceof OlUrlTileSource && newSource instanceof OlUrlTileSource) {
+                const oldUrlTileSource: OlUrlTileSource = oldSource;
+                const newUrlTileSource: OlUrlTileSource = newSource;
+                const oldUrls = oldUrlTileSource.getUrls();
+                const newUrls = newUrlTileSource.getUrls();
+                if (oldUrls !== newUrls && newUrls && (oldUrls === null || oldUrls[0] !== newUrls[0])) {
+                    oldUrlTileSource.setUrls(newUrls!);
+                    replaceSource = false;
                 }
-                const newTileLoadFunction = xyzSourceNew.getTileLoadFunction();
-                if (newTileLoadFunction) {
-                    xyzSourceOld.setTileLoadFunction(newTileLoadFunction!);
+                const oldTileLoadFunction = oldUrlTileSource.getTileLoadFunction();
+                const newTileLoadFunction = newUrlTileSource.getTileLoadFunction();
+                if (oldTileLoadFunction !== newTileLoadFunction) {
+                    oldUrlTileSource.setTileLoadFunction(newTileLoadFunction!);
+                    replaceSource = false;
                 }
-                const newTileUrlFunction = xyzSourceNew.getTileUrlFunction();
-                if (newTileUrlFunction) {
-                    xyzSourceOld.setTileUrlFunction(newTileUrlFunction!);
+                const oldTileUrlFunction = oldUrlTileSource.getTileUrlFunction();
+                const newTileUrlFunction = newUrlTileSource.getTileUrlFunction();
+                if (oldTileUrlFunction !== newTileUrlFunction) {
+                    oldUrlTileSource.setTileUrlFunction(newTileUrlFunction!);
+                    replaceSource = false;
                 }
-            } else {
+            }
+            const oldContextOptions = oldSource.getContextOptions()
+            const newContextOptions = newSource.getContextOptions()
+            const oldImageSmoothing = typeof oldContextOptions === 'object' ?
+                                      (oldContextOptions as {[key: string]: any}).imageSmoothing : true;
+            const newImageSmoothing = typeof newContextOptions === 'object' ?
+                                      (newContextOptions as {[key: string]: any}).imageSmoothing : true;
+            if (oldImageSmoothing !== newImageSmoothing) {
+                replaceSource = true;
+            }
+
+            if (!replaceSource) {
                 // Replace the entire source and accept layer flickering.
-                layer.setSource(this.props.source);
+                layer.setSource(newSource);
             }
         }
+        // TODO: Code duplication in ./Vector.tsx
         if (this.props.visible && this.props.visible !== prevProps.visible) {
             layer.setVisible(this.props.visible);
         }

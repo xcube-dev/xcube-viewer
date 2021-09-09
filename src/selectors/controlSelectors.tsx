@@ -80,6 +80,7 @@ export const selectedTimeSelector = (state: AppState) => state.controlState.sele
 export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
 export const timeAnimationActiveSelector = (state: AppState) => state.controlState.timeAnimationActive;
+export const imageSmoothingSelector = (state: AppState) => state.controlState.imageSmoothingEnabled;
 export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
@@ -324,7 +325,8 @@ function getTileLayer(layerId: string,
                       timeDimension: TimeDimension | null,
                       time: number | null,
                       timeAnimationActive: boolean,
-                      attributions: string[] | null) {
+                      attributions: string[] | null,
+                      imageSmoothing: boolean) {
     if (time !== null) {
         let timeString;
         if (timeDimension) {
@@ -353,6 +355,7 @@ function getTileLayer(layerId: string,
             tileGrid: new OlTileGrid(tileSourceOptions.tileGrid),
             attributions: attributions || undefined,
             transition: timeAnimationActive ? 0 : 250,
+            imageSmoothing: imageSmoothing,
         });
     return (
         <Tile id={layerId} source={source} zIndex={10}/>
@@ -367,6 +370,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
     selectedDatasetAttributionsSelector,
+    imageSmoothingSelector,
     (variable: Variable | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
@@ -374,6 +378,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
      colorBarMinMax: [number, number],
      colorBarName: string,
      attributions: string[] | null,
+     imageSmoothing: boolean
     ): MapElement => {
         if (!variable) {
             return null;
@@ -382,13 +387,16 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             console.warn(`Variable ${variable.name} has no tileSourceOptions!`);
             return null;
         }
-        return getTileLayer('variable',
-                            variable.tileSourceOptions,
-                            `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
-                            timeDimension,
-                            time,
-                            timeAnimationActive,
-                            attributions);
+        return getTileLayer(
+            'variable',
+            variable.tileSourceOptions,
+            `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
+            timeDimension,
+            time,
+            timeAnimationActive,
+            attributions,
+            imageSmoothing
+        );
     }
 );
 
@@ -399,12 +407,14 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     selectedTimeSelector,
     timeAnimationActiveSelector,
     selectedDatasetAttributionsSelector,
+    imageSmoothingSelector,
     (showRgbLayer: boolean,
      rgbSchema: RgbSchema | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
      attributions: string[] | null,
+     imageSmoothing: boolean
     ): MapElement => {
         if (!showRgbLayer || !rgbSchema) {
             return null;
@@ -415,7 +425,8 @@ export const selectedDatasetRgbLayerSelector = createSelector(
                             timeDimension,
                             time,
                             timeAnimationActive,
-                            attributions);
+                            attributions,
+                            imageSmoothing);
     }
 );
 

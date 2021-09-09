@@ -37,16 +37,11 @@ import { Config } from './config';
 import App from './connected/App';
 import { appReducer } from './reducers/appReducer';
 import * as serviceWorker from './serviceWorker';
-import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from './util/hacks';
 
 
 Config.load().then(() => {
     const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
     const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
-
-    if (store.getState().controlState.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
-        setGlobalCanvasImageSmoothing(store.getState().controlState.imageSmoothingEnabled);
-    }
 
     store.dispatch(changeLocale(store.getState().controlState.locale) as any);
     store.dispatch(initAuthClient() as any);

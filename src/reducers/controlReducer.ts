@@ -64,7 +64,6 @@ import { AppState } from '../states/appState';
 import { ControlState, MAP_OBJECTS, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
-import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
 
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
@@ -84,9 +83,6 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
         case UPDATE_SETTINGS: {
             const settings = {...state, ...action.settings};
             storeUserSettings(settings);
-            if (settings.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
-                setGlobalCanvasImageSmoothing(settings.imageSmoothingEnabled);
-            }
             return settings;
         }
         case UPDATE_DATASETS: {

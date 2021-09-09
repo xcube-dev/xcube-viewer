@@ -35,6 +35,7 @@ import { default as OlVectorLayer } from 'ol/layer/Vector';
 import { default as OlMap } from 'ol/Map';
 import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
 import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlTileLayer } from 'ol/layer/Tile';
 import { default as OlCircleStyle } from 'ol/style/Circle';
 import { default as OlFillStyle } from 'ol/style/Fill';
 import { default as OlStrokeStyle } from 'ol/style/Stroke';
@@ -99,6 +100,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
     places: Place[];
+    imageSmoothing?: boolean;
 }
 
 const Viewer: React.FC<ViewerProps> = ({
@@ -115,6 +117,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            selectPlace,
                                            selectedPlaceId,
                                            places,
+                                           imageSmoothing,
                                        }) => {
 
     const [map, setMap] = useState<OlMap | null>(null);
@@ -140,6 +143,19 @@ const Viewer: React.FC<ViewerProps> = ({
             }
         }
     }, [map, selectedPlaceId, selectedPlaceIdPrev]);
+
+    useEffect(() => {
+        // Force layer source updates after imageSmoothing change
+        if (map) {
+            map.getLayers().forEach(layer => {
+                if (layer instanceof OlTileLayer) {
+                    layer.getSource().changed();
+                } else {
+                    layer.changed();
+                }
+            });
+        }
+    }, [map, imageSmoothing]);
 
     const handleMapClick = (event: OlMapBrowserEvent) => {
         if (mapInteraction === 'Select') {
