@@ -26,6 +26,7 @@ import * as React from 'react';
 import { default as OlMap } from 'ol/Map';
 import { default as OlTileLayer } from 'ol/layer/Tile';
 import { default as OlTileSource } from 'ol/source/Tile';
+import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
 import { default as OlUrlTileSource } from 'ol/source/UrlTile';
 import { default as OlXYZSource } from 'ol/source/XYZ';
 import { default as OlOSMSource } from 'ol/source/OSM';
@@ -58,6 +59,7 @@ export function OSMBlackAndWhite(): JSX.Element {
 interface TileProps extends MapComponentProps, OlTileLayerOptions {
 }
 
+
 export class Tile extends MapComponent<OlTileLayer, TileProps> {
 
     addMapObject(map: OlMap): OlTileLayer {
@@ -89,31 +91,38 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
             if (oldSource instanceof OlUrlTileSource && newSource instanceof OlUrlTileSource) {
                 const oldUrlTileSource: OlUrlTileSource = oldSource;
                 const newUrlTileSource: OlUrlTileSource = newSource;
-                const oldUrls = oldUrlTileSource.getUrls();
-                const newUrls = newUrlTileSource.getUrls();
-                if (oldUrls !== newUrls && newUrls && (oldUrls === null || oldUrls[0] !== newUrls[0])) {
-                    oldUrlTileSource.setUrls(newUrls!);
-                    replaceSource = false;
-                }
-                const oldTileLoadFunction = oldUrlTileSource.getTileLoadFunction();
-                const newTileLoadFunction = newUrlTileSource.getTileLoadFunction();
-                if (oldTileLoadFunction !== newTileLoadFunction) {
-                    oldUrlTileSource.setTileLoadFunction(newTileLoadFunction!);
-                    replaceSource = false;
-                }
-                const oldTileUrlFunction = oldUrlTileSource.getTileUrlFunction();
-                const newTileUrlFunction = newUrlTileSource.getTileUrlFunction();
-                if (oldTileUrlFunction !== newTileUrlFunction) {
-                    oldUrlTileSource.setTileUrlFunction(newTileUrlFunction!);
-                    replaceSource = false;
+
+                const oldTileGrid = oldUrlTileSource.getTileGrid();
+                const newTileGrid = oldUrlTileSource.getTileGrid();
+                if (equalTileGrids(oldTileGrid, newTileGrid)) {
+                    const oldUrls = oldUrlTileSource.getUrls();
+                    const newUrls = newUrlTileSource.getUrls();
+                    if (oldUrls !== newUrls && newUrls && (oldUrls === null || oldUrls[0] !== newUrls[0])) {
+                        oldUrlTileSource.setUrls(newUrls!);
+                        replaceSource = false;
+                    }
+                    const oldTileLoadFunction = oldUrlTileSource.getTileLoadFunction();
+                    const newTileLoadFunction = newUrlTileSource.getTileLoadFunction();
+                    if (oldTileLoadFunction !== newTileLoadFunction) {
+                        oldUrlTileSource.setTileLoadFunction(newTileLoadFunction!);
+                        replaceSource = false;
+                    }
+                    const oldTileUrlFunction = oldUrlTileSource.getTileUrlFunction();
+                    const newTileUrlFunction = newUrlTileSource.getTileUrlFunction();
+                    if (oldTileUrlFunction !== newTileUrlFunction) {
+                        oldUrlTileSource.setTileUrlFunction(newTileUrlFunction!);
+                        replaceSource = false;
+                    }
+                } else {
+                    console.debug('tile grids are not equal!');
                 }
             }
             const oldContextOptions = oldSource.getContextOptions()
             const newContextOptions = newSource.getContextOptions()
             const oldImageSmoothing = typeof oldContextOptions === 'object' ?
-                                      (oldContextOptions as {[key: string]: any}).imageSmoothing : true;
+                                      (oldContextOptions as { [key: string]: any }).imageSmoothing : true;
             const newImageSmoothing = typeof newContextOptions === 'object' ?
-                                      (newContextOptions as {[key: string]: any}).imageSmoothing : true;
+                                      (newContextOptions as { [key: string]: any }).imageSmoothing : true;
             if (oldImageSmoothing !== newImageSmoothing) {
                 replaceSource = true;
             }
@@ -176,3 +185,69 @@ const OSM_BW_SOURCE = new OlXYZSource(
         ]
     });
 
+
+function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
+    // Check min/max zoom level
+    if (oldTileGrid.getMinZoom() !== newTileGrid.getMinZoom()
+        || oldTileGrid.getMaxZoom() !== newTileGrid.getMaxZoom()) {
+        return false;
+    }
+
+    // Check extents
+    const oldExtent = oldTileGrid.getExtent();
+    const newExtent = newTileGrid.getExtent();
+    for (let i = 0; i < oldExtent.length; i++) {
+        if (oldExtent[i] !== newExtent[i]) {
+            return false;
+        }
+    }
+
+    // Check number of z-levels
+    const oldResolutions = oldTileGrid.getResolutions();
+    const newResolutions = newTileGrid.getResolutions();
+    const numLevels = oldResolutions.length;
+    if (numLevels !== newResolutions.length) {
+        return false;
+    }
+
+    // Check all z-level properties are equal
+    for (let z = 0; z < numLevels; z++) {
+        // Check resolution
+        const oldResolution = oldTileGrid.getResolution(z);
+        const newResolution = newTileGrid.getResolution(z);
+        if (oldResolution !== newResolution) {
+            return false;
+        }
+        // Check origin
+        const oldOrigin = oldTileGrid.getOrigin(z);
+        const newOrigin = newTileGrid.getOrigin(z);
+        for (let i = 0; i < oldOrigin.length; i++) {
+            if (oldOrigin[i] !== newOrigin[i]) {
+                return false;
+            }
+        }
+        // Check tile size
+        let oldTileSize = oldTileGrid.getTileSize(z);
+        let newTileSize = newTileGrid.getTileSize(z);
+        for (let i = 0; i < oldOrigin.length; i++) {
+            if (typeof oldTileSize === 'number') {
+                oldTileSize = [oldTileSize, oldTileSize]
+            }
+            if (typeof newTileSize === 'number') {
+                newTileSize = [newTileSize, newTileSize]
+            }
+            if (oldTileSize[0] != newTileSize[0]
+                || oldTileSize[1] != newTileSize[1]) {
+                return false;
+            }
+        }
+        // Check tile range
+        let oldTileRange = oldTileGrid.getFullTileRange(z);
+        let newTileRange = newTileGrid.getFullTileRange(z);
+        if (oldTileRange.getWidth() !== newTileRange.getWidth()
+            || oldTileRange.getHeight() !== newTileRange.getHeight()) {
+            return false;
+        }
+    }
+    return true;
+}
