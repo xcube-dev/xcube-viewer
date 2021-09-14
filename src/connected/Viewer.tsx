@@ -31,7 +31,8 @@ import {
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetRgbLayerSelector,
     selectedDatasetVariableLayerSelector,
-    selectedPlaceGroupPlacesSelector
+    selectedPlaceGroupPlacesSelector,
+    imageSmoothingSelector
 } from '../selectors/controlSelectors';
 import { addUserPlace } from '../actions/dataActions';
 import Viewer from '../components/Viewer';
@@ -53,6 +54,7 @@ const mapStateToProps = (state: AppState) => {
         selectedPlaceId: state.controlState.selectedPlaceId,
         places: selectedPlaceGroupPlacesSelector(state),
         baseMapLayer: baseMapLayerSelector(state),
+        imageSmoothing: imageSmoothingSelector(state),
     }
 };
 

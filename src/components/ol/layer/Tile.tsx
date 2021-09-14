@@ -25,10 +25,12 @@
 import * as React from 'react';
 import { default as OlMap } from 'ol/Map';
 import { default as OlTileLayer } from 'ol/layer/Tile';
+import { default as OlTileSource } from 'ol/source/Tile';
+import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
 import { default as OlUrlTileSource } from 'ol/source/UrlTile';
 import { default as OlXYZSource } from 'ol/source/XYZ';
 import { default as OlOSMSource } from 'ol/source/OSM';
-import { Options as OlTileLayerOptions } from 'ol/layer/Tile';
+import { Options as OlTileLayerOptions } from 'ol/layer/BaseTile';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
@@ -57,6 +59,7 @@ export function OSMBlackAndWhite(): JSX.Element {
 interface TileProps extends MapComponentProps, OlTileLayerOptions {
 }
 
+
 export class Tile extends MapComponent<OlTileLayer, TileProps> {
 
     addMapObject(map: OlMap): OlTileLayer {
@@ -66,36 +69,74 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
     }
 
     updateMapObject(map: OlMap, layer: OlTileLayer, prevProps: Readonly<TileProps>): OlTileLayer {
-        // TODO: Code duplication in ./Vector.tsx
-        if (this.props.source !== prevProps.source && this.props.source) {
-            const source = layer.getSource();
-            if (source instanceof OlUrlTileSource && this.props.source instanceof OlUrlTileSource) {
-                // We don't expect anything to change in a XYZ source
-                // but the tile URL.
-                // Just setting source properties allows for
-                // smooth layer transitions.
-                // Replacing the entire source cause the layer
-                // to flicker in the map.
-                // See https://github.com/dcs4cop/xcube-viewer/issues/119
-                const xyzSourceOld: OlUrlTileSource = source;
-                const xyzSourceNew: OlUrlTileSource = this.props.source as OlUrlTileSource;
-                const newUrls = xyzSourceNew.getUrls();
-                if (newUrls) {
-                    xyzSourceOld.setUrls(newUrls!);
+        const oldSource: OlTileSource = layer.getSource();
+        const newSource: OlTileSource | undefined = this.props.source;
+        if (newSource && oldSource !== newSource) {
+            // We don't expect anything to change in a XYZ source
+            // but the tile URL and the new imageSmoothing property.
+            // Just setting source properties allows for
+            // smooth layer transitions.
+            // Replacing the entire source cause the layer
+            // to flicker in the map.
+            // See https://github.com/dcs4cop/xcube-viewer/issues/119
+            //
+            // If the tile source's URL changes, we just set the URL.
+            // Otherwise we replace the source.
+            // Since we cannot detect which single source properties
+            // have changed, we assume here that the URL, if changed, is the
+            // only changed property. This is not a valid assumption
+            // in the general case.
+            //
+            let replaceSource = true;
+            if (oldSource instanceof OlUrlTileSource && newSource instanceof OlUrlTileSource) {
+                const oldUrlTileSource: OlUrlTileSource = oldSource;
+                const newUrlTileSource: OlUrlTileSource = newSource;
+
+                const oldTileGrid = oldUrlTileSource.getTileGrid();
+                const newTileGrid = newUrlTileSource.getTileGrid();
+                if (equalTileGrids(oldTileGrid, newTileGrid)) {
+                    // console.debug("--> Equal tile grids!")
+                    const oldUrls = oldUrlTileSource.getUrls();
+                    const newUrls = newUrlTileSource.getUrls();
+                    if (oldUrls !== newUrls && newUrls && (oldUrls === null || oldUrls[0] !== newUrls[0])) {
+                        oldUrlTileSource.setUrls(newUrls!);
+                        replaceSource = false;
+                    }
+                    const oldTileLoadFunction = oldUrlTileSource.getTileLoadFunction();
+                    const newTileLoadFunction = newUrlTileSource.getTileLoadFunction();
+                    if (oldTileLoadFunction !== newTileLoadFunction) {
+                        oldUrlTileSource.setTileLoadFunction(newTileLoadFunction!);
+                        replaceSource = false;
+                    }
+                    const oldTileUrlFunction = oldUrlTileSource.getTileUrlFunction();
+                    const newTileUrlFunction = newUrlTileSource.getTileUrlFunction();
+                    if (oldTileUrlFunction !== newTileUrlFunction) {
+                        oldUrlTileSource.setTileUrlFunction(newTileUrlFunction!);
+                        replaceSource = false;
+                    }
+                } else {
+                    // console.debug('--> Tile grids are not equal!');
                 }
-                const newTileLoadFunction = xyzSourceNew.getTileLoadFunction();
-                if (newTileLoadFunction) {
-                    xyzSourceOld.setTileLoadFunction(newTileLoadFunction!);
-                }
-                const newTileUrlFunction = xyzSourceNew.getTileUrlFunction();
-                if (newTileUrlFunction) {
-                    xyzSourceOld.setTileUrlFunction(newTileUrlFunction!);
-                }
-            } else {
+            }
+            const oldContextOptions = oldSource.getContextOptions()
+            const newContextOptions = newSource.getContextOptions()
+            const oldImageSmoothing = typeof oldContextOptions === 'object' ?
+                                      (oldContextOptions as { [key: string]: any }).imageSmoothing : true;
+            const newImageSmoothing = typeof newContextOptions === 'object' ?
+                                      (newContextOptions as { [key: string]: any }).imageSmoothing : true;
+            if (oldImageSmoothing !== newImageSmoothing) {
+                replaceSource = true;
+            }
+
+            if (replaceSource) {
                 // Replace the entire source and accept layer flickering.
-                layer.setSource(this.props.source);
+                layer.setSource(newSource);
+                // console.debug("--> Replaced source")
+            } else {
+                // console.debug("--> Updated source (?)")
             }
         }
+        // TODO: Code duplication in ./Vector.tsx
         if (this.props.visible && this.props.visible !== prevProps.visible) {
             layer.setVisible(this.props.visible);
         }
@@ -148,3 +189,77 @@ const OSM_BW_SOURCE = new OlXYZSource(
         ]
     });
 
+
+function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
+    // Check min/max zoom level
+    // console.debug('min zoom:', oldTileGrid.getMinZoom(), newTileGrid.getMinZoom());
+    // console.debug('max zoom:', oldTileGrid.getMaxZoom(), newTileGrid.getMaxZoom());
+    if (oldTileGrid.getMinZoom() !== newTileGrid.getMinZoom()
+        || oldTileGrid.getMaxZoom() !== newTileGrid.getMaxZoom()) {
+        return false;
+    }
+
+    // Check extents
+    const oldExtent = oldTileGrid.getExtent();
+    const newExtent = newTileGrid.getExtent();
+    // console.debug('extent:', oldExtent, newExtent);
+    for (let i = 0; i < oldExtent.length; i++) {
+        if (oldExtent[i] !== newExtent[i]) {
+            return false;
+        }
+    }
+
+    // Check number of z-levels
+    const oldResolutions = oldTileGrid.getResolutions();
+    const newResolutions = newTileGrid.getResolutions();
+    // console.debug('resolutions:', oldResolutions, newResolutions);
+    const numLevels = oldResolutions.length;
+    if (numLevels !== newResolutions.length) {
+        return false;
+    }
+
+    // Check all z-level properties are equal
+    for (let z = 0; z < numLevels; z++) {
+        // Check resolution
+        const oldResolution = oldTileGrid.getResolution(z);
+        const newResolution = newTileGrid.getResolution(z);
+        // console.debug(`resolution ${z}:`, oldResolution, newResolution);
+        if (oldResolution !== newResolution) {
+            return false;
+        }
+        // Check origin
+        const oldOrigin = oldTileGrid.getOrigin(z);
+        const newOrigin = newTileGrid.getOrigin(z);
+        // console.debug(`origin ${z}:`, oldOrigin, newOrigin);
+        for (let i = 0; i < oldOrigin.length; i++) {
+            if (oldOrigin[i] !== newOrigin[i]) {
+                return false;
+            }
+        }
+        // Check tile size
+        let oldTileSize = oldTileGrid.getTileSize(z);
+        let newTileSize = newTileGrid.getTileSize(z);
+        // console.debug(`tile size ${z}:`, oldTileSize, newTileSize);
+        for (let i = 0; i < oldOrigin.length; i++) {
+            if (typeof oldTileSize === 'number') {
+                oldTileSize = [oldTileSize, oldTileSize]
+            }
+            if (typeof newTileSize === 'number') {
+                newTileSize = [newTileSize, newTileSize]
+            }
+            if (oldTileSize[0] !== newTileSize[0]
+                || oldTileSize[1] !== newTileSize[1]) {
+                return false;
+            }
+        }
+        // Check tile range
+        let oldTileRange = oldTileGrid.getFullTileRange(z);
+        let newTileRange = newTileGrid.getFullTileRange(z);
+        // console.debug(`tile range ${z}:`, oldTileRange, newTileRange);
+        if (oldTileRange.getWidth() !== newTileRange.getWidth()
+            || oldTileRange.getHeight() !== newTileRange.getHeight()) {
+            return false;
+        }
+    }
+    return true;
+}

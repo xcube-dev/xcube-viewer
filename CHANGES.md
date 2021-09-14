@@ -1,5 +1,15 @@
 ## Changes in version 0.5.0 (in development)
 
+* The viewer's map now uses EPSG:4326 projection as default so datasets
+  that use this grid too will have image layers showing square pixels.
+
+* Reduced layer flickering a new time step is selected.
+  Layer transitions are now performed more smoothly. (#119)
+
+* We can now turn off image smoothing just for the variable layer.
+  The background map is no longer concerned by this setting and
+  therefore preserve its quality. (#181)
+
 * Simplified use of xcube-viewer as a container. (#167)
   
   The ultimate goal of this activity was to get rid of build-time
@@ -22,13 +32,7 @@
   The JSON schema for the configuration is given in
   `src/resources/config.schema.json`.
   
-* Fixed eslint warnings of type "'ACTION' is already defined" during build.  
-
-* The viewer's map now uses EPSG:4326 projection as default.
-
-* Reduced layer flickering a new time step is selected. 
-  Layer transitions are now performed more smoothly. (#119)
- 
+* Fixed eslint warnings of type "'ACTION' is already defined" during build.
 
 ## Changes in version 0.4.5
 
