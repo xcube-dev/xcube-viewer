@@ -93,8 +93,9 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
                 const newUrlTileSource: OlUrlTileSource = newSource;
 
                 const oldTileGrid = oldUrlTileSource.getTileGrid();
-                const newTileGrid = oldUrlTileSource.getTileGrid();
+                const newTileGrid = newUrlTileSource.getTileGrid();
                 if (equalTileGrids(oldTileGrid, newTileGrid)) {
+                    // console.debug("--> Equal tile grids!")
                     const oldUrls = oldUrlTileSource.getUrls();
                     const newUrls = newUrlTileSource.getUrls();
                     if (oldUrls !== newUrls && newUrls && (oldUrls === null || oldUrls[0] !== newUrls[0])) {
@@ -114,7 +115,7 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
                         replaceSource = false;
                     }
                 } else {
-                    console.debug('tile grids are not equal!');
+                    // console.debug('--> Tile grids are not equal!');
                 }
             }
             const oldContextOptions = oldSource.getContextOptions()
@@ -130,6 +131,9 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
             if (replaceSource) {
                 // Replace the entire source and accept layer flickering.
                 layer.setSource(newSource);
+                // console.debug("--> Replaced source")
+            } else {
+                // console.debug("--> Updated source (?)")
             }
         }
         // TODO: Code duplication in ./Vector.tsx
@@ -188,6 +192,8 @@ const OSM_BW_SOURCE = new OlXYZSource(
 
 function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
     // Check min/max zoom level
+    // console.debug('min zoom:', oldTileGrid.getMinZoom(), newTileGrid.getMinZoom());
+    // console.debug('max zoom:', oldTileGrid.getMaxZoom(), newTileGrid.getMaxZoom());
     if (oldTileGrid.getMinZoom() !== newTileGrid.getMinZoom()
         || oldTileGrid.getMaxZoom() !== newTileGrid.getMaxZoom()) {
         return false;
@@ -196,6 +202,7 @@ function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
     // Check extents
     const oldExtent = oldTileGrid.getExtent();
     const newExtent = newTileGrid.getExtent();
+    // console.debug('extent:', oldExtent, newExtent);
     for (let i = 0; i < oldExtent.length; i++) {
         if (oldExtent[i] !== newExtent[i]) {
             return false;
@@ -205,6 +212,7 @@ function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
     // Check number of z-levels
     const oldResolutions = oldTileGrid.getResolutions();
     const newResolutions = newTileGrid.getResolutions();
+    // console.debug('resolutions:', oldResolutions, newResolutions);
     const numLevels = oldResolutions.length;
     if (numLevels !== newResolutions.length) {
         return false;
@@ -215,12 +223,14 @@ function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
         // Check resolution
         const oldResolution = oldTileGrid.getResolution(z);
         const newResolution = newTileGrid.getResolution(z);
+        // console.debug(`resolution ${z}:`, oldResolution, newResolution);
         if (oldResolution !== newResolution) {
             return false;
         }
         // Check origin
         const oldOrigin = oldTileGrid.getOrigin(z);
         const newOrigin = newTileGrid.getOrigin(z);
+        // console.debug(`origin ${z}:`, oldOrigin, newOrigin);
         for (let i = 0; i < oldOrigin.length; i++) {
             if (oldOrigin[i] !== newOrigin[i]) {
                 return false;
@@ -229,6 +239,7 @@ function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
         // Check tile size
         let oldTileSize = oldTileGrid.getTileSize(z);
         let newTileSize = newTileGrid.getTileSize(z);
+        // console.debug(`tile size ${z}:`, oldTileSize, newTileSize);
         for (let i = 0; i < oldOrigin.length; i++) {
             if (typeof oldTileSize === 'number') {
                 oldTileSize = [oldTileSize, oldTileSize]
@@ -236,14 +247,15 @@ function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
             if (typeof newTileSize === 'number') {
                 newTileSize = [newTileSize, newTileSize]
             }
-            if (oldTileSize[0] != newTileSize[0]
-                || oldTileSize[1] != newTileSize[1]) {
+            if (oldTileSize[0] !== newTileSize[0]
+                || oldTileSize[1] !== newTileSize[1]) {
                 return false;
             }
         }
         // Check tile range
         let oldTileRange = oldTileGrid.getFullTileRange(z);
         let newTileRange = newTileGrid.getFullTileRange(z);
+        // console.debug(`tile range ${z}:`, oldTileRange, newTileRange);
         if (oldTileRange.getWidth() !== newTileRange.getWidth()
             || oldTileRange.getHeight() !== newTileRange.getHeight()) {
             return false;
