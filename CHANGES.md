@@ -3,12 +3,12 @@
 * The viewer's map now uses EPSG:4326 projection as default so datasets
   that use this grid too will have image layers showing square pixels.
 
-* Reduced layer flickering a new time step is selected.
+* Reduced layer flickering when a new time step is selected.
   Layer transitions are now performed more smoothly. (#119)
 
 * We can now turn off image smoothing just for the variable layer.
   The background map is no longer concerned by this setting and
-  therefore preserve its quality. (#181)
+  therefore preserves its quality. (#181)
 
 * Simplified use of xcube-viewer as a container. (#167)
   
