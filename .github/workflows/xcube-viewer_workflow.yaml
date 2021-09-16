@@ -107,9 +107,9 @@ jobs:
         uses: bc-org/gha-update-application-version-tags@main
         with:
           app: xcube-viewer
-          phase: 'dev' #${{ steps.deployment-phase.outputs.phase }}
+          phase: 'stage' #${{ steps.deployment-phase.outputs.phase }}
           delimiter: ' '
-          tag: 'tt' #${{ steps.deployment-phase.outputs.tag }}
+          tag: 'ttstage' #${{ steps.deployment-phase.outputs.tag }}
           hash: 'sha256asöoivjsadöoijv' #${{ steps.get-hash.outputs.hash }}
           working-directory: ./k8s/xcube-viewer-app/helm
       - name: cat-result
