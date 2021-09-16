@@ -115,8 +115,8 @@ jobs:
         working-directory: ./k8s/xcube-viewer-app/helm
         run: |
           head values-dev.yaml
-          head values-stage.yaml
-          head values-prod.yaml
+#          head values-stage.yaml
+#          head values-prod.yaml
       - name: Pushes to another repository
         if: ${{ steps.deployment-phase.outputs.phase != 'ignore' }}
         uses: cpina/github-action-push-to-another-repository@main
