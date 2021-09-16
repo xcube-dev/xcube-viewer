@@ -1,7 +1,10 @@
 FROM node:12.5.0-alpine as build
 WORKDIR /usr/src/app
 COPY package.json yarn.lock  ./
+
+RUN npx browserslist@latest --update-db
 RUN yarn install
+
 COPY . ./
 RUN yarn build
 
