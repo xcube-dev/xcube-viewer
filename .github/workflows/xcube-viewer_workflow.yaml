@@ -105,10 +105,10 @@ jobs:
       - name: set-version-tag-xcube-viewer
         uses: bc-org/gha-update-application-version-tags@main
         with:
-          app: xcube-hub
+          app: xcube-viewer
           phase: ${{ steps.deployment-phase.outputs.phase }}
-          tag: ${{ steps.deployment-phase.outputs.tag }}
-          hash: ${{ steps.get-hash.outputs.hash }}
+          tag: 'tt' #${{ steps.deployment-phase.outputs.tag }}
+          hash: 'sha256asöoivjsadöoijv' #${{ steps.get-hash.outputs.hash }}
           working-directory: ./k8s/xcube-viewer-app/helm
       - name: cat-result
         working-directory: ./k8s/xcube-viewer-app/helm
