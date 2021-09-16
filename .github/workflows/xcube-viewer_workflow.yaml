@@ -61,7 +61,7 @@ jobs:
           registry: ${{ env.REG_NAME }}
           username: ${{ secrets.QUAY_REG_USERNAME }}
           password: ${{ secrets.QUAY_REG_PASSWORD }}
-  update-version-xcube-version:
+  update-version-xcube-viewer:
     env:
       PUSH: 1
     runs-on: ubuntu-latest
@@ -115,9 +115,12 @@ jobs:
       - name: cat-result
         working-directory: ./k8s/xcube-viewer-app/helm
         run: |
+          echo "----------------DEV-------------------"
           head values-dev.yaml
-#          head values-stage.yaml
-#          head values-prod.yaml
+          echo "----------------STAGE-----------------"
+          head values-stage.yaml
+          echo "----------------PROD------------------"
+          head values-prod.yaml
       - name: Pushes to another repository
         if: ${{ steps.deployment-phase.outputs.phase != 'ignore' }}
         uses: cpina/github-action-push-to-another-repository@main
