@@ -74,6 +74,7 @@ jobs:
         with:
           repository: bc-org/k8s-configs
           ref: 'dzelge_xxx_xcube-viewer'
+          delimiter: ' '
           token: ${{ secrets.XCUBE_GITHUB_K8S_CONFIGS_PAT }}
           path: k8s
       - name: get-release-tag
