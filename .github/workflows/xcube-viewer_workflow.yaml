@@ -9,7 +9,7 @@ env:
   APP_NAME: xcube-viewer
   ORG_NAME: bcdev
   REG_NAME: quay.io
-  UNITTEST: 1
+  UNITTEST: 0
 
 jobs:
   unittest:
