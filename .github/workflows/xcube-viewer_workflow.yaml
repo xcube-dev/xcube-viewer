@@ -108,6 +108,7 @@ jobs:
         with:
           app: xcube-viewer
           phase: 'dev' #${{ steps.deployment-phase.outputs.phase }}
+          delimiter: ' '
           tag: 'tt' #${{ steps.deployment-phase.outputs.tag }}
           hash: 'sha256asöoivjsadöoijv' #${{ steps.get-hash.outputs.hash }}
           working-directory: ./k8s/xcube-viewer-app/helm
