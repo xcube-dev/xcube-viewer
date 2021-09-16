@@ -107,7 +107,7 @@ jobs:
         uses: bc-org/gha-update-application-version-tags@main
         with:
           app: xcube-viewer
-          phase: 'stage' #${{ steps.deployment-phase.outputs.phase }}
+          phase: 'prod' #${{ steps.deployment-phase.outputs.phase }}
           delimiter: ' '
           tag: 'ttstage' #${{ steps.deployment-phase.outputs.tag }}
           hash: 'sha256asöoivjsadöoijv' #${{ steps.get-hash.outputs.hash }}
