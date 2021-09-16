@@ -101,32 +101,16 @@ jobs:
           echo "Release Tag: ${{ steps.release.outputs.tag }}"
           echo "Deployment Release Tag: ${{ steps.deployment-phase.outputs.tag }}"
           echo "Deployment Digest: ${{ steps.get-hash.outputs.hash }}"
-      - name: set-version-tag-cate
-        uses: bc-org/update-application-version-tags@main
-        with:
-          app: xcube-hub
-          phase: ${{ steps.deployment-phase.outputs.phase }}
-          delimiter: ' '
-          tag: ${{ steps.deployment-phase.outputs.tag }}
-          hash: ${{ steps.get-hash.outputs.hash }}
-          working-directory: ./k8s/cate/helm
-      - name: cat-result
-        working-directory: ./k8s/cate/helm
-        run: |
-          head values-dev.yaml
-          head values-stage.yaml
-          head values-prod.yaml
-      - name: set-version-tag-xcube-gen
+      - name: set-version-tag-xcube-viewer
         uses: bc-org/gha-update-application-version-tags@main
         with:
           app: xcube-hub
           phase: ${{ steps.deployment-phase.outputs.phase }}
-          delimiter: ' '
           tag: ${{ steps.deployment-phase.outputs.tag }}
           hash: ${{ steps.get-hash.outputs.hash }}
-          working-directory: ./k8s/xcube-gen/helm
+          working-directory: ./k8s/xcube-viewer-app/helm
       - name: cat-result
-        working-directory: ./k8s/xcube-gen/helm
+        working-directory: ./k8s/xcube-viewer-app/helm
         run: |
           head values-dev.yaml
           head values-stage.yaml
