@@ -14,14 +14,13 @@ env:
 jobs:
   unittest:
     runs-on: ubuntu-latest
+    if: ${{ env.UNITTEST == '1' }}
     steps:
       - uses: actions/checkout@v2
       - name: setup xcube-viewer
-        if: ${{ env.UNITTEST == '1' }}
         run: |
           yarn install
       - name: unittest-xcube-viewer
-        if: ${{ env.UNITTEST == '1' }}
         run: |
           yarn test
       - uses: codecov/codecov-action@v1
@@ -35,6 +34,7 @@ jobs:
     steps:
       - name: git-checkout
         uses: actions/checkout@v2
+      # Determine release tag from git ref
       - name: get-release-tag
         id: release
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
@@ -43,6 +43,7 @@ jobs:
         run: |
           echo "TAG: ${{ steps.release.outputs.tag }}"
           echo "EVENT: ${{ github.event_name }}"
+      # Build and push 'latest' docker image from master
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: build-push-docker-image-latest
         if: ${{ github.event_name == 'push' && steps.release.outputs.tag == 'master'  }}
@@ -52,6 +53,7 @@ jobs:
           registry: ${{ env.REG_NAME }}
           username: ${{ secrets.QUAY_REG_USERNAME }}
           password: ${{ secrets.QUAY_REG_PASSWORD }}
+      # Build and push docker release images
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: build-push-docker-image-release
         if: ${{ github.event_name == 'release' }}
@@ -70,21 +72,25 @@ jobs:
     steps:
       - name: git-checkout
         uses: actions/checkout@v2
+      # Checkout https://github.com/bc-org/k8s-configs
       - uses: actions/checkout@v2
         with:
           repository: bc-org/k8s-configs
           delimiter: ' '
           token: ${{ secrets.API_TOKEN_GITHUB }}
           path: k8s
+      #  Determine release tag from git ref
       - name: get-release-tag
         id: release
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      # Determine deployment phase (dev, stage, prod, or ignore)
       - name: deployment-phase
         id: deployment-phase
         uses: bc-org/gha-determine-phase@v0.1
         with:
           event_name: ${{ github.event_name }}
           tag: ${{ steps.release.outputs.tag }}
+      # Get the digest hash of the docker image that has been pushed to quay. Can be used in kubernetes image configs
       - name: get-hash
         id: get-hash
         run: |
@@ -102,6 +108,7 @@ jobs:
           echo "Release Tag: ${{ steps.release.outputs.tag }}"
           echo "Deployment Release Tag: ${{ steps.deployment-phase.outputs.tag }}"
           echo "Deployment Digest: ${{ steps.get-hash.outputs.hash }}"
+      # Update the xcube viewer app version tag in k8s-configs/xcube-viewer-app
       - name: set-version-tag-xcube-viewer
         uses: bc-org/gha-update-application-version-tags@main
         with:
@@ -111,6 +118,7 @@ jobs:
           tag: ${{ steps.deployment-phase.outputs.tag }}
           hash: ${{ steps.get-hash.outputs.hash }}
           working-directory: ./k8s/xcube-viewer-app/helm
+      # Check results
       - name: cat-result
         working-directory: ./k8s/xcube-viewer-app/helm
         run: |
@@ -120,6 +128,7 @@ jobs:
           head values-stage.yaml
           echo "----------------PROD------------------"
           head values-prod.yaml
+      # Push the changes to the k8s-configs repo
       - name: Pushes to another repository
         if: ${{ steps.deployment-phase.outputs.phase != 'ignore' }}
         uses: cpina/github-action-push-to-another-repository@main
