@@ -1,5 +1,10 @@
 ## Changes in version 0.5.0 (in development)
 
+* Users can now manually enter a variable's min/max values that are
+  applied to the selected color bar. The editor that pops up 
+  when clicking the value range scale in the variable legend overlay.
+  (#140)
+
 * The viewer's map now uses EPSG:4326 projection as default so datasets
   that use this grid too will have image layers showing square pixels.
 
