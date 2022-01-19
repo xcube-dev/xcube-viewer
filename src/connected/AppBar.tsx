@@ -40,14 +40,14 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SettingsIcon from '@material-ui/icons/Settings';
 import classNames from 'classnames';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { openDialog } from '../actions/controlActions';
+import {connect} from 'react-redux';
+import {openDialog} from '../actions/controlActions';
 import MarkdownPage from '../components/MarkdownPage';
-import { Config } from '../config';
+import {Config} from '../config';
 import i18n from '../i18n';
 
-import { AppState } from '../states/appState';
-import { WithLocale } from '../util/lang';
+import {AppState} from '../states/appState';
+import {WithLocale} from '../util/lang';
 import ExportDialog from './ExportDialog';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
@@ -165,13 +165,24 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
             className={classNames(classes.appBar)}
         >
             <Toolbar disableGutters className={classes.toolbar} variant="dense">
-                <img
-                    src={Config.instance.branding.logoImage}
-                    width={Config.instance.branding.logoWidth}
-                    alt={'xcube resources'}
-                    className={classes.logo}
-                />
-                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                <a
+                    href={Config.instance.branding.organisationUrl || ""}
+                    target="_blank"
+                >
+                    <img
+                        src={Config.instance.branding.logoImage}
+                        width={Config.instance.branding.logoWidth}
+                        alt={'xcube resources'}
+                        className={classes.logo}
+                    />
+                </a>
+                <Typography
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                    className={classes.title}
+                >
                     {appName}
                 </Typography>
                 <UserControl/>
