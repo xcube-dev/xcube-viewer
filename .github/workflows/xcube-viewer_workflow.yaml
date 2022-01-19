@@ -14,7 +14,6 @@ env:
 jobs:
   unittest:
     runs-on: ubuntu-latest
-    if: ${{ env.UNITTEST == '1' }}
     steps:
       - uses: actions/checkout@v2
       - name: setup xcube-viewer
