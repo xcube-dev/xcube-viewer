@@ -119,7 +119,7 @@ jobs:
           delimiter: ' '
           tag: ${{ steps.deployment-phase.outputs.tag }}
           hash: ${{ steps.get-hash.outputs.hash }}
-          working-directory: ./k8s/xcube-viewer-app/helm
+          working-directory: ./k8s/xcube-viewer-app/xcube-viewer
           prefix: values-edc
       # Check results
       - name: cat-result
