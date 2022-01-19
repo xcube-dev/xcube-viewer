@@ -1,5 +1,7 @@
 ## Changes in version 0.5.0 (in development)
 
+### Enhancements
+
 * Users can now manually enter a variable's min/max values that are
   applied to the selected color bar. The editor that pops up 
   when clicking the value range scale in the variable legend overlay.
@@ -37,6 +39,13 @@
   The JSON schema for the configuration is given in
   `src/resources/config.schema.json`.
   
+### Fixes
+
+* Fixed issue with datasets originating from nested, filesystem-based
+  data stores such as the "s3" and "file" data stores. See also 
+  related https://github.com/dcs4cop/xcube/issues/579.  
+  (#190)
+
 * Fixed eslint warnings of type "'ACTION' is already defined" during build.
 
 ## Changes in version 0.4.5
