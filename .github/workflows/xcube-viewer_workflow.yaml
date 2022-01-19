@@ -123,7 +123,7 @@ jobs:
           prefix: values-edc
       # Check results
       - name: cat-result
-        working-directory: ./k8s/xcube-viewer-app/helm
+        working-directory: ./k8s/xcube-viewer-app/xcube-viewer
         run: |
           echo "----------------DEV-------------------"
           head values-edc-dev.yaml
