@@ -25,7 +25,7 @@
   },
   {
     "name": "ESRI",
-    "link": "http://services.arcgisonline.com/arcgis/rest/services",
+    "link": "https://services.arcgisonline.com/arcgis/rest/services",
     "datasets": [
       {
         "name": "Dark Gray Base",

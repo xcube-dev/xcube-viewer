@@ -1,5 +1,9 @@
 ## Changes in version 0.5.0 (in development)
 
+* The logo in the application's main bar is now a link.
+  The target URL can be configured using the 
+  `branding.organisationUrl` key. (#190)
+
 * Users can now manually enter a variable's min/max values that are
   applied to the selected color bar. The editor that pops up 
   when clicking the value range scale in the variable legend overlay.
