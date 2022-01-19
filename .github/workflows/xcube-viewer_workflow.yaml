@@ -126,11 +126,11 @@ jobs:
         working-directory: ./k8s/xcube-viewer-app/xcube-viewer
         run: |
           echo "----------------DEV-------------------"
-          head values-edc-dev.yaml
+          head values-edc-dev.yml
           echo "----------------STAGE-----------------"
-          head values-edc-stage.yaml
+          head values-edc-stage.yml
           echo "----------------PROD------------------"
-          head values-edc-prod.yaml
+          head values-edc-prod.yml
       # Push the changes to the k8s-configs repo
       - name: Pushes to another repository
         if: ${{ steps.deployment-phase.outputs.phase != 'ignore' }}
