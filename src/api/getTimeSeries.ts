@@ -60,7 +60,12 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
     if (endDate) {
         query.push(['endDate', endDate]);
     }
-    const url = makeRequestUrl(`${apiServerUrl}/timeseries/${datasetId}/${variable.name}`, query);
+    const dsId = encodeURIComponent(datasetId);
+    const variableName = encodeURIComponent(variable.name);
+    const url = makeRequestUrl(
+        `${apiServerUrl}/timeseries/${dsId}/${variableName}`,
+        query
+    );
 
     const init = {
         ...makeRequestInit(accessToken),
