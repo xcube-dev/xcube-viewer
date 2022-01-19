@@ -11,9 +11,10 @@
     "themeName": "dark",
     "primaryColor": "blue",
     "secondaryColor": "pink",
+    "organisationUrl": "https://xcube.readthedocs.io/",
     "logoImage": "images/logo.png",
     "logoWidth": 32,
-    "baseMapUrl": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     "defaultAgg": "mean",
     "allowDownloads": true,
     "polygonFillOpacity": 0.2
