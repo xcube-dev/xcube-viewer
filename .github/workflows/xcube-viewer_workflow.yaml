@@ -17,12 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: setup xcube-viewer
+        if: ${{ env.UNITTEST == '1' }}
         run: |
           yarn install
       - name: unittest-xcube-viewer
+        if: ${{ env.UNITTEST == '1' }}
         run: |
           yarn test
       - uses: codecov/codecov-action@v1
+        if: ${{ env.UNITTEST == '1' }}
         with:
           verbose: true # optional (default = false)
   # build docker images and push to
