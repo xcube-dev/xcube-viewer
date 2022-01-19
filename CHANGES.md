@@ -1,5 +1,7 @@
 ## Changes in version 0.5.0 (in development)
 
+### Enhancements
+
 * The logo in the application's main bar is now a link.
   The target URL can be configured using the 
   `branding.organisationUrl` key. (#176)
@@ -41,6 +43,13 @@
   The JSON schema for the configuration is given in
   `src/resources/config.schema.json`.
   
+### Fixes
+
+* Fixed issue with datasets originating from nested, filesystem-based
+  data stores such as the "s3" and "file" data stores. See also 
+  related https://github.com/dcs4cop/xcube/issues/579.  
+  (#190)
+
 * Fixed eslint warnings of type "'ACTION' is already defined" during build.
 
 ## Changes in version 0.4.5
