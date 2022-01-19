@@ -43,8 +43,8 @@ import {
     teal,
     yellow,
 } from '@material-ui/core/colors';
-import { Color } from '@material-ui/core';
-import { PaletteColorOptions } from '@material-ui/core/styles/createPalette';
+import {Color} from '@material-ui/core';
+import {PaletteColorOptions} from '@material-ui/core/styles/createPalette';
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +78,7 @@ export interface Branding {
     primaryColor: PaletteColorOptions;
     secondaryColor: PaletteColorOptions;
     headerBackgroundColor?: string;
+    organisationUrl?: string;
     logoImage: any;
     logoWidth: number;
     baseMapUrl?: string;
@@ -103,7 +104,7 @@ function setBrandingImage(brandingConfig: any, key: keyof Branding, configPath: 
     const imagePath = brandingConfig[key];
     if (typeof imagePath === 'string') {
         const imageUrl = window.location.origin + '/'
-                         + (configPath !== '' ? `${configPath}/${imagePath}` : imagePath);
+            + (configPath !== '' ? `${configPath}/${imagePath}` : imagePath);
         brandingConfig[key] = imageUrl;
     }
 }
