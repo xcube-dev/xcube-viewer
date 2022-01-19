@@ -10,6 +10,7 @@ env:
   ORG_NAME: bcdev
   REG_NAME: quay.io
   UNITTEST: 0
+  UPDATE_VERSION: 0
 
 jobs:
   unittest:
@@ -17,12 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: setup xcube-viewer
+        if: ${{ env.UNITTEST == '1' }}
         run: |
           yarn install
       - name: unittest-xcube-viewer
+        if: ${{ env.UNITTEST == '1' }}
         run: |
           yarn test
       - uses: codecov/codecov-action@v1
+        if: ${{ env.UNITTEST == '1' }}
         with:
           verbose: true # optional (default = false)
   # build docker images and push to
@@ -87,10 +91,12 @@ jobs:
           path: k8s
       #  Determine release tag from git ref
       - name: get-release-tag
+        if: ${{ env.UPDATE_VERSION == '1' }}
         id: release
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       # Determine deployment phase (dev, stage, prod, or ignore)
       - name: deployment-phase
+        if: ${{ env.UPDATE_VERSION == '1' }}
         id: deployment-phase
         uses: bc-org/gha-determine-phase@v0.1
         with:
@@ -98,6 +104,7 @@ jobs:
           tag: ${{ steps.release.outputs.tag }}
       # Get the digest hash of the docker image that has been pushed to quay. Can be used in kubernetes image configs
       - name: get-hash
+        if: ${{ env.UPDATE_VERSION == '1' }}
         id: get-hash
         run: |
           HASH=$(skopeo inspect docker://${{ env.REG_NAME }}/${{ env.ORG_NAME }}/${{ env.APP_NAME }}:${{ steps.release.outputs.tag }} | jq '.Digest')
@@ -108,6 +115,7 @@ jobs:
             echo ::set-output name=hash::none
           fi
       - name: info
+        if: ${{ env.UPDATE_VERSION == '1' }}
         run: |
           echo "Event: ${{ github.event_name }}"
           echo "Deployment Stage: ${{ steps.deployment-phase.outputs.phase }}"
@@ -116,6 +124,7 @@ jobs:
           echo "Deployment Digest: ${{ steps.get-hash.outputs.hash }}"
       # Update the xcube viewer app version tag in k8s-configs/xcube-viewer-app
       - name: set-version-tag-xcube-viewer
+        if: ${{ env.UPDATE_VERSION == '1' }}
         uses: bc-org/gha-update-application-version-tags@main
         with:
           app: xcube-viewer
@@ -123,20 +132,22 @@ jobs:
           delimiter: ' '
           tag: ${{ steps.deployment-phase.outputs.tag }}
           hash: ${{ steps.get-hash.outputs.hash }}
-          working-directory: ./k8s/xcube-viewer-app/helm
+          working-directory: ./k8s/xcube-viewer-app/xcube-viewer
+          prefix: values-edc
       # Check results
       - name: cat-result
-        working-directory: ./k8s/xcube-viewer-app/helm
+        if: ${{ env.UPDATE_VERSION == '1' }}
+        working-directory: ./k8s/xcube-viewer-app/xcube-viewer
         run: |
           echo "----------------DEV-------------------"
-          head values-dev.yaml
+          head values-edc-dev.yml
           echo "----------------STAGE-----------------"
-          head values-stage.yaml
+          head values-edc-stage.yml
           echo "----------------PROD------------------"
-          head values-prod.yaml
+          head values-edc-prod.yml
       # Push the changes to the k8s-configs repo
       - name: Pushes to another repository
-        if: ${{ steps.deployment-phase.outputs.phase != 'ignore' }}
+        if: ${{ env.UPDATE_VERSION == '1' && steps.deployment-phase.outputs.phase != 'ignore' }}
         uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
