@@ -78,7 +78,7 @@ export class Config {
             configPath = '';
             rawConfig = rawDefaultConfig;
             if (process.env.NODE_ENV === 'development') {
-                console.debug(`Using default configuration.`);
+                console.debug(`Using default configuration.`, e);
             }
         }
 
