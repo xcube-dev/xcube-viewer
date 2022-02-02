@@ -102,7 +102,7 @@ jobs:
           if [[ "$HASH" == *"sha256"* ]]; then
             echo ::set-output name=hash::$HASH
           else
-            echo "No has present. Using none as hash. This will use the version tag instead for deployment."
+            echo "No hash present. Using none as hash. This will use the version tag instead for deployment."
             echo ::set-output name=hash::none
           fi
       - name: info
@@ -124,18 +124,18 @@ jobs:
           tag: ${{ steps.deployment-phase.outputs.tag }}
           hash: ${{ steps.get-hash.outputs.hash }}
           working-directory: ./k8s/xcube-viewer-app/xcube-viewer
-          prefix: values-edc
+          prefix: values-*
       # Check results
       - name: cat-result
         if: ${{ env.UPDATE_VERSION == '1' }}
         working-directory: ./k8s/xcube-viewer-app/xcube-viewer
         run: |
           echo "----------------DEV-------------------"
-          head values-edc-dev.yaml
+          head values-*-dev.yaml
           echo "----------------STAGE-----------------"
-          head values-edc-stage.yaml
+          head values-*-stage.yaml
           echo "----------------PROD------------------"
-          head values-edc-prod.yaml
+          head values-*-prod.yaml
       # Push the changes to the k8s-configs repo
       - name: Pushes to another repository
         if: ${{ env.UPDATE_VERSION == '1' && steps.deployment-phase.outputs.phase != 'ignore' }}
