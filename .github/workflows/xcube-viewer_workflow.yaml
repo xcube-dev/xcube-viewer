@@ -34,10 +34,6 @@ jobs:
     runs-on: ubuntu-latest
     name: build-docker-image
     needs: unittest
-    env:
-      APP_NAME: xcube-viewer
-      ORG_NAME: bcdev
-      REG_NAME: quay.io
     steps:
       - name: git-checkout
         uses: actions/checkout@v2
@@ -71,11 +67,6 @@ jobs:
           username: ${{ secrets.QUAY_REG_USERNAME }}
           password: ${{ secrets.QUAY_REG_PASSWORD }}
   update-version-xcube-viewer:
-    env:
-      PUSH: 1
-      APP_NAME: xcube-viewer
-      ORG_NAME: bcdev
-      REG_NAME: quay.io
     runs-on: ubuntu-latest
     needs: build-docker-image
     name: update-viewer-hub-tag
@@ -140,11 +131,11 @@ jobs:
         working-directory: ./k8s/xcube-viewer-app/xcube-viewer
         run: |
           echo "----------------DEV-------------------"
-          head values-edc-dev.yml
+          head values-edc-dev.yaml
           echo "----------------STAGE-----------------"
-          head values-edc-stage.yml
+          head values-edc-stage.yaml
           echo "----------------PROD------------------"
-          head values-edc-prod.yml
+          head values-edc-prod.yaml
       # Push the changes to the k8s-configs repo
       - name: Pushes to another repository
         if: ${{ env.UPDATE_VERSION == '1' && steps.deployment-phase.outputs.phase != 'ignore' }}
