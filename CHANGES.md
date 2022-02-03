@@ -50,6 +50,14 @@
   related https://github.com/dcs4cop/xcube/issues/579.  
   (#190)
 
+* Fixed numerous base maps (#197)
+  * Where possible, switched from HTTP to HTTPS.
+  * Removed all Stamen maps - for not supporting HTTPS
+  * Removed all Mapbox maps - no longer freely accessible
+  * Removed selected OpenStreetMap maps:
+    - OSM Black & White - no longer maintained and provided
+    - OSM Landscape - no longer freely accessible
+
 * Fixed eslint warnings of type "'ACTION' is already defined" during build.
 
 ## Changes in version 0.4.5
