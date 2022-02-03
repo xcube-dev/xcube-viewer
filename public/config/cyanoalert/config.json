@@ -6,7 +6,7 @@
     "audience": "https://cyanoalert.eu/api/"
   },
   "server": {
-    "id": "CynaloAlert",
+    "id": "CyanoAlert",
     "name": "CyanoAlert Server",
     "url": "https://service.cyanoalert.com/xcube/api/latest"
   },
