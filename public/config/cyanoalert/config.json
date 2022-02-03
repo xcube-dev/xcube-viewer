@@ -6,7 +6,7 @@
     "audience": "https://cyanoalert.eu/api/"
   },
   "server": {
-    "id": "CynaloAlert",
+    "id": "CyanoAlert",
     "name": "CyanoAlert Server",
     "url": "https://service.cyanoalert.com/xcube/api/latest"
   },
@@ -23,7 +23,7 @@
     "secondaryColor": "deepPurple",
     "logoImage": "logo.png",
     "logoWidth": 120,
-    "baseMapUrl": "https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png",
+    "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{z}/{x}/{y}.png",
     "defaultAgg": "median",
     "polygonFillOpacity": 0.025,
     "allowDownloads": false
