@@ -11,14 +11,6 @@
         "name": "OSM Humanitarian",
         "endpoint": "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
       }
-//      {
-//        "name": "OSM Landscape",
-//        "endpoint": "http://a.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "OSM Black & White",
-//        "endpoint": "https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-//      }
     ],
     "overlays": [
     ]
@@ -139,73 +131,4 @@
       }
     ]
   }
-//  {
-//    "name": "Stamen",
-//    "link": "http://maps.stamen.com",
-//    "datasets": [
-//      {
-//        "name": "Toner",
-//        "endpoint": "http://tile.stamen.com/toner/{z}/{x}/{y}.png",
-//        "attribution": "Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, under <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a>. Data by <a href=\"http://openstreetmap.org\">OpenStreetMap</a>, under <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>."
-//      },
-//      {
-//        "name": "Terrain",
-//        "endpoint": "http://tile.stamen.com/terrain/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "Watercolor",
-//        "endpoint": "http://tile.stamen.com/watercolor/{z}/{x}/{y}.png"
-//      }
-//    ],
-//    "overlays": [
-//    ]
-//  },
-//  {
-//    "name": "Mapbox",
-//    "link": "http://a.tiles.mapbox.com/v3/mapbox/maps.html",
-//    "datasets": [
-//      {
-//        "name": "Blue Marble (January)",
-//        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jan/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "Blue Marble (July)",
-//        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "Blue Marble Topo & Bathy B/W (July)",
-//        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul-bw/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "Control Room",
-//        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "Geography Class",
-//        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.geography-class/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "World Dark",
-//        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "World Light",
-//        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-light/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "World Glass",
-//        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-glass/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "World Print",
-//        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-print/{z}/{x}/{y}.png"
-//      },
-//      {
-//        "name": "World Blue",
-//        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-blue/{z}/{x}/{y}.png"
-//      }
-//    ],
-//    "overlays": [
-//    ]
-//  }
 ]
