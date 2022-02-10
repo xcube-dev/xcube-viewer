@@ -1,4 +1,4 @@
-## Changes in version 0.5.0 (in development)
+## Changes in version 0.10.0
 
 ### Enhancements
 
