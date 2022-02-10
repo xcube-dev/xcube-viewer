@@ -10,7 +10,7 @@ env:
   ORG_NAME: bcdev
   REG_NAME: quay.io
   UNITTEST: 0
-  UPDATE_VERSION: 0
+  UPDATE_VERSION: 1
 
 jobs:
   unittest:
@@ -148,4 +148,4 @@ jobs:
           destination-repository-name: 'k8s-configs'
           user-email: bcdev@brockmann-consult.de
           target-branch: main
-          commit-message: ${{ github.event.release }}. Set version to ${{ steps.release.outputs.tag }}
+          commit-message: ${{ github.event.release }}. Set version to ${{ steps.release.outputs.tag }} and ${{ steps.release.outputs.hash }}
