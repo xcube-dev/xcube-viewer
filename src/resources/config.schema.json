@@ -90,6 +90,9 @@
           "minimum": 0.0,
           "maximum": 1.0,
           "example": 0.025
+        },
+        "mapProjection": {
+          "enum": ["EPSG:4326", "EPSG:3857"]
         }
       },
       "additionalProperties": false
