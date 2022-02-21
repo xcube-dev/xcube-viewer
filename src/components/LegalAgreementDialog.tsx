@@ -76,7 +76,13 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
                 </DialogContentText>
                 <DialogContentText>
                     {i18n.get('Find out more')}{' '}
-                    <Link href={i18n.get("https://en.wikipedia.org/wiki/Web_storage")} target='_blank'>{i18n.get('here')}</Link>.
+                    <Link
+                        href={i18n.get("https://en.wikipedia.org/wiki/Web_storage")}
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        {i18n.get('here')}
+                    </Link>.
                 </DialogContentText>
             </DialogContent>
 

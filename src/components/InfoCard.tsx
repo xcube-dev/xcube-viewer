@@ -476,8 +476,17 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({data}) => {
                         data.map((kv, index) => {
                             const [key, value] = kv;
                             let renderedValue = value;
-                            if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
-                                renderedValue = (<Link href={value} target='_blank'>{value}</Link>);
+                            if (typeof value === 'string'
+                                && (value.startsWith('http://')
+                                    || value.startsWith('https://'))) {
+                                renderedValue = (
+                                    <Link
+                                        href={value}
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        {value}
+                                    </Link>);
                             } else if (Array.isArray(value)) {
                                 renderedValue = '[' + value.map(v => v + '').join(', ') + ']';
                             }

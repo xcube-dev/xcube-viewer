@@ -1,8 +1,9 @@
 ## Changes in version 0.10.1 (in development)
 
-### Enhancements
-
 ### Fixes
+
+* Addressed warning saying `Using target="_blank" without rel="noreferrer" 
+  is a security risk`
 
 ## Changes in version 0.10.0
 

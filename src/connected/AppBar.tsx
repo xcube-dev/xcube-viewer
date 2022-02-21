@@ -168,6 +168,7 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                 <a
                     href={Config.instance.branding.organisationUrl || ""}
                     target="_blank"
+                    rel="noreferrer"
                 >
                     <img
                         src={Config.instance.branding.logoImage}
