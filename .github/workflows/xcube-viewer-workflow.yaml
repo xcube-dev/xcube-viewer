@@ -69,7 +69,7 @@ jobs:
   update-version-xcube-viewer:
     runs-on: ubuntu-latest
     needs: build-docker-image
-    name: update-viewer-hub-tag
+    name: update-version-xcube-viewer
     steps:
       - name: git-checkout
         uses: actions/checkout@v2
