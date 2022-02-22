@@ -460,14 +460,6 @@ export function getDefaultPlaceGroupStyle() {
     });
 }
 
-export const selectedMapProjection = createSelector(
-    selectedDatasetSelector,
-    (dataset: Dataset | null): TimeRange | null => {
-        return dataset !== null ? getDatasetTimeRange(dataset) : null;
-    }
-);
-
-
 export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
     mapProjectionSelector,
