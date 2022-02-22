@@ -22,24 +22,23 @@
  * SOFTWARE.
  */
 
-import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
-import { get as olProjGet } from 'ol/proj'
-import { default as OlVectorSource } from 'ol/source/Vector';
-import { default as OlXYZSource } from 'ol/source/XYZ';
-import { default as OlCircle } from 'ol/style/Circle';
-///<reference path="../util/find.ts"/>
-import { default as OlFillStyle } from 'ol/style/Fill';
-import { default as OlStrokeStyle } from 'ol/style/Stroke';
-import { default as OlStyle } from 'ol/style/Style';
-import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
+import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
+import {get as olProjGet} from 'ol/proj'
+import {default as OlVectorSource} from 'ol/source/Vector';
+import {default as OlXYZSource} from 'ol/source/XYZ';
+import {default as OlCircle} from 'ol/style/Circle';
+import {default as OlFillStyle} from 'ol/style/Fill';
+import {default as OlStrokeStyle} from 'ol/style/Stroke';
+import {default as OlStyle} from 'ol/style/Style';
+import {default as OlTileGrid} from 'ol/tilegrid/TileGrid';
 import * as React from 'react';
-import { createSelector } from 'reselect'
-import { Layers } from '../components/ol/layer/Layers';
-import { Tile } from '../components/ol/layer/Tile';
-import { Vector } from '../components/ol/layer/Vector';
-import { MapElement } from '../components/ol/Map';
-import { Config, getTileAccess } from '../config';
-import { ApiServerConfig } from '../model/apiServer';
+import {createSelector} from 'reselect'
+import {Layers} from '../components/ol/layer/Layers';
+import {Tile} from '../components/ol/layer/Tile';
+import {Vector} from '../components/ol/layer/Vector';
+import {MapElement} from '../components/ol/Map';
+import {Config, getTileAccess} from '../config';
+import {ApiServerConfig} from '../model/apiServer';
 import {
     Dataset,
     findDataset,
@@ -58,19 +57,14 @@ import {
     PlaceGroup,
     PlaceInfo,
 } from '../model/place';
-import { TileSourceOptions } from '../model/tile';
-import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import { Variable } from '../model/variable';
+import {TileSourceOptions} from '../model/tile';
+import {Time, TimeRange, TimeSeriesGroup} from '../model/timeSeries';
+import {Variable} from '../model/variable';
 
-import { AppState } from '../states/appState';
-import { findIndexCloseTo } from '../util/find';
-import { MapGroup, maps, MapSource } from '../util/maps';
-import {
-    datasetsSelector,
-    timeSeriesGroupsSelector,
-    userPlaceGroupSelector,
-    userServersSelector
-} from './dataSelectors';
+import {AppState} from '../states/appState';
+import {findIndexCloseTo} from '../util/find';
+import {MapGroup, maps, MapSource} from '../util/maps';
+import {datasetsSelector, timeSeriesGroupsSelector, userPlaceGroupSelector, userServersSelector} from './dataSelectors';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -84,6 +78,8 @@ export const imageSmoothingSelector = (state: AppState) => state.controlState.im
 export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
+// noinspection JSUnusedLocalSymbols
+export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:4326';
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -420,13 +416,13 @@ export const selectedDatasetRgbLayerSelector = createSelector(
             return null;
         }
         return getTileLayer('rgb',
-                            rgbSchema.tileSourceOptions,
-                            '',
-                            timeDimension,
-                            time,
-                            timeAnimationActive,
-                            attributions,
-                            imageSmoothing);
+            rgbSchema.tileSourceOptions,
+            '',
+            timeDimension,
+            time,
+            timeAnimationActive,
+            attributions,
+            imageSmoothing);
     }
 );
 
@@ -437,36 +433,37 @@ export function getDefaultFillOpacity() {
 
 export function getDefaultStyleImage() {
     return new OlCircle({
-                            fill: getDefaultFillStyle(),
-                            stroke: getDefaultStrokeStyle(),
-                            radius: 6
-                        })
+        fill: getDefaultFillStyle(),
+        stroke: getDefaultStrokeStyle(),
+        radius: 6
+    })
 }
 
 export function getDefaultStrokeStyle() {
     return new OlStrokeStyle({
-                                 color: [200, 0, 0, 0.75],
-                                 width: 1.25
-                             });
+        color: [200, 0, 0, 0.75],
+        width: 1.25
+    });
 }
 
 export function getDefaultFillStyle() {
     return new OlFillStyle({
-                               color: [255, 0, 0, getDefaultFillOpacity()]
-                           });
+        color: [255, 0, 0, getDefaultFillOpacity()]
+    });
 }
 
 export function getDefaultPlaceGroupStyle() {
     return new OlStyle({
-                           image: getDefaultStyleImage(),
-                           stroke: getDefaultStrokeStyle(),
-                           fill: getDefaultFillStyle(),
-                       });
+        image: getDefaultStyleImage(),
+        stroke: getDefaultStrokeStyle(),
+        fill: getDefaultFillStyle(),
+    });
 }
 
 export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
-    (placeGroups: PlaceGroup[]): MapElement => {
+    mapProjectionSelector,
+    (placeGroups: PlaceGroup[], mapProjection: string): MapElement => {
         if (placeGroups.length === 0) {
             return null;
         }
@@ -481,10 +478,12 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                         zIndex={100}
                         source={new OlVectorSource(
                             {
-                                features: new OlGeoJSONFormat({
-                                                                  dataProjection: 'EPSG:4326',
-                                                                  featureProjection: 'EPSG:3857'
-                                                              }).readFeatures(placeGroup),
+                                features: new OlGeoJSONFormat(
+                                    {
+                                        dataProjection: 'EPSG:4326',
+                                        featureProjection: mapProjection
+                                    }
+                                ).readFeatures(placeGroup),
                             })}
                     />);
             }

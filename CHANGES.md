@@ -1,6 +1,16 @@
 ## Changes in version 0.10.1 (in development)
 
+### Enhancements
+
+* The map projection can now be configured using the
+  `branding.mapProjection` key. Possible values are the default
+  `"EPSG:4326"` (Geographic) and 
+  `"EPSG:3857"` (Spherical Mercator).
+
 ### Fixes
+
+* Feature geometries loaded from xcube Places API are now rendered again
+  in the map.
 
 * Addressed warning saying `Using target="_blank" without rel="noreferrer" 
   is a security risk`

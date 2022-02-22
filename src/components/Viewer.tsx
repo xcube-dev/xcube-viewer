@@ -22,40 +22,40 @@
  * SOFTWARE.
  */
 
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import rgba from 'color-rgba';
 import * as geojson from 'geojson';
-import { Color as OlColor } from 'ol/color';
-import { default as OlFeature } from 'ol/Feature';
-import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
-import { default as OlCircleGeometry } from 'ol/geom/Circle';
-import { default as OlGeometryType } from 'ol/geom/GeometryType';
-import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
-import { default as OlVectorLayer } from 'ol/layer/Vector';
-import { default as OlMap } from 'ol/Map';
-import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
-import { default as OlVectorSource } from 'ol/source/Vector';
-import { default as OlTileLayer } from 'ol/layer/Tile';
-import { default as OlCircleStyle } from 'ol/style/Circle';
-import { default as OlFillStyle } from 'ol/style/Fill';
-import { default as OlStrokeStyle } from 'ol/style/Stroke';
-import { default as OlStyle } from 'ol/style/Style';
+import {Color as OlColor} from 'ol/color';
+import {default as OlFeature} from 'ol/Feature';
+import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
+import {default as OlCircleGeometry} from 'ol/geom/Circle';
+import {default as OlGeometryType} from 'ol/geom/GeometryType';
+import {fromCircle as olPolygonFromCircle} from 'ol/geom/Polygon';
+import {default as OlVectorLayer} from 'ol/layer/Vector';
+import {default as OlMap} from 'ol/Map';
+import {default as OlMapBrowserEvent} from 'ol/MapBrowserEvent';
+import {default as OlVectorSource} from 'ol/source/Vector';
+import {default as OlTileLayer} from 'ol/layer/Tile';
+import {default as OlCircleStyle} from 'ol/style/Circle';
+import {default as OlFillStyle} from 'ol/style/Fill';
+import {default as OlStrokeStyle} from 'ol/style/Stroke';
+import {default as OlStyle} from 'ol/style/Style';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Config, getUserPlaceColor, getUserPlaceColorName } from '../config';
+import {useEffect, useState} from 'react';
+import {Config, getUserPlaceColor, getUserPlaceColorName} from '../config';
 import i18n from '../i18n';
-import { Place, PlaceGroup } from '../model/place';
-import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
+import {Place, PlaceGroup} from '../model/place';
+import {MAP_OBJECTS, MapInteraction} from '../states/controlState';
 
-import { newId } from '../util/id';
+import {newId} from '../util/id';
 import ErrorBoundary from './ErrorBoundary';
-import { Control } from './ol/control/Control';
-import { ScaleLine } from './ol/control/ScaleLine';
-import { Draw, DrawEvent } from './ol/interaction/Draw';
-import { Layers } from './ol/layer/Layers';
-import { Vector } from './ol/layer/Vector';
-import { Map, MapElement } from './ol/Map';
-import { View } from './ol/View';
+import {Control} from './ol/control/Control';
+import {ScaleLine} from './ol/control/ScaleLine';
+import {Draw, DrawEvent} from './ol/interaction/Draw';
+import {Layers} from './ol/layer/Layers';
+import {Vector} from './ol/layer/Vector';
+import {Map, MapElement} from './ol/Map';
+import {View} from './ol/View';
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
@@ -69,27 +69,28 @@ const SELECTION_LAYER_SOURCE = new OlVectorSource();
 const COLOR_LEGEND_STYLE: React.CSSProperties = {zIndex: 1000, right: 272, top: 10};
 
 const SELECTION_LAYER_STROKE = new OlStrokeStyle({
-                                                     color: [255, 200, 0, 1.0],
-                                                     width: 3
-                                                 });
+    color: [255, 200, 0, 1.0],
+    width: 3
+});
 const SELECTION_LAYER_FILL = new OlFillStyle({
-                                                 color: [255, 200, 0, 0.05]
-                                             });
+    color: [255, 200, 0, 0.05]
+});
 const SELECTION_LAYER_STYLE = new OlStyle({
-                                              stroke: SELECTION_LAYER_STROKE,
-                                              fill: SELECTION_LAYER_FILL,
-                                              image: new OlCircleStyle({
-                                                                           radius: 10,
-                                                                           stroke: SELECTION_LAYER_STROKE,
-                                                                           fill: SELECTION_LAYER_FILL,
-                                                                       })
-                                          });
+    stroke: SELECTION_LAYER_STROKE,
+    fill: SELECTION_LAYER_FILL,
+    image: new OlCircleStyle({
+        radius: 10,
+        stroke: SELECTION_LAYER_STROKE,
+        fill: SELECTION_LAYER_FILL,
+    })
+});
 
 
 interface ViewerProps extends WithStyles<typeof styles> {
     theme: Theme;
     mapId: string;
     mapInteraction: MapInteraction;
+    mapProjection?: string;
     baseMapLayer?: MapElement;
     rgbLayer?: MapElement;
     variableLayer?: MapElement;
@@ -107,6 +108,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            theme,
                                            mapId,
                                            mapInteraction,
+                                           mapProjection,
                                            baseMapLayer,
                                            rgbLayer,
                                            variableLayer,
@@ -131,7 +133,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 if (selectedPlaceIdCurr) {
                     const selectedFeature = findFeatureById(map, selectedPlaceIdCurr);
                     if (selectedFeature) {
-                        // We clone so feature so we can set a new ID and clear the style, so the selection
+                        // We clone features, so we can set a new ID and clear the style, so the selection
                         // layer style is used instead as default.
                         const displayFeature = selectedFeature.clone();
                         displayFeature.setId('Select-' + selectedFeature.getId());
@@ -254,6 +256,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 onMapRef={setMap}
                 mapObjects={MAP_OBJECTS}
                 isStale={true}
+                projection={mapProjection}
             >
                 <View id="view"/>
                 <Layers>

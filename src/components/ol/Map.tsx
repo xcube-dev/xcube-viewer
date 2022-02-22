@@ -52,6 +52,7 @@ interface MapProps extends OlMapOptions {
     onClick?: (event: OlMapBrowserEvent) => void;
     onMapRef?: (map: OlMap | null) => void;
     isStale?: boolean;
+    projection?: string;
 }
 
 interface MapState {
@@ -85,6 +86,7 @@ export class Map extends React.Component<MapProps, MapState> {
         const mapOptions = {...this.props};
         delete mapOptions['children'];
         delete mapOptions['onClick'];
+        delete mapOptions['projection'];
         return mapOptions;
     }
 
@@ -126,7 +128,7 @@ export class Map extends React.Component<MapProps, MapState> {
     componentDidMount(): void {
         // console.log('Map.componentDidMount: id =', this.props.id);
 
-        const {id} = this.props;
+        const {id, projection} = this.props;
         const mapDiv = this.contextValue.mapDiv!;
 
         let map: OlMap | null = null;
@@ -144,7 +146,7 @@ export class Map extends React.Component<MapProps, MapState> {
         if (!map) {
             const initialZoom = this.getMinZoom(mapDiv);
             const view = new OlView({
-                                        projection: 'EPSG:4326',
+                                        projection: projection || 'EPSG:4326',
                                         center: olProjFromLonLat([0, 0]),
                                         minZoom: initialZoom,
                                         zoom: initialZoom,
