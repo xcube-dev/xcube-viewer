@@ -1,3 +1,11 @@
+## Changes in version 0.10.2 (in development)
+
+### Fixes
+
+* Fixed a problem that prevented setting the map projection 
+  using the `branding.mapProjection` configuration key. 
+
+
 ## Changes in version 0.10.1
 
 ### Enhancements

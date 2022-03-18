@@ -23,22 +23,23 @@
  */
 
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { AppState } from '../states/appState';
+import {AppState} from '../states/appState';
 import {
     baseMapLayerSelector,
+    imageSmoothingSelector,
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetRgbLayerSelector,
     selectedDatasetVariableLayerSelector,
-    selectedPlaceGroupPlacesSelector,
-    imageSmoothingSelector
+    selectedPlaceGroupPlacesSelector
 } from '../selectors/controlSelectors';
-import { addUserPlace } from '../actions/dataActions';
+import {addUserPlace} from '../actions/dataActions';
 import Viewer from '../components/Viewer';
-import { userPlaceGroupSelector } from "../selectors/dataSelectors";
-import { selectPlace } from "../actions/controlActions";
+import {userPlaceGroupSelector} from "../selectors/dataSelectors";
+import {selectPlace} from "../actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
+import {Config} from "../config";
 
 
 const mapStateToProps = (state: AppState) => {
@@ -51,6 +52,7 @@ const mapStateToProps = (state: AppState) => {
         userPlaceGroup: userPlaceGroupSelector(state),
         mapId: 'map',
         mapInteraction: state.controlState.mapInteraction,
+        mapProjection: Config.instance.branding.mapProjection,
         selectedPlaceId: state.controlState.selectedPlaceId,
         places: selectedPlaceGroupPlacesSelector(state),
         baseMapLayer: baseMapLayerSelector(state),
