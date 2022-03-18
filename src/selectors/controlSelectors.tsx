@@ -345,10 +345,11 @@ function getTileLayer(layerId: string,
     const source = new OlXYZSource(
         {
             url,
-            projection: olProjGet(tileSourceOptions.projection),
-            minZoom: tileSourceOptions.minZoom,
-            maxZoom: tileSourceOptions.maxZoom,
-            tileGrid: new OlTileGrid(tileSourceOptions.tileGrid),
+            // TODO (forman): continue CRS independence here
+            // projection: olProjGet(tileSourceOptions.projection),
+            // minZoom: tileSourceOptions.minZoom,
+            // maxZoom: tileSourceOptions.maxZoom,
+            // tileGrid: new OlTileGrid(tileSourceOptions.tileGrid),
             attributions: attributions || undefined,
             transition: timeAnimationActive ? 0 : 250,
             imageSmoothing: imageSmoothing,
