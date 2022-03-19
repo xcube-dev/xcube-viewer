@@ -65,6 +65,7 @@ import {AppState} from '../states/appState';
 import {findIndexCloseTo} from '../util/find';
 import {MapGroup, maps, MapSource} from '../util/maps';
 import {datasetsSelector, timeSeriesGroupsSelector, userPlaceGroupSelector, userServersSelector} from './dataSelectors';
+import {makeRequestUrl} from "../api/callApi";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -79,7 +80,7 @@ export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMa
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
 // noinspection JSUnusedLocalSymbols
-export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:4326';
+export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:3857';
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -316,8 +317,8 @@ export const selectedTimeIndexSelector = createSelector(
 );
 
 function getTileLayer(layerId: string,
-                      tileSourceOptions: TileSourceOptions,
-                      queryParams: string,
+                      tileUrl: string,
+                      queryParams: Array<[string, string]>,
                       timeDimension: TimeDimension | null,
                       time: number | null,
                       timeAnimationActive: boolean,
@@ -335,12 +336,11 @@ function getTileLayer(layerId: string,
         if (!timeString) {
             timeString = new Date(time).toISOString();
         }
-        queryParams += `&time=${timeString}`;
+        queryParams = [...queryParams, ['time', timeString]];
     }
-    if (queryParams.length > 0) {
-        queryParams = '?' + queryParams;
-    }
-    const url = tileSourceOptions.url + queryParams;
+
+    const url = makeRequestUrl(tileUrl, queryParams);
+    console.log("Tile URL:", url);
 
     const source = new OlXYZSource(
         {
@@ -364,6 +364,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    mapProjectionSelector,
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
     selectedDatasetAttributionsSelector,
@@ -372,6 +373,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
+     mapProjection: string,
      colorBarMinMax: [number, number],
      colorBarName: string,
      attributions: string[] | null,
@@ -380,14 +382,20 @@ export const selectedDatasetVariableLayerSelector = createSelector(
         if (!variable) {
             return null;
         }
-        if (!variable.tileSourceOptions) {
-            console.warn(`Variable ${variable.name} has no tileSourceOptions!`);
+        if (!variable.tileUrl) {
+            console.warn(`Variable ${variable.name} has no tileUrl!`);
             return null;
         }
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+            ['vmin', `${colorBarMinMax[0]}`],
+            ['vmax', `${colorBarMinMax[1]}`],
+            ['cbar', colorBarName],
+        ];
         return getTileLayer(
             'variable',
-            variable.tileSourceOptions,
-            `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
+            variable.tileUrl,
+            queryParams,
             timeDimension,
             time,
             timeAnimationActive,
@@ -403,6 +411,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    mapProjectionSelector,
     selectedDatasetAttributionsSelector,
     imageSmoothingSelector,
     (showRgbLayer: boolean,
@@ -410,15 +419,19 @@ export const selectedDatasetRgbLayerSelector = createSelector(
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
+     mapProjection: string,
      attributions: string[] | null,
      imageSmoothing: boolean
     ): MapElement => {
         if (!showRgbLayer || !rgbSchema) {
             return null;
         }
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+        ];
         return getTileLayer('rgb',
-            rgbSchema.tileSourceOptions,
-            '',
+            rgbSchema.tileUrl,
+            queryParams,
             timeDimension,
             time,
             timeAnimationActive,

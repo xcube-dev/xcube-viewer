@@ -1,3 +1,14 @@
+## Changes in version 0.11.0 (in development)
+
+### Enhancements
+
+
+### Other Changes
+
+* xcube Viewer 0.11.x requires xcube Server 0.11.x.
+* The default map projection changed from Geographic (EPSG:4326) to Spherical 
+  Mercator (EPSG:3857).
+
 ## Changes in version 0.10.2 (in development)
 
 ### Fixes

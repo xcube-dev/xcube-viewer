@@ -32,7 +32,10 @@ export interface Variable {
     dtype: string;
     units: string;
     title: string;
-    tileSourceOptions: TileSourceOptions;
+    // tileUrl is new since xcube 0.11
+    tileUrl?: string;
+    // tileSourceOptions are longer used since xcube 0.11
+    tileSourceOptions?: TileSourceOptions;
     colorBarName: string;
     colorBarMin: number;
     colorBarMax: number;
