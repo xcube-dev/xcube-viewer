@@ -90,7 +90,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     theme: Theme;
     mapId: string;
     mapInteraction: MapInteraction;
-    mapProjection?: string;
+    mapProjection: string;
     baseMapLayer?: MapElement;
     rgbLayer?: MapElement;
     variableLayer?: MapElement;

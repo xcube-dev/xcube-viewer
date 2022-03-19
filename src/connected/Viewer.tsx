@@ -29,6 +29,7 @@ import {AppState} from '../states/appState';
 import {
     baseMapLayerSelector,
     imageSmoothingSelector,
+    mapProjectionSelector,
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetRgbLayerSelector,
     selectedDatasetVariableLayerSelector,
@@ -39,7 +40,6 @@ import Viewer from '../components/Viewer';
 import {userPlaceGroupSelector} from "../selectors/dataSelectors";
 import {selectPlace} from "../actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
-import {Config} from "../config";
 
 
 const mapStateToProps = (state: AppState) => {
@@ -52,7 +52,7 @@ const mapStateToProps = (state: AppState) => {
         userPlaceGroup: userPlaceGroupSelector(state),
         mapId: 'map',
         mapInteraction: state.controlState.mapInteraction,
-        mapProjection: Config.instance.branding.mapProjection,
+        mapProjection: mapProjectionSelector(state),
         selectedPlaceId: state.controlState.selectedPlaceId,
         places: selectedPlaceGroupPlacesSelector(state),
         baseMapLayer: baseMapLayerSelector(state),
