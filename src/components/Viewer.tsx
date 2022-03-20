@@ -257,6 +257,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 mapObjects={MAP_OBJECTS}
                 isStale={true}
                 projection={mapProjection}
+                // maxTilesLoading={8}
             >
                 <View id="view"/>
                 <Layers>

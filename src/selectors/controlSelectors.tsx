@@ -23,14 +23,12 @@
  */
 
 import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
-import {get as olProjGet} from 'ol/proj'
 import {default as OlVectorSource} from 'ol/source/Vector';
 import {default as OlXYZSource} from 'ol/source/XYZ';
 import {default as OlCircle} from 'ol/style/Circle';
 import {default as OlFillStyle} from 'ol/style/Fill';
 import {default as OlStrokeStyle} from 'ol/style/Stroke';
 import {default as OlStyle} from 'ol/style/Style';
-import {default as OlTileGrid} from 'ol/tilegrid/TileGrid';
 import * as React from 'react';
 import {createSelector} from 'reselect'
 import {Layers} from '../components/ol/layer/Layers';
@@ -66,6 +64,7 @@ import {findIndexCloseTo} from '../util/find';
 import {MapGroup, maps, MapSource} from '../util/maps';
 import {datasetsSelector, timeSeriesGroupsSelector, userPlaceGroupSelector, userServersSelector} from './dataSelectors';
 import {makeRequestUrl} from "../api/callApi";
+import {MAP_OBJECTS} from "../states/controlState";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -342,6 +341,23 @@ function getTileLayer(layerId: string,
     const url = makeRequestUrl(tileUrl, queryParams);
     console.log("Tile URL:", url);
 
+    const map: any = MAP_OBJECTS['map'];
+    let tileLoadFunction;
+    if (map) {
+        // Define a special tileLoadFunction
+        // that prevents tiles from being loaded while the user
+        // pans or zooms, because this leads to high server loads.
+        tileLoadFunction = (tile: any, src: string) => {
+            if (map.getView().getInteracting()) {
+                map.once('moveend', function(){
+                    tile.getImage().src = src;
+                });
+            } else {
+                tile.getImage().src = src;
+            }
+        }
+    }
+
     const source = new OlXYZSource(
         {
             url,
@@ -353,6 +369,7 @@ function getTileLayer(layerId: string,
             attributions: attributions || undefined,
             transition: timeAnimationActive ? 0 : 250,
             imageSmoothing: imageSmoothing,
+            tileLoadFunction
         });
     return (
         <Tile id={layerId} source={source} zIndex={10}/>
