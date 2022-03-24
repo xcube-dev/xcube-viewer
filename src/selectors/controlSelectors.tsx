@@ -408,6 +408,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             ['vmin', `${colorBarMinMax[0]}`],
             ['vmax', `${colorBarMinMax[1]}`],
             ['cbar', colorBarName],
+            // ['retina', '1'],
         ];
         return getTileLayer(
             'variable',
