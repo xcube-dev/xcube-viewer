@@ -2,12 +2,17 @@
 
 ### Enhancements
 
+* Thanks to using xcube Server 0.11.x, xcube Viewer 0.11.x can now display 
+  datasets with non-geographic spatial coordinate reference systems, 
+  for example UTM or LAEA Europe (EPSG:3035).
 
 ### Other Changes
 
 * xcube Viewer 0.11.x requires xcube Server 0.11.x.
+
 * The default map projection changed from Geographic (EPSG:4326) to Spherical 
-  Mercator (EPSG:3857).
+  Mercator (EPSG:3857). Accordingly, image tiles are requested in Spherical 
+  Mercator projection (using the same tile grid as OSM)
 
 ## Changes in version 0.10.2 (in development)
 
