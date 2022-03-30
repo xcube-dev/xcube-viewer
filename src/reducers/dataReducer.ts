@@ -75,21 +75,24 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             return state;
         }
         case UPDATE_DATASET_PLACE_GROUP: {
-            const datasetIndex = state.datasets.findIndex(ds => ds.id === action.datasetId);
-            if (datasetIndex >= 0) {
-                let dataset = state.datasets[datasetIndex];
+            // Issue #208:
+            // We no longer set individual dataset place groups.
+            // That's why action.datasetId is no longer used here.
+            // Instead, we update all datasets that refer to the
+            // place group with the given ID.
+            const placeGroup = action.placeGroup;
+            const datasets = state.datasets.map(dataset => {
                 if (dataset.placeGroups) {
-                    const placeGroupIndex = dataset.placeGroups.findIndex(pg => pg.id === action.placeGroup.id);
+                    const placeGroupIndex = dataset.placeGroups.findIndex(pg => pg.id === placeGroup.id);
                     if (placeGroupIndex >= 0) {
-                        let datasets = state.datasets.slice();
-                        let placeGroups = dataset.placeGroups.slice();
-                        placeGroups[placeGroupIndex] = action.placeGroup;
-                        datasets[datasetIndex] = {...dataset, placeGroups};
-                        return {...state, datasets};
+                        const placeGroups = [...dataset.placeGroups];
+                        placeGroups[placeGroupIndex] = placeGroup;
+                        return {...dataset, placeGroups};
                     }
                 }
-            }
-            return state;
+                return dataset;
+            });
+            return {...state, datasets};
         }
         case ADD_USER_PLACE: {
             const {id, label, color, geometry} = action;
