@@ -36,6 +36,7 @@ export interface Variable {
     colorBarName: string;
     colorBarMin: number;
     colorBarMax: number;
+    opacity?: number;
     htmlRepr?: string;
     attrs: { [name: string]: any };
 }

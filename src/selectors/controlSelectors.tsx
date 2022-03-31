@@ -126,6 +126,16 @@ export const selectedVariableColorBarNameSelector = createSelector(
     }
 );
 
+export const selectedVariableOpacitySelector = createSelector(
+    selectedVariableSelector,
+    (variable: Variable | null): number => {
+        if (!variable || typeof variable.opacity != 'number') {
+            return 1;
+        }
+        return variable.opacity;
+    }
+);
+
 export const selectedDatasetTimeRangeSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): TimeRange | null => {
@@ -318,6 +328,7 @@ export const selectedTimeIndexSelector = createSelector(
 function getTileLayer(layerId: string,
                       tileSourceOptions: TileSourceOptions,
                       queryParams: string,
+                      opacity: number,
                       timeDimension: TimeDimension | null,
                       time: number | null,
                       timeAnimationActive: boolean,
@@ -354,7 +365,7 @@ function getTileLayer(layerId: string,
             imageSmoothing: imageSmoothing,
         });
     return (
-        <Tile id={layerId} source={source} zIndex={10}/>
+        <Tile id={layerId} source={source} zIndex={10} opacity={opacity}/>
     );
 }
 
@@ -365,6 +376,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     timeAnimationActiveSelector,
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
+    selectedVariableOpacitySelector,
     selectedDatasetAttributionsSelector,
     imageSmoothingSelector,
     (variable: Variable | null,
@@ -373,6 +385,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
      timeAnimationActive: boolean,
      colorBarMinMax: [number, number],
      colorBarName: string,
+     opacity: number,
      attributions: string[] | null,
      imageSmoothing: boolean
     ): MapElement => {
@@ -387,6 +400,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             'variable',
             variable.tileSourceOptions,
             `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
+            opacity,
             timeDimension,
             time,
             timeAnimationActive,
@@ -399,6 +413,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
 export const selectedDatasetRgbLayerSelector = createSelector(
     showRgbLayerSelector,
     selectedDatasetRgbSchemaSelector,
+    selectedVariableOpacitySelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
@@ -406,6 +421,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     imageSmoothingSelector,
     (showRgbLayer: boolean,
      rgbSchema: RgbSchema | null,
+     opacity: number,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
@@ -418,6 +434,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
         return getTileLayer('rgb',
             rgbSchema.tileSourceOptions,
             '',
+            opacity,
             timeDimension,
             time,
             timeAnimationActive,

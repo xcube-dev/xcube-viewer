@@ -66,7 +66,8 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                         ...variable,
                         colorBarMin: action.colorBarMinMax[0],
                         colorBarMax: action.colorBarMinMax[1],
-                        colorBarName: action.colorBarName
+                        colorBarName: action.colorBarName,
+                        opacity: action.opacity,
                     };
                     datasets[datasetIndex] = {...dataset, variables};
                     return {...state, datasets};
