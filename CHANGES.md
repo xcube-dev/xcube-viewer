@@ -18,6 +18,12 @@
 
 ### Fixes
 
+* Fixed a problem that occurred with datasets referring to the 
+  same place group. In this case, only the first dataset received 
+  the features on place group reload. Now all datasets 
+  referring to that place group are updated on feature reload. 
+  (#208)
+
 * Fixed a problem that prevented setting the map projection 
   using the `branding.mapProjection` configuration key. 
 
