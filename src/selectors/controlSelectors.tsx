@@ -29,6 +29,7 @@ import {default as OlCircle} from 'ol/style/Circle';
 import {default as OlFillStyle} from 'ol/style/Fill';
 import {default as OlStrokeStyle} from 'ol/style/Stroke';
 import {default as OlStyle} from 'ol/style/Style';
+import {default as OlTileGrid} from 'ol/tilegrid/TileGrid';
 import * as React from 'react';
 import {createSelector} from 'reselect'
 import {Layers} from '../components/ol/layer/Layers';
@@ -37,6 +38,7 @@ import {Vector} from '../components/ol/layer/Vector';
 import {MapElement} from '../components/ol/Map';
 import {Config, getTileAccess} from '../config';
 import {ApiServerConfig} from '../model/apiServer';
+
 import {
     Dataset,
     findDataset,
@@ -55,7 +57,6 @@ import {
     PlaceGroup,
     PlaceInfo,
 } from '../model/place';
-import {TileSourceOptions} from '../model/tile';
 import {Time, TimeRange, TimeSeriesGroup} from '../model/timeSeries';
 import {Variable} from '../model/variable';
 
@@ -79,7 +80,7 @@ export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMa
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
 // noinspection JSUnusedLocalSymbols
-export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:3857';
+export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:4326';
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -321,6 +322,7 @@ function getTileLayer(layerId: string,
                       timeDimension: TimeDimension | null,
                       time: number | null,
                       timeAnimationActive: boolean,
+                      mapProjection: string,
                       attributions: string[] | null,
                       imageSmoothing: boolean) {
     if (time !== null) {
@@ -358,14 +360,29 @@ function getTileLayer(layerId: string,
         }
     }
 
+    // TODO (forman): continue CRS independence here
+
+    let tileGrid: undefined | OlTileGrid = undefined;
+    if (mapProjection !== 'EPSG:3857') {
+        // If projection is not web mercator, it is geographical.
+        // We need to define the geographical tile grid used by xcube:
+        const num_Levels = 20; // TODO (forman): get max num levels from xcube
+        tileGrid = new OlTileGrid({
+            tileSize: [256, 256],
+            origin: [-180, 90],
+            extent: [-180, -90, 180, 90],
+            resolutions: Array.from(
+                {length: num_Levels},
+                (_, i) => 180 / 256 / Math.pow(2, i)
+            )
+        });
+    }
+
     const source = new OlXYZSource(
         {
             url,
-            // TODO (forman): continue CRS independence here
-            // projection: olProjGet(tileSourceOptions.projection),
-            // minZoom: tileSourceOptions.minZoom,
-            // maxZoom: tileSourceOptions.maxZoom,
-            // tileGrid: new OlTileGrid(tileSourceOptions.tileGrid),
+            projection: mapProjection,
+            tileGrid,
             attributions: attributions || undefined,
             transition: timeAnimationActive ? 0 : 250,
             imageSmoothing: imageSmoothing,
@@ -417,6 +434,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
             timeDimension,
             time,
             timeAnimationActive,
+            mapProjection,
             attributions,
             imageSmoothing
         );
@@ -453,6 +471,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
             timeDimension,
             time,
             timeAnimationActive,
+            mapProjection,
             attributions,
             imageSmoothing);
     }

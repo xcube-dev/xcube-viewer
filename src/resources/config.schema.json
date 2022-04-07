@@ -92,7 +92,8 @@
           "example": 0.025
         },
         "mapProjection": {
-          "enum": ["EPSG:4326", "EPSG:3857"]
+          "enum": ["EPSG:4326", "EPSG:3857"],
+          "default": "EPSG:4326"
         }
       },
       "additionalProperties": false
