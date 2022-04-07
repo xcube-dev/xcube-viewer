@@ -400,6 +400,13 @@
       "se": "Dölj lägre värden"
     },
     {
+      "en": "Opacity",
+      "de": "Opazität",
+      "it": "Opacità",
+      "ro": "Opacitate",
+      "se": "Opacitet"
+    },
+    {
       "en": "Dataset information",
       "de": "Informationen zum Datensatz",
       "it": "Informazioni sul set di dati",
