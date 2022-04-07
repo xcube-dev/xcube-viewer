@@ -318,6 +318,8 @@ export const selectedTimeIndexSelector = createSelector(
 
 function getTileLayer(layerId: string,
                       tileUrl: string,
+                      tileLevelMin: number | undefined,
+                      tileLevelMax: number | undefined,
                       queryParams: Array<[string, string]>,
                       timeDimension: TimeDimension | null,
                       time: number | null,
@@ -362,17 +364,24 @@ function getTileLayer(layerId: string,
 
     // TODO (forman): continue CRS independence here
 
+    if (typeof tileLevelMax === 'number') {
+        // It is ok to have some extra zoom levels, so we can magnify pixels.
+        // Using more, artifacts will become visible.
+        tileLevelMax += 3;
+    }
+
     let tileGrid: undefined | OlTileGrid = undefined;
     if (mapProjection !== WEB_MERCATOR_CRS) {
         // If projection is not web mercator, it is geographical.
         // We need to define the geographical tile grid used by xcube:
-        const num_Levels = 20; // TODO (forman): get max num levels from xcube
+        const numLevels = (typeof tileLevelMax === 'number') ? tileLevelMax + 1 : 20;
         tileGrid = new OlTileGrid({
             tileSize: [256, 256],
             origin: [-180, 90],
             extent: [-180, -90, 180, 90],
+            // minZoom: tileLevelMin,
             resolutions: Array.from(
-                {length: num_Levels},
+                {length: numLevels},
                 (_, i) => 180 / 256 / Math.pow(2, i)
             )
         });
@@ -386,8 +395,12 @@ function getTileLayer(layerId: string,
             attributions: attributions || undefined,
             transition: timeAnimationActive ? 0 : 250,
             imageSmoothing: imageSmoothing,
-            tileLoadFunction
+            tileLoadFunction,
+            minZoom: tileLevelMin,
+            maxZoom: tileLevelMax,
         });
+
+    console.debug('source = ', source)
     return (
         <Tile id={layerId} source={source} zIndex={10}/>
     );
@@ -430,6 +443,8 @@ export const selectedDatasetVariableLayerSelector = createSelector(
         return getTileLayer(
             'variable',
             variable.tileUrl,
+            variable.tileLevelMin,
+            variable.tileLevelMax,
             queryParams,
             timeDimension,
             time,
@@ -467,6 +482,8 @@ export const selectedDatasetRgbLayerSelector = createSelector(
         ];
         return getTileLayer('rgb',
             rgbSchema.tileUrl,
+            undefined,
+            undefined,
             queryParams,
             timeDimension,
             time,

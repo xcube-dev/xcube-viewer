@@ -34,6 +34,8 @@ export interface Variable {
     title: string;
     // tileUrl is new since xcube 0.11
     tileUrl?: string;
+    tileLevelMin?: number;
+    tileLevelMax?: number;
     // tileSourceOptions are longer used since xcube 0.11
     tileSourceOptions?: TileSourceOptions;
     colorBarName: string;
