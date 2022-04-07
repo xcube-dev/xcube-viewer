@@ -66,6 +66,7 @@ import {MapGroup, maps, MapSource} from '../util/maps';
 import {datasetsSelector, timeSeriesGroupsSelector, userPlaceGroupSelector, userServersSelector} from './dataSelectors';
 import {makeRequestUrl} from "../api/callApi";
 import {MAP_OBJECTS} from "../states/controlState";
+import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -79,8 +80,7 @@ export const imageSmoothingSelector = (state: AppState) => state.controlState.im
 export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
-// noinspection JSUnusedLocalSymbols
-export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:4326';
+export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -351,7 +351,7 @@ function getTileLayer(layerId: string,
         // pans or zooms, because this leads to high server loads.
         tileLoadFunction = (tile: any, src: string) => {
             if (map.getView().getInteracting()) {
-                map.once('moveend', function(){
+                map.once('moveend', function () {
                     tile.getImage().src = src;
                 });
             } else {
@@ -363,7 +363,7 @@ function getTileLayer(layerId: string,
     // TODO (forman): continue CRS independence here
 
     let tileGrid: undefined | OlTileGrid = undefined;
-    if (mapProjection !== 'EPSG:3857') {
+    if (mapProjection !== WEB_MERCATOR_CRS) {
         // If projection is not web mercator, it is geographical.
         // We need to define the geographical tile grid used by xcube:
         const num_Levels = 20; // TODO (forman): get max num levels from xcube
@@ -531,12 +531,13 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                             {
                                 features: new OlGeoJSONFormat(
                                     {
-                                        dataProjection: 'EPSG:4326',
+                                        dataProjection: GEOGRAPHIC_CRS,
                                         featureProjection: mapProjection
                                     }
                                 ).readFeatures(placeGroup),
                             })}
-                    />);
+                    />
+                );
             }
         });
         return (<Layers>{layers}</Layers>);

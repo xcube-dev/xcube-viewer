@@ -34,6 +34,7 @@ import { fromLonLat as olProjFromLonLat } from 'ol/proj';
 
 import 'ol/ol.css';
 import './Map.css';
+import {DEFAULT_MAP_CRS} from "../../model/proj";
 
 export type MapElement = React.ReactElement | null | undefined;
 
@@ -146,7 +147,7 @@ export class Map extends React.Component<MapProps, MapState> {
         if (!map) {
             const initialZoom = this.getMinZoom(mapDiv);
             const view = new OlView({
-                                        projection: projection || 'EPSG:4326',
+                                        projection: projection || DEFAULT_MAP_CRS,
                                         center: olProjFromLonLat([0, 0]),
                                         minZoom: initialZoom,
                                         zoom: initialZoom,

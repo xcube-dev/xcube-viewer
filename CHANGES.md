@@ -6,6 +6,9 @@
   datasets with non-geographic spatial coordinate reference systems, 
   for example UTM or LAEA Europe (EPSG:3035).
 
+* The map projection can now be changed in the settings dialog. 
+  Possible value are "Geographic" and "Web Mercator".
+
 ### Other Changes
 
 * xcube Viewer 0.11.x requires xcube Server 0.11.x.
