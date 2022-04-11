@@ -23,7 +23,6 @@
  */
 
 import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
-import {get as olProjGet} from 'ol/proj'
 import {default as OlVectorSource} from 'ol/source/Vector';
 import {default as OlXYZSource} from 'ol/source/XYZ';
 import {default as OlCircle} from 'ol/style/Circle';
@@ -39,6 +38,7 @@ import {Vector} from '../components/ol/layer/Vector';
 import {MapElement} from '../components/ol/Map';
 import {Config, getTileAccess} from '../config';
 import {ApiServerConfig} from '../model/apiServer';
+
 import {
     Dataset,
     findDataset,
@@ -57,7 +57,6 @@ import {
     PlaceGroup,
     PlaceInfo,
 } from '../model/place';
-import {TileSourceOptions} from '../model/tile';
 import {Time, TimeRange, TimeSeriesGroup} from '../model/timeSeries';
 import {Variable} from '../model/variable';
 
@@ -65,6 +64,9 @@ import {AppState} from '../states/appState';
 import {findIndexCloseTo} from '../util/find';
 import {MapGroup, maps, MapSource} from '../util/maps';
 import {datasetsSelector, timeSeriesGroupsSelector, userPlaceGroupSelector, userServersSelector} from './dataSelectors';
+import {makeRequestUrl} from "../api/callApi";
+import {MAP_OBJECTS} from "../states/controlState";
+import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -78,8 +80,7 @@ export const imageSmoothingSelector = (state: AppState) => state.controlState.im
 export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
-// noinspection JSUnusedLocalSymbols
-export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:4326';
+export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -326,12 +327,15 @@ export const selectedTimeIndexSelector = createSelector(
 );
 
 function getTileLayer(layerId: string,
-                      tileSourceOptions: TileSourceOptions,
-                      queryParams: string,
+                      tileUrl: string,
+                      tileLevelMin: number | undefined,
+                      tileLevelMax: number | undefined,
+                      queryParams: Array<[string, string]>,
                       opacity: number,
                       timeDimension: TimeDimension | null,
                       time: number | null,
                       timeAnimationActive: boolean,
+                      mapProjection: string,
                       attributions: string[] | null,
                       imageSmoothing: boolean) {
     if (time !== null) {
@@ -346,24 +350,68 @@ function getTileLayer(layerId: string,
         if (!timeString) {
             timeString = new Date(time).toISOString();
         }
-        queryParams += `&time=${timeString}`;
+        queryParams = [...queryParams, ['time', timeString]];
     }
-    if (queryParams.length > 0) {
-        queryParams = '?' + queryParams;
+
+    const url = makeRequestUrl(tileUrl, queryParams);
+    console.log("Tile URL:", url);
+
+    const map: any = MAP_OBJECTS['map'];
+    let tileLoadFunction;
+    if (map) {
+        // Define a special tileLoadFunction
+        // that prevents tiles from being loaded while the user
+        // pans or zooms, because this leads to high server loads.
+        tileLoadFunction = (tile: any, src: string) => {
+            if (map.getView().getInteracting()) {
+                map.once('moveend', function () {
+                    tile.getImage().src = src;
+                });
+            } else {
+                tile.getImage().src = src;
+            }
+        }
     }
-    const url = tileSourceOptions.url + queryParams;
+
+    // TODO (forman): continue CRS independence here
+
+    if (typeof tileLevelMax === 'number') {
+        // It is ok to have some extra zoom levels, so we can magnify pixels.
+        // Using more, artifacts will become visible.
+        tileLevelMax += 3;
+    }
+
+    let tileGrid: undefined | OlTileGrid = undefined;
+    if (mapProjection !== WEB_MERCATOR_CRS) {
+        // If projection is not web mercator, it is geographical.
+        // We need to define the geographical tile grid used by xcube:
+        const numLevels = (typeof tileLevelMax === 'number') ? tileLevelMax + 1 : 20;
+        tileGrid = new OlTileGrid({
+            tileSize: [256, 256],
+            origin: [-180, 90],
+            extent: [-180, -90, 180, 90],
+            // minZoom: tileLevelMin,
+            resolutions: Array.from(
+                {length: numLevels},
+                (_, i) => 180 / 256 / Math.pow(2, i)
+            )
+        });
+    }
 
     const source = new OlXYZSource(
         {
             url,
-            projection: olProjGet(tileSourceOptions.projection),
-            minZoom: tileSourceOptions.minZoom,
-            maxZoom: tileSourceOptions.maxZoom,
-            tileGrid: new OlTileGrid(tileSourceOptions.tileGrid),
+            projection: mapProjection,
+            tileGrid,
             attributions: attributions || undefined,
             transition: timeAnimationActive ? 0 : 250,
             imageSmoothing: imageSmoothing,
+            tileLoadFunction,
+            minZoom: tileLevelMin,
+            maxZoom: tileLevelMax,
         });
+
+    console.debug('source = ', source)
     return (
         <Tile id={layerId} source={source} zIndex={10} opacity={opacity}/>
     );
@@ -374,6 +422,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    mapProjectionSelector,
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
     selectedVariableOpacitySelector,
@@ -383,6 +432,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
+     mapProjection: string,
      colorBarMinMax: [number, number],
      colorBarName: string,
      opacity: number,
@@ -392,18 +442,28 @@ export const selectedDatasetVariableLayerSelector = createSelector(
         if (!variable) {
             return null;
         }
-        if (!variable.tileSourceOptions) {
-            console.warn(`Variable ${variable.name} has no tileSourceOptions!`);
+        if (!variable.tileUrl) {
+            console.warn(`Variable ${variable.name} has no tileUrl!`);
             return null;
         }
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+            ['vmin', `${colorBarMinMax[0]}`],
+            ['vmax', `${colorBarMinMax[1]}`],
+            ['cbar', colorBarName],
+            // ['retina', '1'],
+        ];
         return getTileLayer(
             'variable',
-            variable.tileSourceOptions,
-            `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
+            variable.tileUrl,
+            variable.tileLevelMin,
+            variable.tileLevelMax,
+            queryParams,
             opacity,
             timeDimension,
             time,
             timeAnimationActive,
+            mapProjection,
             attributions,
             imageSmoothing
         );
@@ -417,6 +477,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    mapProjectionSelector,
     selectedDatasetAttributionsSelector,
     imageSmoothingSelector,
     (showRgbLayer: boolean,
@@ -425,19 +486,26 @@ export const selectedDatasetRgbLayerSelector = createSelector(
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
+     mapProjection: string,
      attributions: string[] | null,
      imageSmoothing: boolean
     ): MapElement => {
         if (!showRgbLayer || !rgbSchema) {
             return null;
         }
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+        ];
         return getTileLayer('rgb',
-            rgbSchema.tileSourceOptions,
-            '',
+            rgbSchema.tileUrl,
+            undefined,
+            undefined,
+            queryParams,
             opacity,
             timeDimension,
             time,
             timeAnimationActive,
+            mapProjection,
             attributions,
             imageSmoothing);
     }
@@ -497,12 +565,13 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                             {
                                 features: new OlGeoJSONFormat(
                                     {
-                                        dataProjection: 'EPSG:4326',
+                                        dataProjection: GEOGRAPHIC_CRS,
                                         featureProjection: mapProjection
                                     }
                                 ).readFeatures(placeGroup),
                             })}
-                    />);
+                    />
+                );
             }
         });
         return (<Layers>{layers}</Layers>);

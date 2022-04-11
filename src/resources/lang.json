@@ -379,6 +379,27 @@
       "se": "Karta"
     },
     {
+      "en": "Projection",
+      "de": "Projektion",
+      "it": "Proiezione",
+      "ro": "Proiecție",
+      "se": "Projektion"
+    },
+    {
+      "en": "Geographic",
+      "de": "Geografisch",
+      "it": "Geograficamente",
+      "ro": "Geografic",
+      "se": "Geografiskt"
+    },
+    {
+      "en": "Mercator",
+      "de": "Mercator",
+      "it": "Mercatore",
+      "ro": "Mercator",
+      "se": "Mercator"
+    },
+    {
       "en": "Image smoothing",
       "de": "Bildglättung",
       "it": "Levigatura dell'immagine",

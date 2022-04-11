@@ -27,7 +27,7 @@ import { Dataset, Dimension, TimeDimension } from '../model/dataset';
 
 
 export function getDatasets(apiServerUrl: string, accessToken: string | null): Promise<Dataset[]> {
-    const url = makeRequestUrl(`${apiServerUrl}/datasets`, [['details', '1'], ['tiles','ol4']]);
+    const url = makeRequestUrl(`${apiServerUrl}/datasets`, [['details', '1']]);
     const init = makeRequestInit(accessToken);
     return callJsonApi<Dataset[]>(url, init)
         .then((result: any) => result['datasets'])

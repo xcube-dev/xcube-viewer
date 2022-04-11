@@ -31,15 +31,17 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
-import React, { ChangeEvent } from 'react';
+import React, {ChangeEvent} from 'react';
 import i18n from '../i18n';
-import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
-import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
-import { MapGroup, maps, MapSource } from '../util/maps';
+import {ApiServerConfig, ApiServerInfo} from '../model/apiServer';
+import {ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval} from '../states/controlState';
+import {MapGroup, maps, MapSource} from '../util/maps';
 
 import SettingsPanel from './SettingsPanel';
 import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
+import RadioSetting from "./RadioSetting";
+import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
 
 
 const useStyles = makeStyles(theme => ({
@@ -72,6 +74,7 @@ interface SettingsDialogProps {
     openDialog: (dialogId: string) => void;
     serverInfo: ApiServerInfo | null;
 }
+
 
 const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                                            open,
@@ -264,6 +267,17 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             label={i18n.get('Base map')}
                             value={baseMapLabel}
                             onClick={handleBaseMapMenuOpen}>
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Projection')}>
+                            <RadioSetting
+                                propertyName={'mapProjection'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                                options={[
+                                    [i18n.get('Geographic'), GEOGRAPHIC_CRS],
+                                    [i18n.get('Mercator'), WEB_MERCATOR_CRS],
+                                ]}
+                            />
                         </SettingsSubPanel>
                         <SettingsSubPanel label={i18n.get('Image smoothing')}
                                           value={getOnOff(settings.imageSmoothingEnabled)}>

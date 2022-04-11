@@ -56,6 +56,7 @@ import {Layers} from './ol/layer/Layers';
 import {Vector} from './ol/layer/Vector';
 import {Map, MapElement} from './ol/Map';
 import {View} from './ol/View';
+import {GEOGRAPHIC_CRS} from "../model/proj";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
@@ -196,7 +197,7 @@ const Viewer: React.FC<ViewerProps> = ({
             }
 
             // Beware: transform() is an in-place op
-            geometry = feature.clone().getGeometry()!.transform(projection, 'EPSG:4326');
+            geometry = feature.clone().getGeometry()!.transform(projection, GEOGRAPHIC_CRS);
             const geoJSONGeometry = new OlGeoJSONFormat().writeGeometryObject(geometry) as any;
             feature.setId(placeId);
             let colorIndex = 0;
@@ -256,9 +257,10 @@ const Viewer: React.FC<ViewerProps> = ({
                 onMapRef={setMap}
                 mapObjects={MAP_OBJECTS}
                 isStale={true}
-                projection={mapProjection}
+                // projection={mapProjection}
+                // maxTilesLoading={8}
             >
-                <View id="view"/>
+                <View id="view" projection={mapProjection}/>
                 <Layers>
                     {baseMapLayer}
                     {variableLayer}
