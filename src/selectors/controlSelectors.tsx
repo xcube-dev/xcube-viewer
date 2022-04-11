@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2022 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,6 +22,9 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import {createSelector} from 'reselect'
+import {default as OlMap} from 'ol/map';
 import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
 import {default as OlVectorSource} from 'ol/source/Vector';
 import {default as OlXYZSource} from 'ol/source/XYZ';
@@ -30,12 +33,11 @@ import {default as OlFillStyle} from 'ol/style/Fill';
 import {default as OlStrokeStyle} from 'ol/style/Stroke';
 import {default as OlStyle} from 'ol/style/Style';
 import {default as OlTileGrid} from 'ol/tilegrid/TileGrid';
-import * as React from 'react';
-import {createSelector} from 'reselect'
 import {Layers} from '../components/ol/layer/Layers';
 import {Tile} from '../components/ol/layer/Tile';
 import {Vector} from '../components/ol/layer/Vector';
 import {MapElement} from '../components/ol/Map';
+import memoize from "fast-memoize";
 import {Config, getTileAccess} from '../config';
 import {ApiServerConfig} from '../model/apiServer';
 
@@ -326,6 +328,90 @@ export const selectedTimeIndexSelector = createSelector(
     }
 );
 
+function getOlTileGrid(mapProjection: string,
+                       tileLevelMax: number | undefined) {
+    if (mapProjection !== WEB_MERCATOR_CRS) {
+        // If projection is not web mercator, it is geographical.
+        // We need to define the geographical tile grid used by xcube:
+        const numLevels = (typeof tileLevelMax === 'number') ? tileLevelMax + 1 : 20;
+        return new OlTileGrid({
+            tileSize: [256, 256],
+            origin: [-180, 90],
+            extent: [-180, -90, 180, 90],
+            // Note, although correct, setting minZoom
+            // will cause OpenLayers to crash:
+            // minZoom: tileLevelMin,
+            resolutions: Array.from(
+                {length: numLevels},
+                (_, i) => 180 / 256 / Math.pow(2, i)
+            )
+        });
+    }
+}
+
+function getOlXYZSource(url: string,
+                        mapProjection: string,
+                        tileGrid: undefined | OlTileGrid,
+                        attributions: string[] | null,
+                        timeAnimationActive: boolean,
+                        imageSmoothing: boolean,
+                        tileLoadFunction: any,
+                        tileLevelMin: number | undefined,
+                        tileLevelMax: undefined | number) {
+    return new OlXYZSource(
+        {
+            url,
+            projection: mapProjection,
+            tileGrid,
+            attributions: attributions || undefined,
+            transition: timeAnimationActive ? 0 : 250,
+            imageSmoothing: imageSmoothing,
+            tileLoadFunction,
+            minZoom: tileLevelMin,
+            maxZoom: tileLevelMax,
+        });
+}
+
+
+function __getLoadTileOnlyAfterMove(map: OlMap | undefined) {
+    if (map) {
+        // Define a special tileLoadFunction
+        // that prevents tiles from being loaded while the user
+        // pans or zooms, because this leads to high server loads.
+        return (tile: any, src: string) => {
+            if (map.getView().getInteracting()) {
+                map.once('moveend', function () {
+                    tile.getImage().src = src;
+                });
+            } else {
+                tile.getImage().src = src;
+            }
+        }
+    }
+}
+
+const _getLoadTileOnlyAfterMove = memoize(__getLoadTileOnlyAfterMove, {
+    serializer: args => {
+        const map = args[0] as OlMap | undefined;
+        if (map) {
+            const target = map.getTarget();
+            if (typeof target === 'string') {
+                return target;
+            } else if (target) {
+                return target.id || 'map';
+            }
+            return 'map';
+        }
+        return '';
+    }
+});
+
+function getLoadTileOnlyAfterMove() {
+    const map = MAP_OBJECTS['map'] as OlMap | undefined;
+    return _getLoadTileOnlyAfterMove(map);
+}
+
+
 function getTileLayer(layerId: string,
                       tileUrl: string,
                       tileLevelMin: number | undefined,
@@ -354,26 +440,6 @@ function getTileLayer(layerId: string,
     }
 
     const url = makeRequestUrl(tileUrl, queryParams);
-    console.log("Tile URL:", url);
-
-    const map: any = MAP_OBJECTS['map'];
-    let tileLoadFunction;
-    if (map) {
-        // Define a special tileLoadFunction
-        // that prevents tiles from being loaded while the user
-        // pans or zooms, because this leads to high server loads.
-        tileLoadFunction = (tile: any, src: string) => {
-            if (map.getView().getInteracting()) {
-                map.once('moveend', function () {
-                    tile.getImage().src = src;
-                });
-            } else {
-                tile.getImage().src = src;
-            }
-        }
-    }
-
-    // TODO (forman): continue CRS independence here
 
     if (typeof tileLevelMax === 'number') {
         // It is ok to have some extra zoom levels, so we can magnify pixels.
@@ -381,39 +447,27 @@ function getTileLayer(layerId: string,
         tileLevelMax += 3;
     }
 
-    let tileGrid: undefined | OlTileGrid = undefined;
-    if (mapProjection !== WEB_MERCATOR_CRS) {
-        // If projection is not web mercator, it is geographical.
-        // We need to define the geographical tile grid used by xcube:
-        const numLevels = (typeof tileLevelMax === 'number') ? tileLevelMax + 1 : 20;
-        tileGrid = new OlTileGrid({
-            tileSize: [256, 256],
-            origin: [-180, 90],
-            extent: [-180, -90, 180, 90],
-            // minZoom: tileLevelMin,
-            resolutions: Array.from(
-                {length: numLevels},
-                (_, i) => 180 / 256 / Math.pow(2, i)
-            )
-        });
-    }
+    const tileGrid = getOlTileGrid(mapProjection, tileLevelMax);
+    const source = getOlXYZSource(
+        url,
+        mapProjection,
+        tileGrid,
+        attributions,
+        timeAnimationActive,
+        imageSmoothing,
+        getLoadTileOnlyAfterMove(),
+        tileLevelMin,
+        tileLevelMax
+    );
+    // console.debug('source = ', source)
 
-    const source = new OlXYZSource(
-        {
-            url,
-            projection: mapProjection,
-            tileGrid,
-            attributions: attributions || undefined,
-            transition: timeAnimationActive ? 0 : 250,
-            imageSmoothing: imageSmoothing,
-            tileLoadFunction,
-            minZoom: tileLevelMin,
-            maxZoom: tileLevelMax,
-        });
-
-    console.debug('source = ', source)
     return (
-        <Tile id={layerId} source={source} zIndex={10} opacity={opacity}/>
+        <Tile
+            id={layerId}
+            source={source}
+            zIndex={10}
+            opacity={opacity}
+        />
     );
 }
 

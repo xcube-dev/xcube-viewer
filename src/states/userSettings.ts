@@ -66,6 +66,7 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('infoCardOpen', settings);
             storage.setObjectProperty('infoCardElementStates', settings);
             storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
+            storage.setPrimitiveProperty('mapProjection', settings);
             storage.setPrimitiveProperty('baseMapUrl', settings);
             storage.setPrimitiveProperty('exportTimeSeries', settings);
             storage.setPrimitiveProperty('exportTimeSeriesSeparator', settings);
@@ -95,6 +96,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('infoCardOpen', settings, defaultSettings);
             storage.getObjectProperty('infoCardElementStates', settings, defaultSettings);
             storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);
+            storage.getStringProperty('mapProjection', settings, defaultSettings);
             storage.getStringProperty('baseMapUrl', settings, defaultSettings);
             storage.getBooleanProperty('exportTimeSeries', settings, defaultSettings);
             storage.getStringProperty('exportTimeSeriesSeparator', settings, defaultSettings);
