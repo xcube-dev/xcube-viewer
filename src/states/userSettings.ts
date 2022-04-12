@@ -104,10 +104,15 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('exportPlacesAsCollection', settings, defaultSettings);
             storage.getBooleanProperty('exportZipArchive', settings, defaultSettings);
             storage.getStringProperty('exportFileName', settings, defaultSettings);
+            if (process.env.NODE_ENV === 'development') {
+                console.debug('Loaded user settings:', settings);
+            }
         } catch (e) {
-            console.warn(`failed to load user settings: ${e}`);
+            console.warn(`Failed to load user settings: ${e}`);
         }
         return settings;
+    } else {
+        console.warn('User settings not found or access denied');
     }
     return defaultSettings;
 }

@@ -357,7 +357,7 @@ function getOlXYZSource(url: string,
                         imageSmoothing: boolean,
                         tileLoadFunction: any,
                         tileLevelMin: number | undefined,
-                        tileLevelMax: undefined | number) {
+                        tileLevelMax: number | undefined) {
     return new OlXYZSource(
         {
             url,
@@ -367,7 +367,10 @@ function getOlXYZSource(url: string,
             transition: timeAnimationActive ? 0 : 250,
             imageSmoothing: imageSmoothing,
             tileLoadFunction,
-            minZoom: tileLevelMin,
+            // TODO (forman): if we provide minZoom, we also need to set
+            //   tileGrid.extent, otherwise way to many tiles are loaded from
+            //   level at minZoom when zooming out!
+            // minZoom: tileLevelMin,
             maxZoom: tileLevelMax,
         });
 }

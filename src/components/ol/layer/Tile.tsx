@@ -34,8 +34,10 @@ import { Options as OlTileLayerOptions } from 'ol/layer/BaseTile';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
 
+const DEBUG = false;
+
 let trace: (message?: string, ...optionalParams: any[]) => void;
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' && DEBUG) {
     trace = console.debug;
 } else {
     trace = () => {};
