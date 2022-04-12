@@ -555,8 +555,8 @@ export const selectedDatasetRgbLayerSelector = createSelector(
         ];
         return getTileLayer('rgb',
             rgbSchema.tileUrl,
-            undefined,
-            undefined,
+            rgbSchema.tileLevelMin,
+            rgbSchema.tileLevelMax,
             queryParams,
             opacity,
             timeDimension,
