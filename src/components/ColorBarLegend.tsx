@@ -111,7 +111,8 @@ interface ColorBarLegendProps {
     variableUnits: string;
     variableColorBarMinMax: [number, number];
     variableColorBarName: string;
-    updateVariableColorBar: (colorBarMinMax: [number, number], colorBarName: string) => void;
+    variableOpacity: number;
+    updateVariableColorBar: (colorBarMinMax: [number, number], colorBarName: string, opacity: number) => void;
     colorBars: ColorBars | null;
     width?: number | string;
     height?: number | string;
@@ -123,6 +124,7 @@ export default function ColorBarLegend({
                                            variableUnits,
                                            variableColorBarMinMax,
                                            variableColorBarName,
+                                           variableOpacity,
                                            updateVariableColorBar,
                                            colorBars,
                                            width, height,
@@ -177,7 +179,7 @@ export default function ColorBarLegend({
 
     const handleColorBarMinMaxChangeCommitted = (event: React.ChangeEvent<{}>, value: number | number[]) => {
         if (Array.isArray(value)) {
-            updateVariableColorBar([value[0], value[1]], variableColorBarName);
+            updateVariableColorBar([value[0], value[1]], variableColorBarName, variableOpacity);
         }
     };
 
@@ -193,16 +195,32 @@ export default function ColorBarLegend({
         if (variableColorBarAlpha) {
             variableColorBarName += ALPHA_SUFFIX;
         }
-        updateVariableColorBar(variableColorBarMinMax, variableColorBarName);
+        updateVariableColorBar(variableColorBarMinMax, variableColorBarName, variableOpacity);
     };
 
     const handleColorBarAlpha = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.currentTarget.checked) {
-            updateVariableColorBar(variableColorBarMinMax, variableColorBarBaseName + ALPHA_SUFFIX);
+            updateVariableColorBar(
+                variableColorBarMinMax,
+                variableColorBarBaseName + ALPHA_SUFFIX,
+                variableOpacity
+            );
         } else {
-            updateVariableColorBar(variableColorBarMinMax, variableColorBarBaseName);
+            updateVariableColorBar(
+                variableColorBarMinMax,
+                variableColorBarBaseName,
+                variableOpacity
+            );
         }
     };
+
+    const handleVariableOpacity = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+        updateVariableColorBar(
+            variableColorBarMinMax,
+            variableColorBarName,
+            value as number
+        );
+    }
 
     const handleEnteredColorBarMinChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const enteredValue = event.target.value;
@@ -214,7 +232,7 @@ export default function ColorBarLegend({
                 const newMinMax: [number, number] = [minValue, currentColorBarMinMax[1]];
                 setCurrentColorBarMinMax(newMinMax);
                 setOriginalColorBarMinMax(newMinMax);
-                updateVariableColorBar(newMinMax, variableColorBarName);
+                updateVariableColorBar(newMinMax, variableColorBarName, variableOpacity);
             }
         } else {
             error = true;
@@ -232,7 +250,7 @@ export default function ColorBarLegend({
                 const newMinMax: [number, number] = [currentColorBarMinMax[0], maxValue]
                 setCurrentColorBarMinMax(newMinMax);
                 setOriginalColorBarMinMax(newMinMax);
-                updateVariableColorBar(newMinMax, variableColorBarName);
+                updateVariableColorBar(newMinMax, variableColorBarName, variableOpacity);
             }
         } else {
             error = true;
@@ -371,8 +389,21 @@ export default function ColorBarLegend({
                 <Box component="span">
                     <Checkbox color="primary"
                               checked={variableColorBarAlpha}
-                              onChange={handleColorBarAlpha}/>
+                              onChange={handleColorBarAlpha}
+                              size="small"
+                              style={{paddingLeft: 0, paddingTop: 4, paddingBottom: 4}}/>
                     <Box component="span">{i18n.get('Hide lower values')}</Box>
+                </Box>
+                <Box component="div" style={{display: 'flex', alignItems: 'center'}}>
+                    <span>{i18n.get('Opacity')}</span>
+                    <Slider
+                        min={0}
+                        max={1}
+                        value={variableOpacity}
+                        step={0.01}
+                        style={{flexGrow: 1, marginLeft: 10, marginRight: 10}}
+                        onChange={handleVariableOpacity}
+                    />
                 </Box>
                 {entries}
             </Box>

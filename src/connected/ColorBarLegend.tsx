@@ -29,7 +29,7 @@ import {
     selectedVariableNameSelector,
     selectedVariableUnitsSelector,
     selectedVariableColorBarNameSelector,
-    selectedVariableColorBarMinMaxSelector,
+    selectedVariableColorBarMinMaxSelector, selectedVariableOpacitySelector,
 } from '../selectors/controlSelectors';
 import { updateVariableColorBar } from '../actions/dataActions';
 import ColorBarLegend from '../components/ColorBarLegend';
@@ -41,6 +41,7 @@ const mapStateToProps = (state: AppState) => {
         variableUnits: selectedVariableUnitsSelector(state),
         variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),
         variableColorBarName: selectedVariableColorBarNameSelector(state),
+        variableOpacity: selectedVariableOpacitySelector(state),
         colorBars: state.dataState.colorBars,
     }
 };

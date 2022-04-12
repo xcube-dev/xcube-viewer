@@ -56,8 +56,10 @@ export interface TimeDimension extends Dimension {
 export type NormRange = [number, number];
 
 export interface RgbSchema {
-    // tileUrl is new since xcube 0.11
+    // The following are new since xcube 0.11
     tileUrl: string;
+    tileLevelMin?: number;
+    tileLevelMax?: number;
     // tileSourceOptions are longer used since xcube 0.11
     tileSourceOptions?: TileSourceOptions;
     varNames: [string, string, string];

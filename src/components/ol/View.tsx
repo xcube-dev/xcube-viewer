@@ -35,14 +35,17 @@ interface ViewProps extends MapComponentProps, OlViewOptions {
 export class View extends MapComponent<OlView, ViewProps> {
 
     addMapObject(map: OlMap): OlView {
-        map.getView().setProperties(this.props);
-        return map.getView();
+        return this.updateView(map);
     }
 
     removeMapObject(map: OlMap, object: OlView): void {
     }
 
     updateMapObject(map: OlMap, object: OlView): OlView {
+        return this.updateView(map);
+    }
+
+    updateView(map: OlMap): OlView {
         const newProjection = this.props.projection;
         let oldProjection: OlProjectionLike = map.getView().getProjection();
         if (typeof newProjection === 'string') {

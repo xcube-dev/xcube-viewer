@@ -19,6 +19,11 @@
 
 ## Changes in version 0.10.2 (in development)
 
+### Enhancements
+
+* Now the opacity of tile layers can be changed from the color bar
+  dropdown component in the map.
+
 ### Fixes
 
 * Fixed a problem that occurred with datasets referring to the 

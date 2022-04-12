@@ -163,8 +163,8 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                 if (!isValidPlaceGroup(placeGroup)) {
                     const datasetId = dataset!.id;
                     const placeGroupId = placeGroup.id;
-                    const activitityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
-                    dispatch(addActivity(activitityId, i18n.get('Loading places')));
+                    const activityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
+                    dispatch(addActivity(activityId, i18n.get('Loading places')));
                     api.getDatasetPlaceGroup(apiServer.url,
                                              datasetId,
                                              placeGroupId,
@@ -176,7 +176,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                            dispatch(postMessage('error', error));
                        })
                        .finally(() => {
-                           dispatch(removeActivity(activitityId));
+                           dispatch(removeActivity(activityId));
                        });
                 }
             }

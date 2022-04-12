@@ -23,14 +23,13 @@
  */
 
 import * as React from 'react';
-import { default as OlMap } from 'ol/Map';
-import { default as OlBaseObject } from 'ol/Object';
-import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
-import { default as OlView } from 'ol/View';
-import { default as OlEvent } from 'ol/events/Event';
-import { EventsKey as OlEventsKey } from 'ol/events';
-import { MapOptions as OlMapOptions } from 'ol/PluggableMap';
-import { fromLonLat as olProjFromLonLat } from 'ol/proj';
+import {default as OlMap} from 'ol/Map';
+import {default as OlBaseObject} from 'ol/Object';
+import {default as OlMapBrowserEvent} from 'ol/MapBrowserEvent';
+import {default as OlView} from 'ol/View';
+import {default as OlEvent} from 'ol/events/Event';
+import {EventsKey as OlEventsKey} from 'ol/events';
+import {MapOptions as OlMapOptions} from 'ol/PluggableMap';
 
 import 'ol/ol.css';
 import './Map.css';
@@ -53,13 +52,12 @@ interface MapProps extends OlMapOptions {
     onClick?: (event: OlMapBrowserEvent) => void;
     onMapRef?: (map: OlMap | null) => void;
     isStale?: boolean;
-    projection?: string;
 }
 
 interface MapState {
 }
 
-const DEFAULT_CONTAINER_SYTLE: React.CSSProperties = {height: '100%'};
+const DEFAULT_CONTAINER_STYLE: React.CSSProperties = {height: '100%'};
 
 export class Map extends React.Component<MapProps, MapState> {
 
@@ -83,53 +81,10 @@ export class Map extends React.Component<MapProps, MapState> {
         }
     }
 
-    private getMapOptions(): OlMapOptions {
-        const mapOptions = {...this.props};
-        delete mapOptions['children'];
-        delete mapOptions['onClick'];
-        delete mapOptions['projection'];
-        return mapOptions;
-    }
-
-    private handleClick = (event: OlEvent) => {
-        const onClick = this.props.onClick;
-        if (onClick) {
-            onClick(event as OlMapBrowserEvent);
-        }
-    };
-
-    private handleRef = (mapDiv: HTMLDivElement | null) => {
-        this.contextValue.mapDiv = mapDiv;
-    };
-
-    private handleResize = () => {
-        const mapDiv = this.contextValue.mapDiv;
-        const map = this.contextValue.map;
-        if (mapDiv && map) {
-            map.updateSize();
-            const view = map.getView();
-            const minZoom = this.getMinZoom(mapDiv);
-            if (minZoom !== view.getMinZoom()) {
-                view.setMinZoom(minZoom);
-            }
-        }
-    };
-
-    private getMinZoom = (target: HTMLDivElement) => {
-        // Adjust the view's minZoom so there is only one world,
-        // see https://openlayers.org/en/latest/examples/min-zoom.html
-        const size = target.clientWidth;
-        const minZoom = Math.LOG2E * Math.log(size / 256);
-        if (minZoom >= 0.0) {
-            return minZoom;
-        }
-        return 0;
-    };
-
     componentDidMount(): void {
         // console.log('Map.componentDidMount: id =', this.props.id);
 
-        const {id, projection} = this.props;
+        const {id} = this.props;
         const mapDiv = this.contextValue.mapDiv!;
 
         let map: OlMap | null = null;
@@ -147,17 +102,16 @@ export class Map extends React.Component<MapProps, MapState> {
         if (!map) {
             const initialZoom = this.getMinZoom(mapDiv);
             const view = new OlView({
-                                        projection: projection || DEFAULT_MAP_CRS,
-                                        center: olProjFromLonLat([0, 0]),
-                                        minZoom: initialZoom,
-                                        zoom: initialZoom,
-                                    });
+                projection: DEFAULT_MAP_CRS,
+                center: [0, 0],
+                minZoom: initialZoom,
+                zoom: initialZoom,
+            });
             map = new OlMap({
-                                view,
-                                ...this.getMapOptions(),
-                                target: mapDiv
-                            });
-
+                view,
+                ...this.getMapOptions(),
+                target: mapDiv
+            });
         }
 
         this.contextValue.map = map;
@@ -231,10 +185,52 @@ export class Map extends React.Component<MapProps, MapState> {
             );
         }
         return (
-            <div ref={this.handleRef} style={DEFAULT_CONTAINER_SYTLE}>
+            <div ref={this.handleRef} style={DEFAULT_CONTAINER_STYLE}>
                 {childrenWithContext}
             </div>
         );
     }
+
+    private getMapOptions(): OlMapOptions {
+        const mapOptions = {...this.props};
+        delete mapOptions['children'];
+        delete mapOptions['onClick'];
+        return mapOptions;
+    }
+
+    private handleClick = (event: OlEvent) => {
+        const onClick = this.props.onClick;
+        if (onClick) {
+            onClick(event as OlMapBrowserEvent);
+        }
+    };
+
+    private handleRef = (mapDiv: HTMLDivElement | null) => {
+        this.contextValue.mapDiv = mapDiv;
+    };
+
+    private handleResize = () => {
+        const mapDiv = this.contextValue.mapDiv;
+        const map = this.contextValue.map;
+        if (mapDiv && map) {
+            map.updateSize();
+            const view = map.getView();
+            const minZoom = this.getMinZoom(mapDiv);
+            if (minZoom !== view.getMinZoom()) {
+                view.setMinZoom(minZoom);
+            }
+        }
+    };
+
+    private getMinZoom = (target: HTMLDivElement) => {
+        // Adjust the view's minZoom so there is only one world,
+        // see https://openlayers.org/en/latest/examples/min-zoom.html
+        const size = target.clientWidth;
+        const minZoom = Math.LOG2E * Math.log(size / 256);
+        if (minZoom >= 0.0) {
+            return minZoom;
+        }
+        return 0;
+    };
 }
 
