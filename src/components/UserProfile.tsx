@@ -36,35 +36,35 @@ import { WithLocale } from '../util/lang';
 
 
 interface UserProfileProps extends WithLocale {
-    userInfo: auth.UserInfo;
+    userProfile: auth.UserProfile;
     accessToken: string | null;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({userInfo}) => {
+const UserProfile: React.FC<UserProfileProps> = ({userProfile}) => {
 
     return (
         <Grid container justify="center" spacing={1}>
             <Grid item>
-                <img src={userInfo.picture} width={84} alt={i18n.get('User Profile')}/>
+                <img src={userProfile.picture} width={84} alt={i18n.get('User Profile')}/>
             </Grid>
             <Grid item>
                 <Paper elevation={3}>
                     <List>
                         <ListItem>
                             <ListItemText
-                                primary={userInfo.name}
+                                primary={userProfile.name}
                                 secondary={i18n.get('User name')}/>
                         </ListItem>
                         <Divider light/>
                         <ListItem>
                             <ListItemText
-                                primary={`${userInfo.email} (${userInfo.email_verified ? i18n.get('verified') : i18n.get('not verified')})`}
+                                primary={`${userProfile.email} (${userProfile.email_verified ? i18n.get('verified') : i18n.get('not verified')})`}
                                 secondary={i18n.get('E-mail')}/>
                         </ListItem>
                         <Divider light/>
                         <ListItem>
                             <ListItemText
-                                primary={userInfo.nickname}
+                                primary={userProfile.nickname}
                                 secondary={i18n.get('Nickname')}/>
                         </ListItem>
                     </List>

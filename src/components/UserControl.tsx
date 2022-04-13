@@ -81,7 +81,7 @@ const styles = (theme: Theme) => createStyles(
 interface UserControlProps extends WithStyles<typeof styles>, WithLocale {
     hasAuthClient: boolean;
     isBusy: boolean,
-    userInfo: auth.UserInfo | null;
+    userProfile: auth.UserProfile | null;
     accessToken: string | null;
     signIn: () => void;
     signOut: () => void;
@@ -91,7 +91,7 @@ const UserControl: React.FC<UserControlProps> = ({
                                                      classes,
                                                      hasAuthClient,
                                                      isBusy,
-                                                     userInfo,
+                                                     userProfile,
                                                      accessToken,
                                                      signIn,
                                                      signOut,
@@ -130,16 +130,16 @@ const UserControl: React.FC<UserControlProps> = ({
         signOut();
     };
 
-    if (userInfo !== null) {
+    if (!!userProfile) {
         let avatar;
         let avatarContent: React.ReactNode = <PersonIcon/>;
-        if (!userInfo) {
+        if (!userProfile) {
             avatar = <Avatar className={classes.letterAvatar}>?</Avatar>;
-        } else if (userInfo.picture) {
-            avatar = <Avatar className={classes.imageAvatar} src={userInfo.picture} alt={userInfo.name}/>;
+        } else if (userProfile.picture) {
+            avatar = <Avatar className={classes.imageAvatar} src={userProfile.picture} alt={userProfile.name}/>;
         } else {
-            const name1 = userInfo.given_name || userInfo.name || userInfo.nickname;
-            const name2 = userInfo.family_name;
+            const name1 = userProfile.given_name || userProfile.name || userProfile.nickname;
+            const name2 = userProfile.family_name;
             let letters: string | null = null;
             if (name1 && name2) {
                 letters = name1[0] + name2[0];
@@ -184,7 +184,7 @@ const UserControl: React.FC<UserControlProps> = ({
                 >
                     <DialogTitle id="alert-dialog-slide-title">{i18n.get('User Profile')}</DialogTitle>
                     <DialogContent>
-                        <UserProfile userInfo={userInfo!} accessToken={accessToken}/>
+                        <UserProfile userProfile={userProfile!} accessToken={accessToken}/>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleUserProfileDialogClose} color="primary">

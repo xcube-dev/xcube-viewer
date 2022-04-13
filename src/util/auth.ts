@@ -22,18 +22,14 @@
  * SOFTWARE.
  */
 
-import createAuth0Client, { User } from '@auth0/auth0-spa-js';
-import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
+import { UserManager, UserManagerSettings, User, UserProfile as UP} from 'oidc-client-ts';
 import history from './history';
 
 export type UserInfo = User;
-export type AuthClient = Auth0Client;
+export type UserProfile = UP;
+export type AuthClient = UserManager;
+export type AuthClientConfig = UserManagerSettings;
 
-export interface AuthClientConfig {
-    domain: string;
-    clientId: string;
-    audience: string;
-}
 
 let _authClient: AuthClient | null = null;
 
@@ -47,12 +43,11 @@ export async function initAuthClient(authClientConfig?: AuthClientConfig): Promi
         return Promise.resolve(null);
     }
     if (!_authClient) {
-        _authClient = await createAuth0Client({
-                                                  domain: authClientConfig.domain,
-                                                  client_id: authClientConfig.clientId,
-                                                  audience: authClientConfig.audience,
-                                                  redirect_uri: window.location.origin,
-                                              });
+        _authClient = new UserManager({
+            ...authClientConfig,
+            redirect_uri: window.location.origin + '/oidc/callback',
+            loadUserInfo: true,
+        });
         /*
         try {
             let isAuthenticated = await _authClient.isAuthenticated();
@@ -79,9 +74,11 @@ export async function initAuthClient(authClientConfig?: AuthClientConfig): Promi
             console.error(e);
         }
         */
+
+        // console.info('window.location:', window.location)
         if (window.location.search.includes('code=')) {
-            const {appState} = await _authClient.handleRedirectCallback();
-            handleRedirectCallback(appState);
+            // const user = await _authClient.getUser()
+            // history.push(window.location.pathname);
         }
     }
     return _authClient;

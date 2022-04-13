@@ -32,10 +32,10 @@ import {
     WithStyles
 } from '@material-ui/core';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Config } from '../config';
+import {connect} from 'react-redux';
+import {Config} from '../config';
 
-import { AppState } from '../states/appState';
+import {AppState} from '../states/appState';
 import AppBar from './AppBar';
 import AppPane from './AppPane';
 import LegalAgreementDialog from './LegalAgreementDialog';

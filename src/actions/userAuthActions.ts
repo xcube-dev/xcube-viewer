@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { Dispatch } from 'redux';
-import { Config } from '../config';
+import {Dispatch} from 'redux';
+import {Config} from '../config';
 import * as auth from '../util/auth'
-import { updateDatasets } from './dataActions';
-import { PostMessage, postMessage } from './messageLogActions';
+import {updateDatasets} from './dataActions';
+import {PostMessage, postMessage} from './messageLogActions';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,13 +40,9 @@ export function initAuthClient() {
                 userInfo = await authClient.getUser();
             } catch (e) {
                 // ok
+                console.error(e);
             }
-            let accessToken = null;
-            try {
-                accessToken = await authClient.getTokenSilently();
-            } catch (e) {
-                // ok
-            }
+            const accessToken = userInfo ? userInfo.access_token : null;
             if (userInfo && accessToken) {
                 dispatch(receiveSignIn(userInfo!, accessToken!));
                 dispatch(updateDatasets() as any);
@@ -78,21 +74,22 @@ export function signIn() {
             return;
         }
 
-        authClient.loginWithPopup()
-                  .then(async () => {
-                      dispatch(requestSignIn());
-                      const userInfo = await authClient.getUser();
-                      if (!userInfo) {
-                          throw new Error('Signing in failed, failed to retrieve user information.');
-                      }
-                      const accessToken = await authClient.getTokenSilently();
-                      dispatch(receiveSignIn(userInfo!, accessToken));
-                      dispatch(updateDatasets() as any);
-                  })
-                  .catch((error) => {
-                      dispatch(receiveSignOut());
-                      dispatch(postMessage('error', error));
-                  });
+        authClient.signinPopup({popupWindowTarget: '_self'})
+            .then(userInfo => {
+                dispatch(requestSignIn());
+                if (!userInfo) {
+                    throw new Error('Signing in failed, failed to retrieve user information.');
+                }
+                console.debug('Signing in success:', userInfo);
+                const accessToken = userInfo.access_token;
+                dispatch(receiveSignIn(userInfo!, accessToken));
+                dispatch(updateDatasets() as any);
+            })
+            .catch((error) => {
+                console.error('Signing in failed:', error);
+                dispatch(receiveSignOut());
+                dispatch(postMessage('error', error));
+            });
     };
 }
 
@@ -125,18 +122,18 @@ function receiveSignIn(userInfo: auth.UserInfo, accessToken: string): ReceiveSig
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function signOut() {
-    return (dispatch: Dispatch<RequestSignOut | ReceiveSignOut>) => {
+    return async (dispatch: Dispatch<RequestSignOut | ReceiveSignOut>) => {
         const authClient = auth.getAuthClient();
         if (!authClient) {
             // Should never get here...
             return;
         }
         const logoutOptions = {
-            returnTo: window.location.origin,
-            federated: true,
+            post_logout_redirect_uri: window.location.origin,
+            // federated: true,
         };
         dispatch(requestSignOut());
-        authClient.logout(logoutOptions);
+        await authClient.signoutPopup(logoutOptions);
         dispatch(receiveSignOut());
     };
 }
