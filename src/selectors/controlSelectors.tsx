@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2022 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import {createSelector} from 'reselect'
+import {default as OlMap} from 'ol/map';
 import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
-import {get as olProjGet} from 'ol/proj'
 import {default as OlVectorSource} from 'ol/source/Vector';
 import {default as OlXYZSource} from 'ol/source/XYZ';
 import {default as OlCircle} from 'ol/style/Circle';
@@ -31,14 +33,14 @@ import {default as OlFillStyle} from 'ol/style/Fill';
 import {default as OlStrokeStyle} from 'ol/style/Stroke';
 import {default as OlStyle} from 'ol/style/Style';
 import {default as OlTileGrid} from 'ol/tilegrid/TileGrid';
-import * as React from 'react';
-import {createSelector} from 'reselect'
 import {Layers} from '../components/ol/layer/Layers';
 import {Tile} from '../components/ol/layer/Tile';
 import {Vector} from '../components/ol/layer/Vector';
 import {MapElement} from '../components/ol/Map';
+import memoize from "fast-memoize";
 import {Config, getTileAccess} from '../config';
 import {ApiServerConfig} from '../model/apiServer';
+
 import {
     Dataset,
     findDataset,
@@ -57,7 +59,6 @@ import {
     PlaceGroup,
     PlaceInfo,
 } from '../model/place';
-import {TileSourceOptions} from '../model/tile';
 import {Time, TimeRange, TimeSeriesGroup} from '../model/timeSeries';
 import {Variable} from '../model/variable';
 
@@ -65,6 +66,9 @@ import {AppState} from '../states/appState';
 import {findIndexCloseTo} from '../util/find';
 import {MapGroup, maps, MapSource} from '../util/maps';
 import {datasetsSelector, timeSeriesGroupsSelector, userPlaceGroupSelector, userServersSelector} from './dataSelectors';
+import {makeRequestUrl} from "../api/callApi";
+import {MAP_OBJECTS} from "../states/controlState";
+import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -78,8 +82,7 @@ export const imageSmoothingSelector = (state: AppState) => state.controlState.im
 export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
-// noinspection JSUnusedLocalSymbols
-export const mapProjectionSelector = (state: AppState) => Config.instance.branding.mapProjection || 'EPSG:4326';
+export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -123,6 +126,16 @@ export const selectedVariableColorBarNameSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
         return (variable && variable.colorBarName) || 'viridis';
+    }
+);
+
+export const selectedVariableOpacitySelector = createSelector(
+    selectedVariableSelector,
+    (variable: Variable | null): number => {
+        if (!variable || typeof variable.opacity != 'number') {
+            return 1;
+        }
+        return variable.opacity;
     }
 );
 
@@ -315,12 +328,103 @@ export const selectedTimeIndexSelector = createSelector(
     }
 );
 
+function getOlTileGrid(mapProjection: string,
+                       tileLevelMax: number | undefined) {
+    if (mapProjection !== WEB_MERCATOR_CRS) {
+        // If projection is not web mercator, it is geographical.
+        // We need to define the geographical tile grid used by xcube:
+        const numLevels = (typeof tileLevelMax === 'number') ? tileLevelMax + 1 : 20;
+        return new OlTileGrid({
+            tileSize: [256, 256],
+            origin: [-180, 90],
+            extent: [-180, -90, 180, 90],
+            // Note, although correct, setting minZoom
+            // will cause OpenLayers to crash:
+            // minZoom: tileLevelMin,
+            resolutions: Array.from(
+                {length: numLevels},
+                (_, i) => 180 / 256 / Math.pow(2, i)
+            )
+        });
+    }
+}
+
+function getOlXYZSource(url: string,
+                        mapProjection: string,
+                        tileGrid: undefined | OlTileGrid,
+                        attributions: string[] | null,
+                        timeAnimationActive: boolean,
+                        imageSmoothing: boolean,
+                        tileLoadFunction: any,
+                        tileLevelMin: number | undefined,
+                        tileLevelMax: number | undefined) {
+    return new OlXYZSource(
+        {
+            url,
+            projection: mapProjection,
+            tileGrid,
+            attributions: attributions || undefined,
+            transition: timeAnimationActive ? 0 : 250,
+            imageSmoothing: imageSmoothing,
+            tileLoadFunction,
+            // TODO (forman): if we provide minZoom, we also need to set
+            //   tileGrid.extent, otherwise way to many tiles are loaded from
+            //   level at minZoom when zooming out!
+            // minZoom: tileLevelMin,
+            maxZoom: tileLevelMax,
+        });
+}
+
+
+function __getLoadTileOnlyAfterMove(map: OlMap | undefined) {
+    if (map) {
+        // Define a special tileLoadFunction
+        // that prevents tiles from being loaded while the user
+        // pans or zooms, because this leads to high server loads.
+        return (tile: any, src: string) => {
+            if (map.getView().getInteracting()) {
+                map.once('moveend', function () {
+                    tile.getImage().src = src;
+                });
+            } else {
+                tile.getImage().src = src;
+            }
+        }
+    }
+}
+
+const _getLoadTileOnlyAfterMove = memoize(__getLoadTileOnlyAfterMove, {
+    serializer: args => {
+        const map = args[0] as OlMap | undefined;
+        if (map) {
+            const target = map.getTarget();
+            if (typeof target === 'string') {
+                return target;
+            } else if (target) {
+                return target.id || 'map';
+            }
+            return 'map';
+        }
+        return '';
+    }
+});
+
+function getLoadTileOnlyAfterMove() {
+    const map = MAP_OBJECTS['map'] as OlMap | undefined;
+    return _getLoadTileOnlyAfterMove(map);
+}
+
+
 function getTileLayer(layerId: string,
-                      tileSourceOptions: TileSourceOptions,
-                      queryParams: string,
+                      tileUrl: string,
+                      tileLevelMin: number | undefined,
+                      tileLevelMax: number | undefined,
+                      queryParams: Array<[string, string]>,
+                      opacity: number,
                       timeDimension: TimeDimension | null,
                       time: number | null,
                       timeAnimationActive: boolean,
+                      mapProjection: string,
                       attributions: string[] | null,
                       imageSmoothing: boolean) {
     if (time !== null) {
@@ -335,26 +439,38 @@ function getTileLayer(layerId: string,
         if (!timeString) {
             timeString = new Date(time).toISOString();
         }
-        queryParams += `&time=${timeString}`;
+        queryParams = [...queryParams, ['time', timeString]];
     }
-    if (queryParams.length > 0) {
-        queryParams = '?' + queryParams;
-    }
-    const url = tileSourceOptions.url + queryParams;
 
-    const source = new OlXYZSource(
-        {
-            url,
-            projection: olProjGet(tileSourceOptions.projection),
-            minZoom: tileSourceOptions.minZoom,
-            maxZoom: tileSourceOptions.maxZoom,
-            tileGrid: new OlTileGrid(tileSourceOptions.tileGrid),
-            attributions: attributions || undefined,
-            transition: timeAnimationActive ? 0 : 250,
-            imageSmoothing: imageSmoothing,
-        });
+    const url = makeRequestUrl(tileUrl, queryParams);
+
+    if (typeof tileLevelMax === 'number') {
+        // It is ok to have some extra zoom levels, so we can magnify pixels.
+        // Using more, artifacts will become visible.
+        tileLevelMax += 3;
+    }
+
+    const tileGrid = getOlTileGrid(mapProjection, tileLevelMax);
+    const source = getOlXYZSource(
+        url,
+        mapProjection,
+        tileGrid,
+        attributions,
+        timeAnimationActive,
+        imageSmoothing,
+        getLoadTileOnlyAfterMove(),
+        tileLevelMin,
+        tileLevelMax
+    );
+    // console.debug('source = ', source)
+
     return (
-        <Tile id={layerId} source={source} zIndex={10}/>
+        <Tile
+            id={layerId}
+            source={source}
+            zIndex={10}
+            opacity={opacity}
+        />
     );
 }
 
@@ -363,33 +479,48 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    mapProjectionSelector,
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
+    selectedVariableOpacitySelector,
     selectedDatasetAttributionsSelector,
     imageSmoothingSelector,
     (variable: Variable | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
+     mapProjection: string,
      colorBarMinMax: [number, number],
      colorBarName: string,
+     opacity: number,
      attributions: string[] | null,
      imageSmoothing: boolean
     ): MapElement => {
         if (!variable) {
             return null;
         }
-        if (!variable.tileSourceOptions) {
-            console.warn(`Variable ${variable.name} has no tileSourceOptions!`);
+        if (!variable.tileUrl) {
+            console.warn(`Variable ${variable.name} has no tileUrl!`);
             return null;
         }
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+            ['vmin', `${colorBarMinMax[0]}`],
+            ['vmax', `${colorBarMinMax[1]}`],
+            ['cbar', colorBarName],
+            // ['retina', '1'],
+        ];
         return getTileLayer(
             'variable',
-            variable.tileSourceOptions,
-            `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`,
+            variable.tileUrl,
+            variable.tileLevelMin,
+            variable.tileLevelMax,
+            queryParams,
+            opacity,
             timeDimension,
             time,
             timeAnimationActive,
+            mapProjection,
             attributions,
             imageSmoothing
         );
@@ -399,28 +530,39 @@ export const selectedDatasetVariableLayerSelector = createSelector(
 export const selectedDatasetRgbLayerSelector = createSelector(
     showRgbLayerSelector,
     selectedDatasetRgbSchemaSelector,
+    selectedVariableOpacitySelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    mapProjectionSelector,
     selectedDatasetAttributionsSelector,
     imageSmoothingSelector,
     (showRgbLayer: boolean,
      rgbSchema: RgbSchema | null,
+     opacity: number,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
+     mapProjection: string,
      attributions: string[] | null,
      imageSmoothing: boolean
     ): MapElement => {
         if (!showRgbLayer || !rgbSchema) {
             return null;
         }
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+        ];
         return getTileLayer('rgb',
-            rgbSchema.tileSourceOptions,
-            '',
+            rgbSchema.tileUrl,
+            rgbSchema.tileLevelMin,
+            rgbSchema.tileLevelMax,
+            queryParams,
+            opacity,
             timeDimension,
             time,
             timeAnimationActive,
+            mapProjection,
             attributions,
             imageSmoothing);
     }
@@ -480,12 +622,13 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                             {
                                 features: new OlGeoJSONFormat(
                                     {
-                                        dataProjection: 'EPSG:4326',
+                                        dataProjection: GEOGRAPHIC_CRS,
                                         featureProjection: mapProjection
                                     }
                                 ).readFeatures(placeGroup),
                             })}
-                    />);
+                    />
+                );
             }
         });
         return (<Layers>{layers}</Layers>);

@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { default as OlMap } from 'ol/Map';
-import { default as OlView } from 'ol/View';
-import { ViewOptions as OlViewOptions } from 'ol/View';
+import {default as OlMap} from 'ol/Map';
+import {default as OlView, ViewOptions as OlViewOptions} from 'ol/View';
+import {ProjectionLike as OlProjectionLike, transform as olTransform} from 'ol/proj';
 
-import { MapComponent, MapComponentProps } from "./MapComponent";
+import {MapComponent, MapComponentProps} from "./MapComponent";
 
 
 interface ViewProps extends MapComponentProps, OlViewOptions {
@@ -35,15 +35,39 @@ interface ViewProps extends MapComponentProps, OlViewOptions {
 export class View extends MapComponent<OlView, ViewProps> {
 
     addMapObject(map: OlMap): OlView {
-        map.getView().setProperties(this.props);
-        return map.getView();
+        return this.updateView(map);
     }
 
     removeMapObject(map: OlMap, object: OlView): void {
     }
 
     updateMapObject(map: OlMap, object: OlView): OlView {
-        map.getView().setProperties(this.props);
+        return this.updateView(map);
+    }
+
+    updateView(map: OlMap): OlView {
+        const newProjection = this.props.projection;
+        let oldProjection: OlProjectionLike = map.getView().getProjection();
+        if (typeof newProjection === 'string') {
+            if (oldProjection) {
+                oldProjection = oldProjection.getCode();
+            }
+        }
+        if (newProjection && newProjection !== oldProjection) {
+            const oldView = map.getView();
+            const newView = new OlView({
+                ...this.props,
+                center: olTransform(oldView.getCenter() || [0, 0],
+                    oldProjection,
+                    newProjection
+                ),
+                minZoom: oldView.getMinZoom(),
+                zoom: oldView.getZoom(),
+            });
+            map.setView(newView);
+        } else {
+            map.getView().setProperties(this.props);
+        }
         return map.getView();
     }
 }

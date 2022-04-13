@@ -66,6 +66,7 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('infoCardOpen', settings);
             storage.setObjectProperty('infoCardElementStates', settings);
             storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
+            storage.setPrimitiveProperty('mapProjection', settings);
             storage.setPrimitiveProperty('baseMapUrl', settings);
             storage.setPrimitiveProperty('exportTimeSeries', settings);
             storage.setPrimitiveProperty('exportTimeSeriesSeparator', settings);
@@ -95,6 +96,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('infoCardOpen', settings, defaultSettings);
             storage.getObjectProperty('infoCardElementStates', settings, defaultSettings);
             storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);
+            storage.getStringProperty('mapProjection', settings, defaultSettings);
             storage.getStringProperty('baseMapUrl', settings, defaultSettings);
             storage.getBooleanProperty('exportTimeSeries', settings, defaultSettings);
             storage.getStringProperty('exportTimeSeriesSeparator', settings, defaultSettings);
@@ -102,10 +104,15 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('exportPlacesAsCollection', settings, defaultSettings);
             storage.getBooleanProperty('exportZipArchive', settings, defaultSettings);
             storage.getStringProperty('exportFileName', settings, defaultSettings);
+            if (process.env.NODE_ENV === 'development') {
+                console.debug('Loaded user settings:', settings);
+            }
         } catch (e) {
-            console.warn(`failed to load user settings: ${e}`);
+            console.warn(`Failed to load user settings: ${e}`);
         }
         return settings;
+    } else {
+        console.warn('User settings not found or access denied');
     }
     return defaultSettings;
 }

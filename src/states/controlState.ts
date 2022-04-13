@@ -29,6 +29,7 @@ import { Config } from '../config';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
+import {DEFAULT_MAP_CRS} from "../model/proj";
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -77,6 +78,7 @@ export interface ControlState {
     mapInteraction: MapInteraction;
     infoCardOpen: boolean;
     infoCardElementStates: InfoCardElementStates;
+    mapProjection: string;
     imageSmoothingEnabled: boolean;
     baseMapUrl: string;
     showRgbLayer: boolean;
@@ -121,6 +123,7 @@ export function newControlState(): ControlState {
             variable: {visible: true, viewMode: 'text'},
             place: {visible: true, viewMode: 'text'},
         },
+        mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
         imageSmoothingEnabled: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
         exportTimeSeries: true,

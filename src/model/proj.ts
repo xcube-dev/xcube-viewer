@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2022 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const version = '0.11.0-dev.1';
+export const GEOGRAPHIC_CRS = 'EPSG:4326';
+export const WEB_MERCATOR_CRS = 'EPSG:3857';
 
-export default version;
-
+export const DEFAULT_MAP_CRS = GEOGRAPHIC_CRS;

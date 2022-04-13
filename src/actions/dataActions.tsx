@@ -375,14 +375,20 @@ export interface UpdateVariableColorBar {
     variableName: string;
     colorBarMinMax: [number, number];
     colorBarName: string;
+    opacity: number;
 }
 
-export function updateVariableColorBar(colorBarMinMax: [number, number], colorBarName: string) {
+export function updateVariableColorBar(colorBarMinMax: [number, number],
+                                       colorBarName: string,
+                                       opacity: number) {
     return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
         const selectedDatasetId = getState().controlState.selectedDatasetId;
         const selectedVariableName = getState().controlState.selectedVariableName;
         if (selectedDatasetId && selectedVariableName) {
-            dispatch(_updateVariableColorBar(selectedDatasetId, selectedVariableName, colorBarMinMax, colorBarName));
+            dispatch(_updateVariableColorBar(
+                selectedDatasetId, selectedVariableName,
+                colorBarMinMax, colorBarName, opacity
+            ));
         }
     };
 }
@@ -390,8 +396,16 @@ export function updateVariableColorBar(colorBarMinMax: [number, number], colorBa
 export function _updateVariableColorBar(datasetId: string,
                                         variableName: string,
                                         colorBarMinMax: [number, number],
-                                        colorBarName: string): UpdateVariableColorBar {
-    return {type: UPDATE_VARIABLE_COLOR_BAR, datasetId, variableName, colorBarMinMax, colorBarName};
+                                        colorBarName: string,
+                                        opacity: number): UpdateVariableColorBar {
+    return {
+        type: UPDATE_VARIABLE_COLOR_BAR,
+        datasetId,
+        variableName,
+        colorBarMinMax,
+        colorBarName,
+        opacity
+    };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

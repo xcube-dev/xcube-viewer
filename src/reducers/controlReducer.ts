@@ -64,6 +64,7 @@ import { AppState } from '../states/appState';
 import { ControlState, MAP_OBJECTS, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
+import {GEOGRAPHIC_CRS} from "../model/proj";
 
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
@@ -143,11 +144,11 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
                 // noinspection JSDeprecatedSymbols
                 if (Array.isArray(flyToCurr)) {
                     // Fly to extent (bounding box)
-                    flyToTarget = olProjTransformExtent(flyToCurr, 'EPSG:4326', projection);
+                    flyToTarget = olProjTransformExtent(flyToCurr, GEOGRAPHIC_CRS, projection);
                     map.getView().fit(flyToTarget, {size: map.getSize()});
                 } else {
                     // Transform Geometry object
-                    flyToTarget = flyToCurr.transform('EPSG:4326', projection) as OlSimpleGeometry;
+                    flyToTarget = flyToCurr.transform(GEOGRAPHIC_CRS, projection) as OlSimpleGeometry;
                     if (flyToTarget.getType() === 'Point') {
                         // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
                         map.getView().setCenter(flyToTarget.getFirstCoordinate());
