@@ -22,6 +22,6 @@
   },
   "authClient": {
     "authority": "https://kc.brockmann-consult.de/auth/realms/AVL",
-    "client_id": "avl-viewer-dev",
+    "client_id": "avl-viewer-dev"
   }
 }
