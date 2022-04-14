@@ -45,39 +45,17 @@ export async function initAuthClient(authClientConfig?: AuthClientConfig): Promi
     if (!_authClient) {
         _authClient = new UserManager({
             ...authClientConfig,
-            redirect_uri: window.location.origin + '/oidc/callback',
-            loadUserInfo: true,
+            redirect_uri: window.location.origin,
+            // loadUserInfo: Flag to control if additional identity data is loaded
+            // from the user info endpoint in order to populate
+            // the user's profile (default: false)
+            loadUserInfo: true
         });
-        /*
-        try {
-            let isAuthenticated = await _authClient.isAuthenticated();
-            if (process.env.NODE_ENV === 'development') {
-                console.debug('isAuthenticated:', isAuthenticated);
-            }
-        } catch (e) {
-            console.error(e);
-        }
-        try {
-            let user = await _authClient.getUser();
-            if (process.env.NODE_ENV === 'development') {
-                console.debug('user:', user);
-            }
-        } catch (e) {
-            console.error(e);
-        }
-        try {
-            let token = await _authClient.getTokenSilently();
-            if (process.env.NODE_ENV === 'development') {
-                console.debug('token:', token);
-            }
-        } catch (e) {
-            console.error(e);
-        }
-        */
-
         // console.info('window.location:', window.location)
         if (window.location.search.includes('code=')) {
-            // const user = await _authClient.getUser()
+            const user = await _authClient.getUser();
+            console.debug('Coming from auth service. User:', user);
+            // console.log('Pushing onto history:', window.location.pathname);
             // history.push(window.location.pathname);
         }
     }

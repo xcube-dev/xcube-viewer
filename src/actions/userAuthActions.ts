@@ -75,7 +75,7 @@ export function signIn() {
         }
 
         authClient.signinPopup({popupWindowTarget: '_self'})
-            .then(userInfo => {
+            .then((userInfo) => {
                 dispatch(requestSignIn());
                 if (!userInfo) {
                     throw new Error('Signing in failed, failed to retrieve user information.');
