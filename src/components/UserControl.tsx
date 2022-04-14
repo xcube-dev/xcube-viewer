@@ -37,11 +37,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import PersonIcon from '@material-ui/icons/Person';
 import * as React from 'react';
 import Transition from 'react-transition-group/Transition';
+import { AuthProvider, useAuth } from "react-oidc-context";
 
 import UserProfile from '../components/UserProfile';
 import i18n from '../i18n';
 import * as auth from '../util/auth';
 import { WithLocale } from '../util/lang';
+
 
 
 const styles = (theme: Theme) => createStyles(
@@ -99,6 +101,8 @@ const UserControl: React.FC<UserControlProps> = ({
 
     const [userMenuAnchorEl, setUserMenuAnchorEl] = React.useState<null | HTMLElement>(null);
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
+
+    const auth = useAuth();
 
     if (!hasAuthClient) {
         return null;

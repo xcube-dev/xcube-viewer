@@ -19,5 +19,9 @@
     "allowDownloads": true,
     "polygonFillOpacity": 0.2,
     "mapProjection": "EPSG:4326"
+  },
+  "authClient": {
+    "authority": "https://kc.brockmann-consult.de/auth/realms/AVL",
+    "client_id": "avl-viewer-dev"
   }
 }

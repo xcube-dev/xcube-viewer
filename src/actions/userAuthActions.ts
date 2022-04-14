@@ -30,46 +30,6 @@ import { PostMessage, postMessage } from './messageLogActions';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function initAuthClient() {
-    return async (dispatch: Dispatch<InitAuthClient | ReceiveSignIn>) => {
-        const authClient = await auth.initAuthClient(Config.instance.authClient);
-        dispatch(_initAuthClient(authClient !== null));
-        if (authClient !== null) {
-            let userInfo = null;
-            try {
-                userInfo = await authClient.getUser();
-            } catch (e) {
-                // ok
-            }
-            let accessToken = null;
-            try {
-                accessToken = await authClient.getTokenSilently();
-            } catch (e) {
-                // ok
-            }
-            if (userInfo && accessToken) {
-                dispatch(receiveSignIn(userInfo!, accessToken!));
-                dispatch(updateDatasets() as any);
-            }
-        }
-    };
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const INIT_AUTH_CLIENT = 'INIT_AUTH_CLIENT';
-
-export interface InitAuthClient {
-    type: typeof INIT_AUTH_CLIENT;
-    hasAuthClient: boolean;
-}
-
-function _initAuthClient(hasAuthClient: boolean): InitAuthClient {
-    return {type: INIT_AUTH_CLIENT, hasAuthClient};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 export function signIn() {
     return (dispatch: Dispatch<RequestSignIn | ReceiveSignIn | ReceiveSignOut | PostMessage>) => {
         const authClient = auth.getAuthClient();

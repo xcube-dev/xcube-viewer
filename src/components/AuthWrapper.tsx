@@ -36,7 +36,7 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({child
         return <>{children}</>;
     }
     return (
-        <AuthProvider {...authClient}>
+        <AuthProvider {...authClient} redirect_uri={window.location.origin}>
             {children}
         </AuthProvider>
     );
