@@ -6,22 +6,22 @@
     "AuthClientConfig":   {
       "type": "object",
       "properties": {
-        "clientId": {
+        "authority": {
+          "type": "string",
+          "format": "uri",
+          "example": "https://blueants.eu.auth0.com/auth"
+        },
+        "client_id": {
           "type": "string",
           "example": "PZ0lovaUSzY2sBaicz3MYK6Z6PzCNj3q"
         },
-        "domain": {
-          "type": "string",
-          "format": "hostname",
-          "example": "blueants.eu.auth0.com"
-        },
-        "audience": {
+        "redirect_uri": {
           "type": "string",
           "format": "uri",
-          "example": "https://blueants.eu/api/"
+          "example": "https://blueants.eu.auth0.com/viewer"
         }
       },
-      "required": ["clientId", "domain", "audience"],
+      "required": ["authority", "client_id"],
       "additionalProperties": false
     },
 

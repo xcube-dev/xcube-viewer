@@ -23,8 +23,9 @@
  */
 
 import React from "react";
-import {AuthProvider} from "react-oidc-context";
-import {Config} from '../config';
+import { AuthProvider } from "react-oidc-context";
+import { User } from "oidc-client-ts";
+import { Config } from '../config';
 
 
 interface AuthWrapperProps {
@@ -35,10 +36,35 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({child
     if (!authClient) {
         return <>{children}</>;
     }
+
+    const handleSigninCallback = (_user: User | void): void => {
+        console.info("handleSigninCallback:", _user);
+        window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+        )
+    }
+
+    const handleRemoveUser = (): void => {
+        console.info("handleRemoveUser");
+        // go home after logout
+        window.location.pathname = "/";
+    }
+
     return (
-        <AuthProvider {...authClient} redirect_uri={window.location.origin}>
-            {children}
-        </AuthProvider>
+            <AuthProvider
+                    {...authClient}
+                    loadUserInfo={true}
+                    automaticSilentRenew={true}
+                    redirect_uri={window.location.origin}
+                    post_logout_redirect_uri={window.location.origin}
+                    popup_post_logout_redirect_uri={window.location.origin}
+                    onSigninCallback={handleSigninCallback}
+                    onRemoveUser={handleRemoveUser}
+            >
+                {children}
+            </AuthProvider>
     );
 }
 
