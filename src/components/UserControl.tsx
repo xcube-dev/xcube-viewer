@@ -118,8 +118,8 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
     };
 
     const handleSignInButtonClicked = () => {
-        auth.signinPopup().then(user => {
-            console.info('Signed in:', user);
+        auth.signinRedirect().then(() => {
+            console.info('Signed in:', auth.user);
         }).catch(e => {
             console.error(e);
         });
