@@ -43,7 +43,7 @@ import i18n from '../i18n';
 import { WithLocale } from '../util/lang';
 import { Config } from '../config';
 import UserProfile from '../components/UserProfile';
-import { User } from "oidc-client-ts";
+
 
 const styles = (theme: Theme) => createStyles(
         {
@@ -119,7 +119,9 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
 
     const handleSignInButtonClicked = () => {
         auth.signinRedirect().then(() => {
-            console.info('Signed in:', auth.user);
+            if (process.env.NODE_ENV === 'development') {
+                console.debug('Signed in:', auth.user);
+            }
         }).catch(e => {
             console.error(e);
         });
@@ -128,7 +130,9 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
     const handleSignOutMenuItemClicked = () => {
         handleUserMenuClose();
         auth.signoutRedirect().then(() => {
-            console.info('Signed out:', auth.user);
+            if (process.env.NODE_ENV === 'development') {
+                console.debug('Signed out:', auth.user);
+            }
         }).catch(e => {
             console.error(e);
         });

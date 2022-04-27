@@ -26,7 +26,7 @@
 
 import { Dispatch } from "redux";
 import { AppState } from "../states/appState";
-import { DataAction, updateDatasets } from "./dataActions";
+import { updateDatasets } from "./dataActions";
 
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN';
 
