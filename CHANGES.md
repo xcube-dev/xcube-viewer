@@ -1,3 +1,14 @@
+## Changes in version 0.11.1 (in development)
+
+### Enhancements
+
+* The performance of time-series fetching has been significantly improved
+  by exploiting the actual chunk sizes of the time dimension of a variable.
+  For this to work, the setting "Number of data points in a time series update" 
+  has been replaced by "_Minimal_ number of data points in a time series update".
+  The effective number of data points is now always an integer multiple of the
+  actual variable's time chunk size.
+
 ## Changes in version 0.11.0
 
 ### Enhancements
