@@ -23,6 +23,7 @@
  */
 
 import { TileSourceOptions } from './tile';
+import i18n from "../i18n";
 
 export interface Variable {
     id: string;
@@ -32,6 +33,7 @@ export interface Variable {
     dtype: string;
     units: string;
     title: string;
+    timeChunkSize: number | null;
     // tileUrl is new since xcube 0.11
     tileUrl?: string;
     tileLevelMin?: number;

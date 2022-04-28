@@ -323,11 +323,11 @@
       "se": "Visa median i stället för medelvärde (inaktiverar felfält)"
     },
     {
-      "en": "Number of data points in a time series update",
-      "de": "Anzahl Datenpunkte in einer Zeitreihen-Aktualisierung",
-      "it": "Numero di punti dati in un aggiornamento di serie storiche",
-      "ro": "Numărul de puncte de date dintr-o actualizare a seriei de timp",
-      "se": "Antal datapunkter i en tidsserieuppdatering"
+      "en": "Minimal number of data points in a time series update",
+      "de": "Minimale Anzahl Datenpunkte in einer Zeitreihen-Aktualisierung",
+      "it": "Numero minimo di punti dati in un aggiornamento delle serie temporali",
+      "ro": "Număr minim de puncte de date într -o actualizare a seriilor de timp",
+      "se": "Minimalt antal datapunkter i en tidsserieuppdatering"
     },
     {
       "en": "Legal Agreement",

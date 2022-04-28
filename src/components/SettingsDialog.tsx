@@ -251,7 +251,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={i18n.get('Number of data points in a time series update')}>
+                        <SettingsSubPanel label={i18n.get('Minimal number of data points in a time series update')}>
                             <TextField
                                 className={classes.intTextField}
                                 value={timeChunkSize}
