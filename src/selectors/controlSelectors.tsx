@@ -83,6 +83,7 @@ export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMa
 export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
 export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
+export const timeChunkSizeSelector = (state: AppState) => state.controlState.timeChunkSize;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -290,6 +291,18 @@ export const selectedDatasetVariableSelector = createSelector(
     selectedVariableNameSelector,
     (dataset: Dataset | null, variableName: string | null): Variable | null => {
         return (dataset && findDatasetVariable(dataset, variableName)) || null;
+    }
+);
+
+export const selectedTimeChunkSizeSelector = createSelector(
+    selectedDatasetVariableSelector,
+    timeChunkSizeSelector,
+    (variable: Variable | null, minTimeChunkSize): number => {
+        if (variable && variable.timeChunkSize) {
+            const varTimeChunkSize = variable.timeChunkSize;
+            return varTimeChunkSize * Math.ceil(minTimeChunkSize / varTimeChunkSize);
+        }
+        return minTimeChunkSize;
     }
 );
 
