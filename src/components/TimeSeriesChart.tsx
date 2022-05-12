@@ -151,21 +151,14 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     const setState = (isDragging: boolean,
                       firstTime: number | null | undefined,
                       secondTime: number | null | undefined) => {
-        const firstTimeDefault = !isDragging && dataTimeRange && dataTimeRange[0];
-        const secondTimeDefault = !isDragging && dataTimeRange && dataTimeRange[1];
+        firstTime = toNumberOrNull(firstTime);
+        secondTime = toNumberOrNull(secondTime);
+        if (firstTime !== null && secondTime === null) {
+            secondTime = toNumberOrNull(dataTimeRange && dataTimeRange[1]);
+        }
         setIsDragging(isDragging);
-        setFirstTime(typeof firstTime === 'number'
-            ? firstTime
-            : (typeof firstTimeDefault === 'number'
-                ? firstTimeDefault
-                : null)
-        );
-        setSecondTime(typeof secondTime === 'number'
-            ? secondTime
-            : (typeof secondTimeDefault === 'number'
-                ? secondTimeDefault
-                : null)
-        );
+        setFirstTime(firstTime);
+        setSecondTime(secondTime);
     };
 
     const clearState = () => {
@@ -552,3 +545,7 @@ const CustomizedDot = (props: CustomizedDotProps) => {
 
     return null;
 };
+
+function toNumberOrNull(x: number | null | undefined): number | null {
+    return typeof x === 'number' ? x : null;
+}
