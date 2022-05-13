@@ -62,7 +62,7 @@ const SUBSTITUTE_LABEL_COLOR = '#FAFFDD';
 const styles = (theme: Theme) => createStyles(
     {
         chartContainer: {
-            // userSelect: 'none',
+            userSelect: 'none',
             marginTop: theme.spacing(1),
             width: '99%',
             height: '32vh',
@@ -148,7 +148,14 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     const [firstTime, setFirstTime] = useState<number | null>(null);
     const [secondTime, setSecondTime] = useState<number | null>(null);
 
-    const setState = (isDragging: boolean, firstTime: number | null, secondTime: number | null) => {
+    const setState = (isDragging: boolean,
+                      firstTime: number | null | undefined,
+                      secondTime: number | null | undefined) => {
+        firstTime = toNumberOrNull(firstTime);
+        secondTime = toNumberOrNull(secondTime);
+        if (firstTime !== null && secondTime === null) {
+            secondTime = toNumberOrNull(dataTimeRange && dataTimeRange[1]);
+        }
         setIsDragging(isDragging);
         setFirstTime(firstTime);
         setSecondTime(secondTime);
@@ -192,18 +199,19 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     };
 
     const handleMouseDown = (event: any) => {
-        if (event) {
-            setState(false, event.activeLabel, null);
-        }
+        setState(false, event && event.activeLabel, null);
     };
 
     const handleMouseMove = (event: any) => {
-        if (event && firstTime) {
-            setState(true, firstTime, event.activeLabel);
+        if (firstTime !== null) {
+            setState(true, firstTime, event && event.activeLabel);
         }
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (event: any) => {
+        if (firstTime !== null) {
+            setState(false, firstTime, event && event.activeLabel);
+        }
         zoomIn();
     };
 
@@ -537,3 +545,7 @@ const CustomizedDot = (props: CustomizedDotProps) => {
 
     return null;
 };
+
+function toNumberOrNull(x: number | null | undefined): number | null {
+    return typeof x === 'number' ? x : null;
+}
