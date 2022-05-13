@@ -30,6 +30,14 @@
   }
   ```
 
+### Fixes
+
+* Fixed a bug that caused the app to crash when zooming into the 
+  time-series chart. (#163)
+
+* Text selection has now been disabled for the time-series charts.
+  Zooming in no longer selects the axes' labels.
+
 ## Changes in version 0.11.0
 
 ### Enhancements
