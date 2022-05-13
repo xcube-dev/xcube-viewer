@@ -42,6 +42,9 @@ import { AuthClientConfig } from './util/auth';
 import { Branding, parseBranding } from './util/branding';
 
 
+export const appParams = new URLSearchParams(window.location.search);
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class Config {
@@ -64,8 +67,7 @@ export class Config {
     }
 
     static async load(): Promise<Config> {
-        const urlParams = new URLSearchParams(window.location.search);
-        let configPath = urlParams.get('configPath') || 'config';
+        let configPath = appParams.get('configPath') || 'config';
         let rawConfig;
         try {
             const configUrl = window.location.origin + `/${configPath}/config.json`;
@@ -85,11 +87,11 @@ export class Config {
         const name = rawConfig.name || 'default';
         const authClient = rawConfig.authClient && {...rawConfig.authClient};
         const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
-        server.id = urlParams.get('serverId') || server.id;
-        server.name = urlParams.get('serverName') || server.name;
-        server.url = urlParams.get('serverUrl') || server.url;
+        server.id = appParams.get('serverId') || server.id;
+        server.name = appParams.get('serverName') || server.name;
+        server.url = appParams.get('serverUrl') || server.url;
         const branding = parseBranding({...rawDefaultConfig.branding, ...rawConfig.branding},
-                                       configPath);
+            configPath);
         Config._instance = new Config(name, server, branding, authClient);
         if (process.env.NODE_ENV === 'development') {
             console.debug('Configuration:', Config._instance);
