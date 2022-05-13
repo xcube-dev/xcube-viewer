@@ -11,6 +11,11 @@
 
 * In the info panel, the dataset's spatial reference system is shown. (#225)
 
+* It is now possible to display dataset boundaries in the map.
+  A new setting "Show dataset boundaries" is available to switch this
+  feature on and off. (#226)
+
+
 ### Fixes
 
 * Fixed a bug that caused the app to crash when zooming into the 

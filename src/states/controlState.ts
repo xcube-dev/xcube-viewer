@@ -80,6 +80,7 @@ export interface ControlState {
     infoCardElementStates: InfoCardElementStates;
     mapProjection: string;
     imageSmoothingEnabled: boolean;
+    showDatasetBoundaries: boolean;
     baseMapUrl: string;
     showRgbLayer: boolean;
     exportTimeSeries: boolean;
@@ -125,6 +126,7 @@ export function newControlState(): ControlState {
         },
         mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
         imageSmoothingEnabled: false,
+        showDatasetBoundaries: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
         exportTimeSeries: true,
         exportTimeSeriesSeparator: 'TAB',

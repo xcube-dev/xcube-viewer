@@ -23,23 +23,23 @@
  */
 
 import * as React from 'react';
-import {createSelector} from 'reselect'
-import {default as OlMap} from 'ol/map';
-import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
-import {default as OlVectorSource} from 'ol/source/Vector';
-import {default as OlXYZSource} from 'ol/source/XYZ';
-import {default as OlCircle} from 'ol/style/Circle';
-import {default as OlFillStyle} from 'ol/style/Fill';
-import {default as OlStrokeStyle} from 'ol/style/Stroke';
-import {default as OlStyle} from 'ol/style/Style';
-import {default as OlTileGrid} from 'ol/tilegrid/TileGrid';
-import {Layers} from '../components/ol/layer/Layers';
-import {Tile} from '../components/ol/layer/Tile';
-import {Vector} from '../components/ol/layer/Vector';
-import {MapElement} from '../components/ol/Map';
+import { createSelector } from 'reselect'
+import { default as OlMap } from 'ol/map';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlXYZSource } from 'ol/source/XYZ';
+import { default as OlCircle } from 'ol/style/Circle';
+import { default as OlFillStyle } from 'ol/style/Fill';
+import { default as OlStrokeStyle } from 'ol/style/Stroke';
+import { default as OlStyle } from 'ol/style/Style';
+import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
+import { Layers } from '../components/ol/layer/Layers';
+import { Tile } from '../components/ol/layer/Tile';
+import { Vector } from '../components/ol/layer/Vector';
+import { MapElement } from '../components/ol/Map';
 import memoize from "fast-memoize";
-import {Config, getTileAccess} from '../config';
-import {ApiServerConfig} from '../model/apiServer';
+import { Config, getTileAccess } from '../config';
+import { ApiServerConfig } from '../model/apiServer';
 
 import {
     Dataset,
@@ -59,16 +59,21 @@ import {
     PlaceGroup,
     PlaceInfo,
 } from '../model/place';
-import {Time, TimeRange, TimeSeriesGroup} from '../model/timeSeries';
-import {Variable} from '../model/variable';
+import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
+import { Variable } from '../model/variable';
 
-import {AppState} from '../states/appState';
-import {findIndexCloseTo} from '../util/find';
-import {MapGroup, maps, MapSource} from '../util/maps';
-import {datasetsSelector, timeSeriesGroupsSelector, userPlaceGroupSelector, userServersSelector} from './dataSelectors';
-import {makeRequestUrl} from "../api/callApi";
-import {MAP_OBJECTS} from "../states/controlState";
-import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
+import { AppState } from '../states/appState';
+import { findIndexCloseTo } from '../util/find';
+import { MapGroup, maps, MapSource } from '../util/maps';
+import {
+    datasetsSelector,
+    timeSeriesGroupsSelector,
+    userPlaceGroupSelector,
+    userServersSelector
+} from './dataSelectors';
+import { makeRequestUrl } from "../api/callApi";
+import { MAP_OBJECTS } from "../states/controlState";
+import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "../model/proj";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -84,6 +89,7 @@ export const showRgbLayerSelector = (state: AppState) => state.controlState.show
 export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
 export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
 export const timeChunkSizeSelector = (state: AppState) => state.controlState.timeChunkSize;
+export const showDatasetBoundariesSelector = (state: AppState) => state.controlState.showDatasetBoundaries;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -486,6 +492,69 @@ function getTileLayer(layerId: string,
         />
     );
 }
+
+export const selectedDatasetBoundaryLayerSelector = createSelector(
+    selectedDatasetSelector,
+    mapProjectionSelector,
+    showDatasetBoundariesSelector,
+    (dataset: Dataset | null,
+     mapProjection: string,
+     showDatasetBoundaries: boolean
+    ): MapElement | null => {
+        if (!dataset || !showDatasetBoundaries) {
+            return null;
+        }
+
+        let geometry = dataset.geometry;
+        if (!geometry) {
+            if (dataset.bbox) {
+                const [x1, y1, x2, y2] = dataset.bbox;
+                geometry = {
+                    type: "Polygon",
+                    coordinates: [
+                        [
+                            [x1, y1],
+                            [x2, y1],
+                            [x2, y2],
+                            [x1, y2],
+                            [x1, y1],
+                        ],
+                    ]
+                }
+            } else {
+                console.warn(`Dataset ${dataset.id} has no bbox!`);
+                return null;
+            }
+        }
+
+        const source = new OlVectorSource({
+            features: new OlGeoJSONFormat(
+                {
+                    dataProjection: GEOGRAPHIC_CRS,
+                    featureProjection: mapProjection
+                }
+            ).readFeatures({type: "Feature", geometry}),
+        });
+
+        const style = new OlStyle({
+            stroke: new OlStrokeStyle({
+                color: "yellow",
+                width: 2,
+                lineDash: [2, 4],
+            }),
+        });
+
+        return (
+            <Vector
+                id={`${dataset.id}.bbox`}
+                source={source}
+                style={style}
+                zIndex={11}
+                opacity={0.5}
+            />
+        );
+    }
+);
 
 export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetVariableSelector,

@@ -287,6 +287,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Show dataset boundaries')}
+                                          value={getOnOff(settings.showDatasetBoundaries)}>
+                            <ToggleSetting
+                                propertyName={'showDatasetBoundaries'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
                     </SettingsPanel>
 
                     <SettingsPanel title={i18n.get('System Information')}>

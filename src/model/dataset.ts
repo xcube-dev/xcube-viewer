@@ -70,6 +70,10 @@ export interface Dataset {
     id: string;
     title: string;
     bbox: [number, number, number, number];
+    geometry: {
+        type: "Polygon";
+        coordinates: Array<Array<[number, number]>>;
+    };
     spatialRef: string;
     dimensions: Dimension[];
     variables: Variable[];
