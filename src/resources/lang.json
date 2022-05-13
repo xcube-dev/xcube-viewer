@@ -470,6 +470,13 @@
       "se": "Måttlängder"
     },
     {
+      "en": "Time chunk size",
+      "de": "Zeitblockgröße",
+      "it": "Dimensione del blocco temporale",
+      "ro": "Dimensiunea blocului de timp",
+      "se": "Tidsblockstorlek"
+    },
+    {
       "en": "Geographical extent",
       "de": "Geografische Ausdehnung",
       "it": "Estensione geografica",
