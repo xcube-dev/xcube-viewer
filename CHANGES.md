@@ -9,6 +9,27 @@
   The effective number of data points is now always an integer multiple of the
   actual variable's time chunk size.
 
+* The style of the title and icons of the app's header bar can now be
+  customized by two new branding properties `` and `` that can provide
+  any CCS attributes (using camel-case attribute names). (#227)
+
+  For example
+  ```json
+  {   
+    "branding": {
+      "headerTitleStyle": {
+        "fontFamily": "courier",
+        "color": "yellow"
+      },
+      "headerIconStyle": {
+        "color": "black"
+      },
+      ...
+    },
+    ...
+  }
+  ```
+
 ## Changes in version 0.11.0
 
 ### Enhancements

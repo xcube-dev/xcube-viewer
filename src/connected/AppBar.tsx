@@ -77,7 +77,7 @@ const styles = (theme: Theme) => createStyles(
     {
         toolbar: {
             backgroundColor: Config.instance.branding.headerBackgroundColor,
-            paddingRight: theme.spacing(1)
+            paddingRight: theme.spacing(1),
         },
         appBar: {
             zIndex: theme.zIndex.drawer + 1,
@@ -86,12 +86,17 @@ const styles = (theme: Theme) => createStyles(
                 duration: theme.transitions.duration.leavingScreen,
             }),
         },
+        logoAnchor: {
+            display: "flex",
+            alignItems: "center"
+        },
         logo: {
             marginLeft: theme.spacing(1),
         },
         title: {
             flexGrow: 1,
             marginLeft: theme.spacing(1),
+            ...Config.instance.branding.headerTitleStyle,
         },
         imageAvatar: {
             width: 24,
@@ -120,6 +125,7 @@ const styles = (theme: Theme) => createStyles(
         },
         iconButton: {
             marginLeft: theme.spacing(2),
+            ...Config.instance.branding.headerIconStyle,
         }
     }
 );
@@ -169,6 +175,7 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                     href={Config.instance.branding.organisationUrl || ""}
                     target="_blank"
                     rel="noreferrer"
+                    className={classes.logoAnchor}
                 >
                     <img
                         src={Config.instance.branding.logoImage}
