@@ -70,6 +70,7 @@ export interface Dataset {
     id: string;
     title: string;
     bbox: [number, number, number, number];
+    spatialRef: string;
     dimensions: Dimension[];
     variables: Variable[];
     placeGroups?: PlaceGroup[];

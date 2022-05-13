@@ -245,6 +245,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
             [i18n.get('Dimension data types'), dataset.dimensions.map(d => d.dtype).join(', ')],
             [i18n.get('Dimension lengths'), dataset.dimensions.map(d => d.size).join(', ')],
             [i18n.get('Geographical extent') + ' (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
+            [i18n.get('Spatial reference system'), dataset.spatialRef],
         ];
         content = (
             <CardContent2>

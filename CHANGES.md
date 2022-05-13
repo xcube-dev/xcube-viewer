@@ -9,6 +9,8 @@
   The effective number of data points is now always an integer multiple of the
   actual variable's time chunk size.
 
+* In the info panel, the dataset's spatial reference system is shown. (#225)
+
 ### Fixes
 
 * Fixed a bug that caused the app to crash when zooming into the 

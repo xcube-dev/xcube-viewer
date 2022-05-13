@@ -484,6 +484,13 @@
       "se": "Geografisk omfattning"
     },
     {
+      "en": "Spatial reference system",
+      "de": "Räumliches Bezugssystem",
+      "it": "Sistema di riferimento spaziale",
+      "ro": "Sistem de referință spațială",
+      "se": "Rumsligt referenssystem"
+    },
+    {
       "en": "Name",
       "de": "Name",
       "it": "Nome",
