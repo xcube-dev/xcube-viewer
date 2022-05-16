@@ -538,8 +538,8 @@ export const selectedDatasetBoundaryLayerSelector = createSelector(
 
         const style = new OlStyle({
             stroke: new OlStrokeStyle({
-                color: "yellow",
-                width: 2,
+                color: "orange",
+                width: 3,
                 lineDash: [2, 4],
             }),
         });
