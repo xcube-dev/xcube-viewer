@@ -18,12 +18,32 @@
   The effective number of data points is now always an integer multiple of the
   actual variable's time chunk size.
 
+* The style of the title and icons of the app's header bar can now be
+  customized by two new branding properties `` and `` that can provide
+  any CCS attributes (using camel-case attribute names). (#227)
+
+  For example
+  ```json
+  {   
+    "branding": {
+      "headerTitleStyle": {
+        "fontFamily": "courier",
+        "color": "yellow"
+      },
+      "headerIconStyle": {
+        "color": "black"
+      },
+      ...
+    },
+    ...
+  }
+  ```
+
 * In the info panel, the dataset's spatial reference system is shown. (#225)
 
 * It is now possible to display dataset boundaries in the map.
   A new setting "Show dataset boundaries" is available to switch this
   feature on and off. (#226)
-
 
 ### Fixes
 
