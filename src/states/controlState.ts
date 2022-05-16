@@ -29,7 +29,7 @@ import { Config } from '../config';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
-import {DEFAULT_MAP_CRS} from "../model/proj";
+import { DEFAULT_MAP_CRS } from "../model/proj";
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -95,8 +95,8 @@ export interface ControlState {
 export function newControlState(): ControlState {
     const branding = Config.instance.branding;
     const state: ControlState = {
-        selectedDatasetId: 'local',
-        selectedVariableName: 'conc_chl',
+        selectedDatasetId: null,
+        selectedVariableName: null,
         selectedPlaceGroupIds: ['user'],
         selectedPlaceId: null,
         selectedUserPlaceId: null,

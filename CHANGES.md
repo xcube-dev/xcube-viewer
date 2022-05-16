@@ -2,6 +2,15 @@
 
 ### Enhancements
 
+* The viewer app can now be called with query parameters that
+  preselect the dataset and variable to be displayed.
+  The query parameters are `dataset` and `variable`. (#207) 
+
+  For example, when using the demo configuration, we can preselect
+  dataset with ID `remote` and the variable named `kd489`:
+
+      http://localhost:3000/?dataset=remote&variable=kd489
+
 * The performance of time-series fetching has been significantly improved
   by exploiting the actual chunk sizes of the time dimension of a variable.
   For this to work, the setting "Number of data points in a time series update" 

@@ -64,8 +64,8 @@ import { AppState } from '../states/appState';
 import { ControlState, MAP_OBJECTS, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
-import {GEOGRAPHIC_CRS} from "../model/proj";
-
+import { GEOGRAPHIC_CRS } from "../model/proj";
+import { appParams } from "../config";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
 //                so they produce a consistent state. E.g. on selected dataset change, ensure selected
@@ -76,7 +76,9 @@ import {GEOGRAPHIC_CRS} from "../model/proj";
 //                  Consider providing a value that matches one of the available options or ''.
 //                  The available values are "".
 
-export function controlReducer(state: ControlState | undefined, action: ControlAction | DataAction, appState: AppState | undefined): ControlState {
+export function controlReducer(state: ControlState | undefined,
+                               action: ControlAction | DataAction,
+                               appState: AppState | undefined): ControlState {
     if (state === undefined) {
         state = newControlState();
     }
@@ -87,17 +89,15 @@ export function controlReducer(state: ControlState | undefined, action: ControlA
             return settings;
         }
         case UPDATE_DATASETS: {
-            let selectedDatasetId = state!.selectedDatasetId;
-            let selectedVariableName = state!.selectedVariableName;
+            let selectedDatasetId = state!.selectedDatasetId || appParams.get("dataset");
+            let selectedVariableName = state!.selectedVariableName || appParams.get("variable");
             let mapInteraction = state!.mapInteraction;
             let selectedDataset = findDataset(action.datasets, selectedDatasetId);
             const selectedVariable = (selectedDataset
-                                      && findDatasetVariable(selectedDataset, selectedVariableName))
-                                     || null;
+                    && findDatasetVariable(selectedDataset, selectedVariableName))
+                || null;
             if (selectedDataset) {
-                if (selectedVariable) {
-                    return state;
-                } else {
+                if (!selectedVariable) {
                     selectedVariableName = selectedDataset.variables.length ? selectedDataset.variables[0].name : null;
                 }
             } else {
