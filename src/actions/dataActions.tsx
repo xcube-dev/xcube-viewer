@@ -110,7 +110,7 @@ export function updateDatasets() {
            .then((datasets: Dataset[]) => {
                dispatch(_updateDatasets(datasets));
                if (datasets.length > 0) {
-                   const selectedDatasetId = datasets[0].id;
+                   const selectedDatasetId = getState().controlState.selectedDatasetId || datasets[0].id;
                    dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
                }
            })

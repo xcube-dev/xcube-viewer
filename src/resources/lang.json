@@ -407,6 +407,13 @@
       "se": "Bildutjämning"
     },
     {
+      "en": "Show dataset boundaries",
+      "de": "Datensatzgrenzen anzeigen",
+      "it": "Mostra i limiti del set di dati",
+      "ro": "Afișați limitele setului de date",
+      "se": "Visa datauppsättningsgränser"
+    },
+    {
       "en": "Base map",
       "de": "Basiskarte",
       "it": "Mappa di base",
@@ -470,11 +477,25 @@
       "se": "Måttlängder"
     },
     {
+      "en": "Time chunk size",
+      "de": "Zeitblockgröße",
+      "it": "Dimensione del blocco temporale",
+      "ro": "Dimensiunea blocului de timp",
+      "se": "Tidsblockstorlek"
+    },
+    {
       "en": "Geographical extent",
       "de": "Geografische Ausdehnung",
       "it": "Estensione geografica",
       "ro": "Mărimea geografică",
       "se": "Geografisk omfattning"
+    },
+    {
+      "en": "Spatial reference system",
+      "de": "Räumliches Bezugssystem",
+      "it": "Sistema di riferimento spaziale",
+      "ro": "Sistem de referință spațială",
+      "se": "Rumsligt referenssystem"
     },
     {
       "en": "Name",

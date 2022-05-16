@@ -29,7 +29,7 @@ import { Config } from '../config';
 
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
-import {DEFAULT_MAP_CRS} from "../model/proj";
+import { DEFAULT_MAP_CRS } from "../model/proj";
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -80,6 +80,7 @@ export interface ControlState {
     infoCardElementStates: InfoCardElementStates;
     mapProjection: string;
     imageSmoothingEnabled: boolean;
+    showDatasetBoundaries: boolean;
     baseMapUrl: string;
     showRgbLayer: boolean;
     exportTimeSeries: boolean;
@@ -94,8 +95,8 @@ export interface ControlState {
 export function newControlState(): ControlState {
     const branding = Config.instance.branding;
     const state: ControlState = {
-        selectedDatasetId: 'local',
-        selectedVariableName: 'conc_chl',
+        selectedDatasetId: null,
+        selectedVariableName: null,
         selectedPlaceGroupIds: ['user'],
         selectedPlaceId: null,
         selectedUserPlaceId: null,
@@ -125,6 +126,7 @@ export function newControlState(): ControlState {
         },
         mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
         imageSmoothingEnabled: false,
+        showDatasetBoundaries: false,
         baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
         exportTimeSeries: true,
         exportTimeSeriesSeparator: 'TAB',

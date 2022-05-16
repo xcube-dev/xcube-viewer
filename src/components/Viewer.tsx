@@ -95,6 +95,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     baseMapLayer?: MapElement;
     rgbLayer?: MapElement;
     variableLayer?: MapElement;
+    datasetBoundaryLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
     addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry) => void;
@@ -113,6 +114,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            baseMapLayer,
                                            rgbLayer,
                                            variableLayer,
+                                           datasetBoundaryLayer,
                                            placeGroupLayers,
                                            colorBarLegend,
                                            addUserPlace,
@@ -262,6 +264,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 <Layers>
                     {baseMapLayer}
                     {variableLayer}
+                    {datasetBoundaryLayer}
                     <Vector
                         id='userLayer'
                         opacity={1}

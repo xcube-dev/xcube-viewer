@@ -29,7 +29,7 @@ import {AppState} from '../states/appState';
 import {
     baseMapLayerSelector,
     imageSmoothingSelector,
-    mapProjectionSelector,
+    mapProjectionSelector, selectedDatasetBoundaryLayerSelector,
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetRgbLayerSelector,
     selectedDatasetVariableLayerSelector,
@@ -47,6 +47,7 @@ const mapStateToProps = (state: AppState) => {
         locale: state.controlState.locale,
         variableLayer: selectedDatasetVariableLayerSelector(state),
         rgbLayer: selectedDatasetRgbLayerSelector(state),
+        datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
         placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
         colorBarLegend: <ColorBarLegend/>,
         userPlaceGroup: userPlaceGroupSelector(state),
