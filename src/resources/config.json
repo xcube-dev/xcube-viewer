@@ -18,6 +18,6 @@
     "defaultAgg": "mean",
     "allowDownloads": true,
     "polygonFillOpacity": 0.2,
-    "mapProjection": "EPSG:4326",
+    "mapProjection": "EPSG:4326"
   }
 }
