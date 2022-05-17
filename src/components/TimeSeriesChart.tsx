@@ -125,6 +125,11 @@ const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
 const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
 
+interface TimeRangeSelection {
+    firstTime?: number;
+    secondTime?: number;
+}
+
 const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                                                              classes,
                                                              timeSeriesGroup,
@@ -143,26 +148,13 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                                                              removeTimeSeriesGroup,
                                                              completed,
                                                          }) => {
-    // isDragging: boolean, firstTime: number | null, secondTime: number | null
-    const [isDragging, setIsDragging] = useState<boolean>(false);
-    const [firstTime, setFirstTime] = useState<number | null>(null);
-    const [secondTime, setSecondTime] = useState<number | null>(null);
+    const [
+        timeRangeSelection,
+        setTimeRangeSelection
+    ] = useState<TimeRangeSelection>({});
 
-    const setState = (isDragging: boolean,
-                      firstTime: number | null | undefined,
-                      secondTime: number | null | undefined) => {
-        firstTime = toNumberOrNull(firstTime);
-        secondTime = toNumberOrNull(secondTime);
-        if (firstTime !== null && secondTime === null) {
-            secondTime = toNumberOrNull(dataTimeRange && dataTimeRange[1]);
-        }
-        setIsDragging(isDragging);
-        setFirstTime(firstTime);
-        setSecondTime(secondTime);
-    };
-
-    const clearState = () => {
-        setState(false, null, null);
+    const clearTimeRangeSelection = () => {
+        setTimeRangeSelection({});
     };
 
     const paletteType = theme.palette.type;
@@ -187,11 +179,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         if (event && selectTime && event.activeLabel !== null && Number.isFinite(event.activeLabel)) {
             selectTime(event.activeLabel!);
         }
-        clearState()
+        clearTimeRangeSelection()
     };
 
     const handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
-        // console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
@@ -199,21 +190,29 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     };
 
     const handleMouseDown = (event: any) => {
-        setState(false, event && event.activeLabel, null);
+        const firstTime = event && event.activeLabel;
+        setTimeRangeSelection({firstTime});
     };
 
     const handleMouseMove = (event: any) => {
-        if (firstTime !== null) {
-            setState(true, firstTime, event && event.activeLabel);
+        const firstTime = timeRangeSelection.firstTime;
+        if (firstTime !== undefined) {
+            const secondTime = event && event.activeLabel;
+            setTimeRangeSelection({...timeRangeSelection, secondTime});
         }
     };
 
     const handleMouseUp = (event: any) => {
-        if (firstTime !== null) {
-            setState(false, firstTime, event && event.activeLabel);
-        }
         zoomIn();
     };
+
+    const handleMouseEnter = () => {
+        clearTimeRangeSelection();
+    }
+
+    const handleMouseLeave = () => {
+        clearTimeRangeSelection();
+    }
 
     const handleZoomOutButtonClick = () => {
         zoomOut();
@@ -226,22 +225,26 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     };
 
     const zoomIn = () => {
-        if (firstTime === secondTime || firstTime === null || secondTime === null) {
-            clearState();
+        const {firstTime, secondTime} = timeRangeSelection;
+        console.log("zoomIn:", firstTime, secondTime)
+        if (firstTime === secondTime
+            || firstTime === undefined
+            || secondTime === undefined) {
+            clearTimeRangeSelection();
             return;
         }
         let [minTime, maxTime] = [firstTime, secondTime];
         if (minTime > maxTime) {
             [minTime, maxTime] = [maxTime, minTime];
         }
-        clearState();
+        clearTimeRangeSelection();
         if (selectTimeRange) {
             selectTimeRange([minTime, maxTime]);
         }
     };
 
     const zoomOut = () => {
-        clearState();
+        clearTimeRangeSelection();
         if (selectTimeRange) {
             selectTimeRange(dataTimeRange || null);
         }
@@ -335,8 +338,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
             />;
     }
 
+    const {firstTime, secondTime} = timeRangeSelection;
     let referenceArea = null;
-    if (isDragging && firstTime !== null && secondTime !== null) {
+    if (firstTime !== undefined && secondTime !== undefined) {
         referenceArea =
             <ReferenceArea
                 x1={firstTime}
@@ -407,6 +411,8 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                     onClick={handleClick}
                     syncId="anyId"
                     style={{color: labelTextColor}}
@@ -545,7 +551,3 @@ const CustomizedDot = (props: CustomizedDotProps) => {
 
     return null;
 };
-
-function toNumberOrNull(x: number | null | undefined): number | null {
-    return typeof x === 'number' ? x : null;
-}
