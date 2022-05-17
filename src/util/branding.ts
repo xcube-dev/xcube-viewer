@@ -45,6 +45,7 @@ import {
 } from '@material-ui/core/colors';
 import {Color} from '@material-ui/core';
 import {PaletteColorOptions} from '@material-ui/core/styles/createPalette';
+import { CSSProperties } from "react";
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +79,8 @@ export interface Branding {
     primaryColor: PaletteColorOptions;
     secondaryColor: PaletteColorOptions;
     headerBackgroundColor?: string;
+    headerTitleStyle?: CSSProperties;
+    headerIconStyle?: CSSProperties;
     organisationUrl?: string;
     logoImage: any;
     logoWidth: number;

@@ -245,6 +245,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
             [i18n.get('Dimension data types'), dataset.dimensions.map(d => d.dtype).join(', ')],
             [i18n.get('Dimension lengths'), dataset.dimensions.map(d => d.size).join(', ')],
             [i18n.get('Geographical extent') + ' (x1, y1, x2, y2)', dataset.bbox.map(x => x + '').join(', ')],
+            [i18n.get('Spatial reference system'), dataset.spatialRef],
         ];
         content = (
             <CardContent2>
@@ -280,11 +281,14 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
     let content;
     let htmlReprPaper;
     if (viewMode === 'code') {
-        const jsonVariable = selectObj(variable, ['id', 'name', 'title', 'units', 'shape', 'dtype',
-                                                  'colorBarMin',
-                                                  'colorBarMax',
-                                                  'colorBarName',
-                                                  'attrs']);
+        const jsonVariable = selectObj(variable, [
+            'id', 'name', 'title', 'units', 'shape', 'dtype', 'shape',
+            'timeChunkSize',
+            'colorBarMin',
+            'colorBarMax',
+            'colorBarName',
+            'attrs'
+        ]);
         content = (
             <CardContent2>
                 <Typography className={classes.code}>{JSON.stringify(jsonVariable, null, 2)}</Typography>
@@ -318,6 +322,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
             [i18n.get('Data type'), variable.dtype],
             [i18n.get('Dimension names'), variable.dims.join(', ')],
             [i18n.get('Dimension lengths'), variable.shape.map(s => s + '').join(', ')],
+            [i18n.get('Time chunk size'), variable.timeChunkSize],
         ];
         content = (
             <CardContent2>

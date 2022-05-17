@@ -39,7 +39,8 @@ import {
     selectedPlaceGroupsSelector,
     selectedPlaceIdSelector,
     selectedPlaceSelector,
-    selectedServerSelector
+    selectedServerSelector,
+    selectedTimeChunkSizeSelector
 } from '../selectors/controlSelectors';
 import { datasetsSelector, placeGroupsSelector, userPlaceGroupSelector } from '../selectors/dataSelectors';
 
@@ -109,7 +110,7 @@ export function updateDatasets() {
            .then((datasets: Dataset[]) => {
                dispatch(_updateDatasets(datasets));
                if (datasets.length > 0) {
-                   const selectedDatasetId = datasets[0].id;
+                   const selectedDatasetId = getState().controlState.selectedDatasetId || datasets[0].id;
                    dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
                }
            })
@@ -208,7 +209,7 @@ export function addTimeSeries() {
         const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
         const useMedian = getState().controlState.showTimeSeriesMedian;
         const inclStDev = getState().controlState.showTimeSeriesErrorBars;
-        let timeChunkSize = getState().controlState.timeChunkSize;
+        let timeChunkSize = selectedTimeChunkSizeSelector(getState());
 
         const placeGroups = placeGroupsSelector(getState());
 

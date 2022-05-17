@@ -1,3 +1,58 @@
+## Changes in version 0.11.1 (in development)
+
+### Enhancements
+
+* The viewer app can now be called with query parameters that
+  preselect the dataset and variable to be displayed.
+  The query parameters are `dataset` and `variable`. (#207) 
+
+  For example, when using the demo configuration, we can preselect
+  dataset with ID `remote` and the variable named `kd489`:
+
+      http://localhost:3000/?dataset=remote&variable=kd489
+
+* The performance of time-series fetching has been significantly improved
+  by exploiting the actual chunk sizes of the time dimension of a variable.
+  For this to work, the setting "Number of data points in a time series update" 
+  has been replaced by "_Minimal_ number of data points in a time series update".
+  The effective number of data points is now always an integer multiple of the
+  actual variable's time chunk size.
+
+* The style of the title and icons of the app's header bar can now be
+  customized by two new branding properties `` and `` that can provide
+  any CCS attributes (using camel-case attribute names). (#227)
+
+  For example
+  ```json
+  {   
+    "branding": {
+      "headerTitleStyle": {
+        "fontFamily": "courier",
+        "color": "yellow"
+      },
+      "headerIconStyle": {
+        "color": "black"
+      },
+      ...
+    },
+    ...
+  }
+  ```
+
+* In the info panel, the dataset's spatial reference system is shown. (#225)
+
+* It is now possible to display dataset boundaries in the map.
+  A new setting "Show dataset boundaries" is available to switch this
+  feature on and off. (#226)
+
+### Fixes
+
+* Fixed a bug that caused the app to crash when zooming into the 
+  time-series chart. (#163)
+
+* Text selection has now been disabled for the time-series charts.
+  Zooming in no longer selects the axes' labels.
+
 ## Changes in version 0.11.0
 
 ### Enhancements

@@ -251,7 +251,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
-                        <SettingsSubPanel label={i18n.get('Number of data points in a time series update')}>
+                        <SettingsSubPanel label={i18n.get('Minimal number of data points in a time series update')}>
                             <TextField
                                 className={classes.intTextField}
                                 value={timeChunkSize}
@@ -283,6 +283,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                           value={getOnOff(settings.imageSmoothingEnabled)}>
                             <ToggleSetting
                                 propertyName={'imageSmoothingEnabled'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Show dataset boundaries')}
+                                          value={getOnOff(settings.showDatasetBoundaries)}>
+                            <ToggleSetting
+                                propertyName={'showDatasetBoundaries'}
                                 settings={settings}
                                 updateSettings={updateSettings}
                             />
