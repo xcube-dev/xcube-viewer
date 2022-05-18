@@ -1,5 +1,10 @@
 ## Changes in version 0.11.2-dev.0 (in development) 
 
+### Enhancements
+
+* The view app can now display also 2D datasets published by 
+  xcube server (starting with version 0.12).
+
 ## Changes in version 0.11.1
 
 ### Enhancements
