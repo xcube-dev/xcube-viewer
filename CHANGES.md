@@ -1,4 +1,4 @@
-## Changes in version 0.11.1 (in development)
+## Changes in version 0.11.1
 
 ### Enhancements
 
