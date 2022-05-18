@@ -1,3 +1,5 @@
+## Changes in version 0.11.2-dev.0 (in development) 
+
 ## Changes in version 0.11.1
 
 ### Enhancements
