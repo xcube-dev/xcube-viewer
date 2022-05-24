@@ -106,6 +106,13 @@
       "se": "Tid"
     },
     {
+      "en": "Missing time axis",
+      "de": "Fehlende Zeitachse",
+      "it": "Asse del tempo mancante",
+      "ro": "Lipsește axa timpului",
+      "se": "Saknar tidsaxel"
+    },
+    {
       "en": "Geometry type",
       "de": "Geometry-Typ",
       "it": "Tipo di geometria",

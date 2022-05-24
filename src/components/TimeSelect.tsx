@@ -43,13 +43,19 @@ const styles = (theme: Theme) => createStyles(
 );
 
 interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
+    hasTimeDimension?: boolean;
     selectedTime: Time | null;
     selectTime: (time: Time | null) => void;
     selectedTimeRange: TimeRange | null;
 }
 
 
-const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange, selectTime}) => {
+const TimeSelect: React.FC<TimeSelectProps> = ({
+                                                   hasTimeDimension,
+                                                   selectedTime,
+                                                   selectedTimeRange,
+                                                   selectTime
+                                               }) => {
 
     const handleTimeChange = (date: MaterialUiPickersDate | null, value?: string | null) => {
         selectTime(value ? dateTimeStringToUtcTime(value!) : null);
@@ -76,8 +82,13 @@ const TimeSelect: React.FC<TimeSelectProps> = ({selectedTime, selectedTimeRange,
     const timeInput = (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker
-                //disableToolbar
+                disabled={!hasTimeDimension}
                 variant="inline"
+                emptyLabel={
+                    !hasTimeDimension
+                        ? i18n.get('Missing time axis')
+                        : undefined
+                }
                 format="yyyy-MM-dd hh:mm:ss"
                 id="time-select"
                 value={timeText}
