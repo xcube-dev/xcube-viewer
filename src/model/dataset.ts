@@ -29,7 +29,6 @@ import { TimeRange } from './timeSeries';
 import {
     assertArrayNotEmpty,
     assertDefinedAndNotNull,
-    assertTrue,
 } from '../util/assert';
 
 
@@ -92,18 +91,23 @@ export function findDatasetVariable(dataset: Dataset, variableName: string | nul
     return (variableName && dataset.variables.find(variable => variable.name === variableName)) || null;
 }
 
-export function getDatasetTimeDimension(dataset: Dataset): TimeDimension {
+export function getDatasetTimeDimension(dataset: Dataset): TimeDimension | null {
     assertDefinedAndNotNull(dataset, 'dataset');
     assertArrayNotEmpty(dataset.dimensions, 'dataset.dimensions');
     const dimension: any = dataset.dimensions.find(dimension => dimension.name === 'time');
-    assertTrue(dimension, '\'time\' not found in dataset dimensions');
+    if (!dimension) {
+        return null;
+    }
     assertArrayNotEmpty(dimension!.coordinates, 'timeDimension.coordinates');
     assertArrayNotEmpty(dimension!.labels, 'timeDimension.labels');
     return dimension as TimeDimension;
 }
 
-export function getDatasetTimeRange(dataset: Dataset): TimeRange {
+export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
     const timeDimension = getDatasetTimeDimension(dataset);
+    if (!timeDimension) {
+        return null;
+    }
     const coordinates = timeDimension.coordinates;
     return [coordinates[0], coordinates[coordinates.length - 1]];
 }

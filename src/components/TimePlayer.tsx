@@ -146,7 +146,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
 
     const firstTimeStepButton = (
         <IconButton
-            disabled={timeAnimationActive}
+            disabled={!isValid || timeAnimationActive}
             onClick={handleFirstTimeStepButtonClick}
         >
             <FirstPageIcon/>
@@ -155,7 +155,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
 
     const prevTimeStepButton = (
         <IconButton
-            disabled={timeAnimationActive}
+            disabled={!isValid || timeAnimationActive}
             onClick={handlePrevTimeStepButtonClick}
         >
             <ChevronLeftIcon/>
@@ -163,7 +163,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
     );
     const nextTimeStepButton = (
         <IconButton
-            disabled={timeAnimationActive}
+            disabled={!isValid || timeAnimationActive}
             onClick={handleNextTimeStepButtonClick}
         >
             <ChevronRightIcon/>
@@ -171,7 +171,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
     );
     const lastTimeStepButton = (
         <IconButton
-            disabled={timeAnimationActive}
+            disabled={!isValid || timeAnimationActive}
             onClick={handleLastTimeStepButtonClick}
         >
             <LastPageIcon/>
