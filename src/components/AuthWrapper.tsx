@@ -26,6 +26,7 @@ import React from "react";
 import { AuthProvider } from "react-oidc-context";
 import { User } from "oidc-client-ts";
 import { Config } from '../config';
+import ErrorBoundary from "./ErrorBoundary";
 
 
 interface AuthWrapperProps {
@@ -53,18 +54,20 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({child
     }
 
     return (
-            <AuthProvider
-                    {...authClient}
-                    loadUserInfo={true}
-                    automaticSilentRenew={true}
-                    redirect_uri={window.location.origin}
-                    post_logout_redirect_uri={window.location.origin}
-                    popup_post_logout_redirect_uri={window.location.origin}
-                    onSigninCallback={handleSigninCallback}
-                    onRemoveUser={handleRemoveUser}
-            >
-                {children}
-            </AuthProvider>
+            <ErrorBoundary>
+                <AuthProvider
+                        {...authClient}
+                        loadUserInfo={true}
+                        automaticSilentRenew={true}
+                        redirect_uri={window.location.origin}
+                        post_logout_redirect_uri={window.location.origin}
+                        popup_post_logout_redirect_uri={window.location.origin}
+                        onSigninCallback={handleSigninCallback}
+                        onRemoveUser={handleRemoveUser}
+                >
+                    {children}
+                </AuthProvider>
+            </ErrorBoundary>
     );
 }
 
