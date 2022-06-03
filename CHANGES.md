@@ -1,5 +1,12 @@
 ## Changes in version 0.11.2-dev.0 (in development) 
 
+### Enhancements
+
+* A new refresh icon in the main bar now allows updating 
+  server-side resources and refresh the page.
+  For this to work, the configuration setting 
+  `branding.allowRefresh` must be `true`.
+
 ## Changes in version 0.11.1
 
 ### Enhancements
