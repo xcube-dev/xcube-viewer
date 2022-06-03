@@ -16,8 +16,9 @@
     "logoWidth": 32,
     "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     "defaultAgg": "mean",
-    "allowDownloads": true,
     "polygonFillOpacity": 0.2,
-    "mapProjection": "EPSG:4326"
+    "mapProjection": "EPSG:4326",
+    "allowDownloads": true,
+    "allowRefresh": true
   }
 }

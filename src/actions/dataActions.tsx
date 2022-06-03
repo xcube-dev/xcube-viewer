@@ -93,6 +93,27 @@ export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const UPDATE_RESOURCES = 'UPDATE_RESOURCES';
+
+export function updateResources() {
+    return (dispatch: Dispatch<UpdateDatasets | SelectDataset | AddActivity | RemoveActivity | MessageLogAction>, getState: () => AppState) => {
+        const apiServer = selectedServerSelector(getState());
+        dispatch(addActivity(UPDATE_RESOURCES, i18n.get('Updating resources')));
+        api.updateResources(apiServer.url, getState().userAuthState.accessToken)
+            .then(ok => {
+                if (ok) {
+                    window.location.reload();
+                }
+            })
+            .finally(() =>
+                dispatch(removeActivity(UPDATE_DATASETS))
+            );
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const UPDATE_DATASETS = 'UPDATE_DATASETS';
 
 export interface UpdateDatasets {

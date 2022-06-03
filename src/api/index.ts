@@ -25,6 +25,7 @@
 export { getServerInfo } from './getServerInfo'
 export { getColorBars } from './getColorBars'
 export { getDatasets } from './getDatasets'
+export { updateResources } from './updateResources'
 export { getDatasetPlaceGroup } from './getDatasetPlaceGroup'
 export { getTimeSeriesForGeometry } from './getTimeSeries'
 export { HTTPError } from './errors'
