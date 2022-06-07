@@ -27,12 +27,14 @@ import { connect } from 'react-redux';
 import { AppState } from '../states/appState';
 import TimeSlider from '../components/TimeSlider';
 import { selectTime, selectTimeRange } from '../actions/controlActions';
+import { selectedDatasetTimeDimensionSelector } from '../selectors/controlSelectors';
 
 
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
 
+        hasTimeDimension: !!selectedDatasetTimeDimensionSelector(state),
         selectedTime: state.controlState.selectedTime,
         selectedTimeRange: state.controlState.selectedTimeRange,
     };

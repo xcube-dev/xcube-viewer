@@ -4,6 +4,11 @@
 
 * xcube Viewer can now be used with any OIDC 1.0 compliant auth service.
 
+### Enhancements
+
+* The view app can now display also 2D datasets published by 
+  xcube server (starting with xcube version 0.11.3).
+
 ## Changes in version 0.11.1
 
 ### Enhancements
