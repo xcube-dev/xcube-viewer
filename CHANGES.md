@@ -7,6 +7,10 @@
   For this to work, the configuration setting 
   `branding.allowRefresh` must be `true`.
 
+* The viewer app can now display also 2D datasets published by 
+  xcube server (starting with xcube version 0.11.3).
+
+
 ## Changes in version 0.11.1
 
 ### Enhancements

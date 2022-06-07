@@ -22,13 +22,14 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Slider, { Mark } from '@material-ui/core/Slider';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+
 import i18n from '../i18n';
 import { Time, TimeRange, UNIT } from '../model/timeSeries';
 import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString, } from '../util/time';
@@ -44,10 +45,15 @@ const styles = (theme: Theme) => createStyles(
             marginRight: theme.spacing(HOR_MARGIN),
             minWidth: 200,
         },
+        label: {
+            color: "grey",
+            fontSize: "1em",
+        }
     }
 );
 
 interface TimeSliderProps extends WithStyles<typeof styles> {
+    hasTimeDimension?: boolean;
     selectedTime?: Time | null;
     selectTime?: (time: Time | null) => void;
     selectedTimeRange?: TimeRange | null;
@@ -57,6 +63,7 @@ interface TimeSliderProps extends WithStyles<typeof styles> {
 
 const TimeSlider: React.FC<TimeSliderProps> = ({
                                                    classes,
+                                                   hasTimeDimension,
                                                    selectedTime,
                                                    selectTime,
                                                    selectedTimeRange
@@ -66,6 +73,10 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     useEffect(() => {
         setSelectedTime_(selectedTime || (selectedTimeRange ? selectedTimeRange[0] : 0));
     }, [selectedTime, selectedTimeRange]);
+
+    if (!hasTimeDimension) {
+        return null;
+    }
 
     const handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
         if (typeof value === 'number') {
