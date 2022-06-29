@@ -769,6 +769,13 @@
       "it": "Seleziona l'ora nel set di dati",
       "ro": "Selectați ora în setul de date",
       "se": "Välj tid i dataset"
+    },
+    {
+      "en": "Refresh",
+      "de": "Aktualisieren",
+      "it": "Aggiornare",
+      "ro": "A updata",
+      "se": "Att uppdatera"
     }
   ]
 }
