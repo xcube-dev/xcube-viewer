@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2022 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,9 +22,23 @@
  * SOFTWARE.
  */
 
-export { getServerInfo } from './getServerInfo'
-export { getColorBars } from './getColorBars'
-export { getDatasets } from './getDatasets'
-export { getDatasetPlaceGroup } from './getDatasetPlaceGroup'
-export { getTimeSeriesForGeometry } from './getTimeSeries'
-export { HTTPError } from './errors'
+import { callJsonApi, makeRequestInit, makeRequestUrl } from './callApi';
+
+
+export function updateResources(apiServerUrl: string, accessToken: string | null): Promise<boolean> {
+    const url = makeRequestUrl(`${apiServerUrl}/maintenance/update`, []);
+    const init = makeRequestInit(accessToken);
+    try {
+        return callJsonApi<boolean>(url, init)
+            .then(() => {
+                return true;
+            })
+            .catch(error => {
+                console.error(error);
+                return false;
+            });
+    } catch (error) {
+        console.error(error);
+        return Promise.resolve(false);
+    }
+}
