@@ -27,4 +27,5 @@ export { getColorBars } from './getColorBars';
 export { getDatasets } from './getDatasets';
 export { getDatasetPlaceGroup } from './getDatasetPlaceGroup';
 export { getTimeSeriesForGeometry } from './getTimeSeries';
+export { updateResources } from './updateResources';
 export { HTTPError } from './errors';
