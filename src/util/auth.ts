@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 
+import { UserManagerSettings } from "oidc-client-ts";
 
-export interface AuthClientConfig {
-    authority: string;
-    client_id: string;
+export interface AuthClientConfig extends UserManagerSettings {
 }

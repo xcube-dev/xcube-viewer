@@ -21,7 +21,10 @@
     "mapProjection": "EPSG:4326"
   },
   "authClient": {
-    "authority": "https://kc.brockmann-consult.de/auth/realms/AVL",
-    "client_id": "avl-xc-viewer"
+    "authority": "https://cyanoalert.eu.auth0.com",
+    "client_id": "UZ0gdtbUSzY9sBoacz3MYK6U6PzEMj6r",
+    "extraQueryParams": {
+      "audience": "https://cyanoalert.eu/api/"
+    }
   }
 }

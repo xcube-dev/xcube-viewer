@@ -19,10 +19,23 @@
           "type": "string",
           "format": "uri",
           "example": "https://blueants.eu.auth0.com/viewer"
+        },
+        "extraQueryParams": {
+          "type": "object",
+          "additionalProperties": true
         }
       },
       "required": ["authority", "client_id"],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "examples": [
+        {
+          "authority": "https://cyanoalert.eu.auth0.com",
+          "client_id": "XZ0gDtbUTzY9sAoacz3MYK6U6PzENj6s",
+          "extraQueryParams": {
+            "audience": "https://cyanoalert.eu/api/"
+          }
+        }
+      ]
     },
 
     "ApiServerConfig": {
