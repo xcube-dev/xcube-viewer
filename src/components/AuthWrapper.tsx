@@ -58,6 +58,7 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({child
                 <AuthProvider
                         {...authClient}
                         loadUserInfo={true}
+                        scope="openid email profile"
                         automaticSilentRenew={true}
                         redirect_uri={window.location.origin}
                         post_logout_redirect_uri={window.location.origin}
