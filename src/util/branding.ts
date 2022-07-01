@@ -72,6 +72,9 @@ const COLORS: { [name: string]: Partial<Color> } = {
     yellow,
 };
 
+// Align any changes made here with
+// - resources/config.json
+// - resources/config.schema.json
 export interface Branding {
     appBarTitle: string;
     windowTitle: string;
@@ -87,8 +90,9 @@ export interface Branding {
     baseMapUrl?: string;
     defaultAgg?: 'median' | 'mean';
     polygonFillOpacity?: number;
-    allowDownloads?: boolean;
     mapProjection?: string;
+    allowDownloads?: boolean;
+    allowRefresh?: boolean;
 }
 
 

@@ -97,7 +97,6 @@
           "example": "mean",
           "enum": ["mean", "median", "min", "max"]
         },
-        "allowDownloads": {"type": "boolean", "example": true},
         "polygonFillOpacity": {
           "type": "number",
           "minimum": 0.0,
@@ -107,6 +106,14 @@
         "mapProjection": {
           "enum": ["EPSG:4326", "EPSG:3857"],
           "default": "EPSG:4326"
+        },
+        "allowDownloads": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowRefresh": {
+          "type": "boolean",
+          "default": true
         }
       },
       "additionalProperties": false

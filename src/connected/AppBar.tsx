@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import { connect } from 'react-redux';
 import {
     AppBar,
     createStyles,
@@ -38,25 +40,27 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 import Tooltip from '@material-ui/core/Tooltip';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SettingsIcon from '@material-ui/icons/Settings';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import classNames from 'classnames';
-import * as React from 'react';
-import {connect} from 'react-redux';
-import {openDialog} from '../actions/controlActions';
-import MarkdownPage from '../components/MarkdownPage';
-import {Config} from '../config';
-import i18n from '../i18n';
 
-import {AppState} from '../states/appState';
-import {WithLocale} from '../util/lang';
+import MarkdownPage from '../components/MarkdownPage';
+import { Config } from '../config';
+import i18n from '../i18n';
+import { AppState } from '../states/appState';
+import { WithLocale } from '../util/lang';
 import ExportDialog from './ExportDialog';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
+import { openDialog } from '../actions/controlActions';
+import { updateResources } from "../actions/dataActions";
 
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
     appName: string;
-    openDialog: (dialogId: string) => void;
+    openDialog: (dialogId: string) => any;
+    allowRefresh?: boolean;
+    updateResources: () => any;
 }
 
 
@@ -65,11 +69,13 @@ const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
         appName: Config.instance.branding.appBarTitle,
+        allowRefresh: Config.instance.branding.allowRefresh,
     };
 };
 
 const mapDispatchToProps = {
     openDialog,
+    updateResources,
 };
 
 
@@ -130,7 +136,14 @@ const styles = (theme: Theme) => createStyles(
     }
 );
 
-const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarProps) => {
+const _AppBar: React.FC<AppBarProps> = (
+    {
+        classes,
+        appName,
+        openDialog,
+        allowRefresh,
+        updateResources
+    }: AppBarProps) => {
     const [helpMenuAnchorEl, setHelpMenuAnchorEl] = React.useState(null);
     const [imprintOpen, setImprintOpen] = React.useState(false);
     const [manualOpen, setManualOpen] = React.useState(false);
@@ -165,6 +178,10 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
         setImprintOpen(false);
     };
 
+    const handleRefresh = () => {
+        updateResources();
+    };
+
     return (
         <AppBar
             position="absolute"
@@ -194,6 +211,13 @@ const _AppBar: React.FC<AppBarProps> = ({classes, appName, openDialog}: AppBarPr
                     {appName}
                 </Typography>
                 <UserControl/>
+                {allowRefresh &&
+                    <Tooltip arrow title={i18n.get('Refresh')}>
+                        <IconButton onClick={handleRefresh} size="small" className={classes.iconButton}>
+                            <RefreshIcon/>
+                        </IconButton>
+                    </Tooltip>
+                }
                 <Tooltip arrow title={i18n.get('Help')}>
                     <IconButton onClick={handleOpenHelpMenu} size="small" className={classes.iconButton}>
                         <HelpOutlineIcon/>
