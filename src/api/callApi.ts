@@ -54,7 +54,7 @@ export function makeRequestUrl(url: string, query: QueryComponent[]) {
 export function callApi(url: string, init?: RequestInit): Promise<Response> {
 
     if (process.env.NODE_ENV === 'development') {
-        console.debug('Calling API: ', url);
+        console.debug('Calling API: ', url, init);
     }
 
     return fetch(url, init)

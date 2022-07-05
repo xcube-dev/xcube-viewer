@@ -32,15 +32,16 @@ import {
     WithStyles
 } from '@material-ui/core';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Config } from '../config';
+import {connect} from 'react-redux';
+import {Config} from '../config';
 
-import { AppState } from '../states/appState';
+import {AppState} from '../states/appState';
 import AppBar from './AppBar';
 import AppPane from './AppPane';
 import LegalAgreementDialog from './LegalAgreementDialog';
 import LoadingDialog from './LoadingDialog';
 import MessageLog from './MessageLog';
+import AuthWrapper from "../components/AuthWrapper";
 
 
 interface DashboardProps extends WithStyles<typeof styles> {
@@ -76,16 +77,18 @@ const styles = (theme: Theme) => createStyles(
 
 const App: React.FC<DashboardProps> = ({classes}) => {
     return (
-        <MuiThemeProvider theme={newTheme()}>
-            <div className={classes.root}>
-                <CssBaseline/>
-                <AppBar/>
-                <AppPane/>
-                <LoadingDialog/>
-                <MessageLog/>
-                <LegalAgreementDialog/>
-            </div>
-        </MuiThemeProvider>
+        <AuthWrapper>
+            <MuiThemeProvider theme={newTheme()}>
+                <div className={classes.root}>
+                    <CssBaseline/>
+                    <AppBar/>
+                    <AppPane/>
+                    <LoadingDialog/>
+                    <MessageLog/>
+                    <LegalAgreementDialog/>
+                </div>
+            </MuiThemeProvider>
+        </AuthWrapper>
     );
 };
 

@@ -52,7 +52,11 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-        //  log error information here, e.g. send info to API
+        // log error information here, e.g. send info to API
+        console.error(error);
+        if (errorInfo.componentStack) {
+            console.error(errorInfo.componentStack);
+        }
     }
 
     render() {
@@ -60,21 +64,18 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
             throw new Error('An ErrorBoundary requires at least one child');
         }
 
-        if (this.state.error) {
-            // Error path
-            return (
-                /*Database*/
-                <div>
-                    <h2 className="errorBoundary-header">{i18n.get("Something went wrong.")}</h2>
-                    <details className="errorBoundary-details" style={{whiteSpace: 'pre-wrap'}}>
-                        {this.state.error.toString()}
-                        <br/>
-                    </details>
-                </div>
-            );
+        if (!this.state.error) {
+            return this.props.children;
         }
 
-        // Normally, just render children
-        return this.props.children;
+        return (
+            <div>
+                <h2 className="errorBoundary-header">{i18n.get("Something went wrong.")}</h2>
+                <details className="errorBoundary-details" style={{whiteSpace: 'pre-wrap'}}>
+                    {this.state.error.toString()}
+                    <br/>
+                </details>
+            </div>
+        );
     }
 }

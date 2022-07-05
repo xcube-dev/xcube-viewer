@@ -38,7 +38,10 @@ import { UserAuthAction } from '../actions/userAuthActions';
 
 
 export function appReducer(state: AppState | undefined,
-                           action: DataAction & ControlAction & MessageLogAction & UserAuthAction): AppState {
+                           action: DataAction
+                               & ControlAction
+                               & MessageLogAction
+                               & UserAuthAction): AppState {
     // Not using redux.combineReducers(), because we need to pass app state into controlReducer()
     return {
         dataState: dataReducer(state && state.dataState, action),

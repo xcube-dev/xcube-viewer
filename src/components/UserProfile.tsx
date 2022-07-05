@@ -22,22 +22,21 @@
  * SOFTWARE.
  */
 
+import React from 'react';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
-import React from 'react';
-import i18n from '../i18n';
+import {UserProfile as UserInfo} from "oidc-client-ts";
 
-import * as auth from '../util/auth';
-import { WithLocale } from '../util/lang';
+import i18n from '../i18n';
+import {WithLocale} from '../util/lang';
 
 
 interface UserProfileProps extends WithLocale {
-    userInfo: auth.UserInfo;
-    accessToken: string | null;
+    userInfo: UserInfo;
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({userInfo}) => {

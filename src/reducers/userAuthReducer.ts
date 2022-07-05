@@ -22,15 +22,8 @@
  * SOFTWARE.
  */
 
-import {
-    INIT_AUTH_CLIENT,
-    REQUEST_SIGN_IN,
-    REQUEST_SIGN_OUT,
-    RECEIVE_SIGN_IN,
-    RECEIVE_SIGN_OUT,
-    UserAuthAction
-} from '../actions/userAuthActions';
-import { newUserAuthState, UserAuthState, UserAuthStatus } from '../states/userAuthState';
+import { UPDATE_ACCESS_TOKEN, UserAuthAction } from '../actions/userAuthActions';
+import { newUserAuthState, UserAuthState } from '../states/userAuthState';
 
 
 export function userAuthReducer(state: UserAuthState | undefined, action: UserAuthAction): UserAuthState {
@@ -38,25 +31,10 @@ export function userAuthReducer(state: UserAuthState | undefined, action: UserAu
         state = newUserAuthState();
     }
     switch (action.type) {
-        case INIT_AUTH_CLIENT:
-            return {...state, hasAuthClient: action.hasAuthClient};
-        case REQUEST_SIGN_IN:
-            return {...state, status: UserAuthStatus.REQUESTING_SIGN_IN};
-        case REQUEST_SIGN_OUT:
-            return {...state, status: UserAuthStatus.REQUESTING_SIGN_OUT};
-        case RECEIVE_SIGN_IN:
+        case UPDATE_ACCESS_TOKEN:
             return {
                 ...state,
-                status: UserAuthStatus.SIGNED_IN,
-                userInfo: action.userInfo,
                 accessToken: action.accessToken,
-            };
-        case RECEIVE_SIGN_OUT:
-            return {
-                ...state,
-                status: UserAuthStatus.NOT_SIGNED_IN,
-                userInfo: null,
-                accessToken: null,
             };
     }
     return state!;

@@ -22,149 +22,32 @@
  * SOFTWARE.
  */
 
-import { Dispatch } from 'redux';
-import { Config } from '../config';
-import * as auth from '../util/auth'
-import { updateDatasets } from './dataActions';
-import { PostMessage, postMessage } from './messageLogActions';
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function initAuthClient() {
-    return async (dispatch: Dispatch<InitAuthClient | ReceiveSignIn>) => {
-        const authClient = await auth.initAuthClient(Config.instance.authClient);
-        dispatch(_initAuthClient(authClient !== null));
-        if (authClient !== null) {
-            let userInfo = null;
-            try {
-                userInfo = await authClient.getUser();
-            } catch (e) {
-                // ok
-            }
-            let accessToken = null;
-            try {
-                accessToken = await authClient.getTokenSilently();
-            } catch (e) {
-                // ok
-            }
-            if (userInfo && accessToken) {
-                dispatch(receiveSignIn(userInfo!, accessToken!));
-                dispatch(updateDatasets() as any);
-            }
+import { Dispatch } from "redux";
+import { AppState } from "../states/appState";
+import { updateDatasets } from "./dataActions";
+
+export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN';
+
+export interface UpdateAccessToken {
+    type: typeof UPDATE_ACCESS_TOKEN;
+    accessToken: string | null;
+}
+
+export function updateAccessToken(accessToken: string) {
+    return (dispatch: Dispatch, getState: () => AppState) => {
+        if (getState().userAuthState.accessToken !== accessToken) {
+            dispatch(_updateAccessToken(accessToken));
+            dispatch(updateDatasets() as any);
         }
-    };
+    }
+}
+
+function _updateAccessToken(accessToken: string): UpdateAccessToken {
+    return {type: UPDATE_ACCESS_TOKEN, accessToken};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const INIT_AUTH_CLIENT = 'INIT_AUTH_CLIENT';
-
-export interface InitAuthClient {
-    type: typeof INIT_AUTH_CLIENT;
-    hasAuthClient: boolean;
-}
-
-function _initAuthClient(hasAuthClient: boolean): InitAuthClient {
-    return {type: INIT_AUTH_CLIENT, hasAuthClient};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function signIn() {
-    return (dispatch: Dispatch<RequestSignIn | ReceiveSignIn | ReceiveSignOut | PostMessage>) => {
-        const authClient = auth.getAuthClient();
-        if (!authClient) {
-            // Should never get here...
-            return;
-        }
-
-        authClient.loginWithPopup()
-                  .then(async () => {
-                      dispatch(requestSignIn());
-                      const userInfo = await authClient.getUser();
-                      if (!userInfo) {
-                          throw new Error('Signing in failed, failed to retrieve user information.');
-                      }
-                      const accessToken = await authClient.getTokenSilently();
-                      dispatch(receiveSignIn(userInfo!, accessToken));
-                      dispatch(updateDatasets() as any);
-                  })
-                  .catch((error) => {
-                      dispatch(receiveSignOut());
-                      dispatch(postMessage('error', error));
-                  });
-    };
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const REQUEST_SIGN_IN = 'REQUEST_SIGN_IN';
-
-export interface RequestSignIn {
-    type: typeof REQUEST_SIGN_IN;
-}
-
-function requestSignIn(): RequestSignIn {
-    return {type: REQUEST_SIGN_IN};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const RECEIVE_SIGN_IN = 'RECEIVE_SIGN_IN';
-
-export interface ReceiveSignIn {
-    type: typeof RECEIVE_SIGN_IN;
-    userInfo: auth.UserInfo;
-    accessToken: string;
-}
-
-function receiveSignIn(userInfo: auth.UserInfo, accessToken: string): ReceiveSignIn {
-    return {type: RECEIVE_SIGN_IN, userInfo, accessToken};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function signOut() {
-    return (dispatch: Dispatch<RequestSignOut | ReceiveSignOut>) => {
-        const authClient = auth.getAuthClient();
-        if (!authClient) {
-            // Should never get here...
-            return;
-        }
-        const logoutOptions = {
-            returnTo: window.location.origin,
-            federated: true,
-        };
-        dispatch(requestSignOut());
-        authClient.logout(logoutOptions);
-        dispatch(receiveSignOut());
-    };
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const REQUEST_SIGN_OUT = 'REQUEST_SIGN_OUT';
-
-export interface RequestSignOut {
-    type: typeof REQUEST_SIGN_OUT;
-}
-
-function requestSignOut(): RequestSignOut {
-    return {type: REQUEST_SIGN_OUT};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const RECEIVE_SIGN_OUT = 'RECEIVE_SIGN_OUT';
-
-export interface ReceiveSignOut {
-    type: typeof RECEIVE_SIGN_OUT;
-}
-
-function receiveSignOut(): ReceiveSignOut {
-    return {type: RECEIVE_SIGN_OUT};
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type UserAuthAction = InitAuthClient | RequestSignIn | ReceiveSignIn | RequestSignOut | ReceiveSignOut;
+export type UserAuthAction = UpdateAccessToken;
