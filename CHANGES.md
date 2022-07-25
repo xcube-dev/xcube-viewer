@@ -1,10 +1,10 @@
-## Changes in version 0.12.0
+## Changes in version 0.12.1 (in development)
+
+## Changes in version 0.12.0 
 
 ### Enhancements
 
 * xcube Viewer can now be used with any OIDC 1.0 compliant auth service.
-
-### Enhancements
 
 * A new refresh icon in the main bar now allows updating 
   server-side resources and refresh the page.
