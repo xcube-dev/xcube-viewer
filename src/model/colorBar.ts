@@ -24,11 +24,48 @@
 
 export interface ColorBars {
     groups: ColorBarGroup[];
-    images: {[colorBarName: string]: string}
+    images: { [name: string]: string };
 }
 
 export interface ColorBarGroup {
     title: string;
     description: string;
     names: string[];
+}
+
+export const CB_ALPHA_SUFFIX = '_alpha';
+export const CB_REVERSE_SUFFIX = '_r';
+
+
+export interface ColorBar {
+    baseName: string;
+    isAlpha: boolean;
+    isReversed: boolean;
+}
+
+export function parseColorBar(name: string): ColorBar {
+    let baseName = name;
+
+    const isAlpha = baseName.endsWith(CB_ALPHA_SUFFIX);
+    if (isAlpha) {
+        baseName = baseName.slice(0, baseName.length - CB_ALPHA_SUFFIX.length);
+    }
+
+    const isReversed = baseName.endsWith(CB_REVERSE_SUFFIX);
+    if (isReversed) {
+        baseName = baseName.slice(0, baseName.length - CB_REVERSE_SUFFIX.length);
+    }
+
+    return {baseName, isAlpha, isReversed};
+}
+
+export function formatColorBar(colorBar: ColorBar): string {
+    let name = colorBar.baseName;
+    if (colorBar.isReversed) {
+        name += CB_REVERSE_SUFFIX;
+    }
+    if (colorBar.isAlpha) {
+        name += CB_ALPHA_SUFFIX;
+    }
+    return name;
 }

@@ -32,77 +32,75 @@ import Slider, { Mark } from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import i18n from '../i18n';
-import { ColorBars } from '../model/colorBar';
+import { ColorBars, formatColorBar, parseColorBar } from '../model/colorBar';
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
 
 const HOR_SLIDER_MARGIN = 5;
 const COLOR_BAR_BOX_MARGIN = 1;
 const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
-const ALPHA_SUFFIX = '_alpha';
-
 const useStyles = makeStyles(theme => ({
-        title: {
-            fontSize: 'x-small',
-            fontWeight: 'bold',
-            width: '100%',
-            display: 'flex',
-            flexWrap: 'nowrap',
-            justifyContent: 'center',
-            paddingBottom: theme.spacing(0.5),
-        },
-        label: {
-            fontSize: 'x-small',
-            fontWeight: 'bold',
-            width: '100%',
-            display: 'flex',
-            flexWrap: 'nowrap',
-            justifyContent: 'space-between',
-        },
-        container: {
-            paddingLeft: theme.spacing(1.5),
-            paddingRight: theme.spacing(1.5),
-            paddingBottom: theme.spacing(0.5),
-            paddingTop: theme.spacing(0.5),
-            color: 'black',
-        },
-        sliderBox: {
-            marginTop: theme.spacing(1),
-            marginLeft: theme.spacing(HOR_SLIDER_MARGIN),
-            marginRight: theme.spacing(HOR_SLIDER_MARGIN),
-            minWidth: 320,
-            width: `calc(100% - ${theme.spacing(2 * (HOR_SLIDER_MARGIN + 1))}px)`,
-        },
-        colorBarBox: {
-            marginTop: theme.spacing(COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_BOX_MARGIN),
-            marginLeft: theme.spacing(COLOR_BAR_BOX_MARGIN),
-            marginRight: theme.spacing(COLOR_BAR_BOX_MARGIN),
-            marginBottom: theme.spacing(COLOR_BAR_BOX_MARGIN),
-        },
-        colorBarGroupTitle: {
-            marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
-            color: theme.palette.grey[400],
-        },
-        colorBarGroupItemBox: {
-            marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
-        },
-        colorBarMinMaxEditor: {
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-        },
-        minMaxBox: {
-            display: 'flex',
-            justifyContent: 'center'
-        },
-        minTextField: {
-            maxWidth: '8em',
-            paddingRight: 2,
-        },
-        maxTextField: {
-            maxWidth: '8em',
-            paddingLeft: 2,
-        },
-    }
+            title: {
+                fontSize: 'x-small',
+                fontWeight: 'bold',
+                width: '100%',
+                display: 'flex',
+                flexWrap: 'nowrap',
+                justifyContent: 'center',
+                paddingBottom: theme.spacing(0.5),
+            },
+            label: {
+                fontSize: 'x-small',
+                fontWeight: 'bold',
+                width: '100%',
+                display: 'flex',
+                flexWrap: 'nowrap',
+                justifyContent: 'space-between',
+            },
+            container: {
+                paddingLeft: theme.spacing(1.5),
+                paddingRight: theme.spacing(1.5),
+                paddingBottom: theme.spacing(0.5),
+                paddingTop: theme.spacing(0.5),
+                color: 'black',
+            },
+            sliderBox: {
+                marginTop: theme.spacing(1),
+                marginLeft: theme.spacing(HOR_SLIDER_MARGIN),
+                marginRight: theme.spacing(HOR_SLIDER_MARGIN),
+                minWidth: 320,
+                width: `calc(100% - ${theme.spacing(2 * (HOR_SLIDER_MARGIN + 1))}px)`,
+            },
+            colorBarBox: {
+                marginTop: theme.spacing(COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_BOX_MARGIN),
+                marginLeft: theme.spacing(COLOR_BAR_BOX_MARGIN),
+                marginRight: theme.spacing(COLOR_BAR_BOX_MARGIN),
+                marginBottom: theme.spacing(COLOR_BAR_BOX_MARGIN),
+            },
+            colorBarGroupTitle: {
+                marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
+                color: theme.palette.grey[400],
+            },
+            colorBarGroupItemBox: {
+                marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
+            },
+            colorBarMinMaxEditor: {
+                marginTop: theme.spacing(2),
+                marginBottom: theme.spacing(2),
+            },
+            minMaxBox: {
+                display: 'flex',
+                justifyContent: 'center'
+            },
+            minTextField: {
+                maxWidth: '8em',
+                paddingRight: 2,
+            },
+            maxTextField: {
+                maxWidth: '8em',
+                paddingLeft: 2,
+            },
+        }
 ));
 
 
@@ -136,10 +134,10 @@ export default function ColorBarLegend({
     const [currentColorBarMinMax, setCurrentColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
     const [originalColorBarMinMax, setOriginalColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
     const [enteredColorBarMinMax, setEnteredColorBarMinMax] = React.useState<[string, string]>(
-        minMaxToText(variableColorBarMinMax)
+            minMaxToText(variableColorBarMinMax)
     );
     const [enteredColorBarMinMaxError, setEnteredColorBarMinMaxError] = React.useState<[boolean, boolean]>(
-        [false, false]
+            [false, false]
     );
 
     React.useEffect(() => {
@@ -153,13 +151,9 @@ export default function ColorBarLegend({
         return null;
     }
 
-    const variableColorBarAlpha = variableColorBarName.endsWith(ALPHA_SUFFIX);
-    let variableColorBarBaseName = variableColorBarName;
-    if (variableColorBarAlpha) {
-        variableColorBarBaseName = variableColorBarName.slice(0, variableColorBarName.length - ALPHA_SUFFIX.length);
-    }
+    const variableColorBar = parseColorBar(variableColorBarName);
 
-    const imageData = colorBars.images[variableColorBarName];
+    const imageData = colorBars.images[variableColorBar.baseName];
 
     const handleOpenColorBarMinMaxEditor = (event: React.MouseEvent<HTMLDivElement>) => {
         setColorBarMinMaxAnchorEl(event.currentTarget);
@@ -191,34 +185,36 @@ export default function ColorBarLegend({
         setColorBarNameAnchorEl(null);
     };
 
-    const handleColorBarNameChange = (variableColorBarName: string) => {
-        if (variableColorBarAlpha) {
-            variableColorBarName += ALPHA_SUFFIX;
-        }
+    const handleColorBarNameChange = (baseName: string) => {
+        variableColorBarName = formatColorBar({...variableColorBar, baseName});
         updateVariableColorBar(variableColorBarMinMax, variableColorBarName, variableOpacity);
     };
 
     const handleColorBarAlpha = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.currentTarget.checked) {
-            updateVariableColorBar(
+        const isAlpha = event.currentTarget.checked;
+        variableColorBarName = formatColorBar({...variableColorBar, isAlpha});
+        updateVariableColorBar(
                 variableColorBarMinMax,
-                variableColorBarBaseName + ALPHA_SUFFIX,
+                variableColorBarName,
                 variableOpacity
-            );
-        } else {
-            updateVariableColorBar(
+        );
+    };
+
+    const handleColorBarReversed = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const isReversed = event.currentTarget.checked;
+        variableColorBarName = formatColorBar({...variableColorBar, isReversed});
+        updateVariableColorBar(
                 variableColorBarMinMax,
-                variableColorBarBaseName,
+                variableColorBarName,
                 variableOpacity
-            );
-        }
+        );
     };
 
     const handleVariableOpacity = (event: React.ChangeEvent<{}>, value: number | number[]) => {
         updateVariableColorBar(
-            variableColorBarMinMax,
-            variableColorBarName,
-            value as number
+                variableColorBarMinMax,
+                variableColorBarName,
+                value as number
         );
     }
 
@@ -304,41 +300,41 @@ export default function ColorBarLegend({
         });
 
         colorBarMinMaxEditor = (
-            <div className={classes.colorBarMinMaxEditor}>
-                <span style={{paddingLeft: 14}}>{title}</span>
-                <Box className={classes.sliderBox}>
-                    <Slider
-                        min={total1}
-                        max={total2}
-                        value={currentColorBarMinMax}
-                        marks={marks}
-                        step={step}
-                        onChange={handleColorBarMinMaxChange}
-                        onChangeCommitted={handleColorBarMinMaxChangeCommitted}
-                        valueLabelDisplay="auto"
-                    />
-                </Box>
-                <Box component="form" className={classes.minMaxBox}>
-                    <TextField
-                        className={classes.minTextField}
-                        label="Minimum"
-                        variant="filled"
-                        size="small"
-                        value={enteredColorBarMinMax[0]}
-                        error={enteredColorBarMinMaxError[0]}
-                        onChange={evt => handleEnteredColorBarMinChange(evt)}
-                    />
-                    <TextField
-                        className={classes.maxTextField}
-                        label="Maximum"
-                        variant="filled"
-                        size="small"
-                        value={enteredColorBarMinMax[1]}
-                        error={enteredColorBarMinMaxError[1]}
-                        onChange={evt => handleEnteredColorBarMaxChange(evt)}
-                    />
-                </Box>
-            </div>
+                <div className={classes.colorBarMinMaxEditor}>
+                    <span style={{paddingLeft: 14}}>{title}</span>
+                    <Box className={classes.sliderBox}>
+                        <Slider
+                                min={total1}
+                                max={total2}
+                                value={currentColorBarMinMax}
+                                marks={marks}
+                                step={step}
+                                onChange={handleColorBarMinMaxChange}
+                                onChangeCommitted={handleColorBarMinMaxChangeCommitted}
+                                valueLabelDisplay="auto"
+                        />
+                    </Box>
+                    <Box component="form" className={classes.minMaxBox}>
+                        <TextField
+                                className={classes.minTextField}
+                                label="Minimum"
+                                variant="filled"
+                                size="small"
+                                value={enteredColorBarMinMax[0]}
+                                error={enteredColorBarMinMaxError[0]}
+                                onChange={evt => handleEnteredColorBarMinChange(evt)}
+                        />
+                        <TextField
+                                className={classes.maxTextField}
+                                label="Maximum"
+                                variant="filled"
+                                size="small"
+                                value={enteredColorBarMinMax[1]}
+                                error={enteredColorBarMinMaxError[1]}
+                                onChange={evt => handleEnteredColorBarMaxChange(evt)}
+                        />
+                    </Box>
+                </div>
         );
     }
 
@@ -351,119 +347,135 @@ export default function ColorBarLegend({
                 continue;
             }
             entries.push(
-                <Tooltip arrow key={key++} title={cbg.description} placement="left">
-                    <Box className={classes.colorBarGroupTitle}>
-                        {cbg.title}
-                    </Box>
-                </Tooltip>
+                    <Tooltip arrow key={key++} title={cbg.description} placement="left">
+                        <Box className={classes.colorBarGroupTitle}>
+                            {cbg.title}
+                        </Box>
+                    </Tooltip>
             );
             for (let name of cbg.names) {
-                if (!name.endsWith(ALPHA_SUFFIX)) {
-                    entries.push(
+                entries.push(
                         <Box
-                            key={key++}
-                            className={classes.colorBarGroupItemBox}
-                            border={name === variableColorBarBaseName ? 1 : 1}
-                            borderColor={name === variableColorBarBaseName ? 'orange' : 'black'}
-                            width={240}
-                            height={20}
+                                key={key++}
+                                className={classes.colorBarGroupItemBox}
+                                border={1}
+                                borderColor={name === variableColorBar.baseName ? 'orange' : 'black'}
+                                width={240}
+                                height={20}
                         >
                             <Tooltip arrow title={name} placement="left">
                                 <img
-                                    src={`data:image/png;base64,${colorBars.images[name]}`}
-                                    alt={'Color Bar'}
-                                    width={'100%'}
-                                    height={'100%'}
-                                    onClick={() => {
-                                        handleColorBarNameChange(name);
-                                    }}
+                                        src={`data:image/png;base64,${colorBars.images[name]}`}
+                                        alt={'Color Bar'}
+                                        width={'100%'}
+                                        height={'100%'}
+                                        onClick={() => {
+                                            handleColorBarNameChange(name);
+                                        }}
                                 />
                             </Tooltip>
                         </Box>
-                    );
-                }
+                );
             }
         }
         colorBarNameEditor = (
-            <Box className={classes.colorBarBox}>
-                <Box component="span">
-                    <Checkbox color="primary"
-                              checked={variableColorBarAlpha}
-                              onChange={handleColorBarAlpha}
-                              size="small"
-                              style={{paddingLeft: 0, paddingTop: 4, paddingBottom: 4}}/>
-                    <Box component="span">{i18n.get('Hide lower values')}</Box>
+                <Box className={classes.colorBarBox}>
+                    <Box component="span">
+                        <Checkbox color="primary"
+                                  checked={variableColorBar.isAlpha}
+                                  onChange={handleColorBarAlpha}
+                                  size="small"
+                                  style={{
+                                      paddingLeft: 0,
+                                      paddingRight: 2,
+                                      paddingTop: 4,
+                                      paddingBottom: 4
+                                  }}
+                        />
+                        <Box component="span">{i18n.get('Hide small values')}</Box>
+                        <Checkbox color="primary"
+                                  checked={variableColorBar.isReversed}
+                                  onChange={handleColorBarReversed}
+                                  size="small"
+                                  style={{
+                                      paddingLeft: 10,
+                                      paddingRight: 2,
+                                      paddingTop: 4,
+                                      paddingBottom: 4
+                                  }}
+                        />
+                        <Box component="span">{i18n.get('Reverse')}</Box>
+                    </Box>
+                    <Box component="div" style={{display: 'flex', alignItems: 'center'}}>
+                        <span>{i18n.get('Opacity')}</span>
+                        <Slider
+                                min={0}
+                                max={1}
+                                value={variableOpacity}
+                                step={0.01}
+                                style={{flexGrow: 1, marginLeft: 10, marginRight: 10}}
+                                onChange={handleVariableOpacity}
+                        />
+                    </Box>
+                    {entries}
                 </Box>
-                <Box component="div" style={{display: 'flex', alignItems: 'center'}}>
-                    <span>{i18n.get('Opacity')}</span>
-                    <Slider
-                        min={0}
-                        max={1}
-                        value={variableOpacity}
-                        step={0.01}
-                        style={{flexGrow: 1, marginLeft: 10, marginRight: 10}}
-                        onChange={handleVariableOpacity}
-                    />
-                </Box>
-                {entries}
-            </Box>
         );
     }
 
     return (
-        <div className={'ol-control ' + classes.container}>
-            <div className={classes.title}>
-                <span>{title}</span>
+            <div className={'ol-control ' + classes.container}>
+                <div className={classes.title}>
+                    <span>{title}</span>
+                </div>
+                {Boolean(imageData) ? (
+                        <img
+                                src={`data:image/png;base64,${imageData}`}
+                                alt={'Color Bar'}
+                                width={width || 240}
+                                height={height || 24}
+                                onClick={handleOpenColorBarNameEditor}
+                        />
+                ) : (
+                        <div>{i18n.get('Unknown color bar') + `: ${variableColorBarName}`}</div>
+                )}
+                <div
+                        className={classes.label}
+                        onClick={handleOpenColorBarMinMaxEditor}
+                >
+                    <Labels minValue={variableColorBarMinMax[0]} maxValue={variableColorBarMinMax[1]}
+                            count={numTicks || 5}/>
+                </div>
+                <Popover
+                        anchorEl={colorBarMinMaxAnchorEl}
+                        open={colorBarMinMaxEditorOpen}
+                        onClose={handleCloseColorBarMinMaxEditor}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                >
+                    {colorBarMinMaxEditor}
+                </Popover>
+                <Popover
+                        anchorEl={colorBarNameAnchorEl}
+                        open={colorBarNameEditorOpen}
+                        onClose={handleCloseColorBarNameEditor}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                >
+                    {colorBarNameEditor}
+                </Popover>
             </div>
-            {Boolean(imageData) ? (
-                <img
-                    src={`data:image/png;base64,${imageData}`}
-                    alt={'Color Bar'}
-                    width={width || 240}
-                    height={height || 24}
-                    onClick={handleOpenColorBarNameEditor}
-                />
-            ) : (
-                 <div>{i18n.get('Unknown color bar') + `: ${variableColorBarName}`}</div>
-             )}
-            <div
-                className={classes.label}
-                onClick={handleOpenColorBarMinMaxEditor}
-            >
-                <Labels minValue={variableColorBarMinMax[0]} maxValue={variableColorBarMinMax[1]}
-                        count={numTicks || 5}/>
-            </div>
-            <Popover
-                anchorEl={colorBarMinMaxAnchorEl}
-                open={colorBarMinMaxEditorOpen}
-                onClose={handleCloseColorBarMinMaxEditor}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                }}
-            >
-                {colorBarMinMaxEditor}
-            </Popover>
-            <Popover
-                anchorEl={colorBarNameAnchorEl}
-                open={colorBarNameEditorOpen}
-                onClose={handleCloseColorBarNameEditor}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-            >
-                {colorBarNameEditor}
-            </Popover>
-        </div>
     );
 }
 
@@ -476,12 +488,13 @@ interface LabelsProps {
 
 function Labels({minValue, maxValue, count}: LabelsProps) {
     return (
-        <React.Fragment>
-            {getLabelsFromRange(minValue, maxValue, count).map((label, i) => <span key={i}>{label}</span>)}
-        </React.Fragment>
+            <React.Fragment>
+                {getLabelsFromRange(minValue, maxValue, count).map((label, i) => <span key={i}>{label}</span>)}
+            </React.Fragment>
     );
 }
 
 function minMaxToText(minMaxValue: [number, number]): [string, string] {
     return [minMaxValue[0] + '', minMaxValue[1] + ''];
 }
+

@@ -428,11 +428,18 @@
       "se": "Grundkarta"
     },
     {
-      "en": "Hide lower values",
-      "de": "Niedrigere Werte ausblenden",
-      "it": "Nascondi valori più bassi",
-      "ro": "Ascundeți valori mai mici",
-      "se": "Dölj lägre värden"
+      "en": "Hide small values",
+      "de": "Kleine Werte ausblenden",
+      "it": "Nascondere valori piccoli",
+      "ro": "Ascundeți valorile mici",
+      "se": "Dölja små värden"
+    },
+    {
+      "en": "Reverse",
+      "de": "Umkehren",
+      "it": "Invertire",
+      "ro": "Reverse",
+      "se": "Omvänt"
     },
     {
       "en": "Opacity",

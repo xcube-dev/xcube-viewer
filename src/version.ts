@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-const version = '0.12.1-dev.0';
+const version = '0.13.0-dev.0';
 
 export default version;
 

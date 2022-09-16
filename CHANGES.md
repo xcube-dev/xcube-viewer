@@ -1,4 +1,6 @@
-## Changes in version 0.12.1 (in development)
+## Changes in version 0.13.0 (in development)
+
+* Color bars can now be reversed.
 
 ## Changes in version 0.12.0 
 
