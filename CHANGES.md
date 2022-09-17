@@ -1,6 +1,9 @@
 ## Changes in version 0.13.0 (in development)
 
-* Color bars can now be reversed.
+* Color bar management has been slightly improved:  
+  - Color bars can now be reversed.
+  - Color bar in the legend is now rendered according to the current
+    settings "Hide small values", "Reverse", and "Opacity".
 
 ## Changes in version 0.12.0 
 

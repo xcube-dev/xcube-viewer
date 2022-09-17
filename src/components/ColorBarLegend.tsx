@@ -34,6 +34,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import i18n from '../i18n';
 import { ColorBars, formatColorBar, parseColorBar } from '../model/colorBar';
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
+import { ColorBarCanvas } from "./ColorBarCanvas";
 
 const HOR_SLIDER_MARGIN = 5;
 const COLOR_BAR_BOX_MARGIN = 1;
@@ -130,7 +131,7 @@ export default function ColorBarLegend({
                                        }: ColorBarLegendProps) {
     const classes = useStyles();
     const [colorBarMinMaxAnchorEl, setColorBarMinMaxAnchorEl] = React.useState<HTMLDivElement | null>(null);
-    const [colorBarNameAnchorEl, setColorBarNameAnchorEl] = React.useState<HTMLDivElement | null>(null);
+    const [colorBarNameAnchorEl, setColorBarNameAnchorEl] = React.useState<HTMLCanvasElement | null>(null);
     const [currentColorBarMinMax, setCurrentColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
     const [originalColorBarMinMax, setOriginalColorBarMinMax] = React.useState<[number, number]>(variableColorBarMinMax);
     const [enteredColorBarMinMax, setEnteredColorBarMinMax] = React.useState<[string, string]>(
@@ -177,7 +178,7 @@ export default function ColorBarLegend({
         }
     };
 
-    const handleOpenColorBarNameEditor = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleOpenColorBarNameEditor = (event: React.MouseEvent<HTMLCanvasElement>) => {
         setColorBarNameAnchorEl(event.currentTarget);
     };
 
@@ -427,17 +428,14 @@ export default function ColorBarLegend({
                 <div className={classes.title}>
                     <span>{title}</span>
                 </div>
-                {Boolean(imageData) ? (
-                        <img
-                                src={`data:image/png;base64,${imageData}`}
-                                alt={'Color Bar'}
-                                width={width || 240}
-                                height={height || 24}
-                                onClick={handleOpenColorBarNameEditor}
-                        />
-                ) : (
-                        <div>{i18n.get('Unknown color bar') + `: ${variableColorBarName}`}</div>
-                )}
+                <ColorBarCanvas
+                        colorBar={variableColorBar}
+                        imageData={imageData}
+                        opacity={variableOpacity}
+                        width={width}
+                        height={height}
+                        onOpenEditor={handleOpenColorBarNameEditor}
+                />
                 <div
                         className={classes.label}
                         onClick={handleOpenColorBarMinMaxEditor}
