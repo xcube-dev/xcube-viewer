@@ -106,7 +106,7 @@ export function updateResources() {
                 }
             })
             .finally(() =>
-                dispatch(removeActivity(UPDATE_DATASETS))
+                dispatch(removeActivity(UPDATE_RESOURCES))
             );
     }
 }
