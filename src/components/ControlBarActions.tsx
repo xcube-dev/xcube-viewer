@@ -40,13 +40,13 @@ import { WithLocale } from '../util/lang';
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
-    {
-        formControl: {
-            marginTop: theme.spacing(1),
-            marginRight: theme.spacing(1),
-            marginLeft: 'auto',
-        },
-    });
+        {
+            formControl: {
+                marginTop: theme.spacing(1),
+                marginRight: theme.spacing(1),
+                marginLeft: 'auto',
+            },
+        });
 
 interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     visible: boolean;
@@ -57,24 +57,29 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     openDialog: (dialogId: string) => void;
 }
 
-const ControlBarActions: React.FC<ControlBarActionsProps> = ({
-                                                                 classes,
-                                                                 visible,
-                                                                 flyToSelectedObject,
-                                                                 infoCardOpen,
-                                                                 showInfoCard,
-                                                                 timeSeriesGroups,
-                                                                 openDialog,
-                                                             }) => {
+const ControlBarActions: React.FC<ControlBarActionsProps> = (
+    {
+        classes,
+        visible,
+        flyToSelectedObject,
+        infoCardOpen,
+        showInfoCard,
+        timeSeriesGroups,
+        openDialog,
+    }
+) => {
 
     if (!visible) {
         return null;
     }
 
+    const canDownload = timeSeriesGroups.length > 0;
+    console.info(timeSeriesGroups, canDownload)
+
     let downloadButton;
     if (Config.instance.branding.allowDownloads) {
         downloadButton = (
-            <IconButton onClick={() => openDialog('export')}>
+            <IconButton disabled={!canDownload} onClick={() => openDialog('export')}>
                 <Tooltip arrow title={i18n.get('Export data')}>
                     {<CloudDownloadIcon/>}
                 </Tooltip>

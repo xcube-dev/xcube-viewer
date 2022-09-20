@@ -5,6 +5,9 @@
   - Color bar in the legend is now rendered according to the current
     settings "Hide small values", "Reverse", and "Opacity".
 
+* Export time series button is disabled, when there are no 
+  time-series to download. (#171)
+
 ## Changes in version 0.12.0 
 
 ### Enhancements
