@@ -41,7 +41,7 @@
   For this to work, the setting "Number of data points in a time series update" 
   has been replaced by "_Minimal_ number of data points in a time series update".
   The effective number of data points is now always an integer multiple of the
-  actual variable's time chunk size.
+  actual variable's time chunk size. (#166)
 
 * The style of the title and icons of the app's header bar can now be
   customized by two new branding properties `` and `` that can provide
