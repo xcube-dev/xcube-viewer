@@ -23,26 +23,31 @@
  */
 
 import { connect } from 'react-redux';
+import {
+    selectedDatasetSelector,
+    selectedPlaceInfoSelector,
+    selectedVariableSelector,
+} from '../selectors/controlSelectors';
 
 import { AppState } from '../states/appState';
-import ControlBarActions from '../components/ControlBarActions';
-import { flyToSelectedObject, openDialog, showInfoCard, showVolumeCard } from '../actions/controlActions';
+import { setVolumeRenderMode, showVolumeCard, } from '../actions/controlActions';
+import VolumeCard from '../components/VolumeCard';
+
 
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-        visible: !!(state.controlState.selectedDatasetId || state.controlState.selectedPlaceId),
         volumeCardOpen: state.controlState.volumeCardOpen,
-        infoCardOpen: state.controlState.infoCardOpen,
-        timeSeriesGroups: state.dataState.timeSeriesGroups,
+        volumeRenderMode: state.controlState.volumeRenderMode,
+        selectedDataset: selectedDatasetSelector(state),
+        selectedVariable: selectedVariableSelector(state),
+        selectedPlaceInfo: selectedPlaceInfoSelector(state),
     }
 };
 
 const mapDispatchToProps = {
     showVolumeCard,
-    showInfoCard,
-    flyToSelectedObject,
-    openDialog,
+    setVolumeRenderMode,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);
+export default connect(mapStateToProps, mapDispatchToProps)(VolumeCard);

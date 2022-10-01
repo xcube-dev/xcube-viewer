@@ -44,7 +44,9 @@ import {
     SET_MAP_INTERACTION,
     SET_RGB_LAYER_VISIBILITY,
     SET_VISIBLE_INFO_CARD_ELEMENTS,
+    SET_VOLUME_RENDER_MODE,
     SHOW_INFO_CARD,
+    SHOW_VOLUME_CARD,
     UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
     UPDATE_SETTINGS,
     UPDATE_TIME_ANIMATION,
@@ -301,6 +303,22 @@ export function controlReducer(state: ControlState | undefined,
                 ...state,
                 mapInteraction: action.mapInteraction
             };
+        }
+        case SHOW_VOLUME_CARD: {
+            state = {
+                ...state,
+                volumeCardOpen: action.volumeCardOpen,
+            };
+            storeUserSettings(state);
+            return state;
+        }
+        case SET_VOLUME_RENDER_MODE: {
+            state = {
+                ...state,
+                volumeRenderMode: action.volumeRenderMode,
+            };
+            storeUserSettings(state);
+            return state;
         }
         case SHOW_INFO_CARD: {
             state = {

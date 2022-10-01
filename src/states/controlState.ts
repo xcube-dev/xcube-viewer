@@ -53,6 +53,8 @@ export interface ExportSettings {
     zipArchive: boolean;
 }
 
+export type VolumeRenderMode = 'mip' | 'iso';
+
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
@@ -76,6 +78,8 @@ export interface ControlState {
     dialogOpen: { [dialogId: string]: boolean };
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
+    volumeCardOpen: boolean;
+    volumeRenderMode: VolumeRenderMode;
     infoCardOpen: boolean;
     infoCardElementStates: InfoCardElementStates;
     mapProjection: string;
@@ -118,6 +122,7 @@ export function newControlState(): ControlState {
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
         showRgbLayer: false,
+        volumeCardOpen: false,
         infoCardOpen: false,
         infoCardElementStates: {
             dataset: {visible: true, viewMode: 'text'},

@@ -24,25 +24,28 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
+import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 
 import { AppState } from '../states/appState';
 import Viewer from './Viewer';
 import TimeSeriesCharts from './TimeSeriesCharts';
+import VolumeCard from './VolumeCard';
 import InfoCard from './InfoCard';
 
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
+    hasVolumeCard: boolean;
     hasInfoCard: boolean;
     hasTimeseries: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
+    const hasDatasets = state.controlState.selectedDatasetId!==null
+        && state.dataState.datasets.length > 0;
     return {
-        hasInfoCard: state.controlState.infoCardOpen
-                     && state.controlState.selectedDatasetId !== null
-                     && state.dataState.datasets.length > 0,
+        hasVolumeCard: state.controlState.volumeCardOpen && hasDatasets,
+        hasInfoCard: state.controlState.infoCardOpen && hasDatasets,
         hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
     };
 };
@@ -94,16 +97,18 @@ const styles = (theme: Theme) => createStyles(
 
 const Workspace: React.FC<WorkspaceProps> = ({
                                                  classes,
+                                                 hasVolumeCard,
                                                  hasInfoCard,
                                                  hasTimeseries
                                              }) => {
-    if (hasInfoCard || hasTimeseries) {
+    if (hasVolumeCard || hasInfoCard || hasTimeseries) {
         return (
             <div className={classes.contentContainer}>
                 <div className={classes.viewerContainer}>
                     <Viewer/>
                 </div>
                 <div className={classes.chartContainer}>
+                    <VolumeCard/>
                     <InfoCard/>
                     <TimeSeriesCharts/>
                 </div>

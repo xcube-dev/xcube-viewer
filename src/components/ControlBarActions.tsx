@@ -29,6 +29,7 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/s
 import Tooltip from '@material-ui/core/Tooltip';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import InfoIcon from '@material-ui/icons/Info';
+import VolumeIcon from '@material-ui/icons/Looks3';
 import MyLocationIcon from '@material-ui/icons/MyLocation';
 import * as React from 'react';
 
@@ -51,6 +52,8 @@ const styles = (theme: Theme) => createStyles(
 interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     visible: boolean;
     flyToSelectedObject: () => void;
+    volumeCardOpen: boolean;
+    showVolumeCard: (open: boolean) => void;
     infoCardOpen: boolean;
     showInfoCard: (open: boolean) => void;
     timeSeriesGroups: TimeSeriesGroup[];
@@ -62,6 +65,8 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
         classes,
         visible,
         flyToSelectedObject,
+        volumeCardOpen,
+        showVolumeCard,
         infoCardOpen,
         showInfoCard,
         timeSeriesGroups,
@@ -95,6 +100,14 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
         </IconButton>
     );
 
+    let volumeButton = (
+            <IconButton onClick={() => showVolumeCard(true)} disabled={volumeCardOpen}>
+                <Tooltip arrow title={i18n.get('Open volume panel')}>
+                    {<VolumeIcon/>}
+                </Tooltip>
+            </IconButton>
+    );
+
     let infoButton = (
         <IconButton onClick={() => showInfoCard(true)} disabled={infoCardOpen}>
             <Tooltip arrow title={i18n.get('Open information panel')}>
@@ -108,6 +121,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
             <Box>
                 {downloadButton}
                 {flyToButton}
+                {volumeButton}
                 {infoButton}
             </Box>
         </FormControl>
