@@ -42,7 +42,13 @@ import {
 } from '../selectors/controlSelectors';
 import { datasetsSelector } from '../selectors/dataSelectors';
 import { AppState } from '../states/appState';
-import { ControlState, MapInteraction, TimeAnimationInterval, VolumeRenderMode } from '../states/controlState';
+import {
+    ControlState,
+    MapInteraction,
+    TimeAnimationInterval,
+    VolumeRenderMode,
+    VolumeState
+} from '../states/controlState';
 import { UPDATE_DATASET_PLACE_GROUP, updateDatasetPlaceGroup, UpdateDatasetPlaceGroup, } from './dataActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
 
@@ -158,7 +164,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
 
         const dataset = selectedDatasetSelector(getState());
         const placeGroups = selectedDatasetSelectedPlaceGroupsSelector(getState());
-        if (dataset !== null && placeGroups.length > 0) {
+        if (dataset!==null && placeGroups.length > 0) {
             for (let placeGroup of placeGroups) {
                 if (!isValidPlaceGroup(placeGroup)) {
                     const datasetId = dataset!.id;
@@ -166,18 +172,18 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                     const activityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
                     dispatch(addActivity(activityId, i18n.get('Loading places')));
                     api.getDatasetPlaceGroup(apiServer.url,
-                            datasetId,
-                            placeGroupId,
-                            getState().userAuthState.accessToken)
-                            .then((placeGroup: PlaceGroup) => {
-                                dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
-                            })
-                            .catch(error => {
-                                dispatch(postMessage('error', error));
-                            })
-                            .finally(() => {
-                                dispatch(removeActivity(activityId));
-                            });
+                        datasetId,
+                        placeGroupId,
+                        getState().userAuthState.accessToken)
+                        .then((placeGroup: PlaceGroup) => {
+                            dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
+                        })
+                        .catch(error => {
+                            dispatch(postMessage('error', error));
+                        })
+                        .finally(() => {
+                            dispatch(removeActivity(activityId));
+                        });
                 }
             }
         }
@@ -348,6 +354,20 @@ export function setVolumeRenderMode(volumeRenderMode: VolumeRenderMode): SetVolu
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const UPDATE_VOLUME_STATE = 'UPDATE_VOLUME_STATE';
+
+export interface UpdateVolumeState {
+    type: typeof UPDATE_VOLUME_STATE;
+    volumeId: string;
+    volumeState: VolumeState;
+}
+
+export function updateVolumeState(volumeId: string, volumeState: VolumeState): UpdateVolumeState {
+    return {type: UPDATE_VOLUME_STATE, volumeId, volumeState};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SHOW_INFO_CARD = 'SHOW_INFO_CARD';
 
 export interface ShowInfoCard {
@@ -468,27 +488,28 @@ export function updateSettings(settings: Partial<ControlState>): UpdateSettings 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type ControlAction =
-        SelectDataset
-        | UpdateDatasetPlaceGroup
-        | SelectVariable
-        | SelectPlaceGroups
-        | SelectPlace
-        | SelectTime
-        | SetRgbLayerVisibility
-        | IncSelectedTime
-        | SelectTimeRange
-        | SelectTimeSeriesUpdateMode
-        | UpdateTimeAnimation
-        | SetMapInteraction
-        | AddActivity
-        | RemoveActivity
-        | ChangeLocale
-        | UpdateSettings
-        | OpenDialog
-        | CloseDialog
-        | ShowVolumeCard
-        | SetVolumeRenderMode
-        | ShowInfoCard
-        | SetVisibleInfoCardElements
-        | UpdateInfoCardElementCodeMode
-        | FlyTo;
+    SelectDataset
+    | UpdateDatasetPlaceGroup
+    | SelectVariable
+    | SelectPlaceGroups
+    | SelectPlace
+    | SelectTime
+    | SetRgbLayerVisibility
+    | IncSelectedTime
+    | SelectTimeRange
+    | SelectTimeSeriesUpdateMode
+    | UpdateTimeAnimation
+    | SetMapInteraction
+    | AddActivity
+    | RemoveActivity
+    | ChangeLocale
+    | UpdateSettings
+    | OpenDialog
+    | CloseDialog
+    | ShowVolumeCard
+    | SetVolumeRenderMode
+    | UpdateVolumeState
+    | ShowInfoCard
+    | SetVisibleInfoCardElements
+    | UpdateInfoCardElementCodeMode
+    | FlyTo;

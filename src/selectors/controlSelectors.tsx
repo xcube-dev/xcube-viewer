@@ -91,6 +91,9 @@ export const mapProjectionSelector = (state: AppState) => state.controlState.map
 export const timeChunkSizeSelector = (state: AppState) => state.controlState.timeChunkSize;
 export const showDatasetBoundariesSelector = (state: AppState) => state.controlState.showDatasetBoundaries;
 
+
+
+
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
     selectedDatasetIdSelector,
@@ -234,6 +237,25 @@ export const selectedPlaceInfoSelector = createSelector(
             return null;
         }
         return findPlaceInfo(placeGroups, (placeGroup, place) => place.id === placeId);
+    }
+);
+
+export const selectedVolumeIdSelector = createSelector(
+    selectedDatasetIdSelector,
+    selectedVariableNameSelector,
+    selectedPlaceSelector,
+    (datasetId: string | null, variableName: string | null, place: Place | null): string | null => {
+        if (datasetId && variableName) {
+            if (!place) {
+                // return `${datasetId}-${variableName}-all`;
+                return 'x';
+            }
+            if (place.geometry.type === 'Polygon' || place.geometry.type === 'MultiPolygon') {
+                // return `${datasetId}-${variableName}-${place.id}`;
+                return 'x';
+            }
+        }
+        return null;
     }
 );
 

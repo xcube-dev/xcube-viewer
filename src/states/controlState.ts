@@ -54,6 +54,8 @@ export interface ExportSettings {
 }
 
 export type VolumeRenderMode = 'mip' | 'iso';
+export type VolumeState = 'loading' | 'ok' | 'error';
+export type VolumeStates = { [volumeId: string]: VolumeState };
 
 export interface ControlState {
     selectedDatasetId: string | null;
@@ -80,6 +82,7 @@ export interface ControlState {
     mapInteraction: MapInteraction;
     volumeCardOpen: boolean;
     volumeRenderMode: VolumeRenderMode;
+    volumeStates: VolumeStates;
     infoCardOpen: boolean;
     infoCardElementStates: InfoCardElementStates;
     mapProjection: string;
@@ -123,6 +126,8 @@ export function newControlState(): ControlState {
         mapInteraction: 'Point',
         showRgbLayer: false,
         volumeCardOpen: false,
+        volumeRenderMode: 'mip',
+        volumeStates: {},
         infoCardOpen: false,
         infoCardElementStates: {
             dataset: {visible: true, viewMode: 'text'},

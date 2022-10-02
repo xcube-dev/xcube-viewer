@@ -29,16 +29,17 @@ import IconButton from '@material-ui/core/IconButton';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import CloseIcon from '@material-ui/icons/Close';
-import VolumeIcon from '@material-ui/icons/Looks3';
+import VolumeIcon from '@material-ui/icons/ThreeDRotation';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import React from 'react';
-import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { PlaceInfo } from '../model/place';
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
-import { VolumeRenderMode } from "../states/controlState";
+import { VolumeRenderMode, VolumeState, VolumeStates } from "../states/controlState";
+import VolumeCanvas from "./VolumeCanvas";
+// import i18n from '../i18n';
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
@@ -61,25 +62,31 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
 ));
 
 
-interface InfoCardProps extends WithLocale {
+interface VolumeCardProps extends WithLocale {
     volumeCardOpen: boolean;
     showVolumeCard: (infoCardOpen: boolean) => void;
-    volumeRenderMode: VolumeRenderMode;
-    setVolumeRenderMode: (volumeRenderMode: VolumeRenderMode) => any;
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
     selectedPlaceInfo: PlaceInfo | null;
+    volumeId: string | null;
+    volumeRenderMode: VolumeRenderMode;
+    setVolumeRenderMode: (volumeRenderMode: VolumeRenderMode) => any;
+    volumeStates: VolumeStates;
+    updateVolumeState: (volumeId: string, volumeState: VolumeState) => any;
 }
 
-const VolumeCard: React.FC<InfoCardProps> = ({
-                                               volumeCardOpen,
-                                               showVolumeCard,
-                                               volumeRenderMode,
-                                               setVolumeRenderMode,
-                                               selectedDataset,
-                                               selectedVariable,
-                                               selectedPlaceInfo,
-                                           }) => {
+const VolumeCard: React.FC<VolumeCardProps> = ({
+                                                   volumeCardOpen,
+                                                   showVolumeCard,
+                                                   selectedDataset,
+                                                   selectedVariable,
+                                                   selectedPlaceInfo,
+                                                   volumeId,
+                                                   volumeRenderMode,
+                                                   setVolumeRenderMode,
+                                                   volumeStates,
+                                                   updateVolumeState,
+                                               }) => {
     const classes = useStyles();
 
     if (!volumeCardOpen) {
@@ -87,7 +94,7 @@ const VolumeCard: React.FC<InfoCardProps> = ({
     }
 
     const handleVolumeRenderModeChange = (event: React.MouseEvent<HTMLElement>,
-                                           volumeRenderMode: VolumeRenderMode) => {
+                                          volumeRenderMode: VolumeRenderMode) => {
         setVolumeRenderMode(volumeRenderMode);
     };
 
@@ -99,15 +106,30 @@ const VolumeCard: React.FC<InfoCardProps> = ({
         <Card className={classes.card}>
             <CardActions disableSpacing>
                 <VolumeIcon fontSize={'large'} className={classes.info}/>
-                <ToggleButtonGroup key={0} size="small" value={volumeRenderMode}
-                                   onChange={handleVolumeRenderModeChange}>
-                    <ToggleButton key={0} value="mip" disabled={volumeRenderMode !== 'mip'}>
-                        <Tooltip arrow  title={i18n.get('Maximum intensity projection')}>
+                <ToggleButtonGroup
+                    key={0}
+                    size="small"
+                    exclusive={true}
+                    value={volumeRenderMode}
+                    onChange={handleVolumeRenderModeChange}
+                >
+                    <ToggleButton
+                        key={0}
+                        value="mip"
+                        // disabled={volumeRenderMode!=='mip'}
+                    >
+                        {/*TODO: I18N*/}
+                        <Tooltip arrow title={'Maximum intensity projection'}>
                             <span>MIP</span>
                         </Tooltip>
                     </ToggleButton>
-                    <ToggleButton key={1} value="iso" disabled={volumeRenderMode !== 'iso'}>
-                        <Tooltip arrow title={i18n.get('Iso-surface extraction')}>
+                    <ToggleButton
+                        key={1}
+                        value="iso"
+                        // disabled={volumeRenderMode!=='iso'}
+                    >
+                        {/*TODO: I18N*/}
+                        <Tooltip arrow title={'Iso-surface extraction'}>
                             <span>ISO</span>
                         </Tooltip>
                     </ToggleButton>
@@ -117,7 +139,15 @@ const VolumeCard: React.FC<InfoCardProps> = ({
                 </IconButton>
             </CardActions>
             <CardContent className={classes.cardContent}>
-                <canvas style={{width: '100%', height: '680px'}}/>
+                <VolumeCanvas
+                    selectedDataset={selectedDataset}
+                    selectedVariable={selectedVariable}
+                    selectedPlaceInfo={selectedPlaceInfo}
+                    volumeRenderMode={volumeRenderMode}
+                    volumeId={volumeId}
+                    volumeStates={volumeStates}
+                    updateVolumeState={updateVolumeState}
+                />
             </CardContent>
         </Card>
     );

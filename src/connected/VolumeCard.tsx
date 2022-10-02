@@ -27,10 +27,11 @@ import {
     selectedDatasetSelector,
     selectedPlaceInfoSelector,
     selectedVariableSelector,
+    selectedVolumeIdSelector,
 } from '../selectors/controlSelectors';
 
 import { AppState } from '../states/appState';
-import { setVolumeRenderMode, showVolumeCard, } from '../actions/controlActions';
+import { updateVolumeState, setVolumeRenderMode, showVolumeCard } from '../actions/controlActions';
 import VolumeCard from '../components/VolumeCard';
 
 
@@ -38,16 +39,19 @@ const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
         volumeCardOpen: state.controlState.volumeCardOpen,
-        volumeRenderMode: state.controlState.volumeRenderMode,
         selectedDataset: selectedDatasetSelector(state),
         selectedVariable: selectedVariableSelector(state),
         selectedPlaceInfo: selectedPlaceInfoSelector(state),
+        volumeRenderMode: state.controlState.volumeRenderMode,
+        volumeId: selectedVolumeIdSelector(state),
+        volumeStates: state.controlState.volumeStates,
     }
 };
 
 const mapDispatchToProps = {
     showVolumeCard,
     setVolumeRenderMode,
+    updateVolumeState,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VolumeCard);

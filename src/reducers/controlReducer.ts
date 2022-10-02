@@ -49,7 +49,7 @@ import {
     SHOW_VOLUME_CARD,
     UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
     UPDATE_SETTINGS,
-    UPDATE_TIME_ANIMATION,
+    UPDATE_TIME_ANIMATION, UPDATE_VOLUME_STATE,
 } from '../actions/controlActions';
 import {
     ADD_USER_PLACE,
@@ -318,6 +318,14 @@ export function controlReducer(state: ControlState | undefined,
                 volumeRenderMode: action.volumeRenderMode,
             };
             storeUserSettings(state);
+            return state;
+        }
+        case UPDATE_VOLUME_STATE: {
+            const {volumeId, volumeState} = action;
+            state = {
+                ...state,
+                volumeStates: {...state.volumeStates, [volumeId]: volumeState}
+            };
             return state;
         }
         case SHOW_INFO_CARD: {

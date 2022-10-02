@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2022 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,31 +22,12 @@
  * SOFTWARE.
  */
 
-import { TileSourceOptions } from './tile';
-import i18n from "../i18n";
-import { VolumeRenderMode } from "../states/controlState";
-
-export interface Variable {
-    id: string;
-    name: string;
-    dims: string[],
-    shape: number[],
-    dtype: string;
-    units: string;
-    title: string;
-    timeChunkSize: number | null;
-    // tileUrl is new since xcube 0.11
-    tileUrl?: string;
-    tileLevelMin?: number;
-    tileLevelMax?: number;
-    // tileSourceOptions are longer used since xcube 0.11
-    tileSourceOptions?: TileSourceOptions;
-    colorBarName: string;
-    colorBarMin: number;
-    colorBarMax: number;
-    opacity?: number;
-    volumeRenderMode?: VolumeRenderMode;
-    volumeIsoThreshold?: number;
-    htmlRepr?: string;
-    attrs: { [name: string]: any };
+export function isWebGL2Available(): boolean {
+    try {
+        const canvas = document.createElement('canvas');
+        return !!(window.WebGL2RenderingContext && canvas.getContext('webgl2'));
+    } catch (e) {
+        return false;
+    }
 }
+

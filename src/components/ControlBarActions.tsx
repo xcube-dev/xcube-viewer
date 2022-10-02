@@ -29,7 +29,7 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/s
 import Tooltip from '@material-ui/core/Tooltip';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import InfoIcon from '@material-ui/icons/Info';
-import VolumeIcon from '@material-ui/icons/Looks3';
+import VolumeIcon from '@material-ui/icons/ThreeDRotation';
 import MyLocationIcon from '@material-ui/icons/MyLocation';
 import * as React from 'react';
 
