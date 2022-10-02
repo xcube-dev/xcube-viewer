@@ -247,12 +247,10 @@ export const selectedVolumeIdSelector = createSelector(
     (datasetId: string | null, variableName: string | null, place: Place | null): string | null => {
         if (datasetId && variableName) {
             if (!place) {
-                // return `${datasetId}-${variableName}-all`;
-                return 'x';
+                return `${datasetId}-${variableName}-all`;
             }
             if (place.geometry.type === 'Polygon' || place.geometry.type === 'MultiPolygon') {
-                // return `${datasetId}-${variableName}-${place.id}`;
-                return 'x';
+                return `${datasetId}-${variableName}-${place.id}`;
             }
         }
         return null;

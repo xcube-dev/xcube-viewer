@@ -27,19 +27,25 @@ import { default as OlVectorLayer } from 'ol/layer/Vector';
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
 import {
-    CONFIGURE_SERVERS,
     ADD_USER_PLACE,
-    DataAction, REMOVE_ALL_TIME_SERIES,
+    CONFIGURE_SERVERS,
+    DataAction,
+    REMOVE_ALL_TIME_SERIES,
+    REMOVE_ALL_USER_PLACES,
     REMOVE_TIME_SERIES_GROUP,
+    REMOVE_USER_PLACE,
     UPDATE_COLOR_BARS,
+    UPDATE_DATASET_PLACE_GROUP,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES, UPDATE_SERVER_INFO,
-    UPDATE_VARIABLE_COLOR_BAR
+    UPDATE_SERVER_INFO,
+    UPDATE_TIME_SERIES,
+    UPDATE_VARIABLE_COLOR_BAR, UPDATE_VARIABLE_VOLUME
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
 import { Place } from "../model/place";
 import { TimeSeries, TimeSeriesGroup } from "../model/timeSeries";
+import { Variable } from "../model/variable";
 
 
 export function dataReducer(state: DataState | undefined, action: DataAction): DataState {
@@ -54,26 +60,22 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             return {...state, datasets: action.datasets};
         }
         case UPDATE_VARIABLE_COLOR_BAR: {
-            const datasetIndex = state.datasets.findIndex(ds => ds.id === action.datasetId);
-            if (datasetIndex >= 0) {
-                let dataset = state.datasets[datasetIndex];
-                const variableIndex = dataset.variables.findIndex(v => v.name === action.variableName);
-                if (variableIndex >= 0) {
-                    let variable = dataset.variables[variableIndex];
-                    let datasets = state.datasets.slice();
-                    let variables = dataset.variables.slice();
-                    variables[variableIndex] = {
-                        ...variable,
-                        colorBarMin: action.colorBarMinMax[0],
-                        colorBarMax: action.colorBarMinMax[1],
-                        colorBarName: action.colorBarName,
-                        opacity: action.opacity,
-                    };
-                    datasets[datasetIndex] = {...dataset, variables};
-                    return {...state, datasets};
-                }
-            }
-            return state;
+            const {datasetId, variableName, colorBarMinMax, colorBarName, opacity} = action;
+            const variableProps = {
+                colorBarMin: colorBarMinMax[0],
+                colorBarMax: colorBarMinMax[1],
+                colorBarName,
+                opacity,
+            };
+            return updateVariableProps(state, datasetId, variableName, variableProps);
+        }
+        case UPDATE_VARIABLE_VOLUME: {
+            const {datasetId, variableName, volumeRenderMode, volumeIsoThreshold} = action;
+            const variableProps = {
+                volumeRenderMode,
+                volumeIsoThreshold,
+            };
+            return updateVariableProps(state, datasetId, variableName, variableProps);
         }
         case UPDATE_DATASET_PLACE_GROUP: {
             // Issue #208:
@@ -122,7 +124,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 let timeSeriesGroups = state.timeSeriesGroups;
                 timeSeriesArray.forEach(ts => {
                     timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                                                              ts, 'remove', 'append');
+                        ts, 'remove', 'append');
                 });
                 return {
                     ...state,
@@ -141,7 +143,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             let timeSeriesGroups = state.timeSeriesGroups;
             timeSeriesArray.forEach(ts => {
                 timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                                                          ts, 'remove', 'append');
+                    ts, 'remove', 'append');
             });
             return {
                 ...state,
@@ -155,7 +157,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
         case UPDATE_TIME_SERIES: {
             const {timeSeries, updateMode, dataMode} = action;
             const timeSeriesGroups = updateTimeSeriesGroups(state.timeSeriesGroups,
-                                                            timeSeries, updateMode, dataMode);
+                timeSeries, updateMode, dataMode);
             if (timeSeriesGroups !== state.timeSeriesGroups) {
                 return {...state, timeSeriesGroups};
             }
@@ -185,6 +187,25 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
     return state!;
 }
 
+function updateVariableProps(state: DataState,
+                             datasetId: string,
+                             variableName: string,
+                             variableProps: Partial<Variable>) {
+    const datasetIndex = state.datasets.findIndex(ds => ds.id === datasetId);
+    if (datasetIndex >= 0) {
+        let dataset = state.datasets[datasetIndex];
+        const variableIndex = dataset.variables.findIndex(v => v.name === variableName);
+        if (variableIndex >= 0) {
+            let variable = dataset.variables[variableIndex];
+            let datasets = state.datasets.slice();
+            let variables = dataset.variables.slice();
+            variables[variableIndex] = {...variable, ...variableProps};
+            datasets[datasetIndex] = {...dataset, variables};
+            return {...state, datasets};
+        }
+    }
+    return state;
+}
 
 function removeUserPlacesFromLayer(userPlaceIds: string[]) {
     if (MAP_OBJECTS.userLayer) {
@@ -212,8 +233,8 @@ function updateTimeSeriesGroups(timeSeriesGroups: TimeSeriesGroup[],
         const timeSeriesGroup = timeSeriesGroups[tsgIndex];
         const timeSeriesArray = timeSeriesGroup.timeSeriesArray;
         const tsIndex = timeSeriesArray.findIndex(ts => ts.source.datasetId === currentTimeSeries.source.datasetId
-                                                        && ts.source.variableName === currentTimeSeries.source.variableName
-                                                        && ts.source.placeId === currentTimeSeries.source.placeId);
+            && ts.source.variableName === currentTimeSeries.source.variableName
+            && ts.source.placeId === currentTimeSeries.source.placeId);
         let newTimeSeriesArray;
         if (tsIndex >= 0) {
             const oldTimeSeries = timeSeriesArray[tsIndex];

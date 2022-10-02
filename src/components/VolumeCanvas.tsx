@@ -42,10 +42,9 @@ interface VolumeCanvasProps extends WithLocale {
     selectedPlaceInfo: PlaceInfo | null;
     volumeId: string | null;
     volumeRenderMode: VolumeRenderMode;
+    volumeIsoThreshold: number;
     volumeStates: VolumeStates;
     updateVolumeState: (volumeId: string, volumeState: VolumeState) => any;
-    // volumeIsoThreshold: number;
-    // setVolumeIsoThreshold: (isoThreshold: number) => void;
 }
 
 const CANVAS_STYLE = {width: '100%', height: '680px'};
@@ -66,6 +65,17 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         console.debug('VolumeCanvas.constructor:', this.canvasRef.current, volumeCache);
     }
 
+    private static getVolumeOptions(props: Readonly<VolumeCanvasProps>) {
+        const {selectedVariable, volumeIsoThreshold, volumeRenderMode} = props;
+        return {
+            value1: !!selectedVariable ? selectedVariable.colorBarMin : 0,
+            value2: !!selectedVariable ? selectedVariable.colorBarMax : 1,
+            renderMode: volumeRenderMode,
+            isoThreshold: volumeIsoThreshold,
+            cmName: 'viridis',  // TODO (forman)
+        };
+    }
+
     componentDidMount(): void {
         console.debug('VolumeCanvas.componentDidMount:', this.canvasRef.current, volumeCache);
         this.updateVolumeScene();
@@ -81,61 +91,27 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         this.volumeScene = null;
     }
 
-    private updateVolumeScene() {
-        const canvas = this.canvasRef.current;
-        if (canvas === null) {
-            this.volumeScene = null;
-            return;
-        }
-        if (this.volumeScene === null || this.volumeScene.canvas !== canvas) {
-            this.volumeScene = new VolumeScene(canvas);
-        }
-        let volumeSet = false;
-        if (this.props.volumeId) {
-            const volume = volumeCache[this.props.volumeId];
-            if (volume) {
-                console.log("GOT VOLUME!");
-                this.volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
-                volumeSet = true;
-            } else {
-                console.log("GOT NO VOLUME!");
-            }
-        }
-        if (!volumeSet) {
-            this.volumeScene.setVolumeOptions(VolumeCanvas.getVolumeOptions(this.props));
-        }
-    }
-
-    private static getVolumeOptions(props: Readonly<VolumeCanvasProps>) {
-        const {selectedVariable, volumeIsoThreshold, volumeRenderMode} = props;
-        return {
-            value1: 0, // selectedVariable?.colorBarMin || 0,
-            value2: 22, // selectedVariable?.colorBarMax || 1,
-            renderMode: volumeRenderMode,
-            isoThreshold: 10, // volumeIsoThreshold,
-            cmName: 'viridis',
-        };
-    }
-
     handleLoadVolume() {
         const volumeScene = this.volumeScene;
         if (volumeScene !== null) {
-            const {volumeId, updateVolumeState} = this.props;
-            console.info('updateVolumeState', updateVolumeState, volumeId)
-            updateVolumeState(volumeId!, 'loading');
-            const url = "http://127.0.0.1:8080/volumes/local/conc_chl?dummy=4";
-            new NRRDLoader().load(
-                url,
-                (volume: Volume) => {
-                    updateVolumeState(volumeId!, 'ok');
-                    volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
-                    volumeCache[volumeId!] = volume;
-                },
-                () => {
-                },
-                () => {
-                    updateVolumeState(volumeId!, 'error');
-                });
+            const {selectedDataset, selectedVariable, volumeId, updateVolumeState} = this.props;
+            if (selectedDataset && selectedVariable && volumeId) {
+                console.info('updateVolumeState', updateVolumeState, volumeId)
+                updateVolumeState(volumeId, 'loading');
+                const url = `http://127.0.0.1:8080/volumes/${selectedDataset.id}/${selectedVariable.name}?dummy=4`;
+                new NRRDLoader().load(
+                    url,
+                    (volume: Volume) => {
+                        updateVolumeState(volumeId, 'ok');
+                        volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
+                        volumeCache[volumeId] = volume;
+                    },
+                    () => {
+                    },
+                    () => {
+                        updateVolumeState(volumeId, 'error');
+                    });
+            }
         }
     }
 
@@ -182,6 +158,31 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 />
             </>
         );
+    }
+
+    private updateVolumeScene() {
+        const canvas = this.canvasRef.current;
+        if (canvas === null) {
+            this.volumeScene = null;
+            return;
+        }
+        if (this.volumeScene === null || this.volumeScene.canvas !== canvas) {
+            this.volumeScene = new VolumeScene(canvas);
+        }
+        let volumeSet = false;
+        if (this.props.volumeId) {
+            const volume = volumeCache[this.props.volumeId];
+            if (volume) {
+                console.log("GOT VOLUME!");
+                this.volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
+                volumeSet = true;
+            } else {
+                console.log("GOT NO VOLUME!");
+            }
+        }
+        if (!volumeSet) {
+            this.volumeScene.setVolumeOptions(VolumeCanvas.getVolumeOptions(this.props));
+        }
     }
 }
 

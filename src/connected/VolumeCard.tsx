@@ -31,7 +31,8 @@ import {
 } from '../selectors/controlSelectors';
 
 import { AppState } from '../states/appState';
-import { updateVolumeState, setVolumeRenderMode, showVolumeCard } from '../actions/controlActions';
+import { setVolumeRenderMode, showVolumeCard, updateVolumeState } from '../actions/controlActions';
+import { updateVariableVolume } from "../actions/dataActions";
 import VolumeCard from '../components/VolumeCard';
 
 
@@ -52,6 +53,7 @@ const mapDispatchToProps = {
     showVolumeCard,
     setVolumeRenderMode,
     updateVolumeState,
+    updateVariableVolume,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VolumeCard);

@@ -54,6 +54,7 @@ import {
     selectDataset,
 } from './controlActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
+import { VolumeRenderMode } from "../states/controlState";
 
 const saveAs = require('file-saver');
 
@@ -74,16 +75,16 @@ export function updateServerInfo() {
         dispatch(addActivity(UPDATE_SERVER_INFO, i18n.get('Connecting to server')));
 
         api.getServerInfo(apiServer.url)
-           .then((serverInfo: ApiServerInfo) => {
-               dispatch(_updateServerInfo(serverInfo));
-           })
-           .catch(error => {
-               dispatch(postMessage('error', error));
-           })
+            .then((serverInfo: ApiServerInfo) => {
+                dispatch(_updateServerInfo(serverInfo));
+            })
+            .catch(error => {
+                dispatch(postMessage('error', error));
+            })
             // 'then' because Microsoft Edge does not understand method finally
-           .then(() => {
-               dispatch(removeActivity(UPDATE_SERVER_INFO));
-           });
+            .then(() => {
+                dispatch(removeActivity(UPDATE_SERVER_INFO));
+            });
     };
 }
 
@@ -128,21 +129,21 @@ export function updateDatasets() {
         dispatch(addActivity(UPDATE_DATASETS, i18n.get('Loading data')));
 
         api.getDatasets(apiServer.url, getState().userAuthState.accessToken)
-           .then((datasets: Dataset[]) => {
-               dispatch(_updateDatasets(datasets));
-               if (datasets.length > 0) {
-                   const selectedDatasetId = getState().controlState.selectedDatasetId || datasets[0].id;
-                   dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
-               }
-           })
-           .catch(error => {
-               dispatch(postMessage('error', error));
-               dispatch(_updateDatasets([]));
-           })
+            .then((datasets: Dataset[]) => {
+                dispatch(_updateDatasets(datasets));
+                if (datasets.length > 0) {
+                    const selectedDatasetId = getState().controlState.selectedDatasetId || datasets[0].id;
+                    dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
+                }
+            })
+            .catch(error => {
+                dispatch(postMessage('error', error));
+                dispatch(_updateDatasets([]));
+            })
             // 'then' because Microsoft Edge does not understand method finally
-           .then(() => {
-               dispatch(removeActivity(UPDATE_DATASETS));
-           });
+            .then(() => {
+                dispatch(removeActivity(UPDATE_DATASETS));
+            });
     };
 }
 
@@ -238,33 +239,33 @@ export function addTimeSeries() {
             const timeLabels = selectedDatasetTimeDim.labels;
             const numTimeLabels = timeLabels.length;
 
-            timeChunkSize = timeChunkSize > 0 ? timeChunkSize : numTimeLabels;
+            timeChunkSize = timeChunkSize > 0 ? timeChunkSize:numTimeLabels;
 
             let endTimeIndex = numTimeLabels - 1;
             let startTimeIndex = endTimeIndex - timeChunkSize + 1;
 
             const getTimeSeriesChunk = () => {
-                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
+                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex]:null;
                 const endDateLabel = timeLabels[endTimeIndex];
                 return api.getTimeSeriesForGeometry(apiServer.url,
-                                                    selectedDatasetId,
-                                                    selectedVariable,
-                                                    selectedPlace.id,
-                                                    selectedPlace.geometry,
-                                                    startDateLabel,
-                                                    endDateLabel,
-                                                    useMedian,
-                                                    inclStDev,
-                                                    getState().userAuthState.accessToken);
+                    selectedDatasetId,
+                    selectedVariable,
+                    selectedPlace.id,
+                    selectedPlace.geometry,
+                    startDateLabel,
+                    endDateLabel,
+                    useMedian,
+                    inclStDev,
+                    getState().userAuthState.accessToken);
             };
 
             const successAction = (timeSeries: TimeSeries | null) => {
                 if (timeSeries !== null && isValidPlace(placeGroups, selectedPlace.id)) {
                     const hasMore = startTimeIndex > 0;
-                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
+                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels:1.0;
                     dispatch(updateTimeSeries({...timeSeries, dataProgress},
-                                              timeSeriesUpdateMode,
-                                              endTimeIndex === numTimeLabels - 1 ? 'new' : 'append'));
+                        timeSeriesUpdateMode,
+                        endTimeIndex === numTimeLabels - 1 ? 'new':'append'));
                     if (hasMore && isValidPlace(placeGroups, selectedPlace.id)) {
                         startTimeIndex -= timeChunkSize;
                         endTimeIndex -= timeChunkSize;
@@ -373,12 +374,12 @@ export function updateColorBars() {
         const apiServer = selectedServerSelector(getState());
 
         api.getColorBars(apiServer.url)
-           .then((colorBars: ColorBars) => {
-               dispatch(_updateColorBars(colorBars));
-           })
-           .catch(error => {
-               dispatch(postMessage('error', error));
-           });
+            .then((colorBars: ColorBars) => {
+                dispatch(_updateColorBars(colorBars));
+            })
+            .catch(error => {
+                dispatch(postMessage('error', error));
+            });
     };
 }
 
@@ -400,9 +401,11 @@ export interface UpdateVariableColorBar {
     opacity: number;
 }
 
-export function updateVariableColorBar(colorBarMinMax: [number, number],
-                                       colorBarName: string,
-                                       opacity: number) {
+export function updateVariableColorBar(
+    colorBarMinMax: [number, number],
+    colorBarName: string,
+    opacity: number
+) {
     return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
         const selectedDatasetId = getState().controlState.selectedDatasetId;
         const selectedVariableName = getState().controlState.selectedVariableName;
@@ -415,11 +418,13 @@ export function updateVariableColorBar(colorBarMinMax: [number, number],
     };
 }
 
-export function _updateVariableColorBar(datasetId: string,
-                                        variableName: string,
-                                        colorBarMinMax: [number, number],
-                                        colorBarName: string,
-                                        opacity: number): UpdateVariableColorBar {
+export function _updateVariableColorBar(
+    datasetId: string,
+    variableName: string,
+    colorBarMinMax: [number, number],
+    colorBarName: string,
+    opacity: number
+): UpdateVariableColorBar {
     return {
         type: UPDATE_VARIABLE_COLOR_BAR,
         datasetId,
@@ -427,6 +432,34 @@ export function _updateVariableColorBar(datasetId: string,
         colorBarMinMax,
         colorBarName,
         opacity
+    };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+export const UPDATE_VARIABLE_VOLUME = 'UPDATE_VARIABLE_VOLUME';
+
+export interface UpdateVariableVolume {
+    type: typeof UPDATE_VARIABLE_VOLUME;
+    datasetId: string;
+    variableName: string;
+    volumeRenderMode: VolumeRenderMode;
+    volumeIsoThreshold: number;
+}
+
+export function updateVariableVolume(
+    datasetId: string,
+    variableName: string,
+    volumeRenderMode: VolumeRenderMode,
+    volumeIsoThreshold: number
+): UpdateVariableVolume {
+    return {
+        type: UPDATE_VARIABLE_VOLUME,
+        datasetId,
+        variableName,
+        volumeRenderMode,
+        volumeIsoThreshold,
     };
 }
 
@@ -461,15 +494,15 @@ export function exportData() {
         }
 
         _exportData(getState().dataState.timeSeriesGroups,
-                    placeGroups,
-                    {
-                        includeTimeSeries: exportTimeSeries,
-                        includePlaces: exportPlaces,
-                        separator: exportTimeSeriesSeparator,
-                        placesAsCollection: exportPlacesAsCollection,
-                        zip: exportZipArchive,
-                        fileName: exportFileName,
-                    }
+            placeGroups,
+            {
+                includeTimeSeries: exportTimeSeries,
+                includePlaces: exportPlaces,
+                separator: exportTimeSeriesSeparator,
+                placesAsCollection: exportPlacesAsCollection,
+                zip: exportZipArchive,
+                fileName: exportFileName,
+            }
         );
     };
 }
@@ -505,7 +538,7 @@ class FileExporter extends Exporter {
 
     write(path: string, content: string) {
         const blob = new Blob([content],
-                              {type: "text/plain;charset=utf-8"});
+            {type: "text/plain;charset=utf-8"});
         saveAs(blob, path);
     }
 
@@ -559,7 +592,7 @@ function _exportData(timeSeriesGroups: TimeSeriesGroup[],
         const {colNames, dataRows, referencedPlaces} = timeSeriesGroupsToTable(timeSeriesGroups, placeGroups);
         const validTypes: { [typeName: string]: boolean } = {number: true, string: true};
         const csvHeaderRow = colNames.join(separator);
-        const csvDataRows = dataRows.map(row => row.map(value => validTypes[typeof value] ? value + '' : '').join(separator));
+        const csvDataRows = dataRows.map(row => row.map(value => validTypes[typeof value] ? value + '':'').join(separator));
         const csvText = [csvHeaderRow].concat(csvDataRows).join('\n');
         exporter.write(`${fileName}.txt`, csvText);
         placesToExport = referencedPlaces;
@@ -581,11 +614,11 @@ function _exportData(timeSeriesGroups: TimeSeriesGroup[],
                 features: Object.keys(placesToExport).map(placeId => placesToExport![placeId])
             };
             exporter.write(`${fileName}.geojson`,
-                           JSON.stringify(collection, null, 2));
+                JSON.stringify(collection, null, 2));
         } else {
             Object.keys(placesToExport).forEach(placeId => {
                 exporter.write(`${placeId}.geojson`,
-                               JSON.stringify(placesToExport![placeId], null, 2));
+                    JSON.stringify(placesToExport![placeId], null, 2));
             });
         }
     }
@@ -646,4 +679,5 @@ export type DataAction =
     | RemoveAllTimeSeries
     | ConfigureServers
     | UpdateColorBars
-    | UpdateVariableColorBar;
+    | UpdateVariableColorBar
+    | UpdateVariableVolume;
