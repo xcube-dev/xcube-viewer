@@ -1,4 +1,12 @@
-## Changes in version 0.12.1 (in development)
+## Changes in version 0.13.0 (in development)
+
+* Color bar management has been slightly improved:  
+  - Color bars can now be reversed.
+  - Color bar in the legend is now rendered according to the current
+    settings "Hide small values", "Reverse", and "Opacity".
+
+* Export time series button is disabled, when there are no 
+  time-series to download. (#171)
 
 ## Changes in version 0.12.0 
 
@@ -33,7 +41,7 @@
   For this to work, the setting "Number of data points in a time series update" 
   has been replaced by "_Minimal_ number of data points in a time series update".
   The effective number of data points is now always an integer multiple of the
-  actual variable's time chunk size.
+  actual variable's time chunk size. (#166)
 
 * The style of the title and icons of the app's header bar can now be
   customized by two new branding properties `` and `` that can provide
