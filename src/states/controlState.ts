@@ -54,7 +54,8 @@ export interface ExportSettings {
 }
 
 export type VolumeRenderMode = 'mip' | 'iso';
-export type VolumeState = 'loading' | 'ok' | 'error';
+export type VolumeStatus = 'loading' | 'ok' | 'error';
+export type VolumeState = { status: VolumeStatus; message?: string; };
 export type VolumeStates = { [volumeId: string]: VolumeState };
 
 export interface ControlState {

@@ -33,7 +33,6 @@ import { VolumeScene } from "../volume/VolumeScene";
 import { Volume } from "../volume/Volume";
 import { NRRDLoader } from "../volume/NRRDLoader";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { updateVolumeState } from "../actions/controlActions";
 import { BBox, Position } from "geojson";
 
 
@@ -48,7 +47,24 @@ interface VolumeCanvasProps extends WithLocale {
     updateVolumeState: (volumeId: string, volumeState: VolumeState) => any;
 }
 
-const CANVAS_STYLE = {width: '100%', height: '680px'};
+const CANVAS_STYLE: React.CSSProperties = {
+    width: '100%',
+    height: '680px'
+};
+
+const MESSAGE_STYLE: React.CSSProperties = {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    margin: '0.5em'
+};
+
+const LOAD_STYLE: React.CSSProperties = {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    margin: '1em'
+};
 
 const volumeCache: { [volumeId: string]: Volume } = {};
 
@@ -63,7 +79,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         this.canvasRef = React.createRef<HTMLCanvasElement>();
         this.volumeScene = null;
         this.handleLoadVolume = this.handleLoadVolume.bind(this);
-        console.debug('VolumeCanvas.constructor:', this.canvasRef.current, volumeCache);
+        // console.debug('VolumeCanvas.constructor:', this.canvasRef.current, volumeCache);
     }
 
     private static getVolumeOptions(props: Readonly<VolumeCanvasProps>) {
@@ -78,28 +94,28 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
     }
 
     componentDidMount(): void {
-        console.debug('VolumeCanvas.componentDidMount:', this.canvasRef.current, volumeCache);
+        // console.debug('VolumeCanvas.componentDidMount:', this.canvasRef.current, volumeCache);
         this.updateVolumeScene();
     }
 
     componentDidUpdate(prevProps: Readonly<VolumeCanvasProps>): void {
-        console.debug('VolumeCanvas.componentDidUpdate:', this.canvasRef.current, volumeCache);
+        // console.debug('VolumeCanvas.componentDidUpdate:', this.canvasRef.current, volumeCache);
         this.updateVolumeScene();
     }
 
     componentWillUnmount(): void {
-        console.debug('VolumeCanvas.componentWillUnmount:', this.canvasRef.current, volumeCache);
+        // console.debug('VolumeCanvas.componentWillUnmount:', this.canvasRef.current, volumeCache);
         this.volumeScene = null;
     }
 
-
     handleLoadVolume() {
+        console.info("Raiser!")
         const volumeScene = this.volumeScene;
         if (volumeScene !== null) {
+            console.info("volumeScene !== null")
             const {selectedDataset, selectedVariable, selectedPlaceInfo, volumeId, updateVolumeState} = this.props;
             if (selectedDataset && selectedVariable && volumeId) {
-                console.info('updateVolumeState', updateVolumeState, volumeId);
-                updateVolumeState(volumeId, 'loading');
+                updateVolumeState(volumeId, {status: 'loading'});
                 let bboxArg: string = '';
                 if (selectedPlaceInfo) {
                     let bBox: BBox | null = null;
@@ -120,58 +136,92 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 const url = 'http://127.0.0.1:8080/volumes/'
                     + `${selectedDataset.id}/${selectedVariable.name}`
                     + `?${noCacheArg}&${bboxArg}`;
+                console.debug(`url = ${url}`);
                 new NRRDLoader().load(
                     url,
                     (volume: Volume) => {
-                        updateVolumeState(volumeId, 'ok');
+                        updateVolumeState(volumeId, {status: 'ok'});
                         volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
                         volumeCache[volumeId] = volume;
                     },
                     () => {
                     },
                     (e: any) => {
-                        updateVolumeState(volumeId, 'error');
-                    });
+                        updateVolumeState(volumeId, {status: 'error', message: `${e}`});
+                    }
+                );
             }
         }
     }
 
     render(): React.ReactNode {
-        console.debug('VolumeCanvas.render-1:', this.canvasRef.current);
+        // console.debug('VolumeCanvas.render-1:', this.canvasRef.current);
         const {volumeId} = this.props;
 
-        let altComp;
+        let messageComp;
+        let loadComp;
+        let canvasComp = (
+            <canvas
+                id={"VolumeCanvas-canvas"}
+                ref={this.canvasRef}
+                style={CANVAS_STYLE}
+            />
+        );
         if (!volumeId) {
-            altComp = (
+            /*TODO: I18N*/
+            messageComp = (
                 <>
                     <Typography variant={"subtitle2"}>
-                        /*TODO: I18N*/
-                        {'Cannot display volume'}
+                        {'Cannot display 3D volume'}
                     </Typography>
                     <Typography variant="body2">
-                        /*TODO: I18N*/
                         {'To display a volume, a variable and a place that represents an area must be selected.'}
                     </Typography>
                 </>
             );
         } else {
             const volumeState = this.props.volumeStates[volumeId];
-            if (volumeState === 'loading') {
-                altComp = (<CircularProgress style={{margin: 10}}/>);
-            } else if (volumeState === 'error') {
+
+            if (!volumeState || volumeState.status === 'error' || !volumeCache[volumeId]) {
                 /*TODO: I18N*/
-                altComp = (<Typography variant="body2">{'Error loading volume!'}</Typography>);
-            } else if (volumeState !== 'ok' || !volumeCache[volumeId]) {
-                altComp = (
-                    /*TODO: I18N*/
-                    <Button onClick={this.handleLoadVolume} color='primary'>{'Load Volume Data'}</Button>
+                loadComp = (
+                    <div style={LOAD_STYLE}>
+                        <Button
+                            onClick={this.handleLoadVolume}
+                            color='primary'
+                        >
+                            {'Load Volume Data'}
+                        </Button>
+                    </div>
                 );
+            }
+
+            if (volumeState) {
+                if (volumeState.status === 'loading') {
+                    messageComp = (<CircularProgress style={{margin: 10}}/>);
+                } else if (volumeState.status === 'error') {
+                    /*TODO: I18N*/
+                    messageComp = (
+                        <Typography variant="body2">{`Failed loading volume: ${volumeState.message}`}</Typography>);
+                }
             }
         }
 
+
+        if (messageComp) {
+            messageComp = (
+                <div style={MESSAGE_STYLE}>
+                    {messageComp}
+                </div>
+            );
+        }
+
+        // Note, it is important to always have the canvas element
+        // rendered here, so it is not remounted.
         return (
             <>
-                {altComp}
+                {messageComp}
+                {loadComp}
                 <canvas
                     id={"VolumeCanvas-canvas"}
                     ref={this.canvasRef}
@@ -187,21 +237,18 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
             this.volumeScene = null;
             return;
         }
+        let volume;
+        if (this.props.volumeId) {
+            volume = volumeCache[this.props.volumeId];
+        }
+        let isNewScene = false;
         if (this.volumeScene === null || this.volumeScene.canvas !== canvas) {
             this.volumeScene = new VolumeScene(canvas);
+            isNewScene = true;
         }
-        let volumeSet = false;
-        if (this.props.volumeId) {
-            const volume = volumeCache[this.props.volumeId];
-            if (volume) {
-                console.log("GOT VOLUME!");
-                this.volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
-                volumeSet = true;
-            } else {
-                console.log("GOT NO VOLUME!");
-            }
-        }
-        if (!volumeSet) {
+        if (isNewScene && !!volume) {
+            this.volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
+        } else {
             this.volumeScene.setVolumeOptions(VolumeCanvas.getVolumeOptions(this.props));
         }
     }

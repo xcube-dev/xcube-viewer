@@ -51,6 +51,7 @@ import {
 } from '../states/controlState';
 import { UPDATE_DATASET_PLACE_GROUP, updateDatasetPlaceGroup, UpdateDatasetPlaceGroup, } from './dataActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
+import { BBox } from "geojson";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -139,10 +140,10 @@ export const FLY_TO = 'FLY_TO';
 export interface FlyTo {
     type: typeof FLY_TO;
     mapId: string;
-    location: OlGeometry | OlExtent | null;
+    location: OlGeometry | OlExtent | BBox | null;
 }
 
-export function flyTo(location: OlGeometry | OlExtent | null): FlyTo {
+export function flyTo(location: OlGeometry | OlExtent | BBox | null): FlyTo {
     return {type: FLY_TO, mapId: 'map', location};
 }
 

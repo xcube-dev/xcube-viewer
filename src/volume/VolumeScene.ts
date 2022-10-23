@@ -178,6 +178,7 @@ export class VolumeScene {
 
     setVolumeOptions(options: VolumeOptions) {
         const material = this.material;
+        console.log('material', material)
         if (material !== null) {
             const {value1, value2, isoThreshold, renderMode, cmName} = options;
             const uniforms = material.uniforms;
