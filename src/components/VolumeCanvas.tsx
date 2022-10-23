@@ -34,6 +34,7 @@ import { Volume } from "../volume/Volume";
 import { NRRDLoader } from "../volume/NRRDLoader";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { updateVolumeState } from "../actions/controlActions";
+import { BBox, Position } from "geojson";
 
 
 interface VolumeCanvasProps extends WithLocale {
@@ -68,8 +69,8 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
     private static getVolumeOptions(props: Readonly<VolumeCanvasProps>) {
         const {selectedVariable, volumeIsoThreshold, volumeRenderMode} = props;
         return {
-            value1: !!selectedVariable ? selectedVariable.colorBarMin : 0,
-            value2: !!selectedVariable ? selectedVariable.colorBarMax : 1,
+            value1: !!selectedVariable ? selectedVariable.colorBarMin:0,
+            value2: !!selectedVariable ? selectedVariable.colorBarMax:1,
             renderMode: volumeRenderMode,
             isoThreshold: volumeIsoThreshold,
             cmName: 'viridis',  // TODO (forman)
@@ -91,14 +92,34 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         this.volumeScene = null;
     }
 
+
     handleLoadVolume() {
         const volumeScene = this.volumeScene;
         if (volumeScene !== null) {
-            const {selectedDataset, selectedVariable, volumeId, updateVolumeState} = this.props;
+            const {selectedDataset, selectedVariable, selectedPlaceInfo, volumeId, updateVolumeState} = this.props;
             if (selectedDataset && selectedVariable && volumeId) {
-                console.info('updateVolumeState', updateVolumeState, volumeId)
+                console.info('updateVolumeState', updateVolumeState, volumeId);
                 updateVolumeState(volumeId, 'loading');
-                const url = `http://127.0.0.1:8080/volumes/${selectedDataset.id}/${selectedVariable.name}?dummy=4`;
+                let bboxArg: string = '';
+                if (selectedPlaceInfo) {
+                    let bBox: BBox | null = null;
+                    if (selectedPlaceInfo.place.geometry.type === 'Polygon') {
+                        bBox = getBBoxFromPolygon(selectedPlaceInfo.place.geometry.coordinates[0]);
+                    } else if (selectedPlaceInfo.place.geometry.type === 'MultiPolygon') {
+                        const bBoxes: BBox[] = [];
+                        for (let i = 0; i < selectedPlaceInfo.place.geometry.coordinates.length; i++) {
+                            bBoxes.push(getBBoxFromPolygon(selectedPlaceInfo.place.geometry.coordinates[i][0]));
+                        }
+                        bBox = getBBoxFromBBoxes(bBoxes);
+                    }
+                    if (bBox !== null) {
+                        bboxArg = `bbox=${bBox[0]},${bBox[1]},${bBox[2]},${bBox[3]}`;
+                    }
+                }
+                const noCacheArg = `dummy=${new Date().toLocaleTimeString()}`;
+                const url = 'http://127.0.0.1:8080/volumes/'
+                    + `${selectedDataset.id}/${selectedVariable.name}`
+                    + `?${noCacheArg}&${bboxArg}`;
                 new NRRDLoader().load(
                     url,
                     (volume: Volume) => {
@@ -108,7 +129,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                     },
                     () => {
                     },
-                    () => {
+                    (e: any) => {
                         updateVolumeState(volumeId, 'error');
                     });
             }
@@ -143,7 +164,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
             } else if (volumeState !== 'ok' || !volumeCache[volumeId]) {
                 altComp = (
                     /*TODO: I18N*/
-                    <Button onClick={this.handleLoadVolume}>{'Load Volume Data'}</Button>
+                    <Button onClick={this.handleLoadVolume} color='primary'>{'Load Volume Data'}</Button>
                 );
             }
         }
@@ -187,3 +208,34 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
 }
 
 export default VolumeCanvas;
+
+///////////////////////////////////////////////////////////////////////
+// BBox helpers
+// Move into model/places.ts or so
+
+function getBBoxFromPolygon(coordinates: Position[]): BBox {
+    let xMin: number = Number.POSITIVE_INFINITY;
+    let yMin: number = Number.POSITIVE_INFINITY;
+    let xMax: number = Number.NEGATIVE_INFINITY;
+    let yMax: number = Number.NEGATIVE_INFINITY;
+    for (const pos of coordinates) {
+        const x = pos[0];
+        const y = pos[1];
+        xMin = Math.min(xMin, x);
+        yMin = Math.min(yMin, y);
+        xMax = Math.max(xMax, x);
+        yMax = Math.max(yMax, y);
+    }
+    return [xMin, yMin, xMax, yMax];
+}
+
+function getBBoxFromBBoxes(bBoxes: BBox[]): BBox {
+    let [xMin, yMin, xMax, yMax] = bBoxes[0];
+    for (const bBox of bBoxes.slice(1)) {
+        xMin = Math.min(xMin, bBox[0]);
+        yMin = Math.min(yMin, bBox[1]);
+        xMax = Math.max(xMax, bBox[2]);
+        yMax = Math.max(yMax, bBox[3]);
+    }
+    return [xMin, yMin, xMax, yMax];
+}
