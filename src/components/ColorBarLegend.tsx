@@ -152,9 +152,7 @@ export default function ColorBarLegend({
         return null;
     }
 
-    const variableColorBar = parseColorBar(variableColorBarName);
-
-    const imageData = colorBars.images[variableColorBar.baseName];
+    const variableColorBar = parseColorBar(variableColorBarName, colorBars);
 
     const handleOpenColorBarMinMaxEditor = (event: React.MouseEvent<HTMLDivElement>) => {
         setColorBarMinMaxAnchorEl(event.currentTarget);
@@ -430,7 +428,6 @@ export default function ColorBarLegend({
                 </div>
                 <ColorBarCanvas
                         colorBar={variableColorBar}
-                        imageData={imageData}
                         opacity={variableOpacity}
                         width={width}
                         height={height}

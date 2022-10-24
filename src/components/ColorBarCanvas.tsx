@@ -36,7 +36,6 @@ bgImage.src = bgImageData;
 
 interface ColorBarCanvasProps {
     colorBar: ColorBar;
-    imageData: string;
     opacity: number;
     width: number | string | undefined;
     height: number | string | undefined;
@@ -46,7 +45,6 @@ interface ColorBarCanvasProps {
 export const ColorBarCanvas: React.FC<ColorBarCanvasProps> = (
         {
             colorBar,
-            imageData,
             opacity,
             width,
             height,
@@ -57,18 +55,18 @@ export const ColorBarCanvas: React.FC<ColorBarCanvasProps> = (
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (canvas === null) {
+        if (canvas === null || !Boolean(colorBar.imageData)) {
             return;
         }
         const image = new Image();
         image.onload = () => {
             renderColorBar(colorBar, opacity, canvas, image);
         };
-        image.src = `data:image/png;base64,${imageData}`;
-    }, [colorBar, imageData, opacity]);
+        image.src = `data:image/png;base64,${colorBar.imageData}`;
+    }, [colorBar, opacity]);
 
     return <>
-        {Boolean(imageData) ? (
+        {Boolean(colorBar.imageData) ? (
                 <canvas
                         ref={canvasRef}
                         width={width || 240}

@@ -3,6 +3,7 @@ import { OrbitControls } from './OrbitControls';
 import { Volume } from './Volume';
 import { VolumeShader } from './VolumeShader';
 import { isWebGL2Available } from './webgl-utils';
+// import { ColorBar } from "../model/colorBar";
 
 
 export interface VolumeOptions {
@@ -11,6 +12,7 @@ export interface VolumeOptions {
     isoThreshold: number;
     renderMode: "mip" | "iso";
     cmName: string;
+    // colorBar: ColorBar;
 }
 
 export class VolumeScene {
