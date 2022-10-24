@@ -65,11 +65,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
             flexDirection: 'row'
         },
         isoTextField: {
-            maxWidth: '16em',
+            minWidth: '16em',
             marginLeft: '1em'
         },
         isoSlider: {
-            width: 100,
+            minWidth: 200,
         },
     }
 ));
