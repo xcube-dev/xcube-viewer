@@ -53,7 +53,7 @@ export interface ExportSettings {
     zipArchive: boolean;
 }
 
-export type VolumeRenderMode = 'mip' | 'iso';
+export type VolumeRenderMode = 'mip' | 'aip' | 'iso';
 export type VolumeStatus = 'loading' | 'ok' | 'error';
 export type VolumeState = { status: VolumeStatus; message?: string; };
 export type VolumeStates = { [volumeId: string]: VolumeState };

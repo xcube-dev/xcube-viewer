@@ -10,7 +10,7 @@ export interface VolumeOptions {
     value1: number;
     value2: number;
     isoThreshold: number;
-    renderMode: "mip" | "iso";
+    renderMode: "mip" | "aip" | "iso";
     cmName: string;
     // colorBar: ColorBar;
 }
@@ -186,7 +186,7 @@ export class VolumeScene {
             const uniforms = material.uniforms;
             uniforms['u_clim'].value.set(value1, value2);
             uniforms['u_renderthreshold'].value = isoThreshold;
-            uniforms['u_renderstyle'].value = (renderMode === 'mip') ? 0 : 1;  // 0: MIP, 1: ISO;
+            uniforms['u_renderstyle'].value = (renderMode === 'mip') ? 0 : (renderMode === 'aip') ? 1 : 2;
             uniforms['u_cmdata'].value = this.cmTextures[cmName];
             this.render();
         }

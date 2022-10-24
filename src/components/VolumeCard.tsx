@@ -169,7 +169,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
                             onChange={handleVolumeRenderModeChange}
                         >
                             <ToggleButton
-                                key={0}
+                                key="mip"
                                 value="mip"
                             >
                                 {/*TODO: I18N*/}
@@ -178,7 +178,16 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
                                 </Tooltip>
                             </ToggleButton>
                             <ToggleButton
-                                key={1}
+                                key="aip"
+                                value="aip"
+                            >
+                                {/*TODO: I18N*/}
+                                <Tooltip arrow title={'Average intensity projection'}>
+                                    <span>AIP</span>
+                                </Tooltip>
+                            </ToggleButton>
+                            <ToggleButton
+                                key="iso"
                                 value="iso"
                             >
                                 {/*TODO: I18N*/}

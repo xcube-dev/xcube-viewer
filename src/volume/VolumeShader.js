@@ -101,6 +101,7 @@ const VolumeShader = {
         const float shininess = 40.0;
 
         void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray);
+        void cast_aip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray);
         void cast_iso(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray);
 
         float sample1(vec3 texcoords);
@@ -146,6 +147,8 @@ const VolumeShader = {
             if (u_renderstyle == 0)
                 cast_mip(start_loc, step, nsteps, view_ray);
             else if (u_renderstyle == 1)
+                cast_aip(start_loc, step, nsteps, view_ray);
+            else if (u_renderstyle == 2)
                 cast_iso(start_loc, step, nsteps, view_ray);
 
             if (gl_FragColor.a < 0.05)
@@ -165,38 +168,63 @@ const VolumeShader = {
         void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 
             float max_val = -1e6;
-            int max_i = 100;
             vec3 loc = start_loc;
 
             // Enter the raycasting loop. In WebGL 1 the loop index cannot be compared with
             // non-constant expression. So we use a hard-coded max, and an additional condition
             // inside the loop.
-            for (int iter=0; iter<MAX_STEPS; iter++) {
-                if (iter >= nsteps)
-                        break;
+            for (int iter = 0; iter < MAX_STEPS; iter++) {
+                if (iter >= nsteps) {
+                    break;
+                }
                 // Sample from the 3D texture
                 float val = sample1(loc);
                 // Apply MIP operation
                 if (val > max_val) {
-                        max_val = val;
-                        max_i = iter;
+                    max_val = val;
                 }
                 // Advance location deeper into the volume
                 loc += step;
-            }
-
-            // Refine location, gives crispier images
-            vec3 iloc = start_loc + step * (float(max_i) - 0.5);
-            vec3 istep = step / float(REFINEMENT_STEPS);
-            for (int i=0; i<REFINEMENT_STEPS; i++) {
-                max_val = max(max_val, sample1(iloc));
-                iloc += istep;
             }
 
             // Resolve final color
             gl_FragColor = apply_colormap(max_val);
         }
 
+        void cast_aip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
+
+            float avg_val = 0.0;
+            int count = 0;
+            vec3 loc = start_loc;
+            float eps = 0.02;
+
+            // Enter the raycasting loop. In WebGL 1 the loop index cannot be compared with
+            // non-constant expression. So we use a hard-coded max, and an additional condition
+            // inside the loop.
+            for (int iter = 0; iter < MAX_STEPS; iter++) {
+                if (iter >= nsteps) {
+                    break;
+                }
+                // Sample from the 3D texture
+                float val = sample1(loc);
+                // Apply SUM operation   
+                if (abs(loc.x - 0.5) < eps 
+                    || abs(loc.y - 0.5) < eps 
+                    || abs(loc.z - 0.5) < eps) {
+                    avg_val += val;
+                    count += 1;
+                }          
+                // Advance location deeper into the volume
+                loc += step;
+            }
+
+            // Resolve final color
+            if (count > 0) {
+                gl_FragColor = apply_colormap(avg_val / float(count));
+            } else {
+                gl_FragColor = vec4(0.0);
+            }
+        }
 
         void cast_iso(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 
