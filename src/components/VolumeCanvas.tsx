@@ -116,7 +116,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
             const {selectedDataset, selectedVariable, selectedPlaceInfo, volumeId, updateVolumeState} = this.props;
             if (selectedDataset && selectedVariable && volumeId) {
                 updateVolumeState(volumeId, {status: 'loading'});
-                let bboxArg: string = '';
+                let bboxArg = '';
                 if (selectedPlaceInfo) {
                     let bBox: BBox | null = null;
                     if (selectedPlaceInfo.place.geometry.type === 'Polygon') {
@@ -129,13 +129,13 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                         bBox = getBBoxFromBBoxes(bBoxes);
                     }
                     if (bBox !== null) {
-                        bboxArg = `bbox=${bBox[0]},${bBox[1]},${bBox[2]},${bBox[3]}`;
+                        bboxArg = `&bbox=${bBox[0]},${bBox[1]},${bBox[2]},${bBox[3]}`;
                     }
                 }
                 const noCacheArg = `dummy=${new Date().toLocaleTimeString()}`;
                 const url = 'http://127.0.0.1:8080/volumes/'
                     + `${selectedDataset.id}/${selectedVariable.name}`
-                    + `?${noCacheArg}&${bboxArg}`;
+                    + `?${noCacheArg}${bboxArg}`;
                 console.debug(`url = ${url}`);
                 new NRRDLoader().load(
                     url,
@@ -189,6 +189,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                         <Button
                             onClick={this.handleLoadVolume}
                             color='primary'
+                            disabled={!!volumeState && volumeState.status === 'loading'}
                         >
                             {'Load Volume Data'}
                         </Button>
@@ -202,7 +203,10 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 } else if (volumeState.status === 'error') {
                     /*TODO: I18N*/
                     messageComp = (
-                        <Typography variant="body2">{`Failed loading volume: ${volumeState.message}`}</Typography>);
+                        <Typography variant="body2">
+                            {`Failed loading volume: ${volumeState.message}`}
+                        </Typography>
+                    );
                 }
             }
         }
