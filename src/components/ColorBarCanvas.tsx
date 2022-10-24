@@ -101,7 +101,6 @@ function renderColorBar(colorBar: ColorBar,
     );
 
     let rgbaArray = imageData.data;
-    rgbaArray = rgbaArray.slice(0, rgbaArray.length / 2);
 
     if (colorBar.isReversed) {
         const reversedRgbaArray = new Uint8ClampedArray(rgbaArray.length);
