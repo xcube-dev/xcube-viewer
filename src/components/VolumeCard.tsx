@@ -41,6 +41,7 @@ import { VolumeRenderMode, VolumeState, VolumeStates } from "../states/controlSt
 import VolumeCanvas from "./VolumeCanvas";
 import TextField from "@material-ui/core/TextField";
 import Slider from "@material-ui/core/Slider";
+import { ColorBar } from "../model/colorBar";
 // import i18n from '../i18n';
 
 
@@ -81,6 +82,7 @@ interface VolumeCardProps extends WithLocale {
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
     selectedPlaceInfo: PlaceInfo | null;
+    variableColorBar: ColorBar;
     volumeId: string | null;
     volumeRenderMode: VolumeRenderMode;
     setVolumeRenderMode: (volumeRenderMode: VolumeRenderMode) => any;
@@ -89,6 +91,7 @@ interface VolumeCardProps extends WithLocale {
     updateVariableVolume: (
         datasetId: string,
         variableName: string,
+        variableColorBar: ColorBar,
         volumeRenderMode: VolumeRenderMode,
         volumeIsoThreshold: number,
     ) => any;
@@ -100,6 +103,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
                                                    selectedDataset,
                                                    selectedVariable,
                                                    selectedPlaceInfo,
+                                                   variableColorBar,
                                                    volumeId,
                                                    volumeRenderMode,
                                                    setVolumeRenderMode,
@@ -131,6 +135,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
         updateVariableVolume(
             selectedDataset!.id,
             selectedVariable!.name,
+            variableColorBar,
             volumeRenderMode,
             volumeIsoThreshold,
         );
@@ -144,6 +149,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
                 updateVariableVolume(
                     selectedDataset!.id,
                     selectedVariable!.name,
+                    variableColorBar,
                     volumeRenderMode,
                     volumeIsoThreshold
                 );
@@ -215,6 +221,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
                     selectedDataset={selectedDataset}
                     selectedVariable={selectedVariable}
                     selectedPlaceInfo={selectedPlaceInfo}
+                    variableColorBar={variableColorBar}
                     volumeRenderMode={volumeRenderMode}
                     volumeIsoThreshold={volumeIsoThreshold}
                     volumeId={volumeId}

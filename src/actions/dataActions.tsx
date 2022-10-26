@@ -28,7 +28,7 @@ import { Dispatch } from 'redux';
 import * as api from '../api'
 import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
-import { ColorBars } from '../model/colorBar';
+import { ColorBar, ColorBars } from '../model/colorBar';
 import { Dataset } from '../model/dataset';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
@@ -444,6 +444,7 @@ export interface UpdateVariableVolume {
     type: typeof UPDATE_VARIABLE_VOLUME;
     datasetId: string;
     variableName: string;
+    variableColorBar: ColorBar;
     volumeRenderMode: VolumeRenderMode;
     volumeIsoThreshold: number;
 }
@@ -451,6 +452,7 @@ export interface UpdateVariableVolume {
 export function updateVariableVolume(
     datasetId: string,
     variableName: string,
+    variableColorBar: ColorBar,
     volumeRenderMode: VolumeRenderMode,
     volumeIsoThreshold: number
 ): UpdateVariableVolume {
@@ -458,6 +460,7 @@ export function updateVariableVolume(
         type: UPDATE_VARIABLE_VOLUME,
         datasetId,
         variableName,
+        variableColorBar,
         volumeRenderMode,
         volumeIsoThreshold,
     };

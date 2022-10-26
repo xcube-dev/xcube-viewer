@@ -79,7 +79,6 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     }
 
     const canDownload = timeSeriesGroups.length > 0;
-    console.info(timeSeriesGroups, canDownload)
 
     let downloadButton;
     if (Config.instance.branding.allowDownloads) {
@@ -100,9 +99,10 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
         </IconButton>
     );
 
+    /*TODO: I18N*/
     let volumeButton = (
             <IconButton onClick={() => showVolumeCard(true)} disabled={volumeCardOpen}>
-                <Tooltip arrow title={i18n.get('Open volume panel')}>
+                <Tooltip arrow title={'Open volume panel'}>
                     {<VolumeIcon/>}
                 </Tooltip>
             </IconButton>

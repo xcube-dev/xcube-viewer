@@ -226,7 +226,6 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
 
     const zoomIn = () => {
         const {firstTime, secondTime} = timeRangeSelection;
-        console.log("zoomIn:", firstTime, secondTime)
         if (firstTime === secondTime
             || firstTime === undefined
             || secondTime === undefined) {
@@ -373,6 +372,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     if (loading) {
         removeAllButton = (
             <CircularProgress
+                key={'progress'}
                 size={24}
                 className={classes.actionButton}
                 color={'secondary'}

@@ -26,6 +26,7 @@ import { connect } from 'react-redux';
 import {
     selectedDatasetSelector,
     selectedPlaceInfoSelector,
+    selectedVariableColorBarSelector,
     selectedVariableSelector,
     selectedVolumeIdSelector,
 } from '../selectors/controlSelectors';
@@ -43,6 +44,7 @@ const mapStateToProps = (state: AppState) => {
         selectedDataset: selectedDatasetSelector(state),
         selectedVariable: selectedVariableSelector(state),
         selectedPlaceInfo: selectedPlaceInfoSelector(state),
+        variableColorBar: selectedVariableColorBarSelector(state),
         volumeRenderMode: state.controlState.volumeRenderMode,
         volumeId: selectedVolumeIdSelector(state),
         volumeStates: state.controlState.volumeStates,

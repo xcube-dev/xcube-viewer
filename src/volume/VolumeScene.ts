@@ -3,7 +3,8 @@ import { OrbitControls } from './OrbitControls';
 import { Volume } from './Volume';
 import { VolumeShader } from './VolumeShader';
 import { isWebGL2Available } from './webgl-utils';
-// import { ColorBar } from "../model/colorBar";
+import { ColorBar } from "../model/colorBar";
+import { colorBarTextures } from "./ColorBarTextures";
 
 
 export interface VolumeOptions {
@@ -11,8 +12,7 @@ export interface VolumeOptions {
     value2: number;
     isoThreshold: number;
     renderMode: "mip" | "aip" | "iso";
-    cmName: string;
-    // colorBar: ColorBar;
+    colorBar: ColorBar;
 }
 
 export class VolumeScene {
@@ -21,7 +21,7 @@ export class VolumeScene {
     private readonly camera: THREE.OrthographicCamera;
     private readonly controls: THREE.EventDispatcher;
     private readonly renderer: THREE.WebGLRenderer;
-    private readonly cmTextures: { [cmName: string]: THREE.Texture };
+    // private readonly cmTextures: { [cmName: string]: THREE.Texture };
 
     // Instantiated after volume is set
     private scene: THREE.Scene | null;
@@ -49,7 +49,7 @@ export class VolumeScene {
             -h * aspect,
             h * aspect,
             h,
-            -h ,
+            -h,
             -1000,
             1000
         );
@@ -79,10 +79,10 @@ export class VolumeScene {
         this.material = null;
 
         // Colormap textures
-        this.cmTextures = {
-            viridis: new THREE.TextureLoader().load('images/textures/cm_viridis.png', this.render),
-            gray: new THREE.TextureLoader().load('images/textures/cm_gray.png', this.render)
-        };
+        // this.cmTextures = {
+        //     viridis: new THREE.TextureLoader().load('images/textures/cm_viridis.png', this.render),
+        //     gray: new THREE.TextureLoader().load('images/textures/cm_gray.png', this.render)
+        // };
 
         controls.addEventListener('change', this.render);
         canvas.addEventListener('resize', this.onCanvasResize);
@@ -107,7 +107,6 @@ export class VolumeScene {
         const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
         const [sx, sy, sz] = volume.spacing;
-        console.log("volume.spacing:", volume.spacing);
         const sizeX = Math.floor(sx * volume.xLength);
         const sizeY = Math.floor(sy * volume.yLength);
         const sizeZ = Math.floor(sz * volume.zLength);
@@ -180,20 +179,19 @@ export class VolumeScene {
 
     setVolumeOptions(options: VolumeOptions) {
         const material = this.material;
-        console.log('material', material)
         if (material !== null) {
-            const {value1, value2, isoThreshold, renderMode, cmName} = options;
+            const {value1, value2, isoThreshold, renderMode, colorBar} = options;
             const uniforms = material.uniforms;
             uniforms['u_clim'].value.set(value1, value2);
             uniforms['u_renderthreshold'].value = isoThreshold;
-            uniforms['u_renderstyle'].value = (renderMode === 'mip') ? 0 : (renderMode === 'aip') ? 1 : 2;
-            uniforms['u_cmdata'].value = this.cmTextures[cmName];
+            uniforms['u_renderstyle'].value = (renderMode === 'mip') ? 0:(renderMode === 'aip') ? 1:2;
+            uniforms['u_cmdata'].value = colorBarTextures.get(colorBar, this.render);
             this.render();
         }
     }
 
     getMaterial(): THREE.ShaderMaterial {
-        if (this.material===null) {
+        if (this.material === null) {
             throw new Error("Volume not set!");
         }
         return this.material!;

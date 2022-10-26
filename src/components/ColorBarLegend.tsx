@@ -32,7 +32,7 @@ import Slider, { Mark } from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import i18n from '../i18n';
-import { ColorBars, formatColorBar, parseColorBar } from '../model/colorBar';
+import { ColorBar, ColorBars, formatColorBar } from '../model/colorBar';
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
 import { ColorBarCanvas } from "./ColorBarCanvas";
 
@@ -109,7 +109,8 @@ interface ColorBarLegendProps {
     variableName: string | null;
     variableUnits: string;
     variableColorBarMinMax: [number, number];
-    variableColorBarName: string;
+    variableColorBarName: string,
+    variableColorBar: ColorBar,
     variableOpacity: number;
     updateVariableColorBar: (colorBarMinMax: [number, number], colorBarName: string, opacity: number) => void;
     colorBars: ColorBars | null;
@@ -123,6 +124,7 @@ export default function ColorBarLegend({
                                            variableUnits,
                                            variableColorBarMinMax,
                                            variableColorBarName,
+                                           variableColorBar,
                                            variableOpacity,
                                            updateVariableColorBar,
                                            colorBars,
@@ -151,8 +153,6 @@ export default function ColorBarLegend({
     if (!variableName || !colorBars) {
         return null;
     }
-
-    const variableColorBar = parseColorBar(variableColorBarName, colorBars);
 
     const handleOpenColorBarMinMaxEditor = (event: React.MouseEvent<HTMLDivElement>) => {
         setColorBarMinMaxAnchorEl(event.currentTarget);

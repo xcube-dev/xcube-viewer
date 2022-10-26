@@ -29,17 +29,19 @@ import { PlaceInfo } from '../model/place';
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
 import { VolumeRenderMode, VolumeState, VolumeStates } from "../states/controlState";
-import { VolumeScene } from "../volume/VolumeScene";
+import { VolumeOptions, VolumeScene } from "../volume/VolumeScene";
 import { Volume } from "../volume/Volume";
 import { NRRDLoader } from "../volume/NRRDLoader";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { BBox, Position } from "geojson";
-
+import { ColorBar } from "../model/colorBar";
+import i18n from '../i18n';
 
 interface VolumeCanvasProps extends WithLocale {
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
     selectedPlaceInfo: PlaceInfo | null;
+    variableColorBar: ColorBar;
     volumeId: string | null;
     volumeRenderMode: VolumeRenderMode;
     volumeIsoThreshold: number;
@@ -79,40 +81,34 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         this.canvasRef = React.createRef<HTMLCanvasElement>();
         this.volumeScene = null;
         this.handleLoadVolume = this.handleLoadVolume.bind(this);
-        // console.debug('VolumeCanvas.constructor:', this.canvasRef.current, volumeCache);
     }
 
-    private static getVolumeOptions(props: Readonly<VolumeCanvasProps>) {
-        const {selectedVariable, volumeIsoThreshold, volumeRenderMode} = props;
+    private static getVolumeOptions(props: Readonly<VolumeCanvasProps>): VolumeOptions {
+        const {selectedVariable, variableColorBar, volumeIsoThreshold, volumeRenderMode} = props;
         return {
             value1: !!selectedVariable ? selectedVariable.colorBarMin:0,
             value2: !!selectedVariable ? selectedVariable.colorBarMax:1,
             renderMode: volumeRenderMode,
             isoThreshold: volumeIsoThreshold,
-            cmName: 'viridis',  // TODO (forman)
+            colorBar: variableColorBar,
         };
     }
 
     componentDidMount(): void {
-        // console.debug('VolumeCanvas.componentDidMount:', this.canvasRef.current, volumeCache);
         this.updateVolumeScene();
     }
 
     componentDidUpdate(prevProps: Readonly<VolumeCanvasProps>): void {
-        // console.debug('VolumeCanvas.componentDidUpdate:', this.canvasRef.current, volumeCache);
         this.updateVolumeScene();
     }
 
     componentWillUnmount(): void {
-        // console.debug('VolumeCanvas.componentWillUnmount:', this.canvasRef.current, volumeCache);
         this.volumeScene = null;
     }
 
     handleLoadVolume() {
-        console.info("Raiser!")
         const volumeScene = this.volumeScene;
         if (volumeScene !== null) {
-            console.info("volumeScene !== null")
             const {selectedDataset, selectedVariable, selectedPlaceInfo, volumeId, updateVolumeState} = this.props;
             if (selectedDataset && selectedVariable && volumeId) {
                 updateVolumeState(volumeId, {status: 'loading'});
@@ -136,7 +132,6 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 const url = 'http://127.0.0.1:8080/volumes/'
                     + `${selectedDataset.id}/${selectedVariable.name}`
                     + `?${noCacheArg}${bboxArg}`;
-                console.debug(`url = ${url}`);
                 new NRRDLoader().load(
                     url,
                     (volume: Volume) => {
@@ -160,13 +155,6 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
 
         let messageComp;
         let loadComp;
-        let canvasComp = (
-            <canvas
-                id={"VolumeCanvas-canvas"}
-                ref={this.canvasRef}
-                style={CANVAS_STYLE}
-            />
-        );
         if (!volumeId) {
             /*TODO: I18N*/
             messageComp = (

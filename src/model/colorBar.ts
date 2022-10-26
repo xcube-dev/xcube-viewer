@@ -52,7 +52,7 @@ export interface ColorBar {
     imageData: string | null;
 }
 
-export function parseColorBar(name: string, colorBars: ColorBars): ColorBar {
+export function parseColorBar(name: string, colorBars: ColorBars | null): ColorBar {
     let baseName = name;
 
     const isAlpha = baseName.endsWith(CB_ALPHA_SUFFIX);
@@ -65,7 +65,7 @@ export function parseColorBar(name: string, colorBars: ColorBars): ColorBar {
         baseName = baseName.slice(0, baseName.length - CB_REVERSE_SUFFIX.length);
     }
 
-    const imageData = colorBars.images[baseName] || null;
+    const imageData = (colorBars && colorBars.images[baseName]) || null;
 
     return {baseName, isAlpha, isReversed, imageData};
 }
@@ -85,6 +85,7 @@ export function renderColorBar(colorBar: ColorBar,
                                opacity: number,
                                canvas: HTMLCanvasElement) {
     loadColorBarImageData(colorBar, opacity).then(imageData => {
+        // We must resolve in case ImageBitmap is already resolved
         Promise.resolve(
             createImageBitmap(imageData)
         ).then(imageBitmap => {
@@ -110,21 +111,27 @@ export function renderColorBar(colorBar: ColorBar,
     });
 }
 
-export function loadColorBarImageData(colorBar: ColorBar, opacity: number): Promise<ImageData> {
-    return new Promise<ImageData>(
-        (resolve: (value?: ImageData | PromiseLike<ImageData>) => void, reject: (reason?: any) => void) => {
-            const image = new Image();
+export function loadColorBarImage(colorBar: ColorBar, image?: HTMLImageElement): Promise<HTMLImageElement> {
+    return new Promise<HTMLImageElement>(
+        (resolve: (value?: HTMLImageElement | PromiseLike<HTMLImageElement>) => void, reject: (reason?: any) => void) => {
+            image = image || new Image();
             image.onload = () => {
-                const imageData = getColorBarImageData(colorBar, opacity, image);
-                if (imageData !== null) {
-                    resolve(imageData);
-                } else {
-                    reject("failed to retrieve 2d context");
-                }
+                resolve(image);
             };
             image.src = `data:image/png;base64,${colorBar.imageData}`;
         }
     );
+}
+
+export function loadColorBarImageData(colorBar: ColorBar, opacity: number): Promise<ImageData> {
+    return loadColorBarImage(colorBar).then(image => {
+        const imageData = getColorBarImageData(colorBar, opacity, image);
+        if (imageData !== null) {
+            return imageData;
+        } else {
+            throw new Error("failed to retrieve 2d context");
+        }
+    });
 }
 
 function getColorBarImageData(colorBar: ColorBar,
