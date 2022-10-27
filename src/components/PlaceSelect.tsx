@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -29,11 +30,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import * as React from 'react';
-import i18n from '../i18n';
-import CategoryIcon from '@material-ui/icons/Category';
 
+import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
@@ -69,6 +69,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
                                                      selectedPlaceId,
                                                      selectedPlaceGroupIds,
                                                      removeUserPlace,
+                                                     openDialog,
                                                      places,
                                                  }) => {
 
@@ -77,12 +78,10 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     };
 
     const handleAddButtonClick = () => {
-        const {openDialog} = this.props;
         openDialog('addUserPlaceFromText');
     };
 
-    const handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-        const {removeUserPlace, selectedPlaceId, places} = this.props;
+    const handleRemoveButtonClick = () => {
         if (selectedPlaceId !== null) {
             removeUserPlace(selectedPlaceId, places);
         }
@@ -92,10 +91,6 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     placeLabels = placeLabels || [];
     selectedPlaceId = selectedPlaceId || '';
     selectedPlaceGroupIds = selectedPlaceGroupIds || [];
-
-    if (places.length === 0) {
-        return null;
-    }
 
     const placeSelectLabel = (
         <InputLabel
@@ -127,8 +122,21 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         </Select>
     );
 
-    const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
-                          && selectedPlaceId !== '';
+    const placeAddButton = (
+        <IconButton
+            key={'add'}
+            className={classes.button}
+            aria-label={i18n.get('Add place')}
+            onClick={handleAddButtonClick}
+        >
+            {<AddCircleOutlineIcon/>}
+        </IconButton>
+    );
+
+    const removeEnabled = places.length > 0
+        && selectedPlaceGroupIds.length === 1
+        && selectedPlaceGroupIds[0] === 'user'
+        && selectedPlaceId !== '';
     const placeRemoveButton = (
         <IconButton
             className={classes.button}
@@ -141,22 +149,11 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         </IconButton>
     );
 
-    const placeAddButton = (
-        <IconButton
-            key={'add'}
-            className={classes.button}
-            aria-label={I18N.get('Add place')}
-            onClick={this.handleAddButtonClick}
-        >
-            {<CategoryIcon/>}
-        </IconButton>
-    );
-
     return (
         <ControlBarItem
             label={placeSelectLabel}
             control={placeSelect}
-            actions={placeAddButton, placeRemoveButton}
+            actions={[placeAddButton, placeRemoveButton]}
         />
     );
 };

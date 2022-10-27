@@ -22,21 +22,29 @@
  * SOFTWARE.
  */
 
-import {  OlVectorLayer, OlGeoJSONFormat, OlStyle, OlStrokeStyle, OlFillStyle } from '../components/ol/types';
 import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlStyle } from 'ol/style/Style';
+import { default as OlFillStyle } from 'ol/style/Fill';
+import { default as OlStrokeStyle } from 'ol/style/Stroke';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
 import {
+    DataAction,
     CONFIGURE_SERVERS,
     ADD_USER_PLACE,
-    DataAction, REMOVE_ALL_TIME_SERIES,
+    ADD_USER_PLACE_2,
+    REMOVE_ALL_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES, UPDATE_SERVER_INFO,
+    UPDATE_TIME_SERIES,
+    UPDATE_DATASET_PLACE_GROUP,
+    REMOVE_USER_PLACE,
+    REMOVE_ALL_USER_PLACES,
+    UPDATE_SERVER_INFO,
     UPDATE_VARIABLE_COLOR_BAR,
-    ADD_USER_PLACE_2
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
@@ -99,13 +107,13 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
         }
         case ADD_USER_PLACE: {
             const {id, label, color, geometry} = action;
-            const feature = {
+            const place: Place = {
                 type: 'Feature',
                 id,
                 geometry,
                 properties: {label, color},
             };
-            const features = [...state.userPlaceGroup.features, feature as Place];
+            const features = [...state.userPlaceGroup.features, place];
             const userPlaceGroup = {...state.userPlaceGroup, features};
             return {
                 ...state,
