@@ -1,5 +1,29 @@
-import {  OlVectorLayer, OlGeoJSONFormat, OlStyle, OlStrokeStyle, OlFillStyle } from '../components/ol/types';
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
+import {  OlVectorLayer, OlGeoJSONFormat, OlStyle, OlStrokeStyle, OlFillStyle } from '../components/ol/types';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
 
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
@@ -20,8 +44,8 @@ import { Place } from '../model/place';
 import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
 
 
-export function dataReducer(state: DataState, action: DataAction): DataState {
-    if (typeof state === 'undefined') {
+export function dataReducer(state: DataState | undefined, action: DataAction): DataState {
+    if (state === undefined) {
         state = newDataState();
     }
     switch (action.type) {
@@ -44,7 +68,8 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
                         ...variable,
                         colorBarMin: action.colorBarMinMax[0],
                         colorBarMax: action.colorBarMinMax[1],
-                        colorBarName: action.colorBarName
+                        colorBarName: action.colorBarName,
+                        opacity: action.opacity,
                     };
                     datasets[datasetIndex] = {...dataset, variables};
                     return {...state, datasets};
@@ -53,21 +78,24 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
             return state;
         }
         case UPDATE_DATASET_PLACE_GROUP: {
-            const datasetIndex = state.datasets.findIndex(ds => ds.id === action.datasetId);
-            if (datasetIndex >= 0) {
-                let dataset = state.datasets[datasetIndex];
+            // Issue #208:
+            // We no longer set individual dataset place groups.
+            // That's why action.datasetId is no longer used here.
+            // Instead, we update all datasets that refer to the
+            // place group with the given ID.
+            const placeGroup = action.placeGroup;
+            const datasets = state.datasets.map(dataset => {
                 if (dataset.placeGroups) {
-                    const placeGroupIndex = dataset.placeGroups.findIndex(pg => pg.id === action.placeGroup.id);
+                    const placeGroupIndex = dataset.placeGroups.findIndex(pg => pg.id === placeGroup.id);
                     if (placeGroupIndex >= 0) {
-                        let datasets = state.datasets.slice();
-                        let placeGroups = dataset.placeGroups.slice();
-                        placeGroups[placeGroupIndex] = action.placeGroup;
-                        datasets[datasetIndex] = {...dataset, placeGroups};
-                        return {...state, datasets};
+                        const placeGroups = [...dataset.placeGroups];
+                        placeGroups[placeGroupIndex] = placeGroup;
+                        return {...dataset, placeGroups};
                     }
                 }
-            }
-            return state;
+                return dataset;
+            });
+            return {...state, datasets};
         }
         case ADD_USER_PLACE: {
             const {id, label, color, geometry} = action;
@@ -96,7 +124,7 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         }
         case REMOVE_USER_PLACE: {
             const {id} = action;
-            const index = state.userPlaceGroup.features.findIndex(p => p.id == id);
+            const index = state.userPlaceGroup.features.findIndex(p => p.id === id);
             if (index >= 0) {
                 removeUserPlacesFromLayer([id]);
                 const features = [...state.userPlaceGroup.features];
@@ -166,7 +194,7 @@ export function dataReducer(state: DataState, action: DataAction): DataState {
         }
     }
 
-    return state;
+    return state!;
 }
 
 function addUserPlaceToLayer(place: Place) {

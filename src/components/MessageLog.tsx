@@ -1,7 +1,33 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import * as React from 'react';
 import classNames from 'classnames';
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
+import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -12,8 +38,6 @@ import green from '@material-ui/core/colors/green';
 import amber from '@material-ui/core/colors/amber';
 
 import { MessageLogEntry } from '../states/messageLogState';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
 
 
 const variantIcon = {
@@ -69,53 +93,49 @@ const SNACKBAR_ANCHOR_ORIGIN: SnackbarOrigin = {
     horizontal: 'center',
 };
 
-class MessageLog extends React.Component<MessageLogProps> {
 
-    handleClose = (event: React.SyntheticEvent<any>, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        this.props.hideMessage(this.props.message!.id);
+const MessageLog: React.FC<MessageLogProps> = ({classes, className, message, hideMessage}) => {
+
+    const handleClose = () => {
+        hideMessage(message!.id);
     };
 
-    render() {
-        const {classes, className, message} = this.props;
-
-        if (!message) {
-            return null;
-        }
-
-        const MessageIcon = variantIcon[message.type];
-
-        return (
-            <Snackbar
-                open={true}
-                anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
-                onClose={this.handleClose}>
-                <SnackbarContent
-                    className={classNames(classes[message.type], className)}
-                    aria-describedby="client-snackbar"
-                    message={
-                        <span id="client-snackbar" className={classes.message}>
-                            <MessageIcon className={classNames(classes.icon, classes.iconVariant)}/>
-                            {message.text}
-                        </span>
-                    }
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon className={classes.icon}/>
-                        </IconButton>,
-                    ]}
-                />
-            </Snackbar>
-        );
+    if (!message) {
+        return null;
     }
-}
+
+    const MessageIcon = variantIcon[message.type];
+
+    return (
+        <Snackbar
+            key={message.type + ':' + message.text}
+            open={true}
+            anchorOrigin={SNACKBAR_ANCHOR_ORIGIN}
+            autoHideDuration={5000}
+            onClose={handleClose}>
+            <SnackbarContent
+                className={classNames(classes[message.type], className)}
+                aria-describedby="client-snackbar"
+                message={
+                    <span id="client-snackbar" className={classes.message}>
+                            <MessageIcon className={classNames(classes.icon, classes.iconVariant)}/>
+                        {message.text}
+                        </span>
+                }
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        className={classes.close}
+                        onClick={handleClose}
+                    >
+                        <CloseIcon className={classes.icon}/>
+                    </IconButton>,
+                ]}
+            />
+        </Snackbar>
+    );
+};
 
 export default withStyles(styles)(MessageLog);

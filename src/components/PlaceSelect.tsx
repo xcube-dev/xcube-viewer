@@ -1,20 +1,46 @@
-import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import IconButton from '@material-ui/core/IconButton';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import * as React from 'react';
+import i18n from '../i18n';
 import CategoryIcon from '@material-ui/icons/Category';
 
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 import ControlBarItem from './ControlBarItem';
 
 
+// noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
         select: {
@@ -36,99 +62,104 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     openDialog: (dialogId: string) => void;
 }
 
-class PlaceSelect extends React.Component<PlaceSelectProps> {
+const PlaceSelect: React.FC<PlaceSelectProps> = ({
+                                                     classes,
+                                                     selectPlace,
+                                                     placeLabels,
+                                                     selectedPlaceId,
+                                                     selectedPlaceGroupIds,
+                                                     removeUserPlace,
+                                                     places,
+                                                 }) => {
 
-    handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        this.props.selectPlace(event.target.value || null, this.props.places, true);
+    const handlePlaceChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
+        selectPlace(event.target.value || null, places, true);
     };
 
-    handleAddButtonClick = () => {
+    const handleAddButtonClick = () => {
         const {openDialog} = this.props;
         openDialog('addUserPlaceFromText');
     };
 
-    handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    const handleRemoveButtonClick = (event: React.MouseEvent<HTMLElement>) => {
         const {removeUserPlace, selectedPlaceId, places} = this.props;
         if (selectedPlaceId !== null) {
             removeUserPlace(selectedPlaceId, places);
         }
     };
 
-    render() {
-        const {classes} = this.props;
+    places = places || [];
+    placeLabels = placeLabels || [];
+    selectedPlaceId = selectedPlaceId || '';
+    selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-        const places = this.props.places || [];
-        const placeLabels = this.props.placeLabels || [];
-        const selectedPlaceId = this.props.selectedPlaceId || '';
-        const selectedPlaceGroupIds = this.props.selectedPlaceGroupIds || [];
-
-        let placeSelectLabel;
-        let placeSelect;
-        let placeRemoveButton;
-        if (places.length > 0) {
-            placeSelectLabel = (
-                <InputLabel
-                    shrink
-                    htmlFor="place-select"
-                >
-                    {I18N.get('Place')}
-                </InputLabel>
-            );
-
-            placeSelect = (
-                <Select
-                    value={selectedPlaceId}
-                    onChange={this.handlePlaceChange}
-                    input={<Input name="place" id="place-select"/>}
-                    displayEmpty
-                    name="place"
-                    className={classes.select}
-                >
-                    {places.map((place, i) => (
-                        <MenuItem
-                            key={place.id}
-                            value={place.id}
-                            selected={place.id === selectedPlaceId}
-                        >
-                            {placeLabels[i]}
-                        </MenuItem>
-                    ))}
-                </Select>
-            );
-
-            const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
-                                  && selectedPlaceId !== '';
-            placeRemoveButton = (
-                <IconButton
-                    className={classes.button}
-                    disabled={!removeEnabled}
-                    onClick={this.handleRemoveButtonClick}
-                >
-                    {<RemoveCircleOutlineIcon/>}
-                </IconButton>
-            );
-        }
-
-        const placeAddButton = (
-            <IconButton
-                key={'add'}
-                className={classes.button}
-                aria-label={I18N.get('Add place')}
-                onClick={this.handleAddButtonClick}
-            >
-                {<CategoryIcon/>}
-            </IconButton>
-        );
-
-        return (
-            <ControlBarItem
-                label={placeSelectLabel}
-                control={placeSelect}
-                actions={[placeAddButton, placeRemoveButton]}
-            />
-        );
+    if (places.length === 0) {
+        return null;
     }
-}
+
+    const placeSelectLabel = (
+        <InputLabel
+            shrink
+            htmlFor="place-select"
+        >
+            {i18n.get('Place')}
+        </InputLabel>
+    );
+
+    const placeSelect = (
+        <Select
+            value={selectedPlaceId}
+            onChange={handlePlaceChange}
+            input={<Input name="place" id="place-select"/>}
+            displayEmpty
+            name="place"
+            className={classes.select}
+        >
+            {places.map((place, i) => (
+                <MenuItem
+                    key={place.id}
+                    value={place.id}
+                    selected={place.id === selectedPlaceId}
+                >
+                    {placeLabels[i]}
+                </MenuItem>
+            ))}
+        </Select>
+    );
+
+    const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
+                          && selectedPlaceId !== '';
+    const placeRemoveButton = (
+        <IconButton
+            className={classes.button}
+            disabled={!removeEnabled}
+            onClick={handleRemoveButtonClick}
+        >
+            <Tooltip arrow title={i18n.get('Remove place')}>
+                {<RemoveCircleOutlineIcon/>}
+            </Tooltip>
+        </IconButton>
+    );
+
+    const placeAddButton = (
+        <IconButton
+            key={'add'}
+            className={classes.button}
+            aria-label={I18N.get('Add place')}
+            onClick={this.handleAddButtonClick}
+        >
+            {<CategoryIcon/>}
+        </IconButton>
+    );
+
+    return (
+        <ControlBarItem
+            label={placeSelectLabel}
+            control={placeSelect}
+            actions={placeAddButton, placeRemoveButton}
+        />
+    );
+};
 
 export default withStyles(styles)(PlaceSelect);
 

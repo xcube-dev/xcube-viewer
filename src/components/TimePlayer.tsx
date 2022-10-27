@@ -1,19 +1,46 @@
-import * as React from 'react';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import { Theme } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
-import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
-import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import Box from '@material-ui/core/Box';
-import FormControl from '@material-ui/core/FormControl';
+import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
+import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
+import * as React from 'react';
+import { useEffect, useRef } from 'react';
+import i18n from '../i18n';
 
 import { Time, TimeRange } from '../model/timeSeries';
+import { TimeAnimationInterval } from '../states/controlState';
 import { WithLocale } from '../util/lang';
-import { I18N } from '../config';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -32,137 +59,135 @@ interface TimePlayerProps extends WithStyles<typeof styles>, WithLocale {
     incSelectedTime: (increment: -1 | 1) => void;
     selectedTimeRange: TimeRange | null;
     timeAnimationActive: boolean;
-    timeAnimationInterval: number;
-    updateTimeAnimation: (active: boolean, interval: number) => void;
+    timeAnimationInterval: TimeAnimationInterval;
+    updateTimeAnimation: (active: boolean, interval: TimeAnimationInterval) => void;
 }
 
 
-class TimePlayer extends React.Component<TimePlayerProps> {
+const TimePlayer: React.FC<TimePlayerProps> = ({
+                                                   classes,
+                                                   timeAnimationActive,
+                                                   timeAnimationInterval,
+                                                   updateTimeAnimation,
+                                                   selectedTime,
+                                                   selectedTimeRange,
+                                                   selectTime,
+                                                   incSelectedTime
+                                               }) => {
 
-    private intervalId: number | null = null;
+    const intervalId = useRef<number | null>(null);
 
-    private handlePlayEvent = () => {
-        this.props.incSelectedTime(1);
+    useEffect(() => {
+        playOrNot();
+        return uninstallTimer;
+    });
+
+    const handlePlayEvent = () => {
+        incSelectedTime(1);
     };
 
-    private handlePlayButtonClick = () => {
-        const {timeAnimationActive, timeAnimationInterval, updateTimeAnimation} = this.props;
+    const handlePlayButtonClick = () => {
         updateTimeAnimation(!timeAnimationActive, timeAnimationInterval);
     };
 
-    private handleNextTimeStepButtonClick = () => {
-        this.props.incSelectedTime(1);
+    const handleNextTimeStepButtonClick = () => {
+        incSelectedTime(1);
     };
 
-    private handlePrevTimeStepButtonClick = () => {
-        this.props.incSelectedTime(-1);
+    const handlePrevTimeStepButtonClick = () => {
+        incSelectedTime(-1);
     };
 
-    private handleFirstTimeStepButtonClick = () => {
-        const {selectedTimeRange} = this.props;
-        this.props.selectTime(selectedTimeRange ? selectedTimeRange[0] : null);
+    const handleFirstTimeStepButtonClick = () => {
+        selectTime(selectedTimeRange ? selectedTimeRange[0] : null);
     };
 
-    private handleLastTimeStepButtonClick = () => {
-        const {selectedTimeRange} = this.props;
-        this.props.selectTime(selectedTimeRange ? selectedTimeRange[1] : null);
+    const handleLastTimeStepButtonClick = () => {
+        selectTime(selectedTimeRange ? selectedTimeRange[1] : null);
     };
 
-    private playOrNot() {
-        if (this.props.timeAnimationActive) {
-            this.installTimer();
+    const playOrNot = () => {
+        if (timeAnimationActive) {
+            installTimer();
         } else {
-            this.uninstallTimer();
+            uninstallTimer();
         }
     };
 
-    private installTimer() {
-        this.uninstallTimer();
-        this.intervalId = window.setInterval(this.handlePlayEvent, this.props.timeAnimationInterval);
+    const installTimer = () => {
+        uninstallTimer();
+        intervalId.current = window.setInterval(handlePlayEvent, timeAnimationInterval);
     };
 
-    private uninstallTimer() {
-        if (this.intervalId !== null) {
-            window.clearInterval(this.intervalId);
-            this.intervalId = null;
+    const uninstallTimer = () => {
+        if (intervalId.current !== null) {
+            window.clearInterval(intervalId.current!);
+            intervalId.current = null;
         }
     };
 
-    componentDidMount(): void {
-        this.playOrNot();
-    }
 
-    componentDidUpdate(): void {
-        this.playOrNot();
-    }
+    const isValid = typeof selectedTime === 'number';
 
-    componentWillUnmount(): void {
-        this.uninstallTimer();
-    }
+    const playToolTip = i18n.get(timeAnimationActive ? 'Stop' : 'Start');
+    const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
 
-    render() {
-        let {classes, selectedTime, timeAnimationActive} = this.props;
-
-        const isValid = typeof selectedTime === 'number';
-
-        const playToolTip = I18N.get(timeAnimationActive ? 'Stop' : 'Start');
-        const playIcon = timeAnimationActive ? <PauseCircleOutline/> : <PlayCircleOutline/>;
-
-        const playButton = (
-            <IconButton
-                disabled={!isValid}
-                aria-label={playToolTip}
-                onClick={this.handlePlayButtonClick}
-            >
+    const playButton = (
+        <IconButton
+            disabled={!isValid}
+            aria-label={playToolTip}
+            onClick={handlePlayButtonClick}
+        >
+            <Tooltip arrow title={i18n.get('Auto-step through times in the dataset')}>
                 {playIcon}
-            </IconButton>
-        );
+            </Tooltip>
+        </IconButton>
+    );
 
-        const firstTimeStepButton = (
-            <IconButton
-                disabled={timeAnimationActive}
-                onClick={this.handleFirstTimeStepButtonClick}
-            >
-                <FirstPageIcon/>
-            </IconButton>
-        );
+    const firstTimeStepButton = (
+        <IconButton
+            disabled={!isValid || timeAnimationActive}
+            onClick={handleFirstTimeStepButtonClick}
+        >
+            <FirstPageIcon/>
+        </IconButton>
+    );
 
-        const prevTimeStepButton = (
-            <IconButton
-                disabled={timeAnimationActive}
-                onClick={this.handlePrevTimeStepButtonClick}
-            >
-                <ChevronLeftIcon/>
-            </IconButton>
-        );
-        const nextTimeStepButton = (
-            <IconButton
-                disabled={timeAnimationActive}
-                onClick={this.handleNextTimeStepButtonClick}
-            >
-                <ChevronRightIcon/>
-            </IconButton>
-        );
-        const lastTimeStepButton = (
-            <IconButton
-                disabled={timeAnimationActive}
-                onClick={this.handleLastTimeStepButtonClick}
-            >
-                <LastPageIcon/>
-            </IconButton>);
+    const prevTimeStepButton = (
+        <IconButton
+            disabled={!isValid || timeAnimationActive}
+            onClick={handlePrevTimeStepButtonClick}
+        >
+            <ChevronLeftIcon/>
+        </IconButton>
+    );
+    const nextTimeStepButton = (
+        <IconButton
+            disabled={!isValid || timeAnimationActive}
+            onClick={handleNextTimeStepButtonClick}
+        >
+            <ChevronRightIcon/>
+        </IconButton>
+    );
+    const lastTimeStepButton = (
+        <IconButton
+            disabled={!isValid || timeAnimationActive}
+            onClick={handleLastTimeStepButtonClick}
+        >
+            <LastPageIcon/>
+        </IconButton>);
 
-        return (
-            <FormControl className={classes.formControl}>
-                <Box>
-                    {firstTimeStepButton}
-                    {prevTimeStepButton}
-                    {playButton}
-                    {nextTimeStepButton}
-                    {lastTimeStepButton}
-                </Box>
-            </FormControl>
-        );
-    }
-}
+    return (
+        <FormControl className={classes.formControl}>
+            <Box>
+                {firstTimeStepButton}
+                {prevTimeStepButton}
+                {playButton}
+                {nextTimeStepButton}
+                {lastTimeStepButton}
+            </Box>
+        </FormControl>
+    );
+};
 
 export default withStyles(styles)(TimePlayer);

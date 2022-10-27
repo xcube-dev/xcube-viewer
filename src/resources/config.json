@@ -1,0 +1,24 @@
+{
+  "name": "default",
+  "server": {
+    "id": "local",
+    "name": "Local Server",
+    "url": "http://localhost:8080"
+  },
+  "branding": {
+    "appBarTitle": "xcube Viewer",
+    "windowTitle": "xcube Viewer",
+    "themeName": "dark",
+    "primaryColor": "blue",
+    "secondaryColor": "pink",
+    "organisationUrl": "https://xcube.readthedocs.io/",
+    "logoImage": "images/logo.png",
+    "logoWidth": 32,
+    "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    "defaultAgg": "mean",
+    "polygonFillOpacity": 0.2,
+    "allowDownloads": true,
+    "allowRefresh": true,
+    "mapProjection": "EPSG:4326"
+  }
+}

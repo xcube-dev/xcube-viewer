@@ -1,9 +1,319 @@
-## Changes in version 0.2.2 (in development)
+## Changes in version 0.13.0 (in development)
+
+* Color bar management has been slightly improved:  
+  - Color bars can now be reversed.
+  - Color bar in the legend is now rendered according to the current
+    settings "Hide small values", "Reverse", and "Opacity".
+
+* Export time series button is disabled, when there are no 
+  time-series to download. (#171)
+
+## Changes in version 0.12.0 
+
+### Enhancements
+
+* xcube Viewer can now be used with any OIDC 1.0 compliant auth service.
+
+* A new refresh icon in the main bar now allows updating 
+  server-side resources and refresh the page.
+  For this to work, the configuration setting 
+  `branding.allowRefresh` must be `true`.
+
+* The viewer app can now display also 2D datasets published by 
+  xcube server (starting with xcube version 0.11.3).
+
+
+## Changes in version 0.11.1
+
+### Enhancements
+
+* The viewer app can now be called with query parameters that
+  preselect the dataset and variable to be displayed.
+  The query parameters are `dataset` and `variable`. (#207) 
+
+  For example, when using the demo configuration, we can preselect
+  dataset with ID `remote` and the variable named `kd489`:
+
+      http://localhost:3000/?dataset=remote&variable=kd489
+
+* The performance of time-series fetching has been significantly improved
+  by exploiting the actual chunk sizes of the time dimension of a variable.
+  For this to work, the setting "Number of data points in a time series update" 
+  has been replaced by "_Minimal_ number of data points in a time series update".
+  The effective number of data points is now always an integer multiple of the
+  actual variable's time chunk size. (#166)
+
+* The style of the title and icons of the app's header bar can now be
+  customized by two new branding properties `` and `` that can provide
+  any CCS attributes (using camel-case attribute names). (#227)
+
+  For example
+  ```json
+  {   
+    "branding": {
+      "headerTitleStyle": {
+        "fontFamily": "courier",
+        "color": "yellow"
+      },
+      "headerIconStyle": {
+        "color": "black"
+      },
+      ...
+    },
+    ...
+  }
+  ```
+
+* In the info panel, the dataset's spatial reference system is shown. (#225)
+
+* It is now possible to display dataset boundaries in the map.
+  A new setting "Show dataset boundaries" is available to switch this
+  feature on and off. (#226)
+
+### Fixes
+
+* Fixed a bug that caused the app to crash when zooming into the 
+  time-series chart. (#163)
+
+* Text selection has now been disabled for the time-series charts.
+  Zooming in no longer selects the axes' labels.
+
+## Changes in version 0.11.0
+
+### Enhancements
+
+* Thanks to using xcube Server 0.11.x, xcube Viewer 0.11.x can now display 
+  datasets with non-geographic spatial coordinate reference systems, 
+  for example UTM or LAEA Europe (EPSG:3035).
+
+* The map projection can now be changed in the settings dialog. 
+  Possible value are "Geographic" and "Web Mercator".
+
+* Now the opacity of tile layers can be changed from the color bar
+  dropdown component in the map.
+
+### Other Changes
+
+* xcube Viewer 0.11.x requires xcube Server 0.11.x.
+
+* The default map projection changed from Geographic (EPSG:4326) to Spherical 
+  Mercator (EPSG:3857). Accordingly, image tiles are requested in Spherical 
+  Mercator projection (using the same tile grid as OSM)
+
+### Fixes
+
+* Fixed a problem that occurred with datasets referring to the 
+  same place group. In this case, only the first dataset received 
+  the features on place group reload. Now all datasets 
+  referring to that place group are updated on feature reload. 
+  (#208)
+
+* Fixed a problem that prevented setting the map projection 
+  using the `branding.mapProjection` configuration key. 
+
+
+## Changes in version 0.10.1
+
+### Enhancements
+
+* The map projection can now be configured using the
+  `branding.mapProjection` key. Possible values are the default
+  `"EPSG:4326"` (Geographic) and 
+  `"EPSG:3857"` (Spherical Mercator).
+
+### Fixes
+
+* Feature geometries loaded from xcube Places API are now rendered again
+  in the map.
+
+* Addressed warning saying `Using target="_blank" without rel="noreferrer" 
+  is a security risk`
+
+## Changes in version 0.10.0
+
+### Enhancements
+
+* The logo in the application's main bar is now a link.
+  The target URL can be configured using the 
+  `branding.organisationUrl` key. (#176)
+
+* Users can now manually enter a variable's min/max values that are
+  applied to the selected color bar. The editor that pops up 
+  when clicking the value range scale in the variable legend overlay.
+  (#140)
+
+* The viewer's map now uses EPSG:4326 projection as default so datasets
+  that use this grid too will have image layers showing square pixels.
+
+* Reduced layer flickering when a new time step is selected.
+  Layer transitions are now performed more smoothly. (#119)
+
+* We can now turn off image smoothing just for the variable layer.
+  The background map is no longer concerned by this setting and
+  therefore preserves its quality. (#181)
+
+* Simplified use of xcube-viewer as a container. (#167)
+  
+  The ultimate goal of this activity was to get rid of build-time
+  configuration and replace it by runtime configuration.
+  This introduced some breaking changes as follows.
+  We no longer use `.env` files for build-time configuration.
+  Instead, a runtime configuration is initially loaded: 
+  1. If query parameter `configPath` is given, it is loaded from
+     `{origin}/{configPath}/config.json`.
+  2. Otherwise, it is loaded from `{origin}/config/config.json`.
+  3. If the configuration could not be fetched, the default configuration
+     `src/resources/config.json` is used instead.
+  
+  The first option is useful for development. For example, if the app is 
+  loaded from URL `{origin}?configPath=config/myapp`, its configuration is 
+  loaded from `{origin}/config/myapp/config.json` where configuration 
+  resources are placed in `public/config/myapp/`. For this purpose 
+  `public/config/` is in `.gitignore`.
+  
+  The JSON schema for the configuration is given in
+  `src/resources/config.schema.json`.
+  
+### Fixes
+
+* Fixed issue with datasets originating from nested, filesystem-based
+  data stores such as the "s3" and "file" data stores. See also 
+  related https://github.com/dcs4cop/xcube/issues/579.  
+  (#190)
+
+* Fixed numerous base maps (#197)
+  * Where possible, switched from HTTP to HTTPS.
+  * Removed all Stamen maps - for not supporting HTTPS
+  * Removed all Mapbox maps - no longer freely accessible
+  * Removed selected OpenStreetMap maps:
+    - OSM Black & White - no longer maintained and provided
+    - OSM Landscape - no longer freely accessible
+
+* Fixed eslint warnings of type "'ACTION' is already defined" during build.
+
+## Changes in version 0.4.5
+
+* After logging out, the browser now correctly redirects to the 
+  viewer's origin. (#142)
+* Default colour for dataset-related place groups now red while 
+  initial user places colour is yellow. (#153)
+* RGB layer no longer hides places. (#152)
+* Users can now download time-series data as a Zip archive
+  containing a GeoJSON file for each time-series graph. (#20)
+
+  Note, this new feature must be enabled in `.env`:
+  ```
+  REACT_APP_ALLOW_DOWNLOADS=1
+  ```
+* The opacity of polygon fill colours has been made part the 
+  app's branding.
+* Language setting is now correctly preserved and will be 
+  used on page reload. (#158)
+
+## Changes in version 0.4.4
+
+* Time-series legends are now always shown. (#151)
+* In the time-series charts with multiple graphs, dots have only been drawn
+  for the last graph added. Now they are shown for existing graphs too. (#146)
+* Time-series graphs will no longer hide points. (#145)
+* Fixed some labels used in the UI:
+  - Renamed label "Show data points only" into "Show dots only, hide lines".
+    (#148)
+  - Corrected translation for "Show graph after adding a place".
+* Updated package dependencies:
+  - [recharts](https://recharts.org/) 2.0.9
+  - [react-scripts](https://github.com/facebook/create-react-app#readme) 4.0.3
+
+
+## Changes in version 0.4.3
+
+* Indicating invalid color bar name in map legend.
+* Added language translations for phrase "Time (UTC)".
+* Minor
+  - Fixed manifest icon paths.
+  - Removed unnecessary console dumps.
+
+## Changes in version 0.4.2
+
+_Fixed a problem during release process. No code changes._
+
+## Changes in version 0.4.1
+
+* Using Roboto font in UI which increases readability of text.
+
+
+## Changes in version 0.4.0
+
+### Enhancements
+
+* Users can now switch between median and mean methods for the spatial aggregation of 
+  polygons when creating time-series. The setting is available in the settings dialog. 
+  (partly addresses #135). 
+* Added a "RGB" switch to the app bar that is used to display the selected dataset's RGB layer, 
+  if any. Currently, RGB layers can only be configured through the xcube server. Later xcube viewer 
+  versions will allow users selecting three variables and their respective value ranges for normalisation.
+* Users can now login (and sign on) if the viewer is build with OAuth2 settings, if any, given 
+  in a `.env.local` file (#22): 
+  ```bash
+  REACT_APP_OAUTH2_DOMAIN=MY_DOMAIN
+  REACT_APP_OAUTH2_CLIENT_ID=MY_CLIENT_ID
+  REACT_APP_OAUTH2_AUDIENCE=MY_AUDIENCE
+  ``` 
+* Now displaying dataset attributions when clicking the lower right info button in the map.
+* Added a new panel to display information about the selected dataset, variable, and place (#114).
+* Added a tool button to locate the selected dataset in the map.
+* Notification "snackbars" will now disappear after 5 seconds (#107).
+* The number of data points fetched within a time-series update can now be adjusted.
+* Attached tooltips to many prominent viewer functions.
+
+
+### Fixes
+
+* Date/time displayed in the date/time select field and displayed in time-series plots
+  are now aligned. Both use Coordinated Universal Time (UTC) and ISO format (#133).  
+* When in "Show data points only" mode, values at chart points where no not shown. This now works (#120).   
+* Fixed broken map selection interaction and fly-to introduced in v0.3.2 (#115).  
+* If the server cannot be reached, the tool bar and colour legend are hidden 
+  as datasets and variables are no longer available.
+  
+### Other changes
+
+* Made the app bar a little more dense (48 instead of 56px).
+* Using more intuitive icons for user login and settings.
+* Added Help-icon providing a sub-menu with User Manual (coming soon) and the obligatory imprint.
+* Developers can now overwrite the branding's xcube web API server setting, if any, given in a `.env.local` file:
+  ```bash
+  REACT_APP_BRANDING=MY_BRANDING
+  REACT_APP_XCUBE_API=http://localhost:8080
+  ```  
+  This eases testing of yet undeployed xcube web API versions in the viewer. 
+
+## Changes in version 0.3.2
+
+### Enhancements
+
+* It is now possible to change the base map layer from settings. (#30)
+* Different deployments can now be configured through `.env.local` file. (#24)
+
+### Other changes
+
+* Updated code to use latest React 16.8 features i.e. `React.FC` with hooks (#111)
+
+* Users can now login. (#22)
+
+## Changes in version 0.3.1
+
+Fixed translation of legal agreement.
+
+## Changes in version 0.3.0
 
 ### Enhancements
 
 * It is now possible to adjust the color bar min/max value and the colors. (#29)
 
+### Other changes
+
+* Now requires xcube 0.3.0 as backend.
 
 ## Changes in version 0.2.1
 

@@ -1,38 +1,79 @@
-///<reference path="../util/find.ts"/>
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2022 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import * as React from 'react';
 import { createSelector } from 'reselect'
-import { AppState } from '../states/appState';
-import {
-    datasetsSelector,
-    userServersSelector,
-    userPlaceGroupSelector,
-    timeSeriesGroupsSelector
-} from './dataSelectors';
-
-
-import { OlGeoJSONFormat, OlTileGrid, OlVectorSource, OlXYZSource, olProjGet } from '../components/ol/types';
+import { default as OlMap } from 'ol/map';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlXYZSource } from 'ol/source/XYZ';
+import { default as OlCircle } from 'ol/style/Circle';
+import { default as OlFillStyle } from 'ol/style/Fill';
+import { default as OlStrokeStyle } from 'ol/style/Stroke';
+import { default as OlStyle } from 'ol/style/Style';
+import { default as OlTileGrid } from 'ol/tilegrid/TileGrid';
+import { Layers } from '../components/ol/layer/Layers';
+import { Tile } from '../components/ol/layer/Tile';
+import { Vector } from '../components/ol/layer/Vector';
+import { MapElement } from '../components/ol/Map';
+import memoize from "fast-memoize";
+import { Config, getTileAccess } from '../config';
+import { ApiServerConfig } from '../model/apiServer';
 
 import {
     Dataset,
     findDataset,
     findDatasetVariable,
     getDatasetTimeDimension,
-    getDatasetTimeRange, TimeDimension
+    getDatasetTimeRange,
+    RgbSchema,
+    TimeDimension
 } from '../model/dataset';
-import { Variable } from '../model/variable';
 import {
+    findPlaceInfo,
+    forEachPlace,
+    getPlaceInfo,
+    isValidPlaceGroup,
     Place,
     PlaceGroup,
-    isValidPlaceGroup,
-    PlaceInfo, forEachPlace,
+    PlaceInfo,
 } from '../model/place';
 import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import { MapElement } from '../components/ol/Map';
-import { Tile } from '../components/ol/layer/Tile';
-import { Vector } from '../components/ol/layer/Vector';
-import { Layers } from '../components/ol/layer/Layers';
+import { Variable } from '../model/variable';
+
+import { AppState } from '../states/appState';
 import { findIndexCloseTo } from '../util/find';
-import { Server } from '../model/server';
+import { MapGroup, maps, MapSource } from '../util/maps';
+import {
+    datasetsSelector,
+    timeSeriesGroupsSelector,
+    userPlaceGroupSelector,
+    userServersSelector
+} from './dataSelectors';
+import { makeRequestUrl } from "../api/callApi";
+import { MAP_OBJECTS } from "../states/controlState";
+import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "../model/proj";
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -42,6 +83,13 @@ export const selectedTimeSelector = (state: AppState) => state.controlState.sele
 export const selectedServerIdSelector = (state: AppState) => state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) => state.controlState.activities;
 export const timeAnimationActiveSelector = (state: AppState) => state.controlState.timeAnimationActive;
+export const imageSmoothingSelector = (state: AppState) => state.controlState.imageSmoothingEnabled;
+export const baseMapUrlSelector = (state: AppState) => state.controlState.baseMapUrl;
+export const showRgbLayerSelector = (state: AppState) => state.controlState.showRgbLayer;
+export const infoCardElementStatesSelector = (state: AppState) => state.controlState.infoCardElementStates;
+export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
+export const timeChunkSizeSelector = (state: AppState) => state.controlState.timeChunkSize;
+export const showDatasetBoundariesSelector = (state: AppState) => state.controlState.showDatasetBoundaries;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -70,7 +118,7 @@ export const selectedVariableSelector = createSelector(
 export const selectedVariableUnitsSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
-        return variable && variable.units || '-';
+        return (variable && variable.units) || '-';
     }
 );
 
@@ -84,7 +132,17 @@ export const selectedVariableColorBarMinMaxSelector = createSelector(
 export const selectedVariableColorBarNameSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
-        return variable && variable.colorBarName || 'viridis';
+        return (variable && variable.colorBarName) || 'viridis';
+    }
+);
+
+export const selectedVariableOpacitySelector = createSelector(
+    selectedVariableSelector,
+    (variable: Variable | null): number => {
+        if (!variable || typeof variable.opacity != 'number') {
+            return 1;
+        }
+        return variable.opacity;
     }
 );
 
@@ -92,6 +150,13 @@ export const selectedDatasetTimeRangeSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): TimeRange | null => {
         return dataset !== null ? getDatasetTimeRange(dataset) : null;
+    }
+);
+
+export const selectedDatasetRgbSchemaSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): RgbSchema | null => {
+        return dataset !== null ? (dataset.rgbSchema || null) : null;
     }
 );
 
@@ -153,7 +218,6 @@ export const selectedPlaceGroupPlacesSelector = createSelector(
     }
 );
 
-
 export const selectedPlaceSelector = createSelector(
     selectedPlaceGroupPlacesSelector,
     selectedPlaceIdSelector,
@@ -162,6 +226,16 @@ export const selectedPlaceSelector = createSelector(
     }
 );
 
+export const selectedPlaceInfoSelector = createSelector(
+    selectedPlaceGroupsSelector,
+    selectedPlaceIdSelector,
+    (placeGroups: PlaceGroup[], placeId: string | null): PlaceInfo | null => {
+        if (placeGroups.length === 0 || placeId === null) {
+            return null;
+        }
+        return findPlaceInfo(placeGroups, (placeGroup, place) => place.id === placeId);
+    }
+);
 
 export const canAddTimeSeriesSelector = createSelector(
     timeSeriesGroupsSelector,
@@ -193,11 +267,11 @@ export const timeSeriesPlaceInfosSelector = createSelector(
     timeSeriesGroupsSelector,
     placeGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
-        const placeInfos = {};
-        forEachPlace(placeGroups, (placeGroup, place, label, color) => {
+        const placeInfos: any = {};
+        forEachPlace(placeGroups, (placeGroup, place) => {
             for (let timeSeriesGroup of timeSeriesGroups) {
                 if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {
-                    placeInfos[place.id] = {placeGroup, place, label, color};
+                    placeInfos[place.id] = getPlaceInfo(placeGroup, place);
                     break;
                 }
             }
@@ -211,8 +285,8 @@ export const selectedPlaceGroupPlaceLabelsSelector = createSelector(
     selectedPlaceGroupsSelector,
     (placeGroups: PlaceGroup[]): string[] => {
         const placeLabels: string[] = [];
-        forEachPlace(placeGroups, (placeGroup, place, label) => {
-            placeLabels.push(label);
+        forEachPlace(placeGroups, (placeGroup, place) => {
+            placeLabels.push(getPlaceInfo(placeGroup, place).label);
         });
         return placeLabels;
     }
@@ -226,10 +300,29 @@ export const selectedDatasetVariableSelector = createSelector(
     }
 );
 
+export const selectedTimeChunkSizeSelector = createSelector(
+    selectedDatasetVariableSelector,
+    timeChunkSizeSelector,
+    (variable: Variable | null, minTimeChunkSize): number => {
+        if (variable && variable.timeChunkSize) {
+            const varTimeChunkSize = variable.timeChunkSize;
+            return varTimeChunkSize * Math.ceil(minTimeChunkSize / varTimeChunkSize);
+        }
+        return minTimeChunkSize;
+    }
+);
+
 export const selectedDatasetTimeDimensionSelector = createSelector(
     selectedDatasetSelector,
     (dataset: Dataset | null): TimeDimension | null => {
         return (dataset && getDatasetTimeDimension(dataset)) || null;
+    }
+);
+
+export const selectedDatasetAttributionsSelector = createSelector(
+    selectedDatasetSelector,
+    (dataset: Dataset | null): string[] | null => {
+        return (dataset && dataset.attributions) || null;
     }
 );
 
@@ -254,70 +347,347 @@ export const selectedTimeIndexSelector = createSelector(
     }
 );
 
+function getOlTileGrid(mapProjection: string,
+                       tileLevelMax: number | undefined) {
+    if (mapProjection !== WEB_MERCATOR_CRS) {
+        // If projection is not web mercator, it is geographical.
+        // We need to define the geographical tile grid used by xcube:
+        const numLevels = (typeof tileLevelMax === 'number') ? tileLevelMax + 1 : 20;
+        return new OlTileGrid({
+            tileSize: [256, 256],
+            origin: [-180, 90],
+            extent: [-180, -90, 180, 90],
+            // Note, although correct, setting minZoom
+            // will cause OpenLayers to crash:
+            // minZoom: tileLevelMin,
+            resolutions: Array.from(
+                {length: numLevels},
+                (_, i) => 180 / 256 / Math.pow(2, i)
+            )
+        });
+    }
+}
+
+function getOlXYZSource(url: string,
+                        mapProjection: string,
+                        tileGrid: undefined | OlTileGrid,
+                        attributions: string[] | null,
+                        timeAnimationActive: boolean,
+                        imageSmoothing: boolean,
+                        tileLoadFunction: any,
+                        tileLevelMin: number | undefined,
+                        tileLevelMax: number | undefined) {
+    return new OlXYZSource(
+        {
+            url,
+            projection: mapProjection,
+            tileGrid,
+            attributions: attributions || undefined,
+            transition: timeAnimationActive ? 0 : 250,
+            imageSmoothing: imageSmoothing,
+            tileLoadFunction,
+            // TODO (forman): if we provide minZoom, we also need to set
+            //   tileGrid.extent, otherwise way to many tiles are loaded from
+            //   level at minZoom when zooming out!
+            // minZoom: tileLevelMin,
+            maxZoom: tileLevelMax,
+        });
+}
+
+
+function __getLoadTileOnlyAfterMove(map: OlMap | undefined) {
+    if (map) {
+        // Define a special tileLoadFunction
+        // that prevents tiles from being loaded while the user
+        // pans or zooms, because this leads to high server loads.
+        return (tile: any, src: string) => {
+            if (map.getView().getInteracting()) {
+                map.once('moveend', function () {
+                    tile.getImage().src = src;
+                });
+            } else {
+                tile.getImage().src = src;
+            }
+        }
+    }
+}
+
+const _getLoadTileOnlyAfterMove = memoize(__getLoadTileOnlyAfterMove, {
+    serializer: args => {
+        const map = args[0] as OlMap | undefined;
+        if (map) {
+            const target = map.getTarget();
+            if (typeof target === 'string') {
+                return target;
+            } else if (target) {
+                return target.id || 'map';
+            }
+            return 'map';
+        }
+        return '';
+    }
+});
+
+function getLoadTileOnlyAfterMove() {
+    const map = MAP_OBJECTS['map'] as OlMap | undefined;
+    return _getLoadTileOnlyAfterMove(map);
+}
+
+
+function getTileLayer(layerId: string,
+                      tileUrl: string,
+                      tileLevelMin: number | undefined,
+                      tileLevelMax: number | undefined,
+                      queryParams: Array<[string, string]>,
+                      opacity: number,
+                      timeDimension: TimeDimension | null,
+                      time: number | null,
+                      timeAnimationActive: boolean,
+                      mapProjection: string,
+                      attributions: string[] | null,
+                      imageSmoothing: boolean) {
+    if (time !== null) {
+        let timeString;
+        if (timeDimension) {
+            const timeIndex = findIndexCloseTo(timeDimension.coordinates, time);
+            if (timeIndex > -1) {
+                timeString = timeDimension.labels[timeIndex];
+                // console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
+            }
+        }
+        if (!timeString) {
+            timeString = new Date(time).toISOString();
+        }
+        queryParams = [...queryParams, ['time', timeString]];
+    }
+
+    const url = makeRequestUrl(tileUrl, queryParams);
+
+    if (typeof tileLevelMax === 'number') {
+        // It is ok to have some extra zoom levels, so we can magnify pixels.
+        // Using more, artifacts will become visible.
+        tileLevelMax += 3;
+    }
+
+    const tileGrid = getOlTileGrid(mapProjection, tileLevelMax);
+    const source = getOlXYZSource(
+        url,
+        mapProjection,
+        tileGrid,
+        attributions,
+        timeAnimationActive,
+        imageSmoothing,
+        getLoadTileOnlyAfterMove(),
+        tileLevelMin,
+        tileLevelMax
+    );
+    // console.debug('source = ', source)
+
+    return (
+        <Tile
+            id={layerId}
+            source={source}
+            zIndex={10}
+            opacity={opacity}
+        />
+    );
+}
+
+export const selectedDatasetBoundaryLayerSelector = createSelector(
+    selectedDatasetSelector,
+    mapProjectionSelector,
+    showDatasetBoundariesSelector,
+    (dataset: Dataset | null,
+     mapProjection: string,
+     showDatasetBoundaries: boolean
+    ): MapElement | null => {
+        if (!dataset || !showDatasetBoundaries) {
+            return null;
+        }
+
+        let geometry = dataset.geometry;
+        if (!geometry) {
+            if (dataset.bbox) {
+                const [x1, y1, x2, y2] = dataset.bbox;
+                geometry = {
+                    type: "Polygon",
+                    coordinates: [
+                        [
+                            [x1, y1],
+                            [x2, y1],
+                            [x2, y2],
+                            [x1, y2],
+                            [x1, y1],
+                        ],
+                    ]
+                }
+            } else {
+                console.warn(`Dataset ${dataset.id} has no bbox!`);
+                return null;
+            }
+        }
+
+        const source = new OlVectorSource({
+            features: new OlGeoJSONFormat(
+                {
+                    dataProjection: GEOGRAPHIC_CRS,
+                    featureProjection: mapProjection
+                }
+            ).readFeatures({type: "Feature", geometry}),
+        });
+
+        const style = new OlStyle({
+            stroke: new OlStrokeStyle({
+                color: "orange",
+                width: 3,
+                lineDash: [2, 4],
+            }),
+        });
+
+        return (
+            <Vector
+                id={`${dataset.id}.bbox`}
+                source={source}
+                style={style}
+                zIndex={11}
+                opacity={0.5}
+            />
+        );
+    }
+);
+
 export const selectedDatasetVariableLayerSelector = createSelector(
     selectedDatasetVariableSelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
     timeAnimationActiveSelector,
+    mapProjectionSelector,
     selectedVariableColorBarMinMaxSelector,
     selectedVariableColorBarNameSelector,
+    selectedVariableOpacitySelector,
+    selectedDatasetAttributionsSelector,
+    imageSmoothingSelector,
     (variable: Variable | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
+     mapProjection: string,
      colorBarMinMax: [number, number],
      colorBarName: string,
+     opacity: number,
+     attributions: string[] | null,
+     imageSmoothing: boolean
     ): MapElement => {
-        if (!variable || !variable.tileSourceOptions) {
+        if (!variable) {
             return null;
         }
-        const options = variable.tileSourceOptions;
-        let queryParams = `vmin=${colorBarMinMax[0]}&vmax=${colorBarMinMax[1]}&cbar=${colorBarName}`;
-        if (time !== null) {
-            let timeString;
-            if (timeDimension) {
-                const timeIndex = findIndexCloseTo(timeDimension.coordinates, time);
-                if (timeIndex > -1) {
-                    timeString = timeDimension.labels[timeIndex];
-                    // console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
-                }
-            }
-            if (!timeString) {
-                timeString = new Date(time).toISOString();
-            }
-            queryParams += `&time=${timeString}`;
+        if (!variable.tileUrl) {
+            console.warn(`Variable ${variable.name} has no tileUrl!`);
+            return null;
         }
-        const url = `${options.url}?${queryParams}`;
-        //console.log(`Variable layer URL: ${url}`);
-
-        // TODO: get attributions from dataset metadata
-        // const attribution = new ol_control.Attribution(
-        //         {
-        //             target: 'https://www.brockmann-consult.de',
-        //             label: 'Brockmann Consult GmbH'
-        //         }
-        //     );
-
-        const source = new OlXYZSource(
-            {
-                url,
-                projection: olProjGet(options.projection),
-                minZoom: options.minZoom,
-                maxZoom: options.maxZoom,
-                tileGrid: new OlTileGrid(options.tileGrid),
-                // attributions: attribution,
-                // @ts-ignore
-                transition: timeAnimationActive ? 0 : 250,
-            });
-        return (
-            <Tile id={'variable'} source={source}/>
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+            ['vmin', `${colorBarMinMax[0]}`],
+            ['vmax', `${colorBarMinMax[1]}`],
+            ['cbar', colorBarName],
+            // ['retina', '1'],
+        ];
+        return getTileLayer(
+            'variable',
+            variable.tileUrl,
+            variable.tileLevelMin,
+            variable.tileLevelMax,
+            queryParams,
+            opacity,
+            timeDimension,
+            time,
+            timeAnimationActive,
+            mapProjection,
+            attributions,
+            imageSmoothing
         );
     }
 );
 
+export const selectedDatasetRgbLayerSelector = createSelector(
+    showRgbLayerSelector,
+    selectedDatasetRgbSchemaSelector,
+    selectedVariableOpacitySelector,
+    selectedDatasetTimeDimensionSelector,
+    selectedTimeSelector,
+    timeAnimationActiveSelector,
+    mapProjectionSelector,
+    selectedDatasetAttributionsSelector,
+    imageSmoothingSelector,
+    (showRgbLayer: boolean,
+     rgbSchema: RgbSchema | null,
+     opacity: number,
+     timeDimension: TimeDimension | null,
+     time: Time | null,
+     timeAnimationActive: boolean,
+     mapProjection: string,
+     attributions: string[] | null,
+     imageSmoothing: boolean
+    ): MapElement => {
+        if (!showRgbLayer || !rgbSchema) {
+            return null;
+        }
+        const queryParams: Array<[string, string]> = [
+            ['crs', mapProjection],
+        ];
+        return getTileLayer('rgb',
+            rgbSchema.tileUrl,
+            rgbSchema.tileLevelMin,
+            rgbSchema.tileLevelMax,
+            queryParams,
+            opacity,
+            timeDimension,
+            time,
+            timeAnimationActive,
+            mapProjection,
+            attributions,
+            imageSmoothing);
+    }
+);
+
+
+export function getDefaultFillOpacity() {
+    return Config.instance.branding.polygonFillOpacity || 0.25;
+}
+
+export function getDefaultStyleImage() {
+    return new OlCircle({
+        fill: getDefaultFillStyle(),
+        stroke: getDefaultStrokeStyle(),
+        radius: 6
+    })
+}
+
+export function getDefaultStrokeStyle() {
+    return new OlStrokeStyle({
+        color: [200, 0, 0, 0.75],
+        width: 1.25
+    });
+}
+
+export function getDefaultFillStyle() {
+    return new OlFillStyle({
+        color: [255, 0, 0, getDefaultFillOpacity()]
+    });
+}
+
+export function getDefaultPlaceGroupStyle() {
+    return new OlStyle({
+        image: getDefaultStyleImage(),
+        stroke: getDefaultStrokeStyle(),
+        fill: getDefaultFillStyle(),
+    });
+}
+
 export const selectedDatasetPlaceGroupLayersSelector = createSelector(
     selectedDatasetSelectedPlaceGroupsSelector,
-    (placeGroups: PlaceGroup[]): MapElement => {
+    mapProjectionSelector,
+    (placeGroups: PlaceGroup[], mapProjection: string): MapElement => {
         if (placeGroups.length === 0) {
             return null;
         }
@@ -328,20 +698,48 @@ export const selectedDatasetPlaceGroupLayersSelector = createSelector(
                     <Vector
                         key={index}
                         id={`placeGroup.${placeGroup.id}`}
+                        style={getDefaultPlaceGroupStyle()}
+                        zIndex={100}
                         source={new OlVectorSource(
                             {
-                                features: new OlGeoJSONFormat({
-                                                                  dataProjection: 'EPSG:4326',
-                                                                  featureProjection: 'EPSG:3857'
-                                                              }).readFeatures(placeGroup),
+                                features: new OlGeoJSONFormat(
+                                    {
+                                        dataProjection: GEOGRAPHIC_CRS,
+                                        featureProjection: mapProjection
+                                    }
+                                ).readFeatures(placeGroup),
                             })}
-                    />);
+                    />
+                );
             }
         });
         return (<Layers>{layers}</Layers>);
     }
 );
 
+export const visibleInfoCardElementsSelector = createSelector(
+    infoCardElementStatesSelector,
+    (infoCardElementStates): string[] => {
+        const visibleInfoCardElements: string[] = [];
+        Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
+            if (!!infoCardElementStates[e].visible) {
+                visibleInfoCardElements.push(e);
+            }
+        });
+        return visibleInfoCardElements;
+    }
+);
+
+export const infoCardElementViewModesSelector = createSelector(
+    infoCardElementStatesSelector,
+    (infoCardElementStates): { [elementType: string]: string } => {
+        const infoCardElementCodeModes: { [elementType: string]: string } = {};
+        Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
+            infoCardElementCodeModes[e] = infoCardElementStates[e].viewMode || 'text';
+        });
+        return infoCardElementCodeModes;
+    }
+);
 
 export const activityMessagesSelector = createSelector(
     activitiesSelector,
@@ -353,7 +751,7 @@ export const activityMessagesSelector = createSelector(
 export const selectedServerSelector = createSelector(
     userServersSelector,
     selectedServerIdSelector,
-    (userServers: Server[], serverId: string): Server => {
+    (userServers: ApiServerConfig[], serverId: string): ApiServerConfig => {
         if (userServers.length === 0) {
             throw new Error(`internal error: no servers configured`);
         }
@@ -365,3 +763,35 @@ export const selectedServerSelector = createSelector(
     }
 );
 
+export const baseMapLayerSelector = createSelector(
+    baseMapUrlSelector,
+    (baseMapUrl: string): JSX.Element | null => {
+        const map = findMap(baseMapUrl);
+        if (map) {
+            const access = getTileAccess(map.group.name);
+            const source = new OlXYZSource(
+                {
+                    url: map.dataset.endpoint + (access ? `?${access.param}=${access.token}` : ''),
+                    attributions: [
+                        `&copy; <a href=&quot;${map.group.link}&quot;>${map.group.name}</a>`,
+                    ]
+                });
+            return <Tile id={map.group.name + '-' + map.dataset.name} source={source} zIndex={0}/>;
+        }
+        if (baseMapUrl) {
+            const source = new OlXYZSource({url: baseMapUrl});
+            return <Tile id={baseMapUrl} source={source} zIndex={0}/>;
+        }
+        return null;
+    }
+);
+
+function findMap(endpoint: string): { group: MapGroup, dataset: MapSource } | null {
+    for (let group of maps) {
+        const dataset = group.datasets.find(dataset => dataset.endpoint === endpoint);
+        if (dataset) {
+            return {group, dataset};
+        }
+    }
+    return null;
+}

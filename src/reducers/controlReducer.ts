@@ -1,60 +1,131 @@
-import { OlGeoJSONFormat } from '../components/ol/types';
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+import { default as OlSimpleGeometry } from 'ol/geom/SimpleGeometry';
+import { default as OlMap } from 'ol/Map';
+import { transformExtent as olProjTransformExtent } from 'ol/proj';
+import {
+    ADD_ACTIVITY,
+    CHANGE_LOCALE,
+    CLOSE_DIALOG,
+    ControlAction,
+    FLY_TO,
+    INC_SELECTED_TIME,
+    OPEN_DIALOG,
+    REMOVE_ACTIVITY,
+    SELECT_DATASET,
+    SELECT_PLACE,
+    SELECT_PLACE_GROUPS,
+    SELECT_TIME,
+    SELECT_TIME_RANGE,
+    SELECT_TIME_SERIES_UPDATE_MODE,
+    SELECT_VARIABLE,
+    SET_MAP_INTERACTION,
+    SET_RGB_LAYER_VISIBILITY,
+    SET_VISIBLE_INFO_CARD_ELEMENTS,
+    SHOW_INFO_CARD,
+    UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
+    UPDATE_SETTINGS,
+    UPDATE_TIME_ANIMATION,
+} from '../actions/controlActions';
+import {
+    ADD_USER_PLACE,
+    ADD_USER_PLACE_2,
+    CONFIGURE_SERVERS,
+    DataAction,
+    REMOVE_USER_PLACE,
+    UPDATE_DATASETS
+} from '../actions/dataActions';
+import i18n from '../i18n';
 
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
-import { ControlState, newControlState } from '../states/controlState';
-import {
-    SELECT_DATASET,
-    SELECT_VARIABLE,
-    SELECT_PLACE_GROUPS,
-    SELECT_PLACE,
-    SELECT_TIME,
-    SELECT_TIME_SERIES_UPDATE_MODE,
-    ControlAction,
-    SELECT_TIME_RANGE,
-    UPDATE_TIME_ANIMATION,
-    ADD_ACTIVITY,
-    REMOVE_ACTIVITY,
-    CHANGE_LOCALE,
-    OPEN_DIALOG,
-    CLOSE_DIALOG,
-    INC_SELECTED_TIME,
-    UPDATE_SETTINGS, SET_MAP_INTERACTION,
-} from '../actions/controlActions';
-import { CONFIGURE_SERVERS, DataAction, ADD_USER_PLACE, ADD_USER_PLACE_2, REMOVE_USER_PLACE } from "../actions/dataActions";
-import { I18N } from "../config";
-import { AppState } from "../states/appState";
-import { selectedTimeIndexSelector, timeCoordinatesSelector } from "../selectors/controlSelectors";
-import { findIndexCloseTo } from "../util/find";
+import { selectedTimeIndexSelector, timeCoordinatesSelector } from '../selectors/controlSelectors';
+import { AppState } from '../states/appState';
+import { ControlState, MAP_OBJECTS, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
-import { getGlobalCanvasImageSmoothing, setGlobalCanvasImageSmoothing } from '../util/hacks';
+import { findIndexCloseTo } from '../util/find';
+import { GEOGRAPHIC_CRS } from "../model/proj";
+import { appParams } from "../config";
 
+// TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
+//                so they produce a consistent state. E.g. on selected dataset change, ensure selected
+//                places and variables are still valid. Write tests for that.
+//                We currently still receiving error logs from Material-UI, e.g.:
+//                  SelectInput.js:304 Material-UI: you have provided an out-of-range value `local`
+//                  for the select (name="dataset") component.
+//                  Consider providing a value that matches one of the available options or ''.
+//                  The available values are "".
 
-const SIMPLE_GEOMETRY_TYPES = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'Circle'];
-
-export function controlReducer(state: ControlState, action: ControlAction | DataAction, appState: AppState): ControlState {
-    if (typeof state === 'undefined') {
+export function controlReducer(state: ControlState | undefined,
+                               action: ControlAction | DataAction,
+                               appState: AppState | undefined): ControlState {
+    if (state === undefined) {
         state = newControlState();
     }
     switch (action.type) {
-        case UPDATE_SETTINGS:
-            storeUserSettings(action.settings);
-            if (action.settings.imageSmoothingEnabled !== getGlobalCanvasImageSmoothing()) {
-                setGlobalCanvasImageSmoothing(action.settings.imageSmoothingEnabled);
+        case UPDATE_SETTINGS: {
+            const settings = {...state, ...action.settings};
+            storeUserSettings(settings);
+            return settings;
+        }
+        case UPDATE_DATASETS: {
+            let selectedDatasetId = state!.selectedDatasetId || appParams.get("dataset");
+            let selectedVariableName = state!.selectedVariableName || appParams.get("variable");
+            let mapInteraction = state!.mapInteraction;
+            let selectedDataset = findDataset(action.datasets, selectedDatasetId);
+            const selectedVariable = (selectedDataset
+                    && findDatasetVariable(selectedDataset, selectedVariableName))
+                || null;
+            if (selectedDataset) {
+                if (!selectedVariable) {
+                    selectedVariableName = selectedDataset.variables.length ? selectedDataset.variables[0].name : null;
+                }
+            } else {
+                selectedDatasetId = null;
+                selectedVariableName = null;
+                selectedDataset = action.datasets.length ? action.datasets[0] : null;
+                if (selectedDataset) {
+                    selectedDatasetId = selectedDataset.id;
+                    if (selectedDataset.variables.length > 0) {
+                        selectedVariableName = selectedDataset.variables[0].name;
+                    }
+                }
             }
-            return action.settings;
+            if (!selectedDatasetId) {
+                mapInteraction = 'Select';
+            }
+            return {...state, selectedDatasetId, selectedVariableName, mapInteraction};
+        }
         case SELECT_DATASET: {
             let selectedVariableName = state.selectedVariableName;
-            const dataset = findDataset(action.datasets, action.selectedDatasetId)!;
-            const variable = findDatasetVariable(dataset, selectedVariableName);
-            if (!variable && dataset.variables.length > 0) {
-                selectedVariableName = dataset.variables[0].name;
-            }
-            let flyTo = state.flyTo;
-            if (dataset.bbox) {
-                flyTo = dataset.bbox;
+            const selectedDataset = findDataset(action.datasets, action.selectedDatasetId)!;
+            const selectedVariable = findDatasetVariable(selectedDataset, selectedVariableName);
+            if (!selectedVariable && selectedDataset.variables.length > 0) {
+                selectedVariableName = selectedDataset.variables[0].name;
             }
             const selectedDatasetId = action.selectedDatasetId;
-            const selectedTimeRange = getDatasetTimeRange(dataset);
+            const selectedTimeRange = getDatasetTimeRange(selectedDataset);
             const selectedTime = selectedTimeRange ? selectedTimeRange[1] : null;
             return {
                 ...state,
@@ -62,8 +133,39 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                 selectedVariableName,
                 selectedTimeRange,
                 selectedTime,
-                flyTo,
             };
+        }
+        case FLY_TO: {
+            const mapObject = MAP_OBJECTS[action.mapId];
+            const flyToCurr = action.location;
+            if (mapObject instanceof OlMap && flyToCurr !== null) {
+                const map = mapObject;
+                const projection = map.getView().getProjection();
+                let flyToTarget;
+                // noinspection JSDeprecatedSymbols
+                if (Array.isArray(flyToCurr)) {
+                    // Fly to extent (bounding box)
+                    flyToTarget = olProjTransformExtent(flyToCurr, GEOGRAPHIC_CRS, projection);
+                    map.getView().fit(flyToTarget, {size: map.getSize()});
+                } else {
+                    // Transform Geometry object
+                    flyToTarget = flyToCurr.transform(GEOGRAPHIC_CRS, projection) as OlSimpleGeometry;
+                    if (flyToTarget.getType() === 'Point') {
+                        // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
+                        map.getView().setCenter(flyToTarget.getFirstCoordinate());
+                    } else {
+                        // Fly to shape
+                        map.getView().fit(flyToTarget, {size: map.getSize()});
+                    }
+                }
+            }
+            if (state.flyTo !== action.location) {
+                return {
+                    ...state,
+                    flyTo: action.location,
+                };
+            }
+            return state;
         }
         case SELECT_PLACE_GROUPS: {
             const selectedPlaceGroupIds = action.selectedPlaceGroupIds;
@@ -76,21 +178,9 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         }
         case SELECT_PLACE: {
             const selectedPlaceId = action.selectedPlaceId;
-            let flyTo = state.flyTo;
-            if (selectedPlaceId && action.showInMap) {
-                const place = action.places.find(p => p.id === selectedPlaceId);
-                if (place) {
-                    if (place.bbox && place.bbox.length === 4) {
-                        flyTo = place.bbox as [number, number, number, number];
-                    } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
-                        flyTo = new OlGeoJSONFormat().readGeometry(place.geometry);
-                    }
-                }
-            }
             return {
                 ...state,
                 selectedPlaceId,
-                flyTo
             };
         }
         case SELECT_VARIABLE: {
@@ -99,9 +189,15 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                 selectedVariableName: action.selectedVariableName,
             };
         }
+        case SET_RGB_LAYER_VISIBILITY: {
+            return {
+                ...state,
+                showRgbLayer: action.showRgbLayer,
+            };
+        }
         case SELECT_TIME: {
             let {selectedTime} = action;
-            if (selectedTime !== null) {
+            if (selectedTime !== null && appState) {
                 const timeCoordinates = timeCoordinatesSelector(appState)!;
                 const index = timeCoordinates ? findIndexCloseTo(timeCoordinates, selectedTime) : -1;
                 if (index >= 0) {
@@ -117,31 +213,33 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
             return state;
         }
         case INC_SELECTED_TIME: {
-            let index = selectedTimeIndexSelector(appState);
-            if (index >= 0) {
-                const timeCoordinates = timeCoordinatesSelector(appState)!;
-                index += action.increment;
-                if (index < 0) {
-                    index = timeCoordinates.length - 1;
-                }
-                if (index > timeCoordinates.length - 1) {
-                    index = 0;
-                }
-                let selectedTime = timeCoordinates[index];
-                let selectedTimeRange = state.selectedTimeRange;
-                if (selectedTimeRange !== null) {
-                    if (selectedTime < selectedTimeRange[0]) {
-                        selectedTime = selectedTimeRange[0];
+            if (appState) {
+                let index = selectedTimeIndexSelector(appState);
+                if (index >= 0) {
+                    const timeCoordinates = timeCoordinatesSelector(appState)!;
+                    index += action.increment;
+                    if (index < 0) {
+                        index = timeCoordinates.length - 1;
                     }
-                    if (selectedTime > selectedTimeRange[1]) {
-                        selectedTime = selectedTimeRange[1];
+                    if (index > timeCoordinates.length - 1) {
+                        index = 0;
                     }
-                }
-                if (state.selectedTime !== selectedTime) {
-                    return {
-                        ...state,
-                        selectedTime,
-                    };
+                    let selectedTime = timeCoordinates[index];
+                    let selectedTimeRange = state.selectedTimeRange;
+                    if (selectedTimeRange !== null) {
+                        if (selectedTime < selectedTimeRange[0]) {
+                            selectedTime = selectedTimeRange[0];
+                        }
+                        if (selectedTime > selectedTimeRange[1]) {
+                            selectedTime = selectedTimeRange[1];
+                        }
+                    }
+                    if (state.selectedTime !== selectedTime) {
+                        return {
+                            ...state,
+                            selectedTime,
+                        };
+                    }
                 }
             }
             return state;
@@ -204,6 +302,40 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
                 return state;
             }
         }
+        case SHOW_INFO_CARD: {
+            state = {
+                ...state,
+                infoCardOpen: action.infoCardOpen,
+            };
+            storeUserSettings(state);
+            return state;
+        }
+        case SET_VISIBLE_INFO_CARD_ELEMENTS: {
+            const infoCardElementStates = {...state.infoCardElementStates};
+            Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
+                infoCardElementStates[e] = {...infoCardElementStates[e], visible: action.visibleElements.includes(e)};
+            });
+            state = {
+                ...state,
+                infoCardElementStates,
+            };
+            storeUserSettings(state);
+            return state;
+        }
+        case UPDATE_INFO_CARD_ELEMENT_VIEW_MODE: {
+            state = {
+                ...state,
+                infoCardElementStates: {
+                    ...state.infoCardElementStates,
+                    [action.elementType]: {
+                        ...state.infoCardElementStates[action.elementType],
+                        viewMode: action.viewMode
+                    }
+                },
+            };
+            storeUserSettings(state);
+            return state;
+        }
         case ADD_ACTIVITY: {
             return {
                 ...state,
@@ -220,11 +352,12 @@ export function controlReducer(state: ControlState, action: ControlAction | Data
         }
         case CHANGE_LOCALE: {
             const locale = action.locale;
-            I18N.locale = locale;
-            return {
-                ...state,
-                locale,
-            };
+            i18n.locale = locale;
+            if (locale !== state.locale) {
+                state = {...state, locale};
+                storeUserSettings(state);
+            }
+            return state;
         }
         case OPEN_DIALOG: {
             const dialogId = action.dialogId;

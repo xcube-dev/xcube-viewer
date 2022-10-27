@@ -1,8 +1,32 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import * as geojson from 'geojson';
 
 import { Variable } from '../model/variable';
-import { TimeSeries } from '../model/timeSeries';
-import { callJsonApi, QueryComponent } from './callApi';
+import { TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
+import { callJsonApi, makeRequestInit, makeRequestUrl, QueryComponent } from './callApi';
 
 
 export function getTimeSeriesForGeometry(apiServerUrl: string,
@@ -12,28 +36,50 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
                                          geometry: geojson.Geometry,
                                          startDate: string | null,
                                          endDate: string | null,
-                                         inclStDev: boolean): Promise<TimeSeries | null> {
+                                         useMedian: boolean,
+                                         inclStDev: boolean,
+                                         accessToken: string | null): Promise<TimeSeries | null> {
 
-    const url = apiServerUrl + `/ts/${datasetId}/${variable.name}/geometry`;
+    let valueDataKey: keyof TimeSeriesPoint;
+    let errorDataKey: keyof TimeSeriesPoint | null = null;
+    const query: QueryComponent[] = [];
+    if (useMedian) {
+        query.push(['aggMethods', 'median']);
+        valueDataKey = 'median';
+    } else if (inclStDev) {
+        query.push(['aggMethods', 'mean,std']);
+        valueDataKey = 'mean';
+        errorDataKey = 'std';
+    } else {
+        query.push(['aggMethods', 'mean']);
+        valueDataKey = 'mean';
+    }
+    if (startDate) {
+        query.push(['startDate', startDate]);
+    }
+    if (endDate) {
+        query.push(['endDate', endDate]);
+    }
+    const dsId = encodeURIComponent(datasetId);
+    const variableName = encodeURIComponent(variable.name);
+    const url = makeRequestUrl(
+        `${apiServerUrl}/timeseries/${dsId}/${variableName}`,
+        query
+    );
+
     const init = {
+        ...makeRequestInit(accessToken),
         method: 'post',
         body: JSON.stringify(geometry),
     };
-    const queryComponents: QueryComponent[] = [['inclStDev', inclStDev ? '1' : '0']];
-    if (startDate) {
-        queryComponents.push(['startDate', startDate]);
-    }
-    if (endDate) {
-        queryComponents.push(['endDate', endDate]);
-    }
 
     const convertTimeSeriesResult = (result: { [name: string]: any }) => {
-        const results = result['results'];
-        if (!results || results.length === 0) {
+        result = result['result'];
+        if (!result || result.length === 0) {
             return null;
         }
-        const data = results.map((item: any) => {
-            return {time: new Date(item.date).getTime(), ...item.result};
+        const data = result.map((item: any) => {
+            return {...item, time: new Date(item.time).getTime()};
         });
         const source = {
             datasetId,
@@ -41,10 +87,12 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
             variableUnits: variable.units || undefined,
             placeId,
             geometry,
+            valueDataKey,
+            errorDataKey,
         };
         return {source, data, color: "green"};
     };
 
-    return callJsonApi<TimeSeries>(url, queryComponents, init)
+    return callJsonApi<TimeSeries>(url, init)
         .then(convertTimeSeriesResult);
 }

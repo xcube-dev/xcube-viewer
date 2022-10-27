@@ -1,6 +1,30 @@
-import * as React from 'react';
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
-import { OlMap, OlBaseObject } from './types';
+import * as React from 'react';
+import { default as OlBaseObject } from 'ol/Object';
+import { default as OlMap } from 'ol/Map';
 
 import { MapContext, MapContextType } from './Map';
 
@@ -12,8 +36,8 @@ export interface MapComponentProps {
 export abstract class MapComponent<T extends OlBaseObject, P extends MapComponentProps, S = {}> extends React.PureComponent<P, S> {
     // noinspection JSUnusedGlobalSymbols
     static contextType = MapContextType;
-    context: MapContext;
-    object: T | null;
+    context: MapContext = {} as MapContext;
+    object: T | null = null;
 
     abstract addMapObject(map: OlMap): T;
 

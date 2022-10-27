@@ -1,41 +1,68 @@
-import * as React from 'react';
-import {
-    ResponsiveContainer,
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    AxisDomain,
-    TooltipPayload,
-    ReferenceArea, ReferenceLine, TooltipProps, ErrorBar, DotProps
-} from 'recharts';
-import { Theme, createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
-import { CircularProgress } from "@material-ui/core";
+import * as React from 'react';
+import { useState } from 'react';
+import {
+    AxisDomain,
+    CartesianGrid,
+    DotProps,
+    ErrorBar,
+    Legend,
+    Line,
+    LineChart,
+    ReferenceArea,
+    ReferenceLine,
+    ResponsiveContainer,
+    Tooltip,
+    TooltipPayload,
+    TooltipProps,
+    XAxis,
+    YAxis
+} from 'recharts';
+import { getUserPlaceColor } from '../config';
+import i18n from '../i18n';
+import { Place, PlaceInfo } from '../model/place';
 
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
-import { utcTimeToLocalDateString, utcTimeToLocalDateTimeString } from '../util/time';
-import {
-    I18N,
-    LINE_CHART_STROKE_SHADE_DARK_THEME,
-    LINE_CHART_STROKE_SHADE_LIGHT_THEME,
-    USER_PLACES_COLORS
-} from '../config';
 import { WithLocale } from '../util/lang';
-import { Place, PlaceInfo } from '../model/place';
-import Box from "@material-ui/core/Box";
+import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
 
+const INVISIBLE_LINE_COLOR = '#00000000';
+const SUBSTITUTE_LABEL_COLOR = '#FAFFDD';
 
 const styles = (theme: Theme) => createStyles(
     {
         chartContainer: {
-            // userSelect: 'none',
+            userSelect: 'none',
             marginTop: theme.spacing(1),
             width: '99%',
             height: '32vh',
@@ -93,304 +120,329 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     places: Place[];
 }
 
-interface TimeSeriesChartState {
-    isDragging: boolean;
-    firstTime: Time | null;
-    secondTime: Time | null;
-}
-
 
 const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
 const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
 
 
-class TimeSeriesChart extends React.Component<TimeSeriesChartProps, TimeSeriesChartState> {
+interface TimeRangeSelection {
+    firstTime?: number;
+    secondTime?: number;
+}
 
-    constructor(props: TimeSeriesChartProps) {
-        super(props);
-        this.state = TimeSeriesChart.clearState();
+const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
+                                                             classes,
+                                                             timeSeriesGroup,
+                                                             selectTimeSeries,
+                                                             selectedTime,
+                                                             selectTime,
+                                                             selectedTimeRange,
+                                                             selectTimeRange,
+                                                             places,
+                                                             selectPlace,
+                                                             placeInfos,
+                                                             dataTimeRange,
+                                                             theme,
+                                                             showErrorBars,
+                                                             showPointsOnly,
+                                                             removeTimeSeriesGroup,
+                                                             completed,
+                                                         }) => {
+    const [
+        timeRangeSelection,
+        setTimeRangeSelection
+    ] = useState<TimeRangeSelection>({});
+
+    const clearTimeRangeSelection = () => {
+        setTimeRangeSelection({});
+    };
+
+    const paletteType = theme.palette.type;
+    const lightStroke = theme.palette.primary.light;
+    const mainStroke = theme.palette.primary.main;
+    const labelTextColor = theme.palette.primary.contrastText;
+
+    let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
+    if (selectedTimeRange) {
+        isZoomedIn = !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
+        [time1, time2] = selectedTimeRange;
     }
 
-    render() {
-        const {
-            classes, timeSeriesGroup, selectedTime, selectedTimeRange,
-            dataTimeRange, theme, placeInfos, showErrorBars, showPointsOnly,
-        } = this.props;
-
-        const strokeShade = theme.palette.type === 'light' ? LINE_CHART_STROKE_SHADE_LIGHT_THEME : LINE_CHART_STROKE_SHADE_DARK_THEME;
-        const lightStroke = theme.palette.primary.light;
-        const mainStroke = theme.palette.primary.main;
-        const labelTextColor = theme.palette.primary.contrastText;
-
-        const {isDragging, firstTime, secondTime} = this.state;
-
-        let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
-        if (selectedTimeRange) {
-            isZoomedIn = !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
-            [time1, time2] = selectedTimeRange;
-        }
-
-        const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
-
-            const source = ts.source;
-            let lineName = source.variableName;
-            let lineColor = 'yellow';
-            if (placeInfos) {
-                const placeInfo = placeInfos[source.placeId];
-                if (placeInfo) {
-                    const {place, label, color} = placeInfo;
-                    if (place.geometry.type === 'Point') {
-                        const lon = place.geometry.coordinates[0];
-                        const lat = place.geometry.coordinates[1];
-                        lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
-                    } else {
-                        lineName += ` (${label})`;
-                    }
-                    lineColor = color;
-                }
-            }
-
-            const data: TimeSeriesPoint[] = [];
-            let hasErrorBars = false;
-            ts.data.forEach(point => {
-                if (point.average !== null) {
-                    let time1Ok = true;
-                    let time2Ok = true;
-                    if (time1 !== null) {
-                        time1Ok = point.time >= time1;
-                    }
-                    if (time2 !== null) {
-                        time2Ok = point.time <= time2;
-                    }
-                    if (time1Ok && time2Ok) {
-                        data.push(point);
-                        // noinspection SuspiciousTypeOfGuard
-                        if ((typeof point.uncertainty) === 'number') {
-                            hasErrorBars = true;
-                        }
-                    }
-                }
-            });
-            const shadedLineColor = USER_PLACES_COLORS[lineColor][strokeShade];
-            let errorBar;
-            if (showErrorBars && hasErrorBars) {
-                errorBar = (
-                    <ErrorBar
-                        dataKey="uncertainty"
-                        width={4}
-                        strokeWidth={1}
-                        stroke={shadedLineColor}
-                    />
-                );
-            }
-            return (
-                <Line
-                    key={i}
-                    type="monotone"
-                    name={lineName}
-                    unit={source.variableUnits}
-                    data={data}
-                    dataKey="average"
-                    dot={<CustomizedDot radius={4} stroke={shadedLineColor} fill={'white'} strokeWidth={3}/>}
-                    activeDot={<CustomizedDot radius={4} stroke={'white'} fill={shadedLineColor} strokeWidth={3}/>}
-                    stroke={showPointsOnly ? '#00000000' : shadedLineColor}
-                    strokeWidth={3 * (ts.dataProgress || 1)}
-                    isAnimationActive={ts.dataProgress === 1.0}
-                    onClick={() => this.handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
-                >{errorBar}</Line>
-            );
-        });
-
-        let referenceLine = null;
-        if (selectedTime !== null) {
-            referenceLine =
-                <ReferenceLine isFront={true} x={selectedTime} stroke={mainStroke} strokeWidth={3}
-                               strokeOpacity={0.5}/>;
-        }
-
-        let referenceArea = null;
-        if (isDragging && firstTime !== null && secondTime !== null) {
-            referenceArea =
-                <ReferenceArea x1={firstTime} x2={secondTime} strokeOpacity={0.3} fill={lightStroke}
-                               fillOpacity={0.3}/>;
-        }
-
-        const actionButtons = [];
-
-        if (isZoomedIn) {
-            const zoomOutButton = (
-                <IconButton
-                    key={'zoomOutButton'}
-                    className={classes.actionButton}
-                    aria-label="Zoom Out"
-                    onClick={this.handleZoomOutButtonClick}
-                >
-                    <AllOutIcon/>
-                </IconButton>
-            );
-            actionButtons.push(zoomOutButton);
-        }
-        const progress = this.props.completed.reduce((a: number, b: number) => a + b, 0) / this.props.completed.length;
-        const loading = !!(progress > 0 && progress < 100);
-
-        let removeAllButton;
-        if (loading) {
-            removeAllButton = (
-                <CircularProgress
-                    size={24}
-                    className={classes.actionButton}
-                    color={"secondary"}
-                />
-            );
-        } else {
-            removeAllButton = (
-                <IconButton
-                    key={'removeTimeSeriesGroup'}
-                    className={classes.actionButton}
-                    aria-label="Close"
-                    onClick={this.handleRemoveTimeSeriesGroupClick}
-                >
-                    <CloseIcon/>
-                </IconButton>
-            );
-        }
-
-        actionButtons.push(removeAllButton);
-
-        const timeSeriesText = I18N.get('Time-Series');
-        const unitsText = timeSeriesGroup.variableUnits || I18N.get('unknown units');
-        const chartTitle = `${timeSeriesText} (${unitsText})`;
-
-        // 99% per https://github.com/recharts/recharts/issues/172
-        return (
-            <div className={classes.chartContainer}>
-                <Box display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
-                    <Typography className={classes.chartTitle}>{chartTitle}</Typography>
-                    <Box display='flex' flexDirection='row' flexWrap='nowrap' alignItems='center'>
-                        {actionButtons}
-                    </Box>
-                </Box>
-                <ResponsiveContainer width="99%" className={classes.responsiveContainer}>
-                    <LineChart onMouseDown={this.handleMouseDown}
-                               onMouseMove={this.handleMouseMove}
-                               onMouseUp={this.handleMouseUp}
-                               onClick={this.handleClick}
-                               syncId="anyId"
-                               style={{color: labelTextColor}}
-                    >
-                        <XAxis dataKey="time"
-                               type="number"
-                               tickCount={6}
-                               domain={selectedTimeRange || X_AXIS_DOMAIN}
-                               tickFormatter={this.tickFormatter}
-                               stroke={labelTextColor}
-                               allowDuplicatedCategory={false}
-                        />
-                        <YAxis dataKey="average"
-                               type="number"
-                               domain={Y_AXIS_DOMAIN}
-                               stroke={labelTextColor}
-                        />
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <Tooltip content={<CustomTooltip/>}/>
-                        <Legend/>
-                        {lines}
-                        {referenceArea}
-                        {referenceLine}
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-        );
-    }
-
-    readonly tickFormatter = (value: any) => {
+    const tickFormatter = (value: any) => {
         if (typeof value !== 'number' || !Number.isFinite(value)) {
             return null;
         }
-        return utcTimeToLocalDateString(value);
+        return utcTimeToIsoDateString(value);
     };
 
-    readonly handleClick = (event: any) => {
-        if (event && this.props.selectTime && event.activeLabel !== null && Number.isFinite(event.activeLabel)) {
-            this.props.selectTime(event.activeLabel);
+    const handleClick = (event: any) => {
+        if (event && selectTime && event.activeLabel !== null && Number.isFinite(event.activeLabel)) {
+            selectTime(event.activeLabel!);
         }
-        this.setState(TimeSeriesChart.clearState());
+        clearTimeRangeSelection()
     };
 
-    readonly handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
-        const {selectTimeSeries, selectPlace, places} = this.props;
-        // console.log('handleTimeSeriesClick:', timeSeriesGroupId, timeSeriesIndex, timeSeries);
+    const handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
         selectPlace(timeSeries.source.placeId, places, true);
     };
 
-    readonly handleMouseDown = (event: any) => {
-        if (event) {
-            this.setState(TimeSeriesChart.newState(false, event.activeLabel, null));
+    const handleMouseDown = (event: any) => {
+        const firstTime = event && event.activeLabel;
+        setTimeRangeSelection({firstTime});
+    };
+
+    const handleMouseMove = (event: any) => {
+        const firstTime = timeRangeSelection.firstTime;
+        if (firstTime !== undefined) {
+            const secondTime = event && event.activeLabel;
+            setTimeRangeSelection({...timeRangeSelection, secondTime});
         }
     };
 
-    readonly handleMouseMove = (event: any) => {
-        let {firstTime} = this.state;
-        if (event && firstTime) {
-            this.setState(TimeSeriesChart.newState(true, firstTime, event.activeLabel));
+    const handleMouseUp = (event: any) => {
+        zoomIn();
+    };
+
+    const handleMouseEnter = () => {
+        clearTimeRangeSelection();
+    }
+
+    const handleMouseLeave = () => {
+        clearTimeRangeSelection();
+    }
+
+    const handleZoomOutButtonClick = () => {
+        zoomOut();
+    };
+
+    const handleRemoveTimeSeriesGroupClick = () => {
+        if (removeTimeSeriesGroup) {
+            removeTimeSeriesGroup(timeSeriesGroup.id);
         }
     };
 
-    readonly handleMouseUp = () => {
-        this.zoomIn();
-    };
-
-    readonly handleZoomOutButtonClick = () => {
-        this.zoomOut();
-    };
-
-    readonly handleRemoveTimeSeriesGroupClick = () => {
-        if (this.props.removeTimeSeriesGroup) {
-            this.props.removeTimeSeriesGroup(this.props.timeSeriesGroup.id);
-            this.setState(TimeSeriesChart.newState(this.state.isDragging,
-                                                   this.state.firstTime,
-                                                   this.state.secondTime))
-        }
-    };
-
-    private zoomIn() {
-        let {firstTime, secondTime} = this.state;
-        if (firstTime === secondTime || firstTime === null || secondTime === null) {
-            this.setState(TimeSeriesChart.clearState());
+    const zoomIn = () => {
+        const {firstTime, secondTime} = timeRangeSelection;
+        console.log("zoomIn:", firstTime, secondTime)
+        if (firstTime === secondTime
+            || firstTime === undefined
+            || secondTime === undefined) {
+            clearTimeRangeSelection();
             return;
         }
         let [minTime, maxTime] = [firstTime, secondTime];
         if (minTime > maxTime) {
             [minTime, maxTime] = [maxTime, minTime];
         }
-        this.setState(TimeSeriesChart.clearState(), () => {
-            if (this.props.selectTimeRange) {
-                this.props.selectTimeRange([minTime, maxTime]);
-            }
-        });
+        clearTimeRangeSelection();
+        if (selectTimeRange) {
+            selectTimeRange([minTime, maxTime]);
+        }
     };
 
-    private zoomOut() {
-        this.setState(TimeSeriesChart.clearState(), () => {
-            if (this.props.selectTimeRange) {
-                this.props.selectTimeRange(this.props.dataTimeRange || null);
-            }
-        });
+    const zoomOut = () => {
+        clearTimeRangeSelection();
+        if (selectTimeRange) {
+            selectTimeRange(dataTimeRange || null);
+        }
     };
 
-    private static newState(isDragging: boolean, firstTime: number | null, secondTime: number | null):
-        TimeSeriesChartState {
-        return {isDragging, firstTime, secondTime};
+    let commonValueDataKey: keyof TimeSeriesPoint | null = null;
+
+    const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
+        const source = ts.source;
+        const valueDataKey = source.valueDataKey;
+        let lineName = source.variableName;
+        let lineColor = 'yellow';
+        if (placeInfos) {
+            const placeInfo = placeInfos[source.placeId];
+            if (placeInfo) {
+                const {place, label, color} = placeInfo;
+                if (place.geometry.type === 'Point') {
+                    const lon = place.geometry.coordinates[0];
+                    const lat = place.geometry.coordinates[1];
+                    lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
+                } else {
+                    lineName += ` (${label})`;
+                }
+                lineColor = color;
+            }
+        }
+
+        const data: TimeSeriesPoint[] = [];
+        ts.data.forEach(point => {
+            if (point[valueDataKey] !== null) {
+                let time1Ok = true;
+                let time2Ok = true;
+                if (time1 !== null) {
+                    time1Ok = point.time >= time1;
+                }
+                if (time2 !== null) {
+                    time2Ok = point.time <= time2;
+                }
+                if (time1Ok && time2Ok) {
+                    data.push(point);
+                }
+            }
+        });
+        if (commonValueDataKey === null) {
+            commonValueDataKey = valueDataKey;
+        }
+        const shadedLineColor = getUserPlaceColor(lineColor, paletteType);
+        let errorBar;
+        if (valueDataKey && showErrorBars && source.errorDataKey) {
+            errorBar = (
+                <ErrorBar
+                    dataKey={source.errorDataKey}
+                    width={4}
+                    strokeWidth={1}
+                    stroke={shadedLineColor}
+                />
+            );
+        }
+        return (
+            <Line
+                key={i}
+                type="monotone"
+                name={lineName}
+                unit={source.variableUnits}
+                data={data}
+                dataKey={valueDataKey}
+                dot={<CustomizedDot radius={3} stroke={shadedLineColor} fill={'white'} strokeWidth={2}/>}
+                activeDot={<CustomizedDot radius={3} stroke={'white'} fill={shadedLineColor} strokeWidth={2}/>}
+                stroke={shadedLineColor}
+                strokeOpacity={showPointsOnly ? 0 : ts.dataProgress}
+                // strokeWidth={2 * (ts.dataProgress || 1)}
+                // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
+                // isAnimationActive={ts.dataProgress === 1.0}
+                isAnimationActive={false}
+                onClick={() => handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
+            >
+                {errorBar}
+            </Line>
+        );
+    });
+
+    let referenceLine = null;
+    if (selectedTime !== null) {
+        referenceLine =
+            <ReferenceLine
+                isFront={true}
+                x={selectedTime}
+                stroke={mainStroke}
+                strokeWidth={3}
+                strokeOpacity={0.5}
+            />;
     }
 
-    private static clearState(): TimeSeriesChartState {
-        return TimeSeriesChart.newState(false, null, null);
+    const {firstTime, secondTime} = timeRangeSelection;
+    let referenceArea = null;
+    if (firstTime !== undefined && secondTime !== undefined) {
+        referenceArea =
+            <ReferenceArea
+                x1={firstTime}
+                x2={secondTime}
+                strokeOpacity={0.3}
+                fill={lightStroke}
+                fillOpacity={0.3}
+            />;
     }
 
-}
+    const actionButtons = [];
+
+    if (isZoomedIn) {
+        const zoomOutButton = (
+            <IconButton
+                key={'zoomOutButton'}
+                className={classes.actionButton}
+                aria-label="Zoom Out"
+                onClick={handleZoomOutButtonClick}
+            >
+                <AllOutIcon/>
+            </IconButton>
+        );
+        actionButtons.push(zoomOutButton);
+    }
+    const progress = completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
+    const loading = (progress > 0 && progress < 100);
+
+    let removeAllButton;
+    if (loading) {
+        removeAllButton = (
+            <CircularProgress
+                size={24}
+                className={classes.actionButton}
+                color={'secondary'}
+            />
+        );
+    } else {
+        removeAllButton = (
+            <IconButton
+                key={'removeTimeSeriesGroup'}
+                className={classes.actionButton}
+                aria-label="Close"
+                onClick={handleRemoveTimeSeriesGroupClick}
+            >
+                <CloseIcon/>
+            </IconButton>
+        );
+    }
+
+    actionButtons.push(removeAllButton);
+
+    const timeSeriesText = i18n.get('Time-Series');
+    const unitsText = timeSeriesGroup.variableUnits || i18n.get('unknown units');
+    const chartTitle = `${timeSeriesText} (${unitsText})`;
+
+    // 99% per https://github.com/recharts/recharts/issues/172
+    return (
+        <div className={classes.chartContainer}>
+            <Box display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
+                <Typography className={classes.chartTitle}>{chartTitle}</Typography>
+                <Box display='flex' flexDirection='row' flexWrap='nowrap' alignItems='center'>
+                    {actionButtons}
+                </Box>
+            </Box>
+            <ResponsiveContainer width="99%" className={classes.responsiveContainer}>
+                <LineChart
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    onClick={handleClick}
+                    syncId="anyId"
+                    style={{color: labelTextColor}}
+                >
+                    <XAxis
+                        dataKey="time"
+                        type="number"
+                        tickCount={6}
+                        domain={selectedTimeRange || X_AXIS_DOMAIN}
+                        tickFormatter={tickFormatter}
+                        stroke={labelTextColor}
+                        allowDuplicatedCategory={false}
+                    />
+                    <YAxis
+                        dataKey={commonValueDataKey || "mean"}
+                        type="number"
+                        domain={Y_AXIS_DOMAIN}
+                        stroke={labelTextColor}
+                    />
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <Tooltip content={<CustomTooltip/>}/>
+                    <Legend/>
+                    {lines}
+                    {referenceArea}
+                    {referenceLine}
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
+    );
+};
 
 export default withStyles(styles, {withTheme: true})(TimeSeriesChart);
 
@@ -398,51 +450,61 @@ export default withStyles(styles, {withTheme: true})(TimeSeriesChart);
 interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
 }
 
-class _CustomTooltip extends React.PureComponent<_CustomTooltipProps> {
-    render() {
-        const {classes, active, label, payload} = this.props;
-        if (!active) {
+const _CustomTooltip: React.FC<_CustomTooltipProps> = (
+    {
+        classes,
+        active,
+        label,
+        payload
+    }
+) => {
+    if (!active) {
+        return null;
+    }
+    if (typeof label !== 'number') {
+        return null;
+    }
+    if (!payload || payload.length === 0) {
+        return null;
+    }
+    const items = payload.map((p: TooltipPayload, index: number) => {
+        //console.log("payload:", p);
+        let {name, value, color, unit, dataKey} = p;
+        if (typeof value !== 'number') {
             return null;
         }
-        if (typeof label !== 'number') {
-            return null;
+        // let valueText;
+        // if (typeof p.std === 'number') {
+        //     valueText = `${value.toFixed(2)} ±${p.std.toFixed(2)} (std)`;
+        // } else {
+        //     valueText = value.toFixed(3);
+        // }
+        const valueText = value.toFixed(3);
+        if (color === INVISIBLE_LINE_COLOR) {
+            color = SUBSTITUTE_LABEL_COLOR;
         }
-        if (!payload || payload.length === 0) {
-            return null;
-        }
-        const items = payload.map((p: TooltipPayload, index: number) => {
-            let {name, value, color, unit} = p;
-            if (typeof value !== 'number') {
-                return null;
-            }
-            // let valueText;
-            // if (typeof p.uncertainty === 'number') {
-            //     valueText = `${value.toFixed(2)} ±${p.uncertainty.toFixed(2)} (uncertainty)`;
-            // } else {
-            //     valueText = value.toFixed(3);
-            // }
-            const valueText = value.toFixed(3);
-            return (
-                <div key={index}>
-                    <span>{name}:&nbsp;</span>
-                    <span className={classes.toolTipValue} style={{color: color}}>{valueText}</span>
-                    <span>&nbsp;{unit}</span>
-                </div>
-            );
-        });
-
-        if (!items) {
-            return null;
-        }
-
+        const isPoint = name.indexOf(':') !== -1;
+        const suffix = isPoint ? '' : ` (${dataKey})`;
         return (
-            <div className={classes.toolTipContainer}>
-                <span className={classes.toolTipLabel}>{`${utcTimeToLocalDateTimeString(label)}`}</span>
-                {items}
+            <div key={index}>
+                <span>{name}:&nbsp;</span>
+                <span className={classes.toolTipValue} style={{color}}>{valueText}</span>
+                <span>&nbsp;{`${unit} ${suffix}`}</span>
             </div>
         );
+    });
+
+    if (!items) {
+        return null;
     }
-}
+
+    return (
+        <div className={classes.toolTipContainer}>
+            <span className={classes.toolTipLabel}>{`${utcTimeToIsoDateTimeString(label)} UTC`}</span>
+            {items}
+        </div>
+    );
+};
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip);
 
@@ -468,11 +530,24 @@ const CustomizedDot = (props: CustomizedDotProps) => {
     // noinspection SuspiciousTypeOfGuard
     if (typeof cx === 'number' && typeof cy === 'number') {
         return (
-            <svg x={cx - totalRadius} y={cy - totalRadius} width={totalDiameter} height={totalDiameter}
-                 viewBox={`0 0 ${vpSize} ${vpSize}`}>
-                <circle cx='50%' cy='50%' r={r} strokeWidth={sw} stroke={stroke} fill={fill}/>
+            <svg
+                x={cx - totalRadius}
+                y={cy - totalRadius}
+                width={totalDiameter}
+                height={totalDiameter}
+                viewBox={`0 0 ${vpSize} ${vpSize}`}
+            >
+                <circle
+                    cx='50%'
+                    cy='50%'
+                    r={r}
+                    strokeWidth={sw}
+                    stroke={stroke}
+                    fill={fill}
+                />
             </svg>
         );
     }
+
     return null;
 };
