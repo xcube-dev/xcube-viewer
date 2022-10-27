@@ -1,5 +1,10 @@
 ## Changes in version 0.13.0 (in development)
 
+* The browser window's title and favicon can now be configured
+  using the two parameters
+  - `windowTitle` - a string
+  - `windowIcon` - abs. or rel. URL to `*.ico` icon file
+
 * Color bar management has been slightly improved:  
   - Color bars can now be reversed.
   - Color bar in the legend is now rendered according to the current
