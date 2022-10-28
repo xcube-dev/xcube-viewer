@@ -121,8 +121,8 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             };
         }
         case ADD_USER_PLACE_2: {
-            const {place} = action;
-            addUserPlaceToLayer(place);
+            const {place, mapProjection} = action;
+            addUserPlaceToLayer(place, mapProjection);
             const features = [...state.userPlaceGroup.features, place];
             const userPlaceGroup = {...state.userPlaceGroup, features};
             return {
@@ -205,11 +205,15 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
     return state!;
 }
 
-function addUserPlaceToLayer(place: Place) {
+function addUserPlaceToLayer(place: Place, mapProjection: string) {
     if (MAP_OBJECTS.userLayer) {
         const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
         const source = userLayer.getSource();
-        const feature = new OlGeoJSONFormat().readFeature(place);
+        const feature = new OlGeoJSONFormat().readFeature(place,
+            {
+                dataProjection: 'EPSG:4326',
+                featureProjection: mapProjection
+            });
         feature.setStyle(new OlStyle(
             {
                 stroke: new OlStrokeStyle({color: (place.properties || {}).color || 'red'}),
@@ -217,6 +221,7 @@ function addUserPlaceToLayer(place: Place) {
             }
         ));
         source.addFeature(feature);
+        userLayer.changed();
     }
 }
 

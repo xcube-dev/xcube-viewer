@@ -24,25 +24,29 @@
 
 import * as React from 'react';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Box from "@material-ui/core/Box";
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Typography from '@material-ui/core/Typography';
-import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import CodeMirror from '@uiw/react-codemirror';
+import { json } from '@codemirror/lang-json';
 
 import { WithLocale } from '../util/lang';
 import i18n from '../i18n';
+import { Config } from "../config";
+import { FileUpload } from "./FileUpload";
+import * as events from "events";
+import { DragEvent } from "react";
 
 
 // noinspection JSUnusedLocalSymbols
 const useStyles = makeStyles(theme => (
     {
-        textArea: {
-            width: '100%',
-            backgroundColor: (theme.palette.type === 'dark' ? lighten : darken)(theme.palette.background.paper, 0.78),
+        actionBox: {
+            paddingTop: "8px"
         }
     }
 ));
@@ -57,6 +61,7 @@ interface AddPlaceDialogProps extends WithLocale {
 export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}: AddPlaceDialogProps) {
 
     const [geometryText, setGeometryText] = React.useState('');
+    const [isLoading, setLoading] = React.useState(false);
     const classes = useStyles();
 
     if (!open) {
@@ -72,12 +77,35 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
         closeDialog('addUserPlaceFromText');
     };
 
-    const handleTextAreaChange = (event: any) => {
-        setGeometryText(event.target.value);
+    const handleClean = () => {
+        setGeometryText("");
+    };
+
+    const handleFileSelect = (file: File) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setGeometryText(reader.result as string);
+        };
+        reader.onabort = reader.onerror = () => {
+            setLoading(false);
+        };
+        reader.readAsText(file, "UTF-8");
+    };
+
+    const handleDropFile = () => {
+        setGeometryText("");
+    }
+
+    const handleTextAreaChange = (value: string) => {
+        setGeometryText(value);
+    };
+
+    const isGeometryTextEmpty = (): boolean => {
+        return geometryText.trim() !== "";
     };
 
     const isGeometryTextValid = (): boolean => {
-        return geometryText.trim() !== "";
+        return isGeometryTextEmpty();
     };
 
     return (
@@ -89,14 +117,30 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
         >
             <DialogTitle id="server-dialog-title">{i18n.get('Add Place')}</DialogTitle>
             <DialogContent dividers>
-                <Typography>{i18n.get('Enter (e.g. copy and paste) any valid GeoJSON here.')}</Typography>
-                <TextareaAutosize
+                <Typography>{i18n.get('Enter GeoJSON or drag & drop a GeoJSON file.')}</Typography>
+                <CodeMirror
                     autoFocus
-                    rows={16}
-                    className={classes.textArea}
+                    height="400px"
+                    extensions={[json()]}
                     value={geometryText}
                     onChange={handleTextAreaChange}
+                    theme={Config.instance.branding.themeName || "light"}
+                    onDrop={event => handleDropFile(event)}
+                    // onDragOver={event => handleDragOver(event)}
                 />
+                <Box className={classes.actionBox}>
+                    <FileUpload
+                        title={i18n.get('From File' + "...")}
+                        accept=".json,.geojson"
+                        onFileSelect={handleFileSelect}
+                    />
+                    <Button
+                        onClick={handleClean}
+                        disabled={!isGeometryTextEmpty()}
+                    >
+                        {i18n.get('Clean')}
+                    </Button>
+                </Box>
             </DialogContent>
             <DialogActions>
                 <Button
@@ -115,3 +159,4 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
         </Dialog>
     );
 }
+

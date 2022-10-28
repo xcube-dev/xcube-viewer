@@ -34,6 +34,7 @@ import { Dataset } from '../model/dataset';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
+    mapProjectionSelector,
     selectedDatasetIdSelector,
     selectedDatasetTimeDimensionSelector,
     selectedDatasetVariableSelector,
@@ -205,11 +206,12 @@ export const ADD_USER_PLACE_2 = 'ADD_USER_PLACE_2';
 export interface AddUserPlace2 {
     type: typeof ADD_USER_PLACE_2;
     place: Place;
+    mapProjection: string;
     selectPlace: boolean;
 }
 
-export function addUserPlace2(place: Place, selectPlace: boolean): AddUserPlace2 {
-    return {type: ADD_USER_PLACE_2, place, selectPlace};
+export function addUserPlace2(place: Place, mapProjection: string, selectPlace: boolean): AddUserPlace2 {
+    return {type: ADD_USER_PLACE_2, place, mapProjection, selectPlace};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,7 +231,7 @@ export function addUserPlaceFromText(geometryText: string) {
             properties: {color: 'red'},
         };
 
-        dispatch(addUserPlace2(place, true));
+        dispatch(addUserPlace2(place, mapProjectionSelector(getState()),true));
         dispatch(selectPlaceGroups(['user']) as any);
         dispatch(selectPlace(
             placeId,
