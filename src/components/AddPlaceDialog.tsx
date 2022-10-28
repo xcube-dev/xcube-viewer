@@ -38,8 +38,6 @@ import { WithLocale } from '../util/lang';
 import i18n from '../i18n';
 import { Config } from "../config";
 import { FileUpload } from "./FileUpload";
-import * as events from "events";
-import { DragEvent } from "react";
 
 
 // noinspection JSUnusedLocalSymbols
@@ -61,7 +59,7 @@ interface AddPlaceDialogProps extends WithLocale {
 export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}: AddPlaceDialogProps) {
 
     const [geometryText, setGeometryText] = React.useState('');
-    const [isLoading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
     const classes = useStyles();
 
     if (!open) {
@@ -85,10 +83,12 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
         const reader = new FileReader();
         reader.onloadend = () => {
             setGeometryText(reader.result as string);
+            setLoading(false);
         };
         reader.onabort = reader.onerror = () => {
             setLoading(false);
         };
+        setLoading(true);
         reader.readAsText(file, "UTF-8");
     };
 
@@ -125,18 +125,18 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
                     value={geometryText}
                     onChange={handleTextAreaChange}
                     theme={Config.instance.branding.themeName || "light"}
-                    onDrop={event => handleDropFile(event)}
-                    // onDragOver={event => handleDragOver(event)}
+                    onDrop={handleDropFile}
                 />
                 <Box className={classes.actionBox}>
                     <FileUpload
                         title={i18n.get('From File' + "...")}
                         accept=".json,.geojson"
                         onFileSelect={handleFileSelect}
+                        disabled={loading}
                     />
                     <Button
                         onClick={handleClean}
-                        disabled={!isGeometryTextEmpty()}
+                        disabled={!isGeometryTextEmpty() || loading}
                     >
                         {i18n.get('Clean')}
                     </Button>
@@ -150,7 +150,7 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
                 </Button>
                 <Button
                     onClick={handleConfirm}
-                    disabled={!isGeometryTextValid()}
+                    disabled={!isGeometryTextValid() || loading}
                     color="primary"
                 >
                     {i18n.get('OK')}

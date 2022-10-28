@@ -29,6 +29,7 @@ import Button from '@material-ui/core/Button';
 interface FileUploadProps {
     title: string;
     accept?: string;
+    disabled?: boolean;
     onFileSelect: (file: File) => any;
 }
 
@@ -36,6 +37,7 @@ export const FileUpload: React.FC<FileUploadProps> = (
     {
         title,
         accept,
+        disabled,
         onFileSelect,
     }
 ) => {
@@ -61,8 +63,12 @@ export const FileUpload: React.FC<FileUploadProps> = (
                 ref={fileInput}
                 hidden
                 onChange={handleFileChange}
+                disabled={disabled}
             />
-            <Button onClick={handleButtonClick}>
+            <Button
+                onClick={handleButtonClick}
+                disabled={disabled}
+            >
                 {title}
             </Button>
         </>
