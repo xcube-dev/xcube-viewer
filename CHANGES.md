@@ -1,5 +1,7 @@
 ## Changes in version 0.13.0 (in development)
 
+* Fixed user places disappearing after map projection change (#247).
+
 * Color bar management has been slightly improved:  
   - Color bars can now be reversed.
   - Color bar in the legend is now rendered according to the current
