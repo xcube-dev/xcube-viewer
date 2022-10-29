@@ -29,8 +29,13 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
 
@@ -43,8 +48,20 @@ import { FileUpload } from "./FileUpload";
 // noinspection JSUnusedLocalSymbols
 const useStyles = makeStyles(theme => (
     {
+        spacer: {
+            flexGrow: 1.0,
+        },
+        labelPropertyName: {
+            marginRight: theme.spacing(1),
+            flexGrow: 1.0
+        },
+        fallbackNamePrefix: {
+            flexGrow: 1.0
+        },
         actionBox: {
-            paddingTop: "8px"
+            paddingTop: theme.spacing(0.5),
+            display: "flex",
+            flexDirection: "row",
         }
     }
 ));
@@ -53,13 +70,27 @@ const useStyles = makeStyles(theme => (
 interface AddPlaceDialogProps extends WithLocale {
     open: boolean;
     closeDialog: (dialogId: string) => void;
-    addUserPlaceFromText: (geometryText: string) => void;
+    placeLabelPropertyName: string,
+    placeLabelPrefix: string,
+    addUserPlacesFromText: (geometryText: string,
+                            placeLabelPropertyName: string,
+                            placeLabelPrefix: string) => void;
 }
 
-export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}: AddPlaceDialogProps) {
+export default function AddPlaceDialog(
+    {
+        open,
+        closeDialog,
+        placeLabelPropertyName,
+        placeLabelPrefix,
+        addUserPlacesFromText
+    }: AddPlaceDialogProps) {
 
     const [geometryText, setGeometryText] = React.useState('');
     const [loading, setLoading] = React.useState(false);
+    const [expanded, setExpanded] = React.useState(false);
+    const [_placeLabelPropertyName, setPlaceLabelPropertyName] = React.useState(placeLabelPropertyName);
+    const [_placeLabelPrefix, setPlaceLabelPrefix] = React.useState(placeLabelPrefix);
     const classes = useStyles();
 
     if (!open) {
@@ -68,7 +99,7 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
 
     const handleConfirm = () => {
         closeDialog('addUserPlaceFromText');
-        addUserPlaceFromText(geometryText);
+        addUserPlacesFromText(geometryText, _placeLabelPropertyName, _placeLabelPrefix);
     };
 
     const handleClose = () => {
@@ -111,6 +142,14 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
 
     // TODO: in addition to GeoJSON, also allow for WKT too
 
+    function handlerLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        setPlaceLabelPropertyName(e.target.value);
+    }
+
+    function handlerFallbackNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        setPlaceLabelPrefix(e.target.value);
+    }
+
     return (
         <Dialog
             fullWidth
@@ -130,7 +169,7 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
                     theme={Config.instance.branding.themeName || "light"}
                     onDrop={handleDropFile}
                 />
-                <Box className={classes.actionBox}>
+                <div className={classes.actionBox}>
                     <FileUpload
                         title={i18n.get('From File') + "..."}
                         accept=".json,.geojson"
@@ -144,7 +183,33 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
                     >
                         {i18n.get('Clean')}
                     </Button>
-                </Box>
+                    <Box className={classes.spacer}/>
+                    <IconButton onClick={() => setExpanded(!expanded)}>
+                        {expanded ? <ExpandLessIcon/>:<ExpandMoreIcon/>}
+                    </IconButton>
+                </div>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <div className={classes.actionBox}>
+                        <TextField
+                            label={i18n.get("Label property name")}
+                            value={_placeLabelPropertyName}
+                            onChange={(e) => handlerLabelPropertyNameChange(e)}
+                            size="small"
+                            variant="standard"
+                            helperText={i18n.get("Will be used to name the new place")}
+                            className={classes.labelPropertyName}
+                        />
+                        <TextField
+                            label={i18n.get("Fallback name prefix")}
+                            value={_placeLabelPrefix}
+                            onChange={(e) => handlerFallbackNamePrefixChange(e)}
+                            size="small"
+                            variant="standard"
+                            helperText={i18n.get("Will be used by default")}
+                            className={classes.fallbackNamePrefix}
+                        />
+                    </div>
+                </Collapse>
             </DialogContent>
             <DialogActions>
                 <Button

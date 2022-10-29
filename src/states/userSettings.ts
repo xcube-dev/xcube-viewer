@@ -74,6 +74,8 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('exportPlacesAsCollection', settings);
             storage.setPrimitiveProperty('exportZipArchive', settings);
             storage.setPrimitiveProperty('exportFileName', settings);
+            storage.setPrimitiveProperty('placeLabelPropertyName', settings);
+            storage.setPrimitiveProperty('placeLabelPrefix', settings);
         } catch (e) {
             console.warn(`failed to store user settings: ${e}`);
         }
@@ -104,6 +106,8 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('exportPlacesAsCollection', settings, defaultSettings);
             storage.getBooleanProperty('exportZipArchive', settings, defaultSettings);
             storage.getStringProperty('exportFileName', settings, defaultSettings);
+            storage.getStringProperty('placeLabelPropertyName', settings, defaultSettings);
+            storage.getStringProperty('placeLabelPrefix', settings, defaultSettings);
             if (process.env.NODE_ENV === 'development') {
                 console.debug('Loaded user settings:', settings);
             }

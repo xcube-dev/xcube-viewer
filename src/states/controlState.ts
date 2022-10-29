@@ -70,6 +70,8 @@ export interface ControlState {
     showTimeSeriesPointsOnly: boolean;
     showTimeSeriesErrorBars: boolean;
     showTimeSeriesMedian: boolean;
+    placeLabelPropertyName: string;
+    placeLabelPrefix: string;
     flyTo: OlGeometry | OlExtent | null;
     activities: { [id: string]: string };
     locale: string;
@@ -111,6 +113,8 @@ export function newControlState(): ControlState {
         showTimeSeriesPointsOnly: false,
         showTimeSeriesErrorBars: true,
         showTimeSeriesMedian: branding.defaultAgg === 'median',
+        placeLabelPropertyName: "NAME",
+        placeLabelPrefix: "User-Place-",
         flyTo: null,
         activities: {},
         locale: 'en',

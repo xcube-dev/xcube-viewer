@@ -11,7 +11,8 @@
   - allow for WKT too, currently only GeoJSON.
   - allow entering CRS, currently assuming EPSG:4326.
   - allow entering property name used to label the new place(s)
-    and fallback name prefix, currently using "User-GeoJSON-".
+    and fallback name prefix in settings, 
+    currently possible only in "Add Place" dialog.
 
 * Color bar management has been slightly improved:  
   - Color bars can now be reversed.

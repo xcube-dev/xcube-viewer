@@ -59,7 +59,7 @@ import {
     selectPlace,
     SelectPlace,
     selectPlaceGroups,
-    SelectPlaceGroups,
+    SelectPlaceGroups, updateSettings, UpdateSettings,
 } from './controlActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { newId } from "../util/id";
@@ -222,9 +222,15 @@ export function addUserPlaces(places: Place[], mapProjection: string, selectPlac
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+let LAST_PLACE_LABEL_ID = 0;
 
-export function addUserPlacesFromText(geometryText: string) {
-    return (dispatch: Dispatch<AddUserPlaces | SelectPlaceGroups | SelectPlace>, getState: () => AppState) => {
+export function addUserPlacesFromText(geometryText: string,
+                                      placeLabelPropertyName: string,
+                                      placeLabelPrefix: string) {
+    const placeLabelPropertyNameLC = placeLabelPropertyName.toLowerCase();
+    return (dispatch: Dispatch<AddUserPlaces | SelectPlaceGroups | SelectPlace | UpdateSettings>, getState: () => AppState) => {
+
+
         const geoJSON = new OlGeoJSONFormat();
 
         let features: OlFeature[];
@@ -246,31 +252,45 @@ export function addUserPlacesFromText(geometryText: string) {
             const properties = feature.getProperties();
             const geometry = feature.getGeometry();
             if (geometry) {
-                // TODO: allow for custom prefix
-                let placeId = `User-GeoJSON-${newId()}`;
+                let placeLabel = "";
                 const geoJsonGeometry: geojson.Geometry = geoJSON.writeGeometryObject(geometry) as any;
                 let geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
                 if (properties) {
-                    for (let k in properties) {
-                        const v = properties[k];
-                        if (v === null || typeof v === 'number' || typeof v === 'string' || typeof v === 'boolean') {
-                            geoJsonProps[k] = v;
+                    for (let propertyName in properties) {
+                        const propertyValue = properties[propertyName];
+                        if (propertyValue === null
+                            || typeof propertyValue === 'number'
+                            || typeof propertyValue === 'string'
+                            || typeof propertyValue === 'boolean') {
+                            geoJsonProps[propertyName] = propertyValue;
                         }
-                        // TODO: allow for custom property name
-                        if (typeof v === 'string' && (k === 'NAME' || k === 'S_NAME')) {
-                            // placeId = v;
+                        if (typeof propertyValue === 'string'
+                            && propertyName.toLowerCase() === placeLabelPropertyNameLC) {
+                            placeLabel = propertyValue;
                         }
                     }
                 }
 
+                if (placeLabel === "") {
+                    const placeLabelId = ++LAST_PLACE_LABEL_ID;
+                    placeLabel = `${placeLabelPrefix}-${placeLabelId}`;
+                }
+
+                geoJsonProps["label"] = placeLabel;
+
                 places.push({
                     type: 'Feature',
-                    id: placeId,
+                    id: newId(),
                     geometry: geoJsonGeometry,
                     properties: geoJsonProps,
                 })
             }
         });
+
+        dispatch(updateSettings({
+            placeLabelPropertyName,
+            placeLabelPrefix
+        }));
 
         if (places.length) {
             dispatch(addUserPlaces(places, mapProjectionSelector(getState()), true));

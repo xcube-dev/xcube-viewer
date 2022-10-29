@@ -109,6 +109,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
             displayEmpty
             name="place"
             className={classes.select}
+            disabled={places.length === 0}
         >
             {places.map((place, i) => (
                 <MenuItem
