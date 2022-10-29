@@ -29,23 +29,29 @@ import Button from '@material-ui/core/Button';
 interface FileUploadProps {
     title: string;
     accept?: string;
+    multiple?: boolean;
     disabled?: boolean;
-    onFileSelect: (file: File) => any;
+    onSelect: (selection: File[]) => any;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = (
     {
         title,
         accept,
+        multiple,
         disabled,
-        onFileSelect,
+        onSelect,
     }
 ) => {
     const fileInput = React.useRef<HTMLInputElement | null>(null)
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files !== null && e.target.files.length) {
-            onFileSelect(e.target.files[0]);
+            const files: File[] = [];
+            for (let i = 0; i < e.target.files.length; i++) {
+                files.push(e.target.files[i]);
+            }
+            onSelect(files);
         }
     }
 
@@ -60,6 +66,7 @@ export const FileUpload: React.FC<FileUploadProps> = (
             <input
                 type="file"
                 accept={accept}
+                multiple={multiple}
                 ref={fileInput}
                 hidden
                 onChange={handleFileChange}

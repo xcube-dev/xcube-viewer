@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../states/appState';
 import AddPlaceDialog from '../components/AddPlaceDialog';
 import { closeDialog } from '../actions/controlActions';
-import { addUserPlaceFromText } from '../actions/dataActions';
+import { addUserPlacesFromText } from '../actions/dataActions';
 
 
 const mapStateToProps = (state: AppState) => {
@@ -14,7 +14,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
     closeDialog,
-    addUserPlaceFromText,
+    addUserPlaceFromText: addUserPlacesFromText,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddPlaceDialog);

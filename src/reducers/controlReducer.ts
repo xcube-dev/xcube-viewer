@@ -51,7 +51,7 @@ import {
 } from '../actions/controlActions';
 import {
     ADD_USER_PLACE,
-    ADD_USER_PLACE_2,
+    ADD_USER_PLACES,
     CONFIGURE_SERVERS,
     DataAction,
     REMOVE_USER_PLACE,
@@ -295,9 +295,9 @@ export function controlReducer(state: ControlState | undefined,
                 mapInteraction: action.mapInteraction
             };
         }
-        case ADD_USER_PLACE_2: {
+        case ADD_USER_PLACES: {
             if (action.selectPlace) {
-                return selectPlace(state, action.place.id);
+                return selectPlace(state, action.places.id);
             } else {
                 return state;
             }

@@ -1,13 +1,28 @@
 ## Changes in version 0.13.0 (in development)
 
-* Fixed user places disappearing after map projection change (#247).
+### Enhancements
+ 
+* Added function to insert user places from GeoJSON, either
+  by copy & paste, from selected file(s), or from file(s)
+  dragged & dropped over the map. (#88)
+  TODO:
+  - i18n it.
+  - display error messages in UI, currently console only.
+  - allow for WKT too, currently only GeoJSON.
+  - allow entering CRS, currently assuming EPSG:4326.
+  - allow entering property name used to label the new place(s)
+    and fallback name prefix, currently using "User-GeoJSON-".
 
 * Color bar management has been slightly improved:  
   - Color bars can now be reversed.
   - Color bar in the legend is now rendered according to the current
     settings "Hide small values", "Reverse", and "Opacity".
+  
+### Fixes
 
-* Export time series button is disabled, when there are no 
+* Fixed user places disappearing after map projection change (#247).
+
+* Export time series button is disabled, when there are no
   time-series to download. (#171)
 
 ## Changes in version 0.12.0 
@@ -23,7 +38,7 @@
 
 * The viewer app can now display also 2D datasets published by 
   xcube server (starting with xcube version 0.11.3).
-
+  
 
 ## Changes in version 0.11.1
 

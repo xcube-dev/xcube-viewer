@@ -34,7 +34,7 @@ import {
     DataAction,
     CONFIGURE_SERVERS,
     ADD_USER_PLACE,
-    ADD_USER_PLACE_2,
+    ADD_USER_PLACES,
     REMOVE_ALL_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
@@ -120,10 +120,10 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 userPlaceGroup,
             };
         }
-        case ADD_USER_PLACE_2: {
-            const {place, mapProjection} = action;
-            addUserPlaceToLayer(place, mapProjection);
-            const features = [...state.userPlaceGroup.features, place];
+        case ADD_USER_PLACES: {
+            const {places, mapProjection} = action;
+            places.forEach(place => addUserPlaceToLayer(place, mapProjection));
+            const features = [...state.userPlaceGroup.features, ...places];
             const userPlaceGroup = {...state.userPlaceGroup, features};
             return {
                 ...state,

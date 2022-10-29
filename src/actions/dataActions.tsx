@@ -202,24 +202,29 @@ export function _addUserPlace(id: string, label: string, color: string, geometry
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const ADD_USER_PLACE_2 = 'ADD_USER_PLACE_2';
+export const ADD_USER_PLACES = 'ADD_USER_PLACES';
 
-export interface AddUserPlace2 {
-    type: typeof ADD_USER_PLACE_2;
-    place: Place;
+export interface AddUserPlaces {
+    type: typeof ADD_USER_PLACES;
+    places: Place[];
     mapProjection: string;
     selectPlace: boolean;
 }
 
-export function addUserPlace2(place: Place, mapProjection: string, selectPlace: boolean): AddUserPlace2 {
-    return {type: ADD_USER_PLACE_2, place, mapProjection, selectPlace};
+export function addUserPlaces(places: Place[], mapProjection: string, selectPlace: boolean): AddUserPlaces {
+    return {
+        type: ADD_USER_PLACES,
+        places: places,
+        mapProjection,
+        selectPlace
+    };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export function addUserPlaceFromText(geometryText: string) {
-    return (dispatch: Dispatch<AddUserPlace2 | SelectPlaceGroups | SelectPlace>, getState: () => AppState) => {
+export function addUserPlacesFromText(geometryText: string) {
+    return (dispatch: Dispatch<AddUserPlaces | SelectPlaceGroups | SelectPlace>, getState: () => AppState) => {
         const geoJSON = new OlGeoJSONFormat();
 
         let features: OlFeature[];
@@ -230,17 +235,18 @@ export function addUserPlaceFromText(geometryText: string) {
                 const geometry = geoJSON.readGeometry(geometryText);
                 features = [new OlFeature(geometry)];
             } catch (e) {
+                // TODO: display error message in UI
                 console.error(e);
                 return;
             }
         }
 
-        let firstPlace: Place | null = null;
-
+        const places: Place[] = [];
         features.forEach(feature => {
             const properties = feature.getProperties();
             const geometry = feature.getGeometry();
             if (geometry) {
+                // TODO: allow for custom prefix
                 let placeId = `User-GeoJSON-${newId()}`;
                 const geoJsonGeometry: geojson.Geometry = geoJSON.writeGeometryObject(geometry) as any;
                 let geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
@@ -250,32 +256,28 @@ export function addUserPlaceFromText(geometryText: string) {
                         if (v === null || typeof v === 'number' || typeof v === 'string' || typeof v === 'boolean') {
                             geoJsonProps[k] = v;
                         }
+                        // TODO: allow for custom property name
                         if (typeof v === 'string' && (k === 'NAME' || k === 'S_NAME')) {
                             // placeId = v;
                         }
                     }
                 }
 
-                const place: Place = {
+                places.push({
                     type: 'Feature',
                     id: placeId,
                     geometry: geoJsonGeometry,
                     properties: geoJsonProps,
-                };
-
-                if (!firstPlace) {
-                    firstPlace = place;
-                }
-
-                dispatch(addUserPlace2(place, mapProjectionSelector(getState()), true));
+                })
             }
         });
 
-        if (firstPlace !== null) {
+        if (places.length) {
+            dispatch(addUserPlaces(places, mapProjectionSelector(getState()), true));
             dispatch(selectPlaceGroups(['user']) as any);
             if (features.length === 1) {
                 dispatch(selectPlace(
-                    firstPlace.id,
+                    places[0].id,
                     selectedPlaceGroupPlacesSelector(getState()),
                     true
                 ) as any);
@@ -737,7 +739,7 @@ export type DataAction =
     | UpdateDatasets
     | UpdateDatasetPlaceGroup
     | AddUserPlace
-    | AddUserPlace2
+    | AddUserPlaces
     | RemoveUserPlace
     | RemoveAllUserPlaces
     | UpdateTimeSeries

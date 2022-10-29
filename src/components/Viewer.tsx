@@ -22,41 +22,41 @@
  * SOFTWARE.
  */
 
-import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import rgba from 'color-rgba';
 import * as geojson from 'geojson';
-import {Color as OlColor} from 'ol/color';
-import {default as OlFeature} from 'ol/Feature';
-import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
-import {default as OlCircleGeometry} from 'ol/geom/Circle';
-import {default as OlGeometryType} from 'ol/geom/GeometryType';
-import {fromCircle as olPolygonFromCircle} from 'ol/geom/Polygon';
-import {default as OlVectorLayer} from 'ol/layer/Vector';
-import {default as OlMap} from 'ol/Map';
-import {default as OlMapBrowserEvent} from 'ol/MapBrowserEvent';
-import {default as OlVectorSource} from 'ol/source/Vector';
-import {default as OlTileLayer} from 'ol/layer/Tile';
-import {default as OlCircleStyle} from 'ol/style/Circle';
-import {default as OlFillStyle} from 'ol/style/Fill';
-import {default as OlStrokeStyle} from 'ol/style/Stroke';
-import {default as OlStyle} from 'ol/style/Style';
+import { Color as OlColor } from 'ol/color';
+import { default as OlFeature } from 'ol/Feature';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlCircleGeometry } from 'ol/geom/Circle';
+import { default as OlGeometryType } from 'ol/geom/GeometryType';
+import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlMap } from 'ol/Map';
+import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
+import { default as OlVectorSource } from 'ol/source/Vector';
+import { default as OlTileLayer } from 'ol/layer/Tile';
+import { default as OlCircleStyle } from 'ol/style/Circle';
+import { default as OlFillStyle } from 'ol/style/Fill';
+import { default as OlStrokeStyle } from 'ol/style/Stroke';
+import { default as OlStyle } from 'ol/style/Style';
 import * as React from 'react';
-import {useEffect, useState} from 'react';
-import {Config, getUserPlaceColor, getUserPlaceColorName} from '../config';
+import { useEffect, useState } from 'react';
+import { Config, getUserPlaceColor, getUserPlaceColorName } from '../config';
 import i18n from '../i18n';
-import {Place, PlaceGroup} from '../model/place';
-import {MAP_OBJECTS, MapInteraction} from '../states/controlState';
+import { Place, PlaceGroup } from '../model/place';
+import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
 
-import {newId} from '../util/id';
+import { newId } from '../util/id';
 import ErrorBoundary from './ErrorBoundary';
-import {Control} from './ol/control/Control';
-import {ScaleLine} from './ol/control/ScaleLine';
-import {Draw, DrawEvent} from './ol/interaction/Draw';
-import {Layers} from './ol/layer/Layers';
-import {Vector} from './ol/layer/Vector';
-import {Map, MapElement} from './ol/Map';
-import {View} from './ol/View';
-import {GEOGRAPHIC_CRS} from "../model/proj";
+import { Control } from './ol/control/Control';
+import { ScaleLine } from './ol/control/ScaleLine';
+import { Draw, DrawEvent } from './ol/interaction/Draw';
+import { Layers } from './ol/layer/Layers';
+import { Vector } from './ol/layer/Vector';
+import { Map, MapElement } from './ol/Map';
+import { View } from './ol/View';
+import { GEOGRAPHIC_CRS } from "../model/proj";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
@@ -104,6 +104,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     selectedPlaceId?: string | null;
     places: Place[];
     imageSmoothing?: boolean;
+    addUserPlacesFromText?: (text: string) => any;
 }
 
 const Viewer: React.FC<ViewerProps> = ({
@@ -118,6 +119,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            placeGroupLayers,
                                            colorBarLegend,
                                            addUserPlace,
+                                           addUserPlacesFromText,
                                            userPlaceGroup,
                                            selectPlace,
                                            selectedPlaceId,
@@ -231,7 +233,7 @@ const Viewer: React.FC<ViewerProps> = ({
                     break;
                 }
             }
-             
+
             addUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry, true);
         }
         return true;
@@ -251,6 +253,21 @@ const Viewer: React.FC<ViewerProps> = ({
         variableLayer = rgbLayer;
     }
 
+    const handleDropFiles = (files: File[]) => {
+        if (addUserPlacesFromText) {
+            files.forEach(file => {
+                console.log("reading", file.name)
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    if (typeof reader.result === 'string') {
+                        addUserPlacesFromText(reader.result);
+                    }
+                };
+                reader.readAsText(file, "UTF-8");
+            });
+        }
+    };
+
     return (
         <ErrorBoundary>
             <Map
@@ -259,6 +276,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 onMapRef={setMap}
                 mapObjects={MAP_OBJECTS}
                 isStale={true}
+                onDropFiles={handleDropFiles}
             >
                 <View id="view" projection={mapProjection}/>
                 <Layers>

@@ -52,6 +52,7 @@ interface MapProps extends OlMapOptions {
     onClick?: (event: OlMapBrowserEvent) => void;
     onMapRef?: (map: OlMap | null) => void;
     isStale?: boolean;
+    onDropFiles?: (files: File[]) => any;
 }
 
 interface MapState {
@@ -185,7 +186,12 @@ export class Map extends React.Component<MapProps, MapState> {
             );
         }
         return (
-            <div ref={this.handleRef} style={DEFAULT_CONTAINER_STYLE}>
+            <div
+                ref={this.handleRef}
+                style={DEFAULT_CONTAINER_STYLE}
+                onDragOver={this.handleDragOver}
+                onDrop={this.handleDrop}
+            >
                 {childrenWithContext}
             </div>
         );
@@ -195,6 +201,7 @@ export class Map extends React.Component<MapProps, MapState> {
         const mapOptions = {...this.props};
         delete mapOptions['children'];
         delete mapOptions['onClick'];
+        delete mapOptions['onDropFiles'];
         return mapOptions;
     }
 
@@ -205,7 +212,43 @@ export class Map extends React.Component<MapProps, MapState> {
         }
     };
 
-    private handleRef = (mapDiv: HTMLDivElement | null) => {
+    private handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        if (this.props.onDropFiles) {
+            event.preventDefault();
+
+            const files: File[] = [];
+            if (event.dataTransfer.items) {
+                for (let i = 0; i < event.dataTransfer.items.length; i++) {
+                    const item = event.dataTransfer.items[i];
+                    // If dropped items aren't files, reject them
+                    if (item.kind === 'file') {
+                        const file = item.getAsFile();
+                        if (file !== null) {
+                            files.push(file);
+                        }
+                    }
+                }
+            } else if (event.dataTransfer.files) {
+                for (let i = 0; i < event.dataTransfer.files.length; i++) {
+                    const file = event.dataTransfer.files[i];
+                    if (file !== null) {
+                        files.push(file);
+                    }
+                }
+            }
+            if (files.length) {
+                this.props.onDropFiles(files);
+            }
+        }
+    };
+
+    private handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        if (this.props.onDropFiles) {
+            event.preventDefault();
+        }
+    };
+
+    private readonly handleRef = (mapDiv: HTMLDivElement | null) => {
         this.contextValue.mapDiv = mapDiv;
     };
 

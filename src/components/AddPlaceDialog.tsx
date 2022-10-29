@@ -79,7 +79,9 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
         setGeometryText("");
     };
 
-    const handleFileSelect = (file: File) => {
+    const handleFileSelect = (selection: File[]) => {
+        const file = selection[0];
+        setLoading(true);
         const reader = new FileReader();
         reader.onloadend = () => {
             setGeometryText(reader.result as string);
@@ -88,7 +90,6 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
         reader.onabort = reader.onerror = () => {
             setLoading(false);
         };
-        setLoading(true);
         reader.readAsText(file, "UTF-8");
     };
 
@@ -107,6 +108,8 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
     const isGeometryTextValid = (): boolean => {
         return isGeometryTextEmpty();
     };
+
+    // TODO: in addition to GeoJSON, also allow for WKT too
 
     return (
         <Dialog
@@ -129,9 +132,10 @@ export default function AddPlaceDialog({open, closeDialog, addUserPlaceFromText}
                 />
                 <Box className={classes.actionBox}>
                     <FileUpload
-                        title={i18n.get('From File' + "...")}
+                        title={i18n.get('From File') + "..."}
                         accept=".json,.geojson"
-                        onFileSelect={handleFileSelect}
+                        multiple={false}
+                        onSelect={handleFileSelect}
                         disabled={loading}
                     />
                     <Button
