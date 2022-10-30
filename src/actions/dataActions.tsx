@@ -224,12 +224,11 @@ export function addUserPlaces(places: Place[], mapProjection: string, selectPlac
 
 let LAST_PLACE_LABEL_ID = 0;
 
-export function addUserPlacesFromText(geometryText: string,
-                                      placeLabelPropertyName: string,
-                                      placeLabelPrefix: string) {
-    const placeLabelPropertyNameLC = placeLabelPropertyName.toLowerCase();
+export function addUserPlacesFromText(geometryText: string) {
     return (dispatch: Dispatch<AddUserPlaces | SelectPlaceGroups | SelectPlace | UpdateSettings>, getState: () => AppState) => {
-
+        const placeLabelPropertyName = getState().controlState.placeLabelPropertyName;
+        const placeLabelPrefix = getState().controlState.placeLabelPrefix;
+        const placeLabelPropertyNameLC = placeLabelPropertyName.toLowerCase();
 
         const geoJSON = new OlGeoJSONFormat();
 

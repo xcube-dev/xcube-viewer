@@ -119,6 +119,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         setTimeChunkSize(event.target.value);
     }
 
+    function handlePlaceLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        updateSettings({...settings, placeLabelPropertyName: e.target.value});
+    }
+
+    function handlePlaceLabelPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        updateSettings({...settings, placeLabelPrefix: e.target.value});
+    }
+
     let localeMenuItems = null;
     if (Boolean(languageMenuAnchor)) {
         localeMenuItems = Object.getOwnPropertyNames(i18n.languages).map(langLocale => {
@@ -257,7 +265,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 value={timeChunkSize}
                                 onChange={handleTimeChunkSizeChange}
                                 margin="normal"
-                                size={'small'}
+                                size="small"
                             />
                         </SettingsSubPanel>
                     </SettingsPanel>
@@ -293,6 +301,27 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 propertyName={'showDatasetBoundaries'}
                                 settings={settings}
                                 updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                    </SettingsPanel>
+
+                    <SettingsPanel title={i18n.get('User Places')}>
+                        <SettingsSubPanel label={i18n.get("Label property name")}>
+                            <TextField
+                                value={settings.placeLabelPropertyName}
+                                onChange={handlePlaceLabelPropertyNameChange}
+                                size="small"
+                                variant="standard"
+                                margin="normal"
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Label prefix (used as fallback)')}>
+                            <TextField
+                                value={settings.placeLabelPrefix}
+                                onChange={handlePlaceLabelPrefixChange}
+                                size="small"
+                                variant="standard"
+                                margin="normal"
                             />
                         </SettingsSubPanel>
                     </SettingsPanel>

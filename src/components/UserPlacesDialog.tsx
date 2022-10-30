@@ -43,6 +43,7 @@ import { WithLocale } from '../util/lang';
 import i18n from '../i18n';
 import { Config } from "../config";
 import { FileUpload } from "./FileUpload";
+import { ControlState } from "../states/controlState";
 
 
 // noinspection JSUnusedLocalSymbols
@@ -51,63 +52,80 @@ const useStyles = makeStyles(theme => (
         spacer: {
             flexGrow: 1.0,
         },
-        labelPropertyName: {
+        placeLabelPropertyName: {
             marginRight: theme.spacing(1),
             flexGrow: 1.0
         },
-        fallbackNamePrefix: {
+        placeLabelPrefix: {
             flexGrow: 1.0
         },
         actionBox: {
             paddingTop: theme.spacing(0.5),
             display: "flex",
             flexDirection: "row",
+            alignItems: "center",
+        },
+        actionButton: {
+            marginRight: theme.spacing(1),
+        },
+        error: {
+            fontSize: "small"
         }
     }
 ));
 
 
-interface AddPlaceDialogProps extends WithLocale {
+interface UserPlacesDialogProps extends WithLocale {
     open: boolean;
     closeDialog: (dialogId: string) => void;
-    placeLabelPropertyName: string,
-    placeLabelPrefix: string,
-    addUserPlacesFromText: (geometryText: string,
-                            placeLabelPropertyName: string,
-                            placeLabelPrefix: string) => void;
+    placeLabelPropertyName: string;
+    placeLabelPrefix: string;
+    updateSettings: (settings: ControlState) => void;
+    addUserPlacesFromText: (userPlacesText: string) => void;
 }
 
-export default function AddPlaceDialog(
+const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     {
         open,
-        closeDialog,
         placeLabelPropertyName,
         placeLabelPrefix,
+        closeDialog,
+        updateSettings,
         addUserPlacesFromText
-    }: AddPlaceDialogProps) {
+    }) => {
 
-    const [geometryText, setGeometryText] = React.useState('');
+    const [userPlacesText, setUserPlacesText] = React.useState('');
+    const [error, setError] = React.useState<string | null>(getError(userPlacesText));
     const [loading, setLoading] = React.useState(false);
     const [expanded, setExpanded] = React.useState(false);
     const [_placeLabelPropertyName, setPlaceLabelPropertyName] = React.useState(placeLabelPropertyName);
     const [_placeLabelPrefix, setPlaceLabelPrefix] = React.useState(placeLabelPrefix);
     const classes = useStyles();
 
+    React.useEffect(() => {
+        setPlaceLabelPropertyName(placeLabelPropertyName);
+        setPlaceLabelPrefix(placeLabelPrefix);
+    }, [placeLabelPropertyName, placeLabelPrefix]);
+
     if (!open) {
         return null;
     }
 
     const handleConfirm = () => {
-        closeDialog('addUserPlaceFromText');
-        addUserPlacesFromText(geometryText, _placeLabelPropertyName, _placeLabelPrefix);
+        closeDialog('addUserPlacesFromText');
+        updateSettings({
+            placeLabelPropertyName: _placeLabelPropertyName,
+            placeLabelPrefix: _placeLabelPrefix,
+        });
+        addUserPlacesFromText(userPlacesText);
     };
 
     const handleClose = () => {
-        closeDialog('addUserPlaceFromText');
+        closeDialog('addUserPlacesFromText');
     };
 
-    const handleClean = () => {
-        setGeometryText("");
+    const handleClear = () => {
+        setUserPlacesText("");
     };
 
     const handleFileSelect = (selection: File[]) => {
@@ -115,7 +133,7 @@ export default function AddPlaceDialog(
         setLoading(true);
         const reader = new FileReader();
         reader.onloadend = () => {
-            setGeometryText(reader.result as string);
+            setUserPlacesText(reader.result as string);
             setLoading(false);
         };
         reader.onabort = reader.onerror = () => {
@@ -125,28 +143,21 @@ export default function AddPlaceDialog(
     };
 
     const handleDropFile = () => {
-        setGeometryText("");
+        setUserPlacesText("");
     }
 
     const handleTextAreaChange = (value: string) => {
-        setGeometryText(value);
-    };
-
-    const isGeometryTextEmpty = (): boolean => {
-        return geometryText.trim() !== "";
-    };
-
-    const isGeometryTextValid = (): boolean => {
-        return isGeometryTextEmpty();
+        setUserPlacesText(value);
+        setError(getError(value));
     };
 
     // TODO: in addition to GeoJSON, also allow for WKT too
 
-    function handlerLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    function handleLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
         setPlaceLabelPropertyName(e.target.value);
     }
 
-    function handlerFallbackNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    function handleFallbackNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
         setPlaceLabelPrefix(e.target.value);
     }
 
@@ -157,18 +168,19 @@ export default function AddPlaceDialog(
             onClose={handleClose}
             aria-labelledby="server-dialog-title"
         >
-            <DialogTitle id="server-dialog-title">{i18n.get('Add Place')}</DialogTitle>
+            <DialogTitle id="server-dialog-title">{i18n.get('Add Places')}</DialogTitle>
             <DialogContent dividers>
                 <Typography>{i18n.get('Enter GeoJSON or drag & drop a GeoJSON file.')}</Typography>
                 <CodeMirror
                     autoFocus
                     height="400px"
                     extensions={[json()]}
-                    value={geometryText}
+                    value={userPlacesText}
                     onChange={handleTextAreaChange}
                     theme={Config.instance.branding.themeName || "light"}
                     onDrop={handleDropFile}
                 />
+                {error && <Typography color="error" className={classes.error}>{error}</Typography>}
                 <div className={classes.actionBox}>
                     <FileUpload
                         title={i18n.get('From File') + "..."}
@@ -176,12 +188,16 @@ export default function AddPlaceDialog(
                         multiple={false}
                         onSelect={handleFileSelect}
                         disabled={loading}
+                        className={classes.actionButton}
                     />
                     <Button
-                        onClick={handleClean}
-                        disabled={!isGeometryTextEmpty() || loading}
+                        onClick={handleClear}
+                        disabled={userPlacesText.trim() === "" || loading}
+                        className={classes.actionButton}
+                        variant="outlined"
+                        size="small"
                     >
-                        {i18n.get('Clean')}
+                        {i18n.get('Clear')}
                     </Button>
                     <Box className={classes.spacer}/>
                     <IconButton onClick={() => setExpanded(!expanded)}>
@@ -193,20 +209,18 @@ export default function AddPlaceDialog(
                         <TextField
                             label={i18n.get("Label property name")}
                             value={_placeLabelPropertyName}
-                            onChange={(e) => handlerLabelPropertyNameChange(e)}
+                            onChange={handleLabelPropertyNameChange}
                             size="small"
                             variant="standard"
-                            helperText={i18n.get("Will be used to name the new place")}
-                            className={classes.labelPropertyName}
+                            className={classes.placeLabelPropertyName}
                         />
                         <TextField
-                            label={i18n.get("Fallback name prefix")}
+                            label={i18n.get("Label prefix (used as fallback)")}
                             value={_placeLabelPrefix}
-                            onChange={(e) => handlerFallbackNamePrefixChange(e)}
+                            onChange={handleFallbackNamePrefixChange}
                             size="small"
                             variant="standard"
-                            helperText={i18n.get("Will be used by default")}
-                            className={classes.fallbackNamePrefix}
+                            className={classes.placeLabelPrefix}
                         />
                     </div>
                 </Collapse>
@@ -214,13 +228,15 @@ export default function AddPlaceDialog(
             <DialogActions>
                 <Button
                     onClick={handleClose}
+                    variant="text"
                 >
                     {i18n.get('Cancel')}
                 </Button>
                 <Button
                     onClick={handleConfirm}
-                    disabled={!isGeometryTextValid() || loading}
+                    disabled={userPlacesText.trim() === "" || error !== null || loading}
                     color="primary"
+                    variant="text"
                 >
                     {i18n.get('OK')}
                 </Button>
@@ -228,4 +244,19 @@ export default function AddPlaceDialog(
         </Dialog>
     );
 }
+
+
+export default UserPlacesDialog;
+
+const getError = (geometryText: string): string | null => {
+    if (geometryText.trim() !== "") {
+        try {
+            JSON.parse(geometryText);
+        } catch (e) {
+            console.error(e);
+            return `${e}`;
+        }
+    }
+    return null;
+};
 

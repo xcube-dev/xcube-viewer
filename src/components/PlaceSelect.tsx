@@ -78,7 +78,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     };
 
     const handleAddButtonClick = () => {
-        openDialog('addUserPlaceFromText');
+        openDialog('addUserPlacesFromText');
     };
 
     const handleRemoveButtonClick = () => {

@@ -32,6 +32,7 @@ interface FileUploadProps {
     multiple?: boolean;
     disabled?: boolean;
     onSelect: (selection: File[]) => any;
+    className?: string;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = (
@@ -41,6 +42,7 @@ export const FileUpload: React.FC<FileUploadProps> = (
         multiple,
         disabled,
         onSelect,
+        className
     }
 ) => {
     const fileInput = React.useRef<HTMLInputElement | null>(null)
@@ -75,6 +77,9 @@ export const FileUpload: React.FC<FileUploadProps> = (
             <Button
                 onClick={handleButtonClick}
                 disabled={disabled}
+                className={className}
+                variant="outlined"
+                size="small"
             >
                 {title}
             </Button>

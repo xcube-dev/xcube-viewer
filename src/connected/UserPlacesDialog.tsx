@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
-import AddPlaceDialog from '../components/AddPlaceDialog';
-import { closeDialog } from '../actions/controlActions';
+import UserPlacesDialog from '../components/UserPlacesDialog';
+import { closeDialog, updateSettings } from '../actions/controlActions';
 import { addUserPlacesFromText } from '../actions/dataActions';
 
 
 const mapStateToProps = (state: AppState) => {
     return {
-        open: !!state.controlState.dialogOpen['addUserPlaceFromText'],
+        open: !!state.controlState.dialogOpen['addUserPlacesFromText'],
         placeLabelPropertyName: state.controlState.placeLabelPropertyName,
         placeLabelPrefix: state.controlState.placeLabelPrefix,
     };
@@ -16,7 +16,8 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
     closeDialog,
+    updateSettings,
     addUserPlacesFromText: addUserPlacesFromText,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddPlaceDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(UserPlacesDialog);

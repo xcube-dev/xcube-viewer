@@ -52,7 +52,7 @@ import ExportDialog from './ExportDialog';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
-import AddPlaceDialog from './AddPlaceDialog';
+import AddPlaceDialog from './UserPlacesDialog';
 import { openDialog } from '../actions/controlActions';
 import { updateResources } from "../actions/dataActions";
 
