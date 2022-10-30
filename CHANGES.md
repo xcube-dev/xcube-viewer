@@ -7,9 +7,6 @@
   dragged & dropped over the map. (#88)
   TODO:
   - render points, currently they don't show up at all.
-  - allow entering property name used to label the new place(s)
-    and fallback name prefix in settings,
-    currently possible only in "Add Place" dialog.
   - i18n it, currently EN only.
   - validate (Geo)JSON in dialog, currently we don't,
   - display error messages in UI, currently console only.
