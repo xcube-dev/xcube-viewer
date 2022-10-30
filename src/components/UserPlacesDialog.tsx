@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => (
         spacer: {
             flexGrow: 1.0,
         },
-        placeLabelPropertyName: {
+        placeLabelPropertyNames: {
             marginRight: theme.spacing(1),
             flexGrow: 1.0
         },
@@ -78,16 +78,16 @@ const useStyles = makeStyles(theme => (
 interface UserPlacesDialogProps extends WithLocale {
     open: boolean;
     closeDialog: (dialogId: string) => void;
-    placeLabelPropertyName: string;
+    placeLabelPropertyNames: string;
     placeLabelPrefix: string;
-    updateSettings: (settings: ControlState) => void;
+    updateSettings: (settings: Partial<ControlState>) => void;
     addUserPlacesFromText: (userPlacesText: string) => void;
 }
 
 const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     {
         open,
-        placeLabelPropertyName,
+        placeLabelPropertyNames,
         placeLabelPrefix,
         closeDialog,
         updateSettings,
@@ -98,14 +98,14 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     const [error, setError] = React.useState<string | null>(getError(userPlacesText));
     const [loading, setLoading] = React.useState(false);
     const [expanded, setExpanded] = React.useState(false);
-    const [_placeLabelPropertyName, setPlaceLabelPropertyName] = React.useState(placeLabelPropertyName);
+    const [_placeLabelPropertyNames, setPlaceLabelPropertyNames] = React.useState(placeLabelPropertyNames);
     const [_placeLabelPrefix, setPlaceLabelPrefix] = React.useState(placeLabelPrefix);
     const classes = useStyles();
 
     React.useEffect(() => {
-        setPlaceLabelPropertyName(placeLabelPropertyName);
+        setPlaceLabelPropertyNames(placeLabelPropertyNames);
         setPlaceLabelPrefix(placeLabelPrefix);
-    }, [placeLabelPropertyName, placeLabelPrefix]);
+    }, [placeLabelPropertyNames, placeLabelPrefix]);
 
     if (!open) {
         return null;
@@ -114,7 +114,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     const handleConfirm = () => {
         closeDialog('addUserPlacesFromText');
         updateSettings({
-            placeLabelPropertyName: _placeLabelPropertyName,
+            placeLabelPropertyNames: _placeLabelPropertyNames,
             placeLabelPrefix: _placeLabelPrefix,
         });
         addUserPlacesFromText(userPlacesText);
@@ -154,7 +154,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     // TODO: in addition to GeoJSON, also allow for WKT too
 
     function handleLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        setPlaceLabelPropertyName(e.target.value);
+        setPlaceLabelPropertyNames(e.target.value);
     }
 
     function handleFallbackNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
@@ -207,12 +207,12 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <div className={classes.actionBox}>
                         <TextField
-                            label={i18n.get("Label property name")}
-                            value={_placeLabelPropertyName}
+                            label={i18n.get("Label property names")}
+                            value={_placeLabelPropertyNames}
                             onChange={handleLabelPropertyNameChange}
                             size="small"
                             variant="standard"
-                            className={classes.placeLabelPropertyName}
+                            className={classes.placeLabelPropertyNames}
                         />
                         <TextField
                             label={i18n.get("Label prefix (used as fallback)")}

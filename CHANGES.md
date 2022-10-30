@@ -8,10 +8,10 @@
   TODO:
   - render points, currently they don't show up at all.
   - i18n it, currently EN only.
-  - validate (Geo)JSON in dialog, currently we don't,
-  - display error messages in UI, currently console only.
-  - allow for WKT too, currently GeoJSON only.
-  - allow entering CRS, currently assuming EPSG:4326.
+  - Opt: allow entering CRS, currently assuming EPSG:4326.
+  - Opt: display error messages in UI, currently console only.
+  - Opt: validate (Geo)JSON in dialog, currently we don't.
+  - Opt: allow for WKT too, currently GeoJSON only.
 
 * Color bar management has been slightly improved:  
   - Color bars can now be reversed.

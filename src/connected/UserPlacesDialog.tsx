@@ -9,7 +9,7 @@ import { addUserPlacesFromText } from '../actions/dataActions';
 const mapStateToProps = (state: AppState) => {
     return {
         open: !!state.controlState.dialogOpen['addUserPlacesFromText'],
-        placeLabelPropertyName: state.controlState.placeLabelPropertyName,
+        placeLabelPropertyNames: state.controlState.placeLabelPropertyNames,
         placeLabelPrefix: state.controlState.placeLabelPrefix,
     };
 };

@@ -70,7 +70,7 @@ export interface ControlState {
     showTimeSeriesPointsOnly: boolean;
     showTimeSeriesErrorBars: boolean;
     showTimeSeriesMedian: boolean;
-    placeLabelPropertyName: string;
+    placeLabelPropertyNames: string;
     placeLabelPrefix: string;
     flyTo: OlGeometry | OlExtent | null;
     activities: { [id: string]: string };
@@ -93,6 +93,9 @@ export interface ControlState {
     exportFileName: string;
 }
 
+export const DEFAULT_PLACE_LABEL_PREFIX = "User-Place-";
+
+export const DEFAULT_PLACE_LABEL_PROPERTY_NAMES = "label, name, title, id";
 
 export function newControlState(): ControlState {
     const branding = Config.instance.branding;
@@ -113,8 +116,8 @@ export function newControlState(): ControlState {
         showTimeSeriesPointsOnly: false,
         showTimeSeriesErrorBars: true,
         showTimeSeriesMedian: branding.defaultAgg === 'median',
-        placeLabelPropertyName: "NAME",
-        placeLabelPrefix: "User-Place-",
+        placeLabelPropertyNames: DEFAULT_PLACE_LABEL_PROPERTY_NAMES,
+        placeLabelPrefix: DEFAULT_PLACE_LABEL_PREFIX,
         flyTo: null,
         activities: {},
         locale: 'en',

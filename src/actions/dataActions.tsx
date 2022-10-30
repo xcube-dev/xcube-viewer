@@ -35,7 +35,7 @@ import { Dataset } from '../model/dataset';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
-    mapProjectionSelector,
+    mapProjectionSelector, placeLabelPrefixSelector, placeLabelPropertyNamesSelector,
     selectedDatasetIdSelector,
     selectedDatasetTimeDimensionSelector,
     selectedDatasetVariableSelector,
@@ -226,9 +226,8 @@ let LAST_PLACE_LABEL_ID = 0;
 
 export function addUserPlacesFromText(geometryText: string) {
     return (dispatch: Dispatch<AddUserPlaces | SelectPlaceGroups | SelectPlace | UpdateSettings>, getState: () => AppState) => {
-        const placeLabelPropertyName = getState().controlState.placeLabelPropertyName;
-        const placeLabelPrefix = getState().controlState.placeLabelPrefix;
-        const placeLabelPropertyNameLC = placeLabelPropertyName.toLowerCase();
+        const placeLabelPropertyNames = placeLabelPropertyNamesSelector(getState());
+        const placeLabelPrefix = placeLabelPrefixSelector(getState());
 
         const geoJSON = new OlGeoJSONFormat();
 
@@ -263,8 +262,9 @@ export function addUserPlacesFromText(geometryText: string) {
                             || typeof propertyValue === 'boolean') {
                             geoJsonProps[propertyName] = propertyValue;
                         }
-                        if (typeof propertyValue === 'string'
-                            && propertyName.toLowerCase() === placeLabelPropertyNameLC) {
+                        if (placeLabel === ""
+                            && typeof propertyValue === 'string'
+                            && placeLabelPropertyNames.has(propertyName.toLowerCase())) {
                             placeLabel = propertyValue;
                         }
                     }
@@ -285,11 +285,6 @@ export function addUserPlacesFromText(geometryText: string) {
                 })
             }
         });
-
-        dispatch(updateSettings({
-            placeLabelPropertyName,
-            placeLabelPrefix
-        }));
 
         if (places.length) {
             dispatch(addUserPlaces(places, mapProjectionSelector(getState()), true));

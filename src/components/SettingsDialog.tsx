@@ -120,7 +120,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
 
     function handlePlaceLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateSettings({...settings, placeLabelPropertyName: e.target.value});
+        updateSettings({...settings, placeLabelPropertyNames: e.target.value});
     }
 
     function handlePlaceLabelPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
@@ -306,9 +306,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     </SettingsPanel>
 
                     <SettingsPanel title={i18n.get('User Places')}>
-                        <SettingsSubPanel label={i18n.get("Label property name")}>
+                        <SettingsSubPanel label={i18n.get("Label property names")}>
                             <TextField
-                                value={settings.placeLabelPropertyName}
+                                value={settings.placeLabelPropertyNames}
                                 onChange={handlePlaceLabelPropertyNameChange}
                                 size="small"
                                 variant="standard"
