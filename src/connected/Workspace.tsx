@@ -25,12 +25,26 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
+import {default as OlMap} from 'ol/Map';
 
 import { AppState } from '../states/appState';
 import Viewer from './Viewer';
 import TimeSeriesCharts from './TimeSeriesCharts';
 import InfoCard from './InfoCard';
+import SplitPane from "../components/SplitPane";
 
+const styles = (theme: Theme) => createStyles(
+    {
+        viewerContainer: {
+            overflow: 'hidden',
+            width: '100%',
+            height: '100%',
+        },
+        chartContainer: {
+            //overflowX: 'hidden',
+            //overflowY: 'hidden',
+        },
+    });
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
     hasInfoCard: boolean;
@@ -41,78 +55,76 @@ interface WorkspaceProps extends WithStyles<typeof styles> {
 const mapStateToProps = (state: AppState) => {
     return {
         hasInfoCard: state.controlState.infoCardOpen
-                     && state.controlState.selectedDatasetId !== null
-                     && state.dataState.datasets.length > 0,
+            && state.controlState.selectedDatasetId !== null
+            && state.dataState.datasets.length > 0,
         hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
     };
 };
 
 const mapDispatchToProps = {};
 
-const styles = (theme: Theme) => createStyles(
-    {
-        contentContainer: {
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'row',
-            overflowY: 'hidden',
-            [theme.breakpoints.down('md')]: {
-                display: 'block',
-                overflowY: 'auto',
-            },
-        },
 
-        chartContainer: {
-            width: '50%',
-            overflowX: 'hidden',
-            overflowY: 'auto',
-            paddingLeft: theme.spacing(1),
-            [theme.breakpoints.down('md')]: {
-                width: '100%',
-                paddingLeft: 0,
-                overflowY: 'hidden',
-            },
-        },
-
-        viewerContainer: {
-            overflow: 'hidden',
-            width: '50%',
-            height: '100%',
-            [theme.breakpoints.down('md')]: {
-                width: '100%',
-                height: '60vh',
-            },
-        },
-
-        viewerContainer2: {
-            overflow: 'hidden',
-            width: '100%',
-            height: '100%',
-        },
-
-    });
+type Layout = "hor" | "ver";
+const getLayout = (): Layout => {
+    return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
+};
 
 const Workspace: React.FC<WorkspaceProps> = ({
                                                  classes,
                                                  hasInfoCard,
                                                  hasTimeseries
                                              }) => {
+    const [map, setMap] = React.useState<OlMap | null>(null);
+    const [layout, setLayout] = React.useState<Layout>(getLayout());
+
+    React.useEffect(() =>  {
+        updateLayout();
+        window.onresize = updateLayout;
+    }, []);
+
+    const updateLayout = () => {
+        setLayout(getLayout());
+    };
+
+    function handleResize(size: number) {
+        if (map) {
+            map.updateSize();
+        }
+    }
+
     if (hasInfoCard || hasTimeseries) {
+        let splitPaneStyle: React.CSSProperties = {flexGrow: 1};
+        let splitPaneChild1Style: React.CSSProperties = {overflow: "hidden", padding: 10};
+        let splitPaneChild2Style: React.CSSProperties = {overflowX: "hidden"};
+        if (layout === "hor") {
+            splitPaneStyle = {...splitPaneStyle, overflow: "hidden"};
+            splitPaneChild1Style = {...splitPaneChild1Style, height: "100%"};
+            splitPaneChild2Style = {...splitPaneChild2Style, overflowY: "auto"};
+        } else {
+            splitPaneStyle = {...splitPaneStyle, overflowX: "hidden", overflowY: "auto"};
+            splitPaneChild1Style = {...splitPaneChild1Style, width: "100%"};
+            splitPaneChild2Style = {...splitPaneChild2Style, overflowY: "hidden"};
+        }
         return (
-            <div className={classes.contentContainer}>
-                <div className={classes.viewerContainer}>
-                    <Viewer/>
-                </div>
+            <SplitPane
+                dir={layout}
+                initialSize={Math.max(window.innerWidth, window.innerHeight) / 2}
+                onChange={handleResize}
+                style={splitPaneStyle}
+                child1Style={splitPaneChild1Style}
+                child2Style={splitPaneChild2Style}
+            >
+                <Viewer onMapRef={setMap}/>
                 <div className={classes.chartContainer}>
                     <InfoCard/>
                     <TimeSeriesCharts/>
                 </div>
-            </div>
+            </SplitPane>
         );
     } else {
         return (
-            <div className={classes.viewerContainer2}>
-                <Viewer/>
+            <div className={classes.viewerContainer}>
+                <Viewer onMapRef={setMap}/>
             </div>
         );
     }
