@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols
+
 /*
  * The MIT License (MIT)
  *
@@ -33,18 +35,50 @@ import TimeSeriesCharts from './TimeSeriesCharts';
 import InfoCard from './InfoCard';
 import SplitPane from "../components/SplitPane";
 
+
+// Adjust for debugging split pane style
+const mapExtraStyle: React.CSSProperties = {padding: 0};
+
 const styles = (theme: Theme) => createStyles(
     {
+
+        splitPaneHor: {
+            flexGrow: 1,
+            overflow: "hidden",
+        },
+        splitPaneVer: {
+            flexGrow: 1,
+            overflowX: "hidden",
+            overflowY: "auto"
+        },
+
+        mapPaneHor: {
+            height: "100%",
+            overflow: "hidden",
+            ...mapExtraStyle
+        },
+        mapPaneVer: {
+            width: "100%",
+            overflow: "hidden",
+            ...mapExtraStyle
+        },
+
+        detailsPaneHor: {
+            flex: "auto",
+            overflowX: "hidden",
+            overflowY: "auto",
+        },
+        detailsPaneVer: {
+            width: '100%',
+            overflow: "hidden",
+        },
+
         viewerContainer: {
             overflow: 'hidden',
             width: '100%',
             height: '100%',
         },
-        chartContainer: {
-            //overflowX: 'hidden',
-            //overflowY: 'hidden',
-        },
-    });
+});
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
     hasInfoCard: boolean;
@@ -93,30 +127,20 @@ const Workspace: React.FC<WorkspaceProps> = ({
     }
 
     if (hasInfoCard || hasTimeseries) {
-        const mapPadding = 0;  // set to 20 for style debugging
-        let splitPaneStyle: React.CSSProperties = {flexGrow: 1};
-        let splitPaneChild1Style: React.CSSProperties = {overflow: "hidden", padding: mapPadding};
-        let splitPaneChild2Style: React.CSSProperties = {overflowX: "hidden"};
-        if (layout === "hor") {
-            splitPaneStyle = {...splitPaneStyle, overflow: "hidden"};
-            splitPaneChild1Style = {...splitPaneChild1Style, height: "100%"};
-            splitPaneChild2Style = {...splitPaneChild2Style, flex: 'auto', overflowY: "auto"};
-        } else {
-            splitPaneStyle = {...splitPaneStyle, overflowX: "hidden", overflowY: "auto"};
-            splitPaneChild1Style = {...splitPaneChild1Style, width: "100%"};
-            splitPaneChild2Style = {...splitPaneChild2Style, width: '100%', overflowY: "hidden"};
-        }
+        const splitPaneClassName = layout === "hor" ? classes.splitPaneHor : classes.splitPaneVer;
+        const mapPaneClassName = layout === "hor" ? classes.mapPaneHor : classes.mapPaneVer;
+        const detailsPaneClassName = layout === "hor" ? classes.detailsPaneHor : classes.detailsPaneVer;
         return (
             <SplitPane
                 dir={layout}
                 initialSize={Math.max(window.innerWidth, window.innerHeight) / 2}
                 onChange={handleResize}
-                style={splitPaneStyle}
-                child1Style={splitPaneChild1Style}
-                child2Style={splitPaneChild2Style}
+                className={splitPaneClassName}
+                child1ClassName={mapPaneClassName}
+                child2ClassName={detailsPaneClassName}
             >
                 <Viewer onMapRef={setMap}/>
-                <div className={classes.chartContainer}>
+                <div>
                     <InfoCard/>
                     <TimeSeriesCharts/>
                 </div>

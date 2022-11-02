@@ -25,8 +25,9 @@
 import * as React from 'react'
 import Splitter, { SplitDir } from './Splitter';
 import { createStyles, Theme, withStyles, WithStyles } from "@material-ui/core/styles";
+import classNames from 'classnames';
 
-
+// noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
     {
         hor: {
@@ -40,16 +41,25 @@ const styles = (theme: Theme) => createStyles(
             display: "flex",
             flexFlow: "column nowrap",
             flex: "auto",  // same as "flex: 1 1 auto;"
-        }
+        },
+        childHor: {
+            flex: "none",
+        },
+        childVer: {
+            flex: "none",
+        },
     });
 
 export interface ISplitPaneProps extends WithStyles<typeof styles> {
     dir: SplitDir;
     initialSize?: number;
     onChange?: (newSize: number, oldSize: number) => void;
+    style?: React.CSSProperties;
     child1Style?: React.CSSProperties;
     child2Style?: React.CSSProperties;
-    style?: React.CSSProperties;
+    className?: string;
+    child1ClassName?: string;
+    child2ClassName?: string;
 }
 
 export interface ISplitPaneState {
@@ -93,27 +103,45 @@ class SplitPane extends React.PureComponent<ISplitPaneProps, ISplitPaneState> {
         if (children.length > 2) {
             throw new Error("SplitPane expects not more than two children");
         }
-        let containerClass;
-        let childContainer1Style;
-        let childContainer2Style;
+        let className;
+        let childClassName;
+        let child1Style;
+        let child2Style;
         if (this.props.dir === 'hor') {
             const width1 = this.state.size;
-            containerClass = this.props.classes.hor;
-            childContainer1Style = {flex: 'none', width: width1, ...this.props.child1Style};
-            childContainer2Style = {flex: 'none', ...this.props.child2Style};
+            className = this.props.classes.hor;
+            childClassName = this.props.classes.childVer;
+            child1Style = {width: width1, ...this.props.child1Style};
+            child2Style = this.props.child2Style;
         } else {
             const height1 = this.state.size;
-            containerClass = this.props.classes.ver;
-            childContainer1Style = {flex: 'none', height: height1, ...this.props.child1Style};
-            childContainer2Style = {flex: 'none', ...this.props.child2Style};
+            className = this.props.classes.ver;
+            childClassName = this.props.classes.childVer;
+            child1Style = {height: height1, ...this.props.child1Style};
+            child2Style = this.props.child2Style;
         }
         return (
-            <div id='SplitPane' className={containerClass} style={this.props.style}>
-                <div id='SplitPane-Child-1' style={childContainer1Style}>
+            <div
+                    id='SplitPane'
+                    className={classNames(className, this.props.className)}
+                    style={this.props.style}
+            >
+                <div
+                        id='SplitPane-Child-1'
+                        className={classNames(childClassName, this.props.child1ClassName)}
+                        style={child1Style}
+                >
                     {children[0]}
                 </div>
-                <Splitter dir={this.props.dir} onChange={this.handleSplitDelta}/>
-                <div id='SplitPane-Child-2' style={childContainer2Style}>
+                <Splitter
+                        dir={this.props.dir}
+                        onChange={this.handleSplitDelta}
+                />
+                <div
+                        id='SplitPane-Child-2'
+                        className={classNames(childClassName, this.props.child2ClassName)}
+                        style={child2Style}
+                >
                     {children[1]}
                 </div>
             </div>
