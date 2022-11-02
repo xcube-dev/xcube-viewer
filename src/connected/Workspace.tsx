@@ -93,17 +93,18 @@ const Workspace: React.FC<WorkspaceProps> = ({
     }
 
     if (hasInfoCard || hasTimeseries) {
+        const mapPadding = 0;  // set to 20 for style debugging
         let splitPaneStyle: React.CSSProperties = {flexGrow: 1};
-        let splitPaneChild1Style: React.CSSProperties = {overflow: "hidden", padding: 10};
+        let splitPaneChild1Style: React.CSSProperties = {overflow: "hidden", padding: mapPadding};
         let splitPaneChild2Style: React.CSSProperties = {overflowX: "hidden"};
         if (layout === "hor") {
             splitPaneStyle = {...splitPaneStyle, overflow: "hidden"};
             splitPaneChild1Style = {...splitPaneChild1Style, height: "100%"};
-            splitPaneChild2Style = {...splitPaneChild2Style, overflowY: "auto"};
+            splitPaneChild2Style = {...splitPaneChild2Style, flex: 'auto', overflowY: "auto"};
         } else {
             splitPaneStyle = {...splitPaneStyle, overflowX: "hidden", overflowY: "auto"};
             splitPaneChild1Style = {...splitPaneChild1Style, width: "100%"};
-            splitPaneChild2Style = {...splitPaneChild2Style, overflowY: "hidden"};
+            splitPaneChild2Style = {...splitPaneChild2Style, width: '100%', overflowY: "hidden"};
         }
         return (
             <SplitPane

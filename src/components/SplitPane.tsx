@@ -96,19 +96,16 @@ class SplitPane extends React.PureComponent<ISplitPaneProps, ISplitPaneState> {
         let containerClass;
         let childContainer1Style;
         let childContainer2Style;
-        const splitterSize = 4; // px
         if (this.props.dir === 'hor') {
             const width1 = this.state.size;
-            const width2 = `calc(100% - ${width1 + splitterSize}px)`;
             containerClass = this.props.classes.hor;
             childContainer1Style = {flex: 'none', width: width1, ...this.props.child1Style};
-            childContainer2Style = {flex: 'auto', width: width2, ...this.props.child2Style};
+            childContainer2Style = {flex: 'none', ...this.props.child2Style};
         } else {
             const height1 = this.state.size;
-            const height2 = `calc(100% - ${height1 + splitterSize}px)`;
             containerClass = this.props.classes.ver;
-            childContainer1Style = {flex: 'none', width: '100%', height: height1, ...this.props.child1Style};
-            childContainer2Style = {flex: 'auto', width: '100%', height: height2, ...this.props.child2Style};
+            childContainer1Style = {flex: 'none', height: height1, ...this.props.child1Style};
+            childContainer2Style = {flex: 'none', ...this.props.child2Style};
         }
         return (
             <div id='SplitPane' className={containerClass} style={this.props.style}>
