@@ -27,3 +27,14 @@ export interface Format {
     fileExt: string;
     checkError: (text: string) => string | null;
 }
+
+export function detectFormatName(text: string): "csv" | "geojson"  | "wkt" {
+    text = text.trim();
+    if (text === "") {
+        return "csv";
+    }
+    if (text[0] === "{") {
+        return "geojson"
+    }
+    return "wkt";
+}

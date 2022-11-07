@@ -51,7 +51,7 @@ import WktOptionsEditor from './user-place/WktOptionsEditor';
 import { geoJsonFormat, GeoJsonOptions } from '../model/user-place/geojson';
 import { csvFormat, CsvOptions } from '../model/user-place/csv';
 import { wktFormat, WktOptions } from '../model/user-place/wkt';
-import { Format } from '../model/user-place/common';
+import { Format, detectFormatName } from '../model/user-place/common';
 import { FormControlLabel } from '@material-ui/core';
 
 
@@ -137,7 +137,9 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         setLoading(true);
         const reader = new FileReader();
         reader.onloadend = () => {
-            setUserPlacesText(reader.result as string);
+            const text = reader.result as string;
+            setUserPlacesFormatName(detectFormatName(text))
+            setUserPlacesText(text);
             setLoading(false);
         };
         reader.onabort = reader.onerror = () => {
