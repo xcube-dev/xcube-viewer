@@ -31,9 +31,9 @@ export interface ParseOptions {
     quote: string;
     escape: string;
     trim: boolean;
-    nanKey: string;
-    trueKey: string;
-    falseKey: string;
+    nanToken: string;
+    trueToken: string;
+    falseToken: string;
 }
 
 export const defaultParseOptions: ParseOptions = {
@@ -42,9 +42,9 @@ export const defaultParseOptions: ParseOptions = {
     quote: '"',
     escape: '\\',
     trim: true,
-    nanKey: 'NaN',
-    trueKey: 'true',
-    falseKey: 'false',
+    nanToken: 'NaN',
+    trueToken: 'true',
+    falseToken: 'false',
 }
 
 type Line = [string, number];
@@ -128,13 +128,13 @@ class Parser {
         if (token.startsWith(options.quote)) {
             token = token.substring(1, token.length - 1);
         } else {
-            if (token === options.trueKey) {
+            if (token === options.trueToken) {
                 return true;
             }
-            if (token === options.falseKey) {
+            if (token === options.falseToken) {
                 return false;
             }
-            if (token === options.nanKey) {
+            if (token === options.nanToken) {
                 return Number.NaN;
             }
             const value = parseFloat(token);

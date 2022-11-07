@@ -30,6 +30,9 @@ import { Config } from '../config';
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
 import { DEFAULT_MAP_CRS } from "../model/proj";
+import { defaultGeoJsonOptions, GeoJsonOptions } from "../model/user-place/geojson";
+import { CsvOptions, defaultCsvOptions } from "../model/user-place/csv";
+import { defaultWktOptions, WktOptions } from "../model/user-place/wkt";
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -45,6 +48,14 @@ export interface InfoCardElementState {
 
 export interface InfoCardElementStates {
     [key: string]: InfoCardElementState;
+}
+
+export type UserPlacesFormatName = 'geojson' | 'csv' | 'wkt';
+
+export interface UserPlacesFormatOptions {
+    geojson: GeoJsonOptions;
+    csv: CsvOptions;
+    wkt: WktOptions;
 }
 
 export interface ExportSettings {
@@ -70,8 +81,8 @@ export interface ControlState {
     showTimeSeriesPointsOnly: boolean;
     showTimeSeriesErrorBars: boolean;
     showTimeSeriesMedian: boolean;
-    placeLabelPropertyNames: string;
-    placeLabelPrefix: string;
+    userPlacesFormatName: UserPlacesFormatName;
+    userPlacesFormatOptions: UserPlacesFormatOptions;
     flyTo: OlGeometry | OlExtent | null;
     activities: { [id: string]: string };
     locale: string;
@@ -93,9 +104,6 @@ export interface ControlState {
     exportFileName: string;
 }
 
-export const DEFAULT_PLACE_LABEL_PREFIX = "User-Place-";
-
-export const DEFAULT_PLACE_LABEL_PROPERTY_NAMES = "label, name, title, id";
 
 export function newControlState(): ControlState {
     const branding = Config.instance.branding;
@@ -116,8 +124,12 @@ export function newControlState(): ControlState {
         showTimeSeriesPointsOnly: false,
         showTimeSeriesErrorBars: true,
         showTimeSeriesMedian: branding.defaultAgg === 'median',
-        placeLabelPropertyNames: DEFAULT_PLACE_LABEL_PROPERTY_NAMES,
-        placeLabelPrefix: DEFAULT_PLACE_LABEL_PREFIX,
+        userPlacesFormatName: 'csv',
+        userPlacesFormatOptions: {
+            geojson: {...defaultGeoJsonOptions},
+            csv: {...defaultCsvOptions},
+            wkt: {...defaultWktOptions},
+        },
         flyTo: null,
         activities: {},
         locale: 'en',

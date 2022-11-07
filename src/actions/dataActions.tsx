@@ -59,7 +59,8 @@ import {
     selectPlace,
     SelectPlace,
     selectPlaceGroups,
-    SelectPlaceGroups, updateSettings, UpdateSettings,
+    SelectPlaceGroups,
+    UpdateSettings,
 } from './controlActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { newId } from "../util/id";

@@ -37,7 +37,7 @@ import { Layers } from '../components/ol/layer/Layers';
 import { Tile } from '../components/ol/layer/Tile';
 import { Vector } from '../components/ol/layer/Vector';
 import { MapElement } from '../components/ol/Map';
-import memoize from "fast-memoize";
+import memoize from 'fast-memoize';
 import { Config, getTileAccess } from '../config';
 import { ApiServerConfig } from '../model/apiServer';
 
@@ -71,9 +71,9 @@ import {
     userPlaceGroupSelector,
     userServersSelector
 } from './dataSelectors';
-import { makeRequestUrl } from "../api/callApi";
-import { DEFAULT_PLACE_LABEL_PREFIX, MAP_OBJECTS } from "../states/controlState";
-import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "../model/proj";
+import { makeRequestUrl } from '../api/callApi';
+import { MAP_OBJECTS } from '../states/controlState';
+import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from '../model/proj';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -90,8 +90,8 @@ export const infoCardElementStatesSelector = (state: AppState) => state.controlS
 export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
 export const timeChunkSizeSelector = (state: AppState) => state.controlState.timeChunkSize;
 export const showDatasetBoundariesSelector = (state: AppState) => state.controlState.showDatasetBoundaries;
-export const _placeLabelPrefixSelector = (state: AppState) => state.controlState.placeLabelPrefix;
-export const _placeLabelPropertyNamesSelector = (state: AppState) => state.controlState.placeLabelPropertyNames;
+export const _placeLabelPrefixSelector = (state: AppState) => state.controlState.userPlacesFormatOptions.geojson.placeLabelPrefix;
+export const _placeLabelPropertyNamesSelector = (state: AppState) => state.controlState.userPlacesFormatOptions.geojson.placeLabelPropertyNames;
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -242,7 +242,7 @@ export const selectedPlaceInfoSelector = createSelector(
 export const placeLabelPrefixSelector = createSelector(
     _placeLabelPrefixSelector,
     (placeLabelPrefix: string): string => {
-        return placeLabelPrefix !== "" ? placeLabelPrefix : DEFAULT_PLACE_LABEL_PREFIX;
+        return placeLabelPrefix !== "" ? placeLabelPrefix : "User-Place-";
     }
 );
 
