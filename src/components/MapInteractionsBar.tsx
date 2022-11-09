@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -29,9 +30,10 @@ import AddLocationIcon from '@material-ui/icons/AddLocation';
 import CategoryIcon from '@material-ui/icons/Category';
 import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import FileUploadIcon from '@material-ui/icons/CloudUpload';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import * as React from 'react';
+
 import i18n from '../i18n';
 import { MapInteraction } from "../states/controlState";
 import { WithLocale } from '../util/lang';
@@ -82,6 +84,11 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
                 <ToggleButton key={3} value="Circle">
                     <Tooltip arrow title={i18n.get('Draw a circular area in map')}>
                         <FiberManualRecordIcon/>
+                    </Tooltip>
+                </ToggleButton>
+                <ToggleButton key={4} value="Geometry">
+                    <Tooltip arrow title={i18n.get('Import geometry')}>
+                        <FileUploadIcon/>
                     </Tooltip>
                 </ToggleButton>
             </ToggleButtonGroup>

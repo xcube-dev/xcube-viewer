@@ -90,8 +90,11 @@ export const infoCardElementStatesSelector = (state: AppState) => state.controlS
 export const mapProjectionSelector = (state: AppState) => state.controlState.mapProjection;
 export const timeChunkSizeSelector = (state: AppState) => state.controlState.timeChunkSize;
 export const showDatasetBoundariesSelector = (state: AppState) => state.controlState.showDatasetBoundaries;
-export const _placeLabelPrefixSelector = (state: AppState) => state.controlState.userPlacesFormatOptions.geojson.placeLabelPrefix;
-export const _placeLabelPropertyNamesSelector = (state: AppState) => state.controlState.userPlacesFormatOptions.geojson.placeLabelPropertyNames;
+export const userPlacesFormatNameSelector = (state: AppState) => state.controlState.userPlacesFormatName;
+export const userPlacesFormatOptionsCsvSelector = (state: AppState) => state.controlState.userPlacesFormatOptions.csv;
+export const userPlacesFormatOptionsGeoJsonSelector = (state: AppState) => state.controlState.userPlacesFormatOptions.geojson;
+export const userPlacesFormatOptionsWktSelector = (state: AppState) => state.controlState.userPlacesFormatOptions.wkt;
+
 
 export const selectedDatasetSelector = createSelector(
     datasetsSelector,
@@ -236,23 +239,6 @@ export const selectedPlaceInfoSelector = createSelector(
             return null;
         }
         return findPlaceInfo(placeGroups, (placeGroup, place) => place.id === placeId);
-    }
-);
-
-export const placeLabelPrefixSelector = createSelector(
-    _placeLabelPrefixSelector,
-    (placeLabelPrefix: string): string => {
-        return placeLabelPrefix !== "" ? placeLabelPrefix : "User-Place-";
-    }
-);
-
-export const placeLabelPropertyNamesSelector = createSelector(
-    _placeLabelPropertyNamesSelector,
-    (placeLabelPropertyNames: string): Set<string> => {
-        return new Set(placeLabelPropertyNames.split(",")
-            .map(name => name.trim().toLowerCase())
-            .filter(name => name !== "")
-        );
     }
 );
 

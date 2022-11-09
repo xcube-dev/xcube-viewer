@@ -26,8 +26,8 @@ export class ParseError extends Error {
 }
 
 export interface ParseOptions {
-    comment: string;
     separator: string;
+    comment: string;
     quote: string;
     escape: string;
     trim: boolean;
@@ -37,8 +37,8 @@ export interface ParseOptions {
 }
 
 export const defaultParseOptions: ParseOptions = {
-    comment: '#',
     separator: ',',
+    comment: '#',
     quote: '"',
     escape: '\\',
     trim: true,

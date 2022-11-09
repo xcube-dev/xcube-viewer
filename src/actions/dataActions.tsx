@@ -23,6 +23,9 @@
  */
 
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
+import { default as OlWktFormat } from 'ol/format/WKT';
+import { default as OlGeometry } from 'ol/geom/Geometry';
+import { default as OlGeomPoint } from 'ol/geom/Point';
 import { default as OlFeature } from 'ol/Feature';
 import * as geojson from 'geojson';
 import JSZip from 'jszip';
@@ -35,7 +38,7 @@ import { Dataset } from '../model/dataset';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
 import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
-    mapProjectionSelector, placeLabelPrefixSelector, placeLabelPropertyNamesSelector,
+    mapProjectionSelector,
     selectedDatasetIdSelector,
     selectedDatasetTimeDimensionSelector,
     selectedDatasetVariableSelector,
@@ -44,7 +47,9 @@ import {
     selectedPlaceIdSelector,
     selectedPlaceSelector,
     selectedServerSelector,
-    selectedTimeChunkSizeSelector
+    selectedTimeChunkSizeSelector,
+    userPlacesFormatNameSelector,
+    userPlacesFormatOptionsCsvSelector, userPlacesFormatOptionsGeoJsonSelector, userPlacesFormatOptionsWktSelector
 } from '../selectors/controlSelectors';
 import { datasetsSelector, placeGroupsSelector, userPlaceGroupSelector } from '../selectors/dataSelectors';
 
@@ -63,7 +68,11 @@ import {
     UpdateSettings,
 } from './controlActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
-import { newId } from "../util/id";
+import { newId } from '../util/id';
+import { parseCsv } from '../util/csv';
+import { defaultCsvOptions } from '../model/user-place/csv';
+import { defaultGeoJsonOptions } from '../model/user-place/geojson';
+import { defaultWktOptions } from '../model/user-place/wkt';
 
 const saveAs = require('file-saver');
 
@@ -84,16 +93,16 @@ export function updateServerInfo() {
         dispatch(addActivity(UPDATE_SERVER_INFO, i18n.get('Connecting to server')));
 
         api.getServerInfo(apiServer.url)
-            .then((serverInfo: ApiServerInfo) => {
-                dispatch(_updateServerInfo(serverInfo));
-            })
-            .catch(error => {
-                dispatch(postMessage('error', error));
-            })
-            // 'then' because Microsoft Edge does not understand method finally
-            .then(() => {
-                dispatch(removeActivity(UPDATE_SERVER_INFO));
-            });
+           .then((serverInfo: ApiServerInfo) => {
+               dispatch(_updateServerInfo(serverInfo));
+           })
+           .catch(error => {
+               dispatch(postMessage('error', error));
+           })
+                // 'then' because Microsoft Edge does not understand method finally
+           .then(() => {
+               dispatch(removeActivity(UPDATE_SERVER_INFO));
+           });
     };
 }
 
@@ -110,14 +119,14 @@ export function updateResources() {
         const apiServer = selectedServerSelector(getState());
         dispatch(addActivity(UPDATE_RESOURCES, i18n.get('Updating resources')));
         api.updateResources(apiServer.url, getState().userAuthState.accessToken)
-            .then(ok => {
-                if (ok) {
-                    window.location.reload();
-                }
-            })
-            .finally(() =>
-                dispatch(removeActivity(UPDATE_RESOURCES))
-            );
+           .then(ok => {
+               if (ok) {
+                   window.location.reload();
+               }
+           })
+           .finally(() =>
+                            dispatch(removeActivity(UPDATE_RESOURCES))
+           );
     }
 }
 
@@ -138,21 +147,21 @@ export function updateDatasets() {
         dispatch(addActivity(UPDATE_DATASETS, i18n.get('Loading data')));
 
         api.getDatasets(apiServer.url, getState().userAuthState.accessToken)
-            .then((datasets: Dataset[]) => {
-                dispatch(_updateDatasets(datasets));
-                if (datasets.length > 0) {
-                    const selectedDatasetId = getState().controlState.selectedDatasetId || datasets[0].id;
-                    dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
-                }
-            })
-            .catch(error => {
-                dispatch(postMessage('error', error));
-                dispatch(_updateDatasets([]));
-            })
-            // 'then' because Microsoft Edge does not understand method finally
-            .then(() => {
-                dispatch(removeActivity(UPDATE_DATASETS));
-            });
+           .then((datasets: Dataset[]) => {
+               dispatch(_updateDatasets(datasets));
+               if (datasets.length > 0) {
+                   const selectedDatasetId = getState().controlState.selectedDatasetId || datasets[0].id;
+                   dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
+               }
+           })
+           .catch(error => {
+               dispatch(postMessage('error', error));
+               dispatch(_updateDatasets([]));
+           })
+                // 'then' because Microsoft Edge does not understand method finally
+           .then(() => {
+               dispatch(removeActivity(UPDATE_DATASETS));
+           });
     };
 }
 
@@ -188,7 +197,11 @@ export interface AddUserPlace {
     selectPlace: boolean;
 }
 
-export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry, selectPlace: boolean) {
+export function addUserPlace(id: string,
+                             label: string,
+                             color: string,
+                             geometry: geojson.Geometry,
+                             selectPlace: boolean) {
     return (dispatch: Dispatch<AddUserPlace>, getState: () => AppState) => {
         dispatch(_addUserPlace(id, label, color, geometry, selectPlace));
         if (getState().controlState.autoShowTimeSeries) {
@@ -197,7 +210,11 @@ export function addUserPlace(id: string, label: string, color: string, geometry:
     };
 }
 
-export function _addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry, selectPlace: boolean): AddUserPlace {
+export function _addUserPlace(id: string,
+                              label: string,
+                              color: string,
+                              geometry: geojson.Geometry,
+                              selectPlace: boolean): AddUserPlace {
     return {type: ADD_USER_PLACE, id, label, color, geometry, selectPlace};
 }
 
@@ -212,7 +229,9 @@ export interface AddUserPlaces {
     selectPlace: boolean;
 }
 
-export function addUserPlaces(places: Place[], mapProjection: string, selectPlace: boolean): AddUserPlaces {
+export function addUserPlaces(places: Place[],
+                              mapProjection: string,
+                              selectPlace: boolean): AddUserPlaces {
     return {
         type: ADD_USER_PLACES,
         places: places,
@@ -223,78 +242,33 @@ export function addUserPlaces(places: Place[], mapProjection: string, selectPlac
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-let LAST_PLACE_LABEL_ID = 0;
+type UserPlacesDispatch = Dispatch<AddUserPlaces
+        | SelectPlaceGroups
+        | SelectPlace
+        | UpdateSettings>;
 
-export function addUserPlacesFromText(geometryText: string) {
-    return (dispatch: Dispatch<AddUserPlaces | SelectPlaceGroups | SelectPlace | UpdateSettings>, getState: () => AppState) => {
-        const placeLabelPropertyNames = placeLabelPropertyNamesSelector(getState());
-        const placeLabelPrefix = placeLabelPrefixSelector(getState());
 
-        const geoJSON = new OlGeoJSONFormat();
-
-        let features: OlFeature[];
-        try {
-            features = geoJSON.readFeatures(geometryText);
-        } catch (e) {
-            try {
-                const geometry = geoJSON.readGeometry(geometryText);
-                features = [new OlFeature(geometry)];
-            } catch (e) {
-                // TODO: display error message in UI
-                console.error(e);
-                return;
-            }
+export function addUserPlacesFromText(text: string) {
+    return (dispatch: UserPlacesDispatch, getState: () => AppState) => {
+        const formatName = userPlacesFormatNameSelector(getState());
+        let places: Place[];
+        if (formatName === 'csv') {
+            places = getUserPlacesFromCsv(text, dispatch, getState)
+        } else if (formatName === 'geojson') {
+            places = getUserPlacesFromGeoJson(text, dispatch, getState)
+        } else if (formatName === 'wkt') {
+            places = getUserPlacesFromWkt(text, dispatch, getState)
+        } else {
+            places = [];
         }
-
-        const places: Place[] = [];
-        features.forEach(feature => {
-            const properties = feature.getProperties();
-            const geometry = feature.getGeometry();
-            if (geometry) {
-                let placeLabel = "";
-                const geoJsonGeometry: geojson.Geometry = geoJSON.writeGeometryObject(geometry) as any;
-                let geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
-                if (properties) {
-                    for (let propertyName in properties) {
-                        const propertyValue = properties[propertyName];
-                        if (propertyValue === null
-                            || typeof propertyValue === 'number'
-                            || typeof propertyValue === 'string'
-                            || typeof propertyValue === 'boolean') {
-                            geoJsonProps[propertyName] = propertyValue;
-                        }
-                        if (placeLabel === ""
-                            && typeof propertyValue === 'string'
-                            && placeLabelPropertyNames.has(propertyName.toLowerCase())) {
-                            placeLabel = propertyValue;
-                        }
-                    }
-                }
-
-                if (placeLabel === "") {
-                    const placeLabelId = ++LAST_PLACE_LABEL_ID;
-                    placeLabel = `${placeLabelPrefix}-${placeLabelId}`;
-                }
-
-                geoJsonProps["label"] = placeLabel;
-
-                places.push({
-                    type: 'Feature',
-                    id: newId(),
-                    geometry: geoJsonGeometry,
-                    properties: geoJsonProps,
-                })
-            }
-        });
-
         if (places.length) {
             dispatch(addUserPlaces(places, mapProjectionSelector(getState()), true));
             dispatch(selectPlaceGroups(['user']) as any);
-            if (features.length === 1) {
+            if (places.length === 1) {
                 dispatch(selectPlace(
-                    places[0].id,
-                    selectedPlaceGroupPlacesSelector(getState()),
-                    true
+                        places[0].id,
+                        selectedPlaceGroupPlacesSelector(getState()),
+                        true
                 ) as any);
                 if (getState().controlState.autoShowTimeSeries) {
                     dispatch(addTimeSeries() as any);
@@ -302,6 +276,230 @@ export function addUserPlacesFromText(geometryText: string) {
             }
         }
     };
+}
+
+let LAST_PLACE_LABEL_ID_CSV = 0;
+let LAST_PLACE_LABEL_ID_GEOJSON = 0;
+let LAST_PLACE_LABEL_ID_WKT = 0;
+
+
+function getUserPlacesFromCsv(text: string,
+                              dispatch: UserPlacesDispatch,
+                              getState: () => AppState): Place[] {
+    const options = userPlacesFormatOptionsCsvSelector(getState());
+    let table;
+    try {
+        table = parseCsv(text, options);
+    } catch (e) {
+        // TODO: display error message in UI
+        console.error(e);
+        return [];
+    }
+    if (table.length < 2) {
+        // TODO: display error message in UI
+        console.error('missing header line');
+        return [];
+    }
+
+    for (let v of table[0]) {
+        if (typeof v !== 'string' || v === '') {
+            // TODO: display error message in UI
+            console.error('invalid header line');
+            return [];
+        }
+    }
+
+    const headerRow: string[] = table[0].map(v => v as string);
+    const headerRowLC = headerRow.map(v => v.toLowerCase());
+    const numColumns = headerRow.length;
+
+    for (let row of table) {
+        if (row.length !== numColumns) {
+            // TODO: display error message in UI
+            console.error('all rows must have same length');
+            return [];
+        }
+    }
+
+    const labelNameLC = options.labelName.toLowerCase();
+    const xNameLC = options.xName.toLowerCase();
+    const yNameLC = options.yName.toLowerCase();
+    const geometryNameLC = options.geometryName.toLowerCase();
+    const forceGeometry = options.forceGeometry;
+
+    const labelNameIndex = headerRowLC.findIndex(name => name === labelNameLC);
+    const xNameIndex = headerRowLC.findIndex(name => name === xNameLC);
+    const yNameIndex = headerRowLC.findIndex(name => name === yNameLC);
+    let geometryNameIndex = headerRowLC.findIndex(name => name === geometryNameLC);
+    if (forceGeometry || xNameIndex < 0 || yNameIndex < 0 || xNameIndex === yNameIndex) {
+        if (geometryNameIndex < 0) {
+            // TODO: display error message in UI
+            console.error('no geometry found');
+            return [];
+        }
+    } else {
+        geometryNameIndex = -1;
+    }
+
+    let labelPrefix = options.labelPrefix.trim();
+    if (labelPrefix === '') {
+        labelPrefix = defaultCsvOptions.labelPrefix;
+    }
+
+    const wktFormat = new OlWktFormat();
+
+    const places: Place[] = [];
+    for (let row of table.slice(1)) {
+        console.log(row)
+        let geometry = null;
+        if (geometryNameIndex >= 0) {
+            const wkt = row[geometryNameIndex];
+            if (typeof wkt === 'string') {
+                try {
+                    geometry = wktFormat.readGeometry(text);
+                } catch (e) {
+                    console.error('invalid geometry found', e);
+                    continue;
+                }
+            }
+        } else {
+            const x = row[xNameIndex];
+            const y = row[yNameIndex];
+            if (typeof x === 'number' && Number.isFinite(x) && typeof y === 'number' && Number.isFinite(y)) {
+                geometry = new OlGeomPoint([x, y]);
+            } else {
+                console.error('invalid geometry found');
+                continue;
+            }
+        }
+        if (geometry === null) {
+            console.error('no geometry found');
+            continue;
+        }
+
+        const geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
+        row.forEach((propertyValue, index) => {
+            if (index !== xNameIndex && index !== yNameIndex && index !== geometryNameIndex) {
+                const propertyName = headerRow[index];
+                geoJsonProps[propertyName] = propertyName;
+            }
+        });
+
+        let label: string;
+        if (labelNameIndex >= 0) {
+            label = `${row[labelNameIndex]}`;
+        } else {
+            const labelId = ++LAST_PLACE_LABEL_ID_CSV;
+            label = `${labelPrefix}${labelId}`;
+        }
+        geoJsonProps['label'] = label;
+
+        places.push(newGeoJsonFeature(geometry, geoJsonProps));
+    }
+
+    return places;
+}
+
+function getUserPlacesFromGeoJson(text: string,
+                                  dispatch: UserPlacesDispatch,
+                                  getState: () => AppState): Place[] {
+    const options = userPlacesFormatOptionsGeoJsonSelector(getState());
+    const labelNames = options.labelNames;
+    const labelNamesSet = new Set(
+            labelNames.split(',')
+                      .map(name => name.trim().toLowerCase())
+                      .filter(name => name !== '')
+    )
+    let labelPrefix = options.labelPrefix.trim();
+    if (labelPrefix === '') {
+        labelPrefix = defaultGeoJsonOptions.labelPrefix;
+    }
+
+    const geoJsonFormat = new OlGeoJSONFormat();
+
+    let features: OlFeature[];
+    try {
+        features = geoJsonFormat.readFeatures(text);
+    } catch (e) {
+        try {
+            const geometry = geoJsonFormat.readGeometry(text);
+            features = [new OlFeature(geometry)];
+        } catch (e) {
+            // TODO: display error message in UI
+            console.error(e);
+            return [];
+        }
+    }
+
+    const places: Place[] = [];
+    features.forEach(feature => {
+        const properties = feature.getProperties();
+        const geometry = feature.getGeometry();
+        if (geometry) {
+            let label = '';
+            const geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
+            if (properties) {
+                for (let propertyName in properties) {
+                    const propertyValue = properties[propertyName];
+                    if (propertyValue === null
+                        || typeof propertyValue === 'number'
+                        || typeof propertyValue === 'string'
+                        || typeof propertyValue === 'boolean') {
+                        geoJsonProps[propertyName] = propertyValue;
+                    }
+                    if (label === ''
+                        && typeof propertyValue === 'string'
+                        && labelNamesSet.has(propertyName.toLowerCase())) {
+                        label = propertyValue;
+                    }
+                }
+            }
+
+            if (label === '') {
+                const labelId = ++LAST_PLACE_LABEL_ID_GEOJSON;
+                label = `${labelPrefix}-${labelId}`;
+            }
+            geoJsonProps['label'] = label;
+
+            places.push(newGeoJsonFeature(geometry, geoJsonProps));
+        }
+    });
+
+    return places;
+}
+
+function getUserPlacesFromWkt(text: string,
+                              dispatch: UserPlacesDispatch,
+                              getState: () => AppState): Place[] {
+    const options = userPlacesFormatOptionsWktSelector(getState());
+    let labelPrefix = options.labelPrefix.trim();
+    if (labelPrefix === '') {
+        labelPrefix = defaultWktOptions.labelPrefix;
+    }
+    let label = options.label.trim();
+    if (label === '') {
+        const labelId = ++LAST_PLACE_LABEL_ID_WKT;
+        label = `${labelPrefix}${labelId}`;
+    }
+    try {
+        const geometry = new OlWktFormat().readGeometry(text);
+        return [newGeoJsonFeature(geometry, {label})];
+    } catch (e) {
+        console.error('invalid geometry found', e);
+        return [];
+    }
+
+}
+
+function newGeoJsonFeature(geometry: OlGeometry, properties: { [name: string]: any }): Place {
+    let place: Place = {
+        type: 'Feature',
+        id: newId(),
+        geometry: new OlGeoJSONFormat().writeGeometryObject(geometry),
+        properties: properties,
+    };
+    console.log(place);
+    return place;
 }
 
 
@@ -353,33 +551,33 @@ export function addTimeSeries() {
             const timeLabels = selectedDatasetTimeDim.labels;
             const numTimeLabels = timeLabels.length;
 
-            timeChunkSize = timeChunkSize > 0 ? timeChunkSize:numTimeLabels;
+            timeChunkSize = timeChunkSize > 0 ? timeChunkSize : numTimeLabels;
 
             let endTimeIndex = numTimeLabels - 1;
             let startTimeIndex = endTimeIndex - timeChunkSize + 1;
 
             const getTimeSeriesChunk = () => {
-                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex]:null;
+                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
                 const endDateLabel = timeLabels[endTimeIndex];
                 return api.getTimeSeriesForGeometry(apiServer.url,
-                    selectedDatasetId,
-                    selectedVariable,
-                    selectedPlace.id,
-                    selectedPlace.geometry,
-                    startDateLabel,
-                    endDateLabel,
-                    useMedian,
-                    inclStDev,
-                    getState().userAuthState.accessToken);
+                                                    selectedDatasetId,
+                                                    selectedVariable,
+                                                    selectedPlace.id,
+                                                    selectedPlace.geometry,
+                                                    startDateLabel,
+                                                    endDateLabel,
+                                                    useMedian,
+                                                    inclStDev,
+                                                    getState().userAuthState.accessToken);
             };
 
             const successAction = (timeSeries: TimeSeries | null) => {
                 if (timeSeries !== null && isValidPlace(placeGroups, selectedPlace.id)) {
                     const hasMore = startTimeIndex > 0;
-                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels:1.0;
+                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
                     dispatch(updateTimeSeries({...timeSeries, dataProgress},
-                        timeSeriesUpdateMode,
-                        endTimeIndex === numTimeLabels - 1 ? 'new':'append'));
+                                              timeSeriesUpdateMode,
+                                              endTimeIndex === numTimeLabels - 1 ? 'new' : 'append'));
                     if (hasMore && isValidPlace(placeGroups, selectedPlace.id)) {
                         startTimeIndex -= timeChunkSize;
                         endTimeIndex -= timeChunkSize;
@@ -391,10 +589,10 @@ export function addTimeSeries() {
             };
 
             getTimeSeriesChunk()
-                .then(successAction)
-                .catch((error: any) => {
-                    dispatch(postMessage('error', error));
-                });
+                    .then(successAction)
+                    .catch((error: any) => {
+                        dispatch(postMessage('error', error));
+                    });
         }
     };
 }
@@ -488,12 +686,12 @@ export function updateColorBars() {
         const apiServer = selectedServerSelector(getState());
 
         api.getColorBars(apiServer.url)
-            .then((colorBars: ColorBars) => {
-                dispatch(_updateColorBars(colorBars));
-            })
-            .catch(error => {
-                dispatch(postMessage('error', error));
-            });
+           .then((colorBars: ColorBars) => {
+               dispatch(_updateColorBars(colorBars));
+           })
+           .catch(error => {
+               dispatch(postMessage('error', error));
+           });
     };
 }
 
@@ -523,8 +721,8 @@ export function updateVariableColorBar(colorBarMinMax: [number, number],
         const selectedVariableName = getState().controlState.selectedVariableName;
         if (selectedDatasetId && selectedVariableName) {
             dispatch(_updateVariableColorBar(
-                selectedDatasetId, selectedVariableName,
-                colorBarMinMax, colorBarName, opacity
+                    selectedDatasetId, selectedVariableName,
+                    colorBarMinMax, colorBarName, opacity
             ));
         }
     };
@@ -576,15 +774,15 @@ export function exportData() {
         }
 
         _exportData(getState().dataState.timeSeriesGroups,
-            placeGroups,
-            {
-                includeTimeSeries: exportTimeSeries,
-                includePlaces: exportPlaces,
-                separator: exportTimeSeriesSeparator,
-                placesAsCollection: exportPlacesAsCollection,
-                zip: exportZipArchive,
-                fileName: exportFileName,
-            }
+                    placeGroups,
+                    {
+                        includeTimeSeries: exportTimeSeries,
+                        includePlaces: exportPlaces,
+                        separator: exportTimeSeriesSeparator,
+                        placesAsCollection: exportPlacesAsCollection,
+                        zip: exportZipArchive,
+                        fileName: exportFileName,
+                    }
         );
     };
 }
@@ -611,7 +809,7 @@ class ZipExporter extends Exporter {
     }
 
     close() {
-        this.zipArchive.generateAsync({type: "blob"})
+        this.zipArchive.generateAsync({type: 'blob'})
             .then((content) => saveAs(content, this.fileName));
     }
 }
@@ -620,7 +818,7 @@ class FileExporter extends Exporter {
 
     write(path: string, content: string) {
         const blob = new Blob([content],
-            {type: "text/plain;charset=utf-8"});
+                              {type: 'text/plain;charset=utf-8'});
         saveAs(blob, path);
     }
 
@@ -674,7 +872,7 @@ function _exportData(timeSeriesGroups: TimeSeriesGroup[],
         const {colNames, dataRows, referencedPlaces} = timeSeriesGroupsToTable(timeSeriesGroups, placeGroups);
         const validTypes: { [typeName: string]: boolean } = {number: true, string: true};
         const csvHeaderRow = colNames.join(separator);
-        const csvDataRows = dataRows.map(row => row.map(value => validTypes[typeof value] ? value + '':'').join(separator));
+        const csvDataRows = dataRows.map(row => row.map(value => validTypes[typeof value] ? value + '' : '').join(separator));
         const csvText = [csvHeaderRow].concat(csvDataRows).join('\n');
         exporter.write(`${fileName}.txt`, csvText);
         placesToExport = referencedPlaces;
@@ -692,15 +890,15 @@ function _exportData(timeSeriesGroups: TimeSeriesGroup[],
     if (includePlaces) {
         if (placesAsCollection) {
             const collection = {
-                type: "FeatureCollection",
+                type: 'FeatureCollection',
                 features: Object.keys(placesToExport).map(placeId => placesToExport![placeId])
             };
             exporter.write(`${fileName}.geojson`,
-                JSON.stringify(collection, null, 2));
+                           JSON.stringify(collection, null, 2));
         } else {
             Object.keys(placesToExport).forEach(placeId => {
                 exporter.write(`${placeId}.geojson`,
-                    JSON.stringify(placesToExport![placeId], null, 2));
+                               JSON.stringify(placesToExport![placeId], null, 2));
             });
         }
     }
@@ -750,16 +948,16 @@ function _downloadTimeSeriesGeoJSON(timeSeriesGroups: TimeSeriesGroup[],
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export type DataAction =
-    UpdateServerInfo
-    | UpdateDatasets
-    | UpdateDatasetPlaceGroup
-    | AddUserPlace
-    | AddUserPlaces
-    | RemoveUserPlace
-    | RemoveAllUserPlaces
-    | UpdateTimeSeries
-    | RemoveTimeSeriesGroup
-    | RemoveAllTimeSeries
-    | ConfigureServers
-    | UpdateColorBars
-    | UpdateVariableColorBar;
+        UpdateServerInfo
+        | UpdateDatasets
+        | UpdateDatasetPlaceGroup
+        | AddUserPlace
+        | AddUserPlaces
+        | RemoveUserPlace
+        | RemoveAllUserPlaces
+        | UpdateTimeSeries
+        | RemoveTimeSeriesGroup
+        | RemoveAllTimeSeries
+        | ConfigureServers
+        | UpdateColorBars
+        | UpdateVariableColorBar;

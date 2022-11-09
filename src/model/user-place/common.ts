@@ -48,7 +48,7 @@ export function detectFormatName(text: string): "csv" | "geojson" | "wkt" {
     }
 
     if (text[0] === "{") {
-        return "geojson"
+        return "geojson";
     }
 
     const marker = text.substr(0, 20).toLowerCase();

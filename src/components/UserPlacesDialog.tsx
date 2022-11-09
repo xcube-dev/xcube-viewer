@@ -44,7 +44,7 @@ import { WithLocale } from '../util/lang';
 import i18n from '../i18n';
 import { Config } from '../config';
 import { FileUpload } from './FileUpload';
-import { ControlState, UserPlacesFormatName, UserPlacesFormatOptions } from '../states/controlState';
+import { ControlState, MapInteraction, UserPlacesFormatName, UserPlacesFormatOptions } from '../states/controlState';
 import GeoJsonOptionsEditor from './user-place/GeoJsonOptionsEditor';
 import CsvOptionsEditor from './user-place/CsvOptionsEditor';
 import WktOptionsEditor from './user-place/WktOptionsEditor';
@@ -53,6 +53,7 @@ import { csvFormat, CsvOptions } from '../model/user-place/csv';
 import { wktFormat, WktOptions } from '../model/user-place/wkt';
 import { detectFormatName, Format } from '../model/user-place/common';
 import { FormControlLabel } from '@material-ui/core';
+import { Extension } from '@codemirror/state';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -83,6 +84,8 @@ interface UserPlacesDialogProps extends WithLocale {
     userPlacesFormatOptions: UserPlacesFormatOptions;
     updateSettings: (settings: Partial<ControlState>) => void;
     addUserPlacesFromText: (userPlacesText: string) => void;
+    nextMapInteraction: MapInteraction;
+    setMapInteraction: (mapInteraction: MapInteraction) => any;
 }
 
 const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
@@ -92,7 +95,9 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         userPlacesFormatName,
         userPlacesFormatOptions,
         updateSettings,
-        addUserPlacesFromText
+        addUserPlacesFromText,
+        nextMapInteraction,
+        setMapInteraction
     }) => {
 
     const [userPlacesText, setUserPlacesText] = React.useState('');
@@ -116,6 +121,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     }
 
     const handleConfirm = () => {
+        setMapInteraction(nextMapInteraction);
         closeDialog('addUserPlacesFromText');
         updateSettings({
             userPlacesFormatName: _userPlacesFormatName,
@@ -125,6 +131,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     };
 
     const handleClose = () => {
+        setMapInteraction(nextMapInteraction);
         closeDialog('addUserPlacesFromText');
     };
 
@@ -163,9 +170,9 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
 
     function updateCsvOptions(options: Partial<CsvOptions>) {
         setUserPlacesFormatOptions({
-            ...userPlacesFormatOptions,
+            ..._userPlacesFormatOptions,
             csv: {
-                ...userPlacesFormatOptions.csv,
+                ..._userPlacesFormatOptions.csv,
                 ...options
             }
         });
@@ -173,9 +180,9 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
 
     function updateGeoJsonOptions(options: Partial<GeoJsonOptions>) {
         setUserPlacesFormatOptions({
-            ...userPlacesFormatOptions,
+            ..._userPlacesFormatOptions,
             geojson: {
-                ...userPlacesFormatOptions.geojson,
+                ..._userPlacesFormatOptions.geojson,
                 ...options
             }
         });
@@ -183,9 +190,9 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
 
     function updateWktOptions(options: Partial<WktOptions>) {
         setUserPlacesFormatOptions({
-            ...userPlacesFormatOptions,
+            ..._userPlacesFormatOptions,
             wkt: {
-                ...userPlacesFormatOptions.wkt,
+                ..._userPlacesFormatOptions.wkt,
                 ...options
             }
         });
@@ -193,6 +200,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
 
     let format: Format;
     let formatOptionsEditor;
+    let editorExtensions: Extension[];
     if (_userPlacesFormatName === 'csv') {
         format = csvFormat;
         formatOptionsEditor = (
@@ -202,6 +210,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 className={classes.actionBox}
             />
         );
+        editorExtensions = [];
     } else if (_userPlacesFormatName === 'geojson') {
         format = geoJsonFormat;
         formatOptionsEditor = (
@@ -211,6 +220,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 className={classes.actionBox}
             />
         );
+        editorExtensions = [json()];
     } else {
         format = wktFormat;
         formatOptionsEditor = (
@@ -220,6 +230,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 className={classes.actionBox}
             />
         );
+        editorExtensions = [];
     }
 
     return (
@@ -259,7 +270,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                     placeholder={'Enter text or drag & drop a text file.'}
                     autoFocus
                     height="400px"
-                    extensions={[json()]}
+                    extensions={editorExtensions}
                     value={userPlacesText}
                     onChange={handleTextAreaChange}
                     theme={Config.instance.branding.themeName || 'light'}

@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import rgba from 'color-rgba';
 import * as geojson from 'geojson';
-import { Color as OlColor } from 'ol/color';
 import { default as OlFeature } from 'ol/Feature';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 import { default as OlCircleGeometry } from 'ol/geom/Circle';
@@ -40,14 +40,13 @@ import { default as OlCircleStyle } from 'ol/style/Circle';
 import { default as OlFillStyle } from 'ol/style/Fill';
 import { default as OlStrokeStyle } from 'ol/style/Stroke';
 import { default as OlStyle } from 'ol/style/Style';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+
 import { Config, getUserPlaceColor, getUserPlaceColorName } from '../config';
 import i18n from '../i18n';
 import { Place, PlaceGroup } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
-
 import { newId } from '../util/id';
+import { GEOGRAPHIC_CRS } from '../model/proj';
 import ErrorBoundary from './ErrorBoundary';
 import { Control } from './ol/control/Control';
 import { ScaleLine } from './ol/control/ScaleLine';
@@ -56,7 +55,8 @@ import { Layers } from './ol/layer/Layers';
 import { Vector } from './ol/layer/Vector';
 import { Map, MapElement } from './ol/Map';
 import { View } from './ol/View';
-import { GEOGRAPHIC_CRS } from "../model/proj";
+import { setFeatureStyle } from './ol/style';
+
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
@@ -142,7 +142,7 @@ const Viewer: React.FC<ViewerProps> = ({
                         // layer style is used instead as default.
                         const displayFeature = selectedFeature.clone();
                         displayFeature.setId('Select-' + selectedFeature.getId());
-                        displayFeature.setStyle(null);
+                        displayFeature.setStyle(undefined);
                         SELECTION_LAYER_SOURCE.addFeature(displayFeature);
                     }
                 }
@@ -211,18 +211,7 @@ const Viewer: React.FC<ViewerProps> = ({
             }
             const color = getUserPlaceColorName(colorIndex);
             const shadedColor = getUserPlaceColor(color, theme.palette.type);
-            if (mapInteraction === 'Point') {
-                feature.setStyle(createPointGeometryStyle(7, shadedColor, 'white', 1));
-            } else {
-                const fillOpacity = Config.instance.branding.polygonFillOpacity || 0.25;
-                let fillColorRgba = rgba(shadedColor);
-                if (Array.isArray(fillColorRgba)) {
-                    fillColorRgba = [fillColorRgba[0], fillColorRgba[1], fillColorRgba[2], fillOpacity];
-                } else {
-                    fillColorRgba = [255, 255, 255, fillOpacity];
-                }
-                feature.setStyle(createGeometryStyle(fillColorRgba, shadedColor, 2));
-            }
+            setFeatureStyle(feature, shadedColor, Config.instance.branding.polygonFillOpacity);
 
             const nameBase = i18n.get(mapInteraction);
             let label: string = '';
@@ -256,7 +245,6 @@ const Viewer: React.FC<ViewerProps> = ({
     const handleDropFiles = (files: File[]) => {
         if (addUserPlacesFromText) {
             files.forEach(file => {
-                console.log("reading", file.name)
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     if (typeof reader.result === 'string') {
@@ -335,39 +323,6 @@ const Viewer: React.FC<ViewerProps> = ({
 
 export default withStyles(styles, {withTheme: true})(Viewer);
 
-
-function createPointGeometryStyle(radius: number, fillColor: string, strokeColor: string, strokeWidth: number): OlStyle {
-    let fill = new OlFillStyle(
-        {
-            color: fillColor,
-        });
-    let stroke = new OlStrokeStyle(
-        {
-            color: strokeColor,
-            width: strokeWidth,
-        }
-    );
-    return new OlStyle(
-        {
-            image: new OlCircleStyle({radius, fill, stroke})
-        }
-    );
-}
-
-function createGeometryStyle(fillColor: string | OlColor, strokeColor: string | OlColor, strokeWidth: number): OlStyle {
-    const fill = new OlFillStyle(
-        {
-            color: fillColor,
-        });
-    const stroke = new OlStrokeStyle(
-        {
-            color: strokeColor,
-            width: strokeWidth,
-
-        }
-    );
-    return new OlStyle({fill, stroke});
-}
 
 function findFeatureById(map: OlMap, featureId: string | number): OlFeature | null {
     for (let layer of map.getLayers().getArray()) {

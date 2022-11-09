@@ -266,9 +266,14 @@ export function controlReducer(state: ControlState | undefined,
         case ADD_USER_PLACE: {
             if (action.selectPlace) {
                 return selectPlace(state, action.id);
-            } else {
-                return state;
             }
+            return state;
+        }
+        case ADD_USER_PLACES: {
+            if (action.selectPlace && action.places.length) {
+                return selectPlace(state, action.places[0].id);
+            }
+            return state;
         }
         case REMOVE_USER_PLACE: {
             const {id, places} = action;
@@ -290,17 +295,21 @@ export function controlReducer(state: ControlState | undefined,
             return state;
         }
         case SET_MAP_INTERACTION: {
-            return {
+            let newState = {
                 ...state,
-                mapInteraction: action.mapInteraction
+                mapInteraction: action.mapInteraction,
+                lastMapInteraction: state.mapInteraction,
             };
-        }
-        case ADD_USER_PLACES: {
-            if (action.selectPlace) {
-                return selectPlace(state, action.places.id);
-            } else {
-                return state;
+            if (action.mapInteraction === 'Geometry') {
+                newState = {
+                    ...newState,
+                    dialogOpen: {
+                        ...state.dialogOpen,
+                        addUserPlacesFromText: true
+                    },
+                };
             }
+            return newState;
         }
         case SHOW_INFO_CARD: {
             state = {

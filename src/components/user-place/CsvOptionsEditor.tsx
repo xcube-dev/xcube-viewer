@@ -59,11 +59,11 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                 />
                 <span>
                     <Checkbox
-                        checked={options.hasGeometry}
-                        onChange={e => updateOptions({hasGeometry: e.target.checked})}
+                        checked={options.forceGeometry}
+                        onChange={e => updateOptions({forceGeometry: e.target.checked})}
                         size="small"
                     />
-                    <span>Has geometry column</span>
+                    <span>Use geometry column</span>
                 </span>
                 <CsvTextFieldEditor
                     optionName={'geometryName'}

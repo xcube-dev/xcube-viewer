@@ -30,15 +30,15 @@ import { Config } from '../config';
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
 import { DEFAULT_MAP_CRS } from "../model/proj";
-import { defaultGeoJsonOptions, GeoJsonOptions } from "../model/user-place/geojson";
 import { CsvOptions, defaultCsvOptions } from "../model/user-place/csv";
-import { defaultWktOptions, WktOptions } from "../model/user-place/wkt";
+import { GeoJsonOptions, defaultGeoJsonOptions } from "../model/user-place/geojson";
+import { WktOptions, defaultWktOptions } from "../model/user-place/wkt";
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000, 2500];
 
-export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle';
+export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle' | 'Geometry';
 
 
 export interface InfoCardElementState {
@@ -53,8 +53,8 @@ export interface InfoCardElementStates {
 export type UserPlacesFormatName = 'geojson' | 'csv' | 'wkt';
 
 export interface UserPlacesFormatOptions {
-    geojson: GeoJsonOptions;
     csv: CsvOptions;
+    geojson: GeoJsonOptions;
     wkt: WktOptions;
 }
 
@@ -89,6 +89,7 @@ export interface ControlState {
     dialogOpen: { [dialogId: string]: boolean };
     legalAgreementAccepted: boolean;
     mapInteraction: MapInteraction;
+    lastMapInteraction: MapInteraction;
     infoCardOpen: boolean;
     infoCardElementStates: InfoCardElementStates;
     mapProjection: string;
@@ -136,6 +137,7 @@ export function newControlState(): ControlState {
         dialogOpen: {},
         legalAgreementAccepted: false,
         mapInteraction: 'Point',
+        lastMapInteraction: 'Point',
         showRgbLayer: false,
         infoCardOpen: false,
         infoCardElementStates: {

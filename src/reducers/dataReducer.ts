@@ -23,9 +23,6 @@
  */
 
 import { default as OlVectorLayer } from 'ol/layer/Vector';
-import { default as OlStyle } from 'ol/style/Style';
-import { default as OlFillStyle } from 'ol/style/Fill';
-import { default as OlStrokeStyle } from 'ol/style/Stroke';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 
 import { DataState, newDataState } from '../states/dataState';
@@ -50,6 +47,8 @@ import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
 import { Place } from '../model/place';
 import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
+import { setFeatureStyle } from "../components/ol/style";
+import { Config } from "../config";
 
 
 export function dataReducer(state: DataState | undefined, action: DataAction): DataState {
@@ -214,12 +213,8 @@ function addUserPlaceToLayer(place: Place, mapProjection: string) {
                 dataProjection: 'EPSG:4326',
                 featureProjection: mapProjection
             });
-        feature.setStyle(new OlStyle(
-            {
-                stroke: new OlStrokeStyle({color: (place.properties || {}).color || 'red'}),
-                fill: new OlFillStyle({color: '#ffffff80'}),
-            }
-        ));
+        const color = (place.properties || {}).color || 'red';
+        setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity);
         source.addFeature(feature);
         userLayer.changed();
     }
