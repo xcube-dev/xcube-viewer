@@ -81,6 +81,7 @@
       "properties": {
         "appBarTitle": {"type": "string", "example": "xcube Viewer"},
         "windowTitle": {"type": "string", "example": "xcube Viewer"},
+        "windowIcon": {"type": ["string", "null"], "example": "images/favicon.ico"},
         "themeName": {"type": "string", "example": "light", "enum": ["dark", "light"]},
         "primaryColor": { "$ref": "#/definitions/ColorSchema" },
         "secondaryColor": { "$ref": "#/definitions/ColorSchema" },
