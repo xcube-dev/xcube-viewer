@@ -27,12 +27,13 @@ import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/s
 
 const styles = (theme: Theme) => createStyles(
     {
-        root: {
+        form: {
             display: 'flex',
             flexWrap: 'wrap',
             paddingTop: theme.spacing(1),
             paddingLeft: theme.spacing(1),
             paddingRight: theme.spacing(1),
+            flexGrow: 0,
         },
     });
 
@@ -41,7 +42,7 @@ interface ControlBarProps extends WithStyles<typeof styles> {
 
 const ControlBar: React.FC<ControlBarProps> = ({classes, children}) => {
     return (
-        <form className={classes.root} autoComplete="off">
+        <form className={classes.form} autoComplete="off">
             {children}
         </form>
     );
