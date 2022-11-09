@@ -46,10 +46,10 @@ const mapDispatchToProps = {};
 const styles = (theme: Theme) => createStyles(
     {
         main: {
-            flexGrow: 1,
             padding: 0,
             width: '100vw',
             height: '100vh',
+            overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',

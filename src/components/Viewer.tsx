@@ -25,6 +25,7 @@
 import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import rgba from 'color-rgba';
 import * as geojson from 'geojson';
+import {default as OlMap} from 'ol/Map';
 import {Color as OlColor} from 'ol/color';
 import {default as OlFeature} from 'ol/Feature';
 import {default as OlGeoJSONFormat} from 'ol/format/GeoJSON';
@@ -32,7 +33,6 @@ import {default as OlCircleGeometry} from 'ol/geom/Circle';
 import {default as OlGeometryType} from 'ol/geom/GeometryType';
 import {fromCircle as olPolygonFromCircle} from 'ol/geom/Polygon';
 import {default as OlVectorLayer} from 'ol/layer/Vector';
-import {default as OlMap} from 'ol/Map';
 import {default as OlMapBrowserEvent} from 'ol/MapBrowserEvent';
 import {default as OlVectorSource} from 'ol/source/Vector';
 import {default as OlTileLayer} from 'ol/layer/Tile';
@@ -40,6 +40,7 @@ import {default as OlCircleStyle} from 'ol/style/Circle';
 import {default as OlFillStyle} from 'ol/style/Fill';
 import {default as OlStrokeStyle} from 'ol/style/Stroke';
 import {default as OlStyle} from 'ol/style/Style';
+
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Config, getUserPlaceColor, getUserPlaceColorName} from '../config';
@@ -104,6 +105,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     selectedPlaceId?: string | null;
     places: Place[];
     imageSmoothing?: boolean;
+    onMapRef: (map: OlMap | null) => void;
 }
 
 const Viewer: React.FC<ViewerProps> = ({
@@ -123,6 +125,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            selectedPlaceId,
                                            places,
                                            imageSmoothing,
+                                           onMapRef,
                                        }) => {
 
     const [map, setMap] = useState<OlMap | null>(null);
@@ -237,6 +240,13 @@ const Viewer: React.FC<ViewerProps> = ({
         return true;
     };
 
+    function handleMapRef(map: OlMap | null) {
+        if (onMapRef) {
+            onMapRef(map);
+        }
+        setMap(map);
+    }
+
     let colorBarControl = null;
     if (colorBarLegend) {
         colorBarControl = (
@@ -256,7 +266,7 @@ const Viewer: React.FC<ViewerProps> = ({
             <Map
                 id={mapId}
                 onClick={(event) => handleMapClick(event)}
-                onMapRef={setMap}
+                onMapRef={handleMapRef}
                 mapObjects={MAP_OBJECTS}
                 isStale={true}
             >

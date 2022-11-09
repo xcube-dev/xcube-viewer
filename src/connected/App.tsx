@@ -24,18 +24,14 @@
 
 import {
     createMuiTheme,
-    createStyles,
     CssBaseline,
     MuiThemeProvider,
-    Theme,
-    withStyles,
-    WithStyles
 } from '@material-ui/core';
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {Config} from '../config';
+import { connect } from 'react-redux';
+import { Config } from '../config';
 
-import {AppState} from '../states/appState';
+import { AppState } from '../states/appState';
 import AppBar from './AppBar';
 import AppPane from './AppPane';
 import LegalAgreementDialog from './LegalAgreementDialog';
@@ -44,7 +40,7 @@ import MessageLog from './MessageLog';
 import AuthWrapper from "../components/AuthWrapper";
 
 
-interface DashboardProps extends WithStyles<typeof styles> {
+interface DashboardProps {
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -67,29 +63,19 @@ const newTheme = () => createMuiTheme(
         },
     });
 
-// noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) => createStyles(
-    {
-        root: {
-            display: 'flex',
-        },
-    });
-
-const App: React.FC<DashboardProps> = ({classes}) => {
+const App: React.FC<DashboardProps> = () => {
     return (
         <AuthWrapper>
             <MuiThemeProvider theme={newTheme()}>
-                <div className={classes.root}>
-                    <CssBaseline/>
-                    <AppBar/>
-                    <AppPane/>
-                    <LoadingDialog/>
-                    <MessageLog/>
-                    <LegalAgreementDialog/>
-                </div>
+                <CssBaseline/>
+                <AppBar/>
+                <AppPane/>
+                <LoadingDialog/>
+                <MessageLog/>
+                <LegalAgreementDialog/>
             </MuiThemeProvider>
         </AuthWrapper>
     );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);
