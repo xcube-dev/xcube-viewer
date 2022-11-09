@@ -47,6 +47,7 @@ export const csvFormat: Format = {
 export interface CsvOptions extends ParseOptions {
     xName: string;
     yName: string;
+    hasGeometry: boolean;
     geometryName: string;
     labelName: string;
     labelPrefix: string;
@@ -56,6 +57,7 @@ export const defaultCsvOptions: CsvOptions = {
     ...defaultParseOptions,
     xName: "longitude",
     yName: "latitude",
+    hasGeometry: false,
     geometryName: "geometry",
     labelName: "name",
     labelPrefix: "CSV-",

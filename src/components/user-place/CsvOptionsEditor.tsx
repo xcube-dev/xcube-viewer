@@ -23,10 +23,9 @@
  */
 
 import * as React from 'react';
-import TextField from '@material-ui/core/TextField';
-
-import i18n from '../../i18n';
 import { CsvOptions } from '../../model/user-place/csv';
+import CsvTextFieldEditor from "./CsvTextFieldEditor";
+import Checkbox from "@material-ui/core/Checkbox";
 
 
 interface CsvOptionsEditorProps {
@@ -36,39 +35,110 @@ interface CsvOptionsEditorProps {
 }
 
 const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
-        {
-            options,
-            updateOptions,
-            className
-        }
+    {
+        options,
+        updateOptions,
+        className
+    }
 ) => {
-    function handleLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({labelName: e.target.value});
-    }
-
-    function handleFallbackNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({labelPrefix: e.target.value});
-    }
 
     return (
-            <div className={className}>
-                <TextField
-                        label={i18n.get('Label name')}
-                        value={options.labelName}
-                        onChange={handleLabelPropertyNameChange}
-                        size="small"
-                        variant="standard"
-                        style={{flexGrow: 1, marginRight: 10}}
+        <div>
+            <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
+                <CsvTextFieldEditor
+                    optionName={'xName'}
+                    label={'X/longitude name'}
+                    options={options}
+                    updateOptions={updateOptions}
                 />
-                <TextField
-                        label={i18n.get('Label prefix (used as fallback)')}
-                        value={options.labelPrefix}
-                        onChange={handleFallbackNamePrefixChange}
+                <CsvTextFieldEditor
+                    optionName={'yName'}
+                    label={'Y/latitude name'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <span>
+                    <Checkbox
+                        checked={options.hasGeometry}
+                        onChange={e => updateOptions({hasGeometry: e.target.checked})}
                         size="small"
-                        variant="standard"
-                        style={{flexGrow: 1}}
+                    />
+                    <span>Has geometry column</span>
+                </span>
+                <CsvTextFieldEditor
+                    optionName={'geometryName'}
+                    label={'Geometry name'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'labelName'}
+                    label={'Label name'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'labelPrefix'}
+                    label={'Label prefix (used as fallback)'}
+                    options={options}
+                    updateOptions={updateOptions}
                 />
             </div>
+            <div style={{display: "grid", gap: 12, paddingTop: 12,
+                gridTemplateColumns: "auto auto auto"}}>
+                <CsvTextFieldEditor
+                    optionName={'separator'}
+                    label={'Separator character'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'comment'}
+                    label={'Comment character'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'quote'}
+                    label={'Quote character'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'escape'}
+                    label={'Escape character'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <div/>
+                <span>
+                    <Checkbox
+                        checked={options.trim}
+                        onChange={e => updateOptions({trim: e.target.checked})}
+                        size="small"
+                    />
+                    <span>Remove whitespaces</span>
+                </span>
+                <CsvTextFieldEditor
+                    optionName={'nanToken'}
+                    label={'Not-a-number token'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'trueToken'}
+                    label={'True token'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'falseToken'}
+                    label={'False token'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+            </div>
+        </div>
     );
 }
 

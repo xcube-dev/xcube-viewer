@@ -22,44 +22,37 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import TextField from '@material-ui/core/TextField';
 
-export interface Format {
-    name: string;
-    fileExt: string;
-    checkError: (text: string) => string | null;
+import i18n from '../../i18n';
+import { CsvOptions } from '../../model/user-place/csv';
+
+
+interface CsvOptionsEditorProps {
+    options: CsvOptions;
+    updateOptions: (options: Partial<CsvOptions>) => any;
+    optionName: keyof CsvOptions;
+    label: string;
 }
 
-
-const WKT_GEOM_NAMES = [
-    "Point",
-    "LineString",
-    "Polygon",
-    "MultiPoint",
-    "MultiLineString",
-    "MultiPolygon",
-    "GeometryCollection",
-].map(k => k.toLowerCase());
-
-
-export function detectFormatName(text: string): "csv" | "geojson" | "wkt" {
-    text = text.trim();
-    if (text === "") {
-        return "csv";
+const CsvTextFieldEditor: React.FC<CsvOptionsEditorProps> = (
+    {
+        options,
+        updateOptions,
+        optionName,
+        label
     }
-
-    if (text[0] === "{") {
-        return "geojson"
-    }
-
-    const marker = text.substr(0, 20).toLowerCase();
-    const geomName = WKT_GEOM_NAMES.find(
-        geomName => marker.startsWith(geomName)
-            && (marker.length === geomName.length
-                || "\n\t (".indexOf(marker[geomName.length]) >= 0)
+) => {
+    return (
+        <TextField
+            label={i18n.get(label)}
+            value={options[optionName]}
+            onChange={e => updateOptions({[optionName]: e.target.value})}
+            size="small"
+            variant="standard"
+        />
     );
-    if (geomName) {
-        return "wkt";
-    }
-
-    return "csv";
 }
+
+export default CsvTextFieldEditor;

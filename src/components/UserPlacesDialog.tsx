@@ -51,29 +51,29 @@ import WktOptionsEditor from './user-place/WktOptionsEditor';
 import { geoJsonFormat, GeoJsonOptions } from '../model/user-place/geojson';
 import { csvFormat, CsvOptions } from '../model/user-place/csv';
 import { wktFormat, WktOptions } from '../model/user-place/wkt';
-import { Format, detectFormatName } from '../model/user-place/common';
+import { detectFormatName, Format } from '../model/user-place/common';
 import { FormControlLabel } from '@material-ui/core';
 
 
 // noinspection JSUnusedLocalSymbols
 const useStyles = makeStyles(theme => (
-        {
-            spacer: {
-                flexGrow: 1.0,
-            },
-            actionBox: {
-                paddingTop: theme.spacing(0.5),
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-            },
-            actionButton: {
-                marginRight: theme.spacing(1),
-            },
-            error: {
-                fontSize: 'small'
-            }
+    {
+        spacer: {
+            flexGrow: 1.0,
+        },
+        actionBox: {
+            paddingTop: theme.spacing(0.5),
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        actionButton: {
+            marginRight: theme.spacing(1),
+        },
+        error: {
+            fontSize: 'small'
         }
+    }
 ));
 
 interface UserPlacesDialogProps extends WithLocale {
@@ -86,14 +86,14 @@ interface UserPlacesDialogProps extends WithLocale {
 }
 
 const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
-        {
-            open,
-            closeDialog,
-            userPlacesFormatName,
-            userPlacesFormatOptions,
-            updateSettings,
-            addUserPlacesFromText
-        }) => {
+    {
+        open,
+        closeDialog,
+        userPlacesFormatName,
+        userPlacesFormatOptions,
+        updateSettings,
+        addUserPlacesFromText
+    }) => {
 
     const [userPlacesText, setUserPlacesText] = React.useState('');
     const [error, setError] = React.useState<string | null>(null);
@@ -118,9 +118,9 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     const handleConfirm = () => {
         closeDialog('addUserPlacesFromText');
         updateSettings({
-                           userPlacesFormatName: _userPlacesFormatName,
-                           userPlacesFormatOptions: _userPlacesFormatOptions,
-                       });
+            userPlacesFormatName: _userPlacesFormatName,
+            userPlacesFormatOptions: _userPlacesFormatOptions,
+        });
         addUserPlacesFromText(userPlacesText);
     };
 
@@ -161,6 +161,16 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         setUserPlacesFormatName(e.target.value as UserPlacesFormatName);
     }
 
+    function updateCsvOptions(options: Partial<CsvOptions>) {
+        setUserPlacesFormatOptions({
+            ...userPlacesFormatOptions,
+            csv: {
+                ...userPlacesFormatOptions.csv,
+                ...options
+            }
+        });
+    }
+
     function updateGeoJsonOptions(options: Partial<GeoJsonOptions>) {
         setUserPlacesFormatOptions({
             ...userPlacesFormatOptions,
@@ -171,24 +181,14 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         });
     }
 
-    function updateCsvOptions(options: Partial<CsvOptions>) {
-        setUserPlacesFormatOptions({
-                                       ...userPlacesFormatOptions,
-                                       csv: {
-                                           ...userPlacesFormatOptions.csv,
-                                           ...options
-                                       }
-                                   });
-    }
-
     function updateWktOptions(options: Partial<WktOptions>) {
         setUserPlacesFormatOptions({
-                                       ...userPlacesFormatOptions,
-                                       wkt: {
-                                           ...userPlacesFormatOptions.wkt,
-                                           ...options
-                                       }
-                                   });
+            ...userPlacesFormatOptions,
+            wkt: {
+                ...userPlacesFormatOptions.wkt,
+                ...options
+            }
+        });
     }
 
     let format: Format;
@@ -196,120 +196,120 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     if (_userPlacesFormatName === 'csv') {
         format = csvFormat;
         formatOptionsEditor = (
-                <CsvOptionsEditor
-                        options={_userPlacesFormatOptions.csv}
-                        updateOptions={updateCsvOptions}
-                        className={classes.actionBox}
-                />
+            <CsvOptionsEditor
+                options={_userPlacesFormatOptions.csv}
+                updateOptions={updateCsvOptions}
+                className={classes.actionBox}
+            />
         );
     } else if (_userPlacesFormatName === 'geojson') {
         format = geoJsonFormat;
         formatOptionsEditor = (
-                <GeoJsonOptionsEditor
-                        options={_userPlacesFormatOptions.geojson}
-                        updateOptions={updateGeoJsonOptions}
-                        className={classes.actionBox}
-                />
+            <GeoJsonOptionsEditor
+                options={_userPlacesFormatOptions.geojson}
+                updateOptions={updateGeoJsonOptions}
+                className={classes.actionBox}
+            />
         );
-    } else  {
+    } else {
         format = wktFormat;
         formatOptionsEditor = (
-                <WktOptionsEditor
-                        options={_userPlacesFormatOptions.wkt}
-                        updateOptions={updateWktOptions}
-                        className={classes.actionBox}
-                />
+            <WktOptionsEditor
+                options={_userPlacesFormatOptions.wkt}
+                updateOptions={updateWktOptions}
+                className={classes.actionBox}
+            />
         );
     }
 
     return (
-            <Dialog
-                    fullWidth
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="server-dialog-title"
-            >
-                <DialogTitle id="server-dialog-title">{i18n.get('Add Places')}</DialogTitle>
-                <DialogContent dividers>
-                    <RadioGroup
-                            row
-                            value={_userPlacesFormatName}
-                            onChange={e => handleFormatNameChange(e)}
-                    >
-                        <FormControlLabel
-                                key={'csv'}
-                                value={'csv'}
-                                label={i18n.get(csvFormat.name)}
-                                control={<Radio/>}
-                        />
-                        <FormControlLabel
-                                key={'geojson'}
-                                value={'geojson'}
-                                label={i18n.get(geoJsonFormat.name)}
-                                control={<Radio/>}
-                        />
-                        <FormControlLabel
-                                key={'wkt'}
-                                value={'wkt'}
-                                label={i18n.get(wktFormat.name)}
-                                control={<Radio/>}
-                        />
-                    </RadioGroup>
-                    <CodeMirror
-                            placeholder={'Enter text or drag & drop a text file.'}
-                            autoFocus
-                            height="400px"
-                            extensions={[json()]}
-                            value={userPlacesText}
-                            onChange={handleTextAreaChange}
-                            theme={Config.instance.branding.themeName || 'light'}
-                            onDrop={handleDropFile}
+        <Dialog
+            fullWidth
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="server-dialog-title"
+        >
+            <DialogTitle id="server-dialog-title">{i18n.get('Add Places')}</DialogTitle>
+            <DialogContent dividers>
+                <RadioGroup
+                    row
+                    value={_userPlacesFormatName}
+                    onChange={e => handleFormatNameChange(e)}
+                >
+                    <FormControlLabel
+                        key={'csv'}
+                        value={'csv'}
+                        label={i18n.get(csvFormat.name)}
+                        control={<Radio/>}
                     />
-                    {error && <Typography color="error" className={classes.error}>{error}</Typography>}
-                    <div className={classes.actionBox}>
-                        <FileUpload
-                                title={i18n.get('From File') + '...'}
-                                accept={format.fileExt}
-                                multiple={false}
-                                onSelect={handleFileSelect}
-                                disabled={loading}
-                                className={classes.actionButton}
-                        />
-                        <Button
-                                onClick={handleClear}
-                                disabled={userPlacesText.trim() === '' || loading}
-                                className={classes.actionButton}
-                                variant="outlined"
-                                size="small"
-                        >
-                            {i18n.get('Clear')}
-                        </Button>
-                        <Box className={classes.spacer}/>
-                        <IconButton onClick={() => setExpanded(!expanded)}>
-                            {expanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-                        </IconButton>
-                    </div>
-                    <Collapse in={expanded} timeout="auto" unmountOnExit>
-                        {formatOptionsEditor}
-                    </Collapse>
-                </DialogContent>
-                <DialogActions>
+                    <FormControlLabel
+                        key={'geojson'}
+                        value={'geojson'}
+                        label={i18n.get(geoJsonFormat.name)}
+                        control={<Radio/>}
+                    />
+                    <FormControlLabel
+                        key={'wkt'}
+                        value={'wkt'}
+                        label={i18n.get(wktFormat.name)}
+                        control={<Radio/>}
+                    />
+                </RadioGroup>
+                <CodeMirror
+                    placeholder={'Enter text or drag & drop a text file.'}
+                    autoFocus
+                    height="400px"
+                    extensions={[json()]}
+                    value={userPlacesText}
+                    onChange={handleTextAreaChange}
+                    theme={Config.instance.branding.themeName || 'light'}
+                    onDrop={handleDropFile}
+                />
+                {error && <Typography color="error" className={classes.error}>{error}</Typography>}
+                <div className={classes.actionBox}>
+                    <FileUpload
+                        title={i18n.get('From File') + '...'}
+                        accept={format.fileExt}
+                        multiple={false}
+                        onSelect={handleFileSelect}
+                        disabled={loading}
+                        className={classes.actionButton}
+                    />
                     <Button
-                            onClick={handleClose}
-                            variant="text"
+                        onClick={handleClear}
+                        disabled={userPlacesText.trim() === '' || loading}
+                        className={classes.actionButton}
+                        variant="outlined"
+                        size="small"
                     >
-                        {i18n.get('Cancel')}
+                        {i18n.get('Clear')}
                     </Button>
-                    <Button
-                            onClick={handleConfirm}
-                            disabled={userPlacesText.trim() === '' || error !== null || loading}
-                            color="primary"
-                            variant="text"
-                    >
-                        {i18n.get('OK')}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    <Box className={classes.spacer}/>
+                    <IconButton onClick={() => setExpanded(!expanded)}>
+                        {expanded ? <ExpandLessIcon/>:<ExpandMoreIcon/>}
+                    </IconButton>
+                </div>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    {formatOptionsEditor}
+                </Collapse>
+            </DialogContent>
+            <DialogActions>
+                <Button
+                    onClick={handleClose}
+                    variant="text"
+                >
+                    {i18n.get('Cancel')}
+                </Button>
+                <Button
+                    onClick={handleConfirm}
+                    disabled={userPlacesText.trim() === '' || error !== null || loading}
+                    color="primary"
+                    variant="text"
+                >
+                    {i18n.get('OK')}
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 }
 
