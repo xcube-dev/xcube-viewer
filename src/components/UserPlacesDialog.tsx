@@ -311,9 +311,14 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                         {i18n.get('Clear')}
                     </Button>
                     <Box className={classes.spacer}/>
-                    <IconButton onClick={() => setExpanded(!expanded)}>
-                        {expanded ? <ExpandLessIcon/>:<ExpandMoreIcon/>}
-                    </IconButton>
+                    <Button
+                        onClick={() => setExpanded(!expanded)}
+                        endIcon={expanded ? <ExpandLessIcon/>:<ExpandMoreIcon/>}
+                        variant="outlined"
+                        size="small"
+                    >
+                        {i18n.get('Options')}
+                    </Button>
                 </div>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     {formatOptionsEditor}
