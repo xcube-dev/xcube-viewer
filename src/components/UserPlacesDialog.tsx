@@ -48,12 +48,23 @@ import { ControlState, MapInteraction, UserPlacesFormatName, UserPlacesFormatOpt
 import GeoJsonOptionsEditor from './user-place/GeoJsonOptionsEditor';
 import CsvOptionsEditor from './user-place/CsvOptionsEditor';
 import WktOptionsEditor from './user-place/WktOptionsEditor';
-import { geoJsonFormat, GeoJsonOptions } from '../model/user-place/geojson';
 import { csvFormat, CsvOptions } from '../model/user-place/csv';
+import { geoJsonFormat, GeoJsonOptions } from '../model/user-place/geojson';
 import { wktFormat, WktOptions } from '../model/user-place/wkt';
 import { detectFormatName, Format } from '../model/user-place/common';
 import { FormControlLabel } from '@material-ui/core';
 import { Extension } from '@codemirror/state';
+
+
+interface FormatWithCodeExt extends Format{
+    codeExt: Extension[];
+}
+
+const formats: {[k: string]: FormatWithCodeExt} = {
+    csv: {...csvFormat, codeExt: []},
+    geojson: {...geoJsonFormat, codeExt: [json()]},
+    wkt: {...wktFormat, codeExt: []}
+};
 
 
 // noinspection JSUnusedLocalSymbols
@@ -100,7 +111,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         setMapInteraction
     }) => {
 
-    const [userPlacesText, setUserPlacesText] = React.useState('');
+    const [text, setText] = React.useState('');
     const [error, setError] = React.useState<string | null>(null);
     const [loading, setLoading] = React.useState(false);
     const [expanded, setExpanded] = React.useState(false);
@@ -121,13 +132,13 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
     }
 
     const handleConfirm = () => {
-        setMapInteraction(nextMapInteraction);
+        setMapInteraction('Select');
         closeDialog('addUserPlacesFromText');
         updateSettings({
             userPlacesFormatName: _userPlacesFormatName,
             userPlacesFormatOptions: _userPlacesFormatOptions,
         });
-        addUserPlacesFromText(userPlacesText);
+        addUserPlacesFromText(text);
     };
 
     const handleClose = () => {
@@ -135,8 +146,8 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         closeDialog('addUserPlacesFromText');
     };
 
-    const handleClear = () => {
-        setUserPlacesText('');
+    const handleClearText = () => {
+        setText('');
     };
 
     const handleFileSelect = (selection: File[]) => {
@@ -145,8 +156,8 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         const reader = new FileReader();
         reader.onloadend = () => {
             const text = reader.result as string;
-            setUserPlacesFormatName(detectFormatName(text))
-            setUserPlacesText(text);
+            setUserPlacesFormatName(detectFormatName(text));
+            setText(text);
             setLoading(false);
         };
         reader.onabort = reader.onerror = () => {
@@ -155,13 +166,23 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         reader.readAsText(file, 'UTF-8');
     };
 
-    const handleDropFile = () => {
-        setUserPlacesText('');
-    }
+    const handleCodeDrop = () => {
+        setText('');
+    };
 
-    const handleTextAreaChange = (value: string) => {
-        setUserPlacesText(value);
-        setError(format.checkError(value));
+    const handleCodePaste = () => {
+        console.info("PASTE!", text);
+    };
+
+    const handleCodeChange = (value: string) => {
+        let formatName = _userPlacesFormatName;
+        if (text === "" && value.length > 10) {
+            // Pasted some text
+            formatName = detectFormatName(value);
+            setUserPlacesFormatName(formatName);
+        }
+        setText(value);
+        setError(formats[formatName].checkError(value));
     };
 
     function handleFormatNameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -198,11 +219,8 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
         });
     }
 
-    let format: Format;
     let formatOptionsEditor;
-    let editorExtensions: Extension[];
     if (_userPlacesFormatName === 'csv') {
-        format = csvFormat;
         formatOptionsEditor = (
             <CsvOptionsEditor
                 options={_userPlacesFormatOptions.csv}
@@ -210,9 +228,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 className={classes.actionBox}
             />
         );
-        editorExtensions = [];
     } else if (_userPlacesFormatName === 'geojson') {
-        format = geoJsonFormat;
         formatOptionsEditor = (
             <GeoJsonOptionsEditor
                 options={_userPlacesFormatOptions.geojson}
@@ -220,9 +236,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 className={classes.actionBox}
             />
         );
-        editorExtensions = [json()];
     } else {
-        format = wktFormat;
         formatOptionsEditor = (
             <WktOptionsEditor
                 options={_userPlacesFormatOptions.wkt}
@@ -230,7 +244,6 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 className={classes.actionBox}
             />
         );
-        editorExtensions = [];
     }
 
     return (
@@ -267,28 +280,30 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                     />
                 </RadioGroup>
                 <CodeMirror
-                    placeholder={'Enter text or drag & drop a text file.'}
+                    theme={Config.instance.branding.themeName || 'light'}
+                    placeholder={i18n.get('Enter text or drag & drop a text file.')}
                     autoFocus
                     height="400px"
-                    extensions={editorExtensions}
-                    value={userPlacesText}
-                    onChange={handleTextAreaChange}
-                    theme={Config.instance.branding.themeName || 'light'}
-                    onDrop={handleDropFile}
+                    extensions={formats[_userPlacesFormatName].codeExt}
+                    value={text}
+                    onChange={handleCodeChange}
+                    onDrop={handleCodeDrop}
+                    onPaste={handleCodePaste}
+                    onPasteCapture={handleCodePaste}
                 />
                 {error && <Typography color="error" className={classes.error}>{error}</Typography>}
                 <div className={classes.actionBox}>
                     <FileUpload
                         title={i18n.get('From File') + '...'}
-                        accept={format.fileExt}
+                        accept={formats[_userPlacesFormatName].fileExt}
                         multiple={false}
                         onSelect={handleFileSelect}
                         disabled={loading}
                         className={classes.actionButton}
                     />
                     <Button
-                        onClick={handleClear}
-                        disabled={userPlacesText.trim() === '' || loading}
+                        onClick={handleClearText}
+                        disabled={text.trim() === '' || loading}
                         className={classes.actionButton}
                         variant="outlined"
                         size="small"
@@ -313,7 +328,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
                 </Button>
                 <Button
                     onClick={handleConfirm}
-                    disabled={userPlacesText.trim() === '' || error !== null || loading}
+                    disabled={text.trim() === '' || error !== null || loading}
                     color="primary"
                     variant="text"
                 >

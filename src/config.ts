@@ -111,8 +111,6 @@ export class Config {
     }
 }
 
-// TODO (forman): The following functions should be made part of the configuration.
-
 
 interface TileAccess {
     param: string;

@@ -69,16 +69,11 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
                                                      selectedPlaceId,
                                                      selectedPlaceGroupIds,
                                                      removeUserPlace,
-                                                     openDialog,
                                                      places,
                                                  }) => {
 
     const handlePlaceChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
         selectPlace(event.target.value || null, places, true);
-    };
-
-    const handleAddButtonClick = () => {
-        openDialog('addUserPlacesFromText');
     };
 
     const handleRemoveButtonClick = () => {
@@ -123,17 +118,6 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         </Select>
     );
 
-    const placeAddButton = (
-        <IconButton
-            key={'add'}
-            className={classes.button}
-            aria-label={i18n.get('Add place')}
-            onClick={handleAddButtonClick}
-        >
-            {<AddCircleOutlineIcon/>}
-        </IconButton>
-    );
-
     const removeEnabled = places.length > 0
         && selectedPlaceGroupIds.length === 1
         && selectedPlaceGroupIds[0] === 'user'
@@ -154,7 +138,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         <ControlBarItem
             label={placeSelectLabel}
             control={placeSelect}
-            actions={[placeAddButton, placeRemoveButton]}
+            actions={[placeRemoveButton]}
         />
     );
 };

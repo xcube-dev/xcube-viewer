@@ -2,16 +2,22 @@
 
 ### Enhancements
  
-* Added function to insert user places from GeoJSON, either
-  by copy & paste, from selected file(s), or from file(s)
+* Added function to insert user places from CSV/Text, GeoJSON, and WKT
+  either by copy & paste, from selected file(s), or from file(s)
   dragged & dropped over the map. (#88)
   TODO:
-  - render points, currently they don't show up at all.
   - i18n it, currently EN only.
-  - Opt: allow entering CRS, currently assuming EPSG:4326.
-  - Opt: display error messages in UI, currently console only.
-  - Opt: validate (Geo)JSON in dialog, currently we don't.
-  - Opt: allow for WKT too, currently GeoJSON only.
+  - Opt: import many features into own user place group, 
+    - so we can switch visibility, currently always shown;
+    - delete it entirely, currently only single user places can be deleted.
+  - Opt: allow entering character encoding,
+    currently assuming UTF-8.
+  - Opt: allow entering CRS, 
+    currently assuming EPSG:4326.
+  - Opt: allow entering style/color column, currently fixed to name "color".
+    Default color is "red".
+  - Opt: validate also CSV and WKT in dialog, 
+    currently we only do that for GeoJSON.
 
 * Color bar management has been slightly improved:  
   - Color bars can now be reversed.
