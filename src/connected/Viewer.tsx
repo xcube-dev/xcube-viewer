@@ -24,6 +24,7 @@
 
 import * as React from 'react';
 import {connect} from 'react-redux';
+import { default as OlMap } from "ol/Map";
 
 import {AppState} from '../states/appState';
 import {
@@ -43,7 +44,11 @@ import {selectPlace} from "../actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
 
 
-const mapStateToProps = (state: AppState) => {
+interface OwnProps {
+    onMapRef?: (map: OlMap | null) => void;
+}
+
+const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     return {
         locale: state.controlState.locale,
         variableLayer: selectedDatasetVariableLayerSelector(state),
@@ -59,6 +64,7 @@ const mapStateToProps = (state: AppState) => {
         places: selectedPlaceGroupPlacesSelector(state),
         baseMapLayer: baseMapLayerSelector(state),
         imageSmoothing: imageSmoothingSelector(state),
+        onMapRef: ownProps.onMapRef,
     }
 };
 

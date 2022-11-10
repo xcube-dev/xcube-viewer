@@ -104,6 +104,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     selectedPlaceId?: string | null;
     places: Place[];
     imageSmoothing?: boolean;
+    onMapRef: (map: OlMap | null) => void;
     addUserPlacesFromText?: (text: string) => any;
 }
 
@@ -125,6 +126,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            selectedPlaceId,
                                            places,
                                            imageSmoothing,
+                                           onMapRef,
                                        }) => {
 
     const [map, setMap] = useState<OlMap | null>(null);
@@ -228,6 +230,13 @@ const Viewer: React.FC<ViewerProps> = ({
         return true;
     };
 
+    function handleMapRef(map: OlMap | null) {
+        if (onMapRef) {
+            onMapRef(map);
+        }
+        setMap(map);
+    }
+
     let colorBarControl = null;
     if (colorBarLegend) {
         colorBarControl = (
@@ -261,7 +270,7 @@ const Viewer: React.FC<ViewerProps> = ({
             <Map
                 id={mapId}
                 onClick={(event) => handleMapClick(event)}
-                onMapRef={setMap}
+                onMapRef={handleMapRef}
                 mapObjects={MAP_OBJECTS}
                 isStale={true}
                 onDropFiles={handleDropFiles}

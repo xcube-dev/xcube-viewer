@@ -19,6 +19,11 @@
   - Opt: validate also CSV and WKT in dialog, 
     currently we only do that for GeoJSON.
 
+* The browser window's title and favicon can now be configured
+  using the two parameters
+  - `windowTitle` - a string
+  - `windowIcon` - abs. or rel. URL to `*.ico` icon file
+
 * Color bar management has been slightly improved:  
   - Color bars can now be reversed.
   - Color bar in the legend is now rendered according to the current

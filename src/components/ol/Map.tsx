@@ -58,7 +58,7 @@ interface MapProps extends OlMapOptions {
 interface MapState {
 }
 
-const DEFAULT_CONTAINER_STYLE: React.CSSProperties = {height: '100%'};
+const DEFAULT_CONTAINER_STYLE: React.CSSProperties = {width: '100%', height: '100%'};
 
 export class Map extends React.Component<MapProps, MapState> {
 
@@ -126,14 +126,9 @@ export class Map extends React.Component<MapProps, MapState> {
         // Force update so we can pass this.map as context to all children in next render()
         this.forceUpdate();
 
-        // Add resize listener so we can adjust the view's minZoom.
+        // Add resize listener, so we can adjust the view's minZoom.
         // See https://openlayers.org/en/latest/examples/min-zoom.html
         window.addEventListener('resize', this.handleResize);
-        mapDiv.onresize = () => {
-            if (this.contextValue.map) {
-                this.contextValue.map.updateSize();
-            }
-        };
 
         const onMapRef = this.props.onMapRef;
         if (onMapRef) {
@@ -160,10 +155,7 @@ export class Map extends React.Component<MapProps, MapState> {
     componentWillUnmount(): void {
         // console.log('Map.componentWillUnmount: id =', this.props.id);
 
-        const mapDiv = this.contextValue.mapDiv!;
-        mapDiv.onresize = null;
-
-        // Remove resize listener so we can adjust the view's minZoom.
+        // Remove resize listeners
         window.removeEventListener('resize', this.handleResize);
 
         // if (this.clickEventsKey) {
