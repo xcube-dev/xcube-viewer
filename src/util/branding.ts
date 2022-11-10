@@ -94,6 +94,7 @@ export interface Branding {
     mapProjection?: string;
     allowDownloads?: boolean;
     allowRefresh?: boolean;
+    allow3D?: boolean;
 }
 
 

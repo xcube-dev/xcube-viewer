@@ -20,6 +20,7 @@
     "polygonFillOpacity": 0.2,
     "allowDownloads": true,
     "allowRefresh": true,
+    "allow3D": true,
     "mapProjection": "EPSG:4326"
   }
 }

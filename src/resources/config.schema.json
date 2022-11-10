@@ -115,6 +115,10 @@
         "allowRefresh": {
           "type": "boolean",
           "default": true
+        },
+        "allow3D": {
+          "type": "boolean",
+          "default": true
         }
       },
       "additionalProperties": false
