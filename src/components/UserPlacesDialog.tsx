@@ -23,6 +23,7 @@
  */
 
 import * as React from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog';
@@ -33,11 +34,11 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import IconButton from '@material-ui/core/IconButton';
 import CodeMirror from '@uiw/react-codemirror';
+import { Extension } from '@codemirror/state';
 import { json } from '@codemirror/lang-json';
 
 import { WithLocale } from '../util/lang';
@@ -52,15 +53,13 @@ import { csvFormat, CsvOptions } from '../model/user-place/csv';
 import { geoJsonFormat, GeoJsonOptions } from '../model/user-place/geojson';
 import { wktFormat, WktOptions } from '../model/user-place/wkt';
 import { detectFormatName, Format } from '../model/user-place/common';
-import { FormControlLabel } from '@material-ui/core';
-import { Extension } from '@codemirror/state';
 
 
-interface FormatWithCodeExt extends Format{
+interface FormatWithCodeExt extends Format {
     codeExt: Extension[];
 }
 
-const formats: {[k: string]: FormatWithCodeExt} = {
+const formats: { [k: string]: FormatWithCodeExt } = {
     csv: {...csvFormat, codeExt: []},
     geojson: {...geoJsonFormat, codeExt: [json()]},
     wkt: {...wktFormat, codeExt: []}
