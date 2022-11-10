@@ -90,11 +90,22 @@ export class Config {
         server.id = appParams.get('serverId') || server.id;
         server.name = appParams.get('serverName') || server.name;
         server.url = appParams.get('serverUrl') || server.url;
-        const branding = parseBranding({...rawDefaultConfig.branding, ...rawConfig.branding},
-            configPath);
+        const branding = parseBranding(
+            {
+                ...rawDefaultConfig.branding,
+                ...rawConfig.branding
+            },
+            configPath
+        );
         Config._instance = new Config(name, server, branding, authClient);
         if (process.env.NODE_ENV === 'development') {
             console.debug('Configuration:', Config._instance);
+        }
+        if (branding.windowTitle) {
+            this.changeWindowTitle(branding.windowTitle);
+        }
+        if (branding.windowIcon) {
+            this.changeWindowIcon(branding.windowIcon);
         }
         return Config._instance;
     }
@@ -107,6 +118,22 @@ export class Config {
     private static assertConfigLoaded() {
         if (!Config._instance) {
             throw new Error('internal error: configuration not available yet');
+        }
+    }
+
+    private static changeWindowTitle(title: string) {
+        document.title = title;
+    }
+
+    private static changeWindowIcon(iconUrl: string) {
+        let favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+        if (favicon !== null) {
+            favicon.href = iconUrl;
+        } else {
+            favicon = document.createElement("link");
+            favicon.rel = "icon";
+            favicon.href = iconUrl;
+            document.head.appendChild(favicon);
         }
     }
 }

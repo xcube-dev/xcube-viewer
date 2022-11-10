@@ -24,10 +24,10 @@
 
 import {default as OlMap} from 'ol/Map';
 import {default as OlView, ViewOptions as OlViewOptions} from 'ol/View';
+import { default as OlVectorLayer } from 'ol/layer/Vector';
 import {ProjectionLike as OlProjectionLike, transform as olTransform} from 'ol/proj';
 
 import {MapComponent, MapComponentProps} from "./MapComponent";
-
 
 interface ViewProps extends MapComponentProps, OlViewOptions {
 }
@@ -64,6 +64,13 @@ export class View extends MapComponent<OlView, ViewProps> {
                 minZoom: oldView.getMinZoom(),
                 zoom: oldView.getZoom(),
             });
+            map.getLayers().forEach(layer => {
+                if (layer instanceof OlVectorLayer) {
+                    layer.getSource().forEachFeature(feature => {
+                        feature.getGeometry()?.transform(oldProjection, newProjection);
+                    });
+                }
+            })
             map.setView(newView);
         } else {
             map.getView().setProperties(this.props);
