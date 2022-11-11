@@ -47,13 +47,13 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <CsvTextFieldEditor
                     optionName={'xName'}
-                    label={'X/longitude name'}
+                    label={'X/longitude column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />
                 <CsvTextFieldEditor
                     optionName={'yName'}
-                    label={'Y/latitude name'}
+                    label={'Y/latitude column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />
@@ -63,17 +63,17 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                         onChange={e => updateOptions({forceGeometry: e.target.checked})}
                         size="small"
                     />
-                    <span>Use geometry column</span>
+                    <span>{'Use geometry column'}</span>
                 </span>
                 <CsvTextFieldEditor
                     optionName={'geometryName'}
-                    label={'Geometry name'}
+                    label={'Geometry column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />
                 <CsvTextFieldEditor
                     optionName={'labelName'}
-                    label={'Label name'}
+                    label={'Label column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />

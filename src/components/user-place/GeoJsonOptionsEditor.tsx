@@ -53,7 +53,7 @@ const GeoJsonOptionsEditor: React.FC<GeoJsonOptionsEditorProps> = (
     return (
             <div className={className}>
                 <TextField
-                        label={i18n.get('Label names')}
+                        label={i18n.get('Label property names')}
                         value={options.labelNames}
                         onChange={handleLabelNamesChange}
                         size="small"
