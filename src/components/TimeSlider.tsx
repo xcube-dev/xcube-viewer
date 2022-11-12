@@ -80,13 +80,13 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         return null;
     }
 
-    const handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+    const handleChange = (event: Event, value: number | number[]) => {
         if (typeof value === 'number') {
             setSelectedTime_(value);
         }
     };
 
-    const handleChangeCommitted = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+    const handleChangeCommitted = (event: Event | SyntheticEvent, value: number | number[]) => {
         if (selectTime && typeof value === 'number') {
             selectTime(value as number);
         }
@@ -119,6 +119,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                     marks={marks}
                     onChange={handleChange}
                     onChangeCommitted={handleChangeCommitted}
+                    size="small"
                 />
             </Tooltip>
         </Box>
