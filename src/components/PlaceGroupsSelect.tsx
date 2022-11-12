@@ -101,6 +101,7 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
 
     const placeGroupsSelect = (
         <Select
+            variant="standard"
             multiple
             displayEmpty
             onChange={handlePlaceGroupsChange}
@@ -108,8 +109,7 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
             value={selectedPlaceGroupIds}
             renderValue={renderSelectedPlaceGroupsTitle}
             name="place-groups"
-            className={classes.select}
-        >
+            className={classes.select}>
             {placeGroups.map(placeGroup => (
                 <MenuItem
                     key={placeGroup.id}

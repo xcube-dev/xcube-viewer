@@ -225,33 +225,34 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
         dialogContent = (
             <DialogContent dividers>
                 <TextField
+                    variant="standard"
                     required
                     id="server-name"
                     label="Name"
                     className={classes.textField}
                     margin="normal"
                     value={selectedServer_.name}
-                    onChange={handleServerNameChange}
-                />
+                    onChange={handleServerNameChange} />
                 <br/>
                 <TextField
+                    variant="standard"
                     required
                     id="server-url"
                     label="URL"
                     className={classes.textField2}
                     margin="normal"
                     value={selectedServer_.url}
-                    onChange={handleServerURLChange}
-                />
+                    onChange={handleServerURLChange} />
             </DialogContent>
         );
     } else {
         dialogContent = (
             <DialogContent dividers>
                 <div>
-                    <FormControl className={classes.formControl}>
+                    <FormControl variant="standard" className={classes.formControl}>
                         <InputLabel htmlFor="server-name">Name</InputLabel>
                         <Select
+                            variant="standard"
                             value={selectedServer_.id}
                             onChange={handleSelectServer}
                             inputProps={{

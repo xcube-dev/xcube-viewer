@@ -103,13 +103,13 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
 
     const placeSelect = (
         <Select
+            variant="standard"
             value={selectedPlaceId}
             onChange={handlePlaceChange}
             input={<Input name="place" id="place-select"/>}
             displayEmpty
             name="place"
-            className={classes.select}
-        >
+            className={classes.select}>
             {places.map((place, i) => (
                 <MenuItem
                     key={place.id}

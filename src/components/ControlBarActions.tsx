@@ -107,7 +107,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     );
 
     return (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
             <Box>
                 {downloadButton}
                 {flyToButton}

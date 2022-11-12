@@ -205,12 +205,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </SettingsSubPanel>
                         <SettingsSubPanel label={i18n.get('Time interval of the player')}>
                             <TextField
+                                variant="standard"
                                 select
                                 className={classes.textField}
                                 value={settings.timeAnimationInterval}
                                 onChange={handleTimeAnimationIntervalChange}
-                                margin="normal"
-                            >
+                                margin="normal">
                                 {TIME_ANIMATION_INTERVALS.map((value, i) => (
                                     <MenuItem key={i} value={value}>{value + ' ms'}</MenuItem>
                                 ))}
@@ -253,12 +253,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </SettingsSubPanel>
                         <SettingsSubPanel label={i18n.get('Minimal number of data points in a time series update')}>
                             <TextField
+                                variant="standard"
                                 className={classes.intTextField}
                                 value={timeChunkSize}
                                 onChange={handleTimeChunkSizeChange}
                                 margin="normal"
-                                size={'small'}
-                            />
+                                size={'small'} />
                         </SettingsSubPanel>
                     </SettingsPanel>
 

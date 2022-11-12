@@ -91,13 +91,13 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
 
     const variableSelect = (
         <Select
+            variant="standard"
             className={classes.selectEmpty}
             value={selectedVariableName}
             onChange={handleVariableChange}
             input={<Input name="variable" id="variable-select"/>}
             displayEmpty
-            name="variable"
-        >
+            name="variable">
             {variables.map(variable => (
                 <MenuItem
                     key={variable.name}

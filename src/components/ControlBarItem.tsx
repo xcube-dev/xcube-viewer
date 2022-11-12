@@ -54,7 +54,7 @@ const ControlBarItem: React.FC<ControlBarItemProps> = ({
                                                            actions
                                                        }) => {
     return (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
             <Box>
                 {label}
                 {control}

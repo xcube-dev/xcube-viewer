@@ -109,13 +109,13 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                             label={i18n.get('Separator for time-series data')}
                         >
                             <TextField
+                                variant="standard"
                                 className={classes.separatorTextField}
                                 value={settings.exportTimeSeriesSeparator}
                                 onChange={handleSeparatorChange}
                                 disabled={!settings.exportTimeSeries}
                                 margin="normal"
-                                size={'small'}
-                            />
+                                size={'small'} />
                         </SettingsSubPanel>
                         <SettingsSubPanel
                             label={i18n.get('Include places data') + ' (*.geojson)'}
@@ -150,12 +150,12 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                         </SettingsSubPanel>
                         <SettingsSubPanel label={i18n.get('File name')}>
                             <TextField
+                                variant="standard"
                                 className={classes.fileNameTextField}
                                 value={settings.exportFileName}
                                 onChange={handleFileNameChange}
                                 margin="normal"
-                                size={'small'}
-                            />
+                                size={'small'} />
                         </SettingsSubPanel>
                     </SettingsPanel>
                 </DialogContent>

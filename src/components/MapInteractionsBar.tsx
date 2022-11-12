@@ -62,7 +62,7 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
     }
 
     return (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
             <ToggleButtonGroup size="small" value={mapInteraction} exclusive onChange={handleChange}>
                 <ToggleButton key={0} value="Select">
                     <Tooltip arrow title={i18n.get('Select a place in map')}>

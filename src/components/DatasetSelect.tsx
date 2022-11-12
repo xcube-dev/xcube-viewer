@@ -77,13 +77,13 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
 
     const datasetSelect = (
         <Select
+            variant="standard"
             value={selectedDatasetId}
             onChange={handleDatasetChange}
             input={<Input name="dataset" id="dataset-select"/>}
             displayEmpty
             name="dataset"
-            className={classes.selectEmpty}
-        >
+            className={classes.selectEmpty}>
             {datasets.map(dataset => (
                 <MenuItem
                     key={dataset.id}

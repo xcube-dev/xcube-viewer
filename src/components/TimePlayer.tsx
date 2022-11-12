@@ -180,7 +180,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         </IconButton>);
 
     return (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
             <Box>
                 {firstTimeStepButton}
                 {prevTimeStepButton}
