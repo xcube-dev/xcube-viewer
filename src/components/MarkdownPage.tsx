@@ -95,7 +95,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
             </AppBar>
             <DialogContent className={classes.dialog}>
                 <div className={classes.text}>
-                    <Markdown source={imprintText} linkTarget="_blank"/>
+                    <Markdown children={imprintText} linkTarget="_blank"/>
                 </div>
             </DialogContent>
         </Dialog>
