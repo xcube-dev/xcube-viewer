@@ -22,7 +22,10 @@
  * SOFTWARE.
  */
 
-import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 import rgba from 'color-rgba';
 import * as geojson from 'geojson';
 import {default as OlMap} from 'ol/Map';
@@ -211,7 +214,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 colorIndex = features.length;
             }
             const color = getUserPlaceColorName(colorIndex);
-            const shadedColor = getUserPlaceColor(color, theme.palette.type);
+            const shadedColor = getUserPlaceColor(color, theme.palette.mode);
             if (mapInteraction === 'Point') {
                 feature.setStyle(createPointGeometryStyle(7, shadedColor, 'white', 1));
             } else {

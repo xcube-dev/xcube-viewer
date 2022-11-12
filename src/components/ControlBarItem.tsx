@@ -23,11 +23,14 @@
  */
 
 import * as React from 'react';
-import { withStyles, WithStyles, createStyles, Theme } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import withStyles from '@mui/styles/withStyles';
+import createStyles from '@mui/styles/createStyles';
+import FormControl from '@mui/material/FormControl';
 
 import { WithLocale } from '../util/lang';
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 
 
 const styles = (theme: Theme) => createStyles(

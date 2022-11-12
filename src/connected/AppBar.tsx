@@ -24,26 +24,17 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    AppBar,
-    createStyles,
-    IconButton,
-    Menu,
-    MenuItem,
-    Theme,
-    Toolbar,
-    Typography,
-    WithStyles,
-    withStyles
-} from '@material-ui/core';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import Tooltip from '@material-ui/core/Tooltip';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import SettingsIcon from '@material-ui/icons/Settings';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { AppBar, IconButton, Menu, MenuItem, Theme, Toolbar, Typography } from '@mui/material';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Tooltip from '@mui/material/Tooltip';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import SettingsIcon from '@mui/icons-material/Settings';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import classNames from 'classnames';
-
 import MarkdownPage from '../components/MarkdownPage';
+
 import { Config } from '../config';
 import i18n from '../i18n';
 import { AppState } from '../states/appState';
@@ -54,6 +45,7 @@ import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
 import { openDialog } from '../actions/controlActions';
 import { updateResources } from "../actions/dataActions";
+import { deepOrange } from '@mui/material/colors';
 
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {

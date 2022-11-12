@@ -23,13 +23,13 @@
  */
 
 import * as React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box';
-import Checkbox from '@material-ui/core/Checkbox';
-import Popover from '@material-ui/core/Popover';
-import Slider, { Mark } from '@material-ui/core/Slider';
-import Tooltip from '@material-ui/core/Tooltip';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import Popover from '@mui/material/Popover';
+import Slider, { Mark } from '@mui/material/Slider';
+import Tooltip from '@mui/material/Tooltip';
 
 import i18n from '../i18n';
 import { ColorBars, formatColorBar, parseColorBar } from '../model/colorBar';

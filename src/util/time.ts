@@ -24,8 +24,12 @@
 
 export const LOCAL_OFFSET = -new Date("1970-01-01T00:00:00").getTime();
 
+export function dateTimeToUtcTime(dateTime: Date): number {
+    return dateTime.getTime();
+}
+
 export function dateTimeStringToUtcTime(dateTimeString: string): number {
-    return new Date(dateTimeString).getTime();
+    return dateTimeToUtcTime(new Date(dateTimeString));
 }
 
 export function utcTimeToIsoDateString(utcTime: number, local: boolean = false) {

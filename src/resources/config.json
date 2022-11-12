@@ -9,7 +9,7 @@
     "appBarTitle": "xcube Viewer",
     "windowTitle": "xcube Viewer",
     "windowIcon": null,
-    "themeName": "dark",
+    "themeName": "light",
     "primaryColor": "blue",
     "secondaryColor": "pink",
     "organisationUrl": "https://xcube.readthedocs.io/",

@@ -22,18 +22,21 @@
  * SOFTWARE.
  */
 
-import DateFnsUtils from '@date-io/date-fns';
-import { Theme } from '@material-ui/core';
-import InputLabel from '@material-ui/core/InputLabel/InputLabel';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import * as React from 'react';
-import i18n from '../i18n';
+import { Theme } from '@mui/material';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import { WithStyles } from '@mui/styles';
+import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel/InputLabel';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
+import i18n from '../i18n';
 import { Time, TimeRange } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
-import { dateTimeStringToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
+import { dateTimeToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -57,8 +60,8 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
                                                    selectTime
                                                }) => {
 
-    const handleTimeChange = (date: MaterialUiPickersDate | null, value?: string | null) => {
-        selectTime(value ? dateTimeStringToUtcTime(value!) : null);
+    const handleTimeChange = (date: Date | null) => {
+        selectTime(date !== null ? dateTimeToUtcTime(date!) : null);
     };
 
     const timeInputLabel = (
@@ -80,8 +83,8 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
     }
 
     const timeInput = (
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDateTimePicker
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
                 disabled={!hasTimeDimension}
                 variant="inline"
                 emptyLabel={
@@ -95,9 +98,15 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
                 minDate={minTimeText}
                 maxDate={maxTimeText}
                 onChange={handleTimeChange}
-
+                renderInput={(props: any) => (
+                    <TextField
+                        {...props}
+                        variant="standard"
+                        size="small"
+                    />
+                )}
             />
-        </MuiPickersUtilsProvider>
+        </LocalizationProvider>
     );
 
     return (

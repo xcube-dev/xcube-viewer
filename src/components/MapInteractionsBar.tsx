@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-import FormControl from '@material-ui/core/FormControl';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
-import CategoryIcon from '@material-ui/icons/Category';
-import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import FormControl from '@mui/material/FormControl';
+import makeStyles from '@mui/styles/makeStyles';
+import Tooltip from '@mui/material/Tooltip';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import CategoryIcon from '@mui/icons-material/Category';
+import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import * as React from 'react';
 import i18n from '../i18n';
 import { MapInteraction } from "../states/controlState";

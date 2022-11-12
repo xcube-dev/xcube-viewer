@@ -24,11 +24,13 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Theme } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Slider, { Mark } from '@material-ui/core/Slider';
-import Tooltip from '@material-ui/core/Tooltip';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import { Theme } from '@mui/material';
+import Box from '@mui/material/Box';
+import Slider, { Mark } from '@mui/material/Slider';
+import Tooltip from '@mui/material/Tooltip';
 
 import i18n from '../i18n';
 import { Time, TimeRange, UNIT } from '../model/timeSeries';

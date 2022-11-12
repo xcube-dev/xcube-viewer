@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from "@material-ui/core/ListSubheader";
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import TextField from '@material-ui/core/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from "@mui/material/ListSubheader";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
 import React, {ChangeEvent} from 'react';
 import i18n from '../i18n';
 import {ApiServerConfig, ApiServerInfo} from '../model/apiServer';
