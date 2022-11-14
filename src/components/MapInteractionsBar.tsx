@@ -23,16 +23,16 @@
  */
 
 import * as React from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
-import CategoryIcon from '@material-ui/icons/Category';
-import CenterFocusStrongIcon from '@material-ui/icons/CenterFocusStrong';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import FileUploadIcon from '@material-ui/icons/CloudUpload';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import FormControl from '@mui/material/FormControl';
+import makeStyles from '@mui/styles/makeStyles';
+import Tooltip from '@mui/material/Tooltip';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import CategoryIcon from '@mui/icons-material/Category';
+import CenterFocusStrongIcon from '@mui/icons-material/CenterFocusStrong';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import FileUploadIcon from '@mui/icons-material/CloudUpload';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import i18n from '../i18n';
 import { MapInteraction } from "../states/controlState";
@@ -64,7 +64,7 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
     }
 
     return (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
             <ToggleButtonGroup size="small" value={mapInteraction} exclusive onChange={handleChange}>
                 <ToggleButton key={0} value="Select">
                     <Tooltip arrow title={i18n.get('Select a place in map')}>

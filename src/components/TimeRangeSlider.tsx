@@ -24,13 +24,15 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import { Theme } from '@material-ui/core';
-import Slider, { Mark } from '@material-ui/core/Slider';
-import Box from '@material-ui/core/Box';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import { Theme } from '@mui/material';
+import Slider, { Mark } from '@mui/material/Slider';
+import Box from '@mui/material/Box';
 
 import { TimeRange, UNIT } from '../model/timeSeries';
-import { utcTimeToIsoDateString } from '../util/time';
+import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
 
 const HOR_MARGIN = 5;
 
@@ -41,8 +43,10 @@ const styles = (theme: Theme) => createStyles(
             marginTop: theme.spacing(1),
             marginLeft: theme.spacing(HOR_MARGIN),
             marginRight: theme.spacing(HOR_MARGIN),
-            minWidth: 300,
-            width: `calc(100% - ${theme.spacing(2 * (HOR_MARGIN + 1))}px)`,
+            width: `calc(100% - ${theme.spacing(3 * (HOR_MARGIN + 1))})`,
+            height: '5em',
+            display: "flex",
+            alignItems: "flex-end"
         },
     }
 );
@@ -61,17 +65,21 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({classes, dataTimeRange
         setSelectedTimeRange_(selectedTimeRange);
     }, [selectedTimeRange]);
 
-    const handleChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+    const handleChange = (event: Event, value: number | number[]) => {
         if (Array.isArray(value)) {
             setSelectedTimeRange_([value[0], value[1]]);
         }
     };
 
-    const handleChangeCommitted = (event: React.ChangeEvent<{}>, value: number | number[]) => {
+    const handleChangeCommitted = (event: React.SyntheticEvent | Event, value: number | number[]) => {
         if (selectTimeRange && Array.isArray(value)) {
             selectTimeRange([value[0], value[1]]);
         }
     };
+
+    function valueLabelFormat(value: number) {
+        return utcTimeToIsoDateTimeString(value);
+    }
 
     const dataTimeRangeValid = Array.isArray(dataTimeRange);
     if (!dataTimeRangeValid) {
@@ -93,6 +101,9 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({classes, dataTimeRange
                 marks={marks}
                 onChange={handleChange}
                 onChangeCommitted={handleChangeCommitted}
+                size="small"
+                valueLabelDisplay="on"
+                valueLabelFormat={valueLabelFormat}
             />
         </Box>
     );

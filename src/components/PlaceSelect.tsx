@@ -23,14 +23,17 @@
  */
 
 import * as React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Tooltip from '@mui/material/Tooltip';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
@@ -97,6 +100,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
 
     const placeSelect = (
         <Select
+            variant="standard"
             value={selectedPlaceId}
             onChange={handlePlaceChange}
             input={<Input name="place" id="place-select"/>}
@@ -126,7 +130,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
             className={classes.button}
             disabled={!removeEnabled}
             onClick={handleRemoveButtonClick}
-        >
+            size="large">
             <Tooltip arrow title={i18n.get('Remove place')}>
                 {<RemoveCircleOutlineIcon/>}
             </Tooltip>
@@ -137,7 +141,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         <ControlBarItem
             label={placeSelectLabel}
             control={placeSelect}
-            actions={[placeRemoveButton]}
+            actions={placeRemoveButton}
         />
     );
 };

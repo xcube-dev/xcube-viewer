@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import TextField from '@material-ui/core/TextField';
-import React, { ChangeEvent } from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from "@mui/material/ListSubheader";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
+import React, {ChangeEvent} from 'react';
 import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
@@ -216,160 +216,139 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     <DialogTitle>{i18n.get('Settings')}</DialogTitle>
                     <DialogContent>
 
-                        <SettingsPanel title={i18n.get('General')}>
-                            <SettingsSubPanel
-                                    label={i18n.get('Server')}
-                                    value={selectedServer.name}
-                                    onClick={handleOpenServerDialog}>
-                            </SettingsSubPanel>
-                            <SettingsSubPanel
-                                    label={i18n.get('Language')}
-                                    value={i18n.languages[settings.locale]}
-                                    onClick={handleLanguageMenuOpen}>
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Time interval of the player')}>
-                                <TextField
-                                        select
-                                        className={classes.textField}
-                                        value={settings.timeAnimationInterval}
-                                        onChange={handleTimeAnimationIntervalChange}
-                                        margin="normal"
-                                >
-                                    {TIME_ANIMATION_INTERVALS.map((value, i) => (
-                                            <MenuItem key={i} value={value}>{value + ' ms'}</MenuItem>
-                                    ))}
-                                </TextField>
-                            </SettingsSubPanel>
-                        </SettingsPanel>
+                    <SettingsPanel title={i18n.get('General')}>
+                        <SettingsSubPanel
+                            label={i18n.get('Server')}
+                            value={selectedServer.name}
+                            onClick={handleOpenServerDialog}>
+                        </SettingsSubPanel>
+                        <SettingsSubPanel
+                            label={i18n.get('Language')}
+                            value={i18n.languages[settings.locale]}
+                            onClick={handleLanguageMenuOpen}>
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Time interval of the player')}>
+                            <TextField
+                                variant="standard"
+                                select
+                                className={classes.textField}
+                                value={settings.timeAnimationInterval}
+                                onChange={handleTimeAnimationIntervalChange}
+                                margin="normal">
+                                {TIME_ANIMATION_INTERVALS.map((value, i) => (
+                                    <MenuItem key={i} value={value}>{value + ' ms'}</MenuItem>
+                                ))}
+                            </TextField>
+                        </SettingsSubPanel>
+                    </SettingsPanel>
 
-                        <SettingsPanel title={i18n.get('Time-Series')}>
-                            <SettingsSubPanel label={i18n.get('Show graph after adding a place')}
-                                              value={getOnOff(settings.autoShowTimeSeries)}>
-                                <ToggleSetting
-                                        propertyName={'autoShowTimeSeries'}
-                                        settings={settings}
-                                        updateSettings={updateSettings}
-                                />
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Show dots only, hide lines')}
-                                              value={getOnOff(settings.showTimeSeriesPointsOnly)}>
-                                <ToggleSetting
-                                        propertyName={'showTimeSeriesPointsOnly'}
-                                        settings={settings}
-                                        updateSettings={updateSettings}
-                                />
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Show error bars')}
-                                              value={getOnOff(settings.showTimeSeriesErrorBars)}>
-                                <ToggleSetting
-                                        propertyName={'showTimeSeriesErrorBars'}
-                                        settings={settings}
-                                        updateSettings={updateSettings}
-                                />
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Show median instead of mean (disables error bars)')}
-                                              value={getOnOff(settings.showTimeSeriesMedian)}>
-                                <ToggleSetting
-                                        propertyName={'showTimeSeriesMedian'}
-                                        settings={settings}
-                                        updateSettings={updateSettings}
-                                />
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Minimal number of data points in a time series update')}>
-                                <TextField
-                                        className={classes.intTextField}
-                                        value={timeChunkSize}
-                                        onChange={handleTimeChunkSizeChange}
-                                        margin="normal"
-                                        size="small"
-                                />
-                            </SettingsSubPanel>
-                        </SettingsPanel>
+                    <SettingsPanel title={i18n.get('Time-Series')}>
+                        <SettingsSubPanel label={i18n.get('Show graph after adding a place')}
+                                          value={getOnOff(settings.autoShowTimeSeries)}>
+                            <ToggleSetting
+                                propertyName={'autoShowTimeSeries'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Show dots only, hide lines')}
+                                          value={getOnOff(settings.showTimeSeriesPointsOnly)}>
+                            <ToggleSetting
+                                propertyName={'showTimeSeriesPointsOnly'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Show error bars')}
+                                          value={getOnOff(settings.showTimeSeriesErrorBars)}>
+                            <ToggleSetting
+                                propertyName={'showTimeSeriesErrorBars'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Show median instead of mean (disables error bars)')}
+                                          value={getOnOff(settings.showTimeSeriesMedian)}>
+                            <ToggleSetting
+                                propertyName={'showTimeSeriesMedian'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Minimal number of data points in a time series update')}>
+                            <TextField
+                                variant="standard"
+                                className={classes.intTextField}
+                                value={timeChunkSize}
+                                onChange={handleTimeChunkSizeChange}
+                                margin="normal"
+                                size={'small'} />
+                        </SettingsSubPanel>
+                    </SettingsPanel>
 
-                        <SettingsPanel title={i18n.get('Map')}>
-                            <SettingsSubPanel
-                                    label={i18n.get('Base map')}
-                                    value={baseMapLabel}
-                                    onClick={handleBaseMapMenuOpen}>
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Projection')}>
-                                <RadioSetting
-                                        propertyName={'mapProjection'}
-                                        settings={settings}
-                                        updateSettings={updateSettings}
-                                        options={[
-                                            [i18n.get('Geographic'), GEOGRAPHIC_CRS],
-                                            [i18n.get('Mercator'), WEB_MERCATOR_CRS],
-                                        ]}
-                                />
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Image smoothing')}
-                                              value={getOnOff(settings.imageSmoothingEnabled)}>
-                                <ToggleSetting
-                                        propertyName={'imageSmoothingEnabled'}
-                                        settings={settings}
-                                        updateSettings={updateSettings}
-                                />
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Show dataset boundaries')}
-                                              value={getOnOff(settings.showDatasetBoundaries)}>
-                                <ToggleSetting
-                                        propertyName={'showDatasetBoundaries'}
-                                        settings={settings}
-                                        updateSettings={updateSettings}
-                                />
-                            </SettingsSubPanel>
-                        </SettingsPanel>
+                    <SettingsPanel title={i18n.get('Map')}>
+                        <SettingsSubPanel
+                            label={i18n.get('Base map')}
+                            value={baseMapLabel}
+                            onClick={handleBaseMapMenuOpen}>
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Projection')}>
+                            <RadioSetting
+                                propertyName={'mapProjection'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                                options={[
+                                    [i18n.get('Geographic'), GEOGRAPHIC_CRS],
+                                    [i18n.get('Mercator'), WEB_MERCATOR_CRS],
+                                ]}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Image smoothing')}
+                                          value={getOnOff(settings.imageSmoothingEnabled)}>
+                            <ToggleSetting
+                                propertyName={'imageSmoothingEnabled'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                        <SettingsSubPanel label={i18n.get('Show dataset boundaries')}
+                                          value={getOnOff(settings.showDatasetBoundaries)}>
+                            <ToggleSetting
+                                propertyName={'showDatasetBoundaries'}
+                                settings={settings}
+                                updateSettings={updateSettings}
+                            />
+                        </SettingsSubPanel>
+                    </SettingsPanel>
 
-                        <SettingsPanel title={i18n.get('User Places')}>
-                            <SettingsSubPanel label={i18n.get('Label property names')}>
-                                <TextField
-                                        value={settings.userPlacesFormatOptions.geojson.placeLabelPropertyNames}
-                                        onChange={handlePlaceLabelPropertyNameChange}
-                                        size="small"
-                                        variant="standard"
-                                        margin="normal"
-                                />
-                            </SettingsSubPanel>
-                            <SettingsSubPanel label={i18n.get('Label prefix (used as fallback)')}>
-                                <TextField
-                                        value={settings.userPlacesFormatOptions.geojson.placeLabelPrefix}
-                                        onChange={handlePlaceLabelPrefixChange}
-                                        size="small"
-                                        variant="standard"
-                                        margin="normal"
-                                />
-                            </SettingsSubPanel>
-                        </SettingsPanel>
+                    <SettingsPanel title={i18n.get('System Information')}>
+                        <SettingsSubPanel label={`xcube Viewer ${i18n.get('version')}`}
+                                          value={viewerVersion}/>
+                        <SettingsSubPanel label={`xcube Server ${i18n.get('version')}`}
+                                          value={serverInfo ? serverInfo.version : i18n.get('Cannot reach server')}/>
+                    </SettingsPanel>
+                </DialogContent>
+            </Dialog>
 
-                        <SettingsPanel title={i18n.get('System Information')}>
-                            <SettingsSubPanel label={`xcube Viewer ${i18n.get('version')}`}
-                                              value={viewerVersion}/>
-                            <SettingsSubPanel label={`xcube Server ${i18n.get('version')}`}
-                                              value={serverInfo ? serverInfo.version : i18n.get('Cannot reach server')}/>
-                        </SettingsPanel>
-                    </DialogContent>
-                </Dialog>
+            <Menu
+                anchorEl={languageMenuAnchor}
+                keepMounted
+                open={Boolean(languageMenuAnchor)}
+                onClose={handleLanguageMenuClose}
+            >
+                {localeMenuItems}
+            </Menu>
 
-                <Menu
-                        anchorEl={languageMenuAnchor}
-                        keepMounted
-                        open={Boolean(languageMenuAnchor)}
-                        onClose={handleLanguageMenuClose}
-                >
-                    {localeMenuItems}
-                </Menu>
+            <Menu
+                anchorEl={baseMapMenuAnchor}
+                keepMounted
+                open={Boolean(baseMapMenuAnchor)}
+                onClose={handleBaseMapMenuClose}
+            >
+                {baseMapMenuItems}
+            </Menu>
 
-                <Menu
-                        anchorEl={baseMapMenuAnchor}
-                        keepMounted
-                        open={Boolean(baseMapMenuAnchor)}
-                        onClose={handleBaseMapMenuClose}
-                >
-                    {baseMapMenuItems}
-                </Menu>
-
-            </div>
+        </div>
     );
 };
 

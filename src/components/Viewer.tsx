@@ -24,7 +24,11 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import rgba from 'color-rgba';
 import * as geojson from 'geojson';
 import { default as OlFeature } from 'ol/Feature';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';

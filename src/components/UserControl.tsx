@@ -25,24 +25,27 @@
 import * as React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { useAuth } from "react-oidc-context";
-import { createStyles, Theme, WithStyles, withStyles, } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import PersonIcon from '@material-ui/icons/Person';
-
+import { Theme } from '@mui/material';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PersonIcon from '@mui/icons-material/Person';
 import i18n from '../i18n';
+
 import { WithLocale } from '../util/lang';
 import { Config } from '../config';
 import UserProfile from '../components/UserProfile';
+import { deepOrange } from '@mui/material/colors';
 
 
 const styles = (theme: Theme) => createStyles(

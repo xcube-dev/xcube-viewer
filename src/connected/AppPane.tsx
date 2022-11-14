@@ -24,7 +24,11 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Theme, WithStyles, createStyles, withStyles, Toolbar } from '@material-ui/core';
+import { Theme, Toolbar } from '@mui/material';
+
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 
 import { AppState } from '../states/appState';
 import ControlBar from './ControlBar';

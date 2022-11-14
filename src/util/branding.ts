@@ -42,9 +42,9 @@ import {
     red,
     teal,
     yellow,
-} from '@material-ui/core/colors';
-import {Color} from '@material-ui/core';
-import {PaletteColorOptions} from '@material-ui/core/styles/createPalette';
+} from '@mui/material/colors';
+import {Color} from '@mui/material';
+import { PaletteColorOptions } from '@mui/material/styles';
 import { CSSProperties } from "react";
 
 

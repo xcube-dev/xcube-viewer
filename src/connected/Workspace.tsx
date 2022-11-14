@@ -26,7 +26,10 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core';
+import { Theme } from '@mui/material';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 import {default as OlMap} from 'ol/Map';
 
 import { AppState } from '../states/appState';

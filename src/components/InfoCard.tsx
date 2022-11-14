@@ -22,33 +22,35 @@
  * SOFTWARE.
  */
 
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import CodeIcon from '@material-ui/icons/Code';
-import InfoIcon from '@material-ui/icons/Info';
-import LayersIcon from '@material-ui/icons/Layers';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import PlaceIcon from '@material-ui/icons/Place';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import WidgetsIcon from '@material-ui/icons/Widgets';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import CodeIcon from '@mui/icons-material/Code';
+import InfoIcon from '@mui/icons-material/Info';
+import LayersIcon from '@mui/icons-material/Layers';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import PlaceIcon from '@mui/icons-material/Place';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import React from 'react';
 import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
@@ -197,7 +199,11 @@ const InfoCard: React.FC<InfoCardProps> = ({
                         </Tooltip>
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <IconButton key={1} onClick={handleInfoCardClose} className={classes.close}>
+                <IconButton
+                    key={1}
+                    onClick={handleInfoCardClose}
+                    className={classes.close}
+                    size="large">
                     {<CloseIcon/>}
                 </IconButton>
             </CardActions>

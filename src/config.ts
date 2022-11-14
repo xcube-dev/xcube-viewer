@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Color, PaletteType } from '@material-ui/core';
+import { Color, PaletteType } from '@mui/material';
 import {
     cyan,
     deepPurple,
@@ -35,7 +35,7 @@ import {
     purple,
     red,
     yellow,
-} from '@material-ui/core/colors';
+} from '@mui/material/colors';
 import { ApiServerConfig } from './model/apiServer';
 import rawDefaultConfig from './resources/config.json';
 import { AuthClientConfig } from './util/auth';

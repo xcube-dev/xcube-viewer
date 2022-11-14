@@ -22,11 +22,14 @@
  * SOFTWARE.
  */
 
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 import * as React from 'react';
 import i18n from '../i18n';
 
@@ -74,13 +77,13 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
 
     const datasetSelect = (
         <Select
+            variant="standard"
             value={selectedDatasetId}
             onChange={handleDatasetChange}
             input={<Input name="dataset" id="dataset-select"/>}
             displayEmpty
             name="dataset"
-            className={classes.selectEmpty}
-        >
+            className={classes.selectEmpty}>
             {datasets.map(dataset => (
                 <MenuItem
                     key={dataset.id}

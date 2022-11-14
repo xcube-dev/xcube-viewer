@@ -23,7 +23,12 @@
  */
 
 import * as React from 'react'
-import { createStyles, Theme, withStyles, WithStyles } from "@material-ui/core/styles";
+import { Theme } from "@mui/material/styles";
+
+
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 
 
 const styles = (theme: Theme) => createStyles(
@@ -37,7 +42,7 @@ const styles = (theme: Theme) => createStyles(
             maxHeight: "100%",
             cursor: "col-resize",
 
-            backgroundColor: theme.palette.type === "dark" ? "white" : "black",
+            backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
             opacity: 0.0,
         },
         ver: {
@@ -49,7 +54,7 @@ const styles = (theme: Theme) => createStyles(
             maxWidth: "100%",
             cursor: "row-resize",
 
-            backgroundColor: theme.palette.type === "dark" ? "white" : "black",
+            backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
             opacity: 0.0,
         }
     });
