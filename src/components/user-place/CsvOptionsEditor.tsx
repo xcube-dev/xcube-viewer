@@ -23,9 +23,10 @@
  */
 
 import * as React from 'react';
+import Checkbox from "@mui/material/Checkbox";
+
 import { CsvOptions } from '../../model/user-place/csv';
 import CsvTextFieldEditor from "./CsvTextFieldEditor";
-import Checkbox from "@material-ui/core/Checkbox";
 
 
 interface CsvOptionsEditorProps {

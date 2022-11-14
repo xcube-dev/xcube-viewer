@@ -23,8 +23,9 @@
  */
 
 import * as React from 'react';
+import TextField from '@mui/material/TextField';
+
 import { WktOptions } from '../../model/user-place/wkt';
-import TextField from '@material-ui/core/TextField';
 import i18n from '../../i18n';
 
 

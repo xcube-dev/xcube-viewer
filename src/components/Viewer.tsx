@@ -28,7 +28,6 @@ import { Theme } from '@mui/material/styles';
 import { WithStyles } from '@mui/styles';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
-import rgba from 'color-rgba';
 import * as geojson from 'geojson';
 import { default as OlFeature } from 'ol/Feature';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
@@ -216,7 +215,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 colorIndex = features.length;
             }
             const color = getUserPlaceColorName(colorIndex);
-            const shadedColor = getUserPlaceColor(color, theme.palette.type);
+            const shadedColor = getUserPlaceColor(color, theme.palette.mode);
             setFeatureStyle(feature, shadedColor, Config.instance.branding.polygonFillOpacity);
 
             const nameBase = i18n.get(mapInteraction);

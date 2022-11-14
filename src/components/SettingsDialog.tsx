@@ -119,37 +119,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         setTimeChunkSize(event.target.value);
     }
 
-    function handlePlaceLabelPropertyNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateSettings({
-                           userPlacesFormatOptions: {
-                               ...settings.userPlacesFormatOptions,
-                               geojson: {
-                                   ...settings.userPlacesFormatOptions.geojson,
-                                   placeLabelPropertyNames: e.target.value
-                               }
-                           }
-                       });
-    }
-
-    function handlePlaceLabelPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateSettings({
-                           userPlacesFormatOptions: {
-                               ...settings.userPlacesFormatOptions,
-                               geojson: {
-                                   ...settings.userPlacesFormatOptions.geojson,
-                                   placeLabelPrefix: e.target.value
-                               }
-                           }
-                       });
-    }
-
     let localeMenuItems = null;
     if (Boolean(languageMenuAnchor)) {
         localeMenuItems = Object.getOwnPropertyNames(i18n.languages).map(langLocale => {
             const langName = i18n.languages[langLocale];
             return (
                     <MenuItem
-                            button
                             key={langLocale}
                             selected={langLocale === settings.locale}
                             onClick={() => changeLocale(langLocale)}
@@ -176,7 +151,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
                 baseMapMenuItems!.push(
                         <MenuItem
-                                button
                                 key={i + '.' + j}
                                 selected={settings.baseMapUrl === mapSource.endpoint}
                                 onClick={() => updateSettings({baseMapUrl: mapSource.endpoint})}>

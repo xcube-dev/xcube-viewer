@@ -23,7 +23,7 @@
  */
 
 import * as React from 'react';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 import i18n from '../../i18n';
 import { CsvOptions } from '../../model/user-place/csv';
