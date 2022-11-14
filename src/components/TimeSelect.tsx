@@ -92,12 +92,13 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
                         ? i18n.get('Missing time axis')
                         : undefined
                 }
-                format="yyyy-MM-dd hh:mm:ss"
+                inputFormat="yyyy-MM-dd hh:mm:ss"
                 id="time-select"
                 value={timeText}
-                minDate={minTimeText}
-                maxDate={maxTimeText}
+                minDateTime={minTimeText}
+                maxDateTime={maxTimeText}
                 onChange={handleTimeChange}
+                ampm={false}
                 renderInput={(props: any) => (
                     <TextField
                         {...props}
