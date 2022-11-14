@@ -23,10 +23,13 @@
  */
 
 import {
-    createMuiTheme,
+    createTheme,
     CssBaseline,
-    MuiThemeProvider,
-} from '@material-ui/core';
+    ThemeProvider,
+    Theme,
+    StyledEngineProvider,
+    adaptV4Theme,
+} from '@mui/material';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Config } from '../config';
@@ -50,30 +53,32 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-const newTheme = () => createMuiTheme(
-    {
+const newTheme = () => createTheme(
+    adaptV4Theme({
         typography: {
             fontSize: 12,
             htmlFontSize: 14,
         },
         palette: {
-            type: Config.instance.branding.themeName,
+            mode: Config.instance.branding.themeName,
             primary: Config.instance.branding.primaryColor,
             secondary: Config.instance.branding.secondaryColor,
         },
-    });
+    }));
 
 const App: React.FC<DashboardProps> = () => {
     return (
         <AuthWrapper>
-            <MuiThemeProvider theme={newTheme()}>
-                <CssBaseline/>
-                <AppBar/>
-                <AppPane/>
-                <LoadingDialog/>
-                <MessageLog/>
-                <LegalAgreementDialog/>
-            </MuiThemeProvider>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={newTheme()}>
+                    <CssBaseline/>
+                    <AppBar/>
+                    <AppPane/>
+                    <LoadingDialog/>
+                    <MessageLog/>
+                    <LegalAgreementDialog/>
+                </ThemeProvider>
+            </StyledEngineProvider>
         </AuthWrapper>
     );
 };

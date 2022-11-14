@@ -22,18 +22,20 @@
  * SOFTWARE.
  */
 
-import { Theme } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import LastPageIcon from '@material-ui/icons/LastPage';
-import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
-import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
+import { Theme } from '@mui/material';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Tooltip from '@mui/material/Tooltip';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import LastPageIcon from '@mui/icons-material/LastPage';
+import PauseCircleOutline from '@mui/icons-material/PauseCircleOutline';
+import PlayCircleOutline from '@mui/icons-material/PlayCircleOutline';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
 import i18n from '../i18n';
@@ -137,7 +139,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
             disabled={!isValid}
             aria-label={playToolTip}
             onClick={handlePlayButtonClick}
-        >
+            size="large">
             <Tooltip arrow title={i18n.get('Auto-step through times in the dataset')}>
                 {playIcon}
             </Tooltip>
@@ -148,7 +150,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handleFirstTimeStepButtonClick}
-        >
+            size="large">
             <FirstPageIcon/>
         </IconButton>
     );
@@ -157,7 +159,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handlePrevTimeStepButtonClick}
-        >
+            size="large">
             <ChevronLeftIcon/>
         </IconButton>
     );
@@ -165,7 +167,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handleNextTimeStepButtonClick}
-        >
+            size="large">
             <ChevronRightIcon/>
         </IconButton>
     );
@@ -173,12 +175,12 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handleLastTimeStepButtonClick}
-        >
+            size="large">
             <LastPageIcon/>
         </IconButton>);
 
     return (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
             <Box>
                 {firstTimeStepButton}
                 {prevTimeStepButton}

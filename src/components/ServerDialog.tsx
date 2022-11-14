@@ -22,24 +22,25 @@
  * SOFTWARE.
  */
 
-import { Theme, WithStyles } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import IconButton from '@material-ui/core/IconButton';
-import InputLabel from '@material-ui/core/InputLabel/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import { withStyles } from '@material-ui/core/styles';
-import createStyles from '@material-ui/core/styles/createStyles';
-import TextField from '@material-ui/core/TextField';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import { Theme } from '@mui/material';
+import { WithStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import withStyles from '@mui/styles/withStyles';
+import createStyles from '@mui/styles/createStyles';
+import TextField from '@mui/material/TextField';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import i18n from '../i18n';
@@ -224,33 +225,34 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
         dialogContent = (
             <DialogContent dividers>
                 <TextField
+                    variant="standard"
                     required
                     id="server-name"
                     label="Name"
                     className={classes.textField}
                     margin="normal"
                     value={selectedServer_.name}
-                    onChange={handleServerNameChange}
-                />
+                    onChange={handleServerNameChange} />
                 <br/>
                 <TextField
+                    variant="standard"
                     required
                     id="server-url"
                     label="URL"
                     className={classes.textField2}
                     margin="normal"
                     value={selectedServer_.url}
-                    onChange={handleServerURLChange}
-                />
+                    onChange={handleServerURLChange} />
             </DialogContent>
         );
     } else {
         dialogContent = (
             <DialogContent dividers>
                 <div>
-                    <FormControl className={classes.formControl}>
+                    <FormControl variant="standard" className={classes.formControl}>
                         <InputLabel htmlFor="server-name">Name</InputLabel>
                         <Select
+                            variant="standard"
                             value={selectedServer_.id}
                             onChange={handleSelectServer}
                             inputProps={{
@@ -266,14 +268,14 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
                         aria-label="Add"
                         color="primary"
                         onClick={handleAddMode}
-                    >
+                        size="large">
                         <AddIcon fontSize="small"/>
                     </IconButton>
                     <IconButton
                         className={classes.button}
                         aria-label="Edit"
                         onClick={handleEditMode}
-                    >
+                        size="large">
                         <EditIcon fontSize="small"/>
                     </IconButton>
                     <IconButton
@@ -281,7 +283,7 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
                         aria-label="Delete"
                         disabled={servers_.length < 2}
                         onClick={handleRemoveServer}
-                    >
+                        size="large">
                         <DeleteIcon fontSize="small"/>
                     </IconButton>
                 </div>

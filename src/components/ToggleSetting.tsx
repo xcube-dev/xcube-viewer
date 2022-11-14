@@ -23,7 +23,7 @@
  */
 
 import React from 'react';
-import Switch from '@material-ui/core/Switch';
+import Switch from '@mui/material/Switch';
 
 import { ControlState } from '../states/controlState';
 

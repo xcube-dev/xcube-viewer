@@ -22,10 +22,13 @@
  * SOFTWARE.
  */
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Switch from '@material-ui/core/Switch';
-import Tooltip from '@material-ui/core/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
 import * as React from 'react';
 import i18n from '../i18n';
 

@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Link from '@material-ui/core/Link';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import CheckIcon from '@material-ui/icons/Check';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Link from '@mui/material/Link';
+import makeStyles from '@mui/styles/makeStyles';
+import CheckIcon from '@mui/icons-material/Check';
 import React from 'react';
 import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
@@ -65,10 +65,8 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
         <Dialog
             open={open}
             disableEscapeKeyDown={true}
-            disableBackdropClick={true}
             onClose={handleConfirm}
-            scroll='body'
-        >
+            scroll='body'>
             <DialogTitle>{i18n.get('Legal Agreement')}</DialogTitle>
             <DialogContent>
                 <DialogContentText>

@@ -23,13 +23,13 @@
  */
 
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import { darken, lighten } from '@material-ui/core/styles/colorManipulator';
+import Typography from '@mui/material/Typography';
+import { darken, lighten } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
             marginBottom: theme.spacing(1),
         },
         settingsPanelPaper: {
-            backgroundColor: (theme.palette.type === 'dark' ? lighten : darken)(theme.palette.background.paper, 0.1),
+            backgroundColor: (theme.palette.mode === 'dark' ? lighten : darken)(theme.palette.background.paper, 0.1),
             marginBottom: theme.spacing(2),
         },
         settingsPanelList: {

@@ -24,20 +24,24 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
-import Snackbar from '@material-ui/core/Snackbar';
-import { SnackbarOrigin } from '@material-ui/core/Snackbar/Snackbar';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import ErrorIcon from '@material-ui/icons/Error';
-import WarningIcon from '@material-ui/icons/Warning';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import InfoIcon from '@material-ui/icons/Info';
-import green from '@material-ui/core/colors/green';
-import amber from '@material-ui/core/colors/amber';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Snackbar from '@mui/material/Snackbar';
+import { SnackbarOrigin } from '@mui/material/Snackbar/Snackbar';
+import SnackbarContent from '@mui/material/SnackbarContent';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import ErrorIcon from '@mui/icons-material/Error';
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { MessageLogEntry } from '../states/messageLogState';
+
+
+import { green, amber } from '@mui/material/colors';
 
 
 const variantIcon = {
@@ -129,7 +133,7 @@ const MessageLog: React.FC<MessageLogProps> = ({classes, className, message, hid
                         color="inherit"
                         className={classes.close}
                         onClick={handleClose}
-                    >
+                        size="large">
                         <CloseIcon className={classes.icon}/>
                     </IconButton>,
                 ]}
