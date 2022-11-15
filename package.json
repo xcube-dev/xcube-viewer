@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
-    "@codemirror/state": "^6.1.3",
     "@date-io/date-fns": "^2.16.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -21,6 +20,7 @@
     "@mui/x-date-pickers": "^5.0.8",
     "@uiw/react-codemirror": "^4.12.4",
     "classnames": "^2.2.6",
+    "codemirror": "^6.0.1",
     "color-rgba": "^2.2.3",
     "date-fns": "^2.29.3",
     "fast-memoize": "^2.5.2",
@@ -63,7 +63,11 @@
   "resolutions": {
     "react": "^17.0.2",
     "@types/react": "^17.0.52",
-    "set-value": "^2.0.1"
+    "set-value": "^2.0.1",
+    "@codemirror/highlight": "0.19.8",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/state": ">=6.0.0",
+    "@codemirror/view": ">=6.0.0"
   },
   "eslintConfig": {
     "extends": "react-app"
