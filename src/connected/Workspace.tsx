@@ -86,6 +86,7 @@ const styles = (theme: Theme) => createStyles(
 interface WorkspaceProps extends WithStyles<typeof styles> {
     hasInfoCard: boolean;
     hasTimeseries: boolean;
+    hasConsent: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -95,6 +96,7 @@ const mapStateToProps = (state: AppState) => {
             && state.controlState.selectedDatasetId !== null
             && state.dataState.datasets.length > 0,
         hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
+        hasConsent: state.controlState.privacyNoticeAccepted,
     };
 };
 
@@ -109,7 +111,8 @@ const getLayout = (): Layout => {
 const Workspace: React.FC<WorkspaceProps> = ({
                                                  classes,
                                                  hasInfoCard,
-                                                 hasTimeseries
+                                                 hasTimeseries,
+                                                 hasConsent
                                              }) => {
     const [map, setMap] = React.useState<OlMap | null>(null);
     const [layout, setLayout] = React.useState<Layout>(getLayout());
@@ -127,6 +130,10 @@ const Workspace: React.FC<WorkspaceProps> = ({
         if (map) {
             map.updateSize();
         }
+    }
+
+    if (!hasConsent) {
+        return null;
     }
 
     if (hasInfoCard || hasTimeseries) {

@@ -42,6 +42,7 @@ import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
 import RadioSetting from "./RadioSetting";
 import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
+import Button from '@mui/material/Button';
 
 
 const useStyles = makeStyles(theme => ({
@@ -69,7 +70,7 @@ interface SettingsDialogProps {
     settings: ControlState;
     selectedServer: ApiServerConfig;
     viewerVersion: string;
-    updateSettings: (settings: ControlState) => void;
+    updateSettings: (settings: Partial<ControlState>) => void;
     changeLocale: (locale: string) => void;
     openDialog: (dialogId: string) => void;
     serverInfo: ApiServerInfo | null;
@@ -125,7 +126,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             const langName = i18n.languages[langLocale];
             return (
                 <MenuItem
-                    button
                     key={langLocale}
                     selected={langLocale === settings.locale}
                     onClick={() => changeLocale(langLocale)}
@@ -152,7 +152,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
                 baseMapMenuItems!.push(
                     <MenuItem
-                        button
                         key={i + '.' + j}
                         selected={settings.baseMapUrl === mapSource.endpoint}
                         onClick={() => updateSettings({...settings, baseMapUrl: mapSource.endpoint})}>
@@ -295,6 +294,17 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
+                    </SettingsPanel>
+
+                    <SettingsPanel title={i18n.get("Legal Agreement")}>
+                        <Button
+                                onClick={() => {
+                                    updateSettings({privacyNoticeAccepted: false});
+                                    window.location.reload();
+                                }}
+                        >
+                            {i18n.get("Revoke consent")}
+                        </Button>
                     </SettingsPanel>
 
                     <SettingsPanel title={i18n.get('System Information')}>

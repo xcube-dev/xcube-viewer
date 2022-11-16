@@ -77,10 +77,9 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
     const [markdownText, setMarkdownText] = useState('');
 
     useEffect(() => {
-        // fetch(window.location.href + href)
         fetch(href)
             .then(response => response.text())
-            .then(imprintText => setMarkdownText(imprintText));
+            .then(text => setMarkdownText(text));
     });
 
     const classes = useStyles();

@@ -30,7 +30,7 @@ import { updateSettings } from '../actions/controlActions';
 
 const mapStateToProps = (state: AppState) => {
     return {
-        open: !state.controlState.legalAgreementAccepted,
+        open: !state.controlState.privacyNoticeAccepted,
         settings: state.controlState,
     };
 };

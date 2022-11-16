@@ -31,9 +31,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Link from '@mui/material/Link';
 import makeStyles from '@mui/styles/makeStyles';
 import CheckIcon from '@mui/icons-material/Check';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
+import Markdown from 'react-markdown';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const useStyles = makeStyles(theme => ({
@@ -51,6 +53,16 @@ interface LegalAgreementDialogProps {
 }
 
 export default function LegalAgreementDialog({open, settings, updateSettings}: LegalAgreementDialogProps) {
+    const [markdownText, setMarkdownText] = useState<string | null>(null);
+
+    useEffect(() => {
+        const href = i18n.get("legal/privacy-note.en.md")
+        // fetch(window.location.href + href)
+        fetch(href)
+                .then(response => response.text())
+                .then(text => setMarkdownText(text));
+    });
+
     const classes = useStyles();
 
     if (!open) {
@@ -58,29 +70,38 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
     }
 
     function handleConfirm() {
-        updateSettings({...settings, legalAgreementAccepted: true});
+        updateSettings({...settings, privacyNoticeAccepted: true});
+    }
+
+    function handleLeave() {
+        try {
+            if (window.history.length > 0) {
+                window.history.back();
+            } else if (typeof (window as any).home === 'function') {
+                (window as any).home();
+            } else {
+                window.location.href = 'about:home';
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     return (
         <Dialog
             open={open}
             disableEscapeKeyDown={true}
-            onClose={handleConfirm}
-            scroll='body'>
-            <DialogTitle>{i18n.get('Legal Agreement')}</DialogTitle>
+            keepMounted={true}
+            scroll='body'
+        >
+            <DialogTitle>{i18n.get("Privacy Notice")}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {i18n.get('We use „HTML5 local storage” to save and restore your settings. 3rd parties will never see your data. Note we do not use „cookies” at all.')}
-                </DialogContentText>
-                <DialogContentText>
-                    {i18n.get('Find out more')}{' '}
-                    <Link
-                        href={i18n.get("https://en.wikipedia.org/wiki/Web_storage")}
-                        target='_blank'
-                        rel='noreferrer'
-                    >
-                        {i18n.get('here')}
-                    </Link>.
+                    {
+                        markdownText === null
+                        ? <CircularProgress/>
+                        : <Markdown children={markdownText} linkTarget="_blank"/>
+                    }
                 </DialogContentText>
             </DialogContent>
 
@@ -88,6 +109,9 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
                 <Button onClick={handleConfirm} color="primary">
                     <CheckIcon className={classes.icon}/>
                     {i18n.get('Accept and continue')}
+                </Button>
+                <Button onClick={handleLeave}>
+                    {i18n.get('Leave')}
                 </Button>
             </DialogActions>
 
