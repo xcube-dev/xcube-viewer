@@ -41,19 +41,21 @@ import ControlBarActions from './ControlBarActions';
 
 interface ControlBarProps extends WithLocale {
     show: boolean;
+    hasConsent: boolean;
 }
 
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
         show: state.dataState.datasets.length > 0,
+        hasConsent: state.controlState.privacyNoticeAccepted
     };
 };
 
 const mapDispatchToProps = {};
 
-const _ControlBar: React.FC<ControlBarProps> = (props) => {
-    if (!props.show) {
+const _ControlBar: React.FC<ControlBarProps> = ({show, hasConsent}) => {
+    if (!show || !hasConsent) {
         return null;
     }
     return (
