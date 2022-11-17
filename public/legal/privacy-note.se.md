@@ -5,3 +5,6 @@ Innan du fortsätter bör du veta följande om den här applikationen:
 * Inga användaruppgifter samlas in eller delas.
 * Programinställningar lagras i webbläsarens lokala minne. ([HTML5 local storage](https://en.wikipedia.org/wiki/Web_storage))
 * All inloggningsinformation lagras som funktionella "cookies".
+
+Du kan när som helst återkalla ditt samtycke i systeminställningarna.
+
