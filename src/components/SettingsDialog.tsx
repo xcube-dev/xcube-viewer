@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, {ChangeEvent} from 'react';
+import React, { ChangeEvent } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -46,21 +46,21 @@ import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from '../model/proj';
 
 
 const useStyles = makeStyles(theme => ({
-            textField: {
-                marginLeft: theme.spacing(1),
-                marginRight: theme.spacing(1),
-                fontSize: theme.typography.fontSize / 2
-            },
-            intTextField: {
-                marginLeft: theme.spacing(1),
-                marginRight: theme.spacing(1),
-                fontSize: theme.typography.fontSize / 2,
-                width: theme.spacing(6),
-            },
-            localeAvatar: {
-                margin: 10,
-            }
+        textField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            fontSize: theme.typography.fontSize / 2
+        },
+        intTextField: {
+            marginLeft: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            fontSize: theme.typography.fontSize / 2,
+            width: theme.spacing(6),
+        },
+        localeAvatar: {
+            margin: 10,
         }
+    }
 ));
 
 interface SettingsDialogProps {
@@ -125,13 +125,13 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         localeMenuItems = Object.getOwnPropertyNames(i18n.languages).map(langLocale => {
             const langName = i18n.languages[langLocale];
             return (
-                    <MenuItem
-                            key={langLocale}
-                            selected={langLocale === settings.locale}
-                            onClick={() => changeLocale(langLocale)}
-                    >
-                        <ListItemText primary={langName}/>
-                    </MenuItem>
+                <MenuItem
+                    key={langLocale}
+                    selected={langLocale === settings.locale}
+                    onClick={() => changeLocale(langLocale)}
+                >
+                    <ListItemText primary={langName}/>
+                </MenuItem>
             );
         });
     }
@@ -151,12 +151,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             baseMapMenuItems!.push(<ListSubheader key={i} disableSticky={true}>{mapGroup.name}</ListSubheader>);
             mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
                 baseMapMenuItems!.push(
-                        <MenuItem
-                                key={i + '.' + j}
-                                selected={settings.baseMapUrl === mapSource.endpoint}
-                                onClick={() => updateSettings({baseMapUrl: mapSource.endpoint})}>
-                            <ListItemText primary={mapSource.name}/>
-                        </MenuItem>
+                    <MenuItem
+                        key={i + '.' + j}
+                        selected={settings.baseMapUrl === mapSource.endpoint}
+                        onClick={() => updateSettings({baseMapUrl: mapSource.endpoint})}>
+                        <ListItemText primary={mapSource.name}/>
+                    </MenuItem>
                 );
             });
         });
@@ -180,16 +180,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     });
 
     return (
-            <div>
-                <Dialog
-                        open={open}
-                        fullWidth
-                        maxWidth={'sm'}
-                        onClose={handleCloseDialog}
-                        scroll="body"
-                >
-                    <DialogTitle>{i18n.get('Settings')}</DialogTitle>
-                    <DialogContent>
+        <div>
+            <Dialog
+                open={open}
+                fullWidth
+                maxWidth={'sm'}
+                onClose={handleCloseDialog}
+                scroll="body"
+            >
+                <DialogTitle>{i18n.get('Settings')}</DialogTitle>
+                <DialogContent>
 
                     <SettingsPanel title={i18n.get('General')}>
                         <SettingsSubPanel
@@ -257,7 +257,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 value={timeChunkSize}
                                 onChange={handleTimeChunkSizeChange}
                                 margin="normal"
-                                size={'small'} />
+                                size={'small'}/>
                         </SettingsSubPanel>
                     </SettingsPanel>
 
@@ -298,20 +298,24 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
                     <SettingsPanel title={i18n.get("Legal Agreement")}>
                         <Button
-                                onClick={() => {
-                                    updateSettings({privacyNoticeAccepted: false});
-                                    window.location.reload();
-                                }}
+                            onClick={() => {
+                                updateSettings({privacyNoticeAccepted: false});
+                                window.location.reload();
+                            }}
                         >
                             {i18n.get("Revoke consent")}
                         </Button>
                     </SettingsPanel>
 
                     <SettingsPanel title={i18n.get('System Information')}>
-                        <SettingsSubPanel label={`xcube Viewer ${i18n.get('version')}`}
-                                          value={viewerVersion}/>
-                        <SettingsSubPanel label={`xcube Server ${i18n.get('version')}`}
-                                          value={serverInfo ? serverInfo.version : i18n.get('Cannot reach server')}/>
+                        <SettingsSubPanel
+                            label={`xcube Viewer ${i18n.get('version')}`}
+                            value={viewerVersion}
+                        />
+                        <SettingsSubPanel
+                            label={`xcube Server ${i18n.get('version')}`}
+                            value={serverInfo ? serverInfo.version:i18n.get('Cannot reach server')}
+                        />
                     </SettingsPanel>
                 </DialogContent>
             </Dialog>
@@ -341,6 +345,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 export default SettingsDialog;
 
 const getOnOff = (state: boolean): string => {
-    return state ? i18n.get('On') : i18n.get('Off');
+    return state ? i18n.get('On'):i18n.get('Off');
 };
 
