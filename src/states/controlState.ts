@@ -79,7 +79,7 @@ export interface ControlState {
     activities: { [id: string]: string };
     locale: string;
     dialogOpen: { [dialogId: string]: boolean };
-    legalAgreementAccepted: boolean;
+    privacyNoticeAccepted: boolean;
     mapInteraction: MapInteraction;
     volumeCardOpen: boolean;
     volumeRenderMode: VolumeRenderMode;
@@ -123,7 +123,7 @@ export function newControlState(): ControlState {
         activities: {},
         locale: 'en',
         dialogOpen: {},
-        legalAgreementAccepted: false,
+        privacyNoticeAccepted: false,
         mapInteraction: 'Point',
         showRgbLayer: false,
         volumeCardOpen: false,

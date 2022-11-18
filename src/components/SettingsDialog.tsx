@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from "@material-ui/core/ListSubheader";
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import TextField from '@material-ui/core/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from "@mui/material/ListSubheader";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
 import React, {ChangeEvent} from 'react';
 import i18n from '../i18n';
 import {ApiServerConfig, ApiServerInfo} from '../model/apiServer';
@@ -42,6 +42,7 @@ import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
 import RadioSetting from "./RadioSetting";
 import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
+import Button from '@mui/material/Button';
 
 
 const useStyles = makeStyles(theme => ({
@@ -69,7 +70,7 @@ interface SettingsDialogProps {
     settings: ControlState;
     selectedServer: ApiServerConfig;
     viewerVersion: string;
-    updateSettings: (settings: ControlState) => void;
+    updateSettings: (settings: Partial<ControlState>) => void;
     changeLocale: (locale: string) => void;
     openDialog: (dialogId: string) => void;
     serverInfo: ApiServerInfo | null;
@@ -125,7 +126,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             const langName = i18n.languages[langLocale];
             return (
                 <MenuItem
-                    button
                     key={langLocale}
                     selected={langLocale === settings.locale}
                     onClick={() => changeLocale(langLocale)}
@@ -152,7 +152,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             mapGroup.datasets.forEach((mapSource: MapSource, j: number) => {
                 baseMapMenuItems!.push(
                     <MenuItem
-                        button
                         key={i + '.' + j}
                         selected={settings.baseMapUrl === mapSource.endpoint}
                         onClick={() => updateSettings({...settings, baseMapUrl: mapSource.endpoint})}>
@@ -205,12 +204,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </SettingsSubPanel>
                         <SettingsSubPanel label={i18n.get('Time interval of the player')}>
                             <TextField
+                                variant="standard"
                                 select
                                 className={classes.textField}
                                 value={settings.timeAnimationInterval}
                                 onChange={handleTimeAnimationIntervalChange}
-                                margin="normal"
-                            >
+                                margin="normal">
                                 {TIME_ANIMATION_INTERVALS.map((value, i) => (
                                     <MenuItem key={i} value={value}>{value + ' ms'}</MenuItem>
                                 ))}
@@ -253,12 +252,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </SettingsSubPanel>
                         <SettingsSubPanel label={i18n.get('Minimal number of data points in a time series update')}>
                             <TextField
+                                variant="standard"
                                 className={classes.intTextField}
                                 value={timeChunkSize}
                                 onChange={handleTimeChunkSizeChange}
                                 margin="normal"
-                                size={'small'}
-                            />
+                                size={'small'} />
                         </SettingsSubPanel>
                     </SettingsPanel>
 
@@ -295,6 +294,17 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
+                    </SettingsPanel>
+
+                    <SettingsPanel title={i18n.get("Legal Agreement")}>
+                        <Button
+                                onClick={() => {
+                                    updateSettings({privacyNoticeAccepted: false});
+                                    window.location.reload();
+                                }}
+                        >
+                            {i18n.get("Revoke consent")}
+                        </Button>
                     </SettingsPanel>
 
                     <SettingsPanel title={i18n.get('System Information')}>

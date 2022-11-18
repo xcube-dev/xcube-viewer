@@ -23,12 +23,12 @@
  */
 
 import React from 'react';
-import Divider from '@material-ui/core/Divider';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Paper from '@mui/material/Paper';
 import {UserProfile as UserInfo} from "oidc-client-ts";
 
 import i18n from '../i18n';
@@ -42,7 +42,7 @@ interface UserProfileProps extends WithLocale {
 const UserProfile: React.FC<UserProfileProps> = ({userInfo}) => {
 
     return (
-        <Grid container justify="center" spacing={1}>
+        <Grid container justifyContent="center" spacing={1}>
             <Grid item>
                 <img src={userInfo.picture} width={84} alt={i18n.get('User Profile')}/>
             </Grid>

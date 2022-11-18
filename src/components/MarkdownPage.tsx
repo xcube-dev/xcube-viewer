@@ -22,17 +22,19 @@
  * SOFTWARE.
  */
 
-import { DialogContent } from '@material-ui/core';
+import { DialogContent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Dialog from '@mui/material/Dialog';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
@@ -72,13 +74,12 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
                                                        open,
                                                        onClose
                                                    }) => {
-    const [imprintText, setImprintText] = useState('');
+    const [markdownText, setMarkdownText] = useState('');
 
     useEffect(() => {
-        // fetch(window.location.href + href)
         fetch(href)
             .then(response => response.text())
-            .then(imprintText => setImprintText(imprintText));
+            .then(text => setMarkdownText(text));
     });
 
     const classes = useStyles();
@@ -87,7 +88,12 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
         <Dialog fullScreen open={open} onClose={onClose} TransitionComponent={Transition as any}>
             <AppBar className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" onClick={onClose} aria-label="close">
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={onClose}
+                        aria-label="close"
+                        size="large">
                         <CloseIcon/>
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>{title}</Typography>
@@ -95,7 +101,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
             </AppBar>
             <DialogContent className={classes.dialog}>
                 <div className={classes.text}>
-                    <Markdown source={imprintText} linkTarget="_blank"/>
+                    <Markdown children={markdownText} linkTarget="_blank"/>
                 </div>
             </DialogContent>
         </Dialog>

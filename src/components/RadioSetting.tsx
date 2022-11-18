@@ -23,11 +23,11 @@
  */
 
 import React from 'react';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 
 import {ControlState} from '../states/controlState';
-import {FormControlLabel} from "@material-ui/core";
+import {FormControlLabel} from "@mui/material";
 
 
 interface RadioSettingProps {

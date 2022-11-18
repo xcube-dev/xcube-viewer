@@ -22,16 +22,19 @@
  * SOFTWARE.
  */
 
-import Box from '@material-ui/core/Box';
-import FormControl from '@material-ui/core/FormControl';
-import IconButton from '@material-ui/core/IconButton';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import InfoIcon from '@material-ui/icons/Info';
-import VolumeIcon from '@material-ui/icons/ThreeDRotation';
-import MyLocationIcon from '@material-ui/icons/MyLocation';
 import * as React from 'react';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Tooltip from '@mui/material/Tooltip';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import InfoIcon from '@mui/icons-material/Info';
+import VolumeIcon from '@mui/icons-material/ThreeDRotation';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 import { Config } from '../config';
 import i18n from '../i18n';
@@ -83,7 +86,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     let downloadButton;
     if (Config.instance.branding.allowDownloads) {
         downloadButton = (
-            <IconButton disabled={!canDownload} onClick={() => openDialog('export')}>
+            <IconButton disabled={!canDownload} onClick={() => openDialog('export')} size="large">
                 <Tooltip arrow title={i18n.get('Export data')}>
                     {<CloudDownloadIcon/>}
                 </Tooltip>
@@ -92,7 +95,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     }
 
     const flyToButton = (
-        <IconButton onClick={flyToSelectedObject}>
+        <IconButton onClick={flyToSelectedObject} size="large">
             <Tooltip arrow title={i18n.get('Show selected place in map')}>
                 <MyLocationIcon/>
             </Tooltip>
@@ -101,7 +104,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
 
     /*TODO: I18N*/
     let volumeButton = Config.instance.branding.allow3D && (
-            <IconButton onClick={() => showVolumeCard(true)} disabled={volumeCardOpen}>
+            <IconButton onClick={() => showVolumeCard(true)} disabled={volumeCardOpen} size="large">
                 <Tooltip arrow title={'Open volume panel'}>
                     {<VolumeIcon/>}
                 </Tooltip>
@@ -109,7 +112,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     );
 
     let infoButton = (
-        <IconButton onClick={() => showInfoCard(true)} disabled={infoCardOpen}>
+        <IconButton onClick={() => showInfoCard(true)} disabled={infoCardOpen} size="large">
             <Tooltip arrow title={i18n.get('Open information panel')}>
                 {<InfoIcon/>}
             </Tooltip>
@@ -117,7 +120,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     );
 
     return (
-        <FormControl className={classes.formControl}>
+        <FormControl variant="standard" className={classes.formControl}>
             <Box>
                 {downloadButton}
                 {flyToButton}

@@ -22,16 +22,18 @@
  * SOFTWARE.
  */
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Link from '@material-ui/core/Link';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import CheckIcon from '@material-ui/icons/Check';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Markdown from 'react-markdown';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import makeStyles from '@mui/styles/makeStyles';
+import CircularProgress from '@mui/material/CircularProgress';
+import CheckIcon from '@mui/icons-material/Check';
+
 import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
 
@@ -45,12 +47,28 @@ const useStyles = makeStyles(theme => ({
 
 interface LegalAgreementDialogProps {
     open: boolean;
-
     settings: ControlState;
     updateSettings: (settings: ControlState) => void;
+    syncWithServer: () => void;
 }
 
-export default function LegalAgreementDialog({open, settings, updateSettings}: LegalAgreementDialogProps) {
+export default function LegalAgreementDialog(
+    {
+        open,
+        settings,
+        updateSettings,
+        syncWithServer
+    }: LegalAgreementDialogProps) {
+    const [markdownText, setMarkdownText] = useState<string | null>(null);
+
+    useEffect(() => {
+        const href = i18n.get("legal/privacy-note.en.md")
+        // fetch(window.location.href + href)
+        fetch(href)
+            .then(response => response.text())
+            .then(text => setMarkdownText(text));
+    });
+
     const classes = useStyles();
 
     if (!open) {
@@ -58,31 +76,39 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
     }
 
     function handleConfirm() {
-        updateSettings({...settings, legalAgreementAccepted: true});
+        updateSettings({...settings, privacyNoticeAccepted: true});
+        syncWithServer();
+    }
+
+    function handleLeave() {
+        try {
+            if (window.history.length > 0) {
+                window.history.back();
+            } else if (typeof (window as any).home === 'function') {
+                (window as any).home();
+            } else {
+                window.location.href = 'about:home';
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     return (
         <Dialog
             open={open}
             disableEscapeKeyDown={true}
-            disableBackdropClick={true}
-            onClose={handleConfirm}
+            keepMounted={true}
             scroll='body'
         >
-            <DialogTitle>{i18n.get('Legal Agreement')}</DialogTitle>
+            <DialogTitle>{i18n.get("Privacy Notice")}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {i18n.get('We use „HTML5 local storage” to save and restore your settings. 3rd parties will never see your data. Note we do not use „cookies” at all.')}
-                </DialogContentText>
-                <DialogContentText>
-                    {i18n.get('Find out more')}{' '}
-                    <Link
-                        href={i18n.get("https://en.wikipedia.org/wiki/Web_storage")}
-                        target='_blank'
-                        rel='noreferrer'
-                    >
-                        {i18n.get('here')}
-                    </Link>.
+                    {
+                        markdownText === null
+                            ? <CircularProgress/>
+                            :<Markdown children={markdownText} linkTarget="_blank"/>
+                    }
                 </DialogContentText>
             </DialogContent>
 
@@ -90,6 +116,9 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
                 <Button onClick={handleConfirm} color="primary">
                     <CheckIcon className={classes.icon}/>
                     {i18n.get('Accept and continue')}
+                </Button>
+                <Button onClick={handleLeave}>
+                    {i18n.get('Leave')}
                 </Button>
             </DialogActions>
 

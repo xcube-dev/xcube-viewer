@@ -22,13 +22,16 @@
  * SOFTWARE.
  */
 
-import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import AllOutIcon from '@material-ui/icons/AllOut';
-import CloseIcon from '@material-ui/icons/Close';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
+import Typography from '@mui/material/Typography';
+import AllOutIcon from '@mui/icons-material/AllOut';
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useState } from 'react';
 import {
@@ -157,7 +160,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         setTimeRangeSelection({});
     };
 
-    const paletteType = theme.palette.type;
+    const paletteType = theme.palette.mode;
     const lightStroke = theme.palette.primary.light;
     const mainStroke = theme.palette.primary.main;
     const labelTextColor = theme.palette.primary.contrastText;
@@ -359,7 +362,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 className={classes.actionButton}
                 aria-label="Zoom Out"
                 onClick={handleZoomOutButtonClick}
-            >
+                size="large">
                 <AllOutIcon/>
             </IconButton>
         );
@@ -385,7 +388,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 className={classes.actionButton}
                 aria-label="Close"
                 onClick={handleRemoveTimeSeriesGroupClick}
-            >
+                size="large">
                 <CloseIcon/>
             </IconButton>
         );

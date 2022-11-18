@@ -15,6 +15,8 @@
 * Export time series button is disabled, when there are no 
   time-series to download. (#171)
 
+* Update the privacy notice for even more transparency.
+
 ## Changes in version 0.12.0 
 
 ### Enhancements

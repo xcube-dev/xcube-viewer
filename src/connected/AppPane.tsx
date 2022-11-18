@@ -24,7 +24,11 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Theme, WithStyles, createStyles, withStyles, Toolbar } from '@material-ui/core';
+import { Theme, Toolbar } from '@mui/material';
+
+import { WithStyles } from '@mui/styles';
+import createStyles from '@mui/styles/createStyles';
+import withStyles from '@mui/styles/withStyles';
 
 import { AppState } from '../states/appState';
 import ControlBar from './ControlBar';
@@ -32,12 +36,14 @@ import Workspace from './Workspace';
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
+    hasConsent: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
+        hasConsent: state.controlState.privacyNoticeAccepted
     };
 };
 
@@ -59,13 +65,19 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-const AppPane: React.FC<AppPaneProps> = ({classes}) => {
+const AppPane: React.FC<AppPaneProps> = ({classes, hasConsent}) => {
     // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
     return (
         <main className={classes.main}>
             <Toolbar variant="dense"/>
-            <ControlBar/>
-            <Workspace/>
+            {
+                hasConsent && (
+                    <>
+                        <ControlBar/>
+                        <Workspace/>
+                    </>
+                )
+            }
         </main>
     );
 };
