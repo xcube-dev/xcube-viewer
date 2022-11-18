@@ -26,7 +26,6 @@ import {
     createTheme,
     CssBaseline,
     ThemeProvider,
-    Theme,
     StyledEngineProvider,
     adaptV4Theme,
 } from '@mui/material';
