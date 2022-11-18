@@ -87,7 +87,7 @@ export interface ControlState {
     activities: { [id: string]: string };
     locale: string;
     dialogOpen: { [dialogId: string]: boolean };
-    legalAgreementAccepted: boolean;
+    privacyNoticeAccepted: boolean;
     mapInteraction: MapInteraction;
     lastMapInteraction: MapInteraction;
     infoCardOpen: boolean;
@@ -135,7 +135,7 @@ export function newControlState(): ControlState {
         activities: {},
         locale: 'en',
         dialogOpen: {},
-        legalAgreementAccepted: false,
+        privacyNoticeAccepted: false,
         mapInteraction: 'Point',
         lastMapInteraction: 'Point',
         showRgbLayer: false,

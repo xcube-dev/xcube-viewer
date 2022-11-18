@@ -74,13 +74,12 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
                                                        open,
                                                        onClose
                                                    }) => {
-    const [imprintText, setImprintText] = useState('');
+    const [markdownText, setMarkdownText] = useState('');
 
     useEffect(() => {
-        // fetch(window.location.href + href)
         fetch(href)
             .then(response => response.text())
-            .then(imprintText => setImprintText(imprintText));
+            .then(text => setMarkdownText(text));
     });
 
     const classes = useStyles();
@@ -102,7 +101,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
             </AppBar>
             <DialogContent className={classes.dialog}>
                 <div className={classes.text}>
-                    <Markdown children={imprintText} linkTarget="_blank"/>
+                    <Markdown children={markdownText} linkTarget="_blank"/>
                 </div>
             </DialogContent>
         </Dialog>

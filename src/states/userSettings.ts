@@ -56,7 +56,7 @@ export function storeUserSettings(settings: ControlState) {
     if (storage) {
         try {
             storage.setPrimitiveProperty('locale', settings);
-            storage.setPrimitiveProperty('legalAgreementAccepted', settings);
+            storage.setPrimitiveProperty('privacyNoticeAccepted', settings);
             storage.setPrimitiveProperty('autoShowTimeSeries', settings);
             storage.setPrimitiveProperty('showTimeSeriesErrorBars', settings);
             storage.setPrimitiveProperty('showTimeSeriesPointsOnly', settings);
@@ -88,7 +88,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         const settings = {...defaultSettings};
         try {
             storage.getStringProperty('locale', settings, defaultSettings);
-            storage.getBooleanProperty('legalAgreementAccepted', settings, defaultSettings);
+            storage.getBooleanProperty('privacyNoticeAccepted', settings, defaultSettings);
             storage.getBooleanProperty('autoShowTimeSeries', settings, defaultSettings);
             storage.getBooleanProperty('showTimeSeriesErrorBars', settings, defaultSettings);
             storage.getBooleanProperty('showTimeSeriesPointsOnly', settings, defaultSettings);

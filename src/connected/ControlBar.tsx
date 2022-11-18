@@ -52,8 +52,8 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-const _ControlBar: React.FC<ControlBarProps> = (props) => {
-    if (!props.show) {
+const _ControlBar: React.FC<ControlBarProps> = ({show}) => {
+    if (!show) {
         return null;
     }
     return (

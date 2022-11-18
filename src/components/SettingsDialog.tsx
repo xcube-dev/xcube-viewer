@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import React, {ChangeEvent} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -31,12 +32,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import makeStyles from '@mui/styles/makeStyles';
 import TextField from '@mui/material/TextField';
-import React, {ChangeEvent} from 'react';
+import Button from '@mui/material/Button';
+
 import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
 import { MapGroup, maps, MapSource } from '../util/maps';
-
 import SettingsPanel from './SettingsPanel';
 import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
@@ -293,6 +294,17 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 updateSettings={updateSettings}
                             />
                         </SettingsSubPanel>
+                    </SettingsPanel>
+
+                    <SettingsPanel title={i18n.get("Legal Agreement")}>
+                        <Button
+                                onClick={() => {
+                                    updateSettings({privacyNoticeAccepted: false});
+                                    window.location.reload();
+                                }}
+                        >
+                            {i18n.get("Revoke consent")}
+                        </Button>
                     </SettingsPanel>
 
                     <SettingsPanel title={i18n.get('System Information')}>
