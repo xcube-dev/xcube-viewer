@@ -23,7 +23,12 @@
  */
 
 import React from 'react';
-import { Button, Typography } from "@material-ui/core";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import { BBox, Position } from "geojson";
+
+// import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { PlaceInfo } from '../model/place';
 import { Variable } from '../model/variable';
@@ -32,10 +37,7 @@ import { VolumeRenderMode, VolumeState, VolumeStates } from "../states/controlSt
 import { VolumeOptions, VolumeScene } from "../volume/VolumeScene";
 import { Volume } from "../volume/Volume";
 import { NRRDLoader } from "../volume/NRRDLoader";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { BBox, Position } from "geojson";
 import { ColorBar } from "../model/colorBar";
-import i18n from '../i18n';
 
 interface VolumeCanvasProps extends WithLocale {
     selectedDataset: Dataset | null;

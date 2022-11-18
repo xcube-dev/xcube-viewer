@@ -22,25 +22,28 @@
  * SOFTWARE.
  */
 
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import CloseIcon from '@material-ui/icons/Close';
-import VolumeIcon from '@material-ui/icons/ThreeDRotation';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import CloseIcon from '@mui/icons-material/Close';
+import VolumeIcon from '@mui/icons-material/ThreeDRotation';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+
 import { Dataset } from '../model/dataset';
 import { PlaceInfo } from '../model/place';
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
 import { VolumeRenderMode, VolumeState, VolumeStates } from "../states/controlState";
 import VolumeCanvas from "./VolumeCanvas";
-import TextField from "@material-ui/core/TextField";
-import Slider from "@material-ui/core/Slider";
+import TextField from "@mui/material/TextField";
+import Slider from "@mui/material/Slider";
 import { ColorBar } from "../model/colorBar";
 // import i18n from '../i18n';
 
@@ -283,12 +286,12 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = (
         }
     }
 
-    function handleSliderValueChanged(evt: React.ChangeEvent<{}>, value: number | number[]) {
+    function handleSliderValueChanged(evt: Event, value: number | number[]) {
         setSliderValue(value as number);
         setTextValue((value as number).toFixed(2));
     }
 
-    function handleSliderValueCommitted(evt: React.ChangeEvent<{}>, value: number | number[]) {
+    function handleSliderValueCommitted(evt: Event | SyntheticEvent, value: number | number[]) {
         setValue(value as number);
     }
 
@@ -306,6 +309,7 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = (
             InputProps={{
                 endAdornment: (
                     <Slider
+                        size={"small"}
                         className={classes.isoSlider}
                         min={minValue}
                         max={maxValue}
