@@ -30,7 +30,7 @@ import { Theme } from '@mui/material';
 import { WithStyles } from '@mui/styles';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
-import {default as OlMap} from 'ol/Map';
+import { default as OlMap } from 'ol/Map';
 
 import { AppState } from '../states/appState';
 import Viewer from './Viewer';
@@ -81,12 +81,11 @@ const styles = (theme: Theme) => createStyles(
             width: '100%',
             height: '100%',
         },
-});
+    });
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
     hasInfoCard: boolean;
     hasTimeseries: boolean;
-    hasConsent: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -96,7 +95,6 @@ const mapStateToProps = (state: AppState) => {
             && state.controlState.selectedDatasetId !== null
             && state.dataState.datasets.length > 0,
         hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
-        hasConsent: state.controlState.privacyNoticeAccepted,
     };
 };
 
@@ -105,19 +103,18 @@ const mapDispatchToProps = {};
 
 type Layout = "hor" | "ver";
 const getLayout = (): Layout => {
-    return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
+    return window.innerWidth / window.innerHeight >= 1 ? "hor":"ver";
 };
 
 const Workspace: React.FC<WorkspaceProps> = ({
                                                  classes,
                                                  hasInfoCard,
                                                  hasTimeseries,
-                                                 hasConsent
                                              }) => {
     const [map, setMap] = React.useState<OlMap | null>(null);
     const [layout, setLayout] = React.useState<Layout>(getLayout());
 
-    React.useEffect(() =>  {
+    React.useEffect(() => {
         updateLayout();
         window.onresize = updateLayout;
     }, []);
@@ -132,14 +129,10 @@ const Workspace: React.FC<WorkspaceProps> = ({
         }
     }
 
-    if (!hasConsent) {
-        return null;
-    }
-
     if (hasInfoCard || hasTimeseries) {
-        const splitPaneClassName = layout === "hor" ? classes.splitPaneHor : classes.splitPaneVer;
-        const mapPaneClassName = layout === "hor" ? classes.mapPaneHor : classes.mapPaneVer;
-        const detailsPaneClassName = layout === "hor" ? classes.detailsPaneHor : classes.detailsPaneVer;
+        const splitPaneClassName = layout === "hor" ? classes.splitPaneHor:classes.splitPaneVer;
+        const mapPaneClassName = layout === "hor" ? classes.mapPaneHor:classes.mapPaneVer;
+        const detailsPaneClassName = layout === "hor" ? classes.detailsPaneHor:classes.detailsPaneVer;
         return (
             <SplitPane
                 dir={layout}

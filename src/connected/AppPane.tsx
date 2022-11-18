@@ -36,12 +36,14 @@ import Workspace from './Workspace';
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
+    hasConsent: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
+        hasConsent: state.controlState.privacyNoticeAccepted
     };
 };
 
@@ -63,13 +65,19 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-const AppPane: React.FC<AppPaneProps> = ({classes}) => {
+const AppPane: React.FC<AppPaneProps> = ({classes, hasConsent}) => {
     // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
     return (
         <main className={classes.main}>
             <Toolbar variant="dense"/>
-            <ControlBar/>
-            <Workspace/>
+            {
+                hasConsent && (
+                    <>
+                        <ControlBar/>
+                        <Workspace/>
+                    </>
+                )
+            }
         </main>
     );
 };

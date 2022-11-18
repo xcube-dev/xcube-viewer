@@ -345,9 +345,7 @@ export function configureServers(servers: ApiServerConfig[], selectedServerId: s
         if (getState().controlState.selectedServerId !== selectedServerId) {
             dispatch(removeAllTimeSeries());
             dispatch(_configureServers(servers, selectedServerId));
-            dispatch(updateServerInfo());
-            dispatch(updateDatasets());
-            dispatch(updateColorBars());
+            dispatch(syncWithServer());
         } else if (getState().dataState.userServers !== servers) {
             dispatch(_configureServers(servers, selectedServerId));
         }
@@ -358,6 +356,16 @@ export function _configureServers(servers: ApiServerConfig[], selectedServerId: 
     return {type: CONFIGURE_SERVERS, servers, selectedServerId};
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export function syncWithServer() {
+    return (dispatch: Dispatch<any>) => {
+        dispatch(updateServerInfo());
+        dispatch(updateDatasets());
+        dispatch(updateColorBars());
+    };
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

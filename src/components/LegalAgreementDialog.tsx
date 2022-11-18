@@ -22,20 +22,21 @@
  * SOFTWARE.
  */
 
+import React, { useEffect, useState } from 'react';
+import Markdown from 'react-markdown';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Link from '@mui/material/Link';
 import makeStyles from '@mui/styles/makeStyles';
+import CircularProgress from '@mui/material/CircularProgress';
 import CheckIcon from '@mui/icons-material/Check';
-import React, { useEffect, useState } from 'react';
+
 import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
-import Markdown from 'react-markdown';
-import CircularProgress from '@mui/material/CircularProgress';
+import { syncWithServer } from "../actions/dataActions";
 
 
 const useStyles = makeStyles(theme => ({
@@ -47,20 +48,26 @@ const useStyles = makeStyles(theme => ({
 
 interface LegalAgreementDialogProps {
     open: boolean;
-
     settings: ControlState;
     updateSettings: (settings: ControlState) => void;
+    syncWithServer: () => void;
 }
 
-export default function LegalAgreementDialog({open, settings, updateSettings}: LegalAgreementDialogProps) {
+export default function LegalAgreementDialog(
+    {
+        open,
+        settings,
+        updateSettings,
+        syncWithServer
+    }: LegalAgreementDialogProps) {
     const [markdownText, setMarkdownText] = useState<string | null>(null);
 
     useEffect(() => {
         const href = i18n.get("legal/privacy-note.en.md")
         // fetch(window.location.href + href)
         fetch(href)
-                .then(response => response.text())
-                .then(text => setMarkdownText(text));
+            .then(response => response.text())
+            .then(text => setMarkdownText(text));
     });
 
     const classes = useStyles();
@@ -71,6 +78,7 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
 
     function handleConfirm() {
         updateSettings({...settings, privacyNoticeAccepted: true});
+        syncWithServer();
     }
 
     function handleLeave() {
@@ -99,8 +107,8 @@ export default function LegalAgreementDialog({open, settings, updateSettings}: L
                 <DialogContentText>
                     {
                         markdownText === null
-                        ? <CircularProgress/>
-                        : <Markdown children={markdownText} linkTarget="_blank"/>
+                            ? <CircularProgress/>
+                            :<Markdown children={markdownText} linkTarget="_blank"/>
                     }
                 </DialogContentText>
             </DialogContent>

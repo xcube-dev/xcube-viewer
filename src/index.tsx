@@ -31,7 +31,7 @@ import thunk from 'redux-thunk';
 
 import './index.css';
 import { changeLocale } from './actions/controlActions';
-import { updateColorBars, updateDatasets, updateServerInfo } from './actions/dataActions';
+import { syncWithServer } from './actions/dataActions';
 import { Config } from './config';
 import App from './connected/App';
 import { appReducer } from './reducers/appReducer';
@@ -43,9 +43,10 @@ Config.load().then(() => {
     const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
 
     store.dispatch(changeLocale(store.getState().controlState.locale) as any);
-    store.dispatch(updateServerInfo() as any);
-    store.dispatch(updateDatasets() as any);
-    store.dispatch(updateColorBars() as any);
+
+    if (store.getState().controlState.privacyNoticeAccepted) {
+        store.dispatch(syncWithServer() as any);
+    }
 
     ReactDOM.render(
         <Provider store={store}>{<App/>}</Provider>,
