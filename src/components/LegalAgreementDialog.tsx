@@ -36,7 +36,6 @@ import CheckIcon from '@mui/icons-material/Check';
 
 import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
-import { syncWithServer } from "../actions/dataActions";
 
 
 const useStyles = makeStyles(theme => ({
