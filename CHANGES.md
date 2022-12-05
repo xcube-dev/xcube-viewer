@@ -17,6 +17,8 @@
 
 * Update the privacy notice for even more transparency.
 
+* Fixed issue with page reloading every 5 minutes after login. (#256)
+
 ## Changes in version 0.12.0 
 
 ### Enhancements
