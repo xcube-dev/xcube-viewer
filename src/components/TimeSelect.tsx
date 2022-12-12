@@ -36,7 +36,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import i18n from '../i18n';
 import { Time, TimeRange } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
-import { dateTimeToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
+import { dateTimeToUtcTime, utcTimeToIsoDate } from '../util/time';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -74,12 +74,12 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
     );
 
     const isValid = typeof selectedTime === 'number';
-    const timeText = isValid ? utcTimeToIsoDateTimeString(selectedTime!) : null;
+    const timeValue = isValid ? utcTimeToIsoDate(selectedTime!) : null;
 
-    let minTimeText, maxTimeText;
+    let minTimeValue, maxTimeValue;
     if (Array.isArray(selectedTimeRange)) {
-        minTimeText = utcTimeToIsoDateTimeString(selectedTimeRange[0]);
-        maxTimeText = utcTimeToIsoDateTimeString(selectedTimeRange[1]);
+        minTimeValue = utcTimeToIsoDate(selectedTimeRange[0]);
+        maxTimeValue = utcTimeToIsoDate(selectedTimeRange[1]);
     }
 
     const timeInput = (
@@ -94,9 +94,9 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
                 }
                 inputFormat="yyyy-MM-dd hh:mm:ss"
                 id="time-select"
-                value={timeText}
-                minDateTime={minTimeText}
-                maxDateTime={maxTimeText}
+                value={timeValue}
+                minDateTime={minTimeValue}
+                maxDateTime={maxTimeValue}
                 onChange={handleTimeChange}
                 ampm={false}
                 renderInput={(props: any) => (
