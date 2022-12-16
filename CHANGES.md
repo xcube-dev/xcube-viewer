@@ -1,4 +1,6 @@
-## Changes in version 0.13.0 (in development)
+## Changes in version 0.13.0-dev.2 (in development)
+
+## Changes in version 0.13.0-dev.1
 
 * The browser window's title and favicon can now be configured
   using the two parameters
