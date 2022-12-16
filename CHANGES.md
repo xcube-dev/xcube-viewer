@@ -1,4 +1,6 @@
-## Changes in version 0.13.0 (in development)
+## Changes in version 0.13.0-dev.2 (in development)
+
+## Changes in version 0.13.0-dev.1
 
 * The browser window's title and favicon can now be configured
   using the two parameters
@@ -16,6 +18,8 @@
   time-series to download. (#171)
 
 * Update the privacy notice for even more transparency.
+
+* Fixed issue with page reloading every 5 minutes after login. (#256)
 
 ## Changes in version 0.12.0 
 

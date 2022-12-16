@@ -69,18 +69,19 @@ export class Config {
     static async load(): Promise<Config> {
         let configPath = appParams.get('configPath') || 'config';
         let rawConfig;
+        const configUrl = window.location.origin + `/${configPath}/config.json`;
         try {
-            const configUrl = window.location.origin + `/${configPath}/config.json`;
             rawConfig = await fetch(configUrl);
             rawConfig = await rawConfig.json();
             if (process.env.NODE_ENV === 'development') {
-                console.debug(`Configuration loaded.`);
+                console.debug(`Configuration loaded from ${configUrl}`);
             }
         } catch (e) {
             configPath = '';
             rawConfig = rawDefaultConfig;
             if (process.env.NODE_ENV === 'development') {
-                console.debug(`Using default configuration.`, e);
+                console.debug(`Failed loading configuration from ${configUrl}:`, e);
+                console.debug(`Using defaults.`);
             }
         }
 

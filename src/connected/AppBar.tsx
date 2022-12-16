@@ -189,7 +189,7 @@ const _AppBar: React.FC<AppBarProps> = (
                     <img
                         src={Config.instance.branding.logoImage}
                         width={Config.instance.branding.logoWidth}
-                        alt={'xcube resources'}
+                        alt={'xcube logo'}
                         className={classes.logo}
                     />
                 </a>
