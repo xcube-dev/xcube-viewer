@@ -1,5 +1,9 @@
 ## Changes in version 0.13.0-dev.2 (in development)
 
+
+* Default map projection has changed from 
+  geographic (EPSG:4326) to web mercator (EPSG:3857) 
+  for performance reasons.
 * Configuration resource paths are now resolved against
   `window.location.origin` plus any given sub path used 
   to deploy the application.
