@@ -1,6 +1,10 @@
 ## Changes in version 0.13.0-dev.2 (in development)
 
-
+* Added to information panel Python code that can be used 
+  to select a dataset or variable. This is useful for
+  further analysing data, e.g., in Jupyter Notebooks.
+* Improved in information panels the display of selected 
+  items as JSON.
 * Default map projection has changed from 
   geographic (EPSG:4326) to web mercator (EPSG:3857) 
   for performance reasons.
