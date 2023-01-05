@@ -1,5 +1,9 @@
 ## Changes in version 0.13.0-dev.2 (in development)
 
+* Configuration resource paths are now resolved against
+  `window.location.origin` plus any given sub path used 
+  to deploy the application.
+
 ## Changes in version 0.13.0-dev.1
 
 * The browser window's title and favicon can now be configured

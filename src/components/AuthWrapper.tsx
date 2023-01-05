@@ -53,6 +53,11 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({child
         window.location.pathname = "/";
     }
 
+    // TODO (forman): check whether we can (should?) use
+    //   baseUrl.href (from util/baseurl.ts) here
+    // const redirectUri = baseUrl.href;
+    const redirectUri = window.location.origin;
+
     return (
             <ErrorBoundary>
                 <AuthProvider
@@ -60,9 +65,9 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({child
                         loadUserInfo={true}
                         scope="openid email profile"
                         automaticSilentRenew={true}
-                        redirect_uri={window.location.origin}
-                        post_logout_redirect_uri={window.location.origin}
-                        popup_post_logout_redirect_uri={window.location.origin}
+                        redirect_uri={redirectUri}
+                        post_logout_redirect_uri={redirectUri}
+                        popup_post_logout_redirect_uri={redirectUri}
                         onSigninCallback={handleSigninCallback}
                         onRemoveUser={handleRemoveUser}
                 >
