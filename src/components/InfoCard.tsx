@@ -64,6 +64,8 @@ import pythonLogo from '../resources/python-bw.png'
 import { ApiServerConfig } from "../model/apiServer";
 import { Config } from "../config";
 import { Extension } from "@codemirror/state";
+import { Time } from "../model/timeSeries";
+import { utcTimeToIsoDateTimeString } from '../util/time';
 
 type ViewMode = 'text' | 'list' | 'code' | 'python';
 
@@ -113,6 +115,7 @@ interface InfoCardProps extends WithLocale {
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
     selectedPlaceInfo: PlaceInfo | null;
+    selectedTime: Time | null;
     serverConfig: ApiServerConfig;
 }
 
@@ -126,6 +129,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
                                                selectedDataset,
                                                selectedVariable,
                                                selectedPlaceInfo,
+                                               selectedTime,
                                                serverConfig,
                                            }) => {
     const classes = useStyles();
@@ -171,8 +175,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 isIn={isVisible}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
-                dataset={selectedDataset}
                 variable={selectedVariable}
+                time={selectedTime}
                 serverConfig={serverConfig}
             />
         );
@@ -187,7 +191,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 isIn={isVisible}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
-                placeInfo={selectedPlaceInfo}/>
+                placeInfo={selectedPlaceInfo}
+            />
         );
     }
 
@@ -249,7 +254,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = (
         serverConfig
     }
 ) => {
-    const classes = useStyles();
+    // const classes = useStyles();
     let content;
     if (viewMode === 'code') {
         const jsonDimensions = selectObj(dataset.dimensions, ['name', 'size', 'dtype']);
@@ -281,7 +286,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = (
         );
     } else if (viewMode === 'python') {
         content = (
-            <PythonCodeContent code={getPythonCode(serverConfig, dataset)}/>
+            <PythonCodeContent code={getDatasetPythonCode(serverConfig, dataset)}/>
         );
     }
     return (
@@ -305,8 +310,8 @@ interface VariableInfoContentProps {
     isIn: boolean;
     viewMode: ViewMode;
     setViewMode: (viewMode: ViewMode) => void;
-    dataset: Dataset;
     variable: Variable;
+    time: Time | null,
     serverConfig: ApiServerConfig;
 }
 
@@ -315,8 +320,8 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = (
         isIn,
         viewMode,
         setViewMode,
-        dataset,
         variable,
+        time,
         serverConfig
     }
 ) => {
@@ -372,7 +377,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = (
         );
     } else if (viewMode === 'python') {
         content = (
-            <PythonCodeContent code={getPythonCode(serverConfig, dataset, variable)}/>
+            <PythonCodeContent code={getVariablePythonCode(serverConfig, variable, time)}/>
         );
     }
     return (
@@ -594,7 +599,7 @@ const CodeContent: React.FC<CodeContentProps> = ({code, extension}) => {
         <CardContent2>
             <CodeMirror
                 theme={Config.instance.branding.themeName || 'light'}
-                height="240px"
+                height="320px"
                 extensions={[extension]}
                 value={code}
                 readOnly={true}
@@ -627,28 +632,40 @@ function selectObj(obj: any, keys: string[]): any {
     return newObj;
 }
 
-function getPythonCode(serverConfig: ApiServerConfig, dataset: Dataset, variable?: Variable) {
-    let pythonCode;
-    if (!variable) {
-        pythonCode = [
-            'from xcube.core.store import new_data_store',
-            '',
-            'store = new_data_store(',
-            '    "s3",',
-            '    root="datasets",',
-            `    storage_options={"anon": True, "endpoint_url": "${serverConfig.url}/s3"},`,
-            ')',
-            `# list(store.get_data_ids())`,
-            `dataset = store.get_data("${dataset.id}")`,
-        ];
-    } else {
-        const vmin = variable.colorBarMin;
-        const vmax = variable.colorBarMax;
-        const cbar = variable.colorBarName;
-        pythonCode = [
-            `var = dataset.${variable.name}`,
-            `var.plot.imshow(vmin=${vmin}, vmax=${vmax}, cbar="${cbar}")`,
-        ];
+function getDatasetPythonCode(serverConfig: ApiServerConfig,
+                              dataset: Dataset) {
+    return [
+        'from xcube.core.store import new_data_store',
+        '',
+        'store = new_data_store(',
+        '    "s3",',
+        '    root="datasets",  # can also use "pyramids" here',
+        '    storage_options={',
+        '        "anon": True,',
+        '        "client_kwargs": {',
+        `            "endpoint_url": "${serverConfig.url}/s3"`,
+        '        }',
+        '    }',
+        ')',
+        `# list(store.get_data_ids())`,
+        `dataset = store.open_data("${dataset.id}.zarr")`,
+    ].join("\n");
+}
+
+
+function getVariablePythonCode(serverConfig: ApiServerConfig,
+                               variable: Variable,
+                               time: Time | null) {
+    const name = variable.name;
+    const vmin = variable.colorBarMin;
+    const vmax = variable.colorBarMax;
+    const cmap = variable.colorBarName;
+    let timeSel = '';
+    if (time !== null) {
+        timeSel = `.sel(time="${utcTimeToIsoDateTimeString(time)}", method="nearest")`;
     }
-    return pythonCode.join("\n");
+    return [
+        `var = dataset.${name}${timeSel}`,
+        `var.plot.imshow(vmin=${vmin}, vmax=${vmax}, cmap="${cmap}")`,
+    ].join("\n");
 }
