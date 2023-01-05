@@ -30,6 +30,8 @@ function _getBaseUrl(): URL {
         const lastComponent = pathComponents[numPathComponents - 1];
         if (lastComponent === 'index.html') {
             return new URL(pathComponents.slice(0, numPathComponents - 1).join('/'), window.location.origin);
+        } else {
+            return new URL(url.pathname, window.location.origin);
         }
     }
     return new URL(window.location.origin);
@@ -38,3 +40,5 @@ function _getBaseUrl(): URL {
 const baseUrl = _getBaseUrl();
 
 export default baseUrl;
+
+console.log("baseUrl = ", baseUrl.href);
