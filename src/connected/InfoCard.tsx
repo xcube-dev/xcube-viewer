@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import {
     infoCardElementViewModesSelector,
     selectedDatasetSelector,
-    selectedPlaceInfoSelector,
+    selectedPlaceInfoSelector, selectedServerSelector, selectedTimeSelector,
     selectedVariableSelector,
     visibleInfoCardElementsSelector
 } from '../selectors/controlSelectors';
@@ -49,6 +49,8 @@ const mapStateToProps = (state: AppState) => {
         selectedDataset: selectedDatasetSelector(state),
         selectedVariable: selectedVariableSelector(state),
         selectedPlaceInfo: selectedPlaceInfoSelector(state),
+        selectedTime: selectedTimeSelector(state),
+        serverConfig: selectedServerSelector(state),
     }
 };
 

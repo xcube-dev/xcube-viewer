@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { CSSProperties } from "react";
 import {
     amber,
     blue,
@@ -45,8 +46,8 @@ import {
 } from '@mui/material/colors';
 import {Color} from '@mui/material';
 import { PaletteColorOptions } from '@mui/material/styles';
-import { CSSProperties } from "react";
-
+import baseUrl from './baseurl';
+import { buildPath } from './path';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,9 +113,7 @@ function setBrandingColor(brandingConfig: any, key: keyof Branding) {
 function setBrandingImage(brandingConfig: any, key: keyof Branding, configPath: string) {
     const imagePath = brandingConfig[key];
     if (typeof imagePath === 'string') {
-        const imageUrl = window.location.origin + '/'
-            + (configPath !== '' ? `${configPath}/${imagePath}` : imagePath);
-        brandingConfig[key] = imageUrl;
+        brandingConfig[key] = buildPath(baseUrl.href, configPath, imagePath);
     }
 }
 
@@ -125,84 +124,5 @@ export function parseBranding(brandingConfig: any, configPath: string): Branding
     setBrandingImage(brandingConfig, 'logoImage', configPath);
     return brandingConfig as Branding;
 }
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-const config: { [name: string]: Branding } = {
-    'default': {
-        appBarTitle: 'xcube Viewer',
-        windowTitle: 'xcube Viewer',
-        defaultApiServerId: 'local',
-        defaultApiServerName: 'Local Server',
-        defaultApiServerUrl: defaultApiServerUrl || 'http://localhost:8080',
-        themeName: 'dark',
-        primaryColor: blue,
-        secondaryColor: pink,
-        headerBackgroundColor: undefined,
-        logoImage: require('./resources/default/resources.png').default,
-        logoWidth: 32,
-        baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        defaultAgg: 'mean',
-    },
-    'esdl': {
-        appBarTitle: 'ESDL Viewer',
-        windowTitle: 'ESDL Viewer',
-        defaultApiServerId: 'esdl',
-        defaultApiServerName: 'ESDL Server',
-        defaultApiServerUrl: 'https://xcube.earthsystemdatalab.net',
-        themeName: 'light',
-        primaryColor: grey,
-        secondaryColor: pink,
-        headerBackgroundColor: grey['50'],
-        logoImage: require('./resources/config/esdl/resources.png').default,
-        logoWidth: 64,
-        baseMapUrl: 'http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        defaultAgg: 'mean',
-    },
-    'eodatabee': {
-        appBarTitle: 'Demo Viewer',
-        windowTitle: 'EODataBee Demo Viewer',
-        defaultApiServerId: 'eodatabee',
-        defaultApiServerName: 'EODataBee Server',
-        defaultApiServerUrl: defaultApiServerUrl || 'https://xcube2.dcs4cop.eu/dcs4cop-dev/api/latest',
-        themeName: 'dark',
-        primaryColor: {
-            light: '#ffd77c',
-            main: '#ffc942',
-            dark: '#b78c2f',
-            contrastText: '#fff',
-        },
-        secondaryColor: pink,
-        headerBackgroundColor: undefined,
-        logoImage: require('./resources/config/eodatabee/resources.png').default,
-        logoWidth: 150,
-        baseMapUrl: 'http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-        defaultAgg: 'mean',
-    },
-    'cyanoalert': {
-        appBarTitle: '',
-        windowTitle: 'CyanoAlert Viewer',
-        defaultApiServerId: 'cyanoalert',
-        defaultApiServerName: 'CyanoAlert Server',
-        defaultApiServerUrl: defaultApiServerUrl || 'https://cyanoalert.brockmann-consult.com/api/latest',
-        themeName: 'dark',
-        primaryColor: {
-            light: '#ceef64',
-            main: '#9abc31',
-            dark: '#688c00',
-            contrastText: '#fff',
-        },
-        secondaryColor: deepPurple,
-        headerBackgroundColor: undefined,
-        logoImage: require('./resources/config/cyanoalert/resources.png').default,
-        logoWidth: 120,
-        baseMapUrl: 'https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-        defaultAgg: 'median',
-        polygonFillOpacity: 0.025,
-    },
-};
-*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

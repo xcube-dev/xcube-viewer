@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,26 +22,23 @@
  * SOFTWARE.
  */
 
-export const LOCAL_OFFSET = -new Date("1970-01-01T00:00:00").getTime();
-
-export function dateTimeToUtcTime(dateTime: Date): number {
-    return dateTime.getTime();
+function _getBaseUrl(): URL {
+    const url = new URL(window.location.href);
+    const pathComponents = url.pathname.split('/');
+    const numPathComponents = pathComponents.length;
+    if (numPathComponents > 0) {
+        const lastComponent = pathComponents[numPathComponents - 1];
+        if (lastComponent === 'index.html') {
+            return new URL(pathComponents.slice(0, numPathComponents - 1).join('/'), window.location.origin);
+        } else {
+            return new URL(url.pathname, window.location.origin);
+        }
+    }
+    return new URL(window.location.origin);
 }
 
-export function utcTimeToIsoDate(utcTime: number, local: boolean = false): Date {
-    return new Date(utcTime + (local ? LOCAL_OFFSET : 0));
-}
+const baseUrl = _getBaseUrl();
 
+export default baseUrl;
 
-export function utcTimeToIsoDateString(utcTime: number, local: boolean = false) {
-    return utcTimeToIsoDate(utcTime, local)
-        .toISOString()
-        .substr(0, 10);
-}
-
-export function utcTimeToIsoDateTimeString(utcTime: number, local: boolean = false, skipSeconds: boolean = false) {
-    return utcTimeToIsoDate(utcTime, local)
-        .toISOString()
-        .substr(0, skipSeconds ? 16 : 19)
-        .replace("T", " ");
-}
+console.log("baseUrl = ", baseUrl.href);

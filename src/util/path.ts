@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,26 +22,33 @@
  * SOFTWARE.
  */
 
-export const LOCAL_OFFSET = -new Date("1970-01-01T00:00:00").getTime();
 
-export function dateTimeToUtcTime(dateTime: Date): number {
-    return dateTime.getTime();
-}
-
-export function utcTimeToIsoDate(utcTime: number, local: boolean = false): Date {
-    return new Date(utcTime + (local ? LOCAL_OFFSET : 0));
-}
-
-
-export function utcTimeToIsoDateString(utcTime: number, local: boolean = false) {
-    return utcTimeToIsoDate(utcTime, local)
-        .toISOString()
-        .substr(0, 10);
-}
-
-export function utcTimeToIsoDateTimeString(utcTime: number, local: boolean = false, skipSeconds: boolean = false) {
-    return utcTimeToIsoDate(utcTime, local)
-        .toISOString()
-        .substr(0, skipSeconds ? 16 : 19)
-        .replace("T", " ");
+/**
+ * Builds a path by concatenating a base path and subsequent path components.
+ * The function ensures that only single path separators are used between
+ * path components.
+ *
+ * @param base
+ * @param components
+ */
+export function buildPath(base: string, ...components: string[]): string {
+    let path = base;
+    for (let c of components) {
+        if (c !== '') {
+            if (path.endsWith('/')) {
+                if (c.startsWith('/')) {
+                    path += c.substr(1);
+                } else {
+                    path += c;
+                }
+            } else {
+                if (c.startsWith('/')) {
+                    path += c;
+                } else {
+                    path += '/' + c;
+                }
+            }
+        }
+    }
+    return path;
 }

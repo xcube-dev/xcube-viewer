@@ -25,4 +25,4 @@
 export const GEOGRAPHIC_CRS = 'EPSG:4326';
 export const WEB_MERCATOR_CRS = 'EPSG:3857';
 
-export const DEFAULT_MAP_CRS = GEOGRAPHIC_CRS;
+export const DEFAULT_MAP_CRS = WEB_MERCATOR_CRS;

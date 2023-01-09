@@ -35,16 +35,19 @@ export interface UpdateAccessToken {
     accessToken: string | null;
 }
 
-export function updateAccessToken(accessToken: string) {
+export function updateAccessToken(accessToken: string | null) {
     return (dispatch: Dispatch, getState: () => AppState) => {
-        if (getState().userAuthState.accessToken !== accessToken) {
+        const prevAccessToken = getState().userAuthState.accessToken;
+        if (prevAccessToken !== accessToken) {
             dispatch(_updateAccessToken(accessToken));
-            dispatch(updateDatasets() as any);
+            if (accessToken === null  || prevAccessToken === null) {
+                dispatch(updateDatasets() as any);
+            }
         }
     }
 }
 
-function _updateAccessToken(accessToken: string): UpdateAccessToken {
+function _updateAccessToken(accessToken: string | null): UpdateAccessToken {
     return {type: UPDATE_ACCESS_TOKEN, accessToken};
 }
 

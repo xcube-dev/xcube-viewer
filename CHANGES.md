@@ -1,4 +1,18 @@
-## Changes in version 0.13.0 (in development)
+## Changes in version 0.13.0-dev.2 (in development)
+
+* Added to information panel Python code that can be used 
+  to select a dataset or variable. This is useful for
+  further analysing data, e.g., in Jupyter Notebooks.
+* Improved in information panels the display of selected 
+  items as JSON.
+* Default map projection has changed from 
+  geographic (EPSG:4326) to web mercator (EPSG:3857) 
+  for performance reasons.
+* Configuration resource paths are now resolved against
+  `window.location.origin` plus any given sub path used 
+  to deploy the application.
+
+## Changes in version 0.13.0-dev.1
 
 ### Enhancements
  
@@ -37,6 +51,8 @@
   time-series to download. (#171)
 
 * Update the privacy notice for even more transparency.
+
+* Fixed issue with page reloading every 5 minutes after login. (#256)
 
 ## Changes in version 0.12.0 
 

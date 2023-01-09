@@ -40,10 +40,12 @@ export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000
 
 export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle' | 'Geometry';
 
+export type ViewMode = 'text' | 'list' | 'code' | 'python';
+
 
 export interface InfoCardElementState {
     visible?: boolean;
-    viewMode?: string;
+    viewMode?: ViewMode;
 }
 
 export interface InfoCardElementStates {

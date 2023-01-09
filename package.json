@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/lang-python": "^6.1.1",
     "@date-io/date-fns": "^2.16.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -18,7 +19,7 @@
     "@mui/material": "^5.10.13",
     "@mui/styles": "^5.10.10",
     "@mui/x-date-pickers": "^5.0.8",
-    "@uiw/react-codemirror": "^4.12.4",
+    "@uiw/react-codemirror": "^4.19.5",
     "classnames": "^2.2.6",
     "codemirror": "^6.0.1",
     "color-rgba": "^2.2.3",
