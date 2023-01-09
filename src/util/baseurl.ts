@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +22,23 @@
  * SOFTWARE.
  */
 
-export const GEOGRAPHIC_CRS = 'EPSG:4326';
-export const WEB_MERCATOR_CRS = 'EPSG:3857';
+function _getBaseUrl(): URL {
+    const url = new URL(window.location.href);
+    const pathComponents = url.pathname.split('/');
+    const numPathComponents = pathComponents.length;
+    if (numPathComponents > 0) {
+        const lastComponent = pathComponents[numPathComponents - 1];
+        if (lastComponent === 'index.html') {
+            return new URL(pathComponents.slice(0, numPathComponents - 1).join('/'), window.location.origin);
+        } else {
+            return new URL(url.pathname, window.location.origin);
+        }
+    }
+    return new URL(window.location.origin);
+}
 
-export const DEFAULT_MAP_CRS = WEB_MERCATOR_CRS;
+const baseUrl = _getBaseUrl();
+
+export default baseUrl;
+
+console.log("baseUrl = ", baseUrl.href);

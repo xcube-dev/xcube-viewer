@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +22,33 @@
  * SOFTWARE.
  */
 
-export const GEOGRAPHIC_CRS = 'EPSG:4326';
-export const WEB_MERCATOR_CRS = 'EPSG:3857';
 
-export const DEFAULT_MAP_CRS = WEB_MERCATOR_CRS;
+/**
+ * Builds a path by concatenating a base path and subsequent path components.
+ * The function ensures that only single path separators are used between
+ * path components.
+ *
+ * @param base
+ * @param components
+ */
+export function buildPath(base: string, ...components: string[]): string {
+    let path = base;
+    for (let c of components) {
+        if (c !== '') {
+            if (path.endsWith('/')) {
+                if (c.startsWith('/')) {
+                    path += c.substr(1);
+                } else {
+                    path += c;
+                }
+            } else {
+                if (c.startsWith('/')) {
+                    path += c;
+                } else {
+                    path += '/' + c;
+                }
+            }
+        }
+    }
+    return path;
+}

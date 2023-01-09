@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { CSSProperties } from "react";
 import {
     amber,
     blue,
@@ -45,8 +46,8 @@ import {
 } from '@mui/material/colors';
 import {Color} from '@mui/material';
 import { PaletteColorOptions } from '@mui/material/styles';
-import { CSSProperties } from "react";
-
+import baseUrl from './baseurl';
+import { buildPath } from './path';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,9 +113,7 @@ function setBrandingColor(brandingConfig: any, key: keyof Branding) {
 function setBrandingImage(brandingConfig: any, key: keyof Branding, configPath: string) {
     const imagePath = brandingConfig[key];
     if (typeof imagePath === 'string') {
-        const imageUrl = window.location.origin + '/'
-            + (configPath !== '' ? `${configPath}/${imagePath}` : imagePath);
-        brandingConfig[key] = imageUrl;
+        brandingConfig[key] = buildPath(baseUrl.href, configPath, imagePath);
     }
 }
 

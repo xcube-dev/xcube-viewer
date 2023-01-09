@@ -732,7 +732,7 @@ export const visibleInfoCardElementsSelector = createSelector(
 
 export const infoCardElementViewModesSelector = createSelector(
     infoCardElementStatesSelector,
-    (infoCardElementStates): { [elementType: string]: string } => {
+    (infoCardElementStates) => {
         const infoCardElementCodeModes: { [elementType: string]: string } = {};
         Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
             infoCardElementCodeModes[e] = infoCardElementStates[e].viewMode || 'text';
