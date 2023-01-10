@@ -95,6 +95,7 @@ export interface Branding {
     mapProjection?: string;
     allowDownloads?: boolean;
     allowRefresh?: boolean;
+    allowViewModePython?: boolean;
 }
 
 

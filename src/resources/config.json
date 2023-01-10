@@ -18,8 +18,9 @@
     "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     "defaultAgg": "mean",
     "polygonFillOpacity": 0.2,
+    "mapProjection": "EPSG:3857",
     "allowDownloads": true,
     "allowRefresh": true,
-    "mapProjection": "EPSG:3857"
+    "allowViewModePython": true
   }
 }

@@ -117,6 +117,7 @@ interface InfoCardProps extends WithLocale {
     selectedPlaceInfo: PlaceInfo | null;
     selectedTime: Time | null;
     serverConfig: ApiServerConfig;
+    allowViewModePython: boolean;
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -131,6 +132,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
                                                selectedPlaceInfo,
                                                selectedTime,
                                                serverConfig,
+                                               allowViewModePython
                                            }) => {
     const classes = useStyles();
 
@@ -162,6 +164,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 setViewMode={setViewMode}
                 dataset={selectedDataset}
                 serverConfig={serverConfig}
+                hasPython={allowViewModePython}
             />
         );
     }
@@ -178,6 +181,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 variable={selectedVariable}
                 time={selectedTime}
                 serverConfig={serverConfig}
+                hasPython={allowViewModePython}
             />
         );
     }
@@ -243,6 +247,7 @@ interface DatasetInfoContentProps {
     setViewMode: (viewMode: ViewMode) => void;
     dataset: Dataset;
     serverConfig: ApiServerConfig;
+    hasPython: boolean;
 }
 
 const DatasetInfoContent: React.FC<DatasetInfoContentProps> = (
@@ -251,7 +256,8 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = (
         viewMode,
         setViewMode,
         dataset,
-        serverConfig
+        serverConfig,
+        hasPython
     }
 ) => {
     // const classes = useStyles();
@@ -296,7 +302,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = (
             isIn={isIn}
             viewMode={viewMode}
             setViewMode={setViewMode}
-            hasPython={true}
+            hasPython={hasPython}
         >
             {content}
         </InfoCardContent>
@@ -313,6 +319,7 @@ interface VariableInfoContentProps {
     variable: Variable;
     time: Time | null,
     serverConfig: ApiServerConfig;
+    hasPython: boolean;
 }
 
 const VariableInfoContent: React.FC<VariableInfoContentProps> = (
@@ -322,7 +329,8 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = (
         setViewMode,
         variable,
         time,
-        serverConfig
+        serverConfig,
+        hasPython
     }
 ) => {
     const classes = useStyles();
@@ -387,7 +395,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = (
             isIn={isIn}
             viewMode={viewMode}
             setViewMode={setViewMode}
-            hasPython={true}
+            hasPython={hasPython}
         >
             {htmlReprPaper}
             {content}

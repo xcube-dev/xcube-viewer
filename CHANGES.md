@@ -3,6 +3,9 @@
 * Added to information panel Python code that can be used 
   to select a dataset or variable. This is useful for
   further analysing data, e.g., in Jupyter Notebooks.
+  The feature can be disabled by setting
+  `"branding": {..., "allowViewModePython": false}` in
+  the Viewer's `config.json`.
 * Improved in information panels the display of selected 
   items as JSON.
 * Default map projection has changed from 
