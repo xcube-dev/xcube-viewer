@@ -647,7 +647,7 @@ function getDatasetPythonCode(serverConfig: ApiServerConfig,
         '        }',
         '    }',
         ')',
-        `# list(store.get_data_ids())`,
+        `# store.list_data_ids()`,
         `dataset = store.open_data("${dataset.id}.zarr")`,
     ].join("\n");
 }
