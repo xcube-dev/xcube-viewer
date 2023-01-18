@@ -14,6 +14,9 @@
 * Configuration resource paths are now resolved against
   `window.location.origin` plus any given sub path used 
   to deploy the application.
+* Can now run xcube Viewer in "compact" mode. This is
+  primarily used for the JupyterLab integration.
+  To enable compact mode, pass query parameter `compact=1`.
 
 ## Changes in version 0.13.0-dev.1
 

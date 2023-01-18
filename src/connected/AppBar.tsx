@@ -171,10 +171,6 @@ const _AppBar: React.FC<AppBarProps> = (
         setImprintOpen(false);
     };
 
-    const handleRefresh = () => {
-        updateResources();
-    };
-
     return (
         <AppBar
             position="absolute"
@@ -206,7 +202,7 @@ const _AppBar: React.FC<AppBarProps> = (
                 <UserControl/>
                 {allowRefresh &&
                     <Tooltip arrow title={i18n.get('Refresh')}>
-                        <IconButton onClick={handleRefresh} size="small" className={classes.iconButton}>
+                        <IconButton onClick={updateResources} size="small" className={classes.iconButton}>
                             <RefreshIcon/>
                         </IconButton>
                     </Tooltip>
@@ -222,10 +218,6 @@ const _AppBar: React.FC<AppBarProps> = (
                     </IconButton>
                 </Tooltip>
             </Toolbar>
-            <ServerDialog/>
-            <SettingsDialog/>
-            <ExportDialog/>
-            <AddPlaceDialog/>
             <Menu
                 id="simple-menu"
                 anchorEl={helpMenuAnchorEl}

@@ -9,6 +9,7 @@
     "appBarTitle": "xcube Viewer",
     "windowTitle": "xcube Viewer",
     "windowIcon": null,
+    "compact": false,
     "themeName": "light",
     "primaryColor": "blue",
     "secondaryColor": "pink",

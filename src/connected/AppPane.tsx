@@ -33,17 +33,20 @@ import withStyles from '@mui/styles/withStyles';
 import { AppState } from '../states/appState';
 import ControlBar from './ControlBar';
 import Workspace from './Workspace';
+import { Config } from "../config";
 
 
 interface AppPaneProps extends WithStyles<typeof styles> {
     hasConsent: boolean;
+    compact: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-        hasConsent: state.controlState.privacyNoticeAccepted
+        hasConsent: state.controlState.privacyNoticeAccepted,
+        compact: Config.instance.branding.compact
     };
 };
 
@@ -65,11 +68,11 @@ const styles = (theme: Theme) => createStyles(
         },
     });
 
-const AppPane: React.FC<AppPaneProps> = ({classes, hasConsent}) => {
+const AppPane: React.FC<AppPaneProps> = ({classes, hasConsent, compact}) => {
     // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
     return (
         <main className={classes.main}>
-            <Toolbar variant="dense"/>
+            {!compact && <Toolbar variant="dense"/>}
             {
                 hasConsent && (
                     <>
