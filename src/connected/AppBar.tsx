@@ -32,21 +32,17 @@ import Tooltip from '@mui/material/Tooltip';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { deepOrange } from '@mui/material/colors';
 import classNames from 'classnames';
-import MarkdownPage from '../components/MarkdownPage';
 
 import { Config } from '../config';
 import i18n from '../i18n';
 import { AppState } from '../states/appState';
 import { WithLocale } from '../util/lang';
-import ExportDialog from './ExportDialog';
-import ServerDialog from './ServerDialog';
-import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
-import AddPlaceDialog from './UserPlacesDialog';
 import { openDialog } from '../actions/controlActions';
 import { updateResources } from "../actions/dataActions";
-import { deepOrange } from '@mui/material/colors';
+import MarkdownPage from '../components/MarkdownPage';
 
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
