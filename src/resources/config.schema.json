@@ -115,6 +115,10 @@
         "allowRefresh": {
           "type": "boolean",
           "default": true
+        },
+        "allowViewModePython": {
+          "type": "boolean",
+          "default": true
         }
       },
       "additionalProperties": false

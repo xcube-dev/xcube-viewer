@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import React, { ChangeEvent } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -31,18 +32,17 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import makeStyles from '@mui/styles/makeStyles';
 import TextField from '@mui/material/TextField';
-import React, {ChangeEvent} from 'react';
-import i18n from '../i18n';
-import {ApiServerConfig, ApiServerInfo} from '../model/apiServer';
-import {ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval} from '../states/controlState';
-import {MapGroup, maps, MapSource} from '../util/maps';
+import Button from '@mui/material/Button';
 
+import i18n from '../i18n';
+import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
+import { ControlState, TIME_ANIMATION_INTERVALS, TimeAnimationInterval } from '../states/controlState';
+import { MapGroup, maps, MapSource } from '../util/maps';
 import SettingsPanel from './SettingsPanel';
 import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
-import RadioSetting from "./RadioSetting";
-import {GEOGRAPHIC_CRS, WEB_MERCATOR_CRS} from "../model/proj";
-import Button from '@mui/material/Button';
+import RadioSetting from './RadioSetting';
+import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from '../model/proj';
 
 
 const useStyles = makeStyles(theme => ({
@@ -96,7 +96,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     React.useEffect(() => {
         const newTimeChunkSize = parseInt(timeChunkSize);
         if (!Number.isNaN(newTimeChunkSize) && newTimeChunkSize !== settings.timeChunkSize) {
-            updateSettings({...settings, timeChunkSize: newTimeChunkSize});
+            updateSettings({timeChunkSize: newTimeChunkSize});
         }
     }, [timeChunkSize, settings, updateSettings]);
 
@@ -113,7 +113,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
 
     function handleTimeAnimationIntervalChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        updateSettings({...settings, timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
+        updateSettings({timeAnimationInterval: parseInt(event.target.value) as TimeAnimationInterval});
     }
 
     function handleTimeChunkSizeChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -154,7 +154,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     <MenuItem
                         key={i + '.' + j}
                         selected={settings.baseMapUrl === mapSource.endpoint}
-                        onClick={() => updateSettings({...settings, baseMapUrl: mapSource.endpoint})}>
+                        onClick={() => updateSettings({baseMapUrl: mapSource.endpoint})}>
                         <ListItemText primary={mapSource.name}/>
                     </MenuItem>
                 );
@@ -186,7 +186,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 fullWidth
                 maxWidth={'sm'}
                 onClose={handleCloseDialog}
-                scroll='body'
+                scroll="body"
             >
                 <DialogTitle>{i18n.get('Settings')}</DialogTitle>
                 <DialogContent>
@@ -257,7 +257,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                                 value={timeChunkSize}
                                 onChange={handleTimeChunkSizeChange}
                                 margin="normal"
-                                size={'small'} />
+                                size={'small'}/>
                         </SettingsSubPanel>
                     </SettingsPanel>
 
@@ -298,20 +298,24 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
                     <SettingsPanel title={i18n.get("Legal Agreement")}>
                         <Button
-                                onClick={() => {
-                                    updateSettings({privacyNoticeAccepted: false});
-                                    window.location.reload();
-                                }}
+                            onClick={() => {
+                                updateSettings({privacyNoticeAccepted: false});
+                                window.location.reload();
+                            }}
                         >
                             {i18n.get("Revoke consent")}
                         </Button>
                     </SettingsPanel>
 
                     <SettingsPanel title={i18n.get('System Information')}>
-                        <SettingsSubPanel label={`xcube Viewer ${i18n.get('version')}`}
-                                          value={viewerVersion}/>
-                        <SettingsSubPanel label={`xcube Server ${i18n.get('version')}`}
-                                          value={serverInfo ? serverInfo.version : i18n.get('Cannot reach server')}/>
+                        <SettingsSubPanel
+                            label={`xcube Viewer ${i18n.get('version')}`}
+                            value={viewerVersion}
+                        />
+                        <SettingsSubPanel
+                            label={`xcube Server ${i18n.get('version')}`}
+                            value={serverInfo ? serverInfo.version:i18n.get('Cannot reach server')}
+                        />
                     </SettingsPanel>
                 </DialogContent>
             </Dialog>
@@ -341,6 +345,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 export default SettingsDialog;
 
 const getOnOff = (state: boolean): string => {
-    return state ? i18n.get('On') : i18n.get('Off');
+    return state ? i18n.get('On'):i18n.get('Off');
 };
 

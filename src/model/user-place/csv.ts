@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2022 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,36 +22,43 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
-
-import PlaceSelect from "../components/PlaceSelect";
-import { AppState } from '../states/appState';
-import { removeUserPlace } from "../actions/dataActions";
-import { selectPlace, openDialog } from '../actions/controlActions';
-import {
-    selectedPlaceGroupPlacesSelector,
-    selectedPlaceGroupPlaceLabelsSelector
-} from '../selectors/controlSelectors';
+import { parseCsv, ParseOptions, defaultParseOptions } from '../../util/csv';
+import { Format } from './common';
 
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-
-        datasets: state.dataState.datasets,
-        userPlaceGroup: state.dataState.userPlaceGroup,
-
-        selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedPlaceGroupPlacesSelector(state),
-        placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
-    };
+const checkError = (text: string): string | null => {
+    if (text.trim() !== '') {
+        try {
+            parseCsv(text);
+        } catch (e) {
+            console.error(e);
+            return `${e}`;
+        }
+    }
+    return null;
 };
 
-const mapDispatchToProps = {
-    selectPlace,
-    removeUserPlace,
-    openDialog,
+export const csvFormat: Format = {
+    name: 'Text/CSV',
+    fileExt: '.txt,.csv',
+    checkError
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceSelect);
+export interface CsvOptions extends ParseOptions {
+    xName: string;
+    yName: string;
+    forceGeometry: boolean;
+    geometryName: string;
+    labelName: string;
+    labelPrefix: string;
+}
+
+export const defaultCsvOptions: CsvOptions = {
+    ...defaultParseOptions,
+    xName: "longitude",
+    yName: "latitude",
+    forceGeometry: false,
+    geometryName: "geometry",
+    labelName: "name",
+    labelPrefix: "CSV-",
+};

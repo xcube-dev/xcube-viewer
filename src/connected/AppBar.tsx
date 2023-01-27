@@ -43,6 +43,7 @@ import ExportDialog from './ExportDialog';
 import ServerDialog from './ServerDialog';
 import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
+import AddPlaceDialog from './UserPlacesDialog';
 import { openDialog } from '../actions/controlActions';
 import { updateResources } from "../actions/dataActions";
 import { deepOrange } from '@mui/material/colors';
@@ -224,6 +225,7 @@ const _AppBar: React.FC<AppBarProps> = (
             <ServerDialog/>
             <SettingsDialog/>
             <ExportDialog/>
+            <AddPlaceDialog/>
             <Menu
                 id="simple-menu"
                 anchorEl={helpMenuAnchorEl}

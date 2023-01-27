@@ -171,8 +171,8 @@
       "se": "Allmänhet"
     },
     {
-      "en": "System Informations",
-      "de": "Systeminformationen",
+      "en": "System Information",
+      "de": "Systeminformation",
       "se": "Systeminformation"
     },
     {
@@ -531,6 +531,136 @@
       "se": "Att uppdatera"
     },
     {
+      "en": "Accept and continue",
+      "de": "Akzeptieren und weiter",
+      "se": "Acceptera och fortsätt"
+    },
+    {
+      "en": "Leave",
+      "de": "Verlassen",
+      "se": "Lämna"
+    },
+    {
+      "en": "Import geometry",
+      "de": "Import geometry",
+      "se": "Importera geometri"
+    },
+    {
+      "en": "Add Places",
+      "de": "Orte hinzufügen",
+      "se": "Lägg till Platser"
+    },
+    {
+      "en": "Text/CSV",
+      "de": "Text/CSV",
+      "se": "Text/CSV"
+    },
+    {
+      "en": "GeoJSON",
+      "de": "GeoJSON",
+      "se": "GeoJSON"
+    },
+    {
+      "en": "WKT",
+      "de": "WKT",
+      "se": "WKT"
+    },
+    {
+      "en": "Enter text or drag & drop a text file.",
+      "de": "Text eingeben oder Textdatei per Drag & Drop einfügen.",
+      "se": "Skriv in text eller dra och släpp en textfil."
+    },
+    {
+      "en": "From File",
+      "de": "Aus Datei",
+      "se": "Från fil"
+    },
+    {
+      "en": "Clear",
+      "de": "Löschen",
+      "se": "Tömma"
+    },
+    {
+      "en": "Options",
+      "de": "Optionen",
+      "se": "Alternativ"
+    },
+    {
+      "en": "Label",
+      "de": "Label",
+      "se": "Etikett"
+    },
+    {
+      "en": "Label property names",
+      "de": "Eigenschaftsnamen für Label",
+      "se": "Etikett egendomsnamn"
+    },
+    {
+      "en": "Label prefix (used as fallback)",
+      "de": "Label-Präfix (als Fallback verwendet)",
+      "se": "Etikettprefix (används som reserv)"
+    },
+    {
+      "en": "X/longitude column name",
+      "de": "Spaltenname für y/Längengrad",
+      "se": "X/longitud kolumnnamn"
+    },
+    {
+      "en": "Y/latitude column name",
+      "de": "Spaltenname für y/Breitengrad",
+      "se": "Y/latitud kolumnnamn"
+    },
+    {
+      "en": "Geometry column name",
+      "de": "Spaltenname für Geometrie",
+      "se": "Geometrikolumnnamn"
+    },
+    {
+      "en": "Label column name",
+      "de": "Spaltenname für Label",
+      "se": "Etikettkolumnnamn"
+    },
+    {
+      "en": "Separator character",
+      "de": "Trennzeichen",
+      "se": "Skiljetecken"
+    },
+    {
+      "en": "Comment character",
+      "de": "Kommentar-Zeichen",
+      "se": "Kommentar karaktär"
+    },
+    {
+      "en": "Quote character",
+      "de": "Zitierzeichen",
+      "se": "Citat karaktär"
+    },
+    {
+      "en": "Escape character",
+      "de": "Escape character",
+      "se": "Escape karaktär"
+    },
+   {
+      "en": "Not-a-number token",
+      "de": "Token für 'keine Zahl'",
+      "se": "Not-a-number token"
+    },
+   {
+      "en": "True token",
+      "de": "Token für 'wahr'",
+      "se": "Sann token"
+   },
+    {
+      "en": "False token",
+      "de": "Token für 'falsch'",
+      "se": "Falsk token"
+    },
+    {
+      "en": "Revoke consent",
+      "de": "Zustimmung widerrufen",
+      "se": "Återkalla samtycke "
+    },
+    {
       "en": "Legal Agreement",
       "de": "Rechtliches Übereinkommen",
       "se": "Laglig Överenskommelse"
@@ -544,21 +674,6 @@
       "en": "legal/privacy-note.en.md",
       "de": "legal/privacy-note.de.md",
       "se": "legal/privacy-note.se.md"
-    },
-    {
-      "en": "Accept and continue",
-      "de": "Akzeptieren und weiter",
-      "se": "Acceptera och fortsätt"
-    },
-    {
-      "en": "Leave",
-      "de": "Verlassen",
-      "se": "Lämna"
-    },
-    {
-      "en": "Revoke consent",
-      "de": "Zustimmung widerrufen",
-      "se": "Återkalla samtycke "
     }
   ]
 }

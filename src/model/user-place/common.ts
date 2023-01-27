@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2022 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,36 +22,44 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
 
-import PlaceSelect from "../components/PlaceSelect";
-import { AppState } from '../states/appState';
-import { removeUserPlace } from "../actions/dataActions";
-import { selectPlace, openDialog } from '../actions/controlActions';
-import {
-    selectedPlaceGroupPlacesSelector,
-    selectedPlaceGroupPlaceLabelsSelector
-} from '../selectors/controlSelectors';
+export interface Format {
+    name: string;
+    fileExt: string;
+    checkError: (text: string) => string | null;
+}
 
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
+const WKT_GEOM_NAMES = [
+    "Point",
+    "LineString",
+    "Polygon",
+    "MultiPoint",
+    "MultiLineString",
+    "MultiPolygon",
+    "GeometryCollection",
+].map(k => k.toLowerCase());
 
-        datasets: state.dataState.datasets,
-        userPlaceGroup: state.dataState.userPlaceGroup,
 
-        selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedPlaceGroupPlacesSelector(state),
-        placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
-    };
-};
+export function detectFormatName(text: string): "csv" | "geojson" | "wkt" {
+    text = text.trim();
+    if (text === "") {
+        return "csv";
+    }
 
-const mapDispatchToProps = {
-    selectPlace,
-    removeUserPlace,
-    openDialog,
-};
+    if (text[0] === "{") {
+        return "geojson";
+    }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceSelect);
+    const marker = text.substr(0, 20).toLowerCase();
+    const geomName = WKT_GEOM_NAMES.find(
+        geomName => marker.startsWith(geomName)
+            && (marker.length === geomName.length
+                || "\n\t (".indexOf(marker[geomName.length]) >= 0)
+    );
+    if (geomName) {
+        return "wkt";
+    }
+
+    return "csv";
+}

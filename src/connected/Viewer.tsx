@@ -30,13 +30,14 @@ import {AppState} from '../states/appState';
 import {
     baseMapLayerSelector,
     imageSmoothingSelector,
-    mapProjectionSelector, selectedDatasetBoundaryLayerSelector,
+    mapProjectionSelector,
+    selectedDatasetBoundaryLayerSelector,
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetRgbLayerSelector,
     selectedDatasetVariableLayerSelector,
     selectedPlaceGroupPlacesSelector
 } from '../selectors/controlSelectors';
-import {addUserPlace} from '../actions/dataActions';
+import { addUserPlace, addUserPlacesFromText } from '../actions/dataActions';
 import Viewer from '../components/Viewer';
 import {userPlaceGroupSelector} from "../selectors/dataSelectors";
 import {selectPlace} from "../actions/controlActions";
@@ -69,6 +70,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
 
 const mapDispatchToProps = {
     addUserPlace,
+    addUserPlacesFromText,
     selectPlace,
 };
 

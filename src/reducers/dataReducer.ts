@@ -23,23 +23,32 @@
  */
 
 import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
 import {
+    DataAction,
     CONFIGURE_SERVERS,
     ADD_USER_PLACE,
-    DataAction, REMOVE_ALL_TIME_SERIES,
+    ADD_USER_PLACES,
+    REMOVE_ALL_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES, UPDATE_DATASET_PLACE_GROUP, REMOVE_USER_PLACE, REMOVE_ALL_USER_PLACES, UPDATE_SERVER_INFO,
-    UPDATE_VARIABLE_COLOR_BAR
+    UPDATE_TIME_SERIES,
+    UPDATE_DATASET_PLACE_GROUP,
+    REMOVE_USER_PLACE,
+    REMOVE_ALL_USER_PLACES,
+    UPDATE_SERVER_INFO,
+    UPDATE_VARIABLE_COLOR_BAR,
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
-import { Place } from "../model/place";
-import { TimeSeries, TimeSeriesGroup } from "../model/timeSeries";
+import { Place } from '../model/place';
+import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
+import { setFeatureStyle } from "../components/ol/style";
+import { Config } from "../config";
 
 
 export function dataReducer(state: DataState | undefined, action: DataAction): DataState {
@@ -97,13 +106,23 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
         }
         case ADD_USER_PLACE: {
             const {id, label, color, geometry} = action;
-            const feature = {
+            const place: Place = {
                 type: 'Feature',
                 id,
                 geometry,
                 properties: {label, color},
             };
-            const features = [...state.userPlaceGroup.features, feature as Place];
+            const features = [...state.userPlaceGroup.features, place];
+            const userPlaceGroup = {...state.userPlaceGroup, features};
+            return {
+                ...state,
+                userPlaceGroup,
+            };
+        }
+        case ADD_USER_PLACES: {
+            const {places, mapProjection} = action;
+            places.forEach(place => addUserPlaceToLayer(place, mapProjection));
+            const features = [...state.userPlaceGroup.features, ...places];
             const userPlaceGroup = {...state.userPlaceGroup, features};
             return {
                 ...state,
@@ -185,6 +204,21 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
     return state!;
 }
 
+function addUserPlaceToLayer(place: Place, mapProjection: string) {
+    if (MAP_OBJECTS.userLayer) {
+        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
+        const source = userLayer.getSource();
+        const feature = new OlGeoJSONFormat().readFeature(place,
+            {
+                dataProjection: 'EPSG:4326',
+                featureProjection: mapProjection
+            });
+        const color = (place.properties || {}).color || 'red';
+        setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity);
+        source.addFeature(feature);
+        userLayer.changed();
+    }
+}
 
 function removeUserPlacesFromLayer(userPlaceIds: string[]) {
     if (MAP_OBJECTS.userLayer) {

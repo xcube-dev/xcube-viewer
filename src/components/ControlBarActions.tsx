@@ -71,13 +71,11 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
         openDialog,
     }
 ) => {
-
     if (!visible) {
         return null;
     }
 
     const canDownload = timeSeriesGroups.length > 0;
-    console.info(timeSeriesGroups, canDownload)
 
     let downloadButton;
     if (Config.instance.branding.allowDownloads) {

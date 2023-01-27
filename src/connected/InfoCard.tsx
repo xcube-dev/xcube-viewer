@@ -38,6 +38,7 @@ import {
     updateInfoCardElementViewMode,
 } from '../actions/controlActions';
 import InfoCard from '../components/InfoCard';
+import { Config } from "../config";
 
 
 const mapStateToProps = (state: AppState) => {
@@ -51,6 +52,7 @@ const mapStateToProps = (state: AppState) => {
         selectedPlaceInfo: selectedPlaceInfoSelector(state),
         selectedTime: selectedTimeSelector(state),
         serverConfig: selectedServerSelector(state),
+        allowViewModePython: Config.instance.branding.allowViewModePython,
     }
 };
 

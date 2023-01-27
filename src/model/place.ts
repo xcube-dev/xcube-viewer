@@ -24,7 +24,19 @@
 
 import * as  GeoJSON from 'geojson';
 import { defaultMemoize } from 'reselect';
+import { default as OlWktFormat } from "ol/format/WKT";
+import { default as OlGeomPoint } from "ol/geom/Point";
+import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
+import { default as OlFeature } from "ol/Feature";
+import { default as OlGeometry } from "ol/geom/Geometry";
+
+import { CsvOptions, defaultCsvOptions } from "./user-place/csv";
+import { defaultGeoJsonOptions, GeoJsonOptions } from "./user-place/geojson";
+import { defaultWktOptions, WktOptions } from "./user-place/wkt";
+import { newId } from "../util/id";
 import { getUserPlaceColorName } from '../config';
+import { parseCsv } from "../util/csv";
+import i18n from "../i18n";
 
 
 /**
@@ -67,13 +79,13 @@ export const DEFAULT_IMAGE_PROPERTY_NAMES = mkCases(['image', 'img', 'picture', 
 export function computePlaceInfo(placeGroup: PlaceGroup, place: Place): PlaceInfo {
     const infoObj = {};
     updatePlaceInfo(infoObj, placeGroup, place, 'label', place.id + '',
-                    DEFAULT_LABEL_PROPERTY_NAMES);
+        DEFAULT_LABEL_PROPERTY_NAMES);
     updatePlaceInfo(infoObj, placeGroup, place, 'color', getUserPlaceColorName(getPlaceHash(place)),
-                    DEFAULT_COLOR_PROPERTY_NAMES);
+        DEFAULT_COLOR_PROPERTY_NAMES);
     updatePlaceInfo(infoObj, placeGroup, place, 'image', null,
-                    DEFAULT_IMAGE_PROPERTY_NAMES);
+        DEFAULT_IMAGE_PROPERTY_NAMES);
     updatePlaceInfo(infoObj, placeGroup, place, 'description', null,
-                    DEFAULT_DESCRIPTION_PROPERTY_NAMES);
+        DEFAULT_DESCRIPTION_PROPERTY_NAMES);
     return {placeGroup, place, ...infoObj} as PlaceInfo;
 }
 
@@ -137,7 +149,7 @@ function mkCases(names: string[]): string[] {
     let nameCases: string[] = [];
     for (let name of names) {
         nameCases = nameCases.concat(name.toLowerCase(),
-                                     name.toUpperCase(),
+            name.toUpperCase(),
             name[0].toUpperCase() + name.substr(1).toLowerCase())
     }
     return nameCases;
@@ -214,4 +226,196 @@ export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: strin
     }
     return null;
 }
+
+
+let LAST_PLACE_LABEL_ID_CSV = 0;
+let LAST_PLACE_LABEL_ID_GEOJSON = 0;
+let LAST_PLACE_LABEL_ID_WKT = 0;
+
+
+export function getUserPlacesFromCsv(text: string, options: CsvOptions): Place[] {
+    let table = parseCsv(text, options);
+    if (table.length < 2) {
+        throw new Error(i18n.get('Missing header line in CSV'));
+    }
+
+    for (let v of table[0]) {
+        if (typeof v !== 'string' || v === '') {
+            throw new Error(i18n.get('Invalid header line in CSV'));
+        }
+    }
+
+    const headerRow: string[] = table[0].map(v => v as string);
+    const headerRowLC = headerRow.map(v => v.toLowerCase());
+    const numColumns = headerRow.length;
+
+    for (let row of table) {
+        if (row.length !== numColumns) {
+            throw new Error(i18n.get('All rows must have same length'));
+        }
+    }
+
+    const labelNameLC = options.labelName.toLowerCase();
+    const xNameLC = options.xName.toLowerCase();
+    const yNameLC = options.yName.toLowerCase();
+    const geometryNameLC = options.geometryName.toLowerCase();
+    const forceGeometry = options.forceGeometry;
+
+    const labelNameIndex = headerRowLC.findIndex(name => name === labelNameLC);
+    const xNameIndex = headerRowLC.findIndex(name => name === xNameLC);
+    const yNameIndex = headerRowLC.findIndex(name => name === yNameLC);
+    let geometryNameIndex = headerRowLC.findIndex(name => name === geometryNameLC);
+    if (forceGeometry || xNameIndex < 0 || yNameIndex < 0 || xNameIndex === yNameIndex) {
+        if (geometryNameIndex < 0) {
+            throw new Error(i18n.get('No geometry column(s) found'));
+        }
+    } else {
+        geometryNameIndex = -1;
+    }
+
+    let labelPrefix = options.labelPrefix.trim();
+    if (labelPrefix === '') {
+        labelPrefix = defaultCsvOptions.labelPrefix;
+    }
+
+    const wktFormat = new OlWktFormat();
+
+    const places: Place[] = [];
+    let rowIndex = 1;
+    for (; rowIndex < table.length; rowIndex++) {
+        const dataRow = table[rowIndex];
+        let geometry = null;
+        if (geometryNameIndex >= 0) {
+            const wkt = dataRow[geometryNameIndex];
+            if (typeof wkt === 'string') {
+                try {
+                    geometry = wktFormat.readGeometry(text);
+                } catch (e) {
+                    // will handle error below
+                }
+            }
+        } else {
+            const x = dataRow[xNameIndex];
+            const y = dataRow[yNameIndex];
+            if (typeof x === 'number' && Number.isFinite(x) && typeof y === 'number' && Number.isFinite(y)) {
+                geometry = new OlGeomPoint([x, y]);
+            }
+        }
+        if (geometry === null) {
+            throw new Error(i18n.get(`Invalid geometry in data row ${rowIndex}`));
+        }
+
+        const geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
+        dataRow.forEach((propertyValue, index) => {
+            if (index !== xNameIndex && index !== yNameIndex && index !== geometryNameIndex) {
+                const propertyName = headerRow[index];
+                geoJsonProps[propertyName] = propertyValue;
+            }
+        });
+
+        let label: string;
+        if (labelNameIndex >= 0) {
+            label = `${dataRow[labelNameIndex]}`;
+        } else {
+            const labelId = ++LAST_PLACE_LABEL_ID_CSV;
+            label = `${labelPrefix}${labelId}`;
+        }
+        geoJsonProps['label'] = label;
+
+        places.push(newGeoJsonFeature(geometry, geoJsonProps));
+    }
+
+    return places;
+}
+
+export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions): Place[] {
+    const labelNames = options.labelNames;
+    const labelNamesSet = new Set(
+        labelNames.split(',')
+            .map(name => name.trim().toLowerCase())
+            .filter(name => name !== '')
+    )
+    let labelPrefix = options.labelPrefix.trim();
+    if (labelPrefix === '') {
+        labelPrefix = defaultGeoJsonOptions.labelPrefix;
+    }
+
+    const geoJsonFormat = new OlGeoJSONFormat();
+
+    let features: OlFeature[];
+    try {
+        features = geoJsonFormat.readFeatures(text);
+    } catch (e) {
+        try {
+            const geometry = geoJsonFormat.readGeometry(text);
+            features = [new OlFeature(geometry)];
+        } catch (e) {
+            throw new Error(i18n.get(`Invalid GeoJSON`));
+        }
+    }
+
+    const places: Place[] = [];
+    features.forEach(feature => {
+        const properties = feature.getProperties();
+        const geometry = feature.getGeometry();
+        if (geometry) {
+            let label = '';
+            const geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
+            if (properties) {
+                for (let propertyName in properties) {
+                    const propertyValue = properties[propertyName];
+                    if (propertyValue === null
+                        || typeof propertyValue === 'number'
+                        || typeof propertyValue === 'string'
+                        || typeof propertyValue === 'boolean') {
+                        geoJsonProps[propertyName] = propertyValue;
+                    }
+                    if (label === ''
+                        && typeof propertyValue === 'string'
+                        && labelNamesSet.has(propertyName.toLowerCase())) {
+                        label = propertyValue;
+                    }
+                }
+            }
+
+            if (label === '') {
+                const labelId = ++LAST_PLACE_LABEL_ID_GEOJSON;
+                label = `${labelPrefix}-${labelId}`;
+            }
+            geoJsonProps['label'] = label;
+
+            places.push(newGeoJsonFeature(geometry, geoJsonProps));
+        }
+    });
+
+    return places;
+}
+
+export function getUserPlacesFromWkt(text: string, options: WktOptions): Place[] {
+    let labelPrefix = options.labelPrefix.trim();
+    if (labelPrefix === '') {
+        labelPrefix = defaultWktOptions.labelPrefix;
+    }
+    let label = options.label.trim();
+    if (label === '') {
+        const labelId = ++LAST_PLACE_LABEL_ID_WKT;
+        label = `${labelPrefix}${labelId}`;
+    }
+    try {
+        const geometry = new OlWktFormat().readGeometry(text);
+        return [newGeoJsonFeature(geometry, {label})];
+    } catch (e) {
+        throw new Error(i18n.get(`Invalid Geometry WKT`));
+    }
+}
+
+function newGeoJsonFeature(geometry: OlGeometry, properties: { [name: string]: any }): Place {
+    return {
+        type: 'Feature',
+        id: newId(),
+        geometry: new OlGeoJSONFormat().writeGeometryObject(geometry),
+        properties: properties,
+    };
+}
+
 

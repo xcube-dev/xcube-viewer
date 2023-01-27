@@ -51,6 +51,7 @@ import {
 } from '../actions/controlActions';
 import {
     ADD_USER_PLACE,
+    ADD_USER_PLACES,
     CONFIGURE_SERVERS,
     DataAction,
     REMOVE_USER_PLACE,
@@ -263,19 +264,16 @@ export function controlReducer(state: ControlState | undefined,
             };
         }
         case ADD_USER_PLACE: {
-            let selectedPlaceGroupIds;
-            if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
-                selectedPlaceGroupIds = ['user'];
-            } else if (state.selectedPlaceGroupIds.find(id => id === 'user')) {
-                selectedPlaceGroupIds = state.selectedPlaceGroupIds;
-            } else {
-                selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, 'user']
+            if (action.selectPlace) {
+                return selectPlace(state, action.id);
             }
-            return {
-                ...state,
-                selectedPlaceGroupIds,
-                selectedPlaceId: action.id,
-            };
+            return state;
+        }
+        case ADD_USER_PLACES: {
+            if (action.selectPlace && action.places.length) {
+                return selectPlace(state, action.places[0].id);
+            }
+            return state;
         }
         case REMOVE_USER_PLACE: {
             const {id, places} = action;
@@ -297,10 +295,21 @@ export function controlReducer(state: ControlState | undefined,
             return state;
         }
         case SET_MAP_INTERACTION: {
-            return {
+            let newState = {
                 ...state,
-                mapInteraction: action.mapInteraction
+                mapInteraction: action.mapInteraction,
+                lastMapInteraction: state.mapInteraction,
             };
+            if (action.mapInteraction === 'Geometry') {
+                newState = {
+                    ...newState,
+                    dialogOpen: {
+                        ...state.dialogOpen,
+                        addUserPlacesFromText: true
+                    },
+                };
+            }
+            return newState;
         }
         case SHOW_INFO_CARD: {
             state = {
@@ -382,3 +391,18 @@ export function controlReducer(state: ControlState | undefined,
     return state;
 }
 
+function selectPlace(state: ControlState, selectedPlaceId: string): ControlState {
+    let selectedPlaceGroupIds;
+    if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
+        selectedPlaceGroupIds = ['user'];
+    } else if (state.selectedPlaceGroupIds.find(id => id === 'user')) {
+        selectedPlaceGroupIds = state.selectedPlaceGroupIds;
+    } else {
+        selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, 'user']
+    }
+    return {
+        ...state,
+        selectedPlaceGroupIds,
+        selectedPlaceId,
+    };
+}
