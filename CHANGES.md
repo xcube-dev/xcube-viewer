@@ -14,6 +14,7 @@
 * Configuration resource paths are now resolved against
   `window.location.origin` plus any given sub path used 
   to deploy the application.
+* Dropped support for language locales "it" and "ro".
 
 ## Changes in version 0.13.0-dev.1
 
