@@ -1,5 +1,7 @@
 ## Changes in version 0.13.0-dev.2 (in development)
 
+* Added feature to allow importing features and geometries
+  from `CSV`, `GeoJSON`, and `WKT` formats. (#88)
 * Added to information panel Python code that can be used 
   to select a dataset or variable. This is useful for
   further analysing data, e.g., in Jupyter Notebooks.
