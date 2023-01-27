@@ -1,5 +1,7 @@
 ## Changes in version 0.13.0-dev.2 (in development)
 
+* Added feature to allow importing features and geometries
+  from `CSV`, `GeoJSON`, and `WKT` formats. (#88)
 * Added to information panel Python code that can be used 
   to select a dataset or variable. This is useful for
   further analysing data, e.g., in Jupyter Notebooks.
@@ -17,6 +19,7 @@
 * Can now run xcube Viewer in "compact" mode. This is
   primarily used for the JupyterLab integration.
   To enable compact mode, pass query parameter `compact=1`.
+* Dropped support for language locales "it" and "ro".
 
 ## Changes in version 0.13.0-dev.1
 
