@@ -642,6 +642,7 @@ function selectObj(obj: any, keys: string[]): any {
 
 function getDatasetPythonCode(serverConfig: ApiServerConfig,
                               dataset: Dataset) {
+    const datasetId = getS3DataId(dataset.id);
     return [
         'from xcube.core.store import new_data_store',
         '',
@@ -656,7 +657,7 @@ function getDatasetPythonCode(serverConfig: ApiServerConfig,
         '    }',
         ')',
         `# store.list_data_ids()`,
-        `dataset = store.open_data("${dataset.id}.zarr")`,
+        `dataset = store.open_data(data_id="${datasetId}")`,
     ].join("\n");
 }
 
@@ -676,4 +677,19 @@ function getVariablePythonCode(serverConfig: ApiServerConfig,
         `var = dataset.${name}${timeSel}`,
         `var.plot.imshow(vmin=${vmin}, vmax=${vmax}, cmap="${cmap}")`,
     ].join("\n");
+}
+
+
+function getS3DataId(originalId: string): string {
+    return splitExt(originalId)[0] + ".zarr";
+}
+
+
+function splitExt(name: string): [string, string] {
+    const index = name.lastIndexOf(".");
+    if (index >= 0) {
+        return [name.substring(0, index), name.substring(index)];
+    } else {
+        return [name, ""];
+    }
 }
