@@ -2,14 +2,14 @@
 
 ### Enhancements
 
-* Added to information panel Python code that can be used 
+* Added to information panel Python code that can be used
   to select a dataset or variable. This is useful for
   further analysing data, e.g., in Jupyter Notebooks.
   The feature can be disabled by setting
   `"branding": {..., "allowViewModePython": false}` in
   the Viewer's `config.json`.
 
-* Improved in information panels the display of selected 
+* Improved in information panels the display of selected
   items as JSON.
 
 * Can now run xcube Viewer in "compact" mode. This is
@@ -21,25 +21,25 @@
   dragged & dropped over the map. (#88)
 
   Future enhancements will allow users:
-  - importing many features into own user place group, 
-    * so users can switch group visibility, currently always shown;
-    * so users can delete the group, currently only single user places can be deleted.
-  - entering character encoding, currently assuming UTF-8.
-  - entering CRS, currently assuming EPSG:4326.
-  - entering style/color column, currently fixed to name "color".
-    Default color is "red".
-  - validating also CSV and WKT in dialog, currently we only do that for GeoJSON.
+    - importing many features into own user place group,
+        * so users can switch group visibility, currently always shown;
+        * so users can delete the group, currently only single user places can be deleted.
+    - entering character encoding, currently assuming UTF-8.
+    - entering CRS, currently assuming EPSG:4326.
+    - entering style/color column, currently fixed to name "color".
+      Default color is "red".
+    - validating also CSV and WKT in dialog, currently we only do that for GeoJSON.
 
 * The browser window's title and favicon can now be configured
   using the two parameters
-  - `windowTitle` - a string
-  - `windowIcon` - abs. or rel. URL to `*.ico` icon file
+    - `windowTitle` - a string
+    - `windowIcon` - abs. or rel. URL to `*.ico` icon file
 
-* Color bar management has been slightly improved:  
-  - Color bars can now be reversed.
-  - Color bar in the legend is now rendered according to the current
-    settings "Hide small values", "Reverse", and "Opacity".
-  
+* Color bar management has been slightly improved:
+    - Color bars can now be reversed.
+    - Color bar in the legend is now rendered according to the current
+      settings "Hide small values", "Reverse", and "Opacity".
+
 ### Fixes
 
 * Fixed user places disappearing after map projection change (#247).
