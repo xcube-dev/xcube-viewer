@@ -25,7 +25,7 @@
 import { connect } from 'react-redux';
 import {
     selectedDatasetSelector,
-    selectedPlaceInfoSelector,
+    selectedPlaceInfoSelector, selectedServerSelector,
     selectedVariableColorBarSelector,
     selectedVariableSelector,
     selectedVolumeIdSelector,
@@ -48,6 +48,7 @@ const mapStateToProps = (state: AppState) => {
         volumeRenderMode: state.controlState.volumeRenderMode,
         volumeId: selectedVolumeIdSelector(state),
         volumeStates: state.controlState.volumeStates,
+        serverUrl: selectedServerSelector(state).url
     }
 };
 

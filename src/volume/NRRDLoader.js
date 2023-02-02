@@ -140,14 +140,14 @@ class NRRDLoader extends Loader {
                 _dataPointer += chunks * _chunkSize));
 
             // if required, flip the endianness of the bytes
-            if (_nativeLittleEndian != _littleEndian) {
+            if (_nativeLittleEndian !== _littleEndian) {
 
                 // we need to flip here since the format doesn't match the native endianness
                 _bytes = flipEndianness(_bytes, _chunkSize);
 
             }
 
-            if (chunks == 1) {
+            if (chunks === 1) {
 
                 // if only one chunk was requested, just return one value
                 return _bytes[0];
@@ -325,7 +325,7 @@ class NRRDLoader extends Loader {
         let i;
         for (i = 1; i < _length; i++) {
 
-            if (_bytes[i - 1] == 10 && _bytes[i] == 10) {
+            if (_bytes[i - 1] === 10 && _bytes[i] === 10) {
 
                 // we found two line breaks in a row
                 // now we know what the header is
@@ -461,9 +461,7 @@ class NRRDLoader extends Loader {
                 0, 0, 0, 1
             );
 
-            const transition_to_ras = new Matrix4().multiplyMatrices(ijk_to_transition, transitionMatrix);
-
-            volume.matrix = transition_to_ras;
+            volume.matrix = new Matrix4().multiplyMatrices(ijk_to_transition, transitionMatrix);
 
         }
 
@@ -506,7 +504,7 @@ class NRRDLoader extends Loader {
 
         let output = '';
         // create and append the chars
-        let i = 0;
+        let i;
         for (i = start; i < end; ++i) {
 
             output += String.fromCharCode(array[i]);

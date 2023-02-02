@@ -23,21 +23,21 @@
  */
 
 import React from 'react';
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
-import { BBox, Position } from "geojson";
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import { BBox, Position } from 'geojson';
 
 // import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { PlaceInfo } from '../model/place';
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
-import { VolumeRenderMode, VolumeState, VolumeStates } from "../states/controlState";
-import { VolumeOptions, VolumeScene } from "../volume/VolumeScene";
-import { Volume } from "../volume/Volume";
-import { NRRDLoader } from "../volume/NRRDLoader";
-import { ColorBar } from "../model/colorBar";
+import { VolumeRenderMode, VolumeState, VolumeStates } from '../states/controlState';
+import { VolumeOptions, VolumeScene } from '../volume/VolumeScene';
+import { Volume } from '../volume/Volume';
+import { NRRDLoader } from '../volume/NRRDLoader';
+import { ColorBar } from '../model/colorBar';
 
 interface VolumeCanvasProps extends WithLocale {
     selectedDataset: Dataset | null;
@@ -49,6 +49,7 @@ interface VolumeCanvasProps extends WithLocale {
     volumeIsoThreshold: number;
     volumeStates: VolumeStates;
     updateVolumeState: (volumeId: string, volumeState: VolumeState) => any;
+    serverUrl: string;
 }
 
 const CANVAS_STYLE: React.CSSProperties = {
@@ -60,17 +61,26 @@ const MESSAGE_STYLE: React.CSSProperties = {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    margin: '0.5em'
-};
-
-const LOAD_STYLE: React.CSSProperties = {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
     margin: '1em',
     flexDirection: 'column',
     alignItems: 'center'
 };
+
+const HINT_STYLE: React.CSSProperties = {
+    color: "orange",
+    position: "absolute",
+    bottom: 8,
+    right: 8,
+    zIndex: 10
+};
+
+const HINT_ELEMENT = (
+        <Typography variant="body2" style={HINT_STYLE}>
+            Press LMB to rotate, plus CTRL-key to shift.
+        </Typography>
+);
+
+const DIV_STYLE: React.CSSProperties = {position: "relative"};
 
 const volumeCache: { [volumeId: string]: Volume } = {};
 
@@ -90,8 +100,8 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
     private static getVolumeOptions(props: Readonly<VolumeCanvasProps>): VolumeOptions {
         const {selectedVariable, variableColorBar, volumeIsoThreshold, volumeRenderMode} = props;
         return {
-            value1: !!selectedVariable ? selectedVariable.colorBarMin:0,
-            value2: !!selectedVariable ? selectedVariable.colorBarMax:1,
+            value1: !!selectedVariable ? selectedVariable.colorBarMin : 0,
+            value2: !!selectedVariable ? selectedVariable.colorBarMax : 1,
             renderMode: volumeRenderMode,
             isoThreshold: volumeIsoThreshold,
             colorBar: variableColorBar,
@@ -133,21 +143,21 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                     }
                 }
                 const noCacheArg = `dummy=${new Date().toLocaleTimeString()}`;
-                const url = 'http://127.0.0.1:8080/volumes/'
-                    + `${selectedDataset.id}/${selectedVariable.name}`
-                    + `?${noCacheArg}${bboxArg}`;
+                const url = `${this.props.serverUrl}/volumes/`
+                            + `${selectedDataset.id}/${selectedVariable.name}`
+                            + `?${noCacheArg}${bboxArg}`;
                 new NRRDLoader().load(
-                    url,
-                    (volume: Volume) => {
-                        updateVolumeState(volumeId, {status: 'ok'});
-                        volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
-                        volumeCache[volumeId] = volume;
-                    },
-                    () => {
-                    },
-                    (e: any) => {
-                        updateVolumeState(volumeId, {status: 'error', message: `${e}`});
-                    }
+                        url,
+                        (volume: Volume) => {
+                            volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
+                            volumeCache[volumeId] = volume;
+                            updateVolumeState(volumeId, {status: 'ok'});
+                        },
+                        () => {
+                        },
+                        (e: any) => {
+                            updateVolumeState(volumeId, {status: 'error', message: `${e}`});
+                        }
                 );
             }
         }
@@ -161,37 +171,33 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         let loadComp;
         if (!volumeId) {
             /*TODO: I18N*/
-            messageComp = (
-                <>
-                    <Typography variant={"subtitle2"}>
-                        {'Cannot display 3D volume'}
-                    </Typography>
-                    <Typography variant="body2">
-                        {'To display a volume, a variable and a place that represents an area must be selected. ' +
-                         'Please note that the 3D volume rendering is still an experimental feature.'}
-                    </Typography>
-                </>
-            );
+            messageComp = [
+                <Typography variant={'subtitle2'}>
+                    {'Cannot display 3D volume'}
+                </Typography>,
+                <Typography variant="body2">
+                    {'To display a volume, a variable and a place that represents an area must be selected. ' +
+                     'Please note that the 3D volume rendering is still an experimental feature.'}
+                </Typography>
+            ];
         } else {
             const volumeState = this.props.volumeStates[volumeId];
-            console.log("volumeState:", volumeState, volumeCache)
+            console.log('volumeState:', volumeState, volumeCache)
 
             if (!volumeState || volumeState.status === 'error' || !volumeCache[volumeId]) {
                 /*TODO: I18N*/
-                loadComp = (
-                    <div style={LOAD_STYLE}>
-                        <Button
+                loadComp = [
+                    <Button
                             onClick={this.handleLoadVolume}
-                            color='primary'
+                            color="primary"
                             disabled={!!volumeState && volumeState.status === 'loading'}
-                        >
-                            {'Load Volume Data'}
-                        </Button>
-                        <Typography variant="body2">
-                            {'Please note that the 3D volume rendering is still an experimental feature.'}
-                        </Typography>
-                    </div>
-                );
+                    >
+                        {'Load Volume Data'}
+                    </Button>,
+                    <Typography variant="body2">
+                        {'Please note that the 3D volume rendering is still an experimental feature.'}
+                    </Typography>
+                ];
             }
 
             if (volumeState) {
@@ -200,34 +206,34 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 } else if (volumeState.status === 'error') {
                     /*TODO: I18N*/
                     messageComp = (
-                        <Typography variant="body2">
-                            {`Failed loading volume: ${volumeState.message}`}
-                        </Typography>
+                            <Typography variant="body2">
+                                {`Failed loading volume: ${volumeState.message}`}
+                            </Typography>
                     );
                 }
             }
         }
 
         if (messageComp) {
-            messageComp = (
-                <div style={MESSAGE_STYLE}>
-                    {messageComp}
-                </div>
-            );
+            messageComp = (<div style={MESSAGE_STYLE}>{messageComp}</div>);
+        }
+        if (loadComp) {
+            loadComp = (<div style={MESSAGE_STYLE}>{loadComp}</div>);
         }
 
         // Note, it is important to always have the canvas element
         // rendered here, so it is not remounted.
         return (
-            <>
-                {messageComp}
-                {loadComp}
-                <canvas
-                    id={"VolumeCanvas-canvas"}
-                    ref={this.canvasRef}
-                    style={CANVAS_STYLE}
-                />
-            </>
+                <div style={DIV_STYLE}>
+                    {messageComp}
+                    {loadComp}
+                    <canvas
+                            id={'VolumeCanvas-canvas'}
+                            ref={this.canvasRef}
+                            style={CANVAS_STYLE}
+                    />
+                    {!messageComp && !loadComp && HINT_ELEMENT}
+                </div>
         );
     }
 

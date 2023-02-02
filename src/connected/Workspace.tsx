@@ -37,66 +37,66 @@ import Viewer from './Viewer';
 import TimeSeriesCharts from './TimeSeriesCharts';
 import VolumeCard from './VolumeCard';
 import InfoCard from './InfoCard';
-import SplitPane from "../components/SplitPane";
+import SplitPane from '../components/SplitPane';
 
 
 // Adjust for debugging split pane style
 const mapExtraStyle: React.CSSProperties = {padding: 0};
 
 const styles = (theme: Theme) => createStyles(
-    {
+        {
 
-        splitPaneHor: {
-            flexGrow: 1,
-            overflow: "hidden",
-        },
-        splitPaneVer: {
-            flexGrow: 1,
-            overflowX: "hidden",
-            overflowY: "auto"
-        },
+            splitPaneHor: {
+                flexGrow: 1,
+                overflow: 'hidden',
+            },
+            splitPaneVer: {
+                flexGrow: 1,
+                overflowX: 'hidden',
+                overflowY: 'auto'
+            },
 
-        mapPaneHor: {
-            height: "100%",
-            overflow: "hidden",
-            ...mapExtraStyle
-        },
-        mapPaneVer: {
-            width: "100%",
-            overflow: "hidden",
-            ...mapExtraStyle
-        },
+            mapPaneHor: {
+                height: '100%',
+                overflow: 'hidden',
+                ...mapExtraStyle
+            },
+            mapPaneVer: {
+                width: '100%',
+                overflow: 'hidden',
+                ...mapExtraStyle
+            },
 
-        detailsPaneHor: {
-            flex: "auto",
-            overflowX: "hidden",
-            overflowY: "auto",
-        },
-        detailsPaneVer: {
-            width: '100%',
-            overflow: "hidden",
-        },
+            detailsPaneHor: {
+                flex: 'auto',
+                overflowX: 'hidden',
+                overflowY: 'auto',
+            },
+            detailsPaneVer: {
+                width: '100%',
+                overflow: 'hidden',
+            },
 
-        viewerContainer: {
-            overflow: 'hidden',
-            width: '100%',
-            height: '100%',
-        },
-    });
+            viewerContainer: {
+                overflow: 'hidden',
+                width: '100%',
+                height: '100%',
+            },
+        });
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
-    hasVolumeCard: boolean;
     hasInfoCard: boolean;
+    hasVolumeCard: boolean;
     hasTimeseries: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
     const hasDatasets = state.controlState.selectedDatasetId !== null
-        && state.dataState.datasets.length > 0;
+                        && state.dataState.datasets.length > 0;
     return {
-        hasVolumeCard: state.controlState.volumeCardOpen && hasDatasets,
         hasInfoCard: state.controlState.infoCardOpen && hasDatasets,
+        hasVolumeCard: state.controlState.volumeCardOpen && hasDatasets,
         hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
     };
 };
@@ -104,15 +104,15 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {};
 
 
-type Layout = "hor" | "ver";
+type Layout = 'hor' | 'ver';
 const getLayout = (): Layout => {
-    return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
+    return window.innerWidth / window.innerHeight >= 1 ? 'hor' : 'ver';
 };
 
 const Workspace: React.FC<WorkspaceProps> = ({
                                                  classes,
-                                                 hasVolumeCard,
                                                  hasInfoCard,
+                                                 hasVolumeCard,
                                                  hasTimeseries
                                              }) => {
     const [map, setMap] = React.useState<OlMap | null>(null);
@@ -133,32 +133,32 @@ const Workspace: React.FC<WorkspaceProps> = ({
         }
     }
 
-    if (hasInfoCard || hasTimeseries) {
-        const splitPaneClassName = layout === "hor" ? classes.splitPaneHor : classes.splitPaneVer;
-        const mapPaneClassName = layout === "hor" ? classes.mapPaneHor : classes.mapPaneVer;
-        const detailsPaneClassName = layout === "hor" ? classes.detailsPaneHor : classes.detailsPaneVer;
+    if (hasInfoCard || hasVolumeCard || hasTimeseries) {
+        const splitPaneClassName = layout === 'hor' ? classes.splitPaneHor : classes.splitPaneVer;
+        const mapPaneClassName = layout === 'hor' ? classes.mapPaneHor : classes.mapPaneVer;
+        const detailsPaneClassName = layout === 'hor' ? classes.detailsPaneHor : classes.detailsPaneVer;
         return (
-            <SplitPane
-                dir={layout}
-                initialSize={Math.max(window.innerWidth, window.innerHeight) / 2}
-                onChange={handleResize}
-                className={splitPaneClassName}
-                child1ClassName={mapPaneClassName}
-                child2ClassName={detailsPaneClassName}
-            >
-                <Viewer onMapRef={setMap}/>
-                <div>
-                    <InfoCard/>
-                    <VolumeCard/>
-                    <TimeSeriesCharts/>
-                </div>
-            </SplitPane>
+                <SplitPane
+                        dir={layout}
+                        initialSize={Math.max(window.innerWidth, window.innerHeight) / 2}
+                        onChange={handleResize}
+                        className={splitPaneClassName}
+                        child1ClassName={mapPaneClassName}
+                        child2ClassName={detailsPaneClassName}
+                >
+                    <Viewer onMapRef={setMap}/>
+                    <div>
+                        <InfoCard/>
+                        <VolumeCard/>
+                        <TimeSeriesCharts/>
+                    </div>
+                </SplitPane>
         );
     } else {
         return (
-            <div className={classes.viewerContainer}>
-                <Viewer onMapRef={setMap}/>
-            </div>
+                <div className={classes.viewerContainer}>
+                    <Viewer onMapRef={setMap}/>
+                </div>
         );
     }
 };

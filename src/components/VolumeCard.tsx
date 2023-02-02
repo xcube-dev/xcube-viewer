@@ -40,43 +40,42 @@ import { Dataset } from '../model/dataset';
 import { PlaceInfo } from '../model/place';
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
-import { VolumeRenderMode, VolumeState, VolumeStates } from "../states/controlState";
-import VolumeCanvas from "./VolumeCanvas";
-import TextField from "@mui/material/TextField";
-import Slider from "@mui/material/Slider";
-import { ColorBar } from "../model/colorBar";
-import { Typography } from '@mui/material';
+import { VolumeRenderMode, VolumeState, VolumeStates } from '../states/controlState';
+import VolumeCanvas from './VolumeCanvas';
+import TextField from '@mui/material/TextField';
+import Slider from '@mui/material/Slider';
+import { ColorBar } from '../model/colorBar';
 // import i18n from '../i18n';
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
-    {
-        card: {
-            maxWidth: '100%',
-            marginBottom: theme.spacing(1),
-            marginRight: theme.spacing(1),
-        },
-        info: {
-            marginRight: theme.spacing(1),
-        },
-        close: {
-            marginLeft: 'auto',
-        },
-        cardContent: {
-            padding: 8,
-        },
-        isoEditor: {
-            display: 'flex',
-            flexDirection: 'row'
-        },
-        isoTextField: {
-            minWidth: '16em',
-            marginLeft: '1em'
-        },
-        isoSlider: {
-            minWidth: 200,
-        },
-    }
+        {
+            card: {
+                maxWidth: '100%',
+                marginBottom: theme.spacing(1),
+                marginRight: theme.spacing(1),
+            },
+            info: {
+                marginRight: theme.spacing(1),
+            },
+            close: {
+                marginLeft: 'auto',
+            },
+            cardContent: {
+                padding: 8,
+            },
+            isoEditor: {
+                display: 'flex',
+                flexDirection: 'row'
+            },
+            isoTextField: {
+                minWidth: '16em',
+                marginLeft: '1em'
+            },
+            isoSlider: {
+                minWidth: 200,
+            },
+        }
 ));
 
 
@@ -93,12 +92,13 @@ interface VolumeCardProps extends WithLocale {
     volumeStates: VolumeStates;
     updateVolumeState: (volumeId: string, volumeState: VolumeState) => any;
     updateVariableVolume: (
-        datasetId: string,
-        variableName: string,
-        variableColorBar: ColorBar,
-        volumeRenderMode: VolumeRenderMode,
-        volumeIsoThreshold: number,
+            datasetId: string,
+            variableName: string,
+            variableColorBar: ColorBar,
+            volumeRenderMode: VolumeRenderMode,
+            volumeIsoThreshold: number,
     ) => any;
+    serverUrl: string;
 }
 
 const VolumeCard: React.FC<VolumeCardProps> = ({
@@ -114,6 +114,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
                                                    volumeStates,
                                                    updateVolumeState,
                                                    updateVariableVolume,
+                                                   serverUrl
                                                }) => {
 
     const classes = useStyles();
@@ -137,11 +138,11 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
 
     const setVolumeIsoThreshold = (volumeIsoThreshold: number) => {
         updateVariableVolume(
-            selectedDataset!.id,
-            selectedVariable!.name,
-            variableColorBar,
-            volumeRenderMode,
-            volumeIsoThreshold,
+                selectedDataset!.id,
+                selectedVariable!.name,
+                variableColorBar,
+                volumeRenderMode,
+                volumeIsoThreshold,
         );
     }
 
@@ -151,11 +152,11 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
             setVolumeRenderMode(volumeRenderMode);
             if (selectedVariable) {
                 updateVariableVolume(
-                    selectedDataset!.id,
-                    selectedVariable!.name,
-                    variableColorBar,
-                    volumeRenderMode,
-                    volumeIsoThreshold
+                        selectedDataset!.id,
+                        selectedVariable!.name,
+                        variableColorBar,
+                        volumeRenderMode,
+                        volumeIsoThreshold
                 );
             }
         }
@@ -166,74 +167,75 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
     };
 
     return (
-        <Card className={classes.card}>
-            <CardActions disableSpacing>
-                <VolumeIcon fontSize={'large'} className={classes.info}/>
-                {selectedVariable && (
-                    <>
-                        <ToggleButtonGroup
-                            key={0}
-                            size="small"
-                            exclusive={true}
-                            value={volumeRenderMode}
-                            onChange={handleVolumeRenderModeChange}
-                        >
-                            <ToggleButton
-                                key="mip"
-                                value="mip"
-                            >
-                                {/*TODO: I18N*/}
-                                <Tooltip arrow title={'Maximum intensity projection'}>
-                                    <span>MIP</span>
-                                </Tooltip>
-                            </ToggleButton>
-                            <ToggleButton
-                                key="aip"
-                                value="aip"
-                            >
-                                {/*TODO: I18N*/}
-                                <Tooltip arrow title={'Average intensity projection'}>
-                                    <span>AIP</span>
-                                </Tooltip>
-                            </ToggleButton>
-                            <ToggleButton
-                                key="iso"
-                                value="iso"
-                            >
-                                {/*TODO: I18N*/}
-                                <Tooltip arrow title={'Iso-surface extraction'}>
-                                    <span>ISO</span>
-                                </Tooltip>
-                            </ToggleButton>
-                        </ToggleButtonGroup>
-                        {volumeRenderMode === 'iso' && (
-                            <IsoThresholdEditor
-                                minValue={selectedVariable.colorBarMin}
-                                maxValue={selectedVariable.colorBarMax}
-                                value={volumeIsoThreshold}
-                                setValue={setVolumeIsoThreshold}
-                            />
-                        )}
-                    </>
-                )}
-                <IconButton key={1} onClick={handleVolumeCardClose} className={classes.close}>
-                    {<CloseIcon/>}
-                </IconButton>
-            </CardActions>
-            <CardContent className={classes.cardContent}>
-                <VolumeCanvas
-                    selectedDataset={selectedDataset}
-                    selectedVariable={selectedVariable}
-                    selectedPlaceInfo={selectedPlaceInfo}
-                    variableColorBar={variableColorBar}
-                    volumeRenderMode={volumeRenderMode}
-                    volumeIsoThreshold={volumeIsoThreshold}
-                    volumeId={volumeId}
-                    volumeStates={volumeStates}
-                    updateVolumeState={updateVolumeState}
-                />
-            </CardContent>
-        </Card>
+            <Card className={classes.card}>
+                <CardActions disableSpacing>
+                    <VolumeIcon fontSize={'large'} className={classes.info}/>
+                    {selectedVariable && (
+                            <>
+                                <ToggleButtonGroup
+                                        key={0}
+                                        size="small"
+                                        exclusive={true}
+                                        value={volumeRenderMode}
+                                        onChange={handleVolumeRenderModeChange}
+                                >
+                                    <ToggleButton
+                                            key="mip"
+                                            value="mip"
+                                    >
+                                        {/*TODO: I18N*/}
+                                        <Tooltip arrow title={'Maximum intensity projection'}>
+                                            <span>MIP</span>
+                                        </Tooltip>
+                                    </ToggleButton>
+                                    <ToggleButton
+                                            key="aip"
+                                            value="aip"
+                                    >
+                                        {/*TODO: I18N*/}
+                                        <Tooltip arrow title={'Average intensity projection'}>
+                                            <span>AIP</span>
+                                        </Tooltip>
+                                    </ToggleButton>
+                                    <ToggleButton
+                                            key="iso"
+                                            value="iso"
+                                    >
+                                        {/*TODO: I18N*/}
+                                        <Tooltip arrow title={'Iso-surface extraction'}>
+                                            <span>ISO</span>
+                                        </Tooltip>
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                                {volumeRenderMode === 'iso' && (
+                                        <IsoThresholdEditor
+                                                minValue={selectedVariable.colorBarMin}
+                                                maxValue={selectedVariable.colorBarMax}
+                                                value={volumeIsoThreshold}
+                                                setValue={setVolumeIsoThreshold}
+                                        />
+                                )}
+                            </>
+                    )}
+                    <IconButton key={1} onClick={handleVolumeCardClose} className={classes.close}>
+                        {<CloseIcon/>}
+                    </IconButton>
+                </CardActions>
+                <CardContent className={classes.cardContent}>
+                    <VolumeCanvas
+                            selectedDataset={selectedDataset}
+                            selectedVariable={selectedVariable}
+                            selectedPlaceInfo={selectedPlaceInfo}
+                            variableColorBar={variableColorBar}
+                            volumeRenderMode={volumeRenderMode}
+                            volumeIsoThreshold={volumeIsoThreshold}
+                            volumeId={volumeId}
+                            volumeStates={volumeStates}
+                            updateVolumeState={updateVolumeState}
+                            serverUrl={serverUrl}
+                    />
+                </CardContent>
+            </Card>
     );
 };
 
@@ -251,13 +253,13 @@ interface IsoThresholdEditorProps {
 }
 
 const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = (
-    {
-        value,
-        minValue,
-        maxValue,
-        setValue,
-        disabled
-    }
+        {
+            value,
+            minValue,
+            maxValue,
+            setValue,
+            disabled
+        }
 ) => {
     const classes = useStyles();
     const [sliderValue, setSliderValue] = React.useState<number>(value);
@@ -270,17 +272,17 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = (
 
         const value = parseFloat(textValue);
         if (Number.isNaN(value)) {
-            setError("Not a number")
+            setError('Not a number')
         } else if (value < minValue || value > maxValue) {
-            setError("Out of range");
+            setError('Out of range');
         } else {
             setError(null);
         }
     }
 
     function handleTextFieldKeyPress(evt: React.KeyboardEvent<HTMLDivElement>) {
-        console.log("key", evt.key)
-        if (evt.key === "Enter" && !error) {
+        console.log('key', evt.key)
+        if (evt.key === 'Enter' && !error) {
             const value = parseFloat(textValue);
             setSliderValue(value);
             setValue(value);
@@ -297,30 +299,30 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = (
     }
 
     return (
-        <TextField
-            className={classes.isoTextField}
-            disabled={disabled}
-            label="Iso-Threshold"
-            variant="filled"
-            size="small"
-            value={textValue}
-            error={error !== null}
-            onChange={handleTextValueChange}
-            onKeyPress={handleTextFieldKeyPress}
-            InputProps={{
-                endAdornment: (
-                    <Slider
-                        size={"small"}
-                        className={classes.isoSlider}
-                        min={minValue}
-                        max={maxValue}
-                        value={sliderValue}
-                        step={(maxValue - minValue) / 20}
-                        onChange={handleSliderValueChanged}
-                        onChangeCommitted={handleSliderValueCommitted}
-                    />
-                )
-            }}
-        />
+            <TextField
+                    className={classes.isoTextField}
+                    disabled={disabled}
+                    label="Iso-Threshold"
+                    variant="filled"
+                    size="small"
+                    value={textValue}
+                    error={error !== null}
+                    onChange={handleTextValueChange}
+                    onKeyPress={handleTextFieldKeyPress}
+                    InputProps={{
+                        endAdornment: (
+                                <Slider
+                                        size={'small'}
+                                        className={classes.isoSlider}
+                                        min={minValue}
+                                        max={maxValue}
+                                        value={sliderValue}
+                                        step={(maxValue - minValue) / 20}
+                                        onChange={handleSliderValueChanged}
+                                        onChangeCommitted={handleSliderValueCommitted}
+                                />
+                        )
+                    }}
+            />
     );
 };
