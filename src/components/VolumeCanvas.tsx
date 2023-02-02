@@ -67,7 +67,9 @@ const LOAD_STYLE: React.CSSProperties = {
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    margin: '1em'
+    margin: '1em',
+    flexDirection: 'column',
+    alignItems: 'center'
 };
 
 const volumeCache: { [volumeId: string]: Volume } = {};
@@ -165,12 +167,14 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                         {'Cannot display 3D volume'}
                     </Typography>
                     <Typography variant="body2">
-                        {'To display a volume, a variable and a place that represents an area must be selected.'}
+                        {'To display a volume, a variable and a place that represents an area must be selected. ' +
+                         'Please note that the 3D volume rendering is still an experimental feature.'}
                     </Typography>
                 </>
             );
         } else {
             const volumeState = this.props.volumeStates[volumeId];
+            console.log("volumeState:", volumeState, volumeCache)
 
             if (!volumeState || volumeState.status === 'error' || !volumeCache[volumeId]) {
                 /*TODO: I18N*/
@@ -183,6 +187,9 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                         >
                             {'Load Volume Data'}
                         </Button>
+                        <Typography variant="body2">
+                            {'Please note that the 3D volume rendering is still an experimental feature.'}
+                        </Typography>
                     </div>
                 );
             }
@@ -200,7 +207,6 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 }
             }
         }
-
 
         if (messageComp) {
             messageComp = (

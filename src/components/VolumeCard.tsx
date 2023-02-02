@@ -45,6 +45,7 @@ import VolumeCanvas from "./VolumeCanvas";
 import TextField from "@mui/material/TextField";
 import Slider from "@mui/material/Slider";
 import { ColorBar } from "../model/colorBar";
+import { Typography } from '@mui/material';
 // import i18n from '../i18n';
 
 

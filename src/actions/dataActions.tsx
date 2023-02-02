@@ -73,7 +73,6 @@ import {
     SelectPlaceGroups,
     UpdateSettings,
 } from './controlActions';
-import { MessageLogAction, postMessage } from './messageLogActions';
 import { VolumeRenderMode } from "../states/controlState";
 import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
 

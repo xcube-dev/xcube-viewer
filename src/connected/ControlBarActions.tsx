@@ -26,10 +26,14 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
 import ControlBarActions from '../components/ControlBarActions';
-import { flyToSelectedObject, openDialog, showInfoCard, showVolumeCard } from '../actions/controlActions';
-import { showInfoCard, flyToSelectedObject, openDialog } from '../actions/controlActions';
-import { Config } from "../config";
-import { updateResources } from "../actions/dataActions";
+import {
+    flyToSelectedObject,
+    openDialog,
+    showInfoCard,
+    showVolumeCard,
+} from '../actions/controlActions';
+import { Config } from '../config';
+import { updateResources } from '../actions/dataActions';
 
 const mapStateToProps = (state: AppState) => {
     return {

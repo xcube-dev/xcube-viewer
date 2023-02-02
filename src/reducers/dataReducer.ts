@@ -29,33 +29,23 @@ import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
 import {
     DataAction,
-    CONFIGURE_SERVERS,
     ADD_USER_PLACE,
-    CONFIGURE_SERVERS,
-    DataAction,
-    REMOVE_ALL_TIME_SERIES,
-    REMOVE_ALL_USER_PLACES,
     ADD_USER_PLACES,
+    CONFIGURE_SERVERS,
     REMOVE_ALL_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
-    REMOVE_USER_PLACE,
     UPDATE_COLOR_BARS,
     UPDATE_DATASET_PLACE_GROUP,
     UPDATE_DATASETS,
-    UPDATE_SERVER_INFO,
     UPDATE_TIME_SERIES,
-    UPDATE_VARIABLE_COLOR_BAR, UPDATE_VARIABLE_VOLUME
-    UPDATE_TIME_SERIES,
-    UPDATE_DATASET_PLACE_GROUP,
     REMOVE_USER_PLACE,
     REMOVE_ALL_USER_PLACES,
     UPDATE_SERVER_INFO,
     UPDATE_VARIABLE_COLOR_BAR,
+    UPDATE_VARIABLE_VOLUME
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
-import { Place } from "../model/place";
-import { TimeSeries, TimeSeriesGroup } from "../model/timeSeries";
 import { Variable } from "../model/variable";
 import { Place } from '../model/place';
 import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
@@ -149,7 +139,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 let timeSeriesGroups = state.timeSeriesGroups;
                 timeSeriesArray.forEach(ts => {
                     timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                                                              ts, 'remove', 'append');
+                        ts, 'remove', 'append');
                 });
                 return {
                     ...state,
@@ -168,7 +158,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             let timeSeriesGroups = state.timeSeriesGroups;
             timeSeriesArray.forEach(ts => {
                 timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                                                          ts, 'remove', 'append');
+                    ts, 'remove', 'append');
             });
             return {
                 ...state,
@@ -182,7 +172,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
         case UPDATE_TIME_SERIES: {
             const {timeSeries, updateMode, dataMode} = action;
             const timeSeriesGroups = updateTimeSeriesGroups(state.timeSeriesGroups,
-                                                            timeSeries, updateMode, dataMode);
+                timeSeries, updateMode, dataMode);
             if (timeSeriesGroups !== state.timeSeriesGroups) {
                 return {...state, timeSeriesGroups};
             }
@@ -273,8 +263,8 @@ function updateTimeSeriesGroups(timeSeriesGroups: TimeSeriesGroup[],
         const timeSeriesGroup = timeSeriesGroups[tsgIndex];
         const timeSeriesArray = timeSeriesGroup.timeSeriesArray;
         const tsIndex = timeSeriesArray.findIndex(ts => ts.source.datasetId === currentTimeSeries.source.datasetId
-                                                        && ts.source.variableName === currentTimeSeries.source.variableName
-                                                        && ts.source.placeId === currentTimeSeries.source.placeId);
+            && ts.source.variableName === currentTimeSeries.source.variableName
+            && ts.source.placeId === currentTimeSeries.source.placeId);
         let newTimeSeriesArray;
         if (tsIndex >= 0) {
             const oldTimeSeries = timeSeriesArray[tsIndex];
