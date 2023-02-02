@@ -30,6 +30,10 @@
       Default color is "red".
     - validating also CSV and WKT in dialog, currently we only do that for GeoJSON.
 
+* Added an experimental function that allows for rendering 
+  a 3D data volume. It utilizes the new experimental xcube Server 
+  endpoint `/volumes/{datasetId}/{variableName}`.
+
 * The browser window's title and favicon can now be configured
   using the two parameters
     - `windowTitle` - a string
