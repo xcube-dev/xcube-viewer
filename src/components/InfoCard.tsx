@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -42,7 +43,7 @@ import TableRow from '@mui/material/TableRow';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import CodeIcon from '@mui/icons-material/Code';
+import JsonIcon from '@mui/icons-material/DataObject';
 import InfoIcon from '@mui/icons-material/Info';
 import LayersIcon from '@mui/icons-material/Layers';
 import ListAltIcon from '@mui/icons-material/ListAlt';
@@ -51,13 +52,22 @@ import TextFieldsIcon from '@mui/icons-material/TextFields';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import React from 'react';
+import CodeMirror from '@uiw/react-codemirror';
+import { json } from '@codemirror/lang-json';
+import { python } from '@codemirror/lang-python';
 import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { PlaceInfo } from '../model/place';
 import { Variable } from '../model/variable';
 import { WithLocale } from '../util/lang';
+import pythonLogo from '../resources/python-bw.png'
+import { ApiServerConfig } from "../model/apiServer";
+import { Config } from "../config";
+import { Extension } from "@codemirror/state";
+import { Time } from "../model/timeSeries";
+import { utcTimeToIsoDateTimeString } from '../util/time';
 
+type ViewMode = 'text' | 'list' | 'code' | 'python';
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
@@ -100,11 +110,14 @@ interface InfoCardProps extends WithLocale {
     showInfoCard: (infoCardOpen: boolean) => void;
     visibleInfoCardElements: string[];
     setVisibleInfoCardElements: (visibleInfoCardElements: string[]) => void;
-    infoCardElementViewModes: { [elementType: string]: string };
-    updateInfoCardElementViewMode: (elementType: string, viewMode: string) => void;
+    infoCardElementViewModes: { [elementType: string]: ViewMode };
+    updateInfoCardElementViewMode: (elementType: string, viewMode: ViewMode) => void;
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
     selectedPlaceInfo: PlaceInfo | null;
+    selectedTime: Time | null;
+    serverConfig: ApiServerConfig;
+    allowViewModePython: boolean;
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -117,6 +130,9 @@ const InfoCard: React.FC<InfoCardProps> = ({
                                                selectedDataset,
                                                selectedVariable,
                                                selectedPlaceInfo,
+                                               selectedTime,
+                                               serverConfig,
+                                               allowViewModePython
                                            }) => {
     const classes = useStyles();
 
@@ -139,20 +155,23 @@ const InfoCard: React.FC<InfoCardProps> = ({
     if (selectedDataset) {
         const elementType = 'dataset';
         const viewMode = infoCardElementViewModes[elementType];
-        const setViewMode = (viewMode: string) => updateInfoCardElementViewMode(elementType, viewMode);
+        const setViewMode = (viewMode: ViewMode) => updateInfoCardElementViewMode(elementType, viewMode);
         const isVisible = visibleInfoCardElements.includes(elementType);
         datasetInfoContent = (
             <DatasetInfoContent
                 isIn={isVisible}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
-                dataset={selectedDataset}/>
+                dataset={selectedDataset}
+                serverConfig={serverConfig}
+                hasPython={allowViewModePython}
+            />
         );
     }
-    if (selectedVariable) {
+    if (selectedDataset && selectedVariable) {
         const elementType = 'variable';
         const viewMode = infoCardElementViewModes[elementType];
-        const setViewMode = (viewMode: string) => updateInfoCardElementViewMode(elementType, viewMode);
+        const setViewMode = (viewMode: ViewMode) => updateInfoCardElementViewMode(elementType, viewMode);
         const isVisible = visibleInfoCardElements.includes(elementType);
         variableInfoContent = (
             <VariableInfoContent
@@ -160,20 +179,24 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 viewMode={viewMode}
                 setViewMode={setViewMode}
                 variable={selectedVariable}
+                time={selectedTime}
+                serverConfig={serverConfig}
+                hasPython={allowViewModePython}
             />
         );
     }
     if (selectedPlaceInfo) {
         const elementType = 'place';
         const viewMode = infoCardElementViewModes[elementType];
-        const setViewMode = (viewMode: string) => updateInfoCardElementViewMode(elementType, viewMode);
+        const setViewMode = (viewMode: ViewMode) => updateInfoCardElementViewMode(elementType, viewMode);
         const isVisible = visibleInfoCardElements.includes(elementType);
         placeInfoContent = (
             <PlaceInfoContent
                 isIn={isVisible}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
-                placeInfo={selectedPlaceInfo}/>
+                placeInfo={selectedPlaceInfo}
+            />
         );
     }
 
@@ -184,7 +207,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
                 <ToggleButtonGroup key={0} size="small" value={visibleInfoCardElements}
                                    onChange={handleInfoElementsChanges}>
                     <ToggleButton key={0} value="dataset" disabled={selectedDataset === null}>
-                        <Tooltip arrow  title={i18n.get('Dataset information')}>
+                        <Tooltip arrow title={i18n.get('Dataset information')}>
                             <WidgetsIcon/>
                         </Tooltip>
                     </ToggleButton>
@@ -220,22 +243,31 @@ export default InfoCard;
 
 interface DatasetInfoContentProps {
     isIn: boolean;
-    viewMode: string;
-    setViewMode: (viewMode: string) => void;
+    viewMode: ViewMode;
+    setViewMode: (viewMode: ViewMode) => void;
     dataset: Dataset;
+    serverConfig: ApiServerConfig;
+    hasPython: boolean;
 }
 
-const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, setViewMode, dataset}) => {
-    const classes = useStyles();
+const DatasetInfoContent: React.FC<DatasetInfoContentProps> = (
+    {
+        isIn,
+        viewMode,
+        setViewMode,
+        dataset,
+        serverConfig,
+        hasPython
+    }
+) => {
+    // const classes = useStyles();
     let content;
     if (viewMode === 'code') {
         const jsonDimensions = selectObj(dataset.dimensions, ['name', 'size', 'dtype']);
         const jsonDataset = selectObj(dataset, ['id', 'title', 'bbox', 'attrs']);
         jsonDataset['dimensions'] = jsonDimensions;
         content = (
-            <CardContent2>
-                <Typography className={classes.code}>{JSON.stringify(jsonDataset, null, 2)}</Typography>
-            </CardContent2>
+            <JsonCodeContent code={JSON.stringify(jsonDataset, null, 2)}/>
         );
     } else if (viewMode === 'list') {
         content = (
@@ -245,7 +277,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
                 />
             </CardContent2>
         );
-    } else {
+    } else if (viewMode === 'text') {
         const data: KeyValue[] = [
             [i18n.get('Dimension names'), dataset.dimensions.map(d => d.name).join(', ')],
             [i18n.get('Dimension data types'), dataset.dimensions.map(d => d.dtype).join(', ')],
@@ -258,6 +290,10 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
                 <KeyValueTable data={data}/>
             </CardContent2>
         );
+    } else if (viewMode === 'python') {
+        content = (
+            <PythonCodeContent code={getDatasetPythonCode(serverConfig, dataset)}/>
+        );
     }
     return (
         <InfoCardContent
@@ -266,6 +302,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
             isIn={isIn}
             viewMode={viewMode}
             setViewMode={setViewMode}
+            hasPython={hasPython}
         >
             {content}
         </InfoCardContent>
@@ -277,12 +314,25 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({isIn, viewMode, 
 
 interface VariableInfoContentProps {
     isIn: boolean;
-    viewMode: string;
-    setViewMode: (viewMode: string) => void;
+    viewMode: ViewMode;
+    setViewMode: (viewMode: ViewMode) => void;
     variable: Variable;
+    time: Time | null,
+    serverConfig: ApiServerConfig;
+    hasPython: boolean;
 }
 
-const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode, setViewMode, variable}) => {
+const VariableInfoContent: React.FC<VariableInfoContentProps> = (
+    {
+        isIn,
+        viewMode,
+        setViewMode,
+        variable,
+        time,
+        serverConfig,
+        hasPython
+    }
+) => {
     const classes = useStyles();
     let content;
     let htmlReprPaper;
@@ -296,9 +346,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
             'attrs'
         ]);
         content = (
-            <CardContent2>
-                <Typography className={classes.code}>{JSON.stringify(jsonVariable, null, 2)}</Typography>
-            </CardContent2>
+            <JsonCodeContent code={JSON.stringify(jsonVariable, null, 2)}/>
         );
     } else if (viewMode === 'list') {
         content = (
@@ -320,7 +368,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
                 </CardContent2>
             );
         }
-    } else {
+    } else if (viewMode === 'text') {
         const data: KeyValue[] = [
             [i18n.get('Title'), variable.title],
             [i18n.get('Name'), variable.name],
@@ -335,6 +383,10 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
                 <KeyValueTable data={data}/>
             </CardContent2>
         );
+    } else if (viewMode === 'python') {
+        content = (
+            <PythonCodeContent code={getVariablePythonCode(serverConfig, variable, time)}/>
+        );
     }
     return (
         <InfoCardContent
@@ -343,6 +395,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
             isIn={isIn}
             viewMode={viewMode}
             setViewMode={setViewMode}
+            hasPython={hasPython}
         >
             {htmlReprPaper}
             {content}
@@ -354,12 +407,19 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({isIn, viewMode
 
 interface PlaceInfoContentProps {
     isIn: boolean;
-    viewMode: string;
-    setViewMode: (viewMode: string) => void;
+    viewMode: ViewMode;
+    setViewMode: (viewMode: ViewMode) => void;
     placeInfo: PlaceInfo;
 }
 
-const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setViewMode, placeInfo}) => {
+const PlaceInfoContent: React.FC<PlaceInfoContentProps> = (
+    {
+        isIn,
+        viewMode,
+        setViewMode,
+        placeInfo
+    }
+) => {
     const classes = useStyles();
     const place = placeInfo.place;
     let content;
@@ -367,9 +427,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({isIn, viewMode, setV
     let description;
     if (viewMode === 'code') {
         content = (
-            <CardContent2>
-                <Typography className={classes.code}>{JSON.stringify(place, null, 2)}</Typography>
-            </CardContent2>
+            <JsonCodeContent code={JSON.stringify(place, null, 2)}/>
         );
     } else if (viewMode === 'list') {
         if (!!place.properties) {
@@ -423,8 +481,9 @@ interface InfoCardContentProps {
     isIn: boolean;
     title: React.ReactNode;
     subheader?: React.ReactNode;
-    viewMode: string;
-    setViewMode: (viewMode: string) => void;
+    viewMode: ViewMode;
+    setViewMode: (viewMode: ViewMode) => void;
+    hasPython?: boolean;
 }
 
 const InfoCardContent: React.FC<InfoCardContentProps> = ({
@@ -433,10 +492,11 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                                                              subheader,
                                                              viewMode,
                                                              setViewMode,
+                                                             hasPython,
                                                              children,
                                                          }) => {
 
-    const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, viewMode: string) => {
+    const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, viewMode: ViewMode) => {
         setViewMode(viewMode);
     };
 
@@ -446,11 +506,13 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                 title={title}
                 subheader={subheader}
                 action={
-                    <ToggleButtonGroup key={0}
-                                       size="small"
-                                       value={viewMode}
-                                       exclusive={true}
-                                       onChange={handleViewModeChange}>
+                    <ToggleButtonGroup
+                        key={0}
+                        size="small"
+                        value={viewMode}
+                        exclusive={true}
+                        onChange={handleViewModeChange}
+                    >
                         <ToggleButton key={0} value="text">
                             <TextFieldsIcon/>
                         </ToggleButton>
@@ -458,8 +520,15 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                             <ListAltIcon/>
                         </ToggleButton>
                         <ToggleButton key={2} value="code">
-                            <CodeIcon/>
+                            <JsonIcon/>
                         </ToggleButton>
+                        {
+                            hasPython && (
+                                <ToggleButton key={3} value="python">
+                                    <img src={pythonLogo} width={24} alt="python logo"/>
+                                </ToggleButton>
+                            )
+                        }
                     </ToggleButtonGroup>
                 }
             />
@@ -522,6 +591,43 @@ const CardContent2: React.FC = ({children}) => {
     return <CardContent className={classes.cardContent}>{children}</CardContent>
 };
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+interface CodeContentBaseProps {
+    code: string;
+}
+
+interface CodeContentProps extends CodeContentBaseProps {
+    extension: Extension;
+}
+
+const CodeContent: React.FC<CodeContentProps> = ({code, extension}) => {
+    return (
+        <CardContent2>
+            <CodeMirror
+                theme={Config.instance.branding.themeName || 'light'}
+                height="320px"
+                extensions={[extension]}
+                value={code}
+                readOnly={true}
+            />
+        </CardContent2>
+    );
+};
+
+const JsonCodeContent: React.FC<CodeContentBaseProps> = ({code}) => {
+    return (
+        <CodeContent code={code} extension={json()}/>
+    );
+};
+
+const PythonCodeContent: React.FC<CodeContentBaseProps> = ({code}) => {
+    return (
+        <CodeContent code={code} extension={python()}/>
+    );
+};
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function selectObj(obj: any, keys: string[]): any {
@@ -532,4 +638,58 @@ function selectObj(obj: any, keys: string[]): any {
         }
     }
     return newObj;
+}
+
+function getDatasetPythonCode(serverConfig: ApiServerConfig,
+                              dataset: Dataset) {
+    const datasetId = getS3DataId(dataset.id);
+    return [
+        'from xcube.core.store import new_data_store',
+        '',
+        'store = new_data_store(',
+        '    "s3",',
+        '    root="datasets",  # can also use "pyramids" here',
+        '    storage_options={',
+        '        "anon": True,',
+        '        "client_kwargs": {',
+        `            "endpoint_url": "${serverConfig.url}/s3"`,
+        '        }',
+        '    }',
+        ')',
+        `# store.list_data_ids()`,
+        `dataset = store.open_data(data_id="${datasetId}")`,
+    ].join("\n");
+}
+
+
+function getVariablePythonCode(serverConfig: ApiServerConfig,
+                               variable: Variable,
+                               time: Time | null) {
+    const name = variable.name;
+    const vmin = variable.colorBarMin;
+    const vmax = variable.colorBarMax;
+    const cmap = variable.colorBarName;
+    let timeSel = '';
+    if (time !== null) {
+        timeSel = `.sel(time="${utcTimeToIsoDateTimeString(time)}", method="nearest")`;
+    }
+    return [
+        `var = dataset.${name}${timeSel}`,
+        `var.plot.imshow(vmin=${vmin}, vmax=${vmax}, cmap="${cmap}")`,
+    ].join("\n");
+}
+
+
+function getS3DataId(originalId: string): string {
+    return splitExt(originalId)[0] + ".zarr";
+}
+
+
+function splitExt(name: string): [string, string] {
+    const index = name.lastIndexOf(".");
+    if (index >= 0) {
+        return [name.substring(0, index), name.substring(index)];
+    } else {
+        return [name, ""];
+    }
 }

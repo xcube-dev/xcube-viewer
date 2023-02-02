@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,36 +22,33 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
 
-import PlaceSelect from "../components/PlaceSelect";
-import { AppState } from '../states/appState';
-import { removeUserPlace } from "../actions/dataActions";
-import { selectPlace, openDialog } from '../actions/controlActions';
-import {
-    selectedPlaceGroupPlacesSelector,
-    selectedPlaceGroupPlaceLabelsSelector
-} from '../selectors/controlSelectors';
-
-
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-
-        datasets: state.dataState.datasets,
-        userPlaceGroup: state.dataState.userPlaceGroup,
-
-        selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedPlaceGroupPlacesSelector(state),
-        placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
-    };
-};
-
-const mapDispatchToProps = {
-    selectPlace,
-    removeUserPlace,
-    openDialog,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceSelect);
+/**
+ * Builds a path by concatenating a base path and subsequent path components.
+ * The function ensures that only single path separators are used between
+ * path components.
+ *
+ * @param base
+ * @param components
+ */
+export function buildPath(base: string, ...components: string[]): string {
+    let path = base;
+    for (let c of components) {
+        if (c !== '') {
+            if (path.endsWith('/')) {
+                if (c.startsWith('/')) {
+                    path += c.substr(1);
+                } else {
+                    path += c;
+                }
+            } else {
+                if (c.startsWith('/')) {
+                    path += c;
+                } else {
+                    path += '/' + c;
+                }
+            }
+        }
+    }
+    return path;
+}

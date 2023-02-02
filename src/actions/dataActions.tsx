@@ -22,39 +22,60 @@
  * SOFTWARE.
  */
 
+import { Dispatch } from 'redux';
 import * as geojson from 'geojson';
 import JSZip from 'jszip';
-import { Dispatch } from 'redux';
+
 import * as api from '../api'
 import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { ColorBar, ColorBars } from '../model/colorBar';
 import { Dataset } from '../model/dataset';
-import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
+import {
+    findPlaceInPlaceGroups,
+    getUserPlacesFromCsv,
+    getUserPlacesFromGeoJson,
+    getUserPlacesFromWkt,
+    Place,
+    PlaceGroup
+} from '../model/place';
 import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
+    mapProjectionSelector,
     selectedDatasetIdSelector,
     selectedDatasetTimeDimensionSelector,
     selectedDatasetVariableSelector,
+    selectedPlaceGroupPlacesSelector,
     selectedPlaceGroupsSelector,
     selectedPlaceIdSelector,
     selectedPlaceSelector,
     selectedServerSelector,
-    selectedTimeChunkSizeSelector
+    selectedTimeChunkSizeSelector,
+    userPlacesFormatNameSelector,
+    userPlacesFormatOptionsCsvSelector,
+    userPlacesFormatOptionsGeoJsonSelector,
+    userPlacesFormatOptionsWktSelector
 } from '../selectors/controlSelectors';
 import { datasetsSelector, placeGroupsSelector, userPlaceGroupSelector } from '../selectors/dataSelectors';
-
 import { AppState } from '../states/appState';
 import {
     AddActivity,
     addActivity,
+    openDialog,
+    OpenDialog,
     RemoveActivity,
     removeActivity,
     SelectDataset,
     selectDataset,
+    selectPlace,
+    SelectPlace,
+    selectPlaceGroups,
+    SelectPlaceGroups,
+    UpdateSettings,
 } from './controlActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
 import { VolumeRenderMode } from "../states/controlState";
+import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
 
 const saveAs = require('file-saver');
 
@@ -176,20 +197,104 @@ export interface AddUserPlace {
     label: string;
     color: string;
     geometry: geojson.Geometry;
+    selectPlace: boolean;
 }
 
-export function addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry) {
+export function addUserPlace(id: string,
+                             label: string,
+                             color: string,
+                             geometry: geojson.Geometry,
+                             selectPlace: boolean) {
     return (dispatch: Dispatch<AddUserPlace>, getState: () => AppState) => {
-        dispatch(_addUserPlace(id, label, color, geometry));
+        dispatch(_addUserPlace(id, label, color, geometry, selectPlace));
         if (getState().controlState.autoShowTimeSeries) {
             dispatch(addTimeSeries() as any);
         }
     };
 }
 
-export function _addUserPlace(id: string, label: string, color: string, geometry: geojson.Geometry): AddUserPlace {
-    return {type: ADD_USER_PLACE, id, label, color, geometry};
+export function _addUserPlace(id: string,
+                              label: string,
+                              color: string,
+                              geometry: geojson.Geometry,
+                              selectPlace: boolean): AddUserPlace {
+    return {type: ADD_USER_PLACE, id, label, color, geometry, selectPlace};
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ADD_USER_PLACES = 'ADD_USER_PLACES';
+
+export interface AddUserPlaces {
+    type: typeof ADD_USER_PLACES;
+    places: Place[];
+    mapProjection: string;
+    selectPlace: boolean;
+}
+
+export function addUserPlaces(places: Place[],
+                              mapProjection: string,
+                              selectPlace: boolean): AddUserPlaces {
+    return {
+        type: ADD_USER_PLACES,
+        places: places,
+        mapProjection,
+        selectPlace
+    };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+type UserPlacesDispatch = Dispatch<AddUserPlaces
+    | SelectPlaceGroups
+    | SelectPlace
+    | UpdateSettings
+    | OpenDialog
+    | PostMessage>;
+
+
+export function addUserPlacesFromText(text: string) {
+    return (dispatch: UserPlacesDispatch, getState: () => AppState) => {
+        const formatName = userPlacesFormatNameSelector(getState());
+        let places: Place[];
+        try {
+            if (formatName === 'csv') {
+                const options = userPlacesFormatOptionsCsvSelector(getState());
+                places = getUserPlacesFromCsv(text, options);
+            } else if (formatName === 'geojson') {
+                const options = userPlacesFormatOptionsGeoJsonSelector(getState());
+                places = getUserPlacesFromGeoJson(text, options);
+            } else if (formatName === 'wkt') {
+                const options = userPlacesFormatOptionsWktSelector(getState());
+                places = getUserPlacesFromWkt(text, options);
+            } else {
+                places = [];
+            }
+        } catch (e) {
+            dispatch(postMessage('error', e));
+            dispatch(openDialog('addUserPlacesFromText'));
+            places = [];
+        }
+        if (places.length) {
+            dispatch(addUserPlaces(places, mapProjectionSelector(getState()), true));
+            dispatch(selectPlaceGroups(['user']) as any);
+            if (places.length === 1) {
+                dispatch(selectPlace(
+                    places[0].id,
+                    selectedPlaceGroupPlacesSelector(getState()),
+                    true
+                ) as any);
+                if (getState().controlState.autoShowTimeSeries) {
+                    dispatch(addTimeSeries() as any);
+                }
+            }
+            dispatch(postMessage('info', i18n.get(`Imported ${places.length} place(s)`)));
+        } else {
+            dispatch(postMessage('warning', i18n.get('No places imported')));
+        }
+    };
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -239,13 +344,13 @@ export function addTimeSeries() {
             const timeLabels = selectedDatasetTimeDim.labels;
             const numTimeLabels = timeLabels.length;
 
-            timeChunkSize = timeChunkSize > 0 ? timeChunkSize:numTimeLabels;
+            timeChunkSize = timeChunkSize > 0 ? timeChunkSize : numTimeLabels;
 
             let endTimeIndex = numTimeLabels - 1;
             let startTimeIndex = endTimeIndex - timeChunkSize + 1;
 
             const getTimeSeriesChunk = () => {
-                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex]:null;
+                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
                 const endDateLabel = timeLabels[endTimeIndex];
                 return api.getTimeSeriesForGeometry(apiServer.url,
                     selectedDatasetId,
@@ -540,7 +645,7 @@ class ZipExporter extends Exporter {
     }
 
     close() {
-        this.zipArchive.generateAsync({type: "blob"})
+        this.zipArchive.generateAsync({type: 'blob'})
             .then((content) => saveAs(content, this.fileName));
     }
 }
@@ -549,7 +654,7 @@ class FileExporter extends Exporter {
 
     write(path: string, content: string) {
         const blob = new Blob([content],
-            {type: "text/plain;charset=utf-8"});
+            {type: 'text/plain;charset=utf-8'});
         saveAs(blob, path);
     }
 
@@ -621,7 +726,7 @@ function _exportData(timeSeriesGroups: TimeSeriesGroup[],
     if (includePlaces) {
         if (placesAsCollection) {
             const collection = {
-                type: "FeatureCollection",
+                type: 'FeatureCollection',
                 features: Object.keys(placesToExport).map(placeId => placesToExport![placeId])
             };
             exporter.write(`${fileName}.geojson`,
@@ -683,6 +788,7 @@ export type DataAction =
     | UpdateDatasets
     | UpdateDatasetPlaceGroup
     | AddUserPlace
+    | AddUserPlaces
     | RemoveUserPlace
     | RemoveAllUserPlaces
     | UpdateTimeSeries

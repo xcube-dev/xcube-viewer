@@ -9,6 +9,7 @@
     "appBarTitle": "xcube Viewer",
     "windowTitle": "xcube Viewer",
     "windowIcon": null,
+    "compact": false,
     "themeName": "light",
     "primaryColor": "blue",
     "secondaryColor": "pink",
@@ -18,9 +19,10 @@
     "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     "defaultAgg": "mean",
     "polygonFillOpacity": 0.2,
+    "mapProjection": "EPSG:3857",
     "allowDownloads": true,
     "allowRefresh": true,
-    "allow3D": true,
-    "mapProjection": "EPSG:4326"
+    "allowViewModePython": true,
+    "allow3D": true
   }
 }

@@ -375,7 +375,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     if (loading) {
         removeAllButton = (
             <CircularProgress
-                key={'progress'}
+                key={'loadingTimeSeriesGroup'}
                 size={24}
                 className={classes.actionButton}
                 color={'secondary'}

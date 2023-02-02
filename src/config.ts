@@ -40,6 +40,8 @@ import { ApiServerConfig } from './model/apiServer';
 import rawDefaultConfig from './resources/config.json';
 import { AuthClientConfig } from './util/auth';
 import { Branding, parseBranding } from './util/branding';
+import baseUrl from './util/baseurl';
+import { buildPath } from './util/path';
 
 
 export const appParams = new URLSearchParams(window.location.search);
@@ -69,7 +71,7 @@ export class Config {
     static async load(): Promise<Config> {
         let configPath = appParams.get('configPath') || 'config';
         let rawConfig;
-        const configUrl = window.location.origin + `/${configPath}/config.json`;
+        const configUrl = buildPath(baseUrl.href, configPath, 'config.json');
         try {
             rawConfig = await fetch(configUrl);
             rawConfig = await rawConfig.json();
@@ -91,10 +93,12 @@ export class Config {
         server.id = appParams.get('serverId') || server.id;
         server.name = appParams.get('serverName') || server.name;
         server.url = appParams.get('serverUrl') || server.url;
+        const compact = parseInt(appParams.get('compact') || '0') !== 0;
         const branding = parseBranding(
             {
                 ...rawDefaultConfig.branding,
-                ...rawConfig.branding
+                ...rawConfig.branding,
+                compact: compact || !!rawConfig.branding.compact
             },
             configPath
         );
@@ -139,8 +143,6 @@ export class Config {
         }
     }
 }
-
-// TODO (forman): The following functions should be made part of the configuration.
 
 
 interface TileAccess {

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -33,9 +34,8 @@ import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
 import Tooltip from '@mui/material/Tooltip';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import * as React from 'react';
-import i18n from '../i18n';
 
+import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
@@ -61,6 +61,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     placeLabels: string[];
     selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     removeUserPlace: (placeId: string, places: Place[]) => void;
+    openDialog: (dialogId: string) => void;
 }
 
 const PlaceSelect: React.FC<PlaceSelectProps> = ({
@@ -88,10 +89,6 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     selectedPlaceId = selectedPlaceId || '';
     selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-    if (places.length === 0) {
-        return null;
-    }
-
     const placeSelectLabel = (
         <InputLabel
             shrink
@@ -109,7 +106,9 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
             input={<Input name="place" id="place-select"/>}
             displayEmpty
             name="place"
-            className={classes.select}>
+            className={classes.select}
+            disabled={places.length === 0}
+        >
             {places.map((place, i) => (
                 <MenuItem
                     key={place.id}
@@ -122,8 +121,10 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         </Select>
     );
 
-    const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user'
-                          && selectedPlaceId !== '';
+    const removeEnabled = places.length > 0
+        && selectedPlaceGroupIds.length === 1
+        && selectedPlaceGroupIds[0] === 'user'
+        && selectedPlaceId !== '';
     const placeRemoveButton = (
         <IconButton
             className={classes.button}

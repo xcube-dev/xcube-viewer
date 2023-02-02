@@ -22,13 +22,7 @@
  * SOFTWARE.
  */
 
-import {
-    createTheme,
-    CssBaseline,
-    ThemeProvider,
-    StyledEngineProvider,
-    adaptV4Theme,
-} from '@mui/material';
+import { adaptV4Theme, createTheme, CssBaseline, StyledEngineProvider, ThemeProvider, } from '@mui/material';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Config } from '../config';
@@ -40,14 +34,21 @@ import LegalAgreementDialog from './LegalAgreementDialog';
 import LoadingDialog from './LoadingDialog';
 import MessageLog from './MessageLog';
 import AuthWrapper from "../components/AuthWrapper";
+import ServerDialog from "./ServerDialog";
+import SettingsDialog from "./SettingsDialog";
+import ExportDialog from "./ExportDialog";
+import AddPlaceDialog from "./UserPlacesDialog";
 
 
-interface DashboardProps {
+interface AppProps {
+    compact: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
-    return {};
+    return {
+        compact: Config.instance.branding.compact
+    };
 };
 
 const mapDispatchToProps = {};
@@ -65,17 +66,23 @@ const newTheme = () => createTheme(
         },
     }));
 
-const App: React.FC<DashboardProps> = () => {
+const App: React.FC<AppProps> = ({compact}) => {
     return (
         <AuthWrapper>
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={newTheme()}>
                     <CssBaseline/>
-                    <AppBar/>
+                    {!compact && <AppBar/>}
                     <AppPane/>
-                    <LoadingDialog/>
-                    <MessageLog/>
-                    <LegalAgreementDialog/>
+                    <>
+                        <LoadingDialog/>
+                        <ServerDialog/>
+                        <SettingsDialog/>
+                        <ExportDialog/>
+                        <AddPlaceDialog/>
+                        <LegalAgreementDialog/>
+                        <MessageLog/>
+                    </>
                 </ThemeProvider>
             </StyledEngineProvider>
         </AuthWrapper>

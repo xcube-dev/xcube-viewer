@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,36 +22,23 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+function _getBaseUrl(): URL {
+    const url = new URL(window.location.href);
+    const pathComponents = url.pathname.split('/');
+    const numPathComponents = pathComponents.length;
+    if (numPathComponents > 0) {
+        const lastComponent = pathComponents[numPathComponents - 1];
+        if (lastComponent === 'index.html') {
+            return new URL(pathComponents.slice(0, numPathComponents - 1).join('/'), window.location.origin);
+        } else {
+            return new URL(url.pathname, window.location.origin);
+        }
+    }
+    return new URL(window.location.origin);
+}
 
-import PlaceSelect from "../components/PlaceSelect";
-import { AppState } from '../states/appState';
-import { removeUserPlace } from "../actions/dataActions";
-import { selectPlace, openDialog } from '../actions/controlActions';
-import {
-    selectedPlaceGroupPlacesSelector,
-    selectedPlaceGroupPlaceLabelsSelector
-} from '../selectors/controlSelectors';
+const baseUrl = _getBaseUrl();
 
+export default baseUrl;
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-
-        datasets: state.dataState.datasets,
-        userPlaceGroup: state.dataState.userPlaceGroup,
-
-        selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedPlaceGroupPlacesSelector(state),
-        placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
-    };
-};
-
-const mapDispatchToProps = {
-    selectPlace,
-    removeUserPlace,
-    openDialog,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceSelect);
+console.log("baseUrl = ", baseUrl.href);

@@ -30,21 +30,34 @@ import { Config } from '../config';
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
 import { DEFAULT_MAP_CRS } from "../model/proj";
+import { CsvOptions, defaultCsvOptions } from "../model/user-place/csv";
+import { GeoJsonOptions, defaultGeoJsonOptions } from "../model/user-place/geojson";
+import { WktOptions, defaultWktOptions } from "../model/user-place/wkt";
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000, 2500];
 
-export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle';
+export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle' | 'Geometry';
+
+export type ViewMode = 'text' | 'list' | 'code' | 'python';
 
 
 export interface InfoCardElementState {
     visible?: boolean;
-    viewMode?: string;
+    viewMode?: ViewMode;
 }
 
 export interface InfoCardElementStates {
     [key: string]: InfoCardElementState;
+}
+
+export type UserPlacesFormatName = 'geojson' | 'csv' | 'wkt';
+
+export interface UserPlacesFormatOptions {
+    csv: CsvOptions;
+    geojson: GeoJsonOptions;
+    wkt: WktOptions;
 }
 
 export interface ExportSettings {
@@ -75,12 +88,15 @@ export interface ControlState {
     showTimeSeriesPointsOnly: boolean;
     showTimeSeriesErrorBars: boolean;
     showTimeSeriesMedian: boolean;
+    userPlacesFormatName: UserPlacesFormatName;
+    userPlacesFormatOptions: UserPlacesFormatOptions;
     flyTo: OlGeometry | OlExtent | null;
     activities: { [id: string]: string };
     locale: string;
     dialogOpen: { [dialogId: string]: boolean };
     privacyNoticeAccepted: boolean;
     mapInteraction: MapInteraction;
+    lastMapInteraction: MapInteraction;
     volumeCardOpen: boolean;
     volumeRenderMode: VolumeRenderMode;
     volumeStates: VolumeStates;
@@ -119,12 +135,19 @@ export function newControlState(): ControlState {
         showTimeSeriesPointsOnly: false,
         showTimeSeriesErrorBars: true,
         showTimeSeriesMedian: branding.defaultAgg === 'median',
+        userPlacesFormatName: 'csv',
+        userPlacesFormatOptions: {
+            geojson: {...defaultGeoJsonOptions},
+            csv: {...defaultCsvOptions},
+            wkt: {...defaultWktOptions},
+        },
         flyTo: null,
         activities: {},
         locale: 'en',
         dialogOpen: {},
         privacyNoticeAccepted: false,
         mapInteraction: 'Point',
+        lastMapInteraction: 'Point',
         showRgbLayer: false,
         volumeCardOpen: false,
         volumeRenderMode: 'mip',

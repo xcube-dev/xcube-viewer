@@ -10,14 +10,18 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/lang-python": "^6.1.1",
     "@date-io/date-fns": "^2.16.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@mui/material": "^5.10.13",
     "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.10.13",
     "@mui/styles": "^5.10.10",
     "@mui/x-date-pickers": "^5.0.8",
+    "@uiw/react-codemirror": "^4.19.5",
     "classnames": "^2.2.6",
+    "codemirror": "^6.0.1",
     "color-rgba": "^2.2.3",
     "date-fns": "^2.29.3",
     "fast-memoize": "^2.5.2",
@@ -30,10 +34,10 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-markdown": "^8.0.3",
+    "react-oidc-context": "^2.1.0",
     "react-redux": "^7.2.9",
     "react-router-dom": "^5.1.2",
     "react-scripts": "4.0.3",
-    "react-oidc-context": "^2.1.0",
     "recharts": "^2.0.9",
     "redux": "^4.2.0",
     "redux-logger": "^3.0.6",
@@ -63,7 +67,11 @@
   "resolutions": {
     "react": "^17.0.2",
     "@types/react": "^17.0.52",
-    "set-value": "^2.0.1"
+    "set-value": "^2.0.1",
+    "@codemirror/highlight": "0.19.8",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/state": ">=6.0.0",
+    "@codemirror/view": ">=6.0.0"
   },
   "eslintConfig": {
     "extends": "react-app"

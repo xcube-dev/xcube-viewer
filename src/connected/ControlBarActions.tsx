@@ -27,6 +27,9 @@ import { connect } from 'react-redux';
 import { AppState } from '../states/appState';
 import ControlBarActions from '../components/ControlBarActions';
 import { flyToSelectedObject, openDialog, showInfoCard, showVolumeCard } from '../actions/controlActions';
+import { showInfoCard, flyToSelectedObject, openDialog } from '../actions/controlActions';
+import { Config } from "../config";
+import { updateResources } from "../actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
     return {
@@ -35,6 +38,8 @@ const mapStateToProps = (state: AppState) => {
         volumeCardOpen: state.controlState.volumeCardOpen,
         infoCardOpen: state.controlState.infoCardOpen,
         timeSeriesGroups: state.dataState.timeSeriesGroups,
+        compact: Config.instance.branding.compact,
+        allowRefresh: Config.instance.branding.allowRefresh,
     }
 };
 
@@ -43,6 +48,7 @@ const mapDispatchToProps = {
     showInfoCard,
     flyToSelectedObject,
     openDialog,
+    updateResources,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);

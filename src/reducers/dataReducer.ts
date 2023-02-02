@@ -23,15 +23,20 @@
  */
 
 import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
 import {
+    DataAction,
+    CONFIGURE_SERVERS,
     ADD_USER_PLACE,
     CONFIGURE_SERVERS,
     DataAction,
     REMOVE_ALL_TIME_SERIES,
     REMOVE_ALL_USER_PLACES,
+    ADD_USER_PLACES,
+    REMOVE_ALL_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     REMOVE_USER_PLACE,
     UPDATE_COLOR_BARS,
@@ -40,12 +45,22 @@ import {
     UPDATE_SERVER_INFO,
     UPDATE_TIME_SERIES,
     UPDATE_VARIABLE_COLOR_BAR, UPDATE_VARIABLE_VOLUME
+    UPDATE_TIME_SERIES,
+    UPDATE_DATASET_PLACE_GROUP,
+    REMOVE_USER_PLACE,
+    REMOVE_ALL_USER_PLACES,
+    UPDATE_SERVER_INFO,
+    UPDATE_VARIABLE_COLOR_BAR,
 } from '../actions/dataActions';
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
 import { Place } from "../model/place";
 import { TimeSeries, TimeSeriesGroup } from "../model/timeSeries";
 import { Variable } from "../model/variable";
+import { Place } from '../model/place';
+import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
+import { setFeatureStyle } from "../components/ol/style";
+import { Config } from "../config";
 
 
 export function dataReducer(state: DataState | undefined, action: DataAction): DataState {
@@ -99,13 +114,23 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
         }
         case ADD_USER_PLACE: {
             const {id, label, color, geometry} = action;
-            const feature = {
+            const place: Place = {
                 type: 'Feature',
                 id,
                 geometry,
                 properties: {label, color},
             };
-            const features = [...state.userPlaceGroup.features, feature as Place];
+            const features = [...state.userPlaceGroup.features, place];
+            const userPlaceGroup = {...state.userPlaceGroup, features};
+            return {
+                ...state,
+                userPlaceGroup,
+            };
+        }
+        case ADD_USER_PLACES: {
+            const {places, mapProjection} = action;
+            places.forEach(place => addUserPlaceToLayer(place, mapProjection));
+            const features = [...state.userPlaceGroup.features, ...places];
             const userPlaceGroup = {...state.userPlaceGroup, features};
             return {
                 ...state,
@@ -124,7 +149,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 let timeSeriesGroups = state.timeSeriesGroups;
                 timeSeriesArray.forEach(ts => {
                     timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                        ts, 'remove', 'append');
+                                                              ts, 'remove', 'append');
                 });
                 return {
                     ...state,
@@ -143,7 +168,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             let timeSeriesGroups = state.timeSeriesGroups;
             timeSeriesArray.forEach(ts => {
                 timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                    ts, 'remove', 'append');
+                                                          ts, 'remove', 'append');
             });
             return {
                 ...state,
@@ -157,7 +182,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
         case UPDATE_TIME_SERIES: {
             const {timeSeries, updateMode, dataMode} = action;
             const timeSeriesGroups = updateTimeSeriesGroups(state.timeSeriesGroups,
-                timeSeries, updateMode, dataMode);
+                                                            timeSeries, updateMode, dataMode);
             if (timeSeriesGroups !== state.timeSeriesGroups) {
                 return {...state, timeSeriesGroups};
             }
@@ -187,6 +212,35 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
     return state!;
 }
 
+function addUserPlaceToLayer(place: Place, mapProjection: string) {
+    if (MAP_OBJECTS.userLayer) {
+        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
+        const source = userLayer.getSource();
+        const feature = new OlGeoJSONFormat().readFeature(place,
+            {
+                dataProjection: 'EPSG:4326',
+                featureProjection: mapProjection
+            });
+        const color = (place.properties || {}).color || 'red';
+        setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity);
+        source.addFeature(feature);
+        userLayer.changed();
+    }
+}
+
+function removeUserPlacesFromLayer(userPlaceIds: string[]) {
+    if (MAP_OBJECTS.userLayer) {
+        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
+        const source = userLayer.getSource();
+        userPlaceIds.forEach(placeId => {
+            const feature = source.getFeatureById(placeId);
+            if (feature) {
+                source.removeFeature(feature);
+            }
+        });
+    }
+}
+
 function updateVariableProps(state: DataState,
                              datasetId: string,
                              variableName: string,
@@ -207,20 +261,6 @@ function updateVariableProps(state: DataState,
     return state;
 }
 
-function removeUserPlacesFromLayer(userPlaceIds: string[]) {
-    if (MAP_OBJECTS.userLayer) {
-        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
-        const source = userLayer.getSource();
-        userPlaceIds.forEach(placeId => {
-            const feature = source.getFeatureById(placeId);
-            if (feature) {
-                source.removeFeature(feature);
-            }
-        });
-    }
-}
-
-
 function updateTimeSeriesGroups(timeSeriesGroups: TimeSeriesGroup[],
                                 timeSeries: TimeSeries,
                                 updateMode: 'add' | 'replace' | 'remove',
@@ -233,8 +273,8 @@ function updateTimeSeriesGroups(timeSeriesGroups: TimeSeriesGroup[],
         const timeSeriesGroup = timeSeriesGroups[tsgIndex];
         const timeSeriesArray = timeSeriesGroup.timeSeriesArray;
         const tsIndex = timeSeriesArray.findIndex(ts => ts.source.datasetId === currentTimeSeries.source.datasetId
-            && ts.source.variableName === currentTimeSeries.source.variableName
-            && ts.source.placeId === currentTimeSeries.source.placeId);
+                                                        && ts.source.variableName === currentTimeSeries.source.variableName
+                                                        && ts.source.placeId === currentTimeSeries.source.placeId);
         let newTimeSeriesArray;
         if (tsIndex >= 0) {
             const oldTimeSeries = timeSeriesArray[tsIndex];

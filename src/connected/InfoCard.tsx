@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 import {
     infoCardElementViewModesSelector,
     selectedDatasetSelector,
-    selectedPlaceInfoSelector,
+    selectedPlaceInfoSelector, selectedServerSelector, selectedTimeSelector,
     selectedVariableSelector,
     visibleInfoCardElementsSelector
 } from '../selectors/controlSelectors';
@@ -38,6 +38,7 @@ import {
     updateInfoCardElementViewMode,
 } from '../actions/controlActions';
 import InfoCard from '../components/InfoCard';
+import { Config } from "../config";
 
 
 const mapStateToProps = (state: AppState) => {
@@ -49,6 +50,9 @@ const mapStateToProps = (state: AppState) => {
         selectedDataset: selectedDatasetSelector(state),
         selectedVariable: selectedVariableSelector(state),
         selectedPlaceInfo: selectedPlaceInfoSelector(state),
+        selectedTime: selectedTimeSelector(state),
+        serverConfig: selectedServerSelector(state),
+        allowViewModePython: Config.instance.branding.allowViewModePython,
     }
 };
 
