@@ -39,17 +39,18 @@ import { Config } from '../config';
 import i18n from '../i18n';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
-
+import RefreshIcon from "@mui/icons-material/Refresh";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
-        {
-            formControl: {
-                marginTop: theme.spacing(1),
-                marginRight: theme.spacing(1),
-                marginLeft: 'auto',
-            },
-        });
+    {
+        formControl: {
+            marginTop: theme.spacing(1),
+            marginRight: theme.spacing(1),
+            marginLeft: 'auto',
+        },
+    });
 
 interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     visible: boolean;
@@ -58,6 +59,9 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     showInfoCard: (open: boolean) => void;
     timeSeriesGroups: TimeSeriesGroup[];
     openDialog: (dialogId: string) => void;
+    allowRefresh?: boolean;
+    updateResources: () => any;
+    compact: boolean;
 }
 
 const ControlBarActions: React.FC<ControlBarActionsProps> = (
@@ -69,6 +73,9 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
         showInfoCard,
         timeSeriesGroups,
         openDialog,
+        allowRefresh,
+        updateResources,
+        compact
     }
 ) => {
     if (!visible) {
@@ -80,7 +87,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     let downloadButton;
     if (Config.instance.branding.allowDownloads) {
         downloadButton = (
-            <IconButton disabled={!canDownload} onClick={() => openDialog('export')} size="large">
+            <IconButton disabled={!canDownload} onClick={() => openDialog('export')} size="small">
                 <Tooltip arrow title={i18n.get('Export data')}>
                     {<CloudDownloadIcon/>}
                 </Tooltip>
@@ -89,7 +96,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     }
 
     const flyToButton = (
-        <IconButton onClick={flyToSelectedObject} size="large">
+        <IconButton onClick={flyToSelectedObject} size="small">
             <Tooltip arrow title={i18n.get('Show selected place in map')}>
                 <MyLocationIcon/>
             </Tooltip>
@@ -97,19 +104,44 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
     );
 
     let infoButton = (
-        <IconButton onClick={() => showInfoCard(true)} disabled={infoCardOpen} size="large">
+        <IconButton onClick={() => showInfoCard(true)} disabled={infoCardOpen} size="small">
             <Tooltip arrow title={i18n.get('Open information panel')}>
                 {<InfoIcon/>}
             </Tooltip>
         </IconButton>
     );
 
+
+    let refreshButton;
+    let settingsButton;
+
+    if (compact) {
+        if (allowRefresh) {
+            refreshButton = (
+                <IconButton onClick={updateResources} size="small">
+                    <Tooltip arrow title={i18n.get('Refresh')}>
+                        <RefreshIcon/>
+                    </Tooltip>
+                </IconButton>
+            );
+        }
+        settingsButton = (
+            <IconButton onClick={() => openDialog('settings')} size="small">
+                <Tooltip arrow title={i18n.get('Settings')}>
+                    <SettingsIcon/>
+                </Tooltip>
+            </IconButton>
+        );
+    }
+
     return (
         <FormControl variant="standard" className={classes.formControl}>
             <Box>
+                {refreshButton}
                 {downloadButton}
                 {flyToButton}
                 {infoButton}
+                {settingsButton}
             </Box>
         </FormControl>
     );

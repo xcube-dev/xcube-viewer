@@ -80,6 +80,7 @@ export interface Branding {
     appBarTitle: string;
     windowTitle: string;
     windowIcon: string | null;
+    compact: boolean;
     themeName: 'dark' | 'light';
     primaryColor: PaletteColorOptions;
     secondaryColor: PaletteColorOptions;

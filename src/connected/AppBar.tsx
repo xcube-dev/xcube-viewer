@@ -32,21 +32,17 @@ import Tooltip from '@mui/material/Tooltip';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { deepOrange } from '@mui/material/colors';
 import classNames from 'classnames';
-import MarkdownPage from '../components/MarkdownPage';
 
 import { Config } from '../config';
 import i18n from '../i18n';
 import { AppState } from '../states/appState';
 import { WithLocale } from '../util/lang';
-import ExportDialog from './ExportDialog';
-import ServerDialog from './ServerDialog';
-import SettingsDialog from './SettingsDialog';
 import UserControl from './UserControl';
-import AddPlaceDialog from './UserPlacesDialog';
 import { openDialog } from '../actions/controlActions';
 import { updateResources } from "../actions/dataActions";
-import { deepOrange } from '@mui/material/colors';
+import MarkdownPage from '../components/MarkdownPage';
 
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
@@ -171,10 +167,6 @@ const _AppBar: React.FC<AppBarProps> = (
         setImprintOpen(false);
     };
 
-    const handleRefresh = () => {
-        updateResources();
-    };
-
     return (
         <AppBar
             position="absolute"
@@ -206,7 +198,7 @@ const _AppBar: React.FC<AppBarProps> = (
                 <UserControl/>
                 {allowRefresh &&
                     <Tooltip arrow title={i18n.get('Refresh')}>
-                        <IconButton onClick={handleRefresh} size="small" className={classes.iconButton}>
+                        <IconButton onClick={updateResources} size="small" className={classes.iconButton}>
                             <RefreshIcon/>
                         </IconButton>
                     </Tooltip>
@@ -222,10 +214,6 @@ const _AppBar: React.FC<AppBarProps> = (
                     </IconButton>
                 </Tooltip>
             </Toolbar>
-            <ServerDialog/>
-            <SettingsDialog/>
-            <ExportDialog/>
-            <AddPlaceDialog/>
             <Menu
                 id="simple-menu"
                 anchorEl={helpMenuAnchorEl}
