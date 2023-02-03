@@ -39,6 +39,9 @@ import { Volume } from '../volume/Volume';
 import { NRRDLoader } from '../volume/NRRDLoader';
 import { ColorBar } from '../model/colorBar';
 
+import "./VolumeCanvas.css"
+
+
 interface VolumeCanvasProps extends WithLocale {
     selectedDataset: Dataset | null;
     selectedVariable: Variable | null;
@@ -74,8 +77,9 @@ const HINT_STYLE: React.CSSProperties = {
     zIndex: 10
 };
 
+/*TODO: I18N*/
 const HINT_ELEMENT = (
-        <Typography variant="body2" style={HINT_STYLE}>
+        <Typography variant="body2" style={HINT_STYLE} className="hint_wrap">
             Press LMB to rotate, plus CTRL-key to shift.
         </Typography>
 );
@@ -156,7 +160,24 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                         () => {
                         },
                         (e: any) => {
-                            updateVolumeState(volumeId, {status: 'error', message: `${e}`});
+                            if (e.response instanceof Response) {
+                                e.response.json().then((responseObject: {[k: string]: any}) => {
+                                    const errorObject = responseObject.error;
+                                    const message = !!errorObject && errorObject.message;
+                                    if (errorObject && errorObject.exception) {
+                                        console.debug("exception:", errorObject.exception);
+                                    }
+                                    updateVolumeState(volumeId, {
+                                        status: 'error',
+                                        message: message || `${e}`
+                                    });
+                                });
+                            } else {
+                                updateVolumeState(volumeId, {
+                                    status: 'error',
+                                    message: `${e}`
+                                });
+                            }
                         }
                 );
             }
@@ -206,7 +227,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 } else if (volumeState.status === 'error') {
                     /*TODO: I18N*/
                     messageComp = (
-                            <Typography variant="body2">
+                            <Typography variant="body2" color="red">
                                 {`Failed loading volume: ${volumeState.message}`}
                             </Typography>
                     );
@@ -225,8 +246,8 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         // rendered here, so it is not remounted.
         return (
                 <div style={DIV_STYLE}>
-                    {messageComp}
                     {loadComp}
+                    {messageComp}
                     <canvas
                             id={'VolumeCanvas-canvas'}
                             ref={this.canvasRef}
