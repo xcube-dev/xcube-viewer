@@ -27,7 +27,7 @@
     "fast-memoize": "^2.5.2",
     "file-saver": "^2.0.5",
     "history": "^4.10.1",
-    "jszip": "^3.7.0",
+    "jszip": "^3.8.0",
     "oidc-client-ts": "^2.0.3",
     "ol": "^6.1.1",
     "react": "^17.0.2",
