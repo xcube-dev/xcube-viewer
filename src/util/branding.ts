@@ -97,6 +97,7 @@ export interface Branding {
     allowDownloads?: boolean;
     allowRefresh?: boolean;
     allowViewModePython?: boolean;
+    allow3D?: boolean;
 }
 
 

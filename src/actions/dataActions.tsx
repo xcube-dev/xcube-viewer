@@ -29,7 +29,7 @@ import JSZip from 'jszip';
 import * as api from '../api'
 import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
-import { ColorBars } from '../model/colorBar';
+import { ColorBar, ColorBars } from '../model/colorBar';
 import { Dataset } from '../model/dataset';
 import {
     findPlaceInPlaceGroups,
@@ -73,6 +73,7 @@ import {
     SelectPlaceGroups,
     UpdateSettings,
 } from './controlActions';
+import { VolumeRenderMode } from "../states/controlState";
 import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
 
 const saveAs = require('file-saver');
@@ -342,13 +343,13 @@ export function addTimeSeries() {
             const timeLabels = selectedDatasetTimeDim.labels;
             const numTimeLabels = timeLabels.length;
 
-            timeChunkSize = timeChunkSize > 0 ? timeChunkSize:numTimeLabels;
+            timeChunkSize = timeChunkSize > 0 ? timeChunkSize : numTimeLabels;
 
             let endTimeIndex = numTimeLabels - 1;
             let startTimeIndex = endTimeIndex - timeChunkSize + 1;
 
             const getTimeSeriesChunk = () => {
-                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex]:null;
+                const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
                 const endDateLabel = timeLabels[endTimeIndex];
                 return api.getTimeSeriesForGeometry(apiServer.url,
                     selectedDatasetId,
@@ -512,9 +513,11 @@ export interface UpdateVariableColorBar {
     opacity: number;
 }
 
-export function updateVariableColorBar(colorBarMinMax: [number, number],
-                                       colorBarName: string,
-                                       opacity: number) {
+export function updateVariableColorBar(
+    colorBarMinMax: [number, number],
+    colorBarName: string,
+    opacity: number
+) {
     return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
         const selectedDatasetId = getState().controlState.selectedDatasetId;
         const selectedVariableName = getState().controlState.selectedVariableName;
@@ -527,11 +530,13 @@ export function updateVariableColorBar(colorBarMinMax: [number, number],
     };
 }
 
-export function _updateVariableColorBar(datasetId: string,
-                                        variableName: string,
-                                        colorBarMinMax: [number, number],
-                                        colorBarName: string,
-                                        opacity: number): UpdateVariableColorBar {
+export function _updateVariableColorBar(
+    datasetId: string,
+    variableName: string,
+    colorBarMinMax: [number, number],
+    colorBarName: string,
+    opacity: number
+): UpdateVariableColorBar {
     return {
         type: UPDATE_VARIABLE_COLOR_BAR,
         datasetId,
@@ -539,6 +544,37 @@ export function _updateVariableColorBar(datasetId: string,
         colorBarMinMax,
         colorBarName,
         opacity
+    };
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+export const UPDATE_VARIABLE_VOLUME = 'UPDATE_VARIABLE_VOLUME';
+
+export interface UpdateVariableVolume {
+    type: typeof UPDATE_VARIABLE_VOLUME;
+    datasetId: string;
+    variableName: string;
+    variableColorBar: ColorBar;
+    volumeRenderMode: VolumeRenderMode;
+    volumeIsoThreshold: number;
+}
+
+export function updateVariableVolume(
+    datasetId: string,
+    variableName: string,
+    variableColorBar: ColorBar,
+    volumeRenderMode: VolumeRenderMode,
+    volumeIsoThreshold: number
+): UpdateVariableVolume {
+    return {
+        type: UPDATE_VARIABLE_VOLUME,
+        datasetId,
+        variableName,
+        variableColorBar,
+        volumeRenderMode,
+        volumeIsoThreshold,
     };
 }
 
@@ -759,4 +795,5 @@ export type DataAction =
     | RemoveAllTimeSeries
     | ConfigureServers
     | UpdateColorBars
-    | UpdateVariableColorBar;
+    | UpdateVariableColorBar
+    | UpdateVariableVolume;

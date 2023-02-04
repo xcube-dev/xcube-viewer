@@ -23,36 +23,40 @@
  */
 
 import { connect } from 'react-redux';
+import {
+    selectedDatasetSelector,
+    selectedPlaceInfoSelector, selectedServerSelector,
+    selectedVariableColorBarSelector,
+    selectedVariableSelector,
+    selectedVolumeIdSelector,
+} from '../selectors/controlSelectors';
 
 import { AppState } from '../states/appState';
-import ControlBarActions from '../components/ControlBarActions';
-import {
-    flyToSelectedObject,
-    openDialog,
-    showInfoCard,
-    showVolumeCard,
-} from '../actions/controlActions';
-import { Config } from '../config';
-import { updateResources } from '../actions/dataActions';
+import { setVolumeRenderMode, showVolumeCard, updateVolumeState } from '../actions/controlActions';
+import { updateVariableVolume } from "../actions/dataActions";
+import VolumeCard from '../components/VolumeCard';
+
 
 const mapStateToProps = (state: AppState) => {
     return {
         locale: state.controlState.locale,
-        visible: !!(state.controlState.selectedDatasetId || state.controlState.selectedPlaceId),
         volumeCardOpen: state.controlState.volumeCardOpen,
-        infoCardOpen: state.controlState.infoCardOpen,
-        timeSeriesGroups: state.dataState.timeSeriesGroups,
-        compact: Config.instance.branding.compact,
-        allowRefresh: Config.instance.branding.allowRefresh,
+        selectedDataset: selectedDatasetSelector(state),
+        selectedVariable: selectedVariableSelector(state),
+        selectedPlaceInfo: selectedPlaceInfoSelector(state),
+        variableColorBar: selectedVariableColorBarSelector(state),
+        volumeRenderMode: state.controlState.volumeRenderMode,
+        volumeId: selectedVolumeIdSelector(state),
+        volumeStates: state.controlState.volumeStates,
+        serverUrl: selectedServerSelector(state).url
     }
 };
 
 const mapDispatchToProps = {
     showVolumeCard,
-    showInfoCard,
-    flyToSelectedObject,
-    openDialog,
-    updateResources,
+    setVolumeRenderMode,
+    updateVolumeState,
+    updateVariableVolume,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);
+export default connect(mapStateToProps, mapDispatchToProps)(VolumeCard);

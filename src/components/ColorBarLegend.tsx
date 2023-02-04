@@ -23,6 +23,7 @@
  */
 
 import * as React from 'react';
+import { SyntheticEvent } from "react";
 import makeStyles from '@mui/styles/makeStyles';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -32,10 +33,9 @@ import Slider, { Mark } from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
 
 import i18n from '../i18n';
-import { ColorBars, formatColorBar, parseColorBar } from '../model/colorBar';
+import { ColorBar, ColorBars, formatColorBar } from '../model/colorBar';
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
 import { ColorBarCanvas } from "./ColorBarCanvas";
-import { SyntheticEvent } from "react";
 
 const HOR_SLIDER_MARGIN = 5;
 const COLOR_BAR_BOX_MARGIN = 1;
@@ -110,7 +110,8 @@ interface ColorBarLegendProps {
     variableName: string | null;
     variableUnits: string;
     variableColorBarMinMax: [number, number];
-    variableColorBarName: string;
+    variableColorBarName: string,
+    variableColorBar: ColorBar,
     variableOpacity: number;
     updateVariableColorBar: (colorBarMinMax: [number, number], colorBarName: string, opacity: number) => void;
     colorBars: ColorBars | null;
@@ -124,6 +125,7 @@ export default function ColorBarLegend({
                                            variableUnits,
                                            variableColorBarMinMax,
                                            variableColorBarName,
+                                           variableColorBar,
                                            variableOpacity,
                                            updateVariableColorBar,
                                            colorBars,
@@ -152,10 +154,6 @@ export default function ColorBarLegend({
     if (!variableName || !colorBars) {
         return null;
     }
-
-    const variableColorBar = parseColorBar(variableColorBarName);
-
-    const imageData = colorBars.images[variableColorBar.baseName];
 
     const handleOpenColorBarMinMaxEditor = (event: React.MouseEvent<HTMLDivElement>) => {
         setColorBarMinMaxAnchorEl(event.currentTarget);
@@ -262,7 +260,7 @@ export default function ColorBarLegend({
     if (colorBarMinMaxEditorOpen) {
 
         const [original1, original2] = originalColorBarMinMax;
-        const dist = original1 < original2 ? (original2 - original1):1;
+        const dist = original1 < original2 ? (original2 - original1) : 1;
         const distExp = Math.floor(Math.log10(dist));
         const distNorm = dist * Math.pow(10, -distExp);
 
@@ -284,7 +282,7 @@ export default function ColorBarLegend({
             numStepsInner = 8;
         }
 
-        const delta = original1 < original2 ? dist / numStepsInner:0.5;
+        const delta = original1 < original2 ? dist / numStepsInner : 0.5;
         const numSteps = numStepsInner + 2 * numStepsOuter;
         const total1 = original1 - numStepsOuter * delta;
         const total2 = original2 + numStepsOuter * delta;
@@ -427,56 +425,55 @@ export default function ColorBarLegend({
     }
 
     return (
-        <div className={'ol-control ' + classes.container}>
-            <div className={classes.title}>
-                <span>{title}</span>
+            <div className={'ol-control ' + classes.container}>
+                <div className={classes.title}>
+                    <span>{title}</span>
+                </div>
+                <ColorBarCanvas
+                        colorBar={variableColorBar}
+                        opacity={variableOpacity}
+                        width={width}
+                        height={height}
+                        onOpenEditor={handleOpenColorBarNameEditor}
+                />
+                <div
+                        className={classes.label}
+                        onClick={handleOpenColorBarMinMaxEditor}
+                >
+                    <Labels minValue={variableColorBarMinMax[0]} maxValue={variableColorBarMinMax[1]}
+                            count={numTicks || 5}/>
+                </div>
+                <Popover
+                        anchorEl={colorBarMinMaxAnchorEl}
+                        open={colorBarMinMaxEditorOpen}
+                        onClose={handleCloseColorBarMinMaxEditor}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                >
+                    {colorBarMinMaxEditor}
+                </Popover>
+                <Popover
+                        anchorEl={colorBarNameAnchorEl}
+                        open={colorBarNameEditorOpen}
+                        onClose={handleCloseColorBarNameEditor}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                >
+                    {colorBarNameEditor}
+                </Popover>
             </div>
-            <ColorBarCanvas
-                colorBar={variableColorBar}
-                imageData={imageData}
-                opacity={variableOpacity}
-                width={width}
-                height={height}
-                onOpenEditor={handleOpenColorBarNameEditor}
-            />
-            <div
-                className={classes.label}
-                onClick={handleOpenColorBarMinMaxEditor}
-            >
-                <Labels minValue={variableColorBarMinMax[0]} maxValue={variableColorBarMinMax[1]}
-                        count={numTicks || 5}/>
-            </div>
-            <Popover
-                anchorEl={colorBarMinMaxAnchorEl}
-                open={colorBarMinMaxEditorOpen}
-                onClose={handleCloseColorBarMinMaxEditor}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                }}
-            >
-                {colorBarMinMaxEditor}
-            </Popover>
-            <Popover
-                anchorEl={colorBarNameAnchorEl}
-                open={colorBarNameEditorOpen}
-                onClose={handleCloseColorBarNameEditor}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-            >
-                {colorBarNameEditor}
-            </Popover>
-        </div>
     );
 }
 

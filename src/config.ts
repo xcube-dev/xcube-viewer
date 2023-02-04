@@ -102,6 +102,7 @@ export class Config {
             },
             configPath
         );
+        branding.allow3D = !!parseInt(appParams.get('allow3D') || '0') || branding.allow3D;
         Config._instance = new Config(name, server, branding, authClient);
         if (process.env.NODE_ENV === 'development') {
             console.debug('Configuration:', Config._instance);

@@ -22,6 +22,7 @@
     "mapProjection": "EPSG:3857",
     "allowDownloads": true,
     "allowRefresh": true,
-    "allowViewModePython": true
+    "allowViewModePython": true,
+    "allow3D": true
   }
 }

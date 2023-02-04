@@ -42,9 +42,16 @@ import {
 } from '../selectors/controlSelectors';
 import { datasetsSelector } from '../selectors/dataSelectors';
 import { AppState } from '../states/appState';
-import { ControlState, MapInteraction, TimeAnimationInterval } from '../states/controlState';
+import {
+    ControlState,
+    MapInteraction,
+    TimeAnimationInterval,
+    VolumeRenderMode,
+    VolumeState
+} from '../states/controlState';
 import { UPDATE_DATASET_PLACE_GROUP, updateDatasetPlaceGroup, UpdateDatasetPlaceGroup, } from './dataActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
+import { BBox } from "geojson";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -133,10 +140,10 @@ export const FLY_TO = 'FLY_TO';
 export interface FlyTo {
     type: typeof FLY_TO;
     mapId: string;
-    location: OlGeometry | OlExtent | null;
+    location: OlGeometry | OlExtent | BBox | null;
 }
 
-export function flyTo(location: OlGeometry | OlExtent | null): FlyTo {
+export function flyTo(location: OlGeometry | OlExtent | BBox | null): FlyTo {
     return {type: FLY_TO, mapId: 'map', location};
 }
 
@@ -158,7 +165,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
 
         const dataset = selectedDatasetSelector(getState());
         const placeGroups = selectedDatasetSelectedPlaceGroupsSelector(getState());
-        if (dataset !== null && placeGroups.length > 0) {
+        if (dataset!==null && placeGroups.length > 0) {
             for (let placeGroup of placeGroups) {
                 if (!isValidPlaceGroup(placeGroup)) {
                     const datasetId = dataset!.id;
@@ -166,18 +173,18 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
                     const activityId = `${UPDATE_DATASET_PLACE_GROUP}-${datasetId}-${placeGroupId}`;
                     dispatch(addActivity(activityId, i18n.get('Loading places')));
                     api.getDatasetPlaceGroup(apiServer.url,
-                                             datasetId,
-                                             placeGroupId,
-                                             getState().userAuthState.accessToken)
-                       .then((placeGroup: PlaceGroup) => {
-                           dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
-                       })
-                       .catch(error => {
-                           dispatch(postMessage('error', error));
-                       })
-                       .finally(() => {
-                           dispatch(removeActivity(activityId));
-                       });
+                        datasetId,
+                        placeGroupId,
+                        getState().userAuthState.accessToken)
+                        .then((placeGroup: PlaceGroup) => {
+                            dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
+                        })
+                        .catch(error => {
+                            dispatch(postMessage('error', error));
+                        })
+                        .finally(() => {
+                            dispatch(removeActivity(activityId));
+                        });
                 }
             }
         }
@@ -322,6 +329,46 @@ export function setMapInteraction(mapInteraction: MapInteraction): SetMapInterac
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const SHOW_VOLUME_CARD = 'SHOW_VOLUME_CARD';
+
+export interface ShowVolumeCard {
+    type: typeof SHOW_VOLUME_CARD;
+    volumeCardOpen: boolean;
+}
+
+export function showVolumeCard(volumeCardOpen: boolean): ShowVolumeCard {
+    return {type: SHOW_VOLUME_CARD, volumeCardOpen};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const SET_VOLUME_RENDER_MODE = 'SET_VOLUME_RENDER_MODE';
+
+export interface SetVolumeRenderMode {
+    type: typeof SET_VOLUME_RENDER_MODE;
+    volumeRenderMode: VolumeRenderMode;
+}
+
+export function setVolumeRenderMode(volumeRenderMode: VolumeRenderMode): SetVolumeRenderMode {
+    return {type: SET_VOLUME_RENDER_MODE, volumeRenderMode};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_VOLUME_STATE = 'UPDATE_VOLUME_STATE';
+
+export interface UpdateVolumeState {
+    type: typeof UPDATE_VOLUME_STATE;
+    volumeId: string;
+    volumeState: VolumeState;
+}
+
+export function updateVolumeState(volumeId: string, volumeState: VolumeState): UpdateVolumeState {
+    return {type: UPDATE_VOLUME_STATE, volumeId, volumeState};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const SHOW_INFO_CARD = 'SHOW_INFO_CARD';
 
 export interface ShowInfoCard {
@@ -460,6 +507,9 @@ export type ControlAction =
     | UpdateSettings
     | OpenDialog
     | CloseDialog
+    | ShowVolumeCard
+    | SetVolumeRenderMode
+    | UpdateVolumeState
     | ShowInfoCard
     | SetVisibleInfoCardElements
     | UpdateInfoCardElementCodeMode

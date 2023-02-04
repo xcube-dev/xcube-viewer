@@ -63,6 +63,8 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('showTimeSeriesMedian', settings);
             storage.setPrimitiveProperty('timeAnimationInterval', settings);
             storage.setPrimitiveProperty('timeChunkSize', settings);
+            storage.setPrimitiveProperty('volumeCardOpen', settings);
+            storage.setPrimitiveProperty('volumeRenderMode', settings);
             storage.setPrimitiveProperty('infoCardOpen', settings);
             storage.setObjectProperty('infoCardElementStates', settings);
             storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
@@ -95,6 +97,8 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('showTimeSeriesMedian', settings, defaultSettings);
             storage.getIntProperty('timeAnimationInterval', settings, defaultSettings);
             storage.getIntProperty('timeChunkSize', settings, defaultSettings);
+            storage.getBooleanProperty('volumeCardOpen', settings, defaultSettings);
+            storage.getStringProperty('volumeRenderMode', settings, defaultSettings);
             storage.getBooleanProperty('infoCardOpen', settings, defaultSettings);
             storage.getObjectProperty('infoCardElementStates', settings, defaultSettings);
             storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);

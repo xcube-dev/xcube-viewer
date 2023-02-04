@@ -66,6 +66,7 @@ import { AppState } from '../states/appState';
 import { findIndexCloseTo } from '../util/find';
 import { MapGroup, maps, MapSource } from '../util/maps';
 import {
+    colorBarsSelector,
     datasetsSelector,
     timeSeriesGroupsSelector,
     userPlaceGroupSelector,
@@ -74,6 +75,7 @@ import {
 import { makeRequestUrl } from '../api/callApi';
 import { MAP_OBJECTS } from '../states/controlState';
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from '../model/proj';
+import { ColorBar, ColorBars, parseColorBar } from '../model/colorBar';
 
 export const selectedDatasetIdSelector = (state: AppState) => state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) => state.controlState.selectedVariableName;
@@ -138,6 +140,14 @@ export const selectedVariableColorBarNameSelector = createSelector(
     selectedVariableSelector,
     (variable: Variable | null): string => {
         return (variable && variable.colorBarName) || 'viridis';
+    }
+);
+
+export const selectedVariableColorBarSelector = createSelector(
+    selectedVariableColorBarNameSelector,
+    colorBarsSelector,
+    (colorBarName: string, colorBars: ColorBars | null): ColorBar => {
+        return parseColorBar(colorBarName, colorBars);
     }
 );
 
@@ -239,6 +249,23 @@ export const selectedPlaceInfoSelector = createSelector(
             return null;
         }
         return findPlaceInfo(placeGroups, (placeGroup, place) => place.id === placeId);
+    }
+);
+
+export const selectedVolumeIdSelector = createSelector(
+    selectedDatasetIdSelector,
+    selectedVariableNameSelector,
+    selectedPlaceSelector,
+    (datasetId: string | null, variableName: string | null, place: Place | null): string | null => {
+        if (datasetId && variableName) {
+            if (!place) {
+                return `${datasetId}-${variableName}-all`;
+            }
+            if (place.geometry.type === 'Polygon' || place.geometry.type === 'MultiPolygon') {
+                return `${datasetId}-${variableName}-${place.id}`;
+            }
+        }
+        return null;
     }
 );
 

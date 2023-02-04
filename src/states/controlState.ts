@@ -66,6 +66,11 @@ export interface ExportSettings {
     zipArchive: boolean;
 }
 
+export type VolumeRenderMode = 'mip' | 'aip' | 'iso';
+export type VolumeStatus = 'loading' | 'ok' | 'error';
+export type VolumeState = { status: VolumeStatus; message?: string; };
+export type VolumeStates = { [volumeId: string]: VolumeState };
+
 export interface ControlState {
     selectedDatasetId: string | null;
     selectedVariableName: string | null;
@@ -92,6 +97,9 @@ export interface ControlState {
     privacyNoticeAccepted: boolean;
     mapInteraction: MapInteraction;
     lastMapInteraction: MapInteraction;
+    volumeCardOpen: boolean;
+    volumeRenderMode: VolumeRenderMode;
+    volumeStates: VolumeStates;
     infoCardOpen: boolean;
     infoCardElementStates: InfoCardElementStates;
     mapProjection: string;
@@ -141,6 +149,9 @@ export function newControlState(): ControlState {
         mapInteraction: 'Point',
         lastMapInteraction: 'Point',
         showRgbLayer: false,
+        volumeCardOpen: false,
+        volumeRenderMode: 'mip',
+        volumeStates: {},
         infoCardOpen: false,
         infoCardElementStates: {
             dataset: {visible: true, viewMode: 'text'},

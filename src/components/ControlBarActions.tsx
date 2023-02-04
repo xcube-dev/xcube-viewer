@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -32,8 +33,8 @@ import withStyles from '@mui/styles/withStyles';
 import Tooltip from '@mui/material/Tooltip';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import InfoIcon from '@mui/icons-material/Info';
+import VolumeIcon from '@mui/icons-material/ThreeDRotation';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import * as React from 'react';
 
 import { Config } from '../config';
 import i18n from '../i18n';
@@ -55,6 +56,8 @@ const styles = (theme: Theme) => createStyles(
 interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     visible: boolean;
     flyToSelectedObject: () => void;
+    volumeCardOpen: boolean;
+    showVolumeCard: (open: boolean) => void;
     infoCardOpen: boolean;
     showInfoCard: (open: boolean) => void;
     timeSeriesGroups: TimeSeriesGroup[];
@@ -69,6 +72,8 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
         classes,
         visible,
         flyToSelectedObject,
+        volumeCardOpen,
+        showVolumeCard,
         infoCardOpen,
         showInfoCard,
         timeSeriesGroups,
@@ -101,6 +106,15 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
                 <MyLocationIcon/>
             </Tooltip>
         </IconButton>
+    );
+
+    /*TODO: I18N*/
+    let volumeButton = Config.instance.branding.allow3D && (
+            <IconButton onClick={() => showVolumeCard(true)} disabled={volumeCardOpen} size="large">
+                <Tooltip arrow title={'Open volume panel (experimental!)'}>
+                    {<VolumeIcon/>}
+                </Tooltip>
+            </IconButton>
     );
 
     let infoButton = (
@@ -140,6 +154,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
                 {refreshButton}
                 {downloadButton}
                 {flyToButton}
+                {volumeButton}
                 {infoButton}
                 {settingsButton}
             </Box>
