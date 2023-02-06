@@ -33,6 +33,9 @@
 * Added an experimental function that allows for rendering 
   a 3D data volume. It utilizes the new experimental xcube Server 
   endpoint `/volumes/{datasetId}/{variableName}`.
+  The feature can be disabled by setting
+  `"branding": {..., "allow3D": false}` in
+  the Viewer's `config.json`.
 
 * The browser window's title and favicon can now be configured
   using the two parameters
