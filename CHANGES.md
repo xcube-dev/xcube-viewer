@@ -1,4 +1,15 @@
-## Changes in version 0.13.0-dev.2 (in development)
+## Changes in version 0.13.0-dev.3 (in development)
+
+### Other
+
+* Tile URLs are now constructed by the viewer for well known endpoints
+  `/tiles/{datasetId}/{varName}/{z}/{y}/{x}` and
+  `/tiles/{datasetId}/rgb/{z}/{y}/{x}`.
+  Prior to this, tile URLs from the server's dataset descriptor responses
+  were used. These were wrong under certain server 
+  circumstances, e.g., when xcube server address is being rerouted. 
+
+## Changes in version 0.13.0-dev.2 
 
 ### Enhancements
 

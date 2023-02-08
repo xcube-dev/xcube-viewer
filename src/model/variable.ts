@@ -23,7 +23,6 @@
  */
 
 import { TileSourceOptions } from './tile';
-import i18n from "../i18n";
 import { VolumeRenderMode } from "../states/controlState";
 
 export interface Variable {
@@ -35,11 +34,11 @@ export interface Variable {
     units: string;
     title: string;
     timeChunkSize: number | null;
-    // tileUrl is new since xcube 0.11
-    tileUrl?: string;
+    // The following are new since xcube 0.11
+    tileUrl?: string;  // no longer used since 0.13
     tileLevelMin?: number;
     tileLevelMax?: number;
-    // tileSourceOptions are longer used since xcube 0.11
+    // tileSourceOptions are no longer used since xcube 0.11
     tileSourceOptions?: TileSourceOptions;
     colorBarName: string;
     colorBarMin: number;

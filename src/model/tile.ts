@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+
+// No longer used since xcube 0.11
 export interface TileGrid {
     minZoom?: number;
     extent: [number, number, number, number];
@@ -31,6 +33,7 @@ export interface TileGrid {
     sizes: Array<[number, number]>;
 }
 
+// No longer used since xcube 0.11
 export interface TileSourceOptions {
     url: string;
     projection: string;

@@ -588,7 +588,24 @@ export const selectedDatasetBoundaryLayerSelector = createSelector(
     }
 );
 
+export const selectedServerSelector = createSelector(
+    userServersSelector,
+    selectedServerIdSelector,
+    (userServers: ApiServerConfig[], serverId: string): ApiServerConfig => {
+        if (userServers.length === 0) {
+            throw new Error(`internal error: no servers configured`);
+        }
+        const server = userServers.find(server => server.id === serverId);
+        if (!server) {
+            throw new Error(`internal error: server with ID "${serverId}" not found`);
+        }
+        return server;
+    }
+);
+
 export const selectedDatasetVariableLayerSelector = createSelector(
+    selectedServerSelector,
+    selectedDatasetIdSelector,
     selectedDatasetVariableSelector,
     selectedDatasetTimeDimensionSelector,
     selectedTimeSelector,
@@ -599,7 +616,9 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     selectedVariableOpacitySelector,
     selectedDatasetAttributionsSelector,
     imageSmoothingSelector,
-    (variable: Variable | null,
+    (server: ApiServerConfig,
+     datasetId,
+     variable: Variable | null,
      timeDimension: TimeDimension | null,
      time: Time | null,
      timeAnimationActive: boolean,
@@ -613,10 +632,6 @@ export const selectedDatasetVariableLayerSelector = createSelector(
         if (!variable) {
             return null;
         }
-        if (!variable.tileUrl) {
-            console.warn(`Variable ${variable.name} has no tileUrl!`);
-            return null;
-        }
         const queryParams: Array<[string, string]> = [
             ['crs', mapProjection],
             ['vmin', `${colorBarMinMax[0]}`],
@@ -626,7 +641,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
         ];
         return getTileLayer(
             'variable',
-            variable.tileUrl,
+            getTileUrl(server.url, datasetId!, variable.name),
             variable.tileLevelMin,
             variable.tileLevelMax,
             queryParams,
@@ -642,6 +657,8 @@ export const selectedDatasetVariableLayerSelector = createSelector(
 );
 
 export const selectedDatasetRgbLayerSelector = createSelector(
+    selectedServerSelector,
+    selectedDatasetIdSelector,
     showRgbLayerSelector,
     selectedDatasetRgbSchemaSelector,
     selectedVariableOpacitySelector,
@@ -651,7 +668,9 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     mapProjectionSelector,
     selectedDatasetAttributionsSelector,
     imageSmoothingSelector,
-    (showRgbLayer: boolean,
+    (server: ApiServerConfig,
+     datasetId,
+     showRgbLayer: boolean,
      rgbSchema: RgbSchema | null,
      opacity: number,
      timeDimension: TimeDimension | null,
@@ -667,8 +686,9 @@ export const selectedDatasetRgbLayerSelector = createSelector(
         const queryParams: Array<[string, string]> = [
             ['crs', mapProjection],
         ];
-        return getTileLayer('rgb',
-            rgbSchema.tileUrl,
+        return getTileLayer(
+            'rgb',
+            getTileUrl(server.url, datasetId!, 'rgb'),
             rgbSchema.tileLevelMin,
             rgbSchema.tileLevelMax,
             queryParams,
@@ -682,6 +702,11 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     }
 );
 
+function getTileUrl(serverUrl: string,
+                    datasetId: string,
+                    varName: string): string {
+    return `${serverUrl}/tiles/${datasetId}/${varName}/` + '{z}/{y}/{x}';
+}
 
 export function getDefaultFillOpacity() {
     return Config.instance.branding.polygonFillOpacity || 0.25;
@@ -777,21 +802,6 @@ export const activityMessagesSelector = createSelector(
     activitiesSelector,
     (activities: { [id: string]: string }): string[] => {
         return Object.keys(activities).map(k => activities[k]);
-    }
-);
-
-export const selectedServerSelector = createSelector(
-    userServersSelector,
-    selectedServerIdSelector,
-    (userServers: ApiServerConfig[], serverId: string): ApiServerConfig => {
-        if (userServers.length === 0) {
-            throw new Error(`internal error: no servers configured`);
-        }
-        const server = userServers.find(server => server.id === serverId);
-        if (!server) {
-            throw new Error(`internal error: server with ID "${serverId}" not found`);
-        }
-        return server;
     }
 );
 
