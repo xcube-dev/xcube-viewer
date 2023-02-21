@@ -705,7 +705,12 @@ export const selectedDatasetRgbLayerSelector = createSelector(
 function getTileUrl(serverUrl: string,
                     datasetId: string,
                     varName: string): string {
-    return `${serverUrl}/tiles/${datasetId}/${varName}/` + '{z}/{y}/{x}';
+    return (serverUrl
+        + '/tiles/'
+        + encodeURIComponent(datasetId)
+        + '/'
+        + encodeURIComponent(varName)
+        + '/{z}/{y}/{x}');
 }
 
 export function getDefaultFillOpacity() {
