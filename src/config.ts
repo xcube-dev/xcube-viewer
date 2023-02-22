@@ -70,21 +70,9 @@ export class Config {
 
     static async load(): Promise<Config> {
         let configPath = appParams.get('configPath') || 'config';
-        let rawConfig;
-        const configUrl = buildPath(baseUrl.href, configPath, 'config.json');
-        try {
-            rawConfig = await fetch(configUrl);
-            rawConfig = await rawConfig.json();
-            if (process.env.NODE_ENV === 'development') {
-                console.debug(`Configuration loaded from ${configUrl}`);
-            }
-        } catch (e) {
+        let rawConfig = await this.loadRawConfig(configPath);
+        if (rawConfig === rawDefaultConfig) {
             configPath = '';
-            rawConfig = rawDefaultConfig;
-            if (process.env.NODE_ENV === 'development') {
-                console.debug(`Failed loading configuration from ${configUrl}:`, e);
-                console.debug(`Using defaults.`);
-            }
         }
 
         const name = rawConfig.name || 'default';
@@ -114,6 +102,38 @@ export class Config {
             this.changeWindowIcon(branding.windowIcon);
         }
         return Config._instance;
+    }
+
+    private static async loadRawConfig(configPath: string) {
+        let rawConfig = null;
+        let rawConfigError = null;
+        const configUrl = buildPath(baseUrl.href, configPath, 'config.json');
+        try {
+            const rawConfigResponse = await fetch(configUrl);
+            if (rawConfigResponse.ok) {
+                rawConfig = await rawConfigResponse.json();
+                if (process.env.NODE_ENV === 'development') {
+                    console.debug(`Configuration loaded from ${configUrl}`);
+                }
+            } else {
+                const {status, statusText} = rawConfigResponse;
+                rawConfigError = `HTTP status ${status}`;
+                if (statusText) {
+                    rawConfigError += ` (${statusText})`;
+                }
+            }
+        } catch (e) {
+            rawConfig = null;
+            rawConfigError = `${e}`;
+        }
+        if (rawConfig === null) {
+            rawConfig = rawDefaultConfig;
+            if (process.env.NODE_ENV === 'development') {
+                console.debug(`Failed loading configuration from ${configUrl}:`, rawConfigError);
+                console.debug(`Using defaults.`);
+            }
+        }
+        return rawConfig;
     }
 
     static get instance(): Config {

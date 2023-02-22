@@ -1,5 +1,11 @@
 ## Changes in version 0.13.1 (in development)
 
+### Fixes
+
+* Tiles of datasets with forward slashes in their identifiers 
+  (originated from nested directories) now display again correctly. 
+  Tile URLs have not been URL-encoded in such cases. (#269)
+
 
 ## Changes in version 0.13.0
 
