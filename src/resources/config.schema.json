@@ -9,16 +9,16 @@
         "authority": {
           "type": "string",
           "format": "uri",
-          "example": "https://blueants.eu.auth0.com/auth"
+          "examples": ["https://blueants.eu.auth0.com/auth"]
         },
         "client_id": {
           "type": "string",
-          "example": "PZ0lovaUSzY2sBaicz3MYK6Z6PzCNj3q"
+          "examples": ["PZ0lovaUSzY2sBaicz3MYK6Z6PzCNj3q"]
         },
         "redirect_uri": {
           "type": "string",
           "format": "uri",
-          "example": "https://blueants.eu.auth0.com/viewer"
+          "examples": ["https://blueants.eu.auth0.com/viewer"]
         },
         "extraQueryParams": {
           "type": "object",
@@ -41,9 +41,9 @@
     "ApiServerConfig": {
       "type": "object",
       "properties": {
-        "id": {"type": "string", "example": "local"},
-        "name": {"type": "string", "example": "Local Server"},
-        "url": {"type": "string", "format": "uri", "example": "https://blueants.eu/api/"}
+        "id": {"type": "string", "examples": ["local"]},
+        "name": {"type": "string", "examples": ["Local Server"]},
+        "url": {"type": "string", "format": "uri", "examples": ["https://blueants.eu/api/"]}
       },
       "required": ["id", "name", "url"],
       "additionalProperties": false
@@ -52,8 +52,14 @@
     "ColorSchema": {
       "oneOf": [
         {
+          "description": "Arbitrary HTML color codes as hexadecimal triplets.",
           "type": "string",
-          "example": "lime",
+          "examples": ["#001c32", "#ceef64"],
+          "minLength": 7
+        },
+        {
+          "description": "Predefined color name.",
+          "examples": ["lime", "red", "lightBlue"],
           "enum": [
             "amber", "blue", "blueGrey", "brown",
             "cyan", "deepOrange", "deepPurple", "green",
@@ -63,14 +69,19 @@
           ]
         },
         {
+          "description": "MUI color palette object.",
+          "examples": [{
+            "main": "#9abc31",
+            "contrastText": "#ffffff"
+          }],
           "type": "object",
           "properties": {
-            "light": { "type": "string", "example": "#ceef64" },
-            "main": { "type": "string", "example": "#9abc31" },
-            "dark": { "type": "string", "example": "#688c00" },
-            "contrastText": { "type": "string", "example": "#fff" }
+            "light": { "type": "string", "examples": ["#ceef64"] },
+            "main": { "type": "string", "examples": ["#9abc31"] },
+            "dark": { "type": "string", "examples": ["#688c00"] },
+            "contrastText": { "type": "string", "examples": ["#ffffff"] }
           },
-          "required": ["light","main", "dark", "contrastText"],
+          "required": ["main"],
           "additionalProperties": false
         }
       ]
@@ -79,30 +90,30 @@
     "Branding": {
       "type": "object",
       "properties": {
-        "appBarTitle": {"type": "string", "example": "xcube Viewer"},
-        "windowTitle": {"type": "string", "example": "xcube Viewer"},
-        "windowIcon": {"type": ["string", "null"], "example": "images/favicon.ico"},
-        "themeName": {"type": "string", "example": "light", "enum": ["dark", "light"]},
+        "appBarTitle": {"type": "string", "examples": ["xcube Viewer"]},
+        "windowTitle": {"type": "string", "examples": ["xcube Viewer"]},
+        "windowIcon": {"type": ["string", "null"], "examples": ["images/favicon.ico"]},
+        "themeName": {"type": "string", "examples": ["light"], "enum": ["dark", "light"]},
         "primaryColor": { "$ref": "#/definitions/ColorSchema" },
         "secondaryColor": { "$ref": "#/definitions/ColorSchema" },
-        "headerBackgroundColor": {"type": "string", "example": "#fafafa"},
-        "logoImage": {"type": "string", "example": "images/logo.png"},
-        "logoWidth": { "type": "integer", "example": 32, "minimum": 0 },
+        "headerBackgroundColor": {"type": "string", "examples": ["#fafafa"]},
+        "logoImage": {"type": "string", "examples": ["images/logo.png"]},
+        "logoWidth": { "type": "integer", "examples": [32], "minimum": 0 },
         "baseMapUrl": {
           "type": "string",
           "format": "uri-template",
-          "example": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          "examples": ["https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"]
         },
         "defaultAgg": {
           "type": "string",
-          "example": "mean",
+          "examples": ["mean"],
           "enum": ["mean", "median", "min", "max"]
         },
         "polygonFillOpacity": {
           "type": "number",
           "minimum": 0.0,
           "maximum": 1.0,
-          "example": 0.025
+          "examples": [0.025]
         },
         "mapProjection": {
           "enum": ["EPSG:4326", "EPSG:3857"],

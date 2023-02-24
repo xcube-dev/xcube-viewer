@@ -2,6 +2,14 @@
 
 ### Fixes
 
+* Values of branding parameters `primaryColor` and `secondaryColor`
+  can now be arbitrary HTML color hex codes, such as `"#76ff03"`.
+  They used to be color names only, such as `"red"`.
+  Adapted `src/recesources/config.schema.json` to reflect the change.
+
+* Fixed `src/recesources/config.schema.json` where invalid item 
+  `example: string` was used instead of `examples: string[]`.
+
 * Tiles of datasets with forward slashes in their identifiers 
   (originated from nested directories) now display again correctly. 
   Tile URLs have not been URL-encoded in such cases. (#269)
