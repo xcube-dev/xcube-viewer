@@ -44,14 +44,14 @@ import {
     teal,
     yellow,
 } from '@mui/material/colors';
-import {Color} from '@mui/material';
+import { ColorPartial } from "@mui/material/styles/createPalette";
 import { PaletteColorOptions } from '@mui/material/styles';
 import baseUrl from './baseurl';
 import { buildPath } from './path';
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const COLORS: { [name: string]: Partial<Color> } = {
+const COLOR_NAMES: { [name: string]: ColorPartial } = {
     amber,
     blue,
     blueGrey,
@@ -102,14 +102,24 @@ export interface Branding {
 
 
 function setBrandingColor(brandingConfig: any, key: keyof Branding) {
-    const colorName = brandingConfig[key];
-    if (typeof colorName === 'string') {
-        const color = COLORS[colorName];
-        if (color) {
-            brandingConfig[key] = color;
-        } else {
-            throw new Error(`branding.${key} "${colorName}" is invalid`);
+    const rawColor= brandingConfig[key];
+    let color: PaletteColorOptions | null = null;
+    if (typeof rawColor === 'string') {
+        color = COLOR_NAMES[rawColor] || null;
+        if (color === null
+            && rawColor.startsWith("#")
+            && (rawColor.length === 7 || rawColor.length === 9)) {
+            color = {main: rawColor};
         }
+    } else if (typeof rawColor === 'object') {
+        if (rawColor.hasOwnProperty('main')) {
+            color = rawColor;
+        }
+    }
+    if (color !== null) {
+        brandingConfig[key] = color;
+    } else {
+        throw new Error(`Value of branding.${key} is invalid: ${rawColor}`);
     }
 }
 
