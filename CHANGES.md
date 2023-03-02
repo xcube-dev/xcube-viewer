@@ -1,4 +1,4 @@
-## Changes in version 0.13.1 (in development)
+## Changes in version 1.0.0-dev.1
 
 ### Fixes
 

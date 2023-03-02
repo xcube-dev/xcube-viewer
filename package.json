@@ -1,6 +1,6 @@
 {
   "name": "xcube-viewer",
-  "version": "0.13.1-dev.2",
+  "version": "1.0.0-dev.1",
   "private": true,
   "homepage": ".",
   "scripts": {
