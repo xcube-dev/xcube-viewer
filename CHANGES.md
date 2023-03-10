@@ -1,11 +1,13 @@
-## Changes in version 1.0.0-dev.1
+## Changes in version 1.0.0
 
-### Fixes
+### Enhancements
 
 * Values of branding parameters `primaryColor` and `secondaryColor`
   can now be arbitrary HTML color hex codes, such as `"#76ff03"`.
   They used to be color names only, such as `"red"`.
   Adapted `src/recesources/config.schema.json` to reflect the change.
+
+### Fixes
 
 * Fixed `src/recesources/config.schema.json` where invalid item 
   `example: string` was used instead of `examples: string[]`.
