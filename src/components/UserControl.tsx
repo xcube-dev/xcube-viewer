@@ -188,7 +188,6 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
                     </Menu>
                     <Dialog
                             open={profileDialogOpen}
-                            TransitionComponent={Transition as any}
                             keepMounted
                             onClose={handleUserProfileDialogClose}
                             aria-labelledby="alert-dialog-slide-title"
