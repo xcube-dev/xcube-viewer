@@ -5,6 +5,27 @@
 * Fixed a crash when clicking the profile menu item for logged-in
   users. (#272)
 
+### Other
+
+* For user login, the default value for the redirect URI 
+  is now `baseUrl.href` instead of `window.location.origin` 
+  in order for viewer deployments that make use of new xcube 
+  server endpoint `"/viewer"` introduced in xcube 1.0.
+
+* Now supporting [dotenv](https://github.com/motdotla/dotenv) 
+  for testing while developing xcube-viewer.
+  We support server configuration and auth configuration variables:
+  ```bash
+    # Server configuration
+    REACT_APP_SERVER_ID=my_server
+    REACT_APP_SERVER_NAME=My Server
+    REACT_APP_SERVER_URL=http://127.0.0.1:8181
+    
+    # Authentication configuration
+    REACT_APP_OAUTH2_AUTHORITY=https://my.authority.eu
+    REACT_APP_OAUTH2_CLIENT_ID=kjJKs5n7kj5k7fo9l3
+    REACT_APP_OAUTH2_AUDIENCE=https://my.audience.eu/api/
+  ```
 
 ## Changes in version 1.0.0
 
