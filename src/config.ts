@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Color, PaletteType } from '@mui/material';
+import { Color, PaletteMode } from '@mui/material';
 import {
     cyan,
     deepPurple,
@@ -76,11 +76,18 @@ export class Config {
         }
 
         const name = rawConfig.name || 'default';
-        const authClient = rawConfig.authClient && {...rawConfig.authClient};
+        let authClient = rawConfig.authClient && {...rawConfig.authClient};
+        let authClientFromEnv = Config.getAuthClientFromEnv();
+        if (authClient) {
+            authClient = {...authClient, ...authClientFromEnv};
+        } else if (authClientFromEnv.authority && authClientFromEnv.client_id) {
+            authClient = authClientFromEnv;
+        }
         const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
-        server.id = appParams.get('serverId') || server.id;
-        server.name = appParams.get('serverName') || server.name;
-        server.url = appParams.get('serverUrl') || server.url;
+        let serverFromEnv = Config.getApiServerFromEnv();
+        server.id = appParams.get('serverId') || serverFromEnv.id || server.id;
+        server.name = appParams.get('serverName') || serverFromEnv.name || server.name;
+        server.url = appParams.get('serverUrl') || serverFromEnv.url || server.url;
         const compact = parseInt(appParams.get('compact') || '0') !== 0;
         const branding = parseBranding(
             {
@@ -162,6 +169,24 @@ export class Config {
             document.head.appendChild(favicon);
         }
     }
+
+    private static getAuthClientFromEnv(): Partial<AuthClientConfig> {
+        const authority = process.env.REACT_APP_OAUTH2_AUTHORITY;
+        const client_id = process.env.REACT_APP_OAUTH2_CLIENT_ID;
+        const audience = process.env.REACT_APP_OAUTH2_AUDIENCE;
+        let authClient: Partial<AuthClientConfig> = {authority, client_id};
+        if (audience) {
+            authClient = {...authClient,  extraQueryParams: {audience}};
+        }
+        return authClient;
+    }
+
+    private static getApiServerFromEnv(): Partial<ApiServerConfig> {
+        const id = process.env.REACT_APP_SERVER_ID;
+        const name = process.env.REACT_APP_SERVER_NAME;
+        const url = process.env.REACT_APP_SERVER_URL;
+        return {id, name, url};
+    }
 }
 
 
@@ -197,16 +222,16 @@ const userPlaceColors: { [name: string]: Color } = (() => {
 export const userPlaceColorNames = userPlaceColorsArray.map(([name, _]) => name);
 
 
-export function getStrokeShade(paletteType: PaletteType) {
-    return paletteType === 'light' ? 800 : 400;
+export function getStrokeShade(paletteMode: PaletteMode) {
+    return paletteMode === 'light' ? 800 : 400;
 }
 
 export function getUserPlaceColorName(index: number): string {
     return userPlaceColorNames[index % userPlaceColorNames.length];
 }
 
-export function getUserPlaceColor(colorName: string, paletteType: PaletteType): string {
-    const shade = getStrokeShade(paletteType);
+export function getUserPlaceColor(colorName: string, paletteMode: PaletteMode): string {
+    const shade = getStrokeShade(paletteMode);
     return userPlaceColors[colorName][shade];
 }
 

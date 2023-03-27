@@ -27,6 +27,7 @@ import { AuthProvider } from "react-oidc-context";
 import { User } from "oidc-client-ts";
 import { Config } from '../config';
 import ErrorBoundary from "./ErrorBoundary";
+import baseUrl from '../util/baseurl';
 
 
 interface AuthWrapperProps {
@@ -53,10 +54,7 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({child
         window.location.pathname = "/";
     }
 
-    // TODO (forman): check whether we can (should?) use
-    //   baseUrl.href (from util/baseurl.ts) here
-    // const redirectUri = baseUrl.href;
-    const redirectUri = window.location.origin;
+    const redirectUri = baseUrl.href;
 
     return (
             <ErrorBoundary>
