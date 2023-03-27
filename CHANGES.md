@@ -1,3 +1,11 @@
+## Changes in version 1.0.1 (in development)
+
+### Fixes
+
+* Fixed a crash when clicking the profile menu item for logged-in
+  users. (#272)
+
+
 ## Changes in version 1.0.0
 
 ### Enhancements
