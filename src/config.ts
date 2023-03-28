@@ -76,18 +76,8 @@ export class Config {
         }
 
         const name = rawConfig.name || 'default';
-        let authClient = rawConfig.authClient && {...rawConfig.authClient};
-        let authClientFromEnv = Config.getAuthClientFromEnv();
-        if (authClient) {
-            authClient = {...authClient, ...authClientFromEnv};
-        } else if (authClientFromEnv.authority && authClientFromEnv.client_id) {
-            authClient = authClientFromEnv;
-        }
-        const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
-        let serverFromEnv = Config.getApiServerFromEnv();
-        server.id = appParams.get('serverId') || serverFromEnv.id || server.id;
-        server.name = appParams.get('serverName') || serverFromEnv.name || server.name;
-        server.url = appParams.get('serverUrl') || serverFromEnv.url || server.url;
+        const authClient = this.getAuthConfig(rawConfig);
+        const server = this.getServerConfig(rawConfig);
         const compact = parseInt(appParams.get('compact') || '0') !== 0;
         const branding = parseBranding(
             {
@@ -109,6 +99,50 @@ export class Config {
             this.changeWindowIcon(branding.windowIcon);
         }
         return Config._instance;
+    }
+
+    private static getAuthConfig(rawConfig: any) {
+        let authClient = rawConfig.authClient && {...rawConfig.authClient};
+        let authClientFromEnv = Config.getAuthClientFromEnv();
+        if (!authClient && authClientFromEnv.authority && authClientFromEnv.clientId) {
+            authClient = {
+                authority: authClientFromEnv.authority,
+                client_id: authClientFromEnv.clientId
+            };
+        }
+        if (authClient) {
+            if (authClientFromEnv.authority) {
+                authClient = {
+                    ...authClient,
+                    authority: authClientFromEnv.authority
+                };
+            }
+            if (authClientFromEnv.clientId) {
+                authClient = {
+                    ...authClient,
+                    client_id: authClientFromEnv.clientId
+                };
+            }
+            if (authClientFromEnv.audience) {
+                authClient = {
+                    ...authClient,
+                    extraQueryParams: {
+                        ...authClient.extraQueryParams,
+                        audience: authClientFromEnv.audience
+                    }
+                };
+            }
+        }
+        return authClient;
+    }
+
+    private static getServerConfig(rawConfig: any) {
+        const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
+        let serverFromEnv = Config.getApiServerFromEnv();
+        server.id = appParams.get('serverId') || serverFromEnv.id || server.id;
+        server.name = appParams.get('serverName') || serverFromEnv.name || server.name;
+        server.url = appParams.get('serverUrl') || serverFromEnv.url || server.url;
+        return server;
     }
 
     private static async loadRawConfig(configPath: string) {
@@ -170,15 +204,11 @@ export class Config {
         }
     }
 
-    private static getAuthClientFromEnv(): Partial<AuthClientConfig> {
+    private static getAuthClientFromEnv() {
         const authority = process.env.REACT_APP_OAUTH2_AUTHORITY;
-        const client_id = process.env.REACT_APP_OAUTH2_CLIENT_ID;
+        const clientId = process.env.REACT_APP_OAUTH2_CLIENT_ID;
         const audience = process.env.REACT_APP_OAUTH2_AUDIENCE;
-        let authClient: Partial<AuthClientConfig> = {authority, client_id};
-        if (audience) {
-            authClient = {...authClient,  extraQueryParams: {audience}};
-        }
-        return authClient;
+        return {authority, clientId, audience};
     }
 
     private static getApiServerFromEnv(): Partial<ApiServerConfig> {

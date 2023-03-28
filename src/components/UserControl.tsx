@@ -23,12 +23,12 @@
  */
 
 import * as React from 'react';
-import Transition from 'react-transition-group/Transition';
 import { useAuth } from "react-oidc-context";
 import { Theme } from '@mui/material';
 import { WithStyles } from '@mui/styles';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
+import { deepOrange } from '@mui/material/colors';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -40,45 +40,44 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PersonIcon from '@mui/icons-material/Person';
-import i18n from '../i18n';
 
+import i18n from '../i18n';
 import { WithLocale } from '../util/lang';
 import { Config } from '../config';
 import UserProfile from '../components/UserProfile';
-import { deepOrange } from '@mui/material/colors';
 
 
 const styles = (theme: Theme) => createStyles(
-        {
-            imageAvatar: {
-                width: 32,
-                height: 32,
-                color: '#fff',
-                backgroundColor: deepOrange[300],
-            },
-            letterAvatar: {
-                width: 32,
-                height: 32,
-                color: '#fff',
-                backgroundColor: deepOrange[300],
-            },
-            signInWrapper: {
-                margin: theme.spacing(1),
-                position: 'relative',
-            },
-            signInProgress: {
-                color: deepOrange[300],
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                zIndex: 1,
-                marginTop: -12,
-                marginLeft: -12,
-            },
-            iconButton: {
-                padding: 0,
-            }
+    {
+        imageAvatar: {
+            width: 32,
+            height: 32,
+            color: '#fff',
+            backgroundColor: deepOrange[300],
+        },
+        letterAvatar: {
+            width: 32,
+            height: 32,
+            color: '#fff',
+            backgroundColor: deepOrange[300],
+        },
+        signInWrapper: {
+            margin: theme.spacing(1),
+            position: 'relative',
+        },
+        signInProgress: {
+            color: deepOrange[300],
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            zIndex: 1,
+            marginTop: -12,
+            marginLeft: -12,
+        },
+        iconButton: {
+            padding: 0,
         }
+    }
 );
 
 interface UserControlProps extends WithStyles<typeof styles>, WithLocale {
@@ -95,7 +94,9 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
     }
 
     React.useEffect(() => {
-        console.log("User changed:", auth.user);
+        if (process.env.NODE_ENV === 'development') {
+            console.log("User changed:", auth.user);
+        }
         if (auth.user && auth.user.access_token) {
             updateAccessToken(auth.user.access_token);
         } else {
@@ -166,57 +167,57 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
             avatar = <Avatar className={classes.letterAvatar}>{avatarContent}</Avatar>;
         }
         return (
-                <React.Fragment>
-                    <IconButton
-                            onClick={handleUserMenuOpen}
-                            aria-controls="user-menu"
-                            aria-haspopup="true"
-                            size="small"
-                            className={classes.iconButton}
-                    >
-                        {avatar}
-                    </IconButton>
-                    <Menu
-                            id="user-menu"
-                            anchorEl={userMenuAnchorEl}
-                            keepMounted
-                            open={Boolean(userMenuAnchorEl)}
-                            onClose={handleUserMenuClose}
-                    >
-                        <MenuItem onClick={handleUserProfileMenuItemClicked}>{i18n.get('Profile')}</MenuItem>
-                        <MenuItem onClick={handleSignOutMenuItemClicked}>{i18n.get('Log out')}</MenuItem>
-                    </Menu>
-                    <Dialog
-                            open={profileDialogOpen}
-                            keepMounted
-                            onClose={handleUserProfileDialogClose}
-                            aria-labelledby="alert-dialog-slide-title"
-                            aria-describedby="alert-dialog-slide-description"
-                    >
-                        <DialogTitle id="alert-dialog-slide-title">{i18n.get('User Profile')}</DialogTitle>
-                        <DialogContent>
-                            <UserProfile userInfo={auth.user.profile}/>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleUserProfileDialogClose} color="primary">
-                                OK
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </React.Fragment>
+            <React.Fragment>
+                <IconButton
+                    onClick={handleUserMenuOpen}
+                    aria-controls="user-menu"
+                    aria-haspopup="true"
+                    size="small"
+                    className={classes.iconButton}
+                >
+                    {avatar}
+                </IconButton>
+                <Menu
+                    id="user-menu"
+                    anchorEl={userMenuAnchorEl}
+                    keepMounted
+                    open={Boolean(userMenuAnchorEl)}
+                    onClose={handleUserMenuClose}
+                >
+                    <MenuItem onClick={handleUserProfileMenuItemClicked}>{i18n.get('Profile')}</MenuItem>
+                    <MenuItem onClick={handleSignOutMenuItemClicked}>{i18n.get('Log out')}</MenuItem>
+                </Menu>
+                <Dialog
+                    open={profileDialogOpen}
+                    keepMounted
+                    onClose={handleUserProfileDialogClose}
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle id="alert-dialog-slide-title">{i18n.get('User Profile')}</DialogTitle>
+                    <DialogContent>
+                        <UserProfile userInfo={auth.user.profile}/>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleUserProfileDialogClose} color="primary">
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
         );
     } else {
         let userButton = (
-                <IconButton onClick={auth.isLoading ? undefined : handleSignInButtonClicked} size="small">
-                    <PersonIcon/>
-                </IconButton>
+            <IconButton onClick={auth.isLoading ? undefined : handleSignInButtonClicked} size="small">
+                <PersonIcon/>
+            </IconButton>
         );
         if (auth.isLoading) {
             userButton = (
-                    <div className={classes.signInWrapper}>
-                        {userButton}
-                        <CircularProgress size={24} className={classes.signInProgress}/>
-                    </div>
+                <div className={classes.signInWrapper}>
+                    {userButton}
+                    <CircularProgress size={24} className={classes.signInProgress}/>
+                </div>
             );
         }
         return userButton;
