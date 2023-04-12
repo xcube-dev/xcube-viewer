@@ -97,7 +97,10 @@ const styles = (theme: Theme) => createStyles(
             fontWeight: 'bold',
             paddingBottom: theme.spacing(1),
         },
-        chartTitle: {},
+        chartTitle: {
+            fontSize: "inherit",
+            fontWeight: "normal"
+        },
         legendContainer: {
             display: "flex",
             justifyContent: "center",
@@ -105,12 +108,10 @@ const styles = (theme: Theme) => createStyles(
             flexWrap: "wrap"
         },
         legendItem: {
-            fontSize: "0.85em",
             display: "flex",
             alignItems: "center"
         },
         legendCloseIcon: {
-            // fontSize: "0.3em",
             marginLeft: 4,
             cursor: "pointer",
             display: "flex",
@@ -184,7 +185,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     const paletteType = theme.palette.mode;
     const lightStroke = theme.palette.primary.light;
     const mainStroke = theme.palette.primary.main;
-    const labelTextColor = theme.palette.primary.contrastText;
+    const labelTextColor = theme.palette.text.primary;
+
+    console.log(paletteType, lightStroke, mainStroke, labelTextColor);
 
     let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
     if (selectedTimeRange) {
@@ -443,7 +446,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                     onMouseLeave={handleMouseLeave}
                     onClick={handleClick}
                     syncId="anyId"
-                    style={{color: labelTextColor}}
+                    style={{color: labelTextColor, fontSize: "0.8em"}}
                 >
                     <XAxis
                         dataKey="time"
