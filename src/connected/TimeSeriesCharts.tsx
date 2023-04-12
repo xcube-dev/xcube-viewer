@@ -26,7 +26,7 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
 import TimeSeriesCharts from '../components/TimeSeriesCharts';
-import { removeTimeSeriesGroup } from "../actions/dataActions";
+import { removeTimeSeries, removeTimeSeriesGroup } from "../actions/dataActions";
 import { selectPlace, selectTime, selectTimeRange } from "../actions/controlActions";
 import {
     selectedDatasetTimeRangeSelector,
@@ -52,6 +52,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
     selectTime,
     selectTimeRange,
+    removeTimeSeries,
     removeTimeSeriesGroup,
     selectPlace,
 };

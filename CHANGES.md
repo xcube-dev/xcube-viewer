@@ -1,3 +1,9 @@
+## Changes in version 1.1.0 (in development)
+
+* Users can now remove individual timeseries from a chart. (#277)
+
+
+
 ## Changes in version 1.0.1
 
 ### Fixes

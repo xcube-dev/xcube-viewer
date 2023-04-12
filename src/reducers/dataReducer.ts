@@ -33,6 +33,7 @@ import {
     ADD_USER_PLACES,
     CONFIGURE_SERVERS,
     REMOVE_ALL_TIME_SERIES,
+    REMOVE_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASET_PLACE_GROUP,
@@ -178,8 +179,21 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             }
             return state;
         }
+        case REMOVE_TIME_SERIES: {
+            const tsgIndex = state.timeSeriesGroups.findIndex(tsg => tsg.id === action.groupId);
+            if (tsgIndex >= 0) {
+                const timeSeriesGroups = [...state.timeSeriesGroups];
+                const timeSeriesGroup = {...timeSeriesGroups[tsgIndex]};
+                const timeSeriesArray = [...timeSeriesGroup.timeSeriesArray];
+                timeSeriesArray.splice(action.index, 1);
+                timeSeriesGroup.timeSeriesArray = timeSeriesArray;
+                timeSeriesGroups[tsgIndex] = timeSeriesGroup
+                return {...state, timeSeriesGroups};
+            }
+            return state;
+        }
         case REMOVE_TIME_SERIES_GROUP: {
-            let tsgIndex = state.timeSeriesGroups.findIndex(tsg => tsg.id === action.id);
+            const tsgIndex = state.timeSeriesGroups.findIndex(tsg => tsg.id === action.id);
             if (tsgIndex >= 0) {
                 const timeSeriesGroups = [...state.timeSeriesGroups];
                 timeSeriesGroups.splice(tsgIndex, 1);
