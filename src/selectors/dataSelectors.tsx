@@ -25,7 +25,7 @@
 import { AppState } from "../states/appState";
 import { createSelector } from "reselect";
 import { Dataset } from "../model/dataset";
-import { PlaceGroup } from "../model/place";
+import { getPlaceGroupSchema, PlaceGroup, PlaceGroupSchema } from "../model/place";
 
 export const datasetsSelector = (state: AppState) => state.dataState.datasets || [];
 export const colorBarsSelector = (state: AppState) => state.dataState.colorBars;
@@ -53,3 +53,12 @@ export const placeGroupsSelector = createSelector(
         return placeGroupsArray;
     }
 );
+
+
+export const placeGroupSchemasSelector = createSelector(
+    placeGroupsSelector,
+    (placeGroups: PlaceGroup[]): PlaceGroupSchema[] => {
+        return placeGroups.map(getPlaceGroupSchema);
+    }
+);
+

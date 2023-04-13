@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -54,7 +54,7 @@ export interface Place extends GeoJSON.Feature {
 export interface PlaceGroup extends GeoJSON.FeatureCollection {
     id: string;
     title: string;
-    features: Place[];
+    features: Place[];  // note, this can be undefined!
     propertyMapping?: { [role: string]: string };
     placeGroups?: { [placeId: string]: PlaceGroup }; // placeGroups in placeGroups are not yet supported
 }
@@ -69,6 +69,42 @@ export interface PlaceInfo {
     color: string;
     image: string | null;
     description: string | null;
+}
+
+export type PlaceSchema = { [propertyName: string]: string };
+
+/**
+ * Computed place group schema.
+ */
+export interface PlaceGroupSchema {
+    id: string;
+    title: string;
+    properties: PlaceSchema;
+}
+
+export function getPlaceGroupSchema(placeGroup: PlaceGroup) {
+    return {
+        id: placeGroup.id,
+        title: placeGroup.title,
+        properties: getPlaceSchema(placeGroup.features || [])
+    }
+}
+
+export function getPlaceSchema(places: Place[]) {
+    const placeSchema: { [propertyName: string]: string } = {};
+    places.forEach(place => {
+        const featureProperties = place.properties || {};
+        Object.getOwnPropertyNames(featureProperties).forEach(propertyName => {
+            const propertyValue = featureProperties[propertyName];
+            if (propertyValue !== null) {
+                const propertyType = typeof propertyValue;
+                if (propertyType !== 'undefined') {
+                    placeSchema[propertyName] = propertyType;
+                }
+            }
+        });
+    });
+    return placeSchema;
 }
 
 export const DEFAULT_LABEL_PROPERTY_NAMES = mkCases(['label', 'title', 'name', 'id']);

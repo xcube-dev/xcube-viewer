@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,7 +31,7 @@ import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
 import Typography from '@mui/material/Typography';
 import AllOutIcon from '@mui/icons-material/AllOut';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useState } from 'react';
@@ -56,10 +56,11 @@ import {
 
 import { getUserPlaceColor } from '../config';
 import i18n from '../i18n';
-import { Place, PlaceInfo } from '../model/place';
+import { Place, PlaceGroupSchema, PlaceInfo } from '../model/place';
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
 import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
+import AddTimeSeriesButton from "./AddTimeSeriesButton";
 
 const INVISIBLE_LINE_COLOR = '#00000000';
 const SUBSTITUTE_LABEL_COLOR = '#FAFFDD';
@@ -142,6 +143,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
 
     selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     places: Place[];
+
+    placeGroupSchemas: PlaceGroupSchema[];
 }
 
 
@@ -154,25 +157,28 @@ interface TimeRangeSelection {
     secondTime?: number;
 }
 
-const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
-                                                             classes,
-                                                             timeSeriesGroup,
-                                                             selectTimeSeries,
-                                                             selectedTime,
-                                                             selectTime,
-                                                             selectedTimeRange,
-                                                             selectTimeRange,
-                                                             places,
-                                                             selectPlace,
-                                                             placeInfos,
-                                                             dataTimeRange,
-                                                             theme,
-                                                             showErrorBars,
-                                                             showPointsOnly,
-                                                             removeTimeSeries,
-                                                             removeTimeSeriesGroup,
-                                                             completed,
-                                                         }) => {
+const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
+    {
+        classes,
+        timeSeriesGroup,
+        selectTimeSeries,
+        selectedTime,
+        selectTime,
+        selectedTimeRange,
+        selectTimeRange,
+        places,
+        selectPlace,
+        placeInfos,
+        dataTimeRange,
+        theme,
+        showErrorBars,
+        showPointsOnly,
+        removeTimeSeries,
+        removeTimeSeriesGroup,
+        placeGroupSchemas,
+        completed,
+    }
+) => {
     const [
         timeRangeSelection,
         setTimeRangeSelection
@@ -187,7 +193,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     const mainStroke = theme.palette.primary.main;
     const labelTextColor = theme.palette.text.primary;
 
-    console.log(paletteType, lightStroke, mainStroke, labelTextColor);
+    console.log('placeGroupSchemas:', placeGroupSchemas);
 
     let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
     if (selectedTimeRange) {
@@ -209,7 +215,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         clearTimeRangeSelection()
     };
 
-    const handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
+    const handleTimeSeriesClick = (timeSeriesGroupId: string,
+                                   timeSeriesIndex: number,
+                                   timeSeries: TimeSeries) => {
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
@@ -229,7 +237,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         }
     };
 
-    const handleMouseUp = (event: any) => {
+    const handleMouseUp = () => {
         zoomIn();
     };
 
@@ -398,6 +406,15 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     }
     const progress = completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
     const loading = (progress > 0 && progress < 100);
+
+    const addTimeSeriesButton = (
+        <AddTimeSeriesButton
+            key="addTimeSeries"
+            className={classes.actionButton}
+            placeGroupSchemas={placeGroupSchemas}
+        />
+    );
+    actionButtons.push(addTimeSeriesButton);
 
     let removeAllButton;
     if (loading) {
@@ -612,7 +629,7 @@ const _CustomLegendContent: React.FC<CustomLegendProps & LegendProps> = (props) 
                                 // of <Legend/>!
                                 onMouseUp={() => removeTimeSeries(index)}
                             >
-                                <HighlightOffIcon fontSize={"small"}/>
+                                <RemoveCircleOutlineIcon fontSize={"small"}/>
                             </span>
                         )}
                     </div>
