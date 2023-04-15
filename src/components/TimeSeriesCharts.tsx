@@ -30,8 +30,8 @@ import { Theme } from '@mui/material';
 
 import { WithLocale } from '../util/lang';
 import TimeSeriesChart from './TimeSeriesChart';
-import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
-import { Place, PlaceGroupSchema, PlaceInfo } from '../model/place';
+import { PlaceGroupTimeSeries, Time, TimeRange, TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
+import { Place, PlaceInfo } from '../model/place';
 import TimeRangeSlider from './TimeRangeSlider';
 
 
@@ -72,7 +72,9 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     placeInfos?: { [placeId: string]: PlaceInfo };
     selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     places: Place[];
-    placeGroupSchemas: PlaceGroupSchema[];
+
+    placeGroupTimeSeries: PlaceGroupTimeSeries[];
+    addPlaceGroupTimeSeries: (timeSeriesGroupId: string, timeSeries: TimeSeries) => void;
 }
 
 const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = (
@@ -92,12 +94,12 @@ const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = (
         placeInfos,
         places,
         selectPlace,
-        placeGroupSchemas
+        placeGroupTimeSeries,
+        addPlaceGroupTimeSeries
     }
 ) => {
+    console.log("placeGroupTimeSeries", placeGroupTimeSeries);
 
-    console.log("places", places)
-    console.log("placeGroupSchemas", placeGroupSchemas)
     const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
         const completed = timeSeriesGroup.timeSeriesArray.map(item => (
             item.dataProgress ? 100 * item.dataProgress : 0
@@ -121,7 +123,8 @@ const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = (
                 placeInfos={placeInfos}
                 places={places}
                 selectPlace={selectPlace}
-                placeGroupSchemas={placeGroupSchemas}
+                placeGroupTimeSeries={placeGroupTimeSeries}
+                addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
             />
         );
     });

@@ -56,8 +56,16 @@ import {
 
 import { getUserPlaceColor } from '../config';
 import i18n from '../i18n';
-import { Place, PlaceGroupSchema, PlaceInfo } from '../model/place';
-import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
+import { Place, PlaceInfo } from '../model/place';
+import {
+    equalTimeRanges,
+    PlaceGroupTimeSeries,
+    Time,
+    TimeRange,
+    TimeSeries,
+    TimeSeriesGroup,
+    TimeSeriesPoint
+} from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
 import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
@@ -144,7 +152,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     places: Place[];
 
-    placeGroupSchemas: PlaceGroupSchema[];
+    placeGroupTimeSeries: PlaceGroupTimeSeries[];
+    addPlaceGroupTimeSeries: (timeSeries: TimeSeries) => void;
 }
 
 
@@ -175,7 +184,8 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
         showPointsOnly,
         removeTimeSeries,
         removeTimeSeriesGroup,
-        placeGroupSchemas,
+        placeGroupTimeSeries,
+        addPlaceGroupTimeSeries,
         completed,
     }
 ) => {
@@ -192,8 +202,6 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
     const lightStroke = theme.palette.primary.light;
     const mainStroke = theme.palette.primary.main;
     const labelTextColor = theme.palette.text.primary;
-
-    console.log('placeGroupSchemas:', placeGroupSchemas);
 
     let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
     if (selectedTimeRange) {
@@ -411,7 +419,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
         <AddTimeSeriesButton
             key="addTimeSeries"
             className={classes.actionButton}
-            placeGroupSchemas={placeGroupSchemas}
+            timeSeriesGroupId={timeSeriesGroup.id}
+            placeGroupTimeSeries={placeGroupTimeSeries}
+            addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
         />
     );
     actionButtons.push(addTimeSeriesButton);

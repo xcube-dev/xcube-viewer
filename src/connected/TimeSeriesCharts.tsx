@@ -26,14 +26,14 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
 import TimeSeriesCharts from '../components/TimeSeriesCharts';
-import { removeTimeSeries, removeTimeSeriesGroup } from "../actions/dataActions";
+import { removeTimeSeries, removeTimeSeriesGroup, addPlaceGroupTimeSeries } from "../actions/dataActions";
 import { selectPlace, selectTime, selectTimeRange } from "../actions/controlActions";
 import {
     selectedDatasetTimeRangeSelector,
     selectedPlaceGroupPlacesSelector,
     timeSeriesPlaceInfosSelector
 } from '../selectors/controlSelectors';
-import { placeGroupSchemasSelector } from "../selectors/dataSelectors";
+import { placeGroupTimeSeriesSelector } from "../selectors/dataSelectors";
 
 
 const mapStateToProps = (state: AppState) => {
@@ -47,7 +47,7 @@ const mapStateToProps = (state: AppState) => {
         showErrorBars: state.controlState.showTimeSeriesErrorBars,
         placeInfos: timeSeriesPlaceInfosSelector(state),
         places: selectedPlaceGroupPlacesSelector(state),
-        placeGroupSchemas: placeGroupSchemasSelector(state),
+        placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
     }
 };
 
@@ -57,6 +57,7 @@ const mapDispatchToProps = {
     removeTimeSeries,
     removeTimeSeriesGroup,
     selectPlace,
+    addPlaceGroupTimeSeries,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TimeSeriesCharts);

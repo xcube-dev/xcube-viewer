@@ -29,44 +29,54 @@ import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import { WithLocale } from '../util/lang';
-import { PlaceGroupSchema } from "../model/place";
+import { PlaceGroupTimeSeries, TimeSeries } from "../model/timeSeries";
 
 
 interface AddTimeSeriesButtonProps extends WithLocale {
     className: string;
-    placeGroupSchemas: PlaceGroupSchema[];
+    timeSeriesGroupId: string;
+    placeGroupTimeSeries: PlaceGroupTimeSeries[];
+    addPlaceGroupTimeSeries: (timeSeriesGroupId: string, timeSeries: TimeSeries) => void;
 }
 
 const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
     {
         className,
-        placeGroupSchemas
+        timeSeriesGroupId,
+        placeGroupTimeSeries,
+        addPlaceGroupTimeSeries
     }
 ) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleMenuClose = () => {
         setAnchorEl(null);
     };
 
-    const isOpen = Boolean(anchorEl);
+    const handleMenuItemClick = (timeSeries: TimeSeries) => {
+        setAnchorEl(null);
+        addPlaceGroupTimeSeries(timeSeriesGroupId, timeSeries);
+    };
 
     let menuItems: React.ReactNode[] = [];
-    placeGroupSchemas
-        .filter(placeGroupSchema => typeof placeGroupSchema.properties["time"] === "string")
-        .forEach(placeGroupSchema => {
-            Object.getOwnPropertyNames(placeGroupSchema.properties).forEach(propertyName => {
-                const propertyType = placeGroupSchema.properties[propertyName];
-                if (propertyType === "number" || propertyType === "boolean") {
-                    const menuLabel = `${placeGroupSchema.title} / ${propertyName}`;
-                    menuItems.push(<MenuItem onClick={handleClose}>{menuLabel}</MenuItem>);
-                }
-            })
+    placeGroupTimeSeries.forEach(pgTs => {
+        Object.getOwnPropertyNames(pgTs.timeSeries).forEach(propertyName => {
+            const menuLabel = `${pgTs.placeGroup.title} / ${propertyName}`;
+            menuItems.push(
+                <MenuItem
+                    onClick={() => handleMenuItemClick(pgTs.timeSeries[propertyName])}
+                >
+                    {menuLabel}
+                </MenuItem>
+            );
         });
+    });
+
+    const isOpen = Boolean(anchorEl);
 
     return (
         <>
@@ -77,7 +87,7 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
                 aria-controls={isOpen ? 'basic-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={isOpen ? 'true' : undefined}
-                onClick={handleClick}
+                onClick={handleButtonClick}
                 disabled={menuItems.length === 0}
             >
                 <AddCircleOutlineIcon/>
@@ -86,7 +96,7 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={isOpen}
-                onClose={handleClose}
+                onClose={handleMenuClose}
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
                 }}

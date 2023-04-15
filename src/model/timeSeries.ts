@@ -24,7 +24,8 @@
 
 import * as geojson from 'geojson';
 
-import { utcTimeToIsoDateTimeString } from '../util/time';
+import { parseISO } from 'date-fns';
+import { dateTimeToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from './place';
 
 
@@ -98,7 +99,7 @@ type TimePlaceRows = { [timePlaceId: string]: RowData };
 export interface TimeSeriesTable {
     colNames: string[];
     dataRows: DataRow[];
-    referencedPlaces: {[placeId: string]: Place};
+    referencedPlaces: { [placeId: string]: Place };
 }
 
 export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
@@ -159,14 +160,13 @@ export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
         return placeId1.localeCompare(placeId2);
     });
 
-    const referencedPlaces: {[placeId: string]: Place} = {};
+    const referencedPlaces: { [placeId: string]: Place } = {};
     placeIds.forEach(placeId => {
         referencedPlaces[placeId] = findPlaceInPlaceGroups(placeGroups, placeId)!;
     })
 
     return {colNames, dataRows, referencedPlaces};
 }
-
 
 
 export function timeSeriesGroupsToGeoJSON(timeSeriesGroups: TimeSeriesGroup[]): geojson.FeatureCollection {
@@ -200,4 +200,69 @@ export function timeSeriesToGeoJSON(timeSeries: TimeSeries): geojson.Feature {
             })
         }
     };
+}
+
+export interface PlaceGroupTimeSeries {
+    placeGroup: PlaceGroup;
+    timeSeries: {[propertyName: string]: TimeSeries};
+}
+
+export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSeries | null {
+    let timeSeriesMapping: {[propertyName: string]: TimeSeries} | null = null;
+    const places = placeGroup.features || [];
+    for (let place of places) {
+        if (!place.properties) {
+            continue;
+        }
+        let time = place.properties["time"];
+        if (typeof time !== "string") {
+            continue;
+        }
+        const timeValue = parseISO(time);
+        if (Number.isNaN(timeValue.getDate())) {
+            continue;
+        }
+        const utcTime = dateTimeToUtcTime(timeValue);
+        for (let propertyName of Object.getOwnPropertyNames(place.properties)) {
+            let propertyValue = place.properties[propertyName];
+            const propertyType = typeof propertyValue;
+            if (propertyType === "boolean") {
+                propertyValue = propertyValue ? 1 : 0;
+            } else if (propertyType !== "number") {
+                propertyValue = Number.NaN;
+            }
+            if (Number.isNaN(propertyValue)) {
+                continue;
+            }
+            const point: TimeSeriesPoint = {
+                time: utcTime,
+                countTot: 1,
+                mean: propertyValue,
+            };
+            if (timeSeriesMapping === null) {
+                timeSeriesMapping = {};
+            }
+            let timeSeries = timeSeriesMapping[propertyName];
+            if (!timeSeries) {
+                timeSeriesMapping[propertyName] = {
+                    source: {
+                        datasetId: placeGroup.id,
+                        variableName: propertyName,
+                        placeId: "",
+                        geometry: {type: "Point", coordinates: [0, 0]},
+                        valueDataKey: "mean",
+                        errorDataKey: null,
+                    },
+                    data: [point],
+                    dataProgress: 100,
+                };
+            } else {
+                timeSeries.data.push(point);
+            }
+        }
+    }
+    if (timeSeriesMapping === null) {
+        return null;
+    }
+    return {placeGroup, timeSeries: timeSeriesMapping};
 }

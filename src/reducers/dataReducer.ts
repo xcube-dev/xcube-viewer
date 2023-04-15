@@ -28,20 +28,21 @@ import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
 import {
-    DataAction,
+    ADD_PLACE_GROUP_TIME_SERIES,
     ADD_USER_PLACE,
     ADD_USER_PLACES,
     CONFIGURE_SERVERS,
+    DataAction,
     REMOVE_ALL_TIME_SERIES,
+    REMOVE_ALL_USER_PLACES,
     REMOVE_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
+    REMOVE_USER_PLACE,
     UPDATE_COLOR_BARS,
     UPDATE_DATASET_PLACE_GROUP,
     UPDATE_DATASETS,
-    UPDATE_TIME_SERIES,
-    REMOVE_USER_PLACE,
-    REMOVE_ALL_USER_PLACES,
     UPDATE_SERVER_INFO,
+    UPDATE_TIME_SERIES,
     UPDATE_VARIABLE_COLOR_BAR,
     UPDATE_VARIABLE_VOLUME
 } from '../actions/dataActions';
@@ -169,6 +170,18 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
         }
         case UPDATE_COLOR_BARS: {
             return {...state, colorBars: action.colorBars};
+        }
+        case ADD_PLACE_GROUP_TIME_SERIES: {
+            const {timeSeriesGroupId, timeSeries} = action;
+            const timeSeriesGroups = state.timeSeriesGroups;
+            const tsgIndex = timeSeriesGroups.findIndex(tsg => tsg.id === timeSeriesGroupId);
+            const timeSeriesGroup = timeSeriesGroups[tsgIndex];
+            const newTimeSeriesGroups = [...timeSeriesGroups];
+            newTimeSeriesGroups[tsgIndex] = {
+                ...timeSeriesGroup,
+                timeSeriesArray: [...timeSeriesGroup.timeSeriesArray, timeSeries]
+            };
+            return {...state, timeSeriesGroups: newTimeSeriesGroups};
         }
         case UPDATE_TIME_SERIES: {
             const {timeSeries, updateMode, dataMode} = action;

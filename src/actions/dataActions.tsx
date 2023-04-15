@@ -405,8 +405,25 @@ export interface UpdateTimeSeries {
     dataMode: 'new' | 'append';
 }
 
-export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 'replace' | 'remove', dataMode: 'new' | 'append'): UpdateTimeSeries {
+export function updateTimeSeries(timeSeries: TimeSeries,
+                                 updateMode: 'add' | 'replace' | 'remove',
+                                 dataMode: 'new' | 'append'): UpdateTimeSeries {
     return {type: UPDATE_TIME_SERIES, timeSeries, updateMode, dataMode};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ADD_PLACE_GROUP_TIME_SERIES = 'ADD_PLACE_GROUP_TIME_SERIES';
+
+export interface AddPlaceGroupTimeSeries {
+    type: typeof ADD_PLACE_GROUP_TIME_SERIES;
+    timeSeriesGroupId: string;
+    timeSeries: TimeSeries;
+}
+
+export function addPlaceGroupTimeSeries(timeSeriesGroupId: string,
+                                        timeSeries: TimeSeries): AddPlaceGroupTimeSeries {
+    return {type: ADD_PLACE_GROUP_TIME_SERIES, timeSeriesGroupId, timeSeries};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -800,6 +817,7 @@ export type DataAction =
     UpdateServerInfo
     | UpdateDatasets
     | UpdateDatasetPlaceGroup
+    | AddPlaceGroupTimeSeries
     | AddUserPlace
     | AddUserPlaces
     | RemoveUserPlace

@@ -71,42 +71,6 @@ export interface PlaceInfo {
     description: string | null;
 }
 
-export type PlaceSchema = { [propertyName: string]: string };
-
-/**
- * Computed place group schema.
- */
-export interface PlaceGroupSchema {
-    id: string;
-    title: string;
-    properties: PlaceSchema;
-}
-
-export function getPlaceGroupSchema(placeGroup: PlaceGroup) {
-    return {
-        id: placeGroup.id,
-        title: placeGroup.title,
-        properties: getPlaceSchema(placeGroup.features || [])
-    }
-}
-
-export function getPlaceSchema(places: Place[]) {
-    const placeSchema: { [propertyName: string]: string } = {};
-    places.forEach(place => {
-        const featureProperties = place.properties || {};
-        Object.getOwnPropertyNames(featureProperties).forEach(propertyName => {
-            const propertyValue = featureProperties[propertyName];
-            if (propertyValue !== null) {
-                const propertyType = typeof propertyValue;
-                if (propertyType !== 'undefined') {
-                    placeSchema[propertyName] = propertyType;
-                }
-            }
-        });
-    });
-    return placeSchema;
-}
-
 export const DEFAULT_LABEL_PROPERTY_NAMES = mkCases(['label', 'title', 'name', 'id']);
 export const DEFAULT_DESCRIPTION_PROPERTY_NAMES = mkCases(['description', 'desc', 'abstract', 'comment']);
 export const DEFAULT_COLOR_PROPERTY_NAMES = mkCases(['color']);
