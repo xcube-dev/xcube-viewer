@@ -67,20 +67,32 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
     selectedTimeRange?: TimeRange | null;
     selectTimeRange?: (timeRange: TimeRange | null) => void;
 
-    removeTimeSeriesGroup?: (id: string) => void;
+    removeTimeSeries?: (groupId: string, index: number) => void;
+    removeTimeSeriesGroup?: (groupId: string) => void;
     placeInfos?: { [placeId: string]: PlaceInfo };
     selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     places: Place[];
 }
 
-const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = ({
-                                                               classes, locale,
-                                                               timeSeriesGroups,
-                                                               selectedTime, selectedTimeRange,
-                                                               dataTimeRange, selectTime, selectTimeRange,
-                                                               removeTimeSeriesGroup, showPointsOnly, showErrorBars,
-                                                               placeInfos, places, selectPlace
-                                                           }) => {
+const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = (
+    {
+        classes,
+        locale,
+        timeSeriesGroups,
+        selectedTime,
+        selectedTimeRange,
+        dataTimeRange,
+        selectTime,
+        selectTimeRange,
+        removeTimeSeries,
+        removeTimeSeriesGroup,
+        showPointsOnly,
+        showErrorBars,
+        placeInfos,
+        places,
+        selectPlace
+    }
+) => {
 
 
     const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
@@ -98,6 +110,7 @@ const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = ({
                 dataTimeRange={dataTimeRange}
                 selectTime={selectTime}
                 selectTimeRange={selectTimeRange}
+                removeTimeSeries={removeTimeSeries}
                 removeTimeSeriesGroup={removeTimeSeriesGroup}
                 completed={completed}
                 showPointsOnly={showPointsOnly}

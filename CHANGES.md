@@ -1,3 +1,11 @@
+## Changes in version 1.0.2 (in development)
+
+* Chart labels are now visible again using light theme. (#268)
+
+* Users can now remove individual timeseries from a chart. (#277)
+
+
+
 ## Changes in version 1.0.1
 
 ### Fixes

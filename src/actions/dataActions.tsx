@@ -411,6 +411,20 @@ export function updateTimeSeries(timeSeries: TimeSeries, updateMode: 'add' | 're
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export const REMOVE_TIME_SERIES = 'REMOVE_TIME_SERIES';
+
+export interface RemoveTimeSeries {
+    type: typeof REMOVE_TIME_SERIES;
+    groupId: string;
+    index: number;
+}
+
+export function removeTimeSeries(groupId: string, index: number): RemoveTimeSeries {
+    return {type: REMOVE_TIME_SERIES, groupId, index};
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export const REMOVE_TIME_SERIES_GROUP = 'REMOVE_TIME_SERIES_GROUP';
 
 export interface RemoveTimeSeriesGroup {
@@ -791,6 +805,7 @@ export type DataAction =
     | RemoveUserPlace
     | RemoveAllUserPlaces
     | UpdateTimeSeries
+    | RemoveTimeSeries
     | RemoveTimeSeriesGroup
     | RemoveAllTimeSeries
     | ConfigureServers

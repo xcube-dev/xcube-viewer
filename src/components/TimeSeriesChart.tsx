@@ -31,6 +31,7 @@ import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
 import Typography from '@mui/material/Typography';
 import AllOutIcon from '@mui/icons-material/AllOut';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useState } from 'react';
@@ -40,6 +41,7 @@ import {
     DotProps,
     ErrorBar,
     Legend,
+    LegendProps,
     Line,
     LineChart,
     ReferenceArea,
@@ -51,10 +53,10 @@ import {
     XAxis,
     YAxis
 } from 'recharts';
+
 import { getUserPlaceColor } from '../config';
 import i18n from '../i18n';
 import { Place, PlaceInfo } from '../model/place';
-
 import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
 import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
@@ -95,7 +97,26 @@ const styles = (theme: Theme) => createStyles(
             fontWeight: 'bold',
             paddingBottom: theme.spacing(1),
         },
-        chartTitle: {}
+        chartTitle: {
+            fontSize: "inherit",
+            fontWeight: "normal"
+        },
+        legendContainer: {
+            display: "flex",
+            justifyContent: "center",
+            columnGap: 12,
+            flexWrap: "wrap"
+        },
+        legendItem: {
+            display: "flex",
+            alignItems: "center"
+        },
+        legendCloseIcon: {
+            marginLeft: 4,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center"
+        }
     });
 
 
@@ -113,8 +134,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     showErrorBars: boolean;
 
     selectTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => void;
-
-    removeTimeSeriesGroup?: (id: string) => void;
+    removeTimeSeries?: (timeSeriesGroupId: string, timeSeriesIndex: number) => void;
+    removeTimeSeriesGroup?: (timeSeriesGroupId: string) => void;
     completed: number[];
 
     placeInfos?: { [placeId: string]: PlaceInfo };
@@ -148,6 +169,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                                                              theme,
                                                              showErrorBars,
                                                              showPointsOnly,
+                                                             removeTimeSeries,
                                                              removeTimeSeriesGroup,
                                                              completed,
                                                          }) => {
@@ -163,7 +185,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     const paletteType = theme.palette.mode;
     const lightStroke = theme.palette.primary.light;
     const mainStroke = theme.palette.primary.main;
-    const labelTextColor = theme.palette.primary.contrastText;
+    const labelTextColor = theme.palette.text.primary;
+
+    console.log(paletteType, lightStroke, mainStroke, labelTextColor);
 
     let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
     if (selectedTimeRange) {
@@ -219,6 +243,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
 
     const handleZoomOutButtonClick = () => {
         zoomOut();
+    };
+
+    const handleRemoveTimeSeriesClick = (index: number) => {
+        removeTimeSeries!(timeSeriesGroup.id, index);
     };
 
     const handleRemoveTimeSeriesGroupClick = () => {
@@ -418,7 +446,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                     onMouseLeave={handleMouseLeave}
                     onClick={handleClick}
                     syncId="anyId"
-                    style={{color: labelTextColor}}
+                    style={{color: labelTextColor, fontSize: "0.8em"}}
                 >
                     <XAxis
                         dataKey="time"
@@ -437,7 +465,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                     />
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip content={<CustomTooltip/>}/>
-                    <Legend/>
+                    <Legend content={<CustomLegendContent removeTimeSeries={handleRemoveTimeSeriesClick}/>}/>
                     {lines}
                     {referenceArea}
                     {referenceLine}
@@ -554,3 +582,44 @@ const CustomizedDot = (props: CustomizedDotProps) => {
 
     return null;
 };
+
+
+interface CustomLegendProps extends WithStyles<typeof styles> {
+    removeTimeSeries?: (index: number) => void;
+}
+
+const _CustomLegendContent: React.FC<CustomLegendProps & LegendProps> = (props) => {
+    // console.log(props)
+
+    const {payload, removeTimeSeries, classes} = props;
+    if (!payload || payload.length === 0) {
+        return null;
+    }
+    return (
+        <div className={classes.legendContainer}>
+            {
+                payload.map((pl: any, index: number) => (
+                    <div
+                        key={pl.value}
+                        className={classes.legendItem}
+                        style={{color: pl.color}}
+                    >
+                        <span>{pl.value}</span>
+                        {removeTimeSeries && (
+                            <span
+                                className={classes.legendCloseIcon}
+                                // Note, onClick() does not fire in any sub-component
+                                // of <Legend/>!
+                                onMouseUp={() => removeTimeSeries(index)}
+                            >
+                                <HighlightOffIcon fontSize={"small"}/>
+                            </span>
+                        )}
+                    </div>
+                ))
+            }
+        </div>
+    );
+}
+
+const CustomLegendContent = withStyles(styles)(_CustomLegendContent);
