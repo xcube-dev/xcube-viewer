@@ -153,7 +153,7 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
     places: Place[];
 
     placeGroupTimeSeries: PlaceGroupTimeSeries[];
-    addPlaceGroupTimeSeries: (timeSeries: TimeSeries) => void;
+    addPlaceGroupTimeSeries: (timeSeriesGroupId: string, timeSeries: TimeSeries) => void;
 }
 
 
@@ -302,8 +302,12 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
         const source = ts.source;
         const valueDataKey = source.valueDataKey;
         let lineName = source.variableName;
-        let lineColor = 'yellow';
-        if (placeInfos) {
+        let lineColor = 'red';
+        if (source.placeId === null) {
+            // Time series is from imported CSV or GeoJSON.
+            // Then source.datasetId is the place group name.
+            lineName += ` (${source.datasetId})`;
+        } else if (placeInfos) {
             const placeInfo = placeInfos[source.placeId];
             if (placeInfo) {
                 const {place, label, color} = placeInfo;
@@ -542,12 +546,21 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = (
             color = SUBSTITUTE_LABEL_COLOR;
         }
         const isPoint = name.indexOf(':') !== -1;
-        const suffix = isPoint ? '' : ` (${dataKey})`;
+        let suffix = isPoint ? null : ` (${dataKey})`;
+        if (unit) {
+            if (suffix !== null) {
+                suffix = `${unit} ${suffix}`;
+            } else {
+                suffix = unit;
+            }
+        } else if (suffix === null) {
+            suffix = "";
+        }
         return (
             <div key={index}>
                 <span>{name}:&nbsp;</span>
                 <span className={classes.toolTipValue} style={{color}}>{valueText}</span>
-                <span>&nbsp;{`${unit} ${suffix}`}</span>
+                <span>&nbsp;{suffix}</span>
             </div>
         );
     });

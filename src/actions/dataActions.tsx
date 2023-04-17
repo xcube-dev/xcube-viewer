@@ -351,7 +351,8 @@ export function addTimeSeries() {
             const getTimeSeriesChunk = () => {
                 const startDateLabel = startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
                 const endDateLabel = timeLabels[endTimeIndex];
-                return api.getTimeSeriesForGeometry(apiServer.url,
+                return api.getTimeSeriesForGeometry(
+                    apiServer.url,
                     selectedDatasetId,
                     selectedVariable,
                     selectedPlace.id,
@@ -360,17 +361,22 @@ export function addTimeSeries() {
                     endDateLabel,
                     useMedian,
                     inclStDev,
-                    getState().userAuthState.accessToken);
+                    getState().userAuthState.accessToken
+                );
             };
 
             const successAction = (timeSeries: TimeSeries | null) => {
                 if (timeSeries !== null && isValidPlace(placeGroups, selectedPlace.id)) {
                     const hasMore = startTimeIndex > 0;
-                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels:1.0;
+                    const dataProgress = hasMore ? (numTimeLabels - startTimeIndex) / numTimeLabels : 1.0;
                     dispatch(updateTimeSeries({...timeSeries, dataProgress},
                         timeSeriesUpdateMode,
                         endTimeIndex === numTimeLabels - 1 ? 'new':'append'));
                     if (hasMore && isValidPlace(placeGroups, selectedPlace.id)) {
+                        // TODO (forman): Exit loop if current time-series is no longer alive.
+                        //      We currently keep this loop busy although this time-series
+                        //      may have been removed already!
+                        //      For this, introduce time-series ID.
                         startTimeIndex -= timeChunkSize;
                         endTimeIndex -= timeChunkSize;
                         getTimeSeriesChunk().then(successAction);

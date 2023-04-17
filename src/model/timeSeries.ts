@@ -48,8 +48,8 @@ export interface TimeSeriesSource {
     datasetId: string;
     variableName: string;
     variableUnits?: string;
-    placeId: string;
-    geometry: geojson.Geometry;
+    placeId: string | null;
+    geometry: geojson.Geometry | null;
     valueDataKey: keyof TimeSeriesPoint;
     errorDataKey: keyof TimeSeriesPoint | null;
 }
@@ -90,7 +90,7 @@ export function equalTimeRanges(t1: TimeRange | null, t2: TimeRange | null) {
 type CellValue = number | string | null | undefined;
 type DataRow = CellValue[];
 type RowData = {
-    placeId: string;
+    placeId: string | null;
     time: string;
     [colName: string]: CellValue;
 };
@@ -111,7 +111,9 @@ export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
     for (let timeSeriesGroup of timeSeriesGroups) {
         for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
             const {placeId, datasetId, variableName, valueDataKey, errorDataKey} = timeSeries.source;
-            placeIds.add(placeId);
+            if (placeId !== null) {
+                placeIds.add(placeId);
+            }
             const valueColName = `${datasetId}.${variableName}.${valueDataKey}`;
             dataColNames.add(valueColName);
             let errorColName: string | null = null;
@@ -121,7 +123,9 @@ export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
             }
             timeSeries.data.forEach(point => {
                 const time = utcTimeToIsoDateTimeString(point.time);
-                const timePlaceId = placeId + '-' + time;
+                // if placeId is null, then data is from import CSV / GeoJSON
+                // and datasetId is the name of the place group.
+                const timePlaceId = `${placeId !== null ? placeId : datasetId}-${time}`;
                 const timePlaceRow = timePlaceRows[timePlaceId];
                 if (!timePlaceRow) {
                     timePlaceRows[timePlaceId] = {placeId, time, [valueColName]: point[valueDataKey]};
@@ -133,7 +137,6 @@ export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
                 }
             });
         }
-
     }
 
     const colNames: string[] = ['placeId', 'time'].concat(Array.from(dataColNames).sort());
@@ -169,8 +172,10 @@ export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
 }
 
 
-export function timeSeriesGroupsToGeoJSON(timeSeriesGroups: TimeSeriesGroup[]): geojson.FeatureCollection {
-    const features: geojson.Feature[] = [];
+export function timeSeriesGroupsToGeoJSON(
+    timeSeriesGroups: TimeSeriesGroup[]
+): geojson.FeatureCollection<geojson.Geometry | null> {
+    const features: geojson.Feature<geojson.Geometry | null>[] = [];
     for (let timeSeriesGroup of timeSeriesGroups) {
         for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
             features.push(timeSeriesToGeoJSON(timeSeries));
@@ -180,18 +185,25 @@ export function timeSeriesGroupsToGeoJSON(timeSeriesGroups: TimeSeriesGroup[]): 
 }
 
 
-export function timeSeriesToGeoJSON(timeSeries: TimeSeries): geojson.Feature {
+export function timeSeriesToGeoJSON(
+    timeSeries: TimeSeries
+): geojson.Feature<geojson.Geometry | null> {
+    const timeSeriesSource = timeSeries.source;
+    let id = `${timeSeriesSource.datasetId}-${timeSeriesSource.variableName}`;
+    if (timeSeriesSource.placeId !== null) {
+        id += `-${timeSeriesSource.placeId}`;
+    }
     return {
+        id,
         type: "Feature",
-        id: `${timeSeries.source.datasetId}-${timeSeries.source.variableName}-${timeSeries.source.placeId}`,
-        geometry: timeSeries.source.geometry,
+        geometry: timeSeriesSource.geometry,
         properties: {
-            datasetId: timeSeries.source.datasetId,
-            variableName: timeSeries.source.variableName,
-            variableUnits: timeSeries.source.variableUnits,
-            placeId: timeSeries.source.placeId,
-            valueDataKey: timeSeries.source.valueDataKey,
-            errorDataKey: timeSeries.source.errorDataKey,
+            datasetId: timeSeriesSource.datasetId,
+            variableName: timeSeriesSource.variableName,
+            variableUnits: timeSeriesSource.variableUnits,
+            placeId: timeSeriesSource.placeId,
+            valueDataKey: timeSeriesSource.valueDataKey,
+            errorDataKey: timeSeriesSource.errorDataKey,
             data: timeSeries.data.map(p => {
                 return {
                     ...p,
@@ -246,15 +258,15 @@ export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSe
             if (!timeSeries) {
                 timeSeriesMapping[propertyName] = {
                     source: {
-                        datasetId: placeGroup.id,
+                        datasetId: placeGroup.id,  // important: this is the imported CSV / GeoJSON place group
                         variableName: propertyName,
-                        placeId: "",
-                        geometry: {type: "Point", coordinates: [0, 0]},
+                        placeId: null,   // we don't have an individual place for the entire time-series
+                        geometry: null,  // could be computed later from data points (as GeometryCollection)
                         valueDataKey: "mean",
                         errorDataKey: null,
                     },
                     data: [point],
-                    dataProgress: 100,
+                    dataProgress: 1.0,
                 };
             } else {
                 timeSeries.data.push(point);
