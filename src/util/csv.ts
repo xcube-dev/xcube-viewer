@@ -137,7 +137,7 @@ class Parser {
             if (token === options.nanToken) {
                 return Number.NaN;
             }
-            const value = parseFloat(token);
+            const value = Number(token);
             if (!Number.isNaN(value)) {
                 return value;
             }
