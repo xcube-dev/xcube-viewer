@@ -294,6 +294,19 @@ export function addUserPlacesFromText(text: string) {
     };
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const RENAME_USER_PLACE = 'RENAME_USER_PLACE';
+
+export interface RenameUserPlace {
+    type: typeof RENAME_USER_PLACE;
+    id: string;
+    newName: string;
+}
+
+export function renameUserPlace(id: string, newName: string): RenameUserPlace {
+    return {type: RENAME_USER_PLACE, id, newName};
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -826,6 +839,7 @@ export type DataAction =
     | AddPlaceGroupTimeSeries
     | AddUserPlace
     | AddUserPlaces
+    | RenameUserPlace
     | RemoveUserPlace
     | RemoveAllUserPlaces
     | UpdateTimeSeries

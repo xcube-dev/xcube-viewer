@@ -38,6 +38,7 @@ import {
     REMOVE_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     REMOVE_USER_PLACE,
+    RENAME_USER_PLACE,
     UPDATE_COLOR_BARS,
     UPDATE_DATASET_PLACE_GROUP,
     UPDATE_DATASETS,
@@ -128,6 +129,26 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 ...state,
                 userPlaceGroup,
             };
+        }
+        case RENAME_USER_PLACE: {
+            const {id, newName} = action;
+            const index = state.userPlaceGroup.features.findIndex(p => p.id === id);
+            if (index >= 0) {
+                // renameUserPlaceInLayer(id, newName);
+                const features = [...state.userPlaceGroup.features];
+                features[index] = {
+                    ...features[index], properties: {
+                        ...features[index].properties,
+                        label: newName
+                    }
+                };
+                const userPlaceGroup = {...state.userPlaceGroup, features};
+                return {
+                    ...state,
+                    userPlaceGroup,
+                };
+            }
+            return state;
         }
         case REMOVE_USER_PLACE: {
             const {id} = action;

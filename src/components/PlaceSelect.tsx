@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -27,12 +27,13 @@ import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Theme } from '@mui/material/styles';
 import { WithStyles } from '@mui/styles';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
 import Tooltip from '@mui/material/Tooltip';
+import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import i18n from '../i18n';
@@ -60,6 +61,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     places: Place[];
     placeLabels: string[];
     selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
+    renameUserPlace: (placeId: string, placeName: string) => void;
     removeUserPlace: (placeId: string, places: Place[]) => void;
     openDialog: (dialogId: string) => void;
 }
@@ -70,12 +72,36 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
                                                      placeLabels,
                                                      selectedPlaceId,
                                                      selectedPlaceGroupIds,
+                                                     renameUserPlace,
                                                      removeUserPlace,
                                                      places,
                                                  }) => {
 
-    const handlePlaceChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
+    const inputRef = React.useRef<HTMLInputElement | null>(null);
+    const [editMode, setEditMode] = React.useState(false);
+    const [placeName, setPlaceName] = React.useState("");
+    React.useEffect(() => {
+        if (editMode) {
+            const index = places.findIndex(p => p.id === selectedPlaceId);
+            setPlaceName(placeLabels[index]);
+        }
+    }, [editMode, selectedPlaceId, setPlaceName, places, placeLabels]);
+    React.useEffect(() => {
+        if (editMode) {
+            const inputEl = inputRef.current;
+            if (inputEl !== null) {
+                inputEl.focus();
+                inputEl.select();
+            }
+        }
+    }, [editMode]);
+
+    const handlePlaceChange = (event: SelectChangeEvent) => {
         selectPlace(event.target.value || null, places, true);
+    };
+
+    const handleEditButtonClick = () => {
+        setEditMode(true);
     };
 
     const handleRemoveButtonClick = () => {
@@ -89,7 +115,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     selectedPlaceId = selectedPlaceId || '';
     selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-    const placeSelectLabel = (
+    const inputLabel = (
         <InputLabel
             shrink
             htmlFor="place-select"
@@ -98,52 +124,99 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         </InputLabel>
     );
 
-    const placeSelect = (
-        <Select
-            variant="standard"
-            value={selectedPlaceId}
-            onChange={handlePlaceChange}
-            input={<Input name="place" id="place-select"/>}
-            displayEmpty
-            name="place"
-            className={classes.select}
-            disabled={places.length === 0}
-        >
-            {places.map((place, i) => (
-                <MenuItem
-                    key={place.id}
-                    value={place.id}
-                    selected={place.id === selectedPlaceId}
-                >
-                    {placeLabels[i]}
-                </MenuItem>
-            ))}
-        </Select>
-    );
+    if (editMode) {
+        const input = (
+            <Input
+                name="place"
+                id="place-edit"
+                value={placeName}
+                error={placeName.trim().length === 0}
+                inputRef={inputRef}
+                onBlur={() => setEditMode(false)}
+                onKeyUp={(e) => {
+                    if (e.code === "Escape") {
+                        setEditMode(false);
+                    }  else if (e.code === "Enter") {
+                        setEditMode(false);
+                        renameUserPlace(selectedPlaceId!, placeName);
+                    }
+                }}
+                onChange={(e) => {
+                    setPlaceName(e.currentTarget.value);
+                }}
+            />
+        );
 
-    const removeEnabled = places.length > 0
-        && selectedPlaceGroupIds.length === 1
-        && selectedPlaceGroupIds[0] === 'user'
-        && selectedPlaceId !== '';
-    const placeRemoveButton = (
-        <IconButton
-            className={classes.button}
-            disabled={!removeEnabled}
-            onClick={handleRemoveButtonClick}
-            size="large">
-            <Tooltip arrow title={i18n.get('Remove place')}>
-                {<RemoveCircleOutlineIcon/>}
-            </Tooltip>
-        </IconButton>
-    );
+        return (
+            <ControlBarItem
+                label={inputLabel}
+                control={input}
+            />
+        );
 
-    return (
-        <ControlBarItem
-            label={placeSelectLabel}
-            control={placeSelect}
-            actions={placeRemoveButton}
-        />
-    );
+    } else {
+        const select = (
+            <Select
+                variant="standard"
+                value={selectedPlaceId}
+                onChange={handlePlaceChange}
+                input={<Input name="place" id="place-select"/>}
+                displayEmpty
+                name="place"
+                className={classes.select}
+                disabled={places.length === 0}
+            >
+                {places.map((place, i) => (
+                    <MenuItem
+                        key={place.id}
+                        value={place.id}
+                        selected={place.id === selectedPlaceId}
+                    >
+                        {placeLabels[i]}
+                    </MenuItem>
+                ))}
+            </Select>
+        );
+
+        const canModify = places.length > 0
+            && selectedPlaceGroupIds.length === 1
+            && selectedPlaceGroupIds[0] === 'user'
+            && selectedPlaceId !== '';
+
+        const editEnabled = !editMode && canModify;
+        const editButton = (
+            <IconButton
+                className={classes.button}
+                disabled={!editEnabled}
+                onClick={handleEditButtonClick}
+                size="large">
+                <Tooltip arrow title={i18n.get('Edit place name')}>
+                    {<EditIcon/>}
+                </Tooltip>
+            </IconButton>
+        );
+
+        const removeEnabled = !editMode && canModify;
+        const removeButton = (
+            <IconButton
+                className={classes.button}
+                disabled={!removeEnabled}
+                onClick={handleRemoveButtonClick}
+                size="large">
+                <Tooltip arrow title={i18n.get('Remove place')}>
+                    {<RemoveCircleOutlineIcon/>}
+                </Tooltip>
+            </IconButton>
+        );
+
+        return (
+            <ControlBarItem
+                label={inputLabel}
+                control={select}
+                actions={[editButton, removeButton]}
+            />
+        );
+    }
 };
 
 export default withStyles(styles)(PlaceSelect);

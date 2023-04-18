@@ -98,8 +98,6 @@ const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = (
         addPlaceGroupTimeSeries
     }
 ) => {
-    console.log("placeGroupTimeSeries", placeGroupTimeSeries);
-
     const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
         const completed = timeSeriesGroup.timeSeriesArray.map(item => (
             item.dataProgress ? 100 * item.dataProgress : 0

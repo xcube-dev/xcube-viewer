@@ -40,8 +40,6 @@ export function setFeatureStyle(feature: OlFeature,
                                 color: string,
                                 fillOpacity?: number,
                                 pointSymbol: PointSymbol = "circle") {
-    console.log("setFeatureStyle() for ", feature, pointSymbol);
-
     if (feature.getGeometry() instanceof OlPoint) {
         feature.setStyle(createPointGeometryStyle(
             7,
