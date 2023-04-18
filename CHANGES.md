@@ -1,3 +1,6 @@
+## Changes in version 1.0.3 (in development)
+
+
 ## Changes in version 1.0.2
 
 * Timeseries chart labels are now visible again using light theme. (#268)
