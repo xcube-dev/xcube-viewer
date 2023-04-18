@@ -22,32 +22,40 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
-
-import PlaceGroupsSelect from "../components/PlaceGroupsSelect";
-import { AppState } from '../states/appState';
-import { renameUserPlaceGroup, removeAllUserPlaces } from '../actions/dataActions';
-import { selectPlaceGroups } from '../actions/controlActions';
-import {
-    placeGroupsSelector,
-    selectedPlaceGroupsTitleSelector
-} from '../selectors/controlSelectors';
+import * as React from 'react';
+import { MouseEvent } from 'react';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
+interface ToolButtonProps {
+    icon: React.ReactElement;
+    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+    disabled?: boolean;
+    tooltipText?: string;
+    className?: string;
+}
 
-        selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        placeGroups: placeGroupsSelector(state),
-        selectedPlaceGroupsTitle: selectedPlaceGroupsTitleSelector(state),
-    };
+const ToolButton: React.FC<ToolButtonProps> = (
+    {
+        className,
+        disabled,
+        onClick,
+        icon,
+        tooltipText
+    }
+) => {
+    const iconComp = tooltipText ? (<Tooltip arrow title={tooltipText}>{icon}</Tooltip>) : icon;
+    return (
+        <IconButton
+            className={className}
+            disabled={disabled}
+            onClick={onClick}
+            size="small"
+        >
+            {iconComp}
+        </IconButton>
+    );
 };
 
-const mapDispatchToProps = {
-    selectPlaceGroups,
-    renameUserPlaceGroup,
-    removeAllUserPlaces,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceGroupsSelect);
+export default ToolButton;

@@ -38,7 +38,7 @@ import {
     REMOVE_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     REMOVE_USER_PLACE,
-    RENAME_USER_PLACE,
+    RENAME_USER_PLACE, RENAME_USER_PLACE_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASET_PLACE_GROUP,
     UPDATE_DATASETS,
@@ -128,6 +128,16 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             return {
                 ...state,
                 userPlaceGroup,
+            };
+        }
+        case RENAME_USER_PLACE_GROUP:{
+            const {newName} = action;
+            return {
+                ...state,
+                userPlaceGroup: {
+                    ...state.userPlaceGroup,
+                    title: newName
+                },
             };
         }
         case RENAME_USER_PLACE: {

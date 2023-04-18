@@ -22,25 +22,24 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Theme } from '@mui/material/styles';
 import { WithStyles } from '@mui/styles';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
-import Tooltip from '@mui/material/Tooltip';
+import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import * as React from 'react';
-import i18n from '../i18n';
 
 import { PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
-import ControlBarItem from './ControlBarItem';
+import EditableSelect from "./EditableSelect";
+import ToolButton from "./ToolButton";
+import i18n from '../i18n';
 
 
 // noinspection JSUnusedLocalSymbols
@@ -55,6 +54,7 @@ interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedPlaceGroupIds: string[] | null;
     placeGroups: PlaceGroup[];
     selectPlaceGroups: (placeGroupIds: string[] | null) => void;
+    renameUserPlaceGroup: (placeGroupId: string, newName: string) => void;
     removeAllUserPlaces: () => void;
 
     selectedPlaceGroupsTitle: string;
@@ -62,26 +62,18 @@ interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
     language?: string;
 }
 
-const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
-                                                                classes,
-                                                                placeGroups,
-                                                                selectPlaceGroups,
-                                                                selectedPlaceGroupIds,
-                                                                selectedPlaceGroupsTitle,
-                                                                removeAllUserPlaces,
-                                                            }) => {
-
-    const handlePlaceGroupsChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
-        selectPlaceGroups(event.target.value as any as string[] || null);
-    };
-
-    const handleRemoveButtonClick = () => {
-        removeAllUserPlaces();
-    };
-
-    const renderSelectedPlaceGroupsTitle = () => {
-        return selectedPlaceGroupsTitle;
-    };
+const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = (
+    {
+        classes,
+        placeGroups,
+        selectPlaceGroups,
+        renameUserPlaceGroup,
+        selectedPlaceGroupIds,
+        selectedPlaceGroupsTitle,
+        removeAllUserPlaces,
+    }
+) => {
+    const [editMode, setEditMode] = React.useState(false);
 
     placeGroups = placeGroups || [];
     selectedPlaceGroupIds = selectedPlaceGroupIds || [];
@@ -90,16 +82,19 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
         return null;
     }
 
-    const placeGroupsSelectLabel = (
-        <InputLabel
-            shrink
-            htmlFor="place-groups-select"
-        >
-            {i18n.get('Places')}
-        </InputLabel>
-    );
+    const setPlaceGroupTitle = (placeGroupTitle: string) => {
+        renameUserPlaceGroup(selectedPlaceGroupIds![0], placeGroupTitle);
+    };
 
-    const placeGroupsSelect = (
+    const handlePlaceGroupsChange = (event: SelectChangeEvent<string[]>) => {
+        selectPlaceGroups(event.target.value as any as string[] || null);
+    };
+
+    const renderSelectedPlaceGroupsTitle = () => {
+        return selectedPlaceGroupsTitle;
+    };
+
+    const select = (
         <Select
             variant="standard"
             multiple
@@ -122,20 +117,49 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
         </Select>
     );
 
-    const removeEnabled = selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user';
-    const placeGroupRemoveButton = (
-        <IconButton disabled={!removeEnabled} onClick={handleRemoveButtonClick} size="large">
-            <Tooltip arrow title={i18n.get('Remove places')}>
-                {<RemoveCircleOutlineIcon/>}
-            </Tooltip>
-        </IconButton>
-    );
+
+    let isEditableUserPlaceGroup = false;
+    if (selectedPlaceGroupIds.length === 1 && selectedPlaceGroupIds[0] === 'user') {
+        isEditableUserPlaceGroup = Boolean(placeGroups.find(placeGroup => placeGroup.id === 'user'
+            && placeGroup.features
+            && placeGroup.features.length >= 0)
+        );
+    }
+
+    let actions;
+    if (isEditableUserPlaceGroup) {
+        const handleEditButtonClick = () => {
+            setEditMode(true);
+        };
+
+        const handleRemoveButtonClick = () => {
+            removeAllUserPlaces();
+        };
+
+        actions = [
+            <ToolButton
+                onClick={handleEditButtonClick}
+                tooltipText={i18n.get('Rename place group')}
+                icon={<EditIcon/>}
+            />,
+            <ToolButton
+                onClick={handleRemoveButtonClick}
+                tooltipText={i18n.get('Remove places')}
+                icon={<RemoveCircleOutlineIcon/>}
+            />
+        ];
+    }
 
     return (
-        <ControlBarItem
-            label={placeGroupsSelectLabel}
-            control={placeGroupsSelect}
-            actions={placeGroupRemoveButton}
+        <EditableSelect
+            itemValue={selectedPlaceGroupsTitle}
+            setItemValue={setPlaceGroupTitle}
+            validateItemValue={v => v.trim().length > 0}
+            editMode={editMode}
+            setEditMode={setEditMode}
+            labelText={i18n.get('Places')}
+            select={select}
+            actions={actions}
         />
     );
 };

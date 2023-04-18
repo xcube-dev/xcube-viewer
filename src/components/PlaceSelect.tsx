@@ -23,16 +23,13 @@
  */
 
 import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Theme } from '@mui/material/styles';
 import { WithStyles } from '@mui/styles';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
-import Tooltip from '@mui/material/Tooltip';
 import EditIcon from '@mui/icons-material/Edit';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
@@ -40,7 +37,8 @@ import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { Place, PlaceGroup } from '../model/place';
 import { WithLocale } from '../util/lang';
-import ControlBarItem from './ControlBarItem';
+import EditableSelect from "./EditableSelect";
+import ToolButton from "./ToolButton";
 
 
 // noinspection JSUnusedLocalSymbols
@@ -49,13 +47,11 @@ const styles = (theme: Theme) => createStyles(
         select: {
             minWidth: '5em',
         },
-        button: {},
     });
 
 interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     datasets: Dataset[];
     userPlaceGroup: PlaceGroup;
-
     selectedPlaceGroupIds: string[] | null;
     selectedPlaceId: string | null;
     places: Place[];
@@ -76,147 +72,90 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
                                                      removeUserPlace,
                                                      places,
                                                  }) => {
-
-    const inputRef = React.useRef<HTMLInputElement | null>(null);
     const [editMode, setEditMode] = React.useState(false);
-    const [placeName, setPlaceName] = React.useState("");
-    React.useEffect(() => {
-        if (editMode) {
-            const index = places.findIndex(p => p.id === selectedPlaceId);
-            setPlaceName(placeLabels[index]);
-        }
-    }, [editMode, selectedPlaceId, setPlaceName, places, placeLabels]);
-    React.useEffect(() => {
-        if (editMode) {
-            const inputEl = inputRef.current;
-            if (inputEl !== null) {
-                inputEl.focus();
-                inputEl.select();
-            }
-        }
-    }, [editMode]);
-
-    const handlePlaceChange = (event: SelectChangeEvent) => {
-        selectPlace(event.target.value || null, places, true);
-    };
-
-    const handleEditButtonClick = () => {
-        setEditMode(true);
-    };
-
-    const handleRemoveButtonClick = () => {
-        if (selectedPlaceId !== null) {
-            removeUserPlace(selectedPlaceId, places);
-        }
-    };
 
     places = places || [];
     placeLabels = placeLabels || [];
     selectedPlaceId = selectedPlaceId || '';
     selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-    const inputLabel = (
-        <InputLabel
-            shrink
-            htmlFor="place-select"
+    const placeIndex = places.findIndex(p => p.id === selectedPlaceId);
+    const placeName = placeIndex >= 0 ? placeLabels[placeIndex] : "";
+
+    const setPlaceName = (placeName: string) => {
+        renameUserPlace(selectedPlaceId!, placeName);
+    };
+
+    const handlePlaceChange = (event: SelectChangeEvent) => {
+        selectPlace(event.target.value || null, places, true);
+    };
+
+    const select = (
+        <Select
+            variant="standard"
+            value={selectedPlaceId}
+            onChange={handlePlaceChange}
+            input={<Input name="place" id="place-select"/>}
+            displayEmpty
+            name="place"
+            className={classes.select}
+            disabled={places.length === 0}
         >
-            {i18n.get('Place')}
-        </InputLabel>
+            {places.map((place, i) => (
+                <MenuItem
+                    key={place.id}
+                    value={place.id}
+                    selected={place.id === selectedPlaceId}
+                >
+                    {placeLabels[i]}
+                </MenuItem>
+            ))}
+        </Select>
     );
 
-    if (editMode) {
-        const input = (
-            <Input
-                name="place"
-                id="place-edit"
-                value={placeName}
-                error={placeName.trim().length === 0}
-                inputRef={inputRef}
-                onBlur={() => setEditMode(false)}
-                onKeyUp={(e) => {
-                    if (e.code === "Escape") {
-                        setEditMode(false);
-                    }  else if (e.code === "Enter") {
-                        setEditMode(false);
-                        renameUserPlace(selectedPlaceId!, placeName);
-                    }
-                }}
-                onChange={(e) => {
-                    setPlaceName(e.currentTarget.value);
-                }}
-            />
-        );
+    const isEditableUserPlace = places.length > 0
+        && selectedPlaceGroupIds.length === 1
+        && selectedPlaceGroupIds[0] === 'user'
+        && selectedPlaceId !== '';
 
-        return (
-            <ControlBarItem
-                label={inputLabel}
-                control={input}
-            />
-        );
+    let actions;
+    if (!editMode && isEditableUserPlace) {
+        const handleEditButtonClick = () => {
+            setEditMode(true);
+        };
 
-    } else {
-        const select = (
-            <Select
-                variant="standard"
-                value={selectedPlaceId}
-                onChange={handlePlaceChange}
-                input={<Input name="place" id="place-select"/>}
-                displayEmpty
-                name="place"
-                className={classes.select}
-                disabled={places.length === 0}
-            >
-                {places.map((place, i) => (
-                    <MenuItem
-                        key={place.id}
-                        value={place.id}
-                        selected={place.id === selectedPlaceId}
-                    >
-                        {placeLabels[i]}
-                    </MenuItem>
-                ))}
-            </Select>
-        );
+        const handleRemoveButtonClick = () => {
+            if (selectedPlaceId !== null) {
+                removeUserPlace(selectedPlaceId, places);
+            }
+        };
 
-        const canModify = places.length > 0
-            && selectedPlaceGroupIds.length === 1
-            && selectedPlaceGroupIds[0] === 'user'
-            && selectedPlaceId !== '';
-
-        const editEnabled = !editMode && canModify;
-        const editButton = (
-            <IconButton
-                className={classes.button}
-                disabled={!editEnabled}
+        actions = [
+            <ToolButton
                 onClick={handleEditButtonClick}
-                size="large">
-                <Tooltip arrow title={i18n.get('Edit place name')}>
-                    {<EditIcon/>}
-                </Tooltip>
-            </IconButton>
-        );
-
-        const removeEnabled = !editMode && canModify;
-        const removeButton = (
-            <IconButton
-                className={classes.button}
-                disabled={!removeEnabled}
+                tooltipText={i18n.get('Rename place')}
+                icon={<EditIcon/>}
+            />,
+            <ToolButton
                 onClick={handleRemoveButtonClick}
-                size="large">
-                <Tooltip arrow title={i18n.get('Remove place')}>
-                    {<RemoveCircleOutlineIcon/>}
-                </Tooltip>
-            </IconButton>
-        );
-
-        return (
-            <ControlBarItem
-                label={inputLabel}
-                control={select}
-                actions={[editButton, removeButton]}
+                tooltipText={i18n.get('Remove place')}
+                icon={<RemoveCircleOutlineIcon/>}
             />
-        );
+        ];
     }
+
+    return (
+        <EditableSelect
+            itemValue={placeName}
+            setItemValue={setPlaceName}
+            validateItemValue={v => v.trim().length > 0}
+            editMode={editMode}
+            setEditMode={setEditMode}
+            labelText={i18n.get('Place')}
+            select={select}
+            actions={actions}
+        />
+    );
 };
 
 export default withStyles(styles)(PlaceSelect);
