@@ -49,6 +49,8 @@ export interface CsvOptions extends ParseOptions {
     yName: string;
     forceGeometry: boolean;
     geometryName: string;
+    groupName: string;
+    groupPrefix: string;
     labelName: string;
     labelPrefix: string;
 }
@@ -59,6 +61,8 @@ export const defaultCsvOptions: CsvOptions = {
     yName: "latitude",
     forceGeometry: false,
     geometryName: "geometry",
+    groupName: "station",
+    groupPrefix: "Station-",
     labelName: "name",
     labelPrefix: "CSV-",
 };

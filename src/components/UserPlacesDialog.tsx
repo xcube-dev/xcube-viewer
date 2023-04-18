@@ -78,6 +78,9 @@ const useStyles = makeStyles(theme => (
             flexDirection: 'row',
             alignItems: 'center',
         },
+        optionsBox: {
+            paddingTop: theme.spacing(2),
+        },
         actionButton: {
             marginRight: theme.spacing(1),
         },
@@ -224,7 +227,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
             <CsvOptionsEditor
                 options={_userPlacesFormatOptions.csv}
                 updateOptions={updateCsvOptions}
-                className={classes.actionBox}
+                className={classes.optionsBox}
             />
         );
     } else if (_userPlacesFormatName === 'geojson') {
@@ -232,7 +235,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
             <GeoJsonOptionsEditor
                 options={_userPlacesFormatOptions.geojson}
                 updateOptions={updateGeoJsonOptions}
-                className={classes.actionBox}
+                className={classes.optionsBox}
             />
         );
     } else {
@@ -240,7 +243,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
             <WktOptionsEditor
                 options={_userPlacesFormatOptions.wkt}
                 updateOptions={updateWktOptions}
-                className={classes.actionBox}
+                className={classes.optionsBox}
             />
         );
     }

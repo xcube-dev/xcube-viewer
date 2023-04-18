@@ -36,12 +36,20 @@ interface WktOptionsEditorProps {
 }
 
 const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
-        {
-            options,
-            updateOptions,
-            className
-        }
+    {
+        options,
+        updateOptions,
+        className
+    }
 ) => {
+    function handleGroupNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        updateOptions({groupName: e.target.value});
+    }
+
+    function handleGroupNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        updateOptions({groupNamePrefix: e.target.value});
+    }
+
     function handleLabelChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
         updateOptions({label: e.target.value});
     }
@@ -51,24 +59,42 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
     }
 
     return (
-            <div className={className}>
+        <div className={className}>
+            <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <TextField
-                        label={i18n.get('Label')}
-                        value={options.label}
-                        onChange={handleLabelChange}
-                        size="small"
-                        variant="standard"
-                        style={{flexGrow: 1, marginRight: 10}}
+                    label={i18n.get('Group name')}
+                    value={options.groupName}
+                    onChange={handleGroupNameChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1, marginRight: 10}}
                 />
                 <TextField
-                        label={i18n.get('Label prefix (used as fallback)')}
-                        value={options.labelPrefix}
-                        onChange={handleLabelPrefixChange}
-                        size="small"
-                        variant="standard"
-                        style={{flexGrow: 1}}
+                    label={i18n.get('Group name prefix (used as fallback)')}
+                    value={options.groupNamePrefix}
+                    onChange={handleGroupNamePrefixChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1}}
+                />
+                <TextField
+                    label={i18n.get('Label')}
+                    value={options.label}
+                    onChange={handleLabelChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1, marginRight: 10}}
+                />
+                <TextField
+                    label={i18n.get('Label prefix (used as fallback)')}
+                    value={options.labelPrefix}
+                    onChange={handleLabelPrefixChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1}}
                 />
             </div>
+        </div>
     );
 }
 

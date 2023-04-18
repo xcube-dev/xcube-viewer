@@ -36,39 +36,65 @@ interface GeoJsonOptionsEditorProps {
 }
 
 const GeoJsonOptionsEditor: React.FC<GeoJsonOptionsEditorProps> = (
-        {
-            options,
-            updateOptions,
-            className
-        }
+    {
+        options,
+        updateOptions,
+        className
+    }
 ) => {
+    function handleGroupNamesChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        updateOptions({groupNames: e.target.value});
+    }
+
+    function handleGroupPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+        updateOptions({groupPrefix: e.target.value});
+    }
+
     function handleLabelNamesChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
         updateOptions({labelNames: e.target.value});
     }
 
-    function handleFallbackNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    function handleLabelPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
         updateOptions({labelPrefix: e.target.value});
     }
 
     return (
-            <div className={className}>
+        <div className={className}>
+            <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <TextField
-                        label={i18n.get('Label property names')}
-                        value={options.labelNames}
-                        onChange={handleLabelNamesChange}
-                        size="small"
-                        variant="standard"
-                        style={{flexGrow: 1, marginRight: 10}}
+                    label={i18n.get('Group property names')}
+                    value={options.groupNames}
+                    onChange={handleGroupNamesChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1, marginRight: 10}}
                 />
                 <TextField
-                        label={i18n.get('Label prefix (used as fallback)')}
-                        value={options.labelPrefix}
-                        onChange={handleFallbackNamePrefixChange}
-                        size="small"
-                        variant="standard"
-                        style={{flexGrow: 1}}
+                    label={i18n.get('Group prefix (used as fallback)')}
+                    value={options.groupPrefix}
+                    onChange={handleGroupPrefixChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1}}
+                />
+                <TextField
+                    label={i18n.get('Label property names')}
+                    value={options.labelNames}
+                    onChange={handleLabelNamesChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1, marginRight: 10}}
+                />
+                <TextField
+                    label={i18n.get('Label prefix (used as fallback)')}
+                    value={options.labelPrefix}
+                    onChange={handleLabelPrefixChange}
+                    size="small"
+                    variant="standard"
+                    style={{flexGrow: 1}}
                 />
             </div>
+        </div>
     );
 }
 

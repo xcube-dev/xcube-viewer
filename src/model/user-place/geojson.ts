@@ -44,11 +44,15 @@ export const geoJsonFormat: Format = {
 };
 
 export interface GeoJsonOptions {
+    groupNames: string;
+    groupPrefix: string;
     labelNames: string;
     labelPrefix: string;
 }
 
 export const defaultGeoJsonOptions: GeoJsonOptions = {
+    groupNames: "station, group, type",
+    groupPrefix: "Group-",
     labelNames: "label, name, title, id",
     labelPrefix: "GeoJSON-",
 };

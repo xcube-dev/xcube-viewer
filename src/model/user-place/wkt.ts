@@ -37,11 +37,15 @@ export const wktFormat: Format = {
 };
 
 export interface WktOptions {
+    groupName: string;
+    groupNamePrefix: string;
     label: string;
     labelPrefix: string;
 }
 
 export const defaultWktOptions: WktOptions = {
+    groupName: "",
+    groupNamePrefix: "WKT-",
     label: "",
     labelPrefix: "WKT-"
 };

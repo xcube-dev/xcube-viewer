@@ -42,9 +42,8 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
         className
     }
 ) => {
-
     return (
-        <div>
+        <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <CsvTextFieldEditor
                     optionName={'xName'}
@@ -69,6 +68,18 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                 <CsvTextFieldEditor
                     optionName={'geometryName'}
                     label={'Geometry column name'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'groupName'}
+                    label={'Group column name'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <CsvTextFieldEditor
+                    optionName={'groupPrefix'}
+                    label={'Group prefix (used as fallback)'}
                     options={options}
                     updateOptions={updateOptions}
                 />
