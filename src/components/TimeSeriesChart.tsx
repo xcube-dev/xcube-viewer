@@ -353,6 +353,38 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
                 />
             );
         }
+        let strokeOpacity;
+        let dotProps;
+        if (ts.source.placeId === null) {
+            strokeOpacity = 0;
+            dotProps = {
+                radius: 5,
+                strokeWidth: 1.5,
+                symbol: 'diamond'
+            };
+        } else {
+            strokeOpacity = showPointsOnly ? 0 : ts.dataProgress;
+            dotProps = {
+                radius: 3,
+                strokeWidth: 2,
+                symbol: 'circle'
+            };
+        }
+
+        const dot = (
+            <CustomizedDot
+                {...dotProps}
+                stroke={shadedLineColor}
+                fill={'white'}
+            />
+        );
+        const activeDot = (
+            <CustomizedDot
+                {...dotProps}
+                stroke={'white'}
+                fill={shadedLineColor}
+            />
+        );
         return (
             <Line
                 key={i}
@@ -361,10 +393,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
                 unit={source.variableUnits}
                 data={data}
                 dataKey={valueDataKey}
-                dot={<CustomizedDot radius={3} stroke={shadedLineColor} fill={'white'} strokeWidth={2}/>}
-                activeDot={<CustomizedDot radius={3} stroke={'white'} fill={shadedLineColor} strokeWidth={2}/>}
+                dot={dot}
+                activeDot={activeDot}
                 stroke={shadedLineColor}
-                strokeOpacity={showPointsOnly ? 0 : ts.dataProgress}
+                strokeOpacity={strokeOpacity}
                 // strokeWidth={2 * (ts.dataProgress || 1)}
                 // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
                 // isAnimationActive={ts.dataProgress === 1.0}
@@ -584,19 +616,41 @@ interface CustomizedDotProps extends DotProps {
     stroke: string;
     strokeWidth: number;
     fill: string;
+    symbol: 'diamond' | 'circle';
 }
-
 
 const CustomizedDot = (props: CustomizedDotProps) => {
 
-    const {cx, cy, radius, stroke, fill, strokeWidth} = props;
+    const {cx, cy, radius, stroke, fill, strokeWidth, symbol} = props;
 
     const vpSize = 1024;
     const totalRadius = radius + 0.5 * strokeWidth;
     const totalDiameter = 2 * totalRadius;
 
-    const r = Math.floor(100 * radius / totalDiameter + 0.5) + '%';
     const sw = Math.floor(100 * strokeWidth / totalDiameter + 0.5) + '%';
+
+    let shape;
+    if (symbol === 'diamond') {
+        const c = vpSize / 2;
+        const cx = c, cy = c;
+        const r = vpSize * (radius / totalDiameter);
+        shape = (<polygon
+            points={`${cx-r},${cy} ${cx},${cy-r} ${cx+r},${cy} ${cx},${cy+r}`}
+            strokeWidth={sw}
+            stroke={stroke}
+            fill={fill}
+        />);
+    } else {
+        const r = Math.floor(100 * radius / totalDiameter + 0.5) + '%';
+        shape = (<circle
+            cx='50%'
+            cy='50%'
+            r={r}
+            strokeWidth={sw}
+            stroke={stroke}
+            fill={fill}
+        />);
+    }
 
     // noinspection SuspiciousTypeOfGuard
     if (typeof cx === 'number' && typeof cy === 'number') {
@@ -608,14 +662,7 @@ const CustomizedDot = (props: CustomizedDotProps) => {
                 height={totalDiameter}
                 viewBox={`0 0 ${vpSize} ${vpSize}`}
             >
-                <circle
-                    cx='50%'
-                    cy='50%'
-                    r={r}
-                    strokeWidth={sw}
-                    stroke={stroke}
-                    fill={fill}
-                />
+                {shape}
             </svg>
         );
     }

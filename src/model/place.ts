@@ -321,6 +321,7 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): Place[]
             label = `${labelPrefix}${labelId}`;
         }
         geoJsonProps['label'] = label;
+        geoJsonProps['source'] = 'CSV';
 
         places.push(newGeoJsonFeature(geometry, geoJsonProps));
     }
@@ -383,6 +384,7 @@ export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions):
                 label = `${labelPrefix}-${labelId}`;
             }
             geoJsonProps['label'] = label;
+            geoJsonProps['source'] = 'GeoJSON';
 
             places.push(newGeoJsonFeature(geometry, geoJsonProps));
         }
@@ -403,7 +405,8 @@ export function getUserPlacesFromWkt(text: string, options: WktOptions): Place[]
     }
     try {
         const geometry = new OlWktFormat().readGeometry(text);
-        return [newGeoJsonFeature(geometry, {label})];
+        const geoJsonProps = {label, source: 'WKT'};
+        return [newGeoJsonFeature(geometry, geoJsonProps)];
     } catch (e) {
         throw new Error(i18n.get(`Invalid Geometry WKT`));
     }

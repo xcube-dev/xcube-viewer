@@ -239,7 +239,8 @@ function addUserPlaceToLayer(place: Place, mapProjection: string) {
                 featureProjection: mapProjection
             });
         const color = (place.properties || {}).color || 'red';
-        setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity);
+        const pointSymbol = Boolean((place.properties || {}).source) ? 'diamond' : 'circle';
+        setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity, pointSymbol);
         source.addFeature(feature);
         userLayer.changed();
     }
