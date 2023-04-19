@@ -25,7 +25,7 @@
 import * as React from 'react';
 
 import { GeoJsonOptions } from '../../model/user-place/geojson';
-import OptionsField from "./OptionField";
+import OptionsField from "./OptionsTextField";
 
 const GeoJsonTextField = OptionsField<GeoJsonOptions, string>();
 

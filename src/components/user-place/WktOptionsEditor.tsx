@@ -25,7 +25,7 @@
 import * as React from 'react';
 
 import { WktOptions } from '../../model/user-place/wkt';
-import OptionsField from "./OptionField";
+import OptionsField from "./OptionsTextField";
 
 
 const WktTextField = OptionsField<WktOptions, string>();

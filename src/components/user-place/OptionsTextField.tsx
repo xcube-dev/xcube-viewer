@@ -40,7 +40,7 @@ const defaults = {
     },
 }
 
-interface OptionFieldProps<T, V = string> {
+interface OptionsTextFieldProps<T, V = string> {
     options: T;
     updateOptions: (options: Partial<T>) => any;
     optionKey: keyof T;
@@ -53,8 +53,8 @@ interface OptionFieldProps<T, V = string> {
 }
 
 
-function OptionFieldEditor<T, V>() {
-    return (props: OptionFieldProps<T, V>): JSX.Element => {
+function OptionsTextField<T, V>() {
+    return (props: OptionsTextFieldProps<T, V>): JSX.Element => {
         const {
             options,
             updateOptions,
@@ -87,4 +87,4 @@ function OptionFieldEditor<T, V>() {
     }
 }
 
-export default OptionFieldEditor;
+export default OptionsTextField;
