@@ -39,7 +39,7 @@ const mapStateToProps = (state: AppState) => {
         locale: state.controlState.locale,
 
         datasets: state.dataState.datasets,
-        userPlaceGroup: state.dataState.userPlaceGroup,
+        userPlaceGroups: state.dataState.userPlaceGroups,
 
         selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
         selectedPlaceId: state.controlState.selectedPlaceId,

@@ -31,7 +31,8 @@ import { PlaceGroupTimeSeries, placeGroupToTimeSeries } from "../model/timeSerie
 export const datasetsSelector = (state: AppState) => state.dataState.datasets || [];
 export const colorBarsSelector = (state: AppState) => state.dataState.colorBars;
 export const timeSeriesGroupsSelector = (state: AppState) => state.dataState.timeSeriesGroups;
-export const userPlaceGroupSelector = (state: AppState) => state.dataState.userPlaceGroup;
+export const userPlaceGroupSelector = (state: AppState) => state.dataState.userPlaceGroups[0];
+export const userPlaceGroupsSelector = (state: AppState) => state.dataState.userPlaceGroups;
 export const userServersSelector = (state: AppState) => state.dataState.userServers || [];
 
 export const placeGroupsSelector = createSelector(
@@ -47,7 +48,6 @@ export const placeGroupsSelector = createSelector(
                         placeGroups[placeGroup.id] = placeGroup;
                         placeGroupsArray.push(placeGroup);
                     }
-
                 });
             }
         });

@@ -69,7 +69,7 @@ import {
     colorBarsSelector,
     datasetsSelector,
     timeSeriesGroupsSelector,
-    userPlaceGroupSelector,
+    userPlaceGroupsSelector,
     userServersSelector
 } from './dataSelectors';
 import { makeRequestUrl } from '../api/callApi';
@@ -182,14 +182,11 @@ export const selectedDatasetPlaceGroupsSelector = createSelector(
     }
 );
 
-export const placeGroupsSelector = createSelector(
+export const selectedDatasetAndUserPlaceGroupsSelector = createSelector(
     selectedDatasetPlaceGroupsSelector,
-    userPlaceGroupSelector,
-    (placeGroups: PlaceGroup[], userPlaceGroup: PlaceGroup): PlaceGroup[] => {
-        if (!userPlaceGroup.features || userPlaceGroup.features.length === 0) {
-            return placeGroups;
-        }
-        return placeGroups.concat([userPlaceGroup]);
+    userPlaceGroupsSelector,
+    (placeGroups: PlaceGroup[], userPlaceGroups: PlaceGroup[]): PlaceGroup[] => {
+        return placeGroups.concat(userPlaceGroups);
     }
 );
 
@@ -213,7 +210,7 @@ export const selectedDatasetSelectedPlaceGroupsSelector = createSelector(
 );
 
 export const selectedPlaceGroupsSelector = createSelector(
-    placeGroupsSelector,
+    selectedDatasetAndUserPlaceGroupsSelector,
     selectedPlaceGroupIdsSelector,
     selectPlaceGroups
 );
@@ -297,7 +294,7 @@ export const canAddTimeSeriesSelector = createSelector(
 
 export const timeSeriesPlaceInfosSelector = createSelector(
     timeSeriesGroupsSelector,
-    placeGroupsSelector,
+    selectedDatasetAndUserPlaceGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
         const placeInfos: any = {};
         forEachPlace(placeGroups, (placeGroup, place) => {

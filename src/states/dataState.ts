@@ -27,7 +27,7 @@ import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
 import { ColorBars } from '../model/colorBar';
 import { Dataset } from '../model/dataset';
-import { Place, PlaceGroup, } from '../model/place';
+import { Place, PlaceGroup, USER_PLACE_GROUP_ID, } from '../model/place';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { loadUserServers } from './userSettings';
 
@@ -36,8 +36,8 @@ export interface DataState {
     datasets: Dataset[];
     colorBars: ColorBars | null;
     timeSeriesGroups: TimeSeriesGroup[];
-    userPlaceGroup: PlaceGroup;
-    userServers: ApiServerConfig[];
+    userPlaceGroups: PlaceGroup[];  // Will contain at least 1 item
+    userServers: ApiServerConfig[]; // Will contain at least 1 item
 }
 
 export function newDataState(): DataState {
@@ -55,12 +55,12 @@ export function newDataState(): DataState {
         datasets: [],
         colorBars: null,
         timeSeriesGroups: [],
-        userPlaceGroup: {
-            id: 'user',
+        userPlaceGroups: [{
+            id: USER_PLACE_GROUP_ID,
             title: i18n.get('My places'),
             type: "FeatureCollection",
             features: [] as Array<Place>
-        },
+        }],
         userServers,
     };
 }

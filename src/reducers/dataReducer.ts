@@ -34,7 +34,7 @@ import {
     CONFIGURE_SERVERS,
     DataAction,
     REMOVE_ALL_TIME_SERIES,
-    REMOVE_ALL_USER_PLACES,
+    REMOVE_USER_PLACE_GROUP,
     REMOVE_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     REMOVE_USER_PLACE,
@@ -50,7 +50,7 @@ import {
 import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
 import { Variable } from "../model/variable";
-import { Place } from '../model/place';
+import { Place, USER_PLACE_GROUP_ID, USER_PLACE_GROUP_ID_PREFIX } from '../model/place';
 import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
 import { setFeatureStyle } from "../components/ol/style";
 import { Config } from "../config";
@@ -113,91 +113,170 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 geometry,
                 properties: {label, color},
             };
-            const features = [...state.userPlaceGroup.features, place];
-            const userPlaceGroup = {...state.userPlaceGroup, features};
-            return {
-                ...state,
-                userPlaceGroup,
-            };
-        }
-        case ADD_USER_PLACES: {
-            const {places, mapProjection} = action;
-            places.forEach(place => addUserPlaceToLayer(place, mapProjection));
-            const features = [...state.userPlaceGroup.features, ...places];
-            const userPlaceGroup = {...state.userPlaceGroup, features};
-            return {
-                ...state,
-                userPlaceGroup,
-            };
-        }
-        case RENAME_USER_PLACE_GROUP:{
-            const {newName} = action;
-            return {
-                ...state,
-                userPlaceGroup: {
-                    ...state.userPlaceGroup,
-                    title: newName
-                },
-            };
-        }
-        case RENAME_USER_PLACE: {
-            const {id, newName} = action;
-            const index = state.userPlaceGroup.features.findIndex(p => p.id === id);
-            if (index >= 0) {
-                // renameUserPlaceInLayer(id, newName);
-                const features = [...state.userPlaceGroup.features];
-                features[index] = {
-                    ...features[index], properties: {
-                        ...features[index].properties,
-                        label: newName
-                    }
-                };
-                const userPlaceGroup = {...state.userPlaceGroup, features};
+            const userPlaceGroups = state.userPlaceGroups;
+            const pgIndex = userPlaceGroups.findIndex(pg => pg.id === USER_PLACE_GROUP_ID);
+            if (pgIndex >= 0) {
+                const pg = state.userPlaceGroups[pgIndex];
                 return {
                     ...state,
-                    userPlaceGroup,
+                    userPlaceGroups: [
+                        {
+                            ...pg,
+                            features: [
+                                ...pg.features,
+                                place,
+                            ]
+                        },
+                        ...state.userPlaceGroups.slice(1)
+                    ],
                 };
+            }
+            return state;
+        }
+        case ADD_USER_PLACES: {
+            const {placeGroups, mapProjection} = action;
+            const userPlaceGroups = [...state.userPlaceGroups];
+            for (let pg of placeGroups) {
+                const newPlaceGroup = {...pg, id: USER_PLACE_GROUP_ID_PREFIX + newId()};
+                userPlaceGroups.push(newPlaceGroup);
+                newPlaceGroup.features.forEach(
+                    place => addUserPlaceToLayer(newPlaceGroup.id, place, mapProjection)
+                );
+            }
+            return {...state, userPlaceGroups};
+        }
+        case RENAME_USER_PLACE_GROUP: {
+            const {placeGroupId, newName} = action;
+            const userPlaceGroups = state.userPlaceGroups;
+            const pgIndex = userPlaceGroups.findIndex(pg => pg.id === placeGroupId);
+            if (pgIndex >= 0) {
+                const pg = userPlaceGroups[pgIndex];
+                return {
+                    ...state,
+                    userPlaceGroups: [
+                        ...userPlaceGroups.slice(0, pgIndex),
+                        {...pg, title: newName},
+                        ...userPlaceGroups.slice(pgIndex + 1)
+                    ]
+                };
+            }
+            return state;
+        }
+        case RENAME_USER_PLACE: {
+            const {placeGroupId, placeId, newName} = action;
+            const userPlaceGroups = state.userPlaceGroups;
+            const pgIndex = userPlaceGroups.findIndex(pg => pg.id === placeGroupId);
+            if (pgIndex >= 0) {
+                const pg = userPlaceGroups[pgIndex];
+                const features = pg.features;
+                const pIndex = features.findIndex(p => p.id === placeId);
+                if (pIndex >= 0) {
+                    const p = features[pIndex];
+                    renameUserPlaceInLayer(placeGroupId, placeId, newName);
+                    return {
+                        ...state,
+                        userPlaceGroups: [
+                            ...userPlaceGroups.slice(0, pgIndex),
+                            {
+                                ...pg,
+                                features: [
+                                    ...features.slice(0, pIndex),
+                                    {
+                                        ...p,
+                                        properties: {
+                                            ...p.properties,
+                                            label: newName
+                                        }
+                                    },
+                                    ...features.slice(pIndex + 1),
+                                ]
+                            },
+                            ...userPlaceGroups.slice(pgIndex + 1)
+                        ],
+                    };
+                }
             }
             return state;
         }
         case REMOVE_USER_PLACE: {
-            const {id} = action;
-            const index = state.userPlaceGroup.features.findIndex(p => p.id === id);
-            if (index >= 0) {
-                removeUserPlacesFromLayer([id]);
-                const features = [...state.userPlaceGroup.features];
-                features.splice(index, 1);
-                const userPlaceGroup = {...state.userPlaceGroup, features};
-                const timeSeriesArray = getTimeSeriesArray(state.timeSeriesGroups, [id]);
-                let timeSeriesGroups = state.timeSeriesGroups;
-                timeSeriesArray.forEach(ts => {
-                    timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                        ts, 'remove', 'append');
-                });
-                return {
-                    ...state,
-                    userPlaceGroup,
-                    timeSeriesGroups
-                };
+            const {placeGroupId, placeId} = action;
+            const userPlaceGroups = state.userPlaceGroups;
+            const pgIndex = userPlaceGroups.findIndex(pg => pg.id === placeGroupId);
+            if (pgIndex >= 0) {
+                const pg = userPlaceGroups[pgIndex];
+                const pIndex = pg.features.findIndex(p => p.id === placeId);
+                if (pIndex >= 0) {
+                    removeUserPlacesFromLayer(placeGroupId, [placeId]);
+
+                    const timeSeriesArray = getTimeSeriesArray(state.timeSeriesGroups, [placeId]);
+                    let timeSeriesGroups = state.timeSeriesGroups;
+                    timeSeriesArray.forEach(ts => {
+                        timeSeriesGroups = updateTimeSeriesGroups(
+                            timeSeriesGroups, ts, 'remove', 'append'
+                        );
+                    });
+
+                    return {
+                        ...state,
+                        userPlaceGroups: [
+                            ...userPlaceGroups.slice(0, pgIndex),
+                            {
+                                ...pg,
+                                features: [
+                                    ...pg.features.slice(0, pIndex),
+                                    ...pg.features.slice(pIndex + 1),
+                                ]
+                            },
+                            ...userPlaceGroups.slice(pgIndex + 1)
+                        ],
+                        timeSeriesGroups
+                    };
+                }
             }
             return state;
         }
-        case REMOVE_ALL_USER_PLACES: {
-            const userPlaces = state.userPlaceGroup.features as Place[];
-            const userPlaceIds = userPlaces.map(p => p.id);
-            removeUserPlacesFromLayer(userPlaceIds);
-            const userPlaceGroup = {...state.userPlaceGroup, features: []};
-            const timeSeriesArray = getTimeSeriesArray(state.timeSeriesGroups, userPlaceIds);
-            let timeSeriesGroups = state.timeSeriesGroups;
-            timeSeriesArray.forEach(ts => {
-                timeSeriesGroups = updateTimeSeriesGroups(timeSeriesGroups,
-                    ts, 'remove', 'append');
-            });
-            return {
-                ...state,
-                userPlaceGroup,
-                timeSeriesGroups,
-            };
+        case REMOVE_USER_PLACE_GROUP: {
+            const {placeGroupId} = action;
+            const userPlaceGroups = state.userPlaceGroups;
+            const pgIndex = userPlaceGroups.findIndex(pg => pg.id === placeGroupId);
+            if (pgIndex >= 0) {
+                const pg = userPlaceGroups[pgIndex];
+                const userPlaceIds = pg.features.map(p => p.id);
+                removeUserPlacesFromLayer(placeGroupId, userPlaceIds);
+
+                const timeSeriesArray = getTimeSeriesArray(state.timeSeriesGroups, userPlaceIds);
+                let timeSeriesGroups = state.timeSeriesGroups;
+                timeSeriesArray.forEach(ts => {
+                    timeSeriesGroups = updateTimeSeriesGroups(
+                        timeSeriesGroups, ts, 'remove', 'append'
+                    );
+                });
+
+                if (placeGroupId === 'user0') {
+                    return {
+                        ...state,
+                        userPlaceGroups: [
+                            ...userPlaceGroups.slice(0, pgIndex),
+                            {
+                                ...pg,
+                                features: []
+                            },
+                            ...userPlaceGroups.slice(pgIndex + 1)
+                        ],
+                        timeSeriesGroups
+                    };
+                } else {
+                    return {
+                        ...state,
+                        userPlaceGroups: [
+                            ...userPlaceGroups.slice(0, pgIndex),
+                            ...userPlaceGroups.slice(pgIndex + 1)
+                        ],
+                        timeSeriesGroups
+                    };
+                }
+            }
+            return state;
         }
         case UPDATE_COLOR_BARS: {
             return {...state, colorBars: action.colorBars};
@@ -260,9 +339,9 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
     return state!;
 }
 
-function addUserPlaceToLayer(place: Place, mapProjection: string) {
-    if (MAP_OBJECTS.userLayer) {
-        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
+function addUserPlaceToLayer(userPlaceGroupId: string, place: Place, mapProjection: string) {
+    if (MAP_OBJECTS[userPlaceGroupId]) {
+        const userLayer = MAP_OBJECTS[userPlaceGroupId] as OlVectorLayer;
         const source = userLayer.getSource();
         const feature = new OlGeoJSONFormat().readFeature(place,
             {
@@ -277,9 +356,9 @@ function addUserPlaceToLayer(place: Place, mapProjection: string) {
     }
 }
 
-function removeUserPlacesFromLayer(userPlaceIds: string[]) {
-    if (MAP_OBJECTS.userLayer) {
-        const userLayer = MAP_OBJECTS.userLayer as OlVectorLayer;
+function removeUserPlacesFromLayer(userPlaceGroupId: string, userPlaceIds: string[]) {
+    if (MAP_OBJECTS[userPlaceGroupId]) {
+        const userLayer = MAP_OBJECTS[userPlaceGroupId] as OlVectorLayer;
         const source = userLayer.getSource();
         userPlaceIds.forEach(placeId => {
             const feature = source.getFeatureById(placeId);
@@ -287,6 +366,13 @@ function removeUserPlacesFromLayer(userPlaceIds: string[]) {
                 source.removeFeature(feature);
             }
         });
+    }
+}
+
+function renameUserPlaceInLayer(userPlaceGroupId: string, userPlaceId: string, newName: string) {
+    if (MAP_OBJECTS[userPlaceGroupId]) {
+        // const userLayer = MAP_OBJECTS[userPlaceGroupId] as OlVectorLayer;
+        // TODO (forman): update userLayer
     }
 }
 

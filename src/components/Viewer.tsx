@@ -102,7 +102,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
     addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry, selectPlace: boolean) => void;
-    userPlaceGroup: PlaceGroup;
+    userPlaceGroups: PlaceGroup[];
     selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
     places: Place[];
@@ -124,7 +124,7 @@ const Viewer: React.FC<ViewerProps> = ({
                                            colorBarLegend,
                                            addUserPlace,
                                            addUserPlacesFromText,
-                                           userPlaceGroup,
+                                           userPlaceGroups,
                                            selectPlace,
                                            selectedPlaceId,
                                            places,
@@ -210,7 +210,7 @@ const Viewer: React.FC<ViewerProps> = ({
             const geoJSONGeometry = new OlGeoJSONFormat().writeGeometryObject(geometry) as any;
             feature.setId(placeId);
             let colorIndex = 0;
-            if (MAP_OBJECTS.userLayer) {
+            if (MAP_OBJECTS.userLayer0) {
                 const features = USER_LAYER_SOURCE.getFeatures();
                 colorIndex = features.length;
             }
@@ -223,7 +223,7 @@ const Viewer: React.FC<ViewerProps> = ({
             for (let index = 1; ; index++) {
                 label = `${nameBase} ${index}`;
                 // eslint-disable-next-line
-                if (!userPlaceGroup.features.find(p => (p.properties || {})['label'] === label)) {
+                if (!userPlaceGroups[0].features.find(p => (p.properties || {})['label'] === label)) {
                     break;
                 }
             }
@@ -283,12 +283,16 @@ const Viewer: React.FC<ViewerProps> = ({
                     {baseMapLayer}
                     {variableLayer}
                     {datasetBoundaryLayer}
-                    <Vector
-                        id='userLayer'
-                        opacity={1}
-                        zIndex={500}
-                        source={USER_LAYER_SOURCE}
-                    />
+                    {<>{
+                        userPlaceGroups.map((placeGroup, index) => (
+                            <Vector
+                                id={`userLayer${index}`}
+                                opacity={index = 0 ? 1 : 0.8}
+                                zIndex={500}
+                                source={USER_LAYER_SOURCE}
+                            />
+                        ))
+                    }</>}
                     <Vector
                         id='selectionLayer'
                         opacity={0.7}
@@ -301,7 +305,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={handleSelect}/>*/}
                 <Draw
                     id="drawPoint"
-                    layerId={'userLayer'}
+                    layerId={'userLayer0'}
                     active={mapInteraction === 'Point'}
                     type={OlGeometryType.POINT}
                     wrapX={true}
@@ -310,7 +314,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 />
                 <Draw
                     id="drawPolygon"
-                    layerId={'userLayer'}
+                    layerId={'userLayer0'}
                     active={mapInteraction === 'Polygon'}
                     type={OlGeometryType.POLYGON}
                     wrapX={true}
@@ -319,7 +323,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 />
                 <Draw
                     id="drawCircle"
-                    layerId={'userLayer'}
+                    layerId={'userLayer0'}
                     active={mapInteraction === 'Circle'}
                     type={OlGeometryType.CIRCLE}
                     wrapX={true}

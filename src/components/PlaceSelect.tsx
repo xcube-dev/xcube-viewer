@@ -35,7 +35,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
-import { Place, PlaceGroup } from '../model/place';
+import { Place, PlaceGroup, USER_PLACE_GROUP_ID_PREFIX } from '../model/place';
 import { WithLocale } from '../util/lang';
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
@@ -51,14 +51,14 @@ const styles = (theme: Theme) => createStyles(
 
 interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     datasets: Dataset[];
-    userPlaceGroup: PlaceGroup;
+    userPlaceGroup: PlaceGroup[];
     selectedPlaceGroupIds: string[] | null;
     selectedPlaceId: string | null;
     places: Place[];
     placeLabels: string[];
-    selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
-    renameUserPlace: (placeId: string, placeName: string) => void;
-    removeUserPlace: (placeId: string, places: Place[]) => void;
+    selectPlace: (placeGroupId: string | null, placeId: string | null, places: Place[], showInMap: boolean) => void;
+    renameUserPlace: (placeGroupId: string, placeId: string, placeName: string) => void;
+    removeUserPlace: (placeGroupId: string, placeId: string, places: Place[]) => void;
     openDialog: (dialogId: string) => void;
 }
 
@@ -79,15 +79,17 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     selectedPlaceId = selectedPlaceId || '';
     selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
+    const selectedPlaceGroupId = selectedPlaceGroupIds!.length === 1 ? selectedPlaceGroupIds![0] : null;
+
     const placeIndex = places.findIndex(p => p.id === selectedPlaceId);
     const placeName = placeIndex >= 0 ? placeLabels[placeIndex] : "";
 
     const setPlaceName = (placeName: string) => {
-        renameUserPlace(selectedPlaceId!, placeName);
+        renameUserPlace(selectedPlaceGroupId!, selectedPlaceId!, placeName);
     };
 
     const handlePlaceChange = (event: SelectChangeEvent) => {
-        selectPlace(event.target.value || null, places, true);
+        selectPlace(selectedPlaceGroupId, event.target.value || null, places, true);
     };
 
     const select = (
@@ -113,9 +115,8 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         </Select>
     );
 
-    const isEditableUserPlace = places.length > 0
-        && selectedPlaceGroupIds.length === 1
-        && selectedPlaceGroupIds[0] === 'user'
+    const isEditableUserPlace = selectedPlaceGroupId !== null
+        && selectedPlaceGroupId.startsWith(USER_PLACE_GROUP_ID_PREFIX)
         && selectedPlaceId !== '';
 
     let actions;
@@ -125,9 +126,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         };
 
         const handleRemoveButtonClick = () => {
-            if (selectedPlaceId !== null) {
-                removeUserPlace(selectedPlaceId, places);
-            }
+            removeUserPlace(selectedPlaceGroupId!, selectedPlaceId!, places);
         };
 
         actions = [

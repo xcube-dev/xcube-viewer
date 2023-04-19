@@ -39,7 +39,11 @@ import {
     Place,
     PlaceGroup
 } from '../model/place';
-import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
+import {
+    TimeSeries,
+    TimeSeriesGroup,
+    timeSeriesGroupsToTable
+} from '../model/timeSeries';
 import {
     mapProjectionSelector,
     selectedDatasetIdSelector,
@@ -56,7 +60,11 @@ import {
     userPlacesFormatOptionsGeoJsonSelector,
     userPlacesFormatOptionsWktSelector
 } from '../selectors/controlSelectors';
-import { datasetsSelector, placeGroupsSelector, userPlaceGroupSelector } from '../selectors/dataSelectors';
+import {
+    datasetsSelector,
+    placeGroupsSelector,
+    userPlaceGroupsSelector
+} from '../selectors/dataSelectors';
 import { AppState } from '../states/appState';
 import {
     AddActivity,
@@ -74,7 +82,11 @@ import {
     UpdateSettings,
 } from './controlActions';
 import { VolumeRenderMode } from "../states/controlState";
-import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
+import {
+    MessageLogAction,
+    PostMessage,
+    postMessage
+} from './messageLogActions';
 
 const saveAs = require('file-saver');
 
@@ -226,17 +238,17 @@ export const ADD_USER_PLACES = 'ADD_USER_PLACES';
 
 export interface AddUserPlaces {
     type: typeof ADD_USER_PLACES;
-    places: Place[];
+    placeGroups: PlaceGroup[];
     mapProjection: string;
     selectPlace: boolean;
 }
 
-export function addUserPlaces(places: Place[],
+export function addUserPlaces(placeGroups: PlaceGroup[],
                               mapProjection: string,
                               selectPlace: boolean): AddUserPlaces {
     return {
         type: ADD_USER_PLACES,
-        places: places,
+        placeGroups,
         mapProjection,
         selectPlace
     };
@@ -255,31 +267,32 @@ type UserPlacesDispatch = Dispatch<AddUserPlaces
 export function addUserPlacesFromText(text: string) {
     return (dispatch: UserPlacesDispatch, getState: () => AppState) => {
         const formatName = userPlacesFormatNameSelector(getState());
-        let places: Place[];
+        let placeGroups: PlaceGroup[];
         try {
             if (formatName === 'csv') {
                 const options = userPlacesFormatOptionsCsvSelector(getState());
-                places = getUserPlacesFromCsv(text, options);
+                placeGroups = getUserPlacesFromCsv(text, options);
             } else if (formatName === 'geojson') {
                 const options = userPlacesFormatOptionsGeoJsonSelector(getState());
-                places = getUserPlacesFromGeoJson(text, options);
+                placeGroups = getUserPlacesFromGeoJson(text, options);
             } else if (formatName === 'wkt') {
                 const options = userPlacesFormatOptionsWktSelector(getState());
-                places = getUserPlacesFromWkt(text, options);
+                placeGroups = getUserPlacesFromWkt(text, options);
             } else {
-                places = [];
+                placeGroups = [];
             }
         } catch (e) {
             dispatch(postMessage('error', e));
             dispatch(openDialog('addUserPlacesFromText'));
-            places = [];
+            placeGroups = [];
         }
-        if (places.length) {
-            dispatch(addUserPlaces(places, mapProjectionSelector(getState()), true));
-            dispatch(selectPlaceGroups(['user']) as any);
-            if (places.length === 1) {
+        if (placeGroups.length) {
+            dispatch(addUserPlaces(placeGroups, mapProjectionSelector(getState()), true));
+            dispatch(selectPlaceGroups(placeGroups.map(pg => pg.id)) as any);
+            if (placeGroups.length === 1 && placeGroups[0].features.length === 1) {
+                const place = placeGroups[0].features[0];
                 dispatch(selectPlace(
-                    places[0].id,
+                    place.id,
                     selectedPlaceGroupPlacesSelector(getState()),
                     true
                 ) as any);
@@ -287,7 +300,11 @@ export function addUserPlacesFromText(text: string) {
                     dispatch(addTimeSeries() as any);
                 }
             }
-            dispatch(postMessage('info', i18n.get(`Imported ${places.length} place(s)`)));
+            let numPlaces = 0;
+            placeGroups.forEach(placeGroup => {
+                numPlaces += placeGroup.features ? placeGroup.features.length : 0;
+            });
+            dispatch(postMessage('info', i18n.get(`Imported ${numPlaces} place(s) in ${placeGroups.length} groups(s)`)));
         } else {
             dispatch(postMessage('warning', i18n.get('No places imported')));
         }
@@ -299,12 +316,12 @@ export const RENAME_USER_PLACE_GROUP = 'RENAME_USER_PLACE_GROUP';
 
 export interface RenameUserPlaceGroup {
     type: typeof RENAME_USER_PLACE_GROUP;
-    id: string;
+    placeGroupId: string;
     newName: string;
 }
 
-export function renameUserPlaceGroup(id: string, newName: string): RenameUserPlaceGroup {
-    return {type: RENAME_USER_PLACE_GROUP, id, newName};
+export function renameUserPlaceGroup(placeGroupId: string, newName: string): RenameUserPlaceGroup {
+    return {type: RENAME_USER_PLACE_GROUP, placeGroupId, newName};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -313,12 +330,13 @@ export const RENAME_USER_PLACE = 'RENAME_USER_PLACE';
 
 export interface RenameUserPlace {
     type: typeof RENAME_USER_PLACE;
-    id: string;
+    placeGroupId: string;
+    placeId: string;
     newName: string;
 }
 
-export function renameUserPlace(id: string, newName: string): RenameUserPlace {
-    return {type: RENAME_USER_PLACE, id, newName};
+export function renameUserPlace(placeGroupId: string, placeId: string, newName: string): RenameUserPlace {
+    return {type: RENAME_USER_PLACE, placeGroupId, placeId, newName};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,24 +345,25 @@ export const REMOVE_USER_PLACE = 'REMOVE_USER_PLACE';
 
 export interface RemoveUserPlace {
     type: typeof REMOVE_USER_PLACE;
-    id: string;
-    places: Place[];
+    placeGroupId: string;
+    placeId: string;
 }
 
-export function removeUserPlace(id: string, places: Place[]): RemoveUserPlace {
-    return {type: REMOVE_USER_PLACE, id, places};
+export function removeUserPlace(placeGroupId: string, placeId: string): RemoveUserPlace {
+    return {type: REMOVE_USER_PLACE, placeGroupId, placeId};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const REMOVE_ALL_USER_PLACES = 'REMOVE_ALL_USER_PLACES';
+export const REMOVE_USER_PLACE_GROUP = 'REMOVE_USER_PLACE_GROUP';
 
-export interface RemoveAllUserPlaces {
-    type: typeof REMOVE_ALL_USER_PLACES;
+export interface RemoveUserPlaceGroup {
+    type: typeof REMOVE_USER_PLACE_GROUP;
+    placeGroupId: string;
 }
 
-export function removeAllUserPlaces(): RemoveAllUserPlaces {
-    return {type: REMOVE_ALL_USER_PLACES};
+export function removeUserPlaceGroup(placeGroupId: string): RemoveUserPlaceGroup {
+    return {type: REMOVE_USER_PLACE_GROUP, placeGroupId};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -665,7 +684,7 @@ export function exportData() {
                     placeGroups = placeGroups.concat(dataset.placeGroups);
                 }
             });
-            placeGroups.push(userPlaceGroupSelector(getState()));
+            placeGroups = [...placeGroups, ...userPlaceGroupsSelector(getState())];
         } else if (exportPlaces) {
             // Just export all visible places.
             placeGroups = selectedPlaceGroupsSelector(getState());
@@ -855,7 +874,7 @@ export type DataAction =
     | RenameUserPlaceGroup
     | RenameUserPlace
     | RemoveUserPlace
-    | RemoveAllUserPlaces
+    | RemoveUserPlaceGroup
     | UpdateTimeSeries
     | RemoveTimeSeries
     | RemoveTimeSeriesGroup

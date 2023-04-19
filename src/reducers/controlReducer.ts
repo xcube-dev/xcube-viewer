@@ -69,6 +69,7 @@ import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
 import { GEOGRAPHIC_CRS } from "../model/proj";
 import { appParams } from "../config";
+import { USER_PLACE_GROUP_ID } from "../model/place";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
 //                so they produce a consistent state. E.g. on selected dataset change, ensure selected
@@ -266,22 +267,23 @@ export function controlReducer(state: ControlState | undefined,
             };
         }
         case ADD_USER_PLACE: {
+            const {id} = action;
             if (action.selectPlace) {
                 return selectPlace(state, action.id);
             }
             return state;
         }
         case ADD_USER_PLACES: {
-            if (action.selectPlace && action.places.length) {
-                return selectPlace(state, action.places[0].id);
-            }
+            // if (action.selectPlace && action.places.length) {
+            //     return selectPlace(state, action.places[0].id);
+            // }
             return state;
         }
         case REMOVE_USER_PLACE: {
-            const {id, places} = action;
-            if (id === state.selectedPlaceId) {
+            const {placeGroupId, placeId} = action;
+            if (placeId === state.selectedPlaceId) {
                 let selectedPlaceId = null;
-                const index = places.findIndex(p => p.id === id);
+                const index = places.findIndex(p => p.id === placeId);
                 if (index >= 0) {
                     if (index < places.length - 1) {
                         selectedPlaceId = places[index + 1].id;
@@ -420,11 +422,11 @@ export function controlReducer(state: ControlState | undefined,
 function selectPlace(state: ControlState, selectedPlaceId: string): ControlState {
     let selectedPlaceGroupIds;
     if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
-        selectedPlaceGroupIds = ['user'];
-    } else if (state.selectedPlaceGroupIds.find(id => id === 'user')) {
+        selectedPlaceGroupIds = [USER_PLACE_GROUP_ID];
+    } else if (state.selectedPlaceGroupIds.find(id => id === USER_PLACE_GROUP_ID)) {
         selectedPlaceGroupIds = state.selectedPlaceGroupIds;
     } else {
-        selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, 'user']
+        selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, USER_PLACE_GROUP_ID]
     }
     return {
         ...state,

@@ -38,6 +38,10 @@ import { getUserPlaceColorName } from '../config';
 import { parseCsv } from "../util/csv";
 import i18n from "../i18n";
 
+export const USER_PLACE_GROUP_ID_PREFIX = "user-";
+
+// a user place group with this ID will always exist
+export const USER_PLACE_GROUP_ID = "user-0";
 
 /**
  * A place is a GeoJSON feature with a mandatory string ID.
@@ -69,6 +73,15 @@ export interface PlaceInfo {
     color: string;
     image: string | null;
     description: string | null;
+}
+
+export function newUserPlaceGroup(title: string, places: Place[]): PlaceGroup {
+    return {
+        type: "FeatureCollection",
+        features: places,
+        id: `user-${newId()}`,
+        title,
+    };
 }
 
 export const DEFAULT_LABEL_PROPERTY_NAMES = mkCases(['label', 'title', 'name', 'id']);
@@ -233,7 +246,7 @@ let LAST_PLACE_LABEL_ID_GEOJSON = 0;
 let LAST_PLACE_LABEL_ID_WKT = 0;
 
 
-export function getUserPlacesFromCsv(text: string, options: CsvOptions): Place[] {
+export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGroup[] {
     let table = parseCsv(text, options);
     if (table.length < 2) {
         throw new Error(i18n.get('Missing header line in CSV'));
@@ -326,10 +339,10 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): Place[]
         places.push(newGeoJsonFeature(geometry, geoJsonProps));
     }
 
-    return places;
+    return [newUserPlaceGroup('', places)];
 }
 
-export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions): Place[] {
+export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions): PlaceGroup[] {
     const labelNames = options.labelNames;
     const labelNamesSet = new Set(
         labelNames.split(',')
@@ -390,10 +403,10 @@ export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions):
         }
     });
 
-    return places;
+    return [newUserPlaceGroup('', places)];
 }
 
-export function getUserPlacesFromWkt(text: string, options: WktOptions): Place[] {
+export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGroup[] {
     let labelPrefix = options.labelPrefix.trim();
     if (labelPrefix === '') {
         labelPrefix = defaultWktOptions.labelPrefix;
@@ -406,7 +419,8 @@ export function getUserPlacesFromWkt(text: string, options: WktOptions): Place[]
     try {
         const geometry = new OlWktFormat().readGeometry(text);
         const geoJsonProps = {label, source: 'WKT'};
-        return [newGeoJsonFeature(geometry, geoJsonProps)];
+        const places = [newGeoJsonFeature(geometry, geoJsonProps)];
+        return [newUserPlaceGroup('', places)];
     } catch (e) {
         throw new Error(i18n.get(`Invalid Geometry WKT`));
     }

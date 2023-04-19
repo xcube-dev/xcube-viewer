@@ -26,10 +26,10 @@ import { connect } from 'react-redux';
 
 import PlaceGroupsSelect from "../components/PlaceGroupsSelect";
 import { AppState } from '../states/appState';
-import { renameUserPlaceGroup, removeAllUserPlaces } from '../actions/dataActions';
+import { renameUserPlaceGroup, removeUserPlaceGroup } from '../actions/dataActions';
 import { selectPlaceGroups } from '../actions/controlActions';
 import {
-    placeGroupsSelector,
+    selectedDatasetAndUserPlaceGroupsSelector,
     selectedPlaceGroupsTitleSelector
 } from '../selectors/controlSelectors';
 
@@ -39,7 +39,7 @@ const mapStateToProps = (state: AppState) => {
         locale: state.controlState.locale,
 
         selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        placeGroups: placeGroupsSelector(state),
+        placeGroups: selectedDatasetAndUserPlaceGroupsSelector(state),
         selectedPlaceGroupsTitle: selectedPlaceGroupsTitleSelector(state),
     };
 };
@@ -47,7 +47,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
     selectPlaceGroups,
     renameUserPlaceGroup,
-    removeAllUserPlaces,
+    removeAllUserPlaces: removeUserPlaceGroup,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaceGroupsSelect);
