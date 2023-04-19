@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,11 +23,11 @@
  */
 
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 
-import i18n from '../../i18n';
 import { GeoJsonOptions } from '../../model/user-place/geojson';
+import OptionsField from "./OptionField";
 
+const GeoJsonTextField = OptionsField<GeoJsonOptions, string>();
 
 interface GeoJsonOptionsEditorProps {
     options: GeoJsonOptions;
@@ -42,56 +42,32 @@ const GeoJsonOptionsEditor: React.FC<GeoJsonOptionsEditorProps> = (
         className
     }
 ) => {
-    function handleGroupNamesChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({groupNames: e.target.value});
-    }
-
-    function handleGroupPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({groupPrefix: e.target.value});
-    }
-
-    function handleLabelNamesChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({labelNames: e.target.value});
-    }
-
-    function handleLabelPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({labelPrefix: e.target.value});
-    }
-
     return (
         <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
-                <TextField
-                    label={i18n.get('Group property names')}
-                    value={options.groupNames}
-                    onChange={handleGroupNamesChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1, marginRight: 10}}
+                <GeoJsonTextField
+                    label={'Group property names'}
+                    optionKey='groupNames'
+                    options={options}
+                    updateOptions={updateOptions}
                 />
-                <TextField
-                    label={i18n.get('Group prefix (used as fallback)')}
-                    value={options.groupPrefix}
-                    onChange={handleGroupPrefixChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1}}
+                <GeoJsonTextField
+                    label={'Group prefix (used as fallback)'}
+                    optionKey='groupPrefix'
+                    options={options}
+                    updateOptions={updateOptions}
                 />
-                <TextField
-                    label={i18n.get('Label property names')}
-                    value={options.labelNames}
-                    onChange={handleLabelNamesChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1, marginRight: 10}}
+                <GeoJsonTextField
+                    label={'Label property names'}
+                    optionKey='labelNames'
+                    options={options}
+                    updateOptions={updateOptions}
                 />
-                <TextField
-                    label={i18n.get('Label prefix (used as fallback)')}
-                    value={options.labelPrefix}
-                    onChange={handleLabelPrefixChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1}}
+                <GeoJsonTextField
+                    label={'Label prefix (used as fallback)'}
+                    optionKey='labelPrefix'
+                    options={options}
+                    updateOptions={updateOptions}
                 />
             </div>
         </div>

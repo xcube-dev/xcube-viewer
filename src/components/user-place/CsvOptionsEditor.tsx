@@ -26,8 +26,9 @@ import * as React from 'react';
 import Checkbox from "@mui/material/Checkbox";
 
 import { CsvOptions } from '../../model/user-place/csv';
-import CsvTextFieldEditor from "./CsvTextFieldEditor";
+import OptionsField from "./OptionField";
 
+const CsvTextField = OptionsField<CsvOptions, string>();
 
 interface CsvOptionsEditorProps {
     options: CsvOptions;
@@ -45,14 +46,14 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
     return (
         <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
-                <CsvTextFieldEditor
-                    optionName={'xName'}
+                <CsvTextField
+                    optionKey={'xName'}
                     label={'X/longitude column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'yName'}
+                <CsvTextField
+                    optionKey={'yName'}
                     label={'Y/latitude column name'}
                     options={options}
                     updateOptions={updateOptions}
@@ -65,59 +66,61 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                     />
                     <span>{'Use geometry column'}</span>
                 </span>
-                <CsvTextFieldEditor
-                    optionName={'geometryName'}
+                <CsvTextField
+                    optionKey={'geometryName'}
                     label={'Geometry column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'groupName'}
+                <CsvTextField
+                    optionKey={'groupName'}
                     label={'Group column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'groupPrefix'}
+                <CsvTextField
+                    optionKey={'groupPrefix'}
                     label={'Group prefix (used as fallback)'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'labelName'}
+                <CsvTextField
+                    optionKey={'labelName'}
                     label={'Label column name'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'labelPrefix'}
+                <CsvTextField
+                    optionKey={'labelPrefix'}
                     label={'Label prefix (used as fallback)'}
                     options={options}
                     updateOptions={updateOptions}
                 />
             </div>
-            <div style={{display: "grid", gap: 12, paddingTop: 12,
-                gridTemplateColumns: "auto auto auto"}}>
-                <CsvTextFieldEditor
-                    optionName={'separator'}
+            <div style={{
+                display: "grid", gap: 12, paddingTop: 12,
+                gridTemplateColumns: "auto auto auto"
+            }}>
+                <CsvTextField
+                    optionKey={'separator'}
                     label={'Separator character'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'comment'}
+                <CsvTextField
+                    optionKey={'comment'}
                     label={'Comment character'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'quote'}
+                <CsvTextField
+                    optionKey={'quote'}
                     label={'Quote character'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'escape'}
+                <CsvTextField
+                    optionKey={'escape'}
                     label={'Escape character'}
                     options={options}
                     updateOptions={updateOptions}
@@ -131,20 +134,20 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                     />
                     <span>Remove whitespaces</span>
                 </span>
-                <CsvTextFieldEditor
-                    optionName={'nanToken'}
+                <CsvTextField
+                    optionKey={'nanToken'}
                     label={'Not-a-number token'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'trueToken'}
+                <CsvTextField
+                    optionKey={'trueToken'}
                     label={'True token'}
                     options={options}
                     updateOptions={updateOptions}
                 />
-                <CsvTextFieldEditor
-                    optionName={'falseToken'}
+                <CsvTextField
+                    optionKey={'falseToken'}
                     label={'False token'}
                     options={options}
                     updateOptions={updateOptions}

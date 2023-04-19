@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,10 +23,12 @@
  */
 
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 
 import { WktOptions } from '../../model/user-place/wkt';
-import i18n from '../../i18n';
+import OptionsField from "./OptionField";
+
+
+const WktTextField = OptionsField<WktOptions, string>();
 
 
 interface WktOptionsEditorProps {
@@ -42,56 +44,32 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
         className
     }
 ) => {
-    function handleGroupNameChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({groupName: e.target.value});
-    }
-
-    function handleGroupNamePrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({groupNamePrefix: e.target.value});
-    }
-
-    function handleLabelChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({label: e.target.value});
-    }
-
-    function handleLabelPrefixChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-        updateOptions({labelPrefix: e.target.value});
-    }
-
     return (
         <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
-                <TextField
-                    label={i18n.get('Group name')}
-                    value={options.groupName}
-                    onChange={handleGroupNameChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1, marginRight: 10}}
+                <WktTextField
+                    label={'Group name'}
+                    options={options}
+                    optionKey='groupName'
+                    updateOptions={updateOptions}
                 />
-                <TextField
-                    label={i18n.get('Group name prefix (used as fallback)')}
-                    value={options.groupNamePrefix}
-                    onChange={handleGroupNamePrefixChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1}}
+                <WktTextField
+                    label={'Group name prefix (used as fallback)'}
+                    optionKey='groupNamePrefix'
+                    options={options}
+                    updateOptions={updateOptions}
                 />
-                <TextField
-                    label={i18n.get('Label')}
-                    value={options.label}
-                    onChange={handleLabelChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1, marginRight: 10}}
+                <WktTextField
+                    label={'Label'}
+                    optionKey='label'
+                    options={options}
+                    updateOptions={updateOptions}
                 />
-                <TextField
-                    label={i18n.get('Label prefix (used as fallback)')}
-                    value={options.labelPrefix}
-                    onChange={handleLabelPrefixChange}
-                    size="small"
-                    variant="standard"
-                    style={{flexGrow: 1}}
+                <WktTextField
+                    label={'Label prefix (used as fallback)'}
+                    optionKey='labelPrefix'
+                    options={options}
+                    updateOptions={updateOptions}
                 />
             </div>
         </div>
