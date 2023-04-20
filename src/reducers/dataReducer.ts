@@ -22,15 +22,12 @@
  * SOFTWARE.
  */
 
-import { default as OlVectorLayer } from 'ol/layer/Vector';
-import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
-
 import { DataState, newDataState } from '../states/dataState';
 import { storeUserServers } from '../states/userSettings';
 import {
     ADD_PLACE_GROUP_TIME_SERIES,
-    ADD_USER_PLACE,
-    ADD_USER_PLACES,
+    ADD_DRAWN_USER_PLACE,
+    ADD_IMPORTED_USER_PLACE_GROUPS,
     CONFIGURE_SERVERS,
     DataAction,
     REMOVE_ALL_TIME_SERIES,
@@ -38,7 +35,8 @@ import {
     REMOVE_TIME_SERIES,
     REMOVE_TIME_SERIES_GROUP,
     REMOVE_USER_PLACE,
-    RENAME_USER_PLACE, RENAME_USER_PLACE_GROUP,
+    RENAME_USER_PLACE,
+    RENAME_USER_PLACE_GROUP,
     UPDATE_COLOR_BARS,
     UPDATE_DATASET_PLACE_GROUP,
     UPDATE_DATASETS,
@@ -47,13 +45,10 @@ import {
     UPDATE_VARIABLE_COLOR_BAR,
     UPDATE_VARIABLE_VOLUME
 } from '../actions/dataActions';
-import { MAP_OBJECTS } from '../states/controlState';
 import { newId } from '../util/id';
 import { Variable } from "../model/variable";
-import { Place, USER_PLACE_GROUP_ID, USER_PLACE_GROUP_ID_PREFIX } from '../model/place';
+import { Place, DRAWN_USER_PLACE_GROUP_ID } from '../model/place';
 import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
-import { setFeatureStyle } from "../components/ol/style";
-import { Config } from "../config";
 
 
 export function dataReducer(state: DataState | undefined, action: DataAction): DataState {
@@ -105,7 +100,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             });
             return {...state, datasets};
         }
-        case ADD_USER_PLACE: {
+        case ADD_DRAWN_USER_PLACE: {
             const {id, label, color, geometry} = action;
             const place: Place = {
                 type: 'Feature',
@@ -114,9 +109,11 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 properties: {label, color},
             };
             const userPlaceGroups = state.userPlaceGroups;
-            const pgIndex = userPlaceGroups.findIndex(pg => pg.id === USER_PLACE_GROUP_ID);
+            const pgIndex = userPlaceGroups.findIndex(
+                pg => pg.id === DRAWN_USER_PLACE_GROUP_ID
+            );
             if (pgIndex >= 0) {
-                const pg = state.userPlaceGroups[pgIndex];
+                const pg = userPlaceGroups[pgIndex];
                 return {
                     ...state,
                     userPlaceGroups: [
@@ -127,23 +124,18 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                                 place,
                             ]
                         },
-                        ...state.userPlaceGroups.slice(1)
+                        ...userPlaceGroups.slice(1)
                     ],
                 };
             }
             return state;
         }
-        case ADD_USER_PLACES: {
-            const {placeGroups, mapProjection} = action;
-            const userPlaceGroups = [...state.userPlaceGroups];
-            for (let pg of placeGroups) {
-                const newPlaceGroup = {...pg, id: USER_PLACE_GROUP_ID_PREFIX + newId()};
-                userPlaceGroups.push(newPlaceGroup);
-                newPlaceGroup.features.forEach(
-                    place => addUserPlaceToLayer(newPlaceGroup.id, place, mapProjection)
-                );
-            }
-            return {...state, userPlaceGroups};
+        case ADD_IMPORTED_USER_PLACE_GROUPS: {
+            const {placeGroups} = action;
+            return {
+                ...state,
+                userPlaceGroups: [...state.userPlaceGroups, ...placeGroups]
+            };
         }
         case RENAME_USER_PLACE_GROUP: {
             const {placeGroupId, newName} = action;
@@ -172,7 +164,6 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 const pIndex = features.findIndex(p => p.id === placeId);
                 if (pIndex >= 0) {
                     const p = features[pIndex];
-                    renameUserPlaceInLayer(placeGroupId, placeId, newName);
                     return {
                         ...state,
                         userPlaceGroups: [
@@ -206,7 +197,6 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                 const pg = userPlaceGroups[pgIndex];
                 const pIndex = pg.features.findIndex(p => p.id === placeId);
                 if (pIndex >= 0) {
-                    removeUserPlacesFromLayer(placeGroupId, [placeId]);
 
                     const timeSeriesArray = getTimeSeriesArray(state.timeSeriesGroups, [placeId]);
                     let timeSeriesGroups = state.timeSeriesGroups;
@@ -242,7 +232,6 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             if (pgIndex >= 0) {
                 const pg = userPlaceGroups[pgIndex];
                 const userPlaceIds = pg.features.map(p => p.id);
-                removeUserPlacesFromLayer(placeGroupId, userPlaceIds);
 
                 const timeSeriesArray = getTimeSeriesArray(state.timeSeriesGroups, userPlaceIds);
                 let timeSeriesGroups = state.timeSeriesGroups;
@@ -339,42 +328,6 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
     return state!;
 }
 
-function addUserPlaceToLayer(userPlaceGroupId: string, place: Place, mapProjection: string) {
-    if (MAP_OBJECTS[userPlaceGroupId]) {
-        const userLayer = MAP_OBJECTS[userPlaceGroupId] as OlVectorLayer;
-        const source = userLayer.getSource();
-        const feature = new OlGeoJSONFormat().readFeature(place,
-            {
-                dataProjection: 'EPSG:4326',
-                featureProjection: mapProjection
-            });
-        const color = (place.properties || {}).color || 'red';
-        const pointSymbol = Boolean((place.properties || {}).source) ? 'diamond' : 'circle';
-        setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity, pointSymbol);
-        source.addFeature(feature);
-        userLayer.changed();
-    }
-}
-
-function removeUserPlacesFromLayer(userPlaceGroupId: string, userPlaceIds: string[]) {
-    if (MAP_OBJECTS[userPlaceGroupId]) {
-        const userLayer = MAP_OBJECTS[userPlaceGroupId] as OlVectorLayer;
-        const source = userLayer.getSource();
-        userPlaceIds.forEach(placeId => {
-            const feature = source.getFeatureById(placeId);
-            if (feature) {
-                source.removeFeature(feature);
-            }
-        });
-    }
-}
-
-function renameUserPlaceInLayer(userPlaceGroupId: string, userPlaceId: string, newName: string) {
-    if (MAP_OBJECTS[userPlaceGroupId]) {
-        // const userLayer = MAP_OBJECTS[userPlaceGroupId] as OlVectorLayer;
-        // TODO (forman): update userLayer
-    }
-}
 
 function updateVariableProps(state: DataState,
                              datasetId: string,

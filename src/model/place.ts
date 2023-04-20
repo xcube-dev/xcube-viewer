@@ -40,8 +40,9 @@ import i18n from "../i18n";
 
 export const USER_PLACE_GROUP_ID_PREFIX = "user-";
 
-// a user place group with this ID will always exist
-export const USER_PLACE_GROUP_ID = "user-0";
+// The ID of the user place group that hold all drawn places.
+// This place group will always exist.
+export const DRAWN_USER_PLACE_GROUP_ID = USER_PLACE_GROUP_ID_PREFIX + "drawing";
 
 /**
  * A place is a GeoJSON feature with a mandatory string ID.

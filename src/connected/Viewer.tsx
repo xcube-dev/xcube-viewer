@@ -37,7 +37,7 @@ import {
     selectedDatasetVariableLayerSelector,
     selectedPlaceGroupPlacesSelector
 } from '../selectors/controlSelectors';
-import { addUserPlace, addUserPlacesFromText } from '../actions/dataActions';
+import { addDrawnUserPlace, importUserPlacesFromText } from '../actions/dataActions';
 import Viewer from '../components/Viewer';
 import {userPlaceGroupsSelector} from "../selectors/dataSelectors";
 import {selectPlace} from "../actions/controlActions";
@@ -69,8 +69,8 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
 };
 
 const mapDispatchToProps = {
-    addUserPlace,
-    addUserPlacesFromText,
+    addUserPlace: addDrawnUserPlace,
+    addUserPlacesFromText: importUserPlacesFromText,
     selectPlace,
 };
 
