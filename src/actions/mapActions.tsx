@@ -38,7 +38,9 @@ import { setFeatureStyle } from "../components/ol/style";
 
 
 export function addUserPlacesToLayer(placeGroup: PlaceGroup, mapProjection: string) {
+    console.log("addUserPlacesToLayer:", placeGroup)
     if (MAP_OBJECTS[placeGroup.id]) {
+        console.log("addUserPlacesToLayer: layer found!")
         const userLayer = MAP_OBJECTS[placeGroup.id] as OlVectorLayer;
         const source = userLayer.getSource();
         placeGroup.features.forEach(place => {

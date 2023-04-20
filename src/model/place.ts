@@ -38,11 +38,11 @@ import { getUserPlaceColorName } from '../config';
 import { parseCsv } from "../util/csv";
 import i18n from "../i18n";
 
-export const USER_PLACE_GROUP_ID_PREFIX = "user-";
+export const USER_ID_PREFIX = "user-";
 
 // The ID of the user place group that hold all drawn places.
 // This place group will always exist.
-export const DRAWN_USER_PLACE_GROUP_ID = USER_PLACE_GROUP_ID_PREFIX + "drawing";
+export const USER_DRAWING_PLACE_GROUP_ID = USER_ID_PREFIX + "drawing";
 
 /**
  * A place is a GeoJSON feature with a mandatory string ID.
@@ -80,8 +80,17 @@ export function newUserPlaceGroup(title: string, places: Place[]): PlaceGroup {
     return {
         type: "FeatureCollection",
         features: places,
-        id: `user-${newId()}`,
+        id: newId(USER_ID_PREFIX),
         title,
+    };
+}
+
+export function newUserPlace(geometry: OlGeometry, properties: { [name: string]: any }): Place {
+    return {
+        type: 'Feature',
+        geometry: new OlGeoJSONFormat().writeGeometryObject(geometry),
+        properties: properties,
+        id: newId(USER_ID_PREFIX),
     };
 }
 
@@ -241,6 +250,7 @@ export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: strin
     return null;
 }
 
+let LAST_PLACE_GROUP_ID_CSV = 0;
 
 let LAST_PLACE_LABEL_ID_CSV = 0;
 let LAST_PLACE_LABEL_ID_GEOJSON = 0;
@@ -269,12 +279,14 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGr
         }
     }
 
+    const groupNameLC = options.groupName.toLowerCase();
     const labelNameLC = options.labelName.toLowerCase();
     const xNameLC = options.xName.toLowerCase();
     const yNameLC = options.yName.toLowerCase();
     const geometryNameLC = options.geometryName.toLowerCase();
     const forceGeometry = options.forceGeometry;
 
+    const groupNameIndex = headerRowLC.findIndex(name => name === groupNameLC);
     const labelNameIndex = headerRowLC.findIndex(name => name === labelNameLC);
     const xNameIndex = headerRowLC.findIndex(name => name === xNameLC);
     const yNameIndex = headerRowLC.findIndex(name => name === yNameLC);
@@ -287,17 +299,43 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGr
         geometryNameIndex = -1;
     }
 
+    let groupPrefix = options.groupPrefix.trim();
+    if (groupPrefix === '') {
+        groupPrefix = defaultCsvOptions.groupPrefix;
+    }
+
     let labelPrefix = options.labelPrefix.trim();
     if (labelPrefix === '') {
         labelPrefix = defaultCsvOptions.labelPrefix;
     }
 
+    let group: string = '';
+    if (groupNameIndex === -1) {
+        const groupId = ++LAST_PLACE_GROUP_ID_CSV;
+        group = `${groupPrefix}${groupId}`;
+    }
+
     const wktFormat = new OlWktFormat();
 
-    const places: Place[] = [];
+    const placeGroups: { [group: string]: PlaceGroup } = {};
     let rowIndex = 1;
+    let numPlaceGroups = 0;
+    let color = getUserPlaceColorName(0);
     for (; rowIndex < table.length; rowIndex++) {
         const dataRow = table[rowIndex];
+
+        if (groupNameIndex >= 0) {
+            group = `${dataRow[groupNameIndex]}`;
+        }
+
+        let placeGroup = placeGroups[group];
+        if (!placeGroup) {
+            placeGroup = newUserPlaceGroup(group, []);
+            placeGroups[group] = placeGroup;
+            color = getUserPlaceColorName(numPlaceGroups);
+            numPlaceGroups++;
+        }
+
         let geometry = null;
         if (geometryNameIndex >= 0) {
             const wkt = dataRow[geometryNameIndex];
@@ -319,7 +357,7 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGr
             throw new Error(i18n.get(`Invalid geometry in data row ${rowIndex}`));
         }
 
-        const geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
+        const geoJsonProps: { [k: string]: number | string | boolean | null } = {};
         dataRow.forEach((propertyValue, index) => {
             if (index !== xNameIndex && index !== yNameIndex && index !== geometryNameIndex) {
                 const propertyName = headerRow[index];
@@ -334,13 +372,18 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGr
             const labelId = ++LAST_PLACE_LABEL_ID_CSV;
             label = `${labelPrefix}${labelId}`;
         }
-        geoJsonProps['label'] = label;
-        geoJsonProps['source'] = 'CSV';
 
-        places.push(newGeoJsonFeature(geometry, geoJsonProps));
+        if (!geoJsonProps['color'])
+            geoJsonProps['color'] = color;
+        if (!geoJsonProps['label'])
+            geoJsonProps['label'] = label;
+        if (!geoJsonProps['source'])
+            geoJsonProps['source'] = 'CSV';
+
+        placeGroup.features.push(newUserPlace(geometry, geoJsonProps));
     }
 
-    return [newUserPlaceGroup('', places)];
+    return Object.getOwnPropertyNames(placeGroups).map(group => placeGroups[group]);
 }
 
 export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions): PlaceGroup[] {
@@ -400,7 +443,7 @@ export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions):
             geoJsonProps['label'] = label;
             geoJsonProps['source'] = 'GeoJSON';
 
-            places.push(newGeoJsonFeature(geometry, geoJsonProps));
+            places.push(newUserPlace(geometry, geoJsonProps));
         }
     });
 
@@ -420,20 +463,13 @@ export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGr
     try {
         const geometry = new OlWktFormat().readGeometry(text);
         const geoJsonProps = {label, source: 'WKT'};
-        const places = [newGeoJsonFeature(geometry, geoJsonProps)];
+        const places = [newUserPlace(geometry, geoJsonProps)];
         return [newUserPlaceGroup('', places)];
     } catch (e) {
         throw new Error(i18n.get(`Invalid Geometry WKT`));
     }
 }
 
-function newGeoJsonFeature(geometry: OlGeometry, properties: { [name: string]: any }): Place {
-    return {
-        type: 'Feature',
-        id: newId(),
-        geometry: new OlGeoJSONFormat().writeGeometryObject(geometry),
-        properties: properties,
-    };
-}
+
 
 

@@ -29,13 +29,13 @@ import { WithStyles } from '@mui/styles';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
 import * as geojson from 'geojson';
+import { default as OlMap } from 'ol/Map';
 import { default as OlFeature } from 'ol/Feature';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 import { default as OlCircleGeometry } from 'ol/geom/Circle';
 import { default as OlGeometryType } from 'ol/geom/GeometryType';
 import { fromCircle as olPolygonFromCircle } from 'ol/geom/Polygon';
 import { default as OlVectorLayer } from 'ol/layer/Vector';
-import { default as OlMap } from 'ol/Map';
 import { default as OlMapBrowserEvent } from 'ol/MapBrowserEvent';
 import { default as OlVectorSource } from 'ol/source/Vector';
 import { default as OlTileLayer } from 'ol/layer/Tile';
@@ -46,7 +46,7 @@ import { default as OlStyle } from 'ol/style/Style';
 
 import { Config, getUserPlaceColor, getUserPlaceColorName } from '../config';
 import i18n from '../i18n';
-import { Place, PlaceGroup } from '../model/place';
+import { USER_DRAWING_PLACE_GROUP_ID, Place, PlaceGroup, USER_ID_PREFIX } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
 import { newId } from '../util/id';
 import { GEOGRAPHIC_CRS } from '../model/proj';
@@ -64,9 +64,18 @@ import { setFeatureStyle } from './ol/style';
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles({});
 
-// TODO (forman): no good design, store in some state instead:
-const USER_LAYER_SOURCE = new OlVectorSource();
-const SELECTION_LAYER_SOURCE = new OlVectorSource();
+const DRAWING_LAYER_ID = USER_DRAWING_PLACE_GROUP_ID;
+const SELECTION_LAYER_ID = 'selection';
+const VECTOR_LAYER_SOURCES: {[layerId: string]: OlVectorSource} = {};
+
+function getVectorLayerSource(layerId: string): OlVectorSource {
+    let source = VECTOR_LAYER_SOURCES[layerId];
+    if (!source) {
+        source = new OlVectorSource();
+        VECTOR_LAYER_SOURCES[layerId] = source;
+    }
+    return source;
+}
 
 // TODO (forman): move all map styles into dedicated module, so settings will be easier to find & adjust
 
@@ -101,36 +110,38 @@ interface ViewerProps extends WithStyles<typeof styles> {
     datasetBoundaryLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    addUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry, selectPlace: boolean) => void;
+    addDrawnUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry, selected: boolean) => void;
     userPlaceGroups: PlaceGroup[];
     selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
     places: Place[];
     imageSmoothing?: boolean;
     onMapRef: (map: OlMap | null) => void;
-    addUserPlacesFromText?: (text: string) => any;
+    importUserPlacesFromText?: (text: string) => any;
 }
 
-const Viewer: React.FC<ViewerProps> = ({
-                                           theme,
-                                           mapId,
-                                           mapInteraction,
-                                           mapProjection,
-                                           baseMapLayer,
-                                           rgbLayer,
-                                           variableLayer,
-                                           datasetBoundaryLayer,
-                                           placeGroupLayers,
-                                           colorBarLegend,
-                                           addUserPlace,
-                                           addUserPlacesFromText,
-                                           userPlaceGroups,
-                                           selectPlace,
-                                           selectedPlaceId,
-                                           places,
-                                           imageSmoothing,
-                                           onMapRef,
-                                       }) => {
+const Viewer: React.FC<ViewerProps> = (
+    {
+        theme,
+        mapId,
+        mapInteraction,
+        mapProjection,
+        baseMapLayer,
+        rgbLayer,
+        variableLayer,
+        datasetBoundaryLayer,
+        placeGroupLayers,
+        colorBarLegend,
+        addDrawnUserPlace,
+        importUserPlacesFromText,
+        userPlaceGroups,
+        selectPlace,
+        selectedPlaceId,
+        places,
+        imageSmoothing,
+        onMapRef,
+    }
+) => {
 
     const [map, setMap] = useState<OlMap | null>(null);
     const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(selectedPlaceId || null);
@@ -139,16 +150,17 @@ const Viewer: React.FC<ViewerProps> = ({
         if (map) {
             const selectedPlaceIdCurr = selectedPlaceId || null;
             if (selectedPlaceIdCurr !== selectedPlaceIdPrev) {
-                SELECTION_LAYER_SOURCE.clear();
+                const selectionSource = getVectorLayerSource(SELECTION_LAYER_ID);
+                selectionSource.clear();
                 if (selectedPlaceIdCurr) {
                     const selectedFeature = findFeatureById(map, selectedPlaceIdCurr);
                     if (selectedFeature) {
                         // We clone features, so we can set a new ID and clear the style, so the selection
                         // layer style is used instead as default.
                         const displayFeature = selectedFeature.clone();
-                        displayFeature.setId('Select-' + selectedFeature.getId());
+                        displayFeature.setId('select-' + selectedFeature.getId());
                         displayFeature.setStyle(undefined);
-                        SELECTION_LAYER_SOURCE.addFeature(displayFeature);
+                        selectionSource.addFeature(displayFeature);
                     }
                 }
                 setSelectedPlaceIdPrev(selectedPlaceIdCurr);
@@ -190,14 +202,14 @@ const Viewer: React.FC<ViewerProps> = ({
 
     const handleDrawEnd = (event: DrawEvent) => {
         // TODO (forman): too much logic here! put the following code into an action + reducer.
-        if (map !== null && addUserPlace && mapInteraction !== 'Select') {
+        if (map !== null && addDrawnUserPlace && mapInteraction !== 'Select') {
             const feature = event.feature;
             let geometry = feature.getGeometry();
             if (!geometry) {
                 return;
             }
 
-            const placeId = `User-${mapInteraction}-${newId()}`;
+            const placeId = newId(USER_ID_PREFIX + mapInteraction.toLowerCase() + "-");
             const projection = map.getView().getProjection();
 
             if (geometry instanceof OlCircleGeometry) {
@@ -210,8 +222,9 @@ const Viewer: React.FC<ViewerProps> = ({
             const geoJSONGeometry = new OlGeoJSONFormat().writeGeometryObject(geometry) as any;
             feature.setId(placeId);
             let colorIndex = 0;
-            if (MAP_OBJECTS.userLayer0) {
-                const features = USER_LAYER_SOURCE.getFeatures();
+            if (MAP_OBJECTS[USER_DRAWING_PLACE_GROUP_ID]) {
+                const userLayer = MAP_OBJECTS[USER_DRAWING_PLACE_GROUP_ID] as OlVectorLayer;
+                const features = userLayer.getSource().getFeatures();
                 colorIndex = features.length;
             }
             const color = getUserPlaceColorName(colorIndex);
@@ -228,7 +241,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 }
             }
 
-            addUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry, true);
+            addDrawnUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry, true);
         }
         return true;
     };
@@ -255,12 +268,12 @@ const Viewer: React.FC<ViewerProps> = ({
     }
 
     const handleDropFiles = (files: File[]) => {
-        if (addUserPlacesFromText) {
+        if (importUserPlacesFromText) {
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     if (typeof reader.result === 'string') {
-                        addUserPlacesFromText(reader.result);
+                        importUserPlacesFromText(reader.result);
                     }
                 };
                 reader.readAsText(file, "UTF-8");
@@ -284,28 +297,29 @@ const Viewer: React.FC<ViewerProps> = ({
                     {variableLayer}
                     {datasetBoundaryLayer}
                     {<>{
-                        userPlaceGroups.map((placeGroup, index) => (
+                        userPlaceGroups.map(placeGroup => (
                             <Vector
-                                id={`userLayer${index}`}
-                                opacity={index = 0 ? 1 : 0.8}
+                                key={placeGroup.id}
+                                id={placeGroup.id}
+                                opacity={placeGroup.id === DRAWING_LAYER_ID ? 1 : 0.8}
                                 zIndex={500}
-                                source={USER_LAYER_SOURCE}
+                                source={getVectorLayerSource(placeGroup.id)}
                             />
                         ))
                     }</>}
                     <Vector
-                        id='selectionLayer'
+                        id={SELECTION_LAYER_ID}
                         opacity={0.7}
                         zIndex={510}
                         style={SELECTION_LAYER_STYLE}
-                        source={SELECTION_LAYER_SOURCE}
+                        source={getVectorLayerSource(SELECTION_LAYER_ID)}
                     />
                 </Layers>
                 {placeGroupLayers}
                 {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={handleSelect}/>*/}
                 <Draw
                     id="drawPoint"
-                    layerId={'userLayer0'}
+                    layerId={USER_DRAWING_PLACE_GROUP_ID}
                     active={mapInteraction === 'Point'}
                     type={OlGeometryType.POINT}
                     wrapX={true}
@@ -314,7 +328,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 />
                 <Draw
                     id="drawPolygon"
-                    layerId={'userLayer0'}
+                    layerId={USER_DRAWING_PLACE_GROUP_ID}
                     active={mapInteraction === 'Polygon'}
                     type={OlGeometryType.POLYGON}
                     wrapX={true}
@@ -323,7 +337,7 @@ const Viewer: React.FC<ViewerProps> = ({
                 />
                 <Draw
                     id="drawCircle"
-                    layerId={'userLayer0'}
+                    layerId={USER_DRAWING_PLACE_GROUP_ID}
                     active={mapInteraction === 'Circle'}
                     type={OlGeometryType.CIRCLE}
                     wrapX={true}

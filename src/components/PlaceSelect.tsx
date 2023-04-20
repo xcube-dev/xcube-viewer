@@ -35,7 +35,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
-import { Place, PlaceGroup, USER_PLACE_GROUP_ID_PREFIX } from '../model/place';
+import { Place, PlaceGroup, USER_ID_PREFIX } from '../model/place';
 import { WithLocale } from '../util/lang';
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
@@ -56,7 +56,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedPlaceId: string | null;
     places: Place[];
     placeLabels: string[];
-    selectPlace: (placeGroupId: string | null, placeId: string | null, places: Place[], showInMap: boolean) => void;
+    selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     renameUserPlace: (placeGroupId: string, placeId: string, placeName: string) => void;
     removeUserPlace: (placeGroupId: string, placeId: string, places: Place[]) => void;
     openDialog: (dialogId: string) => void;
@@ -89,7 +89,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     };
 
     const handlePlaceChange = (event: SelectChangeEvent) => {
-        selectPlace(selectedPlaceGroupId, event.target.value || null, places, true);
+        selectPlace(event.target.value || null, places, true);
     };
 
     const select = (
@@ -116,7 +116,7 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
     );
 
     const isEditableUserPlace = selectedPlaceGroupId !== null
-        && selectedPlaceGroupId.startsWith(USER_PLACE_GROUP_ID_PREFIX)
+        && selectedPlaceGroupId.startsWith(USER_ID_PREFIX)
         && selectedPlaceId !== '';
 
     let actions;
@@ -158,4 +158,3 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
 };
 
 export default withStyles(styles)(PlaceSelect);
-

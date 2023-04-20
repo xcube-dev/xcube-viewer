@@ -47,7 +47,7 @@ import {
 } from '../actions/dataActions';
 import { newId } from '../util/id';
 import { Variable } from "../model/variable";
-import { Place, DRAWN_USER_PLACE_GROUP_ID } from '../model/place';
+import { Place, USER_DRAWING_PLACE_GROUP_ID } from '../model/place';
 import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
 
 
@@ -110,7 +110,7 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             };
             const userPlaceGroups = state.userPlaceGroups;
             const pgIndex = userPlaceGroups.findIndex(
-                pg => pg.id === DRAWN_USER_PLACE_GROUP_ID
+                pg => pg.id === USER_DRAWING_PLACE_GROUP_ID
             );
             if (pgIndex >= 0) {
                 const pg = userPlaceGroups[pgIndex];
@@ -408,14 +408,14 @@ function updateTimeSeriesGroups(timeSeriesGroups: TimeSeriesGroup[],
     } else {
         if (updateMode === 'replace') {
             const newTimeSeriesGroup = {
-                id: newId(),
+                id: newId('ts-'),
                 variableUnits: currentTimeSeries.source.variableUnits,
                 timeSeriesArray: [currentTimeSeries],
             };
             newTimeSeriesGroups = [newTimeSeriesGroup];
         } else if (updateMode === 'add') {
             const newTimeSeriesGroup = {
-                id: newId(),
+                id: newId('ts-'),
                 variableUnits: currentTimeSeries.source.variableUnits,
                 timeSeriesArray: [currentTimeSeries],
             };

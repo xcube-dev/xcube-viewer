@@ -110,7 +110,7 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
 
     /*TODO: I18N*/
     let volumeButton = Config.instance.branding.allow3D && (
-            <IconButton onClick={() => showVolumeCard(true)} disabled={volumeCardOpen} size="large">
+            <IconButton onClick={() => showVolumeCard(true)} disabled={volumeCardOpen} size="small">
                 <Tooltip arrow title={'Open volume panel (experimental!)'}>
                     {<VolumeIcon/>}
                 </Tooltip>
@@ -124,7 +124,6 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = (
             </Tooltip>
         </IconButton>
     );
-
 
     let refreshButton;
     let settingsButton;

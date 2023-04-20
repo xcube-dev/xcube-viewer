@@ -65,7 +65,7 @@ import { ControlState, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
 import { appParams } from "../config";
-import { DRAWN_USER_PLACE_GROUP_ID } from "../model/place";
+import { USER_DRAWING_PLACE_GROUP_ID } from "../model/place";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
 //                so they produce a consistent state. E.g. on selected dataset change, ensure selected
@@ -241,9 +241,9 @@ export function controlReducer(state: ControlState | undefined,
             };
         }
         case ADD_DRAWN_USER_PLACE: {
-            const {id, selectPlace} = action;
-            if (selectPlace) {
-                return selectUserPlace(state, DRAWN_USER_PLACE_GROUP_ID, id);
+            const {id, selected} = action;
+            if (selected) {
+                return selectUserPlace(state, USER_DRAWING_PLACE_GROUP_ID, id);
             }
             return state;
         }

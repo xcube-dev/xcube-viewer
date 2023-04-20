@@ -69,8 +69,8 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
 };
 
 const mapDispatchToProps = {
-    addUserPlace: addDrawnUserPlace,
-    addUserPlacesFromText: importUserPlacesFromText,
+    addDrawnUserPlace,
+    importUserPlacesFromText,
     selectPlace,
 };
 

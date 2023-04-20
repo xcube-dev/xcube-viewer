@@ -210,27 +210,24 @@ export const SELECT_PLACE = 'SELECT_PLACE';
 
 export interface SelectPlace {
     type: typeof SELECT_PLACE;
-    placeGroupId: string | null;
     placeId: string | null;
     // TODO: Having places in here is ugly, but we need it in the reducer.
     places: Place[];
 }
 
-export function selectPlace(placeGroupId: string | null,
-                            placeId: string | null,
+export function selectPlace(placeId: string | null,
                             places: Place[], showInMap: boolean) {
     return (dispatch: Dispatch<SelectPlace>) => {
-        dispatch(_selectPlace(placeGroupId, placeId, places));
+        dispatch(_selectPlace(placeId, places));
         if (showInMap && placeId) {
             dispatch(flyToPlace(placeId) as any);
         }
     }
 }
 
-function _selectPlace(placeGroupId: string | null,
-                      placeId: string | null,
+function _selectPlace(placeId: string | null,
                       places: Place[]): SelectPlace {
-    return {type: SELECT_PLACE, placeGroupId, placeId, places};
+    return {type: SELECT_PLACE, placeId, places};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

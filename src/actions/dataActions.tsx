@@ -198,16 +198,16 @@ export interface AddDrawnUserPlace {
     label: string;
     color: string;
     geometry: geojson.Geometry;
-    selectPlace: boolean;
+    selected: boolean;
 }
 
 export function addDrawnUserPlace(id: string,
                                   label: string,
                                   color: string,
                                   geometry: geojson.Geometry,
-                                  selectPlace: boolean) {
+                                  selected: boolean) {
     return (dispatch: Dispatch<AddDrawnUserPlace>, getState: () => AppState) => {
-        dispatch(_addDrawnUserPlace(id, label, color, geometry, selectPlace));
+        dispatch(_addDrawnUserPlace(id, label, color, geometry, selected));
         if (getState().controlState.autoShowTimeSeries
             && getState().controlState.selectedPlaceId === id) {
             dispatch(addTimeSeries() as any);
@@ -219,8 +219,8 @@ export function _addDrawnUserPlace(id: string,
                                    label: string,
                                    color: string,
                                    geometry: geojson.Geometry,
-                                   selectPlace: boolean): AddDrawnUserPlace {
-    return {type: ADD_DRAWN_USER_PLACE, id, label, color, geometry, selectPlace};
+                                   selected: boolean): AddDrawnUserPlace {
+    return {type: ADD_DRAWN_USER_PLACE, id, label, color, geometry, selected};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,15 +231,22 @@ export interface AddImportedUserPlaces {
     type: typeof ADD_IMPORTED_USER_PLACE_GROUPS;
     placeGroups: PlaceGroup[];
     mapProjection: string;
-    selectPlace: boolean;
+    selected: boolean;
 }
 
 export function addImportedUserPlaces(placeGroups: PlaceGroup[],
                                       mapProjection: string,
-                                      selectPlace: boolean) {
-    return (dispatch: Dispatch<AddDrawnUserPlace>) => {
-        dispatch(_addImportedUserPlaces(placeGroups, mapProjection, selectPlace) as any);
+                                      selected: boolean) {
+    return (dispatch: Dispatch<AddImportedUserPlaces>) => {
+        dispatch(_addImportedUserPlaces(placeGroups, mapProjection, selected));
         // Side effect: add places after layers are created
+        dispatch(_drawImportedUserPlaces(placeGroups, mapProjection) as any);
+    }
+}
+
+function _drawImportedUserPlaces(placeGroups: PlaceGroup[],
+                                 mapProjection: string) {
+    return () => {
         for (let placeGroup of placeGroups) {
             addUserPlacesToLayer(placeGroup, mapProjection);
         }
@@ -248,12 +255,12 @@ export function addImportedUserPlaces(placeGroups: PlaceGroup[],
 
 function _addImportedUserPlaces(placeGroups: PlaceGroup[],
                                 mapProjection: string,
-                                selectPlace: boolean): AddImportedUserPlaces {
+                                selected: boolean): AddImportedUserPlaces {
     return {
         type: ADD_IMPORTED_USER_PLACE_GROUPS,
         placeGroups,
         mapProjection,
-        selectPlace
+        selected
     };
 }
 

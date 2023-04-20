@@ -37,8 +37,8 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import {
     PlaceGroup,
-    DRAWN_USER_PLACE_GROUP_ID,
-    USER_PLACE_GROUP_ID_PREFIX
+    USER_DRAWING_PLACE_GROUP_ID,
+    USER_ID_PREFIX
 } from '../model/place';
 import { WithLocale } from '../util/lang';
 import EditableSelect from "./EditableSelect";
@@ -84,7 +84,7 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = (
 
     if (placeGroups.length === 0
         || (placeGroups.length === 1
-            && placeGroups[0].id === DRAWN_USER_PLACE_GROUP_ID)) {
+            && placeGroups[0].id === USER_DRAWING_PLACE_GROUP_ID)) {
         return null;
     }
 
@@ -126,7 +126,7 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = (
     );
 
     let isEditableUserPlaceGroup = false;
-    if (selectedPlaceGroupId !== null && selectedPlaceGroupId.startsWith(USER_PLACE_GROUP_ID_PREFIX)) {
+    if (selectedPlaceGroupId !== null && selectedPlaceGroupId.startsWith(USER_ID_PREFIX)) {
         isEditableUserPlaceGroup = Boolean(placeGroups.find(
             placeGroup => placeGroup.id === selectedPlaceGroupId
             && placeGroup.features
@@ -146,11 +146,13 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = (
 
         actions = [
             <ToolButton
+                key="editPlaceGroup"
                 onClick={handleEditButtonClick}
                 tooltipText={i18n.get('Rename place group')}
                 icon={<EditIcon/>}
             />,
             <ToolButton
+                key="removePlaceGroup"
                 onClick={handleRemoveButtonClick}
                 tooltipText={i18n.get('Remove places')}
                 icon={<RemoveCircleOutlineIcon/>}

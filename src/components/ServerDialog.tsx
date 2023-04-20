@@ -173,7 +173,7 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
     };
 
     const doAddServer = () => {
-        const selectedServer = {...selectedServer_, id: newId()};
+        const selectedServer = {...selectedServer_, id: newId('server-')};
         const servers = [...servers_, selectedServer];
         setServers(servers, selectedServer);
     };

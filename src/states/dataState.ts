@@ -27,7 +27,7 @@ import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
 import { ColorBars } from '../model/colorBar';
 import { Dataset } from '../model/dataset';
-import { Place, PlaceGroup, DRAWN_USER_PLACE_GROUP_ID, } from '../model/place';
+import { Place, PlaceGroup, USER_DRAWING_PLACE_GROUP_ID, } from '../model/place';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { loadUserServers } from './userSettings';
 
@@ -56,7 +56,7 @@ export function newDataState(): DataState {
         colorBars: null,
         timeSeriesGroups: [],
         userPlaceGroups: [{
-            id: DRAWN_USER_PLACE_GROUP_ID,
+            id: USER_DRAWING_PLACE_GROUP_ID,
             title: i18n.get('My places'),
             type: "FeatureCollection",
             features: [] as Array<Place>

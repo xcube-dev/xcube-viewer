@@ -25,15 +25,15 @@
 import { Extent as OlExtent } from 'ol/extent';
 import { Geometry as OlGeometry } from 'ol/geom';
 import { default as OlBaseObject } from 'ol/Object';
-import { Config } from '../config';
 
+import { Config } from '../config';
 import { Time, TimeRange } from '../model/timeSeries';
 import { loadUserSettings } from './userSettings';
 import { DEFAULT_MAP_CRS } from "../model/proj";
 import { CsvOptions, defaultCsvOptions } from "../model/user-place/csv";
 import { GeoJsonOptions, defaultGeoJsonOptions } from "../model/user-place/geojson";
 import { WktOptions, defaultWktOptions } from "../model/user-place/wkt";
-import { DRAWN_USER_PLACE_GROUP_ID } from "../model/place";
+import { USER_DRAWING_PLACE_GROUP_ID } from "../model/place";
 
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -122,7 +122,7 @@ export function newControlState(): ControlState {
     const state: ControlState = {
         selectedDatasetId: null,
         selectedVariableName: null,
-        selectedPlaceGroupIds: [DRAWN_USER_PLACE_GROUP_ID],
+        selectedPlaceGroupIds: [USER_DRAWING_PLACE_GROUP_ID],
         selectedPlaceId: null,
         selectedUserPlaceId: null,
         selectedServerId: Config.instance.server.id,
