@@ -119,6 +119,8 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         && selectedPlaceGroupId.startsWith(USER_ID_PREFIX)
         && selectedPlaceId !== '';
 
+    console.log(editMode, isEditableUserPlace, selectedPlaceGroupId, selectedPlaceId);
+
     let actions;
     if (!editMode && isEditableUserPlace) {
         const handleEditButtonClick = () => {
@@ -131,11 +133,13 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
 
         actions = [
             <ToolButton
+                key="editButton"
                 onClick={handleEditButtonClick}
                 tooltipText={i18n.get('Rename place')}
                 icon={<EditIcon/>}
             />,
             <ToolButton
+                key="removeButton"
                 onClick={handleRemoveButtonClick}
                 tooltipText={i18n.get('Remove place')}
                 icon={<RemoveCircleOutlineIcon/>}

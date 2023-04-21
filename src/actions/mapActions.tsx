@@ -28,53 +28,9 @@ import { Extent as OlExtent } from "ol/extent";
 import { transformExtent as olProjTransformExtent } from "ol/proj";
 import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
 import { default as OlVectorLayer } from "ol/layer/Vector";
-import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
-
-import { Config } from "../config";
-import { PlaceGroup } from '../model/place';
 import { GEOGRAPHIC_CRS } from "../model/proj";
 import { MAP_OBJECTS } from "../states/controlState";
-import { setFeatureStyle } from "../components/ol/style";
 
-
-export function addUserPlacesToLayer(placeGroup: PlaceGroup, mapProjection: string) {
-    console.log("addUserPlacesToLayer:", placeGroup)
-    if (MAP_OBJECTS[placeGroup.id]) {
-        console.log("addUserPlacesToLayer: layer found!")
-        const userLayer = MAP_OBJECTS[placeGroup.id] as OlVectorLayer;
-        const source = userLayer.getSource();
-        placeGroup.features.forEach(place => {
-            const feature = new OlGeoJSONFormat().readFeature(
-                place,
-                {
-                    dataProjection: 'EPSG:4326',
-                    featureProjection: mapProjection
-                }
-            );
-            if (feature.getId() !== place.id) {
-                feature.setId(place.id);
-            }
-            const color = (place.properties || {}).color || 'red';
-            const pointSymbol = Boolean((place.properties || {}).source) ? 'diamond' : 'circle';
-            setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity, pointSymbol);
-            source.addFeature(feature);
-        });
-        userLayer.changed();
-    }
-}
-
-export function removeUserPlacesFromLayer(placeGroupId: string, placeIds: string[]) {
-    if (MAP_OBJECTS[placeGroupId]) {
-        const userLayer = MAP_OBJECTS[placeGroupId] as OlVectorLayer;
-        const source = userLayer.getSource();
-        placeIds.forEach(placeId => {
-            const feature = source.getFeatureById(placeId);
-            if (feature) {
-                source.removeFeature(feature);
-            }
-        });
-    }
-}
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(placeGroupId: string, placeId: string, newName: string) {

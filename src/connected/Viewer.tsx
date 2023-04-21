@@ -35,7 +35,8 @@ import {
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetRgbLayerSelector,
     selectedDatasetVariableLayerSelector,
-    selectedPlaceGroupPlacesSelector
+    selectedPlaceGroupPlacesSelector,
+    userPlaceGroupsVisibilitySelector,
 } from '../selectors/controlSelectors';
 import { addDrawnUserPlace, importUserPlacesFromText } from '../actions/dataActions';
 import Viewer from '../components/Viewer';
@@ -57,6 +58,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
         placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
         colorBarLegend: <ColorBarLegend/>,
         userPlaceGroups: userPlaceGroupsSelector(state),
+        userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
         mapId: 'map',
         mapInteraction: state.controlState.mapInteraction,
         mapProjection: mapProjectionSelector(state),

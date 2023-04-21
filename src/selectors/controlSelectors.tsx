@@ -59,7 +59,7 @@ import {
     PlaceGroup,
     PlaceInfo,
 } from '../model/place';
-import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
+import { PlaceGroupTimeSeries, placeGroupToTimeSeries, Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
 import { Variable } from '../model/variable';
 
 import { AppState } from '../states/appState';
@@ -69,6 +69,7 @@ import {
     colorBarsSelector,
     datasetsSelector,
     timeSeriesGroupsSelector,
+    userPlaceGroupSelector,
     userPlaceGroupsSelector,
     userServersSelector
 } from './dataSelectors';
@@ -202,6 +203,20 @@ function selectPlaceGroups(placeGroups: PlaceGroup[],
     }
     return selectedPlaceGroups;
 }
+
+export const userPlaceGroupsVisibilitySelector = createSelector(
+    userPlaceGroupsSelector,
+    selectedPlaceGroupIdsSelector,
+    (userPlaceGroups: PlaceGroup[], selectedPlaceGroupIds: string[] | null): {[pgId: string]: boolean}  => {
+        const visibility: {[pgId: string]: boolean} = {};
+        const idSet = new Set(selectedPlaceGroupIds || []);
+        userPlaceGroups.forEach(placeGroup => {
+            visibility[placeGroup.id] = idSet.has(placeGroup.id);
+        });
+        return visibility;
+    }
+);
+
 
 export const selectedDatasetSelectedPlaceGroupsSelector = createSelector(
     selectedDatasetPlaceGroupsSelector,

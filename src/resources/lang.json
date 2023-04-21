@@ -501,9 +501,19 @@
       "se": "Rita ett cirkulärt område på kartan"
     },
     {
+      "en": "Rename place",
+      "de": "Ort umbenennen",
+      "se": "Byt namn på plats"
+    },
+    {
       "en": "Remove place",
       "de": "Ort entfernen",
       "se": "Ta bort plats"
+    },
+    {
+      "en": "Rename place group",
+      "de": "Ortsgruppe umbenennen",
+      "se": "Byt namn på platsgrupp"
     },
     {
       "en": "Remove places",

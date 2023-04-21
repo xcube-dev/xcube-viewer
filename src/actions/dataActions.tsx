@@ -76,7 +76,7 @@ import {
 import { VolumeRenderMode } from "../states/controlState";
 import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
 import { assertDefinedAndNotNull } from "../util/assert";
-import { addUserPlacesToLayer, removeUserPlacesFromLayer, renameUserPlaceInLayer } from "./mapActions";
+import { renameUserPlaceInLayer } from "./mapActions";
 
 const saveAs = require('file-saver');
 
@@ -235,25 +235,6 @@ export interface AddImportedUserPlaces {
 }
 
 export function addImportedUserPlaces(placeGroups: PlaceGroup[],
-                                      mapProjection: string,
-                                      selected: boolean) {
-    return (dispatch: Dispatch<AddImportedUserPlaces>) => {
-        dispatch(_addImportedUserPlaces(placeGroups, mapProjection, selected));
-        // Side effect: add places after layers are created
-        dispatch(_drawImportedUserPlaces(placeGroups, mapProjection) as any);
-    }
-}
-
-function _drawImportedUserPlaces(placeGroups: PlaceGroup[],
-                                 mapProjection: string) {
-    return () => {
-        for (let placeGroup of placeGroups) {
-            addUserPlacesToLayer(placeGroup, mapProjection);
-        }
-    }
-}
-
-function _addImportedUserPlaces(placeGroups: PlaceGroup[],
                                 mapProjection: string,
                                 selected: boolean): AddImportedUserPlaces {
     return {
@@ -298,7 +279,7 @@ export function importUserPlacesFromText(text: string) {
         }
         if (placeGroups.length) {
             dispatch(addImportedUserPlaces(placeGroups, mapProjectionSelector(getState()), true) as any);
-            dispatch(selectPlaceGroups(placeGroups.map(pg => pg.id)) as any);
+            // dispatch(selectPlaceGroups(placeGroups.map(pg => pg.id)) as any);
             if (placeGroups.length === 1 && placeGroups[0].features.length === 1) {
                 const place = placeGroups[0].features[0];
                 dispatch(selectPlace(
@@ -376,7 +357,7 @@ export function removeUserPlace(placeGroupId: string, placeId: string) {
         const placeGroup = getState().dataState.userPlaceGroups.find(pg => pg.id === placeGroupId);
         assertDefinedAndNotNull(placeGroup, 'placeGroup');
         dispatch(_removeUserPlace(placeGroupId, placeId, placeGroup!.features));
-        removeUserPlacesFromLayer(placeGroupId, [placeId]);
+        // removeUserPlacesFromLayer(placeGroupId, [placeId]);
     }
 }
 
@@ -399,7 +380,7 @@ export function removeUserPlaceGroup(placeGroupId: string) {
         assertDefinedAndNotNull(placeGroup, 'placeGroup');
         const userPlaceIds = placeGroup!.features.map(f => f.id);
         dispatch(_removeUserPlaceGroup(placeGroupId));
-        removeUserPlacesFromLayer(placeGroupId, userPlaceIds);
+        // removeUserPlacesFromLayer(placeGroupId, userPlaceIds);
     }
 }
 

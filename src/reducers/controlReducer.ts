@@ -248,11 +248,14 @@ export function controlReducer(state: ControlState | undefined,
             return state;
         }
         case ADD_IMPORTED_USER_PLACE_GROUPS: {
-            // TODO (forman): Select the first place from any of given place groups
-            // if (action.selectPlace && action.places.length) {
-            //     return selectUserPlace(state, action.places[0].id);
-            // }
-            return state;
+            const {placeGroups} = action;
+            return {
+                ...state,
+                selectedPlaceGroupIds: [
+                    ...(state.selectedPlaceGroupIds || []),
+                    ...placeGroups.map(pg => pg.id)
+                ]
+            };
         }
         case REMOVE_USER_PLACE: {
             const {placeId, places} = action;

@@ -47,7 +47,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
     selectPlaceGroups,
     renameUserPlaceGroup,
-    removeAllUserPlaces: removeUserPlaceGroup,
+    removeUserPlaceGroup,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaceGroupsSelect);

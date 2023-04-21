@@ -24,11 +24,12 @@
 
 import { default as OlMap } from 'ol/Map';
 import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlVectorSource } from 'ol/source/Vector';
 import { default as OlSelectInteraction } from 'ol/interaction/Select';
 import { default as OlFeature } from 'ol/Feature';
 import { default as OlRenderFeature } from 'ol/render/Feature';
-import CircleStyle from 'ol/style/Circle';
 import { default as OlStyle } from 'ol/style/Style';
+import { StyleLike as OlStyleLike } from 'ol/style/Style';
 import { default as OlFillStyle } from 'ol/style/Fill';
 import { default as OlStrokeStyle } from 'ol/style/Stroke';
 import { default as OlCircleStyle } from 'ol/style/Circle';
@@ -77,6 +78,7 @@ export class Select extends MapComponent<OlSelectInteraction, SelectProps> {
         return options;
     }
 
+    // noinspection JSMethodCanBeStatic
     private listen(select: OlSelectInteraction, props: Readonly<SelectProps>) {
         const {onSelect} = props;
         if (onSelect) {
@@ -84,6 +86,7 @@ export class Select extends MapComponent<OlSelectInteraction, SelectProps> {
         }
     }
 
+    // noinspection JSMethodCanBeStatic,SpellCheckingInspection
     private unlisten(select: OlSelectInteraction, props: Readonly<SelectProps>) {
         const {onSelect} = props;
         if (onSelect) {
@@ -135,7 +138,7 @@ function styleFunction(feature: (OlFeature | OlRenderFeature), resolution: numbe
         if (Array.isArray(style)) {
             style = style[0];
         } else if (typeof style === 'function') {
-            style = style(feature, 0);
+            style = style(feature, 0) as OlStyleLike;
         }
         if (style instanceof OlStyle) {
             const imageStyle = style.getImage() as any;
@@ -172,8 +175,8 @@ function findFeaturesByIds(map: OlMap, featureIds: FeatureId[]): (OlFeature | nu
 function findFeatureById(map: OlMap, featureId: FeatureId): OlFeature | null {
     for (let layer of map.getLayers().getArray()) {
         if (layer instanceof OlVectorLayer) {
-            const vectorLayer = layer as OlVectorLayer;
-            const feature = vectorLayer.getSource().getFeatureById(featureId);
+            const vectorLayer = layer as OlVectorLayer<OlVectorSource>;
+            const feature = vectorLayer.getSource()?.getFeatureById(featureId);
             if (feature) {
                 return feature;
             }

@@ -49,7 +49,7 @@ interface MapProps extends OlMapOptions {
     id: string;
     children?: React.ReactNode;
     mapObjects?: { [id: string]: OlBaseObject };
-    onClick?: (event: OlMapBrowserEvent) => void;
+    onClick?: (event: OlMapBrowserEvent<any>) => void;
     onMapRef?: (map: OlMap | null) => void;
     isStale?: boolean;
     onDropFiles?: (files: File[]) => any;
@@ -200,7 +200,7 @@ export class Map extends React.Component<MapProps, MapState> {
     private handleClick = (event: OlEvent) => {
         const onClick = this.props.onClick;
         if (onClick) {
-            onClick(event as OlMapBrowserEvent);
+            onClick(event as OlMapBrowserEvent<any>);
         }
     };
 

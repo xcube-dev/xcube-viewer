@@ -68,3 +68,4 @@ export const placeGroupTimeSeriesSelector = createSelector(
         return placeGroupTimeSeries;
     }
 );
+

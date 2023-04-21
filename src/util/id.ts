@@ -23,5 +23,5 @@
  */
 
 export function newId(prefix?: string): string {
-    return (prefix || '') + Math.random().toString(8).substr(2);
+    return (prefix || '') + Math.random().toString(16).substr(2);
 }

@@ -24,6 +24,7 @@
 
 import { default as OlMap } from 'ol/Map';
 import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlVectorSource } from 'ol/source/Vector';
 import { default as OlDrawInteraction } from 'ol/interaction/Draw';
 import { DrawEvent as OlDrawEvent } from 'ol/interaction/Draw';
 import { Options as OlDrawInteractionOptions } from 'ol/interaction/Draw';
@@ -79,7 +80,7 @@ export class Draw extends MapComponent<OlDrawInteraction, DrawProps> {
         if (layerId && !options.source) {
             const vectorLayer = this.getMapObject(layerId);
             if (vectorLayer) {
-                options['source'] = (vectorLayer as OlVectorLayer).getSource();
+                options['source'] = (vectorLayer as OlVectorLayer<OlVectorSource>).getSource();
             }
         }
         return options;
