@@ -69,7 +69,6 @@ import {
     selectDataset,
     selectPlace,
     SelectPlace,
-    selectPlaceGroups,
     SelectPlaceGroups,
     UpdateSettings,
 } from './controlActions';
@@ -352,16 +351,7 @@ export interface RemoveUserPlace {
     places: Place[];
 }
 
-export function removeUserPlace(placeGroupId: string, placeId: string) {
-    return (dispatch: Dispatch<RemoveUserPlace>, getState: () => AppState) => {
-        const placeGroup = getState().dataState.userPlaceGroups.find(pg => pg.id === placeGroupId);
-        assertDefinedAndNotNull(placeGroup, 'placeGroup');
-        dispatch(_removeUserPlace(placeGroupId, placeId, placeGroup!.features));
-        // removeUserPlacesFromLayer(placeGroupId, [placeId]);
-    }
-}
-
-function _removeUserPlace(placeGroupId: string, placeId: string, places: Place[]): RemoveUserPlace {
+export function removeUserPlace(placeGroupId: string, placeId: string, places: Place[]): RemoveUserPlace {
     return {type: REMOVE_USER_PLACE, placeGroupId, placeId, places};
 }
 
@@ -374,17 +364,7 @@ export interface RemoveUserPlaceGroup {
     placeGroupId: string;
 }
 
-export function removeUserPlaceGroup(placeGroupId: string) {
-    return (dispatch: Dispatch<RemoveUserPlaceGroup>, getState: () => AppState) => {
-        const placeGroup = getState().dataState.userPlaceGroups.find(pg => pg.id === placeGroupId);
-        assertDefinedAndNotNull(placeGroup, 'placeGroup');
-        const userPlaceIds = placeGroup!.features.map(f => f.id);
-        dispatch(_removeUserPlaceGroup(placeGroupId));
-        // removeUserPlacesFromLayer(placeGroupId, userPlaceIds);
-    }
-}
-
-export function _removeUserPlaceGroup(placeGroupId: string): RemoveUserPlaceGroup {
+export function removeUserPlaceGroup(placeGroupId: string): RemoveUserPlaceGroup {
     return {type: REMOVE_USER_PLACE_GROUP, placeGroupId};
 }
 
