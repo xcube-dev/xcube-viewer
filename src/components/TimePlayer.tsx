@@ -139,7 +139,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
             disabled={!isValid}
             aria-label={playToolTip}
             onClick={handlePlayButtonClick}
-            size="large">
+            size="small">
             <Tooltip arrow title={i18n.get('Auto-step through times in the dataset')}>
                 {playIcon}
             </Tooltip>
@@ -150,7 +150,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handleFirstTimeStepButtonClick}
-            size="large">
+            size="small">
             <FirstPageIcon/>
         </IconButton>
     );
@@ -159,7 +159,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handlePrevTimeStepButtonClick}
-            size="large">
+            size="small">
             <ChevronLeftIcon/>
         </IconButton>
     );
@@ -167,7 +167,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handleNextTimeStepButtonClick}
-            size="large">
+            size="small">
             <ChevronRightIcon/>
         </IconButton>
     );
@@ -175,7 +175,7 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
         <IconButton
             disabled={!isValid || timeAnimationActive}
             onClick={handleLastTimeStepButtonClick}
-            size="large">
+            size="small">
             <LastPageIcon/>
         </IconButton>);
 

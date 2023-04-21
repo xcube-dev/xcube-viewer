@@ -74,7 +74,6 @@ import {
 } from './controlActions';
 import { VolumeRenderMode } from "../states/controlState";
 import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
-import { assertDefinedAndNotNull } from "../util/assert";
 import { renameUserPlaceInLayer } from "./mapActions";
 
 const saveAs = require('file-saver');

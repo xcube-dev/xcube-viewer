@@ -451,6 +451,8 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
     const progress = completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
     const loading = (progress > 0 && progress < 100);
 
+    console.log("placeGroupTimeSeries", placeGroupTimeSeries)
+
     const addTimeSeriesButton = (
         <AddTimeSeriesButton
             key="addTimeSeries"

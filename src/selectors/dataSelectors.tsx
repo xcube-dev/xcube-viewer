@@ -37,21 +37,21 @@ export const userServersSelector = (state: AppState) => state.dataState.userServ
 
 export const placeGroupsSelector = createSelector(
     datasetsSelector,
-    userPlaceGroupSelector,
-    (datasets: Dataset[], userPlaceGroup: PlaceGroup): PlaceGroup[] => {
+    userPlaceGroupsSelector,
+    (datasets: Dataset[], userPlaceGroups: PlaceGroup[]): PlaceGroup[] => {
         const placeGroups: any = {};
-        const placeGroupsArray = [userPlaceGroup];
+        const datasetPlaceGroups: PlaceGroup[] = [];
         datasets.forEach(dataset => {
             if (dataset.placeGroups) {
                 dataset.placeGroups.forEach(placeGroup => {
                     if (!placeGroups[placeGroup.id]) {
                         placeGroups[placeGroup.id] = placeGroup;
-                        placeGroupsArray.push(placeGroup);
+                        datasetPlaceGroups.push(placeGroup);
                     }
                 });
             }
         });
-        return placeGroupsArray;
+        return [...datasetPlaceGroups, ...userPlaceGroups];
     }
 );
 
