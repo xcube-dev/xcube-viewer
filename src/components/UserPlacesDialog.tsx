@@ -255,7 +255,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = (
             onClose={handleClose}
             aria-labelledby="server-dialog-title"
         >
-            <DialogTitle id="server-dialog-title">{i18n.get('Add Places')}</DialogTitle>
+            <DialogTitle id="server-dialog-title">{i18n.get('Import places')}</DialogTitle>
             <DialogContent dividers>
                 <RadioGroup
                     row

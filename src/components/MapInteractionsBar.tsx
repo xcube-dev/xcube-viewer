@@ -87,7 +87,7 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
                     </Tooltip>
                 </ToggleButton>
                 <ToggleButton key={4} value="Geometry">
-                    <Tooltip arrow title={i18n.get('Import geometry')}>
+                    <Tooltip arrow title={i18n.get('Import places')}>
                         <FileUploadIcon/>
                     </Tooltip>
                 </ToggleButton>

@@ -551,14 +551,9 @@
       "se": "Lämna"
     },
     {
-      "en": "Import geometry",
-      "de": "Import geometry",
-      "se": "Importera geometri"
-    },
-    {
-      "en": "Add Places",
-      "de": "Orte hinzufügen",
-      "se": "Lägg till Platser"
+      "en": "Import places",
+      "de": "Orte importieren",
+      "se": "Importera platser"
     },
     {
       "en": "Text/CSV",
