@@ -251,9 +251,11 @@ export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: strin
 }
 
 let LAST_PLACE_GROUP_ID_CSV = 0;
+let LAST_PLACE_GROUP_ID_GEO_JSON = 0;
+let LAST_PLACE_GROUP_ID_WKT = 0;
 
 let LAST_PLACE_LABEL_ID_CSV = 0;
-let LAST_PLACE_LABEL_ID_GEOJSON = 0;
+let LAST_PLACE_LABEL_ID_GEO_JSON = 0;
 let LAST_PLACE_LABEL_ID_WKT = 0;
 
 
@@ -387,6 +389,17 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGr
 }
 
 export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions): PlaceGroup[] {
+    const groupNames = options.groupNames;
+    const groupNamesSet = new Set(
+        groupNames.split(',')
+            .map(name => name.trim().toLowerCase())
+            .filter(name => name !== '')
+    )
+    let groupPrefix = options.groupPrefix.trim();
+    if (groupPrefix === '') {
+        groupPrefix = defaultGeoJsonOptions.groupPrefix;
+    }
+
     const labelNames = options.labelNames;
     const labelNamesSet = new Set(
         labelNames.split(',')
@@ -412,11 +425,14 @@ export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions):
         }
     }
 
-    const places: Place[] = [];
+    const placeGroups: { [group: string]: PlaceGroup } = {};
+    let numPlaceGroups = 0;
+    let color = getUserPlaceColorName(0);
     features.forEach(feature => {
         const properties = feature.getProperties();
         const geometry = feature.getGeometry();
         if (geometry) {
+            let group = '';
             let label = '';
             const geoJsonProps: { [k: string]: number | string | boolean | null } = {color: 'red'};
             if (properties) {
@@ -428,6 +444,11 @@ export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions):
                         || typeof propertyValue === 'boolean') {
                         geoJsonProps[propertyName] = propertyValue;
                     }
+                    if (group === ''
+                        && typeof propertyValue === 'string'
+                        && groupNamesSet.has(propertyName.toLowerCase())) {
+                        group = propertyValue;
+                    }
                     if (label === ''
                         && typeof propertyValue === 'string'
                         && labelNamesSet.has(propertyName.toLowerCase())) {
@@ -436,18 +457,35 @@ export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions):
                 }
             }
 
+            if (group === '') {
+                const groupId = ++LAST_PLACE_GROUP_ID_GEO_JSON;
+                group = `${groupPrefix}-${groupId}`;
+            }
             if (label === '') {
-                const labelId = ++LAST_PLACE_LABEL_ID_GEOJSON;
+                const labelId = ++LAST_PLACE_LABEL_ID_GEO_JSON;
                 label = `${labelPrefix}-${labelId}`;
             }
-            geoJsonProps['label'] = label;
-            geoJsonProps['source'] = 'GeoJSON';
 
-            places.push(newUserPlace(geometry, geoJsonProps));
+            let placeGroup = placeGroups[group];
+            if (!placeGroup) {
+                placeGroup = newUserPlaceGroup(group, []);
+                placeGroups[group] = placeGroup;
+                color = getUserPlaceColorName(numPlaceGroups);
+                numPlaceGroups++;
+            }
+
+            if (!geoJsonProps['color'])
+                geoJsonProps['color'] = color;
+            if (!geoJsonProps['label'])
+                geoJsonProps['label'] = label;
+            if (!geoJsonProps['source'])
+                geoJsonProps['source'] = 'GeoJSON';
+
+            placeGroup.features.push(newUserPlace(geometry, geoJsonProps));
         }
     });
 
-    return [newUserPlaceGroup('', places)];
+    return Object.getOwnPropertyNames(placeGroups).map(group => placeGroups[group]);
 }
 
 export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGroup[] {
@@ -462,7 +500,11 @@ export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGr
     }
     try {
         const geometry = new OlWktFormat().readGeometry(text);
-        const geoJsonProps = {label, source: 'WKT'};
+        const geoJsonProps = {
+            color: getUserPlaceColorName(Math.floor(1000 * Math.random())),
+            label,
+            source: 'WKT'
+        };
         const places = [newUserPlace(geometry, geoJsonProps)];
         return [newUserPlaceGroup('', places)];
     } catch (e) {
