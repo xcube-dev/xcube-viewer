@@ -41,7 +41,8 @@ import { WithLocale } from '../util/lang';
 
 const useStyles = makeStyles(theme => ({
         formControl: {
-            marginTop: theme.spacing(1.5),
+            marginTop: theme.spacing(1),
+            marginLeft: theme.spacing(1),
             marginRight: theme.spacing(2),
         },
     }

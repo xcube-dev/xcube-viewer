@@ -42,7 +42,7 @@ const HOR_MARGIN = 5;
 const styles = (theme: Theme) => createStyles(
     {
         box: {
-            marginTop: theme.spacing(2),
+            marginTop: theme.spacing(1),
             marginLeft: theme.spacing(HOR_MARGIN),
             marginRight: theme.spacing(HOR_MARGIN),
             minWidth: 200,

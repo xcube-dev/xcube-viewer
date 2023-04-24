@@ -42,7 +42,11 @@ import ControlBarItem from './ControlBarItem';
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) => createStyles(
-    {}
+    {
+        dateTimePicker: {
+            marginTop: theme.spacing(2)
+        }
+    }
 );
 
 interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
@@ -52,8 +56,8 @@ interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
     selectedTimeRange: TimeRange | null;
 }
 
-
 const TimeSelect: React.FC<TimeSelectProps> = ({
+                                                   classes,
                                                    hasTimeDimension,
                                                    selectedTime,
                                                    selectedTimeRange,
@@ -92,6 +96,7 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
                         ? i18n.get('Missing time axis')
                         : undefined
                 }
+                className={classes.dateTimePicker}
                 inputFormat="yyyy-MM-dd hh:mm:ss"
                 id="time-select"
                 value={timeValue}

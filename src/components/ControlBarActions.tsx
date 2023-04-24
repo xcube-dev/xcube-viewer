@@ -47,7 +47,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 const styles = (theme: Theme) => createStyles(
     {
         formControl: {
-            marginTop: theme.spacing(1),
+            marginTop: theme.spacing(2),
             marginRight: theme.spacing(1),
             marginLeft: 'auto',
         },
