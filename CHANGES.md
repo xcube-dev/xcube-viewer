@@ -1,4 +1,6 @@
-## Changes in version 1.0.3 (in development)
+## Changes in version 1.0.2.1
+
+* Now reporting correct viewer version.
 
 
 ## Changes in version 1.0.2
