@@ -119,8 +119,6 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
         && selectedPlaceGroupId.startsWith(USER_ID_PREFIX)
         && selectedPlaceId !== '';
 
-    console.log(editMode, isEditableUserPlace, selectedPlaceGroupId, selectedPlaceId);
-
     let actions;
     if (!editMode && isEditableUserPlace) {
         const handleEditButtonClick = () => {

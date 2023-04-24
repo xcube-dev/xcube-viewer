@@ -222,7 +222,6 @@ export interface PlaceGroupTimeSeries {
 export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSeries | null {
     let timeSeriesMapping: {[propertyName: string]: TimeSeries} | null = null;
     const places = placeGroup.features || [];
-    console.log(places)
     for (let place of places) {
         if (!place.properties) {
             continue;

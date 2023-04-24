@@ -48,7 +48,6 @@ export class Vector extends MapComponent<OlVectorLayer<OlVectorSource>, VectorPr
         if (this.props.source !== prevProps.source && this.props.source) {
             layer.setSource(this.props.source);
         }
-        console.log("updateMapObject", layer, prevProps, this.props)
         processLayerProperties(layer, prevProps, this.props);
         return layer;
     }

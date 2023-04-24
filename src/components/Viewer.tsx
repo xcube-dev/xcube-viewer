@@ -277,9 +277,6 @@ const Viewer: React.FC<ViewerProps> = (
         }
     };
 
-    console.log("userPlaceGroups", userPlaceGroups)
-    console.log("userPlaceGroupsVisibility", userPlaceGroupsVisibility)
-
     return (
         <ErrorBoundary>
             <Map

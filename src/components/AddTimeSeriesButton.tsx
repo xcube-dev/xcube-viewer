@@ -81,7 +81,7 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
     return (
         <>
             <IconButton
-                size="large"
+                size="small"
                 className={className}
                 aria-label="Add"
                 aria-controls={isOpen ? 'basic-menu' : undefined}

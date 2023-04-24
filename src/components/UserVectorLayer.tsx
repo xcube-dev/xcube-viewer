@@ -46,10 +46,7 @@ const UserVectorLayer: React.FC<UserVectorLayerProps> = (
     }) => {
     const sourceRef = React.useRef<OlVectorSource>(new OlVectorSource());
 
-    console.log("UserVectorLayer", placeGroup.id, visible)
-
     React.useEffect(() => {
-        console.log("Efffffffect!");
         const source = sourceRef.current;
         const places = placeGroup.features;
         if (places.length === 0) {

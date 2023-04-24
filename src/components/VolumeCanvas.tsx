@@ -203,7 +203,6 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
             ];
         } else {
             const volumeState = this.props.volumeStates[volumeId];
-            console.log('volumeState:', volumeState, volumeCache)
 
             if (!volumeState || volumeState.status === 'error' || !volumeCache[volumeId]) {
                 /*TODO: I18N*/
