@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -42,7 +42,7 @@ import {
 import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
     mapProjectionSelector,
-    selectedDatasetIdSelector,
+    selectedDatasetSelector,
     selectedDatasetTimeDimensionSelector,
     selectedDatasetVariableSelector,
     selectedPlaceGroupPlacesSelector,
@@ -373,7 +373,7 @@ export function addTimeSeries() {
     return (dispatch: Dispatch<UpdateTimeSeries | MessageLogAction>, getState: () => AppState) => {
         const apiServer = selectedServerSelector(getState());
 
-        const selectedDatasetId = selectedDatasetIdSelector(getState());
+        const selectedDataset = selectedDatasetSelector(getState());
         const selectedDatasetTimeDim = selectedDatasetTimeDimensionSelector(getState());
         const selectedVariable = selectedDatasetVariableSelector(getState());
         const selectedPlaceId = selectedPlaceIdSelector(getState());
@@ -385,7 +385,7 @@ export function addTimeSeries() {
 
         const placeGroups = placeGroupsSelector(getState());
 
-        if (selectedDatasetId && selectedVariable && selectedPlaceId && selectedDatasetTimeDim) {
+        if (selectedDataset && selectedVariable && selectedPlaceId && selectedDatasetTimeDim) {
             const timeLabels = selectedDatasetTimeDim.labels;
             const numTimeLabels = timeLabels.length;
 
@@ -399,7 +399,7 @@ export function addTimeSeries() {
                 const endDateLabel = timeLabels[endTimeIndex];
                 return api.getTimeSeriesForGeometry(
                     apiServer.url,
-                    selectedDatasetId,
+                    selectedDataset,
                     selectedVariable,
                     selectedPlace.id,
                     selectedPlace.geometry,

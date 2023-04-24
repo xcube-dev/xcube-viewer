@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -59,7 +59,7 @@ import {
     PlaceGroup,
     PlaceInfo,
 } from '../model/place';
-import { PlaceGroupTimeSeries, placeGroupToTimeSeries, Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
+import { Time, TimeRange, TimeSeriesGroup } from '../model/timeSeries';
 import { Variable } from '../model/variable';
 
 import { AppState } from '../states/appState';
@@ -69,7 +69,6 @@ import {
     colorBarsSelector,
     datasetsSelector,
     timeSeriesGroupsSelector,
-    userPlaceGroupSelector,
     userPlaceGroupsSelector,
     userServersSelector
 } from './dataSelectors';

@@ -306,7 +306,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
         if (source.placeId === null) {
             // Time series is from imported CSV or GeoJSON.
             // Then source.datasetId is the place group name.
-            lineName += ` (${source.datasetId})`;
+            lineName = `${source.datasetTitle}/${lineName}`;
         } else if (placeInfos) {
             const placeInfo = placeInfos[source.placeId];
             if (placeInfo) {

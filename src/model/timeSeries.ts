@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -46,6 +46,7 @@ export const UNIT = {
 
 export interface TimeSeriesSource {
     datasetId: string;
+    datasetTitle: string;
     variableName: string;
     variableUnits?: string;
     placeId: string | null;
@@ -199,6 +200,7 @@ export function timeSeriesToGeoJSON(
         geometry: timeSeriesSource.geometry,
         properties: {
             datasetId: timeSeriesSource.datasetId,
+            datasetTitle: timeSeriesSource.datasetTitle,
             variableName: timeSeriesSource.variableName,
             variableUnits: timeSeriesSource.variableUnits,
             placeId: timeSeriesSource.placeId,
@@ -258,7 +260,9 @@ export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSe
             if (!timeSeries) {
                 timeSeriesMapping[propertyName] = {
                     source: {
-                        datasetId: placeGroup.id,  // important: this is the imported CSV / GeoJSON place group
+                        // important: this is the imported CSV / GeoJSON place group
+                        datasetId: placeGroup.id,
+                        datasetTitle: placeGroup.title,
                         variableName: propertyName,
                         placeId: null,   // we don't have an individual place for the entire time-series
                         geometry: null,  // could be computed later from data points (as GeometryCollection)

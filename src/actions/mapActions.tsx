@@ -22,22 +22,20 @@
  * SOFTWARE.
  */
 
-import { default as OlMap } from "ol/Map";
-import { Geometry as OlGeometry } from "ol/geom";
-import { Extent as OlExtent } from "ol/extent";
-import { transformExtent as olProjTransformExtent } from "ol/proj";
-import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
-import { default as OlVectorLayer } from "ol/layer/Vector";
-import { GEOGRAPHIC_CRS } from "../model/proj";
-import { MAP_OBJECTS } from "../states/controlState";
+import { default as OlMap } from 'ol/Map';
+import { Geometry as OlGeometry } from 'ol/geom';
+import { Extent as OlExtent } from 'ol/extent';
+import { transformExtent as olProjTransformExtent } from 'ol/proj';
+import { default as OlSimpleGeometry } from 'ol/geom/SimpleGeometry';
+import { GEOGRAPHIC_CRS } from '../model/proj';
+import { MAP_OBJECTS } from '../states/controlState';
 
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(placeGroupId: string, placeId: string, newName: string) {
     if (MAP_OBJECTS[placeGroupId]) {
-        const userLayer = MAP_OBJECTS[placeGroupId] as OlVectorLayer;
-        // noinspection JSUnusedLocalSymbols
-        const source = userLayer.getSource();
+        // const userLayer = MAP_OBJECTS[placeGroupId] as OlVectorLayer;
+        // const source = userLayer.getSource();
         // TODO (forman): update feature source in user layer to reflect newName.
         //  Note, this is not yet an issue, because we still don't show user places labels
         //  in the viewer.
