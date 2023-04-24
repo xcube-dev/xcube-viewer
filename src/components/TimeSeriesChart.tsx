@@ -299,14 +299,26 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
     let commonValueDataKey: keyof TimeSeriesPoint | null = null;
 
     const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
+        // TODO (forman): way too much logic here, refactor!
         const source = ts.source;
         const valueDataKey = source.valueDataKey;
         let lineName = source.variableName;
-        let lineColor = 'red';
+        let lineColor: string;
         if (source.placeId === null) {
             // Time series is from imported CSV or GeoJSON.
             // Then source.datasetId is the place group name.
             lineName = `${source.datasetTitle}/${lineName}`;
+            // Try detecting line color from a place group's first place color
+            let placeLineColor: string | null = null;
+            placeGroupTimeSeries.forEach(pgTs => {
+                if (placeLineColor === null && pgTs.placeGroup.id === source.datasetId) {
+                    const places = pgTs.placeGroup.features!;
+                    if (places.length > 0 && places[0].properties) {
+                        placeLineColor = places[0].properties['color'] || null;
+                    }
+                }
+            });
+            lineColor = placeLineColor || 'red';
         } else if (placeInfos) {
             const placeInfo = placeInfos[source.placeId];
             if (placeInfo) {
