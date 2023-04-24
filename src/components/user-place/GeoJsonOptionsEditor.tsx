@@ -46,6 +46,13 @@ const GeoJsonOptionsEditor: React.FC<GeoJsonOptionsEditorProps> = (
         <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <GeoJsonTextField
+                    optionKey={'timeNames'}
+                    label={'Time property names'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <div id="spareField"/>
+                <GeoJsonTextField
                     label={'Group property names'}
                     optionKey='groupNames'
                     options={options}

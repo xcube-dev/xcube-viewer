@@ -606,23 +606,23 @@
       "se": "Etikettprefix (används som reserv)"
     },
     {
-      "en": "X/longitude column name",
-      "de": "Spaltenname für y/Längengrad",
+      "en": "X/longitude column names",
+      "de": "Spaltennamen für y/Längengrad",
       "se": "X/longitud kolumnnamn"
     },
     {
-      "en": "Y/latitude column name",
-      "de": "Spaltenname für y/Breitengrad",
+      "en": "Y/latitude column names",
+      "de": "Spaltennamen für y/Breitengrad",
       "se": "Y/latitud kolumnnamn"
     },
     {
-      "en": "Geometry column name",
-      "de": "Spaltenname für Geometrie",
+      "en": "Geometry column names",
+      "de": "Spaltennamen für Geometrie",
       "se": "Geometrikolumnnamn"
     },
     {
-      "en": "Label column name",
-      "de": "Spaltenname für Label",
+      "en": "Label column names",
+      "de": "Spaltennamen für Label",
       "se": "Etikettkolumnnamn"
     },
     {

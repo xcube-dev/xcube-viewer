@@ -138,8 +138,8 @@ export function newControlState(): ControlState {
         showTimeSeriesMedian: branding.defaultAgg === 'median',
         userPlacesFormatName: 'csv',
         userPlacesFormatOptions: {
-            geojson: {...defaultGeoJsonOptions},
             csv: {...defaultCsvOptions},
+            geojson: {...defaultGeoJsonOptions},
             wkt: {...defaultWktOptions},
         },
         flyTo: null,

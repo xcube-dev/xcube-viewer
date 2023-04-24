@@ -48,11 +48,13 @@ export interface GeoJsonOptions {
     groupPrefix: string;
     labelNames: string;
     labelPrefix: string;
+    timeNames: string;
 }
 
 export const defaultGeoJsonOptions: GeoJsonOptions = {
-    groupNames: "station, group, type",
+    groupNames: "group, station, type",
     groupPrefix: "Group-",
     labelNames: "label, name, title, id",
-    labelPrefix: "GeoJSON-",
+    labelPrefix: "Place-",
+    timeNames: "time, date, datetime, date-time",
 };

@@ -45,24 +45,26 @@ export const csvFormat: Format = {
 };
 
 export interface CsvOptions extends ParseOptions {
-    xName: string;
-    yName: string;
+    xNames: string;
+    yNames: string;
     forceGeometry: boolean;
-    geometryName: string;
-    groupName: string;
+    geometryNames: string;
+    timeNames: string;
+    groupNames: string;
     groupPrefix: string;
-    labelName: string;
+    labelNames: string;
     labelPrefix: string;
 }
 
 export const defaultCsvOptions: CsvOptions = {
     ...defaultParseOptions,
-    xName: "longitude",
-    yName: "latitude",
+    xNames: "longitude. lon, x",
+    yNames: "latitude, lat, y",
     forceGeometry: false,
-    geometryName: "geometry",
-    groupName: "station",
-    groupPrefix: "Station-",
-    labelName: "name",
-    labelPrefix: "CSV-",
+    geometryNames: "geometry, geom",
+    timeNames: "time, date, datetime, date-time",
+    groupNames: "group, station, type",
+    groupPrefix: "Group-",
+    labelNames: "label, name, title, id",
+    labelPrefix: "Place-",
 };

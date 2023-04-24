@@ -37,15 +37,17 @@ export const wktFormat: Format = {
 };
 
 export interface WktOptions {
-    groupName: string;
-    groupNamePrefix: string;
+    group: string;
+    groupPrefix: string;
     label: string;
     labelPrefix: string;
+    time: string;
 }
 
 export const defaultWktOptions: WktOptions = {
-    groupName: "",
-    groupNamePrefix: "WKT-",
+    group: "",
+    groupPrefix: "Group-",
     label: "",
-    labelPrefix: "WKT-"
+    labelPrefix: "Place-",
+    time: new Date().toISOString(),
 };

@@ -48,14 +48,21 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
         <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <WktTextField
-                    label={'Group name'}
+                    optionKey={'time'}
+                    label={'Time (ISO format)'}
                     options={options}
-                    optionKey='groupName'
+                    updateOptions={updateOptions}
+                />
+                <div id="spareField"/>
+                <WktTextField
+                    label={'Group'}
+                    options={options}
+                    optionKey='group'
                     updateOptions={updateOptions}
                 />
                 <WktTextField
-                    label={'Group name prefix (used as fallback)'}
-                    optionKey='groupNamePrefix'
+                    label={'Group prefix (used as fallback)'}
+                    optionKey='groupPrefix'
                     options={options}
                     updateOptions={updateOptions}
                 />

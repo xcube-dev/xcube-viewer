@@ -47,14 +47,14 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
         <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <CsvTextField
-                    optionKey={'xName'}
-                    label={'X/longitude column name'}
+                    optionKey={'xNames'}
+                    label={'X/longitude column names'}
                     options={options}
                     updateOptions={updateOptions}
                 />
                 <CsvTextField
-                    optionKey={'yName'}
-                    label={'Y/latitude column name'}
+                    optionKey={'yNames'}
+                    label={'Y/latitude column names'}
                     options={options}
                     updateOptions={updateOptions}
                 />
@@ -67,14 +67,21 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                     <span>{'Use geometry column'}</span>
                 </span>
                 <CsvTextField
-                    optionKey={'geometryName'}
-                    label={'Geometry column name'}
+                    optionKey={'geometryNames'}
+                    label={'Geometry column names'}
                     options={options}
                     updateOptions={updateOptions}
                 />
                 <CsvTextField
-                    optionKey={'groupName'}
-                    label={'Group column name'}
+                    optionKey={'timeNames'}
+                    label={'Time column names'}
+                    options={options}
+                    updateOptions={updateOptions}
+                />
+                <div id="spareField"/>
+                <CsvTextField
+                    optionKey={'groupNames'}
+                    label={'Group column names'}
                     options={options}
                     updateOptions={updateOptions}
                 />
@@ -85,8 +92,8 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                     updateOptions={updateOptions}
                 />
                 <CsvTextField
-                    optionKey={'labelName'}
-                    label={'Label column name'}
+                    optionKey={'labelNames'}
+                    label={'Label column names'}
                     options={options}
                     updateOptions={updateOptions}
                 />

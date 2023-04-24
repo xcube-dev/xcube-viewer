@@ -281,18 +281,14 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGr
         }
     }
 
-    const groupNameLC = options.groupName.toLowerCase();
-    const labelNameLC = options.labelName.toLowerCase();
-    const xNameLC = options.xName.toLowerCase();
-    const yNameLC = options.yName.toLowerCase();
-    const geometryNameLC = options.geometryName.toLowerCase();
+    const columnNameToIndex = getColumnNameToIndex(headerRowLC);
+    const groupNameIndex = findColumnIndex(columnNameToIndex, options.groupNames);
+    const labelNameIndex = findColumnIndex(columnNameToIndex, options.labelNames);
+    const xNameIndex = findColumnIndex(columnNameToIndex, options.xNames);
+    const yNameIndex = findColumnIndex(columnNameToIndex, options.yNames);
+    let geometryNameIndex = findColumnIndex(columnNameToIndex, options.geometryNames);
     const forceGeometry = options.forceGeometry;
 
-    const groupNameIndex = headerRowLC.findIndex(name => name === groupNameLC);
-    const labelNameIndex = headerRowLC.findIndex(name => name === labelNameLC);
-    const xNameIndex = headerRowLC.findIndex(name => name === xNameLC);
-    const yNameIndex = headerRowLC.findIndex(name => name === yNameLC);
-    let geometryNameIndex = headerRowLC.findIndex(name => name === geometryNameLC);
     if (forceGeometry || xNameIndex < 0 || yNameIndex < 0 || xNameIndex === yNameIndex) {
         if (geometryNameIndex < 0) {
             throw new Error(i18n.get('No geometry column(s) found'));
@@ -489,6 +485,17 @@ export function getUserPlacesFromGeoJson(text: string, options: GeoJsonOptions):
 }
 
 export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGroup[] {
+
+    let groupPrefix = options.groupPrefix.trim();
+    if (groupPrefix === '') {
+        groupPrefix = defaultWktOptions.groupPrefix;
+    }
+    let group = options.group.trim();
+    if (group === '') {
+        const groupId = ++LAST_PLACE_GROUP_ID_WKT;
+        group = `${groupPrefix}${groupId}`;
+    }
+
     let labelPrefix = options.labelPrefix.trim();
     if (labelPrefix === '') {
         labelPrefix = defaultWktOptions.labelPrefix;
@@ -498,6 +505,7 @@ export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGr
         const labelId = ++LAST_PLACE_LABEL_ID_WKT;
         label = `${labelPrefix}${labelId}`;
     }
+
     try {
         const geometry = new OlWktFormat().readGeometry(text);
         const geoJsonProps = {
@@ -506,12 +514,33 @@ export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGr
             source: 'WKT'
         };
         const places = [newUserPlace(geometry, geoJsonProps)];
-        return [newUserPlaceGroup('', places)];
+        return [newUserPlaceGroup(group, places)];
     } catch (e) {
         throw new Error(i18n.get(`Invalid Geometry WKT`));
     }
 }
 
 
+type ColumnNameToIndex = {[columnName: string]: number};
 
+function getColumnNameToIndex(columnNames: string[]): ColumnNameToIndex {
+    const indices: ColumnNameToIndex = {};
+    for (let index = 0; index < columnNames.length; index++) {
+        indices[columnNames[index].toLowerCase()] = index;
+    }
+    return indices;
+}
+
+
+function findColumnIndex(columnNameToIndex: ColumnNameToIndex, alternatives: string): number {
+    const alternativesLC = alternatives.toLowerCase().split(',').map(s => s.trim().toLowerCase());
+    for (let alternative of alternativesLC) {
+        const columnIndex: number | undefined = columnNameToIndex[alternative];
+        // noinspection SuspiciousTypeOfGuard
+        if (typeof columnIndex === 'number') {
+            return columnIndex;
+        }
+    }
+    return -1;
+}
 
