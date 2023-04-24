@@ -140,5 +140,6 @@ export class Storage {
 
 
 function isObject(value: any) {
-    return value !== null && value.constructor === Object;
+    return Boolean(value) && value.constructor === Object;
 }
+
