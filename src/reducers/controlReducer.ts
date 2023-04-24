@@ -249,13 +249,16 @@ export function controlReducer(state: ControlState | undefined,
         }
         case ADD_IMPORTED_USER_PLACE_GROUPS: {
             const {placeGroups} = action;
-            return {
-                ...state,
-                selectedPlaceGroupIds: [
-                    ...(state.selectedPlaceGroupIds || []),
-                    ...placeGroups.map(pg => pg.id)
-                ]
-            };
+            if (placeGroups.length > 0) {
+                return {
+                    ...state,
+                    selectedPlaceGroupIds: [
+                        ...(state.selectedPlaceGroupIds || []),
+                        placeGroups[0].id
+                    ]
+                };
+            }
+            return state;
         }
         case REMOVE_USER_PLACE: {
             const {placeId, places} = action;

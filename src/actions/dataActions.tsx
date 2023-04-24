@@ -275,7 +275,7 @@ export function importUserPlacesFromText(text: string) {
             dispatch(openDialog('addUserPlacesFromText'));
             placeGroups = [];
         }
-        if (placeGroups.length) {
+        if (placeGroups.length > 0) {
             dispatch(addImportedUserPlaces(placeGroups, mapProjectionSelector(getState()), true) as any);
             // dispatch(selectPlaceGroups(placeGroups.map(pg => pg.id)) as any);
             if (placeGroups.length === 1 && placeGroups[0].features.length === 1) {
@@ -295,7 +295,7 @@ export function importUserPlacesFromText(text: string) {
             });
             dispatch(postMessage(
                 'info',
-                i18n.get(`Imported ${numPlaces} place(s) in ${placeGroups.length} groups(s)`)
+                i18n.get(`Imported ${numPlaces} place(s) in ${placeGroups.length} groups(s), 1 selected`)
             ));
         } else {
             dispatch(postMessage('warning', i18n.get('No places imported')));
