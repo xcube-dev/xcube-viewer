@@ -49,7 +49,7 @@ import { WithLocale } from '../util/lang';
 const styles = (theme: Theme) => createStyles(
     {
         formControl: {
-            marginTop: theme.spacing(1),
+            marginTop: theme.spacing(1.5),
             marginRight: theme.spacing(1),
         },
     }
