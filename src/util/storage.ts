@@ -92,9 +92,10 @@ export class Storage {
         this.getProperty(propertyName, target, defaultObj,
             (value) => {
                 const parsedObj = JSON.parse(value);
-                const resultObj: {[key: string]: any} = {...defaultObj, ...parsedObj};
+                const defaultObjValue = defaultObj[propertyName];
+                const resultObj: {[key: string]: any} = {...defaultObjValue, ...parsedObj};
                 Object.getOwnPropertyNames(parsedObj).forEach(key => {
-                    const defaultValue = (defaultObj as any)[key];
+                    const defaultValue = (defaultObjValue as any)[key];
                     const parsedValue = parsedObj[key];
                     if (isObject(defaultValue) && isObject(parsedValue)) {
                         resultObj[key] = {...defaultValue, ...parsedValue};

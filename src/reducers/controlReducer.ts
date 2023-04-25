@@ -54,7 +54,7 @@ import {
     ADD_IMPORTED_USER_PLACE_GROUPS,
     CONFIGURE_SERVERS,
     DataAction,
-    REMOVE_USER_PLACE,
+    REMOVE_USER_PLACE, RENAME_USER_PLACE_GROUP,
     UPDATE_DATASETS
 } from '../actions/dataActions';
 import i18n from '../i18n';
@@ -65,7 +65,7 @@ import { ControlState, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
 import { appParams } from "../config";
-import { USER_DRAWING_PLACE_GROUP_ID } from "../model/place";
+import { USER_DRAWN_PLACE_GROUP_ID } from "../model/place";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
 //                so they produce a consistent state. E.g. on selected dataset change, ensure selected
@@ -243,7 +243,7 @@ export function controlReducer(state: ControlState | undefined,
         case ADD_DRAWN_USER_PLACE: {
             const {id, selected} = action;
             if (selected) {
-                return selectUserPlace(state, USER_DRAWING_PLACE_GROUP_ID, id);
+                return selectUserPlace(state, USER_DRAWN_PLACE_GROUP_ID, id);
             }
             return state;
         }
@@ -256,6 +256,16 @@ export function controlReducer(state: ControlState | undefined,
                         ...(state.selectedPlaceGroupIds || []),
                         placeGroups[0].id
                     ]
+                };
+            }
+            return state;
+        }
+        case RENAME_USER_PLACE_GROUP: {
+            const {placeGroupId, newName} = action;
+            if (placeGroupId === USER_DRAWN_PLACE_GROUP_ID) {
+                return {
+                    ...state,
+                    userDrawnPlaceGroupName: newName
                 };
             }
             return state;

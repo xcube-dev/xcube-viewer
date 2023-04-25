@@ -68,6 +68,7 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
             const menuLabel = `${pgTs.placeGroup.title} / ${propertyName}`;
             menuItems.push(
                 <MenuItem
+                    key={menuLabel}
                     onClick={() => handleMenuItemClick(pgTs.timeSeries[propertyName])}
                 >
                     {menuLabel}
@@ -108,5 +109,3 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
 };
 
 export default AddTimeSeriesButton;
-
-

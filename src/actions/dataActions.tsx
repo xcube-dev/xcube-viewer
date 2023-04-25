@@ -31,14 +31,10 @@ import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from '../model/apiServer';
 import { ColorBar, ColorBars } from '../model/colorBar';
 import { Dataset } from '../model/dataset';
-import {
-    findPlaceInPlaceGroups,
-    getUserPlacesFromCsv,
-    getUserPlacesFromGeoJson,
-    getUserPlacesFromWkt,
-    Place,
-    PlaceGroup
-} from '../model/place';
+import { findPlaceInPlaceGroups, Place, PlaceGroup } from '../model/place';
+import { getUserPlacesFromCsv } from '../model/user-place/csv';
+import { getUserPlacesFromGeoJson } from '../model/user-place/geojson';
+import { getUserPlacesFromWkt } from '../model/user-place/wkt';
 import { TimeSeries, TimeSeriesGroup, timeSeriesGroupsToTable } from '../model/timeSeries';
 import {
     mapProjectionSelector,
@@ -192,20 +188,20 @@ export const ADD_DRAWN_USER_PLACE = 'ADD_DRAWN_USER_PLACE';
 
 export interface AddDrawnUserPlace {
     type: typeof ADD_DRAWN_USER_PLACE;
+    placeGroupTitle: string;
     id: string;
-    label: string;
-    color: string;
+    properties: {[name: string]: any};
     geometry: geojson.Geometry;
     selected: boolean;
 }
 
-export function addDrawnUserPlace(id: string,
-                                  label: string,
-                                  color: string,
+export function addDrawnUserPlace(placeGroupTitle: string,
+                                  id: string,
+                                  properties: {[name: string]: any},
                                   geometry: geojson.Geometry,
                                   selected: boolean) {
     return (dispatch: Dispatch<AddDrawnUserPlace>, getState: () => AppState) => {
-        dispatch(_addDrawnUserPlace(id, label, color, geometry, selected));
+        dispatch(_addDrawnUserPlace(placeGroupTitle, id, properties, geometry, selected));
         if (getState().controlState.autoShowTimeSeries
             && getState().controlState.selectedPlaceId === id) {
             dispatch(addTimeSeries() as any);
@@ -213,12 +209,12 @@ export function addDrawnUserPlace(id: string,
     };
 }
 
-export function _addDrawnUserPlace(id: string,
-                                   label: string,
-                                   color: string,
+export function _addDrawnUserPlace(placeGroupTitle: string,
+                                   id: string,
+                                   properties: {[name: string]: any},
                                    geometry: geojson.Geometry,
                                    selected: boolean): AddDrawnUserPlace {
-    return {type: ADD_DRAWN_USER_PLACE, id, label, color, geometry, selected};
+    return {type: ADD_DRAWN_USER_PLACE, placeGroupTitle, id, properties, geometry, selected};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

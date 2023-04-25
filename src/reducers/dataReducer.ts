@@ -47,8 +47,9 @@ import {
 } from '../actions/dataActions';
 import { newId } from '../util/id';
 import { Variable } from "../model/variable";
-import { Place, USER_DRAWING_PLACE_GROUP_ID } from '../model/place';
+import { Place, USER_DRAWN_PLACE_GROUP_ID } from '../model/place';
 import { TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
+import i18n from "../i18n";
 
 
 export function dataReducer(state: DataState | undefined, action: DataAction): DataState {
@@ -101,22 +102,23 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
             return {...state, datasets};
         }
         case ADD_DRAWN_USER_PLACE: {
-            const {id, label, color, geometry} = action;
+            const {placeGroupTitle, id, properties, geometry} = action;
             const place: Place = {
                 type: 'Feature',
                 id,
+                properties,
                 geometry,
-                properties: {label, color},
             };
             const userPlaceGroups = state.userPlaceGroups;
             const pgIndex = userPlaceGroups.findIndex(
-                pg => pg.id === USER_DRAWING_PLACE_GROUP_ID
+                pg => pg.id === USER_DRAWN_PLACE_GROUP_ID
             );
             if (pgIndex >= 0) {
                 const pg = userPlaceGroups[pgIndex];
                 return {
                     ...state,
                     userPlaceGroups: [
+                        ...userPlaceGroups.slice(0, pgIndex),
                         {
                             ...pg,
                             features: [
@@ -124,11 +126,26 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                                 place,
                             ]
                         },
-                        ...userPlaceGroups.slice(1)
+                        ...userPlaceGroups.slice(pgIndex + 1)
+                    ],
+                };
+            } else {
+                const title = Boolean(placeGroupTitle) && placeGroupTitle !== ''
+                    ? placeGroupTitle
+                    : i18n.get('My places');
+                return {
+                    ...state,
+                    userPlaceGroups: [
+                        {
+                            type: 'FeatureCollection',
+                            id: USER_DRAWN_PLACE_GROUP_ID,
+                            title,
+                            features: [place],
+                        },
+                        ...userPlaceGroups
                     ],
                 };
             }
-            return state;
         }
         case ADD_IMPORTED_USER_PLACE_GROUPS: {
             const {placeGroups} = action;
@@ -241,29 +258,14 @@ export function dataReducer(state: DataState | undefined, action: DataAction): D
                     );
                 });
 
-                if (placeGroupId === 'user0') {
-                    return {
-                        ...state,
-                        userPlaceGroups: [
-                            ...userPlaceGroups.slice(0, pgIndex),
-                            {
-                                ...pg,
-                                features: []
-                            },
-                            ...userPlaceGroups.slice(pgIndex + 1)
-                        ],
-                        timeSeriesGroups
-                    };
-                } else {
-                    return {
-                        ...state,
-                        userPlaceGroups: [
-                            ...userPlaceGroups.slice(0, pgIndex),
-                            ...userPlaceGroups.slice(pgIndex + 1)
-                        ],
-                        timeSeriesGroups
-                    };
-                }
+                return {
+                    ...state,
+                    userPlaceGroups: [
+                        ...userPlaceGroups.slice(0, pgIndex),
+                        ...userPlaceGroups.slice(pgIndex + 1)
+                    ],
+                    timeSeriesGroups
+                };
             }
             return state;
         }

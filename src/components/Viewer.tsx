@@ -45,7 +45,7 @@ import { default as OlStyle } from 'ol/style/Style';
 
 import { Config, getUserPlaceColor, getUserPlaceColorName } from '../config';
 import i18n from '../i18n';
-import { Place, PlaceGroup, USER_DRAWING_PLACE_GROUP_ID, USER_ID_PREFIX } from '../model/place';
+import { Place, PlaceGroup, USER_DRAWN_PLACE_GROUP_ID, USER_ID_PREFIX } from '../model/place';
 import { MAP_OBJECTS, MapInteraction } from '../states/controlState';
 import { newId } from '../util/id';
 import { GEOGRAPHIC_CRS } from '../model/proj';
@@ -100,9 +100,10 @@ interface ViewerProps extends WithStyles<typeof styles> {
     datasetBoundaryLayer?: MapElement;
     placeGroupLayers?: MapElement;
     colorBarLegend?: MapElement;
-    addDrawnUserPlace?: (id: string, label: string, color: string, geometry: geojson.Geometry, selected: boolean) => void;
+    userDrawnPlaceGroupName: string;
+    addDrawnUserPlace?: (placeGroupTitle: string, id: string, properties: {[name: string]: any}, geometry: geojson.Geometry, selected: boolean) => void;
     userPlaceGroups: PlaceGroup[];
-    userPlaceGroupsVisibility: {[pgId: string]: boolean};
+    userPlaceGroupsVisibility: { [pgId: string]: boolean };
     selectPlace?: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     selectedPlaceId?: string | null;
     places: Place[];
@@ -123,6 +124,7 @@ const Viewer: React.FC<ViewerProps> = (
         datasetBoundaryLayer,
         placeGroupLayers,
         colorBarLegend,
+        userDrawnPlaceGroupName,
         addDrawnUserPlace,
         importUserPlacesFromText,
         userPlaceGroups,
@@ -217,8 +219,8 @@ const Viewer: React.FC<ViewerProps> = (
             const geoJSONGeometry = new OlGeoJSONFormat().writeGeometryObject(geometry) as any;
             feature.setId(placeId);
             let colorIndex = 0;
-            if (MAP_OBJECTS[USER_DRAWING_PLACE_GROUP_ID]) {
-                const userLayer = MAP_OBJECTS[USER_DRAWING_PLACE_GROUP_ID] as OlVectorLayer<OlVectorSource>;
+            if (Boolean(MAP_OBJECTS[USER_DRAWN_PLACE_GROUP_ID])) {
+                const userLayer = MAP_OBJECTS[USER_DRAWN_PLACE_GROUP_ID] as OlVectorLayer<OlVectorSource>;
                 const features = userLayer?.getSource()?.getFeatures();
                 if (features)
                     colorIndex = features.length;
@@ -227,17 +229,25 @@ const Viewer: React.FC<ViewerProps> = (
             const shadedColor = getUserPlaceColor(color, theme.palette.mode);
             setFeatureStyle(feature, shadedColor, Config.instance.branding.polygonFillOpacity);
 
+            // Find non-existing label
+            const drawingPlaceGroup = userPlaceGroups.find(pg => pg.id === USER_DRAWN_PLACE_GROUP_ID);
             const nameBase = i18n.get(mapInteraction);
             let label: string = '';
             for (let index = 1; ; index++) {
                 label = `${nameBase} ${index}`;
-                // eslint-disable-next-line
-                if (!userPlaceGroups[0].features.find(p => (p.properties || {})['label'] === label)) {
+                if (!drawingPlaceGroup
+                    || !drawingPlaceGroup.features.find(p => (p.properties || {})['label'] === label)) {
                     break;
                 }
             }
 
-            addDrawnUserPlace(placeId, label, color, geoJSONGeometry as geojson.Geometry, true);
+            addDrawnUserPlace(
+                userDrawnPlaceGroupName,
+                placeId,
+                {label, color},
+                geoJSONGeometry as geojson.Geometry,
+                true
+            );
         }
         return true;
     };
@@ -314,7 +324,7 @@ const Viewer: React.FC<ViewerProps> = (
                 {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={handleSelect}/>*/}
                 <Draw
                     id="drawPoint"
-                    layerId={USER_DRAWING_PLACE_GROUP_ID}
+                    layerId={USER_DRAWN_PLACE_GROUP_ID}
                     active={mapInteraction === 'Point'}
                     type={'Point'}
                     wrapX={true}
@@ -323,7 +333,7 @@ const Viewer: React.FC<ViewerProps> = (
                 />
                 <Draw
                     id="drawPolygon"
-                    layerId={USER_DRAWING_PLACE_GROUP_ID}
+                    layerId={USER_DRAWN_PLACE_GROUP_ID}
                     active={mapInteraction === 'Polygon'}
                     type={'Polygon'}
                     wrapX={true}
@@ -332,7 +342,7 @@ const Viewer: React.FC<ViewerProps> = (
                 />
                 <Draw
                     id="drawCircle"
-                    layerId={USER_DRAWING_PLACE_GROUP_ID}
+                    layerId={USER_DRAWN_PLACE_GROUP_ID}
                     active={mapInteraction === 'Circle'}
                     type={'Circle'}
                     wrapX={true}

@@ -35,11 +35,7 @@ import withStyles from '@mui/styles/withStyles';
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
-import {
-    PlaceGroup,
-    USER_DRAWING_PLACE_GROUP_ID,
-    USER_ID_PREFIX
-} from '../model/place';
+import { PlaceGroup, USER_ID_PREFIX } from '../model/place';
 import { WithLocale } from '../util/lang';
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
@@ -82,9 +78,7 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = (
     placeGroups = placeGroups || [];
     selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-    if (placeGroups.length === 0
-        || (placeGroups.length === 1
-            && placeGroups[0].id === USER_DRAWING_PLACE_GROUP_ID)) {
+    if (placeGroups.length === 0) {
         return null;
     }
 
@@ -129,8 +123,8 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = (
     if (selectedPlaceGroupId !== null && selectedPlaceGroupId.startsWith(USER_ID_PREFIX)) {
         isEditableUserPlaceGroup = Boolean(placeGroups.find(
             placeGroup => placeGroup.id === selectedPlaceGroupId
-            && placeGroup.features
-            && placeGroup.features.length >= 0
+                && placeGroup.features
+                && placeGroup.features.length >= 0
         ));
     }
 

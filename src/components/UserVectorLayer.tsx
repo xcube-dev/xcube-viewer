@@ -26,7 +26,7 @@ import * as React from 'react';
 import { default as OlVectorSource } from 'ol/source/Vector';
 
 import { Vector } from "./ol/layer/Vector";
-import { PlaceGroup, USER_DRAWING_PLACE_GROUP_ID } from "../model/place";
+import { PlaceGroup, USER_DRAWN_PLACE_GROUP_ID } from "../model/place";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { setFeatureStyle } from "./ol/style";
 import { Config } from "../config";
@@ -82,7 +82,7 @@ const UserVectorLayer: React.FC<UserVectorLayerProps> = (
     return (
         <Vector
             id={placeGroup.id}
-            opacity={placeGroup.id === USER_DRAWING_PLACE_GROUP_ID ? 1 : 0.8}
+            opacity={placeGroup.id === USER_DRAWN_PLACE_GROUP_ID ? 1 : 0.8}
             visible={visible}
             zIndex={500}
             source={sourceRef.current}
