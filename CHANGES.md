@@ -1,6 +1,7 @@
 ## Changes in version 1.0.3 (in development)
 
-
+* Times are now correctly displayed using standard UTC timezone 
+  in ISO format. (#281)
 
 ## Changes in version 1.0.2.1
 
