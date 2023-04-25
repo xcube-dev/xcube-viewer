@@ -36,7 +36,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import i18n from '../i18n';
 import { Time, TimeRange } from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
-import { dateTimeToUtcTime, utcTimeToIsoDate } from '../util/time';
+import { localToUtcTime, utcTimeToLocal } from '../util/time';
 import ControlBarItem from './ControlBarItem';
 
 
@@ -65,7 +65,7 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
                                                }) => {
 
     const handleTimeChange = (date: Date | null) => {
-        selectTime(date !== null ? dateTimeToUtcTime(date!) : null);
+        selectTime(date !== null ? localToUtcTime(date!) : null);
     };
 
     const timeInputLabel = (
@@ -78,13 +78,17 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
     );
 
     const isValid = typeof selectedTime === 'number';
-    const timeValue = isValid ? utcTimeToIsoDate(selectedTime!) : null;
+    const timeValue = isValid ? utcTimeToLocal(selectedTime!) : null;
 
     let minTimeValue, maxTimeValue;
     if (Array.isArray(selectedTimeRange)) {
-        minTimeValue = utcTimeToIsoDate(selectedTimeRange[0]);
-        maxTimeValue = utcTimeToIsoDate(selectedTimeRange[1]);
+        minTimeValue = utcTimeToLocal(selectedTimeRange[0]);
+        maxTimeValue = utcTimeToLocal(selectedTimeRange[1]);
     }
+
+    // MUI DateTimePicker always uses local time, so we need to adjust.
+    // See https://stackoverflow.com/questions/72103096/mui-x-date-pickers-utc-always-please
+    // See https://github.com/dcs4cop/xcube-viewer/issues/281
 
     const timeInput = (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -124,3 +128,4 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
 };
 
 export default withStyles(styles)(TimeSelect);
+

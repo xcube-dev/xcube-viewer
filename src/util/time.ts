@@ -22,26 +22,29 @@
  * SOFTWARE.
  */
 
-export const LOCAL_OFFSET = -new Date("1970-01-01T00:00:00").getTime();
 
-export function dateTimeToUtcTime(dateTime: Date): number {
-    return dateTime.getTime();
+function getTimezoneOffset(date: Date): number {
+    return date.getTimezoneOffset() * 60000;
 }
 
-export function utcTimeToIsoDate(utcTime: number, local: boolean = false): Date {
-    return new Date(utcTime + (local ? LOCAL_OFFSET : 0));
+export function localToUtcTime(local: Date): number {
+    return local.getTime() - getTimezoneOffset(local);
 }
 
+export function utcTimeToLocal(utcTime: number): Date {
+    const dateTime = new Date(utcTime);
+    return new Date(dateTime.getTime() + getTimezoneOffset(dateTime));
+}
 
-export function utcTimeToIsoDateString(utcTime: number, local: boolean = false) {
-    return utcTimeToIsoDate(utcTime, local)
+export function utcTimeToIsoDateString(utcTime: number) {
+    return new Date(utcTime)
         .toISOString()
         .substr(0, 10);
 }
 
-export function utcTimeToIsoDateTimeString(utcTime: number, local: boolean = false, skipSeconds: boolean = false) {
-    return utcTimeToIsoDate(utcTime, local)
+export function utcTimeToIsoDateTimeString(utcTime: number) {
+    return new Date(utcTime)
         .toISOString()
-        .substr(0, skipSeconds ? 16 : 19)
+        .substr(0, 19)
         .replace("T", " ");
 }
