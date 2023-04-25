@@ -57,6 +57,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
         datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
         placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
         colorBarLegend: <ColorBarLegend/>,
+        userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
         userPlaceGroups: userPlaceGroupsSelector(state),
         userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
         mapId: 'map',
