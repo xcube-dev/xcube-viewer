@@ -25,7 +25,7 @@
 import * as geojson from 'geojson';
 
 import { parseISO } from 'date-fns';
-import { dateTimeToUtcTime, utcTimeToIsoDateTimeString } from '../util/time';
+import { utcTimeToIsoDateTimeString } from '../util/time';
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from './place';
 
 
@@ -233,10 +233,10 @@ export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSe
             continue;
         }
         const timeValue = parseISO(time);
-        if (Number.isNaN(timeValue.getDate())) {
+        const utcTime = timeValue.getTime();
+        if (Number.isNaN(utcTime)) {
             continue;
         }
-        const utcTime = dateTimeToUtcTime(timeValue);
         for (let propertyName of Object.getOwnPropertyNames(place.properties)) {
             let propertyValue = place.properties[propertyName];
             const propertyType = typeof propertyValue;
