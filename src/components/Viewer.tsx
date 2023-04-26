@@ -225,21 +225,10 @@ const Viewer: React.FC<ViewerProps> = (
                 if (features)
                     colorIndex = features.length;
             }
+            const label = findNextLabel(userPlaceGroups, mapInteraction);
             const color = getUserPlaceColorName(colorIndex);
             const shadedColor = getUserPlaceColor(color, theme.palette.mode);
             setFeatureStyle(feature, shadedColor, Config.instance.branding.polygonFillOpacity);
-
-            // Find non-existing label
-            const drawingPlaceGroup = userPlaceGroups.find(pg => pg.id === USER_DRAWN_PLACE_GROUP_ID);
-            const nameBase = i18n.get(mapInteraction);
-            let label: string = '';
-            for (let index = 1; ; index++) {
-                label = `${nameBase} ${index}`;
-                if (!drawingPlaceGroup
-                    || !drawingPlaceGroup.features.find(p => (p.properties || {})['label'] === label)) {
-                    break;
-                }
-            }
 
             addDrawnUserPlace(
                 userDrawnPlaceGroupName,
@@ -370,4 +359,25 @@ function findFeatureById(map: OlMap, featureId: string | number): OlFeature | nu
         }
     }
     return null;
+}
+
+function findNextLabel(userPlaceGroups: PlaceGroup[], mapInteraction: MapInteraction) {
+    const nameBase = i18n.get(mapInteraction);
+    const drawingPlaceGroup = userPlaceGroups.find(pg => pg.id === USER_DRAWN_PLACE_GROUP_ID);
+    if (Boolean(drawingPlaceGroup)) {
+        for (let index = 1; ; index++) {
+            const label = `${nameBase} ${index}`;
+            const exists = !!drawingPlaceGroup!.features.find(p => {
+                    if (!Boolean(p.properties)) {
+                        return false;
+                    }
+                    return p.properties!['label'] === label;
+                }
+            );
+            if (!exists) {
+                return label;
+            }
+        }
+    }
+    return `${nameBase} 1`;
 }
