@@ -79,9 +79,9 @@ const HINT_STYLE: React.CSSProperties = {
 
 /*TODO: I18N*/
 const HINT_ELEMENT = (
-        <Typography variant="body2" style={HINT_STYLE} className="hint_wrap">
-            Press LMB to rotate, plus CTRL-key to shift.
-        </Typography>
+    <Typography variant="body2" style={HINT_STYLE} className="hint_wrap">
+        Press LMB to rotate, plus CTRL-key to shift.
+    </Typography>
 );
 
 const DIV_STYLE: React.CSSProperties = {position: "relative"};
@@ -148,37 +148,37 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 }
                 const noCacheArg = `dummy=${new Date().toLocaleTimeString()}`;
                 const url = `${this.props.serverUrl}/volumes/`
-                            + `${selectedDataset.id}/${selectedVariable.name}`
-                            + `?${noCacheArg}${bboxArg}`;
+                    + `${selectedDataset.id}/${selectedVariable.name}`
+                    + `?${noCacheArg}${bboxArg}`;
                 new NRRDLoader().load(
-                        url,
-                        (volume: Volume) => {
-                            volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
-                            volumeCache[volumeId] = volume;
-                            updateVolumeState(volumeId, {status: 'ok'});
-                        },
-                        () => {
-                        },
-                        (e: any) => {
-                            if (e.response instanceof Response) {
-                                e.response.json().then((responseObject: {[k: string]: any}) => {
-                                    const errorObject = responseObject.error;
-                                    const message = !!errorObject && errorObject.message;
-                                    if (errorObject && errorObject.exception) {
-                                        console.debug("exception:", errorObject.exception);
-                                    }
-                                    updateVolumeState(volumeId, {
-                                        status: 'error',
-                                        message: message || `${e}`
-                                    });
-                                });
-                            } else {
+                    url,
+                    (volume: Volume) => {
+                        volumeScene.setVolume(volume, VolumeCanvas.getVolumeOptions(this.props));
+                        volumeCache[volumeId] = volume;
+                        updateVolumeState(volumeId, {status: 'ok'});
+                    },
+                    () => {
+                    },
+                    (e: any) => {
+                        if (e.response instanceof Response) {
+                            e.response.json().then((responseObject: { [k: string]: any }) => {
+                                const errorObject = responseObject.error;
+                                const message = !!errorObject && errorObject.message;
+                                if (errorObject && errorObject.exception) {
+                                    console.debug("exception:", errorObject.exception);
+                                }
                                 updateVolumeState(volumeId, {
                                     status: 'error',
-                                    message: `${e}`
+                                    message: message || `${e}`
                                 });
-                            }
+                            });
+                        } else {
+                            updateVolumeState(volumeId, {
+                                status: 'error',
+                                message: `${e}`
+                            });
                         }
+                    }
                 );
             }
         }
@@ -193,12 +193,12 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         if (!volumeId) {
             /*TODO: I18N*/
             messageComp = [
-                <Typography variant={'subtitle2'}>
+                <Typography key="subtitle2" variant={'subtitle2'}>
                     {'Cannot display 3D volume'}
                 </Typography>,
-                <Typography variant="body2">
+                <Typography key="body2" variant="body2">
                     {'To display a volume, a variable and a place that represents an area must be selected. ' +
-                     'Please note that the 3D volume rendering is still an experimental feature.'}
+                        'Please note that the 3D volume rendering is still an experimental feature.'}
                 </Typography>
             ];
         } else {
@@ -208,13 +208,14 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 /*TODO: I18N*/
                 loadComp = [
                     <Button
-                            onClick={this.handleLoadVolume}
-                            color="primary"
-                            disabled={!!volumeState && volumeState.status === 'loading'}
+                        key="load"
+                        onClick={this.handleLoadVolume}
+                        color="primary"
+                        disabled={!!volumeState && volumeState.status === 'loading'}
                     >
                         {'Load Volume Data'}
                     </Button>,
-                    <Typography variant="body2">
+                    <Typography key="note" variant="body2">
                         {'Please note that the 3D volume rendering is still an experimental feature.'}
                     </Typography>
                 ];
@@ -226,9 +227,9 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
                 } else if (volumeState.status === 'error') {
                     /*TODO: I18N*/
                     messageComp = (
-                            <Typography variant="body2" color="red">
-                                {`Failed loading volume: ${volumeState.message}`}
-                            </Typography>
+                        <Typography variant="body2" color="red">
+                            {`Failed loading volume: ${volumeState.message}`}
+                        </Typography>
                     );
                 }
             }
@@ -244,16 +245,16 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         // Note, it is important to always have the canvas element
         // rendered here, so it is not remounted.
         return (
-                <div style={DIV_STYLE}>
-                    {loadComp}
-                    {messageComp}
-                    <canvas
-                            id={'VolumeCanvas-canvas'}
-                            ref={this.canvasRef}
-                            style={CANVAS_STYLE}
-                    />
-                    {!messageComp && !loadComp && HINT_ELEMENT}
-                </div>
+            <div style={DIV_STYLE}>
+                {loadComp}
+                {messageComp}
+                <canvas
+                    id={'VolumeCanvas-canvas'}
+                    ref={this.canvasRef}
+                    style={CANVAS_STYLE}
+                />
+                {!messageComp && !loadComp && HINT_ELEMENT}
+            </div>
         );
     }
 
