@@ -1,5 +1,20 @@
-## Changes in version 1.0.3 (in development)
+## Changes in version 1.1.0 (in development)
 
+* A certain column of an imported CSV table or a property of an imported GeoJSON
+  feature collection can now be added to an existing time-series chart. (#276)
+
+  This new feature required additional features that have been added:
+
+  - When importing a CSV table or a GeoJSON object, users can now specify
+    a grouping column name or grouping property that will be used to
+    create a new place group for the imported places. 
+  
+  - Similarly, user can specify the time column name or time property.
+    If given, time values are expected to be UTC and use ISO format.
+
+  - It is now possible to rename and remove an existing place group
+    and place if it was previously created by the user.
+  
 * Times are now correctly displayed using standard UTC timezone 
   in ISO format. (#281)
 
@@ -10,9 +25,9 @@
 
 ## Changes in version 1.0.2
 
-* Timeseries chart labels are now visible again using light theme. (#268)
+* Time-series chart labels are now visible again using light theme. (#268)
 
-* Users can now remove individual timeseries from a chart. (#277)
+* Users can now remove individual time-series from a chart. (#277)
 
 
 ## Changes in version 1.0.1
