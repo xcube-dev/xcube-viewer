@@ -591,9 +591,9 @@
       "se": "Alternativ"
     },
     {
-      "en": "Time (ISO-format)",
-      "de": "Zeit (ISO-Format)",
-      "se": "Tid (ISO-format)"
+      "en": "Time (UTC, ISO-format)",
+      "de": "Zeit (UTC, ISO-Format)",
+      "se": "Tid (UTC, ISO-format)"
     },
     {
       "en": "Group",

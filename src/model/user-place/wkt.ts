@@ -28,6 +28,7 @@ import { Format } from './common';
 import { getUserPlaceColorName } from "../../config";
 import i18n from "../../i18n";
 import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "../place";
+import { utcTimeToIsoDateTimeString } from "../../util/time";
 
 
 // noinspection JSUnusedLocalSymbols
@@ -55,7 +56,7 @@ export const defaultWktOptions: WktOptions = {
     groupPrefix: "Group-",
     label: "",
     labelPrefix: "Place-",
-    time: new Date().toISOString(),
+    time: utcTimeToIsoDateTimeString(new Date().getTime()),
 };
 
 
