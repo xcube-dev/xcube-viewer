@@ -43,6 +43,7 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
         className
     }
 ) => {
+    const forceGeometry = options.forceGeometry;
     return (
         <div className={className}>
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
@@ -51,12 +52,14 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                     label={'X/longitude column names'}
                     options={options}
                     updateOptions={updateOptions}
+                    disabled={forceGeometry}
                 />
                 <CsvTextField
                     optionKey={'yNames'}
                     label={'Y/latitude column names'}
                     options={options}
                     updateOptions={updateOptions}
+                    disabled={forceGeometry}
                 />
                 <span>
                     <Checkbox
@@ -71,6 +74,7 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = (
                     label={'Geometry column names'}
                     options={options}
                     updateOptions={updateOptions}
+                    disabled={!forceGeometry}
                 />
                 <CsvTextField
                     optionKey={'timeNames'}

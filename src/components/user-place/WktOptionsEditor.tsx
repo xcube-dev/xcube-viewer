@@ -49,7 +49,7 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <WktTextField
                     optionKey={'time'}
-                    label={'Time (ISO-format)'}
+                    label={'Time (UTC, ISO-format)'}
                     options={options}
                     updateOptions={updateOptions}
                 />
@@ -65,6 +65,7 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
                     optionKey='groupPrefix'
                     options={options}
                     updateOptions={updateOptions}
+                    disabled={options.group.trim() !== ''}
                 />
                 <WktTextField
                     label={'Label'}
@@ -77,6 +78,7 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
                     optionKey='labelPrefix'
                     options={options}
                     updateOptions={updateOptions}
+                    disabled={options.label.trim() !== ''}
                 />
             </div>
         </div>

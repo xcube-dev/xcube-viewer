@@ -47,6 +47,7 @@ interface OptionsTextFieldProps<T, V = string> {
     label: string;
     style?: React.CSSProperties;
     className?: string;
+    disabled?: boolean;
     parse?: (text: string) => V;
     format?: (value: V) => string;
     validate?: (value: V) => boolean;
@@ -62,6 +63,7 @@ function OptionsTextField<T, V>() {
             label,
             style,
             className,
+            disabled,
             parse,
             format,
             validate,
@@ -80,6 +82,7 @@ function OptionsTextField<T, V>() {
                 onChange={handleChange}
                 style={style}
                 className={className}
+                disabled={disabled}
                 size="small"
                 variant="standard"
             />
