@@ -49,7 +49,7 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
             <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
                 <WktTextField
                     optionKey={'time'}
-                    label={'Time (ISO format)'}
+                    label={'Time (ISO-format)'}
                     options={options}
                     updateOptions={updateOptions}
                 />

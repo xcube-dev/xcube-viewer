@@ -591,14 +591,39 @@
       "se": "Alternativ"
     },
     {
+      "en": "Time (ISO-format)",
+      "de": "Zeit (ISO-Format)",
+      "se": "Tid (ISO-format)"
+    },
+    {
+      "en": "Group",
+      "de": "Gruppe",
+      "se": "Grupp"
+    },
+    {
       "en": "Label",
       "de": "Label",
       "se": "Etikett"
     },
     {
+      "en": "Time property names",
+      "de": "Eigenschaftsnamen für Zeit",
+      "se": "Gruppegendomsnamn"
+    },
+    {
+      "en": "Group property names",
+      "de": "Eigenschaftsnamen für Gruppe",
+      "se": "Gruppegendomsnamn"
+    },
+    {
       "en": "Label property names",
       "de": "Eigenschaftsnamen für Label",
       "se": "Etikett egendomsnamn"
+    },
+    {
+      "en": "Group prefix (used as fallback)",
+      "de": "Gruppen-Präfix (als Fallback verwendet)",
+      "se": "Gruppprefix (används som reserv)"
     },
     {
       "en": "Label prefix (used as fallback)",
@@ -619,6 +644,16 @@
       "en": "Geometry column names",
       "de": "Spaltennamen für Geometrie",
       "se": "Geometrikolumnnamn"
+    },
+    {
+      "en": "Time column names",
+      "de": "Spaltennamen für Zeit",
+      "se": "Tidskolumnnamn"
+    },
+    {
+      "en": "Group column names",
+      "de": "Spaltennamen für Gruppe",
+      "se": "Gruppkolumnnamn"
     },
     {
       "en": "Label column names",
