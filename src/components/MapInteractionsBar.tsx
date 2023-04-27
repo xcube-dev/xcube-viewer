@@ -41,7 +41,8 @@ import { WithLocale } from '../util/lang';
 
 const useStyles = makeStyles(theme => ({
         formControl: {
-            marginTop: theme.spacing(1.5),
+            marginTop: theme.spacing(1),
+            marginLeft: theme.spacing(1),
             marginRight: theme.spacing(2),
         },
     }
@@ -87,7 +88,7 @@ export default function MapInteractionsBar({mapInteraction, setMapInteraction}: 
                     </Tooltip>
                 </ToggleButton>
                 <ToggleButton key={4} value="Geometry">
-                    <Tooltip arrow title={i18n.get('Import geometry')}>
+                    <Tooltip arrow title={i18n.get('Import places')}>
                         <FileUploadIcon/>
                     </Tooltip>
                 </ToggleButton>

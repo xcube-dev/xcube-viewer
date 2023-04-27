@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,13 +26,14 @@ import { connect } from 'react-redux';
 
 import { AppState } from '../states/appState';
 import TimeSeriesCharts from '../components/TimeSeriesCharts';
-import { removeTimeSeries, removeTimeSeriesGroup } from "../actions/dataActions";
+import { removeTimeSeries, removeTimeSeriesGroup, addPlaceGroupTimeSeries } from "../actions/dataActions";
 import { selectPlace, selectTime, selectTimeRange } from "../actions/controlActions";
 import {
     selectedDatasetTimeRangeSelector,
     selectedPlaceGroupPlacesSelector,
     timeSeriesPlaceInfosSelector
 } from '../selectors/controlSelectors';
+import { placeGroupTimeSeriesSelector } from "../selectors/dataSelectors";
 
 
 const mapStateToProps = (state: AppState) => {
@@ -46,6 +47,7 @@ const mapStateToProps = (state: AppState) => {
         showErrorBars: state.controlState.showTimeSeriesErrorBars,
         placeInfos: timeSeriesPlaceInfosSelector(state),
         places: selectedPlaceGroupPlacesSelector(state),
+        placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
     }
 };
 
@@ -55,6 +57,7 @@ const mapDispatchToProps = {
     removeTimeSeries,
     removeTimeSeriesGroup,
     selectPlace,
+    addPlaceGroupTimeSeries,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TimeSeriesCharts);

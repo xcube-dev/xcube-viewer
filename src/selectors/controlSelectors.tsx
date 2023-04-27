@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 by the xcube development team and contributors.
+ * Copyright (c) 2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -69,7 +69,7 @@ import {
     colorBarsSelector,
     datasetsSelector,
     timeSeriesGroupsSelector,
-    userPlaceGroupSelector,
+    userPlaceGroupsSelector,
     userServersSelector
 } from './dataSelectors';
 import { makeRequestUrl } from '../api/callApi';
@@ -182,14 +182,11 @@ export const selectedDatasetPlaceGroupsSelector = createSelector(
     }
 );
 
-export const placeGroupsSelector = createSelector(
+export const selectedDatasetAndUserPlaceGroupsSelector = createSelector(
     selectedDatasetPlaceGroupsSelector,
-    userPlaceGroupSelector,
-    (placeGroups: PlaceGroup[], userPlaceGroup: PlaceGroup): PlaceGroup[] => {
-        if (!userPlaceGroup.features || userPlaceGroup.features.length === 0) {
-            return placeGroups;
-        }
-        return placeGroups.concat([userPlaceGroup]);
+    userPlaceGroupsSelector,
+    (placeGroups: PlaceGroup[], userPlaceGroups: PlaceGroup[]): PlaceGroup[] => {
+        return placeGroups.concat(userPlaceGroups);
     }
 );
 
@@ -206,6 +203,20 @@ function selectPlaceGroups(placeGroups: PlaceGroup[],
     return selectedPlaceGroups;
 }
 
+export const userPlaceGroupsVisibilitySelector = createSelector(
+    userPlaceGroupsSelector,
+    selectedPlaceGroupIdsSelector,
+    (userPlaceGroups: PlaceGroup[], selectedPlaceGroupIds: string[] | null): {[pgId: string]: boolean}  => {
+        const visibility: {[pgId: string]: boolean} = {};
+        const idSet = new Set(selectedPlaceGroupIds || []);
+        userPlaceGroups.forEach(placeGroup => {
+            visibility[placeGroup.id] = idSet.has(placeGroup.id);
+        });
+        return visibility;
+    }
+);
+
+
 export const selectedDatasetSelectedPlaceGroupsSelector = createSelector(
     selectedDatasetPlaceGroupsSelector,
     selectedPlaceGroupIdsSelector,
@@ -213,7 +224,7 @@ export const selectedDatasetSelectedPlaceGroupsSelector = createSelector(
 );
 
 export const selectedPlaceGroupsSelector = createSelector(
-    placeGroupsSelector,
+    selectedDatasetAndUserPlaceGroupsSelector,
     selectedPlaceGroupIdsSelector,
     selectPlaceGroups
 );
@@ -297,7 +308,7 @@ export const canAddTimeSeriesSelector = createSelector(
 
 export const timeSeriesPlaceInfosSelector = createSelector(
     timeSeriesGroupsSelector,
-    placeGroupsSelector,
+    selectedDatasetAndUserPlaceGroupsSelector,
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
         const placeInfos: any = {};
         forEachPlace(placeGroups, (placeGroup, place) => {

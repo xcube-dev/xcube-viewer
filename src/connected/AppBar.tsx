@@ -220,7 +220,6 @@ const _AppBar: React.FC<AppBarProps> = (
                 keepMounted
                 open={Boolean(helpMenuAnchorEl)}
                 onClose={handleCloseHelpMenu}
-                getContentAnchorEl={null}
                 anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
                 transformOrigin={{vertical: 'top', horizontal: 'center'}}
             >

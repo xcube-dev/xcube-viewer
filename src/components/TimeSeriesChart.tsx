@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,7 +31,7 @@ import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
 import Typography from '@mui/material/Typography';
 import AllOutIcon from '@mui/icons-material/AllOut';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useState } from 'react';
@@ -57,9 +57,18 @@ import {
 import { getUserPlaceColor } from '../config';
 import i18n from '../i18n';
 import { Place, PlaceInfo } from '../model/place';
-import { equalTimeRanges, Time, TimeRange, TimeSeries, TimeSeriesGroup, TimeSeriesPoint } from '../model/timeSeries';
+import {
+    equalTimeRanges,
+    PlaceGroupTimeSeries,
+    Time,
+    TimeRange,
+    TimeSeries,
+    TimeSeriesGroup,
+    TimeSeriesPoint
+} from '../model/timeSeries';
 import { WithLocale } from '../util/lang';
 import { utcTimeToIsoDateString, utcTimeToIsoDateTimeString } from '../util/time';
+import AddTimeSeriesButton from "./AddTimeSeriesButton";
 
 const INVISIBLE_LINE_COLOR = '#00000000';
 const SUBSTITUTE_LABEL_COLOR = '#FAFFDD';
@@ -142,6 +151,9 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
 
     selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
     places: Place[];
+
+    placeGroupTimeSeries: PlaceGroupTimeSeries[];
+    addPlaceGroupTimeSeries: (timeSeriesGroupId: string, timeSeries: TimeSeries) => void;
 }
 
 
@@ -154,25 +166,29 @@ interface TimeRangeSelection {
     secondTime?: number;
 }
 
-const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
-                                                             classes,
-                                                             timeSeriesGroup,
-                                                             selectTimeSeries,
-                                                             selectedTime,
-                                                             selectTime,
-                                                             selectedTimeRange,
-                                                             selectTimeRange,
-                                                             places,
-                                                             selectPlace,
-                                                             placeInfos,
-                                                             dataTimeRange,
-                                                             theme,
-                                                             showErrorBars,
-                                                             showPointsOnly,
-                                                             removeTimeSeries,
-                                                             removeTimeSeriesGroup,
-                                                             completed,
-                                                         }) => {
+const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
+    {
+        classes,
+        timeSeriesGroup,
+        selectTimeSeries,
+        selectedTime,
+        selectTime,
+        selectedTimeRange,
+        selectTimeRange,
+        places,
+        selectPlace,
+        placeInfos,
+        dataTimeRange,
+        theme,
+        showErrorBars,
+        showPointsOnly,
+        removeTimeSeries,
+        removeTimeSeriesGroup,
+        placeGroupTimeSeries,
+        addPlaceGroupTimeSeries,
+        completed,
+    }
+) => {
     const [
         timeRangeSelection,
         setTimeRangeSelection
@@ -186,8 +202,6 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     const lightStroke = theme.palette.primary.light;
     const mainStroke = theme.palette.primary.main;
     const labelTextColor = theme.palette.text.primary;
-
-    console.log(paletteType, lightStroke, mainStroke, labelTextColor);
 
     let isZoomedIn = false, time1: number | null = null, time2: number | null = null;
     if (selectedTimeRange) {
@@ -209,7 +223,9 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         clearTimeRangeSelection()
     };
 
-    const handleTimeSeriesClick = (timeSeriesGroupId: string, timeSeriesIndex: number, timeSeries: TimeSeries) => {
+    const handleTimeSeriesClick = (timeSeriesGroupId: string,
+                                   timeSeriesIndex: number,
+                                   timeSeries: TimeSeries) => {
         if (!!selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
@@ -229,7 +245,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
         }
     };
 
-    const handleMouseUp = (event: any) => {
+    const handleMouseUp = () => {
         zoomIn();
     };
 
@@ -283,11 +299,27 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     let commonValueDataKey: keyof TimeSeriesPoint | null = null;
 
     const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
+        // TODO (forman): way too much logic here, refactor!
         const source = ts.source;
         const valueDataKey = source.valueDataKey;
         let lineName = source.variableName;
-        let lineColor = 'yellow';
-        if (placeInfos) {
+        let lineColor: string;
+        if (source.placeId === null) {
+            // Time series is from imported CSV or GeoJSON.
+            // Then source.datasetId is the place group name.
+            lineName = `${source.datasetTitle}/${lineName}`;
+            // Try detecting line color from a place group's first place color
+            let placeLineColor: string | null = null;
+            placeGroupTimeSeries.forEach(pgTs => {
+                if (placeLineColor === null && pgTs.placeGroup.id === source.datasetId) {
+                    const places = pgTs.placeGroup.features!;
+                    if (places.length > 0 && places[0].properties) {
+                        placeLineColor = places[0].properties['color'] || null;
+                    }
+                }
+            });
+            lineColor = placeLineColor || 'red';
+        } else if (placeInfos) {
             const placeInfo = placeInfos[source.placeId];
             if (placeInfo) {
                 const {place, label, color} = placeInfo;
@@ -333,6 +365,38 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 />
             );
         }
+        let strokeOpacity;
+        let dotProps;
+        if (ts.source.placeId === null) {
+            strokeOpacity = 0;
+            dotProps = {
+                radius: 5,
+                strokeWidth: 1.5,
+                symbol: 'diamond'
+            };
+        } else {
+            strokeOpacity = showPointsOnly ? 0 : ts.dataProgress;
+            dotProps = {
+                radius: 3,
+                strokeWidth: 2,
+                symbol: 'circle'
+            };
+        }
+
+        const dot = (
+            <CustomizedDot
+                {...dotProps}
+                stroke={shadedLineColor}
+                fill={'white'}
+            />
+        );
+        const activeDot = (
+            <CustomizedDot
+                {...dotProps}
+                stroke={'white'}
+                fill={shadedLineColor}
+            />
+        );
         return (
             <Line
                 key={i}
@@ -341,10 +405,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 unit={source.variableUnits}
                 data={data}
                 dataKey={valueDataKey}
-                dot={<CustomizedDot radius={3} stroke={shadedLineColor} fill={'white'} strokeWidth={2}/>}
-                activeDot={<CustomizedDot radius={3} stroke={'white'} fill={shadedLineColor} strokeWidth={2}/>}
+                dot={dot}
+                activeDot={activeDot}
                 stroke={shadedLineColor}
-                strokeOpacity={showPointsOnly ? 0 : ts.dataProgress}
+                strokeOpacity={strokeOpacity}
                 // strokeWidth={2 * (ts.dataProgress || 1)}
                 // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
                 // isAnimationActive={ts.dataProgress === 1.0}
@@ -399,6 +463,17 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     const progress = completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
     const loading = (progress > 0 && progress < 100);
 
+    const addTimeSeriesButton = (
+        <AddTimeSeriesButton
+            key="addTimeSeries"
+            className={classes.actionButton}
+            timeSeriesGroupId={timeSeriesGroup.id}
+            placeGroupTimeSeries={placeGroupTimeSeries}
+            addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
+        />
+    );
+    actionButtons.push(addTimeSeriesButton);
+
     let removeAllButton;
     if (loading) {
         removeAllButton = (
@@ -416,7 +491,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
                 className={classes.actionButton}
                 aria-label="Close"
                 onClick={handleRemoveTimeSeriesGroupClick}
-                size="large">
+                size="small">
                 <CloseIcon/>
             </IconButton>
         );
@@ -515,12 +590,21 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = (
             color = SUBSTITUTE_LABEL_COLOR;
         }
         const isPoint = name.indexOf(':') !== -1;
-        const suffix = isPoint ? '' : ` (${dataKey})`;
+        let suffix = isPoint ? null : ` (${dataKey})`;
+        if (unit) {
+            if (suffix !== null) {
+                suffix = `${unit} ${suffix}`;
+            } else {
+                suffix = unit;
+            }
+        } else if (suffix === null) {
+            suffix = "";
+        }
         return (
             <div key={index}>
                 <span>{name}:&nbsp;</span>
                 <span className={classes.toolTipValue} style={{color}}>{valueText}</span>
-                <span>&nbsp;{`${unit} ${suffix}`}</span>
+                <span>&nbsp;{suffix}</span>
             </div>
         );
     });
@@ -544,19 +628,41 @@ interface CustomizedDotProps extends DotProps {
     stroke: string;
     strokeWidth: number;
     fill: string;
+    symbol: 'diamond' | 'circle';
 }
-
 
 const CustomizedDot = (props: CustomizedDotProps) => {
 
-    const {cx, cy, radius, stroke, fill, strokeWidth} = props;
+    const {cx, cy, radius, stroke, fill, strokeWidth, symbol} = props;
 
     const vpSize = 1024;
     const totalRadius = radius + 0.5 * strokeWidth;
     const totalDiameter = 2 * totalRadius;
 
-    const r = Math.floor(100 * radius / totalDiameter + 0.5) + '%';
     const sw = Math.floor(100 * strokeWidth / totalDiameter + 0.5) + '%';
+
+    let shape;
+    if (symbol === 'diamond') {
+        const c = vpSize / 2;
+        const cx = c, cy = c;
+        const r = vpSize * (radius / totalDiameter);
+        shape = (<polygon
+            points={`${cx-r},${cy} ${cx},${cy-r} ${cx+r},${cy} ${cx},${cy+r}`}
+            strokeWidth={sw}
+            stroke={stroke}
+            fill={fill}
+        />);
+    } else {
+        const r = Math.floor(100 * radius / totalDiameter + 0.5) + '%';
+        shape = (<circle
+            cx='50%'
+            cy='50%'
+            r={r}
+            strokeWidth={sw}
+            stroke={stroke}
+            fill={fill}
+        />);
+    }
 
     // noinspection SuspiciousTypeOfGuard
     if (typeof cx === 'number' && typeof cy === 'number') {
@@ -568,14 +674,7 @@ const CustomizedDot = (props: CustomizedDotProps) => {
                 height={totalDiameter}
                 viewBox={`0 0 ${vpSize} ${vpSize}`}
             >
-                <circle
-                    cx='50%'
-                    cy='50%'
-                    r={r}
-                    strokeWidth={sw}
-                    stroke={stroke}
-                    fill={fill}
-                />
+                {shape}
             </svg>
         );
     }
@@ -612,7 +711,7 @@ const _CustomLegendContent: React.FC<CustomLegendProps & LegendProps> = (props) 
                                 // of <Legend/>!
                                 onMouseUp={() => removeTimeSeries(index)}
                             >
-                                <HighlightOffIcon fontSize={"small"}/>
+                                <RemoveCircleOutlineIcon fontSize={"small"}/>
                             </span>
                         )}
                     </div>

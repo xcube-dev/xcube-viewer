@@ -63,3 +63,16 @@ export function detectFormatName(text: string): "csv" | "geojson" | "wkt" {
 
     return "csv";
 }
+
+/**
+ * Helper function that splits a comma-separated string into lower-case
+ * name tokens.
+ *
+ * @param alternatives
+ */
+export function parseAlternativeNames(alternatives: string): string[] {
+    return alternatives
+        .split(',')
+        .map(s => s.trim().toLowerCase())
+        .filter(name => name !== '');
+}

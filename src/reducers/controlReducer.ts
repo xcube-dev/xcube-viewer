@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-import { default as OlSimpleGeometry } from 'ol/geom/SimpleGeometry';
-import { default as OlMap } from 'ol/Map';
-import { transformExtent as olProjTransformExtent } from 'ol/proj';
 import {
     ADD_ACTIVITY,
     CHANGE_LOCALE,
@@ -49,26 +46,26 @@ import {
     SHOW_VOLUME_CARD,
     UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
     UPDATE_SETTINGS,
-    UPDATE_TIME_ANIMATION, UPDATE_VOLUME_STATE,
+    UPDATE_TIME_ANIMATION,
+    UPDATE_VOLUME_STATE,
 } from '../actions/controlActions';
 import {
-    ADD_USER_PLACE,
-    ADD_USER_PLACES,
+    ADD_DRAWN_USER_PLACE,
+    ADD_IMPORTED_USER_PLACE_GROUPS,
     CONFIGURE_SERVERS,
     DataAction,
-    REMOVE_USER_PLACE,
+    REMOVE_USER_PLACE, RENAME_USER_PLACE_GROUP,
     UPDATE_DATASETS
 } from '../actions/dataActions';
 import i18n from '../i18n';
-
 import { findDataset, findDatasetVariable, getDatasetTimeRange } from '../model/dataset';
 import { selectedTimeIndexSelector, timeCoordinatesSelector } from '../selectors/controlSelectors';
 import { AppState } from '../states/appState';
-import { ControlState, MAP_OBJECTS, newControlState } from '../states/controlState';
+import { ControlState, newControlState } from '../states/controlState';
 import { storeUserSettings } from '../states/userSettings';
 import { findIndexCloseTo } from '../util/find';
-import { GEOGRAPHIC_CRS } from "../model/proj";
 import { appParams } from "../config";
+import { USER_DRAWN_PLACE_GROUP_ID } from "../model/place";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
 //                so they produce a consistent state. E.g. on selected dataset change, ensure selected
@@ -138,33 +135,11 @@ export function controlReducer(state: ControlState | undefined,
             };
         }
         case FLY_TO: {
-            const mapObject = MAP_OBJECTS[action.mapId];
-            const flyToCurr = action.location;
-            if (mapObject instanceof OlMap && flyToCurr !== null) {
-                const map = mapObject;
-                const projection = map.getView().getProjection();
-                let flyToTarget;
-                // noinspection JSDeprecatedSymbols
-                if (Array.isArray(flyToCurr)) {
-                    // Fly to extent (bounding box)
-                    flyToTarget = olProjTransformExtent(flyToCurr, GEOGRAPHIC_CRS, projection);
-                    map.getView().fit(flyToTarget, {size: map.getSize()});
-                } else {
-                    // Transform Geometry object
-                    flyToTarget = flyToCurr.transform(GEOGRAPHIC_CRS, projection) as OlSimpleGeometry;
-                    if (flyToTarget.getType() === 'Point') {
-                        // Points don't fly. Just reset map center. Not ideal, but better than zooming in too deep (see #54)
-                        map.getView().setCenter(flyToTarget.getFirstCoordinate());
-                    } else {
-                        // Fly to shape
-                        map.getView().fit(flyToTarget, {size: map.getSize()});
-                    }
-                }
-            }
-            if (state.flyTo !== action.location) {
+            const {location} = action;
+            if (state.flyTo !== location) {
                 return {
                     ...state,
-                    flyTo: action.location,
+                    flyTo: location,
                 };
             }
             return state;
@@ -179,10 +154,10 @@ export function controlReducer(state: ControlState | undefined,
             };
         }
         case SELECT_PLACE: {
-            const selectedPlaceId = action.selectedPlaceId;
+            const {placeId} = action;
             return {
                 ...state,
-                selectedPlaceId,
+                selectedPlaceId: placeId,
             };
         }
         case SELECT_VARIABLE: {
@@ -265,23 +240,41 @@ export function controlReducer(state: ControlState | undefined,
                 timeAnimationInterval: action.timeAnimationInterval,
             };
         }
-        case ADD_USER_PLACE: {
-            if (action.selectPlace) {
-                return selectPlace(state, action.id);
+        case ADD_DRAWN_USER_PLACE: {
+            const {id, selected} = action;
+            if (selected) {
+                return selectUserPlace(state, USER_DRAWN_PLACE_GROUP_ID, id);
             }
             return state;
         }
-        case ADD_USER_PLACES: {
-            if (action.selectPlace && action.places.length) {
-                return selectPlace(state, action.places[0].id);
+        case ADD_IMPORTED_USER_PLACE_GROUPS: {
+            const {placeGroups} = action;
+            if (placeGroups.length > 0) {
+                return {
+                    ...state,
+                    selectedPlaceGroupIds: [
+                        ...(state.selectedPlaceGroupIds || []),
+                        placeGroups[0].id
+                    ]
+                };
+            }
+            return state;
+        }
+        case RENAME_USER_PLACE_GROUP: {
+            const {placeGroupId, newName} = action;
+            if (placeGroupId === USER_DRAWN_PLACE_GROUP_ID) {
+                return {
+                    ...state,
+                    userDrawnPlaceGroupName: newName
+                };
             }
             return state;
         }
         case REMOVE_USER_PLACE: {
-            const {id, places} = action;
-            if (id === state.selectedPlaceId) {
+            const {placeId, places} = action;
+            if (placeId === state.selectedPlaceId) {
                 let selectedPlaceId = null;
-                const index = places.findIndex(p => p.id === id);
+                const index = places.findIndex(p => p.id === placeId);
                 if (index >= 0) {
                     if (index < places.length - 1) {
                         selectedPlaceId = places[index + 1].id;
@@ -358,18 +351,19 @@ export function controlReducer(state: ControlState | undefined,
             return state;
         }
         case UPDATE_INFO_CARD_ELEMENT_VIEW_MODE: {
-            state = {
+            const {elementType, viewMode} = action;
+            const newState = {
                 ...state,
                 infoCardElementStates: {
                     ...state.infoCardElementStates,
-                    [action.elementType]: {
-                        ...state.infoCardElementStates[action.elementType],
-                        viewMode: action.viewMode
+                    [elementType]: {
+                        ...state.infoCardElementStates[elementType],
+                        viewMode
                     }
                 },
             };
-            storeUserSettings(state);
-            return state;
+            storeUserSettings(newState);
+            return newState;
         }
         case ADD_ACTIVITY: {
             return {
@@ -417,18 +411,16 @@ export function controlReducer(state: ControlState | undefined,
     return state;
 }
 
-function selectPlace(state: ControlState, selectedPlaceId: string): ControlState {
-    let selectedPlaceGroupIds;
+function selectUserPlace(state: ControlState, placeGroupId: string, placeId: string): ControlState {
+    let selectedPlaceGroupIds = state.selectedPlaceGroupIds;
     if (!state.selectedPlaceGroupIds || state.selectedPlaceGroupIds.length === 0) {
-        selectedPlaceGroupIds = ['user'];
-    } else if (state.selectedPlaceGroupIds.find(id => id === 'user')) {
-        selectedPlaceGroupIds = state.selectedPlaceGroupIds;
-    } else {
-        selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, 'user']
+        selectedPlaceGroupIds = [placeGroupId];
+    } else if (!state.selectedPlaceGroupIds.find(id => id === placeGroupId)) {
+        selectedPlaceGroupIds = [...state.selectedPlaceGroupIds, placeGroupId]
     }
     return {
         ...state,
         selectedPlaceGroupIds,
-        selectedPlaceId,
+        selectedPlaceId: placeId,
     };
 }

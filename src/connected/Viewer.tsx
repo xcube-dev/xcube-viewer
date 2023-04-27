@@ -35,11 +35,12 @@ import {
     selectedDatasetPlaceGroupLayersSelector,
     selectedDatasetRgbLayerSelector,
     selectedDatasetVariableLayerSelector,
-    selectedPlaceGroupPlacesSelector
+    selectedPlaceGroupPlacesSelector,
+    userPlaceGroupsVisibilitySelector,
 } from '../selectors/controlSelectors';
-import { addUserPlace, addUserPlacesFromText } from '../actions/dataActions';
+import { addDrawnUserPlace, importUserPlacesFromText } from '../actions/dataActions';
 import Viewer from '../components/Viewer';
-import {userPlaceGroupSelector} from "../selectors/dataSelectors";
+import {userPlaceGroupsSelector} from "../selectors/dataSelectors";
 import {selectPlace} from "../actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
 
@@ -56,7 +57,9 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
         datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
         placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
         colorBarLegend: <ColorBarLegend/>,
-        userPlaceGroup: userPlaceGroupSelector(state),
+        userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
+        userPlaceGroups: userPlaceGroupsSelector(state),
+        userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
         mapId: 'map',
         mapInteraction: state.controlState.mapInteraction,
         mapProjection: mapProjectionSelector(state),
@@ -69,8 +72,8 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
 };
 
 const mapDispatchToProps = {
-    addUserPlace,
-    addUserPlacesFromText,
+    addDrawnUserPlace,
+    importUserPlacesFromText,
     selectPlace,
 };
 

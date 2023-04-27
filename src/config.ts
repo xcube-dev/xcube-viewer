@@ -228,8 +228,8 @@ interface TileAccess {
 
 // Array of user place colors in stable order (see #153)
 const userPlaceColorsArray: [string, Color][] = [
-    ["yellow", yellow],
     ["red", red],
+    ["yellow", yellow],
     ["pink", pink],
     ["lightBlue", lightBlue],
     ["green", green],

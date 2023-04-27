@@ -26,30 +26,45 @@ import { AppState } from "../states/appState";
 import { createSelector } from "reselect";
 import { Dataset } from "../model/dataset";
 import { PlaceGroup } from "../model/place";
+import { PlaceGroupTimeSeries, placeGroupToTimeSeries } from "../model/timeSeries";
 
 export const datasetsSelector = (state: AppState) => state.dataState.datasets || [];
 export const colorBarsSelector = (state: AppState) => state.dataState.colorBars;
 export const timeSeriesGroupsSelector = (state: AppState) => state.dataState.timeSeriesGroups;
-export const userPlaceGroupSelector = (state: AppState) => state.dataState.userPlaceGroup;
+export const userPlaceGroupsSelector = (state: AppState) => state.dataState.userPlaceGroups;
 export const userServersSelector = (state: AppState) => state.dataState.userServers || [];
 
 export const placeGroupsSelector = createSelector(
     datasetsSelector,
-    userPlaceGroupSelector,
-    (datasets: Dataset[], userPlaceGroup: PlaceGroup): PlaceGroup[] => {
+    userPlaceGroupsSelector,
+    (datasets: Dataset[], userPlaceGroups: PlaceGroup[]): PlaceGroup[] => {
         const placeGroups: any = {};
-        const placeGroupsArray = [userPlaceGroup];
+        const datasetPlaceGroups: PlaceGroup[] = [];
         datasets.forEach(dataset => {
             if (dataset.placeGroups) {
                 dataset.placeGroups.forEach(placeGroup => {
                     if (!placeGroups[placeGroup.id]) {
                         placeGroups[placeGroup.id] = placeGroup;
-                        placeGroupsArray.push(placeGroup);
+                        datasetPlaceGroups.push(placeGroup);
                     }
-
                 });
             }
         });
-        return placeGroupsArray;
+        return [...datasetPlaceGroups, ...userPlaceGroups];
     }
 );
+
+export const placeGroupTimeSeriesSelector = createSelector(
+    placeGroupsSelector,
+    (placeGroups: PlaceGroup[]): PlaceGroupTimeSeries[] => {
+        const placeGroupTimeSeries: PlaceGroupTimeSeries[] = [];
+        placeGroups.forEach(placeGroup => {
+            const timeSeries = placeGroupToTimeSeries(placeGroup);
+            if (timeSeries !== null) {
+                placeGroupTimeSeries.push(timeSeries);
+            }
+        });
+        return placeGroupTimeSeries;
+    }
+);
+

@@ -22,9 +22,16 @@
  * SOFTWARE.
  */
 
+import { default as OlWktFormat } from "ol/format/WKT";
+
 import { Format } from './common';
+import { getUserPlaceColorName } from "../../config";
+import i18n from "../../i18n";
+import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "../place";
+import { utcTimeToIsoDateTimeString } from "../../util/time";
 
 
+// noinspection JSUnusedLocalSymbols
 const checkError = (text: string): string | null => {
     // TODO
     return null;
@@ -37,11 +44,63 @@ export const wktFormat: Format = {
 };
 
 export interface WktOptions {
+    group: string;
+    groupPrefix: string;
     label: string;
     labelPrefix: string;
+    time: string;
 }
 
 export const defaultWktOptions: WktOptions = {
+    group: "",
+    groupPrefix: "Group-",
     label: "",
-    labelPrefix: "WKT-"
+    labelPrefix: "Place-",
+    time: utcTimeToIsoDateTimeString(new Date().getTime()),
 };
+
+
+let LAST_PLACE_GROUP_ID_WKT = 0;
+let LAST_PLACE_LABEL_ID_WKT = 0;
+
+
+export function getUserPlacesFromWkt(text: string, options: WktOptions): PlaceGroup[] {
+
+    let groupPrefix = options.groupPrefix.trim();
+    if (groupPrefix === '') {
+        groupPrefix = defaultWktOptions.groupPrefix;
+    }
+    let group = options.group.trim();
+    if (group === '') {
+        const groupId = ++LAST_PLACE_GROUP_ID_WKT;
+        group = `${groupPrefix}${groupId}`;
+    }
+
+    let labelPrefix = options.labelPrefix.trim();
+    if (labelPrefix === '') {
+        labelPrefix = defaultWktOptions.labelPrefix;
+    }
+    let label = options.label.trim();
+    if (label === '') {
+        const labelId = ++LAST_PLACE_LABEL_ID_WKT;
+        label = `${labelPrefix}${labelId}`;
+    }
+
+    const time = options.time.trim();
+
+    try {
+        const geometry = new OlWktFormat().readGeometry(text);
+        let geoJsonProps: { [name: string]: any } = {
+            color: getUserPlaceColorName(Math.floor(1000 * Math.random())),
+            label,
+            source: 'WKT'
+        };
+        if (time !== '') {
+            geoJsonProps = {time, ...geoJsonProps};
+        }
+        const places = [newUserPlace(geometry, geoJsonProps)];
+        return [newUserPlaceGroup(group, places)];
+    } catch (e) {
+        throw new Error(i18n.get(`Invalid Geometry WKT`));
+    }
+}

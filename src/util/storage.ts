@@ -63,10 +63,13 @@ export class Storage {
     getItem(propertyName: string, defaultValue?: any, parser?: (value: string) => any): any {
         let value = this.nativeStorage.getItem(this.makeKey(propertyName));
         if (value !== null) {
-            return parser ? parser(value) : value;
-        } else {
-            return defaultValue;
+            try {
+                return parser ? parser(value): value;
+            } catch (e) {
+                console.error(`Failed parsing user setting "${propertyName}": ${e}`);
+            }
         }
+        return defaultValue;
     }
 
     getObjectItem(propertyName: string, defaultValue?: any): any {
@@ -86,7 +89,21 @@ export class Storage {
     }
 
     getObjectProperty<T>(propertyName: keyof T, target: T, defaultObj: T) {
-        this.getProperty(propertyName, target, defaultObj, (value) => JSON.parse(value));
+        this.getProperty(propertyName, target, defaultObj,
+            (value) => {
+                const parsedObj = JSON.parse(value);
+                const defaultObjValue = defaultObj[propertyName];
+                const resultObj: {[key: string]: any} = {...defaultObjValue, ...parsedObj};
+                Object.getOwnPropertyNames(parsedObj).forEach(key => {
+                    const defaultValue = (defaultObjValue as any)[key];
+                    const parsedValue = parsedObj[key];
+                    if (isObject(defaultValue) && isObject(parsedValue)) {
+                        resultObj[key] = {...defaultValue, ...parsedValue};
+                    }
+                });
+                return resultObj;
+        });
+
     }
 
     private getProperty<T>(propertyName: keyof T,
@@ -121,3 +138,9 @@ export class Storage {
         return `xcube.${this.brandingName}.${propertyName}`;
     }
 }
+
+
+function isObject(value: any) {
+    return Boolean(value) && value.constructor === Object;
+}
+

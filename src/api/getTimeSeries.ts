@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -27,10 +27,11 @@ import * as geojson from 'geojson';
 import { Variable } from '../model/variable';
 import { TimeSeries, TimeSeriesPoint } from '../model/timeSeries';
 import { callJsonApi, makeRequestInit, makeRequestUrl, QueryComponent } from './callApi';
+import { Dataset } from "../model/dataset";
 
 
 export function getTimeSeriesForGeometry(apiServerUrl: string,
-                                         datasetId: string,
+                                         dataset: Dataset,
                                          variable: Variable,
                                          placeId: string,
                                          geometry: geojson.Geometry,
@@ -60,7 +61,7 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
     if (endDate) {
         query.push(['endDate', endDate]);
     }
-    const dsId = encodeURIComponent(datasetId);
+    const dsId = encodeURIComponent(dataset.id);
     const variableName = encodeURIComponent(variable.name);
     const url = makeRequestUrl(
         `${apiServerUrl}/timeseries/${dsId}/${variableName}`,
@@ -82,7 +83,8 @@ export function getTimeSeriesForGeometry(apiServerUrl: string,
             return {...item, time: new Date(item.time).getTime()};
         });
         const source = {
-            datasetId,
+            datasetId: dataset.id,
+            datasetTitle: dataset.title,
             variableName: variable.name,
             variableUnits: variable.units || undefined,
             placeId,

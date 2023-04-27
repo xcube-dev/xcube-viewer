@@ -46,12 +46,13 @@ import {
     ControlState,
     MapInteraction,
     TimeAnimationInterval,
+    ViewMode,
     VolumeRenderMode,
     VolumeState
 } from '../states/controlState';
 import { UPDATE_DATASET_PLACE_GROUP, updateDatasetPlaceGroup, UpdateDatasetPlaceGroup, } from './dataActions';
 import { MessageLogAction, postMessage } from './messageLogActions';
-import { BBox } from "geojson";
+import { flyToLocation } from "./mapActions";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,7 +88,7 @@ export function flyToDataset(selectedDatasetId: string) {
         const datasets = datasetsSelector(getState());
         const dataset = findDataset(datasets, selectedDatasetId);
         if (dataset && dataset.bbox) {
-            dispatch(flyTo(dataset.bbox));
+            dispatch(flyTo(dataset.bbox) as any);
         }
     }
 }
@@ -106,11 +107,11 @@ const SIMPLE_GEOMETRY_TYPES = [
 ];
 
 export function flyToPlace(selectedPlaceId: string) {
-    return (dispatch: Dispatch<FlyTo>, getState: () => AppState) => {
+    return (dispatch: Dispatch<any>, getState: () => AppState) => {
         const placeGroups = selectedPlaceGroupsSelector(getState());
         const place = findPlaceInPlaceGroups(placeGroups, selectedPlaceId);
         if (place) {
-            if (place.bbox) {
+            if (place.bbox && place.bbox.length === 4) {
                 dispatch(flyTo(place.bbox));
             } else if (place.geometry && SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)) {
                 dispatch(flyTo(new OlGeoJSONFormat().readGeometry(place.geometry)));
@@ -140,11 +141,19 @@ export const FLY_TO = 'FLY_TO';
 export interface FlyTo {
     type: typeof FLY_TO;
     mapId: string;
-    location: OlGeometry | OlExtent | BBox | null;
+    location: OlGeometry | OlExtent | null;
 }
 
-export function flyTo(location: OlGeometry | OlExtent | BBox | null): FlyTo {
-    return {type: FLY_TO, mapId: 'map', location};
+export function flyTo(location: OlGeometry | OlExtent | null) {
+    return (dispatch: Dispatch<FlyTo>) => {
+        const mapId = 'map';
+        dispatch(_flyTo(mapId, location));
+        flyToLocation(mapId, location);
+    };
+}
+
+export function _flyTo(mapId: string, location: OlGeometry | OlExtent | null): FlyTo {
+    return {type: FLY_TO, mapId, location};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,7 +174,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
 
         const dataset = selectedDatasetSelector(getState());
         const placeGroups = selectedDatasetSelectedPlaceGroupsSelector(getState());
-        if (dataset!==null && placeGroups.length > 0) {
+        if (dataset !== null && placeGroups.length > 0) {
             for (let placeGroup of placeGroups) {
                 if (!isValidPlaceGroup(placeGroup)) {
                     const datasetId = dataset!.id;
@@ -201,23 +210,24 @@ export const SELECT_PLACE = 'SELECT_PLACE';
 
 export interface SelectPlace {
     type: typeof SELECT_PLACE;
-    selectedPlaceId: string | null;
+    placeId: string | null;
     // TODO: Having places in here is ugly, but we need it in the reducer.
     places: Place[];
 }
 
-
-export function selectPlace(selectedPlaceId: string | null, places: Place[], showInMap: boolean) {
+export function selectPlace(placeId: string | null,
+                            places: Place[], showInMap: boolean) {
     return (dispatch: Dispatch<SelectPlace>) => {
-        dispatch(_selectPlace(selectedPlaceId, places));
-        if (showInMap && selectedPlaceId) {
-            dispatch(flyToPlace(selectedPlaceId) as any);
+        dispatch(_selectPlace(placeId, places));
+        if (showInMap && placeId) {
+            dispatch(flyToPlace(placeId) as any);
         }
     }
 }
 
-function _selectPlace(selectedPlaceId: string | null, places: Place[]): SelectPlace {
-    return {type: SELECT_PLACE, selectedPlaceId, places};
+function _selectPlace(placeId: string | null,
+                      places: Place[]): SelectPlace {
+    return {type: SELECT_PLACE, placeId, places};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -400,10 +410,10 @@ export const UPDATE_INFO_CARD_ELEMENT_VIEW_MODE = 'UPDATE_INFO_CARD_ELEMENT_VIEW
 export interface UpdateInfoCardElementCodeMode {
     type: typeof UPDATE_INFO_CARD_ELEMENT_VIEW_MODE;
     elementType: string;
-    viewMode: string;
+    viewMode: ViewMode;
 }
 
-export function updateInfoCardElementViewMode(elementType: string, viewMode: string): UpdateInfoCardElementCodeMode {
+export function updateInfoCardElementViewMode(elementType: string, viewMode: ViewMode): UpdateInfoCardElementCodeMode {
     return {type: UPDATE_INFO_CARD_ELEMENT_VIEW_MODE, elementType, viewMode};
 }
 

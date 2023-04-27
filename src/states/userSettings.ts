@@ -70,6 +70,7 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('imageSmoothingEnabled', settings);
             storage.setPrimitiveProperty('mapProjection', settings);
             storage.setPrimitiveProperty('baseMapUrl', settings);
+            storage.setPrimitiveProperty('userDrawnPlaceGroupName', settings);
             storage.setPrimitiveProperty('exportTimeSeries', settings);
             storage.setPrimitiveProperty('exportTimeSeriesSeparator', settings);
             storage.setPrimitiveProperty('exportPlaces', settings);
@@ -78,6 +79,9 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('exportFileName', settings);
             storage.setPrimitiveProperty('userPlacesFormatName', settings);
             storage.setObjectProperty('userPlacesFormatOptions', settings);
+            if (process.env.NODE_ENV === 'development') {
+                console.debug('Stored user settings:', settings);
+            }
         } catch (e) {
             console.warn(`failed to store user settings: ${e}`);
         }
@@ -104,6 +108,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getBooleanProperty('imageSmoothingEnabled', settings, defaultSettings);
             storage.getStringProperty('mapProjection', settings, defaultSettings);
             storage.getStringProperty('baseMapUrl', settings, defaultSettings);
+            storage.getStringProperty('userDrawnPlaceGroupName', settings, defaultSettings);
             storage.getBooleanProperty('exportTimeSeries', settings, defaultSettings);
             storage.getStringProperty('exportTimeSeriesSeparator', settings, defaultSettings);
             storage.getBooleanProperty('exportPlaces', settings, defaultSettings);

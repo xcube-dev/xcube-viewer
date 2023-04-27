@@ -281,7 +281,6 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = (
     }
 
     function handleTextFieldKeyPress(evt: React.KeyboardEvent<HTMLDivElement>) {
-        console.log('key', evt.key)
         if (evt.key === 'Enter' && !error) {
             const value = parseFloat(textValue);
             setSliderValue(value);

@@ -23,18 +23,31 @@
  */
 
 import { default as OlStyle } from "ol/style/Style";
-import { default as  OlFeature} from "ol/Feature";
+import { default as OlFeature } from "ol/Feature";
 import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlCircleStyle } from "ol/style/Circle";
+import { default as OlRegularShape } from "ol/style/RegularShape";
+import { default as OlImageStyle } from "ol/style/Image";
 import { Color as OlColor } from "ol/color";
 import { default as OlPoint } from "ol/geom/Point";
 import rgba from "color-rgba";
 
 
-export function setFeatureStyle(feature: OlFeature, color: string, fillOpacity?: number) {
+export type PointSymbol = "circle" | "square" | "diamond";
+
+export function setFeatureStyle(feature: OlFeature,
+                                color: string,
+                                fillOpacity?: number,
+                                pointSymbol: PointSymbol = "circle") {
     if (feature.getGeometry() instanceof OlPoint) {
-        feature.setStyle(createPointGeometryStyle(7, color, 'white', 1));
+        feature.setStyle(createPointGeometryStyle(
+            7,
+            color,
+            'white',
+            1,
+            pointSymbol
+        ));
     } else {
         fillOpacity = typeof fillOpacity === "number" ? fillOpacity : 0.25;
         let fillColorRgba = rgba(color);
@@ -47,11 +60,31 @@ export function setFeatureStyle(feature: OlFeature, color: string, fillOpacity?:
     }
 }
 
-
 export function createPointGeometryStyle(radius: number,
                                          fillColor: string,
                                          strokeColor: string,
-                                         strokeWidth: number): OlStyle {
+                                         strokeWidth: number,
+                                         pointSymbol: PointSymbol = "circle"): OlStyle {
+    return new OlStyle(
+        {
+            image: createImageStyle(
+                radius,
+                fillColor,
+                strokeColor,
+                strokeWidth,
+                pointSymbol
+            )
+        }
+    );
+}
+
+function createImageStyle(
+    radius: number,
+    fillColor: string,
+    strokeColor: string,
+    strokeWidth: number,
+    pointSymbol: PointSymbol
+): OlImageStyle {
     const fill = new OlFillStyle(
         {
             color: fillColor,
@@ -62,11 +95,33 @@ export function createPointGeometryStyle(radius: number,
             width: strokeWidth,
         }
     );
-    return new OlStyle(
-        {
-            image: new OlCircleStyle({radius, fill, stroke})
-        }
-    );
+    switch (pointSymbol) {
+        case "square":
+            return new OlRegularShape({
+                fill,
+                stroke,
+                radius,
+                points: 4,
+                angle: Math.PI / 4,
+                rotation: 0.0,
+            });
+        case "diamond":
+            return new OlRegularShape({
+                fill,
+                stroke,
+                radius,
+                points: 4,
+                angle: Math.PI / 4,
+                rotation: Math.PI / 4,
+            });
+        default:
+            return new OlCircleStyle({
+                fill,
+                stroke,
+                radius,
+            });
+    }
+
 }
 
 export function createGeometryStyle(fillColor: string | OlColor,

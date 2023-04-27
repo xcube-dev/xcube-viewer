@@ -501,9 +501,19 @@
       "se": "Rita ett cirkulärt område på kartan"
     },
     {
+      "en": "Rename place",
+      "de": "Ort umbenennen",
+      "se": "Byt namn på plats"
+    },
+    {
       "en": "Remove place",
       "de": "Ort entfernen",
       "se": "Ta bort plats"
+    },
+    {
+      "en": "Rename place group",
+      "de": "Ortsgruppe umbenennen",
+      "se": "Byt namn på platsgrupp"
     },
     {
       "en": "Remove places",
@@ -541,14 +551,9 @@
       "se": "Lämna"
     },
     {
-      "en": "Import geometry",
-      "de": "Import geometry",
-      "se": "Importera geometri"
-    },
-    {
-      "en": "Add Places",
-      "de": "Orte hinzufügen",
-      "se": "Lägg till Platser"
+      "en": "Import places",
+      "de": "Orte importieren",
+      "se": "Importera platser"
     },
     {
       "en": "Text/CSV",
@@ -586,9 +591,29 @@
       "se": "Alternativ"
     },
     {
+      "en": "Time (UTC, ISO-format)",
+      "de": "Zeit (UTC, ISO-Format)",
+      "se": "Tid (UTC, ISO-format)"
+    },
+    {
+      "en": "Group",
+      "de": "Gruppe",
+      "se": "Grupp"
+    },
+    {
       "en": "Label",
       "de": "Label",
       "se": "Etikett"
+    },
+    {
+      "en": "Time property names",
+      "de": "Eigenschaftsnamen für Zeit",
+      "se": "Gruppegendomsnamn"
+    },
+    {
+      "en": "Group property names",
+      "de": "Eigenschaftsnamen für Gruppe",
+      "se": "Gruppegendomsnamn"
     },
     {
       "en": "Label property names",
@@ -596,28 +621,43 @@
       "se": "Etikett egendomsnamn"
     },
     {
+      "en": "Group prefix (used as fallback)",
+      "de": "Gruppen-Präfix (als Fallback verwendet)",
+      "se": "Gruppprefix (används som reserv)"
+    },
+    {
       "en": "Label prefix (used as fallback)",
       "de": "Label-Präfix (als Fallback verwendet)",
       "se": "Etikettprefix (används som reserv)"
     },
     {
-      "en": "X/longitude column name",
-      "de": "Spaltenname für y/Längengrad",
+      "en": "X/longitude column names",
+      "de": "Spaltennamen für y/Längengrad",
       "se": "X/longitud kolumnnamn"
     },
     {
-      "en": "Y/latitude column name",
-      "de": "Spaltenname für y/Breitengrad",
+      "en": "Y/latitude column names",
+      "de": "Spaltennamen für y/Breitengrad",
       "se": "Y/latitud kolumnnamn"
     },
     {
-      "en": "Geometry column name",
-      "de": "Spaltenname für Geometrie",
+      "en": "Geometry column names",
+      "de": "Spaltennamen für Geometrie",
       "se": "Geometrikolumnnamn"
     },
     {
-      "en": "Label column name",
-      "de": "Spaltenname für Label",
+      "en": "Time column names",
+      "de": "Spaltennamen für Zeit",
+      "se": "Tidskolumnnamn"
+    },
+    {
+      "en": "Group column names",
+      "de": "Spaltennamen für Gruppe",
+      "se": "Gruppkolumnnamn"
+    },
+    {
+      "en": "Label column names",
+      "de": "Spaltennamen für Label",
       "se": "Etikettkolumnnamn"
     },
     {

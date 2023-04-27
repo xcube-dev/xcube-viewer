@@ -23,11 +23,10 @@
  */
 
 import { Config } from '../config';
-import i18n from '../i18n';
 import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
 import { ColorBars } from '../model/colorBar';
 import { Dataset } from '../model/dataset';
-import { Place, PlaceGroup, } from '../model/place';
+import { PlaceGroup, } from '../model/place';
 import { TimeSeriesGroup } from '../model/timeSeries';
 import { loadUserServers } from './userSettings';
 
@@ -36,8 +35,8 @@ export interface DataState {
     datasets: Dataset[];
     colorBars: ColorBars | null;
     timeSeriesGroups: TimeSeriesGroup[];
-    userPlaceGroup: PlaceGroup;
-    userServers: ApiServerConfig[];
+    userPlaceGroups: PlaceGroup[];
+    userServers: ApiServerConfig[]; // Will contain at least 1 item
 }
 
 export function newDataState(): DataState {
@@ -55,12 +54,7 @@ export function newDataState(): DataState {
         datasets: [],
         colorBars: null,
         timeSeriesGroups: [],
-        userPlaceGroup: {
-            id: 'user',
-            title: i18n.get('My places'),
-            type: "FeatureCollection",
-            features: [] as Array<Place>
-        },
+        userPlaceGroups: [],
         userServers,
     };
 }

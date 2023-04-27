@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 by the xcube development team and contributors.
+ * Copyright (c) 2019-2021 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,36 +23,39 @@
  */
 
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
+import { MouseEvent } from 'react';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
-import i18n from '../../i18n';
-import { CsvOptions } from '../../model/user-place/csv';
 
-
-interface CsvOptionsEditorProps {
-    options: CsvOptions;
-    updateOptions: (options: Partial<CsvOptions>) => any;
-    optionName: keyof CsvOptions;
-    label: string;
+interface ToolButtonProps {
+    icon: React.ReactElement;
+    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+    disabled?: boolean;
+    tooltipText?: string;
+    className?: string;
 }
 
-const CsvTextFieldEditor: React.FC<CsvOptionsEditorProps> = (
+const ToolButton: React.FC<ToolButtonProps> = (
     {
-        options,
-        updateOptions,
-        optionName,
-        label
+        className,
+        disabled,
+        onClick,
+        icon,
+        tooltipText
     }
 ) => {
+    const iconComp = tooltipText ? (<Tooltip arrow title={tooltipText}>{icon}</Tooltip>) : icon;
     return (
-        <TextField
-            label={i18n.get(label)}
-            value={options[optionName]}
-            onChange={e => updateOptions({[optionName]: e.target.value})}
+        <IconButton
+            className={className}
+            disabled={disabled}
+            onClick={onClick}
             size="small"
-            variant="standard"
-        />
+        >
+            {iconComp}
+        </IconButton>
     );
-}
+};
 
-export default CsvTextFieldEditor;
+export default ToolButton;

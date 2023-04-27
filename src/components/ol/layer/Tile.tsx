@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2023 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -33,6 +33,7 @@ import { default as OlOSMSource } from 'ol/source/OSM';
 import { Options as OlTileLayerOptions } from 'ol/layer/BaseTile';
 
 import { MapComponent, MapComponentProps } from '../MapComponent';
+import { processLayerProperties } from "./common";
 
 const DEBUG = false;
 
@@ -64,22 +65,25 @@ export function OSMBlackAndWhite(): JSX.Element {
 }
 
 
-interface TileProps extends MapComponentProps, OlTileLayerOptions {
+interface TileProps extends MapComponentProps, OlTileLayerOptions<OlTileSource> {
 }
 
 
-export class Tile extends MapComponent<OlTileLayer, TileProps> {
+export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
 
-    addMapObject(map: OlMap): OlTileLayer {
+    addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
         const layer = new OlTileLayer(this.props);
         map.getLayers().push(layer);
         return layer;
     }
 
-    updateMapObject(map: OlMap, layer: OlTileLayer, prevProps: Readonly<TileProps>): OlTileLayer {
-        const oldSource: OlTileSource = layer.getSource();
-        const newSource: OlTileSource | undefined = this.props.source;
-        if (newSource && oldSource !== newSource) {
+    updateMapObject(map: OlMap, layer: OlTileLayer<OlTileSource>, prevProps: Readonly<TileProps>): OlTileLayer<OlTileSource> {
+        const oldSource = layer.getSource();
+        const newSource = this.props.source || null;
+        if (oldSource === newSource) {
+            return layer;
+        }
+        if (newSource !== null && oldSource !== newSource) {
             // We don't expect anything to change in a XYZ source
             // but the tile URL and the new imageSmoothing property.
             // Just setting source properties allows for
@@ -126,13 +130,10 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
                     trace('--> Tile grids are not equal!');
                 }
             }
-            const oldContextOptions = oldSource.getContextOptions()
-            const newContextOptions = newSource.getContextOptions()
-            const oldImageSmoothing = typeof oldContextOptions === 'object' ?
-                                      (oldContextOptions as { [key: string]: any }).imageSmoothing : true;
-            const newImageSmoothing = typeof newContextOptions === 'object' ?
-                                      (newContextOptions as { [key: string]: any }).imageSmoothing : true;
-            if (oldImageSmoothing !== newImageSmoothing) {
+
+            const oldInterpolate = oldSource?.getInterpolate();
+            const newInterpolate = newSource?.getInterpolate();
+            if (oldInterpolate !== newInterpolate) {
                 replaceSource = true;
             }
 
@@ -144,28 +145,11 @@ export class Tile extends MapComponent<OlTileLayer, TileProps> {
                 trace("--> Updated source (check, is it still flickering?)")
             }
         }
-
-        // TODO: Code duplication in ./Vector.tsx
-        if (this.props.visible && this.props.visible !== prevProps.visible) {
-            layer.setVisible(this.props.visible);
-        }
-        if (this.props.opacity && this.props.opacity !== prevProps.opacity) {
-            layer.setOpacity(this.props.opacity);
-        }
-        if (this.props.zIndex && this.props.zIndex !== prevProps.zIndex) {
-            layer.setZIndex(this.props.zIndex);
-        }
-        if (this.props.minResolution && this.props.minResolution !== prevProps.minResolution) {
-            layer.setMinResolution(this.props.minResolution);
-        }
-        if (this.props.maxResolution && this.props.maxResolution !== prevProps.maxResolution) {
-            layer.setMaxResolution(this.props.maxResolution);
-        }
-        // TODO: add more props here
+        processLayerProperties(layer, prevProps, this.props);
         return layer;
     }
 
-    removeMapObject(map: OlMap, layer: OlTileLayer): void {
+    removeMapObject(map: OlMap, layer: OlTileLayer<OlTileSource>): void {
         map.getLayers().remove(layer);
     }
 }
@@ -199,7 +183,13 @@ const OSM_BW_SOURCE = new OlXYZSource(
     });
 
 
-function equalTileGrids(oldTileGrid: OlTileGrid, newTileGrid: OlTileGrid) {
+function equalTileGrids(oldTileGrid: OlTileGrid | null, newTileGrid: OlTileGrid | null): boolean {
+    if (oldTileGrid === newTileGrid) {
+        return true;
+    }
+    if (oldTileGrid === null || newTileGrid === null) {
+        return false;
+    }
     trace('tile grid:', oldTileGrid, newTileGrid);
     // Check min/max zoom level
     trace('min zoom:', oldTileGrid.getMinZoom(), newTileGrid.getMinZoom());
