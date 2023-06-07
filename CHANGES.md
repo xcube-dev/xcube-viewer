@@ -1,4 +1,4 @@
-## Changes in version 1.1.0 (in development)
+## Changes in version 1.1.0
 
 * A certain column of an imported CSV table or a property of an imported GeoJSON
   feature collection can now be added to an existing time-series chart, given

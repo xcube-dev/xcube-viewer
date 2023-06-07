@@ -1,4 +1,4 @@
-# xcube-viewer
+# xcube Viewer
 
 A simple viewer component for [xcube](https://xcube.readthedocs.io/).
 
@@ -6,8 +6,19 @@ A simple viewer component for [xcube](https://xcube.readthedocs.io/).
 
 ## Run it
 
-1. Install [xcube](https://github.com/dcs4cop/xcube) and run server in demo mode
-2. Install and start `xcube-viewer` with demo configuration
+Note, there is no need to install xcube Viewer on its own.
+It is bundled with the [xcube](https://github.com/dcs4cop/xcube)
+Python package since version 1.0. Just run
+```bash
+xcube serve -c server-config.yaml
+```
+and access the viewer via the server endpoint `/viewer`,
+hence http://127.0.0.1/viewer, when run without URL prefix.
+
+For development or for independent deployment, please read ahead to
+
+1. install [xcube](https://github.com/dcs4cop/xcube) and run server in demo mode;
+2. install and start `xcube-viewer` with demo configuration.
 
 ### `xcube`
 
