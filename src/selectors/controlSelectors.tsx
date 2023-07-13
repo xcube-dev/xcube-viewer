@@ -24,7 +24,7 @@
 
 import * as React from 'react';
 import { createSelector } from 'reselect'
-import { default as OlMap } from 'ol/map';
+import { default as OlMap } from 'ol/Map';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
 import { default as OlVectorSource } from 'ol/source/Vector';
 import { default as OlXYZSource } from 'ol/source/XYZ';
@@ -73,7 +73,7 @@ import {
     userServersSelector
 } from './dataSelectors';
 import { makeRequestUrl } from '../api/callApi';
-import { MAP_OBJECTS } from '../states/controlState';
+import { MAP_OBJECTS, ViewMode } from '../states/controlState';
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from '../model/proj';
 import { ColorBar, ColorBars, parseColorBar } from '../model/colorBar';
 
@@ -806,7 +806,7 @@ export const visibleInfoCardElementsSelector = createSelector(
 export const infoCardElementViewModesSelector = createSelector(
     infoCardElementStatesSelector,
     (infoCardElementStates) => {
-        const infoCardElementCodeModes: { [elementType: string]: string } = {};
+        const infoCardElementCodeModes: { [elementType: string]: ViewMode } = {};
         Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
             infoCardElementCodeModes[e] = infoCardElementStates[e].viewMode || 'text';
         });

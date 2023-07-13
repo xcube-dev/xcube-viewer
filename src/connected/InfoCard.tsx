@@ -52,7 +52,7 @@ const mapStateToProps = (state: AppState) => {
         selectedPlaceInfo: selectedPlaceInfoSelector(state),
         selectedTime: selectedTimeSelector(state),
         serverConfig: selectedServerSelector(state),
-        allowViewModePython: Config.instance.branding.allowViewModePython,
+        allowViewModePython: !!Config.instance.branding.allowViewModePython,
     }
 };
 

@@ -95,7 +95,7 @@ export class VolumeScene {
         // Also see https://www.khronos.org/registry/webgl/specs/latest/2.0/#TEXTURE_TYPES_FORMATS_FROM_DOM_ELEMENTS_TABLE
         // TODO: look the dtype up in the volume metadata
 
-        const texture = new THREE.Data3DTexture(volume.data, volume.xLength, volume.yLength, volume.zLength);
+        const texture = new THREE.Data3DTexture(volume.data!, volume.xLength!, volume.yLength!, volume.zLength!);
         texture.format = THREE.RedFormat;
         texture.type = THREE.FloatType;
         texture.minFilter = texture.magFilter = THREE.LinearFilter;
@@ -107,9 +107,9 @@ export class VolumeScene {
         const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
         const [sx, sy, sz] = volume.spacing;
-        const sizeX = Math.floor(sx * volume.xLength);
-        const sizeY = Math.floor(sy * volume.yLength);
-        const sizeZ = Math.floor(sz * volume.zLength);
+        const sizeX = Math.floor(sx * volume.xLength!);
+        const sizeY = Math.floor(sy * volume.yLength!);
+        const sizeZ = Math.floor(sz * volume.zLength!);
 
         uniforms['u_data'].value = texture;
         uniforms['u_size'].value.set(sizeX, sizeY, sizeZ);

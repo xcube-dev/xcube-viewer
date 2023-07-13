@@ -29,7 +29,8 @@ import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
 import { Theme } from '@mui/material';
 import Box from '@mui/material/Box';
-import Slider, { Mark } from '@mui/material/Slider';
+import Slider from '@mui/material/Slider';
+import { Mark } from '@mui/base/useSlider';
 import Tooltip from '@mui/material/Tooltip';
 
 import i18n from '../i18n';
@@ -86,7 +87,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         }
     };
 
-    const handleChangeCommitted = (event: Event | SyntheticEvent, value: number | number[]) => {
+    const handleChangeCommitted = (event: React.SyntheticEvent | Event, value: number | number[]) => {
         if (selectTime && typeof value === 'number') {
             selectTime(value as number);
         }

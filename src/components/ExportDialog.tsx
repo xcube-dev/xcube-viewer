@@ -22,20 +22,21 @@
  * SOFTWARE.
  */
 
+import React, { ChangeEvent } from 'react';
+import { Theme } from "@mui/material";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import makeStyles from '@mui/styles/makeStyles';
 import TextField from '@mui/material/TextField';
-import React, { ChangeEvent } from 'react';
 import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
 import SettingsPanel from './SettingsPanel';
 import SettingsSubPanel from './SettingsSubPanel';
 import ToggleSetting from './ToggleSetting';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
         separatorTextField: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),

@@ -24,6 +24,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
+import { Theme } from "@mui/material";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -38,7 +39,7 @@ import i18n from '../i18n';
 import { ControlState } from '../states/controlState';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
         icon: {
             marginRight: theme.spacing(2),
         },

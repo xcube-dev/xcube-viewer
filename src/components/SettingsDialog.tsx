@@ -23,6 +23,7 @@
  */
 
 import React, { ChangeEvent } from 'react';
+import { Theme } from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -45,7 +46,7 @@ import RadioSetting from './RadioSetting';
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from '../model/proj';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
         textField: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),

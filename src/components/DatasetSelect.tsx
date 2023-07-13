@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import { Theme } from '@mui/material/styles';
+import { WithStyles } from '@mui/styles';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import { Theme } from '@mui/material/styles';
-import { WithStyles } from '@mui/styles';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
-import * as React from 'react';
-import i18n from '../i18n';
 
+import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
 import { WithLocale } from '../util/lang';
 import ControlBarItem from './ControlBarItem';
@@ -61,7 +61,7 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
                                                          selectDataset,
                                                      }) => {
 
-    const handleDatasetChange = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
+    const handleDatasetChange = (event: SelectChangeEvent) => {
         const datasetId = event.target.value || null;
         selectDataset(datasetId, datasets, true);
     };

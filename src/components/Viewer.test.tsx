@@ -25,10 +25,23 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Viewer from './Viewer';
+import { Place, PlaceGroup } from "../model/place";
 
 
 it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<Viewer userPlaceGroup={{type: 'FeatureCollection', id: 'user-0', title: '', features: []}} places={[]} mapInteraction={'Select'}/>, div);
+    ReactDOM.render(
+        <Viewer
+            userPlaceGroups={[{
+                    type: 'FeatureCollection',
+                    id: 'user-0',
+                    title: '',
+                    features: []
+            } as PlaceGroup]}
+            places={[]}
+            mapInteraction={'Select'}
+        />,
+        div
+    );
     ReactDOM.unmountComponentAtNode(div);
 });
