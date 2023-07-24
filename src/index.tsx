@@ -39,7 +39,7 @@ import { changeLocale } from './actions/controlActions';
 import { syncWithServer } from './actions/dataActions';
 import { Config } from './config';
 import App from './connected/App';
-import { appReducer } from './reducers/appReducer';Y
+import { appReducer } from './reducers/appReducer';
 import * as serviceWorker from './serviceWorker';
 
 
