@@ -94,15 +94,14 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
                 disabled={!hasTimeDimension}
-                variant="inline"
-                emptyLabel={
-                    !hasTimeDimension
-                        ? i18n.get('Missing time axis')
-                        : undefined
-                }
+                // emptyLabel={
+                //     !hasTimeDimension
+                //         ? i18n.get('Missing time axis')
+                //         : undefined
+                // }
                 className={classes.dateTimePicker}
                 inputFormat="yyyy-MM-dd hh:mm:ss"
-                id="time-select"
+                // id="time-select"
                 value={timeValue}
                 minDateTime={minTimeValue}
                 maxDateTime={maxTimeValue}

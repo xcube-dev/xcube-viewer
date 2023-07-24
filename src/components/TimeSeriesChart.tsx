@@ -211,7 +211,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
 
     const tickFormatter = (value: any) => {
         if (typeof value !== 'number' || !Number.isFinite(value)) {
-            return null;
+            return "";
         }
         return utcTimeToIsoDateString(value);
     };
@@ -553,7 +553,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
 export default withStyles(styles, {withTheme: true})(TimeSeriesChart);
 
 
-interface _CustomTooltipProps extends TooltipProps, WithStyles<typeof styles> {
+interface _CustomTooltipProps extends TooltipProps<>, WithStyles<typeof styles> {
 }
 
 const _CustomTooltip: React.FC<_CustomTooltipProps> = (
