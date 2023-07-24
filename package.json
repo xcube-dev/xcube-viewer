@@ -15,6 +15,7 @@
     "@date-io/date-fns": "^2.16.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^5.0.5",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.13",
     "@mui/styles": "^5.10.10",
