@@ -36,7 +36,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useState } from 'react';
 import {
-    AxisDomain,
     CartesianGrid,
     DotProps,
     ErrorBar,
@@ -48,14 +47,15 @@ import {
     ReferenceLine,
     ResponsiveContainer,
     Tooltip,
-    TooltipPayload,
     TooltipProps,
     XAxis,
     YAxis
 } from 'recharts';
+import { Payload } from "recharts/types/component/DefaultTooltipContent";
+import { AxisDomain } from "recharts/types/util/types";
 
-import { getUserPlaceColor } from '../config';
 import i18n from '../i18n';
+import { getUserPlaceColor } from '../config';
 import { Place, PlaceInfo } from '../model/place';
 import {
     equalTimeRanges,
@@ -157,8 +157,8 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
 }
 
 
-const X_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['dataMin', 'dataMax'];
-const Y_AXIS_DOMAIN: [AxisDomain, AxisDomain] = ['auto', 'auto'];
+const X_AXIS_DOMAIN: AxisDomain = ['dataMin', 'dataMax'];
+const Y_AXIS_DOMAIN: AxisDomain = ['auto', 'auto'];
 
 
 interface TimeRangeSelection {
@@ -303,7 +303,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
         const source = ts.source;
         const valueDataKey = source.valueDataKey;
         let lineName = source.variableName;
-        let lineColor: string;
+        let lineColor = 'red';
         if (source.placeId === null) {
             // Time series is from imported CSV or GeoJSON.
             // Then source.datasetId is the place group name.
@@ -366,7 +366,11 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
             );
         }
         let strokeOpacity;
-        let dotProps;
+        let dotProps: {
+            radius: number;
+            strokeWidth: number;
+            symbol: 'diamond' | 'circle';
+        };
         if (ts.source.placeId === null) {
             strokeOpacity = 0;
             dotProps = {
@@ -553,7 +557,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
 export default withStyles(styles, {withTheme: true})(TimeSeriesChart);
 
 
-interface _CustomTooltipProps extends TooltipProps<>, WithStyles<typeof styles> {
+interface _CustomTooltipProps extends TooltipProps<number, string>, WithStyles<typeof styles> {
 }
 
 const _CustomTooltip: React.FC<_CustomTooltipProps> = (
@@ -573,9 +577,15 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = (
     if (!payload || payload.length === 0) {
         return null;
     }
-    const items = payload.map((p: TooltipPayload, index: number) => {
+    const items = payload.map((p: Payload<number, string>, index: number) => {
         //console.log("payload:", p);
-        let {name, value, color, unit, dataKey} = p;
+        let {
+            name,
+            value,
+            color,
+            unit,
+            dataKey,
+        } = p;
         if (typeof value !== 'number') {
             return null;
         }
@@ -585,26 +595,25 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = (
         // } else {
         //     valueText = value.toFixed(3);
         // }
+        const nameText = name || '?';
         const valueText = value.toFixed(3);
         if (color === INVISIBLE_LINE_COLOR) {
             color = SUBSTITUTE_LABEL_COLOR;
         }
-        const isPoint = name.indexOf(':') !== -1;
-        let suffix = isPoint ? null : ` (${dataKey})`;
-        if (unit) {
-            if (suffix !== null) {
-                suffix = `${unit} ${suffix}`;
+        const isPoint = nameText.indexOf(':') !== -1;
+        let suffixText = isPoint ? '' : ` (${dataKey})`;
+        if (typeof unit === 'string') {
+            if (suffixText !== '') {
+                suffixText = `${unit} ${suffixText}`;
             } else {
-                suffix = unit;
+                suffixText = unit;
             }
-        } else if (suffix === null) {
-            suffix = "";
         }
         return (
             <div key={index}>
-                <span>{name}:&nbsp;</span>
+                <span>{nameText}:&nbsp;</span>
                 <span className={classes.toolTipValue} style={{color}}>{valueText}</span>
-                <span>&nbsp;{suffix}</span>
+                <span>&nbsp;{suffixText}</span>
             </div>
         );
     });
@@ -647,7 +656,7 @@ const CustomizedDot = (props: CustomizedDotProps) => {
         const cx = c, cy = c;
         const r = vpSize * (radius / totalDiameter);
         shape = (<polygon
-            points={`${cx-r},${cy} ${cx},${cy-r} ${cx+r},${cy} ${cx},${cy+r}`}
+            points={`${cx - r},${cy} ${cx},${cy - r} ${cx + r},${cy} ${cx},${cy + r}`}
             strokeWidth={sw}
             stroke={stroke}
             fill={fill}
