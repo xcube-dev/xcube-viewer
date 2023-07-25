@@ -29,7 +29,12 @@ import * as Redux from 'redux';
 import * as ReduxLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import './index.css';
+
 import { changeLocale } from './actions/controlActions';
 import { syncWithServer } from './actions/dataActions';
 import { Config } from './config';

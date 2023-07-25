@@ -1,4 +1,9 @@
-## Changes in version 1.1.1 (in development)
+## Changes in version 1.2.0 (in development)
+
+* No longer obtaining Roboto font from Google servers. 
+  Using the static version from 
+  [`@fontsource/roboto`](https://fontsource.org/fonts/roboto/install)
+  instead.
 
 * Updated development dependencies and updated TypeScript code base accordingly.
   - `typescript` from v4 to v5
