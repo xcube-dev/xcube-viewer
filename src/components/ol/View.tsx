@@ -25,6 +25,7 @@
 import {default as OlMap} from 'ol/Map';
 import {default as OlView, ViewOptions as OlViewOptions} from 'ol/View';
 import { default as OlVectorLayer } from 'ol/layer/Vector';
+import { default as OlFeature } from 'ol/Feature';
 import {ProjectionLike as OlProjectionLike, transform as olTransform} from 'ol/proj';
 
 import {MapComponent, MapComponentProps} from "./MapComponent";
@@ -66,7 +67,7 @@ export class View extends MapComponent<OlView, ViewProps> {
             });
             map.getLayers().forEach(layer => {
                 if (layer instanceof OlVectorLayer) {
-                    layer.getSource().forEachFeature(feature => {
+                    layer.getSource().forEachFeature((feature: OlFeature) => {
                         feature.getGeometry()?.transform(oldProjection, newProjection);
                     });
                 }

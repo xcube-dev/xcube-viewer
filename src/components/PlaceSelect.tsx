@@ -35,7 +35,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 import i18n from '../i18n';
 import { Dataset } from '../model/dataset';
-import { Place, PlaceGroup, USER_ID_PREFIX } from '../model/place';
+import { Place, USER_ID_PREFIX } from '../model/place';
 import { WithLocale } from '../util/lang';
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
@@ -51,7 +51,6 @@ const styles = (theme: Theme) => createStyles(
 
 interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     datasets: Dataset[];
-    userPlaceGroup: PlaceGroup[];
     selectedPlaceGroupIds: string[] | null;
     selectedPlaceId: string | null;
     places: Place[];

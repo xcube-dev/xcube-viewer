@@ -23,6 +23,7 @@
  */
 
 import * as React from 'react';
+import { Theme } from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
@@ -67,7 +68,7 @@ const formats: { [k: string]: FormatWithCodeExt } = {
 
 
 // noinspection JSUnusedLocalSymbols
-const useStyles = makeStyles(theme => (
+const useStyles = makeStyles((theme: Theme) => (
     {
         spacer: {
             flexGrow: 1.0,

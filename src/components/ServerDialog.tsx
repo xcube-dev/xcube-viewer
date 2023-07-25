@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Theme } from '@mui/material';
 import { WithStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
@@ -34,19 +36,17 @@ import FormHelperText from '@mui/material/FormHelperText';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import withStyles from '@mui/styles/withStyles';
 import createStyles from '@mui/styles/createStyles';
 import TextField from '@mui/material/TextField';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+
 import i18n from '../i18n';
 import { ApiServerConfig } from '../model/apiServer';
 import { newId } from '../util/id';
-
 import { WithLocale } from '../util/lang';
 
 
@@ -69,7 +69,7 @@ const styles = (theme: Theme) => createStyles(
             width: 400,
         },
         button: {
-            margin: 0.1 * theme.spacing(1),
+            margin: theme.spacing(0.1),
         },
     });
 
@@ -119,7 +119,7 @@ const ServerDialog: React.FC<ServerDialogProps> = ({classes, open, servers, sele
         doClose();
     };
 
-    const handleSelectServer = (event: React.ChangeEvent<{ name?: string; value: any; }>) => {
+    const handleSelectServer = (event: SelectChangeEvent<string>) => {
         const selectedServerId = event.target.value;
         const selectedServer = servers_.find(server => server.id === selectedServerId)!;
         setSelectedServer_(selectedServer);

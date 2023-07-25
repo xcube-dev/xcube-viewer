@@ -108,7 +108,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
     selectedPlaceId?: string | null;
     places: Place[];
     imageSmoothing?: boolean;
-    onMapRef: (map: OlMap | null) => void;
+    onMapRef?: (map: OlMap | null) => void;
     importUserPlacesFromText?: (text: string) => any;
 }
 

@@ -23,6 +23,7 @@
  */
 
 import * as React from 'react';
+import { Theme } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import makeStyles from '@mui/styles/makeStyles';
 import Tooltip from '@mui/material/Tooltip';
@@ -39,7 +40,7 @@ import { MapInteraction } from "../states/controlState";
 import { WithLocale } from '../util/lang';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
         formControl: {
             marginTop: theme.spacing(1),
             marginLeft: theme.spacing(1),

@@ -57,9 +57,15 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
     }
 ));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+const Transition = React.forwardRef(
+    function Transition({children}, ref) {
+        return (
+            <Slide direction="up" ref={ref}>
+                {children as React.ReactElement<any, any>}
+            </Slide>
+        );
+    }
+);
 
 interface MarkdownPageProps {
     title: string;

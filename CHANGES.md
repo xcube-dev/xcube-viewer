@@ -1,3 +1,9 @@
+## Changes in version 1.1.1 (in development)
+
+* Updated development dependencies and updated TypeScript code base accordingly.
+  - `typescript` from v4 to v5
+  - `react-scripts` from v4 to v5
+
 ## Changes in version 1.1.0
 
 * A certain column of an imported CSV table or a property of an imported GeoJSON

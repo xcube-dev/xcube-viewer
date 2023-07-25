@@ -63,6 +63,7 @@ export interface ISplitPaneProps extends WithStyles<typeof styles> {
     className?: string;
     child1ClassName?: string;
     child2ClassName?: string;
+    children: [React.ReactNode, React.ReactNode];
 }
 
 export interface ISplitPaneState {
@@ -96,7 +97,7 @@ class SplitPane extends React.PureComponent<ISplitPaneProps, ISplitPaneState> {
     }
 
     render() {
-        const children = this.props.children;
+        const children = this.props.children as React.ReactNode;
         if (!children || !Array.isArray(children)) {
             return children;
         }

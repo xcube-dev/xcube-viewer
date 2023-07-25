@@ -23,6 +23,7 @@
  */
 
 import React from 'react';
+import { Theme } from "@mui/material";
 import Typography from '@mui/material/Typography';
 import { darken, lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
@@ -32,7 +33,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
         settingsPanelTitle: {
             marginBottom: theme.spacing(1),
         },

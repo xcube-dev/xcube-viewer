@@ -266,7 +266,7 @@ export function importUserPlacesFromText(text: string) {
             } else {
                 placeGroups = [];
             }
-        } catch (e) {
+        } catch (e: any) {
             dispatch(postMessage('error', e));
             dispatch(openDialog('addUserPlacesFromText'));
             placeGroups = [];

@@ -113,12 +113,18 @@ export function renderColorBar(colorBar: ColorBar,
 
 export function loadColorBarImage(colorBar: ColorBar, image?: HTMLImageElement): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>(
-        (resolve: (value?: HTMLImageElement | PromiseLike<HTMLImageElement>) => void, reject: (reason?: any) => void) => {
-            image = image || new Image();
-            image.onload = () => {
-                resolve(image);
+        (
+            resolve: (value: HTMLImageElement | PromiseLike<HTMLImageElement>) => void,
+            reject: (reason?: any) => void
+        ) => {
+            const im = image || new Image();
+            im.onload = () => {
+                resolve(im);
             };
-            image.src = `data:image/png;base64,${colorBar.imageData}`;
+            im.onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
+                reject(error);
+            }
+            im.src = `data:image/png;base64,${colorBar.imageData}`;
         }
     );
 }

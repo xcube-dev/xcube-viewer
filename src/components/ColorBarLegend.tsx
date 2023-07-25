@@ -29,19 +29,21 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Popover from '@mui/material/Popover';
-import Slider, { Mark } from '@mui/material/Slider';
+import Slider from '@mui/material/Slider';
+import { Mark } from '@mui/base/useSlider';
 import Tooltip from '@mui/material/Tooltip';
 
 import i18n from '../i18n';
 import { ColorBar, ColorBars, formatColorBar } from '../model/colorBar';
 import { getLabelsFromArray, getLabelsFromRange } from '../util/label'
 import { ColorBarCanvas } from "./ColorBarCanvas";
+import { Theme } from "@mui/material";
 
 const HOR_SLIDER_MARGIN = 5;
 const COLOR_BAR_BOX_MARGIN = 1;
 const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
         title: {
             fontSize: 'x-small',
             fontWeight: 'bold',
