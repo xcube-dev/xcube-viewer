@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import { DialogContent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 import { Theme } from '@mui/material/styles';
@@ -35,12 +34,14 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
+import DialogContent from '@mui/material/DialogContent';
+import { TransitionProps } from "@mui/material/transitions";
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles(
     {
         dialog: {
-            backgroundColor: theme.palette.grey[600]
+            backgroundColor: theme.palette.grey[200]
         },
         appBar: {
             position: 'relative',
@@ -57,15 +58,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles(
     }
 ));
 
-const Transition = React.forwardRef(
-    function Transition({children}, ref) {
-        return (
-            <Slide direction="up" ref={ref}>
-                {children as React.ReactElement<any, any>}
-            </Slide>
-        );
-    }
-);
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & { children: React.ReactElement<any, any>; },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props}/>;
+});
 
 interface MarkdownPageProps {
     title: string;
@@ -91,7 +89,13 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
     const classes = useStyles();
 
     return (
-        <Dialog fullScreen open={open} onClose={onClose} TransitionComponent={Transition as any}>
+        <Dialog
+            fullScreen
+            open={open}
+            onClose={onClose}
+            TransitionComponent={Transition as any}
+            PaperProps={{tabIndex: -1}}
+        >
             <AppBar className={classes.appBar}>
                 <Toolbar>
                     <IconButton
@@ -99,10 +103,13 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
                         color="inherit"
                         onClick={onClose}
                         aria-label="close"
-                        size="large">
+                        size="large"
+                    >
                         <CloseIcon/>
                     </IconButton>
-                    <Typography variant="h6" className={classes.title}>{title}</Typography>
+                    <Typography variant="h6" className={classes.title}>
+                        {title}
+                    </Typography>
                 </Toolbar>
             </AppBar>
             <DialogContent className={classes.dialog}>
