@@ -24,14 +24,19 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { AppBar, IconButton, Menu, MenuItem, Theme, Toolbar, Typography } from '@mui/material';
 import { WithStyles } from '@mui/styles';
+import { Theme } from "@mui/material";
+import AppBar from '@mui/material/AppBar';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import createStyles from '@mui/styles/createStyles';
 import withStyles from '@mui/styles/withStyles';
-import Tooltip from '@mui/material/Tooltip';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import PolicyIcon from '@mui/icons-material/Policy';
 import { deepOrange } from '@mui/material/colors';
 import classNames from 'classnames';
 
@@ -133,33 +138,17 @@ const _AppBar: React.FC<AppBarProps> = (
         allowRefresh,
         updateResources
     }: AppBarProps) => {
-    const [helpMenuAnchorEl, setHelpMenuAnchorEl] = React.useState(null);
     const [imprintOpen, setImprintOpen] = React.useState(false);
-    const [manualOpen, setManualOpen] = React.useState(false);
 
     const handleSettingsButtonClicked = () => {
         openDialog('settings');
     };
 
-    const handleOpenHelpMenu = (event: any) => {
-        setHelpMenuAnchorEl(event.currentTarget);
-    };
-
-    const handleCloseHelpMenu = () => {
-        setHelpMenuAnchorEl(null);
-    };
-
     const handleOpenManual = () => {
-        handleCloseHelpMenu();
-        setManualOpen(true);
-    };
-
-    const handleCloseManual = () => {
-        setManualOpen(false);
+        window.open('https://xcube.readthedocs.io/en/latest/viewer.html', 'Manual');
     };
 
     const handleOpenImprint = () => {
-        handleCloseHelpMenu();
         setImprintOpen(true);
     };
 
@@ -204,8 +193,13 @@ const _AppBar: React.FC<AppBarProps> = (
                     </Tooltip>
                 }
                 <Tooltip arrow title={i18n.get('Help')}>
-                    <IconButton onClick={handleOpenHelpMenu} size="small" className={classes.iconButton}>
+                    <IconButton onClick={handleOpenManual} size="small" className={classes.iconButton}>
                         <HelpOutlineIcon/>
+                    </IconButton>
+                </Tooltip>
+                <Tooltip arrow title={i18n.get('Imprint')}>
+                    <IconButton onClick={handleOpenImprint} size="small" className={classes.iconButton}>
+                        <PolicyIcon/>
                     </IconButton>
                 </Tooltip>
                 <Tooltip arrow title={i18n.get('Settings')}>
@@ -214,21 +208,6 @@ const _AppBar: React.FC<AppBarProps> = (
                     </IconButton>
                 </Tooltip>
             </Toolbar>
-            <Menu
-                id="simple-menu"
-                anchorEl={helpMenuAnchorEl}
-                keepMounted
-                open={Boolean(helpMenuAnchorEl)}
-                onClose={handleCloseHelpMenu}
-                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-                transformOrigin={{vertical: 'top', horizontal: 'center'}}
-            >
-                <MenuItem onClick={handleOpenManual}>{i18n.get('User Manual')}</MenuItem>
-                <MenuItem onClick={handleOpenImprint}>{i18n.get('Imprint')}</MenuItem>
-            </Menu>
-            <MarkdownPage title={i18n.get('User Manual')}
-                          href='manual.md'
-                          open={manualOpen} onClose={handleCloseManual}/>
             <MarkdownPage title={i18n.get('Imprint')}
                           href='imprint.md'
                           open={imprintOpen} onClose={handleCloseImprint}/>
