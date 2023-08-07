@@ -13,6 +13,9 @@
   - `typescript` from v4 to v5
   - `react-scripts` from v4 to v5
 
+* Added brief section in `README.md` of how to update xcube with a new 
+  xcube-viewer build.
+
 ## Changes in version 1.1.0
 
 * A certain column of an imported CSV table or a property of an imported GeoJSON
