@@ -70,9 +70,10 @@ Find outputs in `./build`.
 To bundle the `xcube` package with a new `xcube-viewer` version first build 
 `xcube-viewer` as described above.
 
-In the xcube package replace the contents the `xcube/webapi/viewer/data` directory 
-with the contents of the `./build` directory. Note, it is important to replace the 
-contents, do not just copy. Then add new files to git and commit all changes.  
+Then, in the xcube repo checked out from GitHub replace the contents the 
+`xcube/webapi/viewer/data` directory with the contents of the `./build` 
+directory. Note, it is important to replace the contents, 
+do not just copy. Then add new files to git and commit all changes.  
 
 ## More
 
