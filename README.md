@@ -20,7 +20,7 @@ For development or for independent deployment, please read ahead to
 1. install [xcube](https://github.com/dcs4cop/xcube) and run server in demo mode;
 2. install and start `xcube-viewer` with demo configuration.
 
-### `xcube`
+### Install `xcube` in development mode
 
 `xcube` one-time install:
 
@@ -41,7 +41,7 @@ If errors occur, you may need to update the environment:
 
     $ conda env update
 
-### `xcube-viewer`
+### Install and run `xcube-viewer` in development mode
 
 Checkout `xcube-viewer` sources:
 
@@ -64,6 +64,15 @@ Build `xcube-viewer` for deployment with `default` branding:
     $ yarn build
 
 Find outputs in `./build`.
+
+### Update `xcube` by a new `xcube-viewer` build
+
+To bundle the `xcube` package with a new `xcube-viewer` version first build 
+`xcube-viewer` as described above.
+
+In the xcube package replace the contents the `xcube/webapi/viewer/data` directory 
+with the contents of the `./build` directory. Note, it is important to replace the 
+contents, do not just copy. Then add new files to git and commit all changes.  
 
 ## More
 
