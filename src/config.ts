@@ -238,7 +238,7 @@ const userPlaceColorsArray: [string, Color][] = [
     ["purple", purple],
     ["indigo", indigo],
     ["cyan", cyan],
-    ["deepPurple", deepPurple],
+    ["purple", purple],
 ];
 
 const userPlaceColors: { [name: string]: Color } = (() => {
