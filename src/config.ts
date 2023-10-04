@@ -24,6 +24,7 @@
 
 import { Color, PaletteMode } from '@mui/material';
 import {
+    brown,
     cyan,
     deepPurple,
     green,
@@ -238,7 +239,7 @@ const userPlaceColorsArray: [string, Color][] = [
     ["purple", purple],
     ["indigo", indigo],
     ["cyan", cyan],
-    ["purple", purple],
+    ["brown",brown]
 ];
 
 const userPlaceColors: { [name: string]: Color } = (() => {
