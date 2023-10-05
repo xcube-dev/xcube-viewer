@@ -18,7 +18,7 @@
 
 ### Fixes
 
-* Fixed a crash when plotting more than 10 poins on map. (#299)
+* Fixed a crash when plotting more than 10 points on map. (#299)
 
 ## Changes in version 1.1.0
 
