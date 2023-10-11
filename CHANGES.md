@@ -20,6 +20,8 @@
 
 * Fixed a crash when plotting more than 10 points on map. (#299)
 
+* Fixed a crash when resizing window. (#301)
+
 ## Changes in version 1.1.0
 
 * A certain column of an imported CSV table or a property of an imported GeoJSON

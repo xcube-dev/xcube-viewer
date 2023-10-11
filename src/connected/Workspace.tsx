@@ -117,7 +117,32 @@ const Workspace: React.FC<WorkspaceProps> = ({
                                              }) => {
     const [map, setMap] = React.useState<OlMap | null>(null);
     const [layout, setLayout] = React.useState<Layout>(getLayout());
+    const useBeforeRender = (callback: any) => {
+        const [isRun, setIsRun] = React.useState(false);
 
+        if (!isRun) {
+            callback();
+            setIsRun(true);
+        }
+    };
+
+    useBeforeRender(() => {
+        window.addEventListener("error", (e) => {
+            if (e) {
+                const resizeObserverErrDiv = document.getElementById(
+                    "webpack-dev-server-client-overlay-div",
+                );
+                const resizeObserverErr = document.getElementById(
+                    "webpack-dev-server-client-overlay",
+                );
+                if (resizeObserverErr)
+                    resizeObserverErr.className = "hide-resize-observer";
+                if (resizeObserverErrDiv)
+                    resizeObserverErrDiv.className = "hide-resize-observer";
+            }
+        });
+    });
+                                              
     React.useEffect(() => {
         updateLayout();
         window.onresize = updateLayout;
