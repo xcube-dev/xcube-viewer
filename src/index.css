@@ -29,7 +29,3 @@ body {
     height: 100vh;
     font-family: "Roboto", "Segoe UI", "sans-serif";
 }
-
-.hide-resize-observer {
-    display: none !important;
-}

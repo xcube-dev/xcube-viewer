@@ -117,35 +117,18 @@ const Workspace: React.FC<WorkspaceProps> = ({
                                              }) => {
     const [map, setMap] = React.useState<OlMap | null>(null);
     const [layout, setLayout] = React.useState<Layout>(getLayout());
-    const useBeforeRender = (callback: any) => {
-        const [isRun, setIsRun] = React.useState(false);
-
-        if (!isRun) {
-            callback();
-            setIsRun(true);
-        }
-    };
-
-    useBeforeRender(() => {
-        window.addEventListener("error", (e) => {
-            if (e.message == "ResizeObserver loop completed with undelivered notifications.") {
-                const resizeObserverErrDiv = document.getElementById(
-                    "webpack-dev-server-client-overlay-div",
-                );
-                const resizeObserverErr = document.getElementById(
-                    "webpack-dev-server-client-overlay",
-                );
-                if (resizeObserverErr)
-                    resizeObserverErr.className = "hide-resize-observer";
-                if (resizeObserverErrDiv)
-                    resizeObserverErrDiv.className = "hide-resize-observer";
-            }
-        });
-    });
+    const resizeObserver = React.useRef<ResizeObserver | null>(null);
                                               
     React.useEffect(() => {
         updateLayout();
-        window.onresize = updateLayout;
+        resizeObserver.current = new ResizeObserver(updateLayout);
+        resizeObserver.current.observe(document.documentElement);
+
+        return () => {
+            if (resizeObserver.current) {
+                resizeObserver.current.disconnect();
+            }
+        };
     }, []);
 
     const updateLayout = () => {
