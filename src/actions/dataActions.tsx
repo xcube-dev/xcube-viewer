@@ -72,7 +72,7 @@ import { VolumeRenderMode } from "../states/controlState";
 import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
 import { renameUserPlaceInLayer } from "./mapActions";
 
-const saveAs = require('file-saver');
+import { saveAs } from "file-saver";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

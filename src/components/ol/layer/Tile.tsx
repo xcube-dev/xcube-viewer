@@ -38,7 +38,7 @@ import { processLayerProperties } from "./common";
 const DEBUG = false;
 
 let trace: (message?: string, ...optionalParams: any[]) => void;
-if (process.env.NODE_ENV === 'development' && DEBUG) {
+if (import.meta.env.DEV && DEBUG) {
     trace = console.debug;
 } else {
     trace = () => {};

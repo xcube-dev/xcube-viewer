@@ -77,14 +77,14 @@
   We support server configuration and auth configuration variables:
   ```bash
     # Server configuration
-    REACT_APP_SERVER_ID=my_server
-    REACT_APP_SERVER_NAME=My Server
-    REACT_APP_SERVER_URL=http://127.0.0.1:8181
+    XCV_SERVER_ID=my_server
+    XCV_SERVER_NAME=My Server
+    XCV_SERVER_URL=http://127.0.0.1:8181
     
     # Authentication configuration
-    REACT_APP_OAUTH2_AUTHORITY=https://my.authority.eu
-    REACT_APP_OAUTH2_CLIENT_ID=kjJKs5n7kj5k7fo9l3
-    REACT_APP_OAUTH2_AUDIENCE=https://my.audience.eu/api/
+    XCV_OAUTH2_AUTHORITY=https://my.authority.eu
+    XCV_OAUTH2_CLIENT_ID=kjJKs5n7kj5k7fo9l3
+    XCV_OAUTH2_AUDIENCE=https://my.audience.eu/api/
   ```
 
 ## Changes in version 1.0.0
@@ -381,7 +381,7 @@
 
   Note, this new feature must be enabled in `.env`:
   ```
-  REACT_APP_ALLOW_DOWNLOADS=1
+  XCV_ALLOW_DOWNLOADS=1
   ```
 * The opacity of polygon fill colours has been made part the 
   app's branding.
@@ -433,9 +433,9 @@ _Fixed a problem during release process. No code changes._
 * Users can now login (and sign on) if the viewer is build with OAuth2 settings, if any, given 
   in a `.env.local` file (#22): 
   ```bash
-  REACT_APP_OAUTH2_DOMAIN=MY_DOMAIN
-  REACT_APP_OAUTH2_CLIENT_ID=MY_CLIENT_ID
-  REACT_APP_OAUTH2_AUDIENCE=MY_AUDIENCE
+  XCV_OAUTH2_DOMAIN=MY_DOMAIN
+  XCV_OAUTH2_CLIENT_ID=MY_CLIENT_ID
+  XCV_OAUTH2_AUDIENCE=MY_AUDIENCE
   ``` 
 * Now displaying dataset attributions when clicking the lower right info button in the map.
 * Added a new panel to display information about the selected dataset, variable, and place (#114).
@@ -461,8 +461,8 @@ _Fixed a problem during release process. No code changes._
 * Added Help-icon providing a sub-menu with User Manual (coming soon) and the obligatory imprint.
 * Developers can now overwrite the branding's xcube web API server setting, if any, given in a `.env.local` file:
   ```bash
-  REACT_APP_BRANDING=MY_BRANDING
-  REACT_APP_XCUBE_API=http://localhost:8080
+  XCV_BRANDING=MY_BRANDING
+  XCV_XCUBE_API=http://localhost:8080
   ```  
   This eases testing of yet undeployed xcube web API versions in the viewer. 
 
