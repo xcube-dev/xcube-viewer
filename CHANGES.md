@@ -1,4 +1,12 @@
-## Changes in version 1.2.0 (in development)
+## Changes in version 1.1.1
+
+### Fixes
+
+* Fixed a crash when plotting more than 10 points on map. (#299)
+
+* Fixed a crash when resizing browser window. (#301)
+
+### Other changes
 
 * Changed the development environment for the `xcube-viewer` project 
   from [create-react-app](https://create-react-app.dev/) and `yarn`
