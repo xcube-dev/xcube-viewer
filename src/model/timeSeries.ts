@@ -109,8 +109,8 @@ export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
     const dataColNames = new Set<string>();
     const placeIds = new Set<string>();
     const timePlaceRows: TimePlaceRows = {};
-    for (let timeSeriesGroup of timeSeriesGroups) {
-        for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
+    for (const timeSeriesGroup of timeSeriesGroups) {
+        for (const timeSeries of timeSeriesGroup.timeSeriesArray) {
             const {placeId, datasetId, variableName, valueDataKey, errorDataKey} = timeSeries.source;
             if (placeId !== null) {
                 placeIds.add(placeId);
@@ -118,7 +118,7 @@ export function timeSeriesGroupsToTable(timeSeriesGroups: TimeSeriesGroup[],
             const valueColName = `${datasetId}.${variableName}.${valueDataKey}`;
             dataColNames.add(valueColName);
             let errorColName: string | null = null;
-            if (Boolean(errorDataKey)) {
+            if (errorDataKey) {
                 errorColName = `${datasetId}.${variableName}.${errorDataKey}`;
                 dataColNames.add(errorColName);
             }
@@ -177,8 +177,8 @@ export function timeSeriesGroupsToGeoJSON(
     timeSeriesGroups: TimeSeriesGroup[]
 ): geojson.FeatureCollection<geojson.Geometry | null> {
     const features: geojson.Feature<geojson.Geometry | null>[] = [];
-    for (let timeSeriesGroup of timeSeriesGroups) {
-        for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
+    for (const timeSeriesGroup of timeSeriesGroups) {
+        for (const timeSeries of timeSeriesGroup.timeSeriesArray) {
             features.push(timeSeriesToGeoJSON(timeSeries));
         }
     }
@@ -224,11 +224,11 @@ export interface PlaceGroupTimeSeries {
 export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSeries | null {
     let timeSeriesMapping: {[propertyName: string]: TimeSeries} | null = null;
     const places = placeGroup.features || [];
-    for (let place of places) {
+    for (const place of places) {
         if (!place.properties) {
             continue;
         }
-        let time = place.properties["time"];
+        const time = place.properties["time"];
         if (typeof time !== "string") {
             continue;
         }
@@ -237,7 +237,7 @@ export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSe
         if (Number.isNaN(utcTime)) {
             continue;
         }
-        for (let propertyName of Object.getOwnPropertyNames(place.properties)) {
+        for (const propertyName of Object.getOwnPropertyNames(place.properties)) {
             let propertyValue = place.properties[propertyName];
             const propertyType = typeof propertyValue;
             if (propertyType === "boolean") {
@@ -256,7 +256,7 @@ export function placeGroupToTimeSeries(placeGroup: PlaceGroup): PlaceGroupTimeSe
             if (timeSeriesMapping === null) {
                 timeSeriesMapping = {};
             }
-            let timeSeries = timeSeriesMapping[propertyName];
+            const timeSeries = timeSeriesMapping[propertyName];
             if (!timeSeries) {
                 timeSeriesMapping[propertyName] = {
                     source: {

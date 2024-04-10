@@ -136,7 +136,7 @@ export class Map extends React.Component<MapProps, MapState> {
         }
     }
 
-    componentDidUpdate(prevProps: Readonly<MapProps>): void {
+    componentDidUpdate(_prevProps: Readonly<MapProps>): void {
         // console.log('Map.componentDidUpdate: id =', this.props.id);
 
         const map = this.contextValue.map!;

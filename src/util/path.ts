@@ -33,7 +33,7 @@
  */
 export function buildPath(base: string, ...components: string[]): string {
     let path = base;
-    for (let c of components) {
+    for (const c of components) {
         if (c !== '') {
             if (path.endsWith('/')) {
                 if (c.startsWith('/')) {

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as Redux from 'redux';
@@ -44,7 +43,8 @@ import { appReducer } from './reducers/appReducer';
 
 Config.load().then(() => {
     const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
-    const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
+    const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
+    const store = Redux.createStore(appReducer, middlewares);
 
     store.dispatch(changeLocale(store.getState().controlState.locale) as any);
 

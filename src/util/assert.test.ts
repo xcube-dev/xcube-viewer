@@ -48,7 +48,7 @@ describe('assert', () => {
     });
 
     it('assertDefined', () => {
-        let geom: any;
+        let geom: any = undefined;
         expect(() => assertDefined(geom, "geom")).toThrowError("assertion failed: geom must not be undefined");
         geom = {};
         expect(() => assertDefined(geom, "geom")).not.toThrowError();

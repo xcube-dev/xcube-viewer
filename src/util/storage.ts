@@ -61,7 +61,7 @@ export class Storage {
     }
 
     getItem(propertyName: string, defaultValue?: any, parser?: (value: string) => any): any {
-        let value = this.nativeStorage.getItem(this.makeKey(propertyName));
+        const value = this.nativeStorage.getItem(this.makeKey(propertyName));
         if (value !== null) {
             try {
                 return parser ? parser(value): value;

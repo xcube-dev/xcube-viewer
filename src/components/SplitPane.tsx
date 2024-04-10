@@ -31,7 +31,7 @@ import withStyles from '@mui/styles/withStyles';
 import classNames from 'classnames';
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) => createStyles(
+const styles = (_theme: Theme) => createStyles(
     {
         hor: {
             display: "flex",

@@ -175,7 +175,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
         const dataset = selectedDatasetSelector(getState());
         const placeGroups = selectedDatasetSelectedPlaceGroupsSelector(getState());
         if (dataset !== null && placeGroups.length > 0) {
-            for (let placeGroup of placeGroups) {
+            for (const placeGroup of placeGroups) {
                 if (!isValidPlaceGroup(placeGroup)) {
                     const datasetId = dataset!.id;
                     const placeGroupId = placeGroup.id;

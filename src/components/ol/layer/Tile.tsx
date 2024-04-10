@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
 import { default as OlMap } from 'ol/Map';
 import { default as OlTileLayer } from 'ol/layer/Tile';
 import { default as OlTileSource } from 'ol/source/Tile';
@@ -77,7 +76,7 @@ export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
         return layer;
     }
 
-    updateMapObject(map: OlMap, layer: OlTileLayer<OlTileSource>, prevProps: Readonly<TileProps>): OlTileLayer<OlTileSource> {
+    updateMapObject(_map: OlMap, layer: OlTileLayer<OlTileSource>, prevProps: Readonly<TileProps>): OlTileLayer<OlTileSource> {
         const oldSource = layer.getSource();
         const newSource = this.props.source || null;
         if (oldSource === newSource) {
@@ -253,8 +252,8 @@ function equalTileGrids(oldTileGrid: OlTileGrid | null, newTileGrid: OlTileGrid 
             }
         }
         // Check tile range
-        let oldTileRange = oldTileGrid.getFullTileRange(z);
-        let newTileRange = newTileGrid.getFullTileRange(z);
+        const oldTileRange = oldTileGrid.getFullTileRange(z);
+        const newTileRange = newTileGrid.getFullTileRange(z);
         trace(`tile range ${z}:`, oldTileRange, newTileRange);
         if (oldTileRange && newTileRange) {
             if (oldTileRange.getWidth() !== newTileRange.getWidth()

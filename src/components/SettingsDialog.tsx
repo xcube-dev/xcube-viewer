@@ -122,7 +122,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
 
     let localeMenuItems = null;
-    if (Boolean(languageMenuAnchor)) {
+    if (languageMenuAnchor) {
         localeMenuItems = Object.getOwnPropertyNames(i18n.languages).map(langLocale => {
             const langName = i18n.languages[langLocale];
             return (
@@ -146,7 +146,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
 
     let baseMapMenuItems: null | React.ReactElement[] = null;
-    if (Boolean(baseMapMenuAnchor)) {
+    if (baseMapMenuAnchor) {
         baseMapMenuItems = [];
         maps.forEach((mapGroup: MapGroup, i: number) => {
             baseMapMenuItems!.push(<ListSubheader key={i} disableSticky={true}>{mapGroup.name}</ListSubheader>);

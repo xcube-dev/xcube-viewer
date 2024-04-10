@@ -139,19 +139,19 @@ class Splitter extends React.PureComponent<ISplitterProps, any> {
     }
 
     //noinspection JSUnusedLocalSymbols
-    private onBodyMouseUp(event: MouseEvent) {
+    private onBodyMouseUp(_event: MouseEvent) {
         // console.log("onBodyMouseUp: ", event, this);
         this.endDragging();
     }
 
     //noinspection JSUnusedLocalSymbols
-    private onBodyMouseEnter(event: MouseEvent) {
+    private onBodyMouseEnter(_event: MouseEvent) {
         // console.log("onBodyMouseEnter: ", event, this);
         this.endDragging();
     }
 
     //noinspection JSUnusedLocalSymbols
-    private onBodyMouseLeave(event: MouseEvent) {
+    private onBodyMouseLeave(_event: MouseEvent) {
         // console.log("onBodyMouseLeave: ", event, this);
         this.endDragging();
     }

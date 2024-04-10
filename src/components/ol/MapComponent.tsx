@@ -33,7 +33,7 @@ export interface MapComponentProps {
     id?: string;
 }
 
-export abstract class MapComponent<T extends OlBaseObject, P extends MapComponentProps, S = {}> extends React.PureComponent<P, S> {
+export abstract class MapComponent<T extends OlBaseObject, P extends MapComponentProps, S = unknown> extends React.PureComponent<P, S> {
     // noinspection JSUnusedGlobalSymbols
     static contextType = MapContextType;
     context: MapContext = {} as MapContext;
@@ -50,7 +50,7 @@ export abstract class MapComponent<T extends OlBaseObject, P extends MapComponen
     }
 
     getOptions(): any {
-        let options: any = {...this.props};
+        const options: any = {...this.props};
         delete options.id;
         return options;
     }

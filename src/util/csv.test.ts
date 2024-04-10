@@ -49,7 +49,7 @@ describe('Assert that csv.parseCsv()', () => {
     });
 
     it('returns empty array for only comment, newlines, and spaces', () => {
-        expect(parseCsv("  \n #what?  \n    \# bye!")).toEqual([]);
+        expect(parseCsv("  \n #what?  \n    # bye!")).toEqual([]);
     });
 });
 

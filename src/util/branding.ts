@@ -112,7 +112,7 @@ function setBrandingColor(brandingConfig: any, key: keyof Branding) {
             color = {main: rawColor};
         }
     } else if (typeof rawColor === 'object') {
-        if (rawColor.hasOwnProperty('main')) {
+        if ('main' in rawColor) {
             color = rawColor;
         }
     }

@@ -81,19 +81,19 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         return null;
     }
 
-    const handleChange = (event: Event, value: number | number[]) => {
+    const handleChange = (_event: Event, value: number | number[]) => {
         if (typeof value === 'number') {
             setSelectedTime_(value);
         }
     };
 
-    const handleChangeCommitted = (event: React.SyntheticEvent | Event, value: number | number[]) => {
+    const handleChangeCommitted = (_event: React.SyntheticEvent | Event, value: number | number[]) => {
         if (selectTime && typeof value === 'number') {
             selectTime(value as number);
         }
     };
 
-    let selectedTimeRangeValid = Array.isArray(selectedTimeRange);
+    const selectedTimeRangeValid = Array.isArray(selectedTimeRange);
     if (!selectedTimeRangeValid) {
         selectedTimeRange = [Date.now() - 2 * UNIT.years, Date.now()];
     }

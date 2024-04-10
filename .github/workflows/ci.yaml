@@ -31,8 +31,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
+      - run: npm run lint
       - run: npm run build
       - run: npm run test
-      # TODO: address following in subsequent PRs
-      #- run: npm run lint
+      # TODO: address in subsequent PR
       #- run: npm run coverage

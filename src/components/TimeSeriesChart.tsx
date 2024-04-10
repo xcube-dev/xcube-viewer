@@ -226,7 +226,7 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = (
     const handleTimeSeriesClick = (timeSeriesGroupId: string,
                                    timeSeriesIndex: number,
                                    timeSeries: TimeSeries) => {
-        if (!!selectTimeSeries) {
+        if (selectTimeSeries) {
             selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
         }
         selectPlace(timeSeries.source.placeId, places, true);
@@ -579,13 +579,13 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = (
     }
     const items = payload.map((p: Payload<number, string>, index: number) => {
         //console.log("payload:", p);
-        let {
+        const {
             name,
             value,
-            color,
             unit,
             dataKey,
         } = p;
+        let color = p.color;
         if (typeof value !== 'number') {
             return null;
         }

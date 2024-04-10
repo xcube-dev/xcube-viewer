@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
 import { createSelector } from 'reselect'
 import { default as OlMap } from 'ol/Map';
 import { default as OlGeoJSONFormat } from 'ol/format/GeoJSON';
@@ -259,7 +258,7 @@ export const selectedPlaceInfoSelector = createSelector(
         if (placeGroups.length === 0 || placeId === null) {
             return null;
         }
-        return findPlaceInfo(placeGroups, (placeGroup, place) => place.id === placeId);
+        return findPlaceInfo(placeGroups, (_placeGroup, place) => place.id === placeId);
     }
 );
 
@@ -292,8 +291,8 @@ export const canAddTimeSeriesSelector = createSelector(
         if (!datasetId || !variableName || !placeId) {
             return false;
         }
-        for (let timeSeriesGroup of timeSeriesGroups) {
-            for (let timeSeries of timeSeriesGroup.timeSeriesArray) {
+        for (const timeSeriesGroup of timeSeriesGroups) {
+            for (const timeSeries of timeSeriesGroup.timeSeriesArray) {
                 const source = timeSeries.source;
                 if (source.datasetId === datasetId
                     && source.variableName === variableName
@@ -312,7 +311,7 @@ export const timeSeriesPlaceInfosSelector = createSelector(
     (timeSeriesGroups: TimeSeriesGroup[], placeGroups: PlaceGroup[]): { [placeId: string]: PlaceInfo } => {
         const placeInfos: any = {};
         forEachPlace(placeGroups, (placeGroup, place) => {
-            for (let timeSeriesGroup of timeSeriesGroups) {
+            for (const timeSeriesGroup of timeSeriesGroups) {
                 if (timeSeriesGroup.timeSeriesArray.find(ts => ts.source.placeId === place.id)) {
                     placeInfos[place.id] = getPlaceInfo(placeGroup, place);
                     break;
@@ -418,7 +417,7 @@ function getOlXYZSource(url: string,
                         timeAnimationActive: boolean,
                         imageSmoothing: boolean,
                         tileLoadFunction: any,
-                        tileLevelMin: number | undefined,
+                        _tileLevelMin: number | undefined,
                         tileLevelMax: number | undefined) {
     return new OlXYZSource(
         {
@@ -795,7 +794,7 @@ export const visibleInfoCardElementsSelector = createSelector(
     (infoCardElementStates): string[] => {
         const visibleInfoCardElements: string[] = [];
         Object.getOwnPropertyNames(infoCardElementStates).forEach(e => {
-            if (!!infoCardElementStates[e].visible) {
+            if (infoCardElementStates[e].visible) {
                 visibleInfoCardElements.push(e);
             }
         });
@@ -845,7 +844,7 @@ export const baseMapLayerSelector = createSelector(
 );
 
 function findMap(endpoint: string): { group: MapGroup, dataset: MapSource } | null {
-    for (let group of maps) {
+    for (const group of maps) {
         const dataset = group.datasets.find(dataset => dataset.endpoint === endpoint);
         if (dataset) {
             return {group, dataset};

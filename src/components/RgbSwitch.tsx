@@ -37,7 +37,7 @@ import { WithLocale } from '../util/lang';
 
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) => createStyles(
+const styles = (_theme: Theme) => createStyles(
     {});
 
 interface RgbSwitchProps extends WithStyles<typeof styles>, WithLocale {

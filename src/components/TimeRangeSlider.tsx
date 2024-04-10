@@ -66,13 +66,13 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({classes, dataTimeRange
         setSelectedTimeRange_(selectedTimeRange);
     }, [selectedTimeRange]);
 
-    const handleChange = (event: Event, value: number | number[]) => {
+    const handleChange = (_event: Event, value: number | number[]) => {
         if (Array.isArray(value)) {
             setSelectedTimeRange_([value[0], value[1]]);
         }
     };
 
-    const handleChangeCommitted = (event: React.SyntheticEvent | Event, value: number | number[]) => {
+    const handleChangeCommitted = (_event: React.SyntheticEvent | Event, value: number | number[]) => {
         if (selectTimeRange && Array.isArray(value)) {
             selectTimeRange([value[0], value[1]]);
         }

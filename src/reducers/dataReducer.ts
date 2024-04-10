@@ -337,12 +337,12 @@ function updateVariableProps(state: DataState,
                              variableProps: Partial<Variable>) {
     const datasetIndex = state.datasets.findIndex(ds => ds.id === datasetId);
     if (datasetIndex >= 0) {
-        let dataset = state.datasets[datasetIndex];
+        const dataset = state.datasets[datasetIndex];
         const variableIndex = dataset.variables.findIndex(v => v.name === variableName);
         if (variableIndex >= 0) {
-            let variable = dataset.variables[variableIndex];
-            let datasets = state.datasets.slice();
-            let variables = dataset.variables.slice();
+            const variable = dataset.variables[variableIndex];
+            const datasets = state.datasets.slice();
+            const variables = dataset.variables.slice();
             variables[variableIndex] = {...variable, ...variableProps};
             datasets[datasetIndex] = {...dataset, variables};
             return {...state, datasets};

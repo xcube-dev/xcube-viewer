@@ -58,7 +58,7 @@ export class Select extends MapComponent<OlSelectInteraction, SelectProps> {
         return select;
     }
 
-    updateMapObject(map: OlMap, select: OlSelectInteraction, prevProps: Readonly<SelectProps>): OlSelectInteraction {
+    updateMapObject(_map: OlMap, select: OlSelectInteraction, prevProps: Readonly<SelectProps>): OlSelectInteraction {
         select.setProperties(this.getOptions());
         this.updateSelection(select);
         this.unlisten(select, prevProps);
@@ -72,7 +72,7 @@ export class Select extends MapComponent<OlSelectInteraction, SelectProps> {
     }
 
     getOptions(): OlSelectInteractionOptions {
-        let options = super.getOptions();
+        const options = super.getOptions();
         delete options['onSelect'];
         delete options['selectedFeaturesIds'];
         return options;
@@ -125,7 +125,7 @@ const OL_DEFAULT_CIRCLE_RADIUS = 5;
 const SELECT_STROKE_COLOR: OlColor = [255, 255, 0, 0.7];
 
 
-function styleFunction(feature: (OlFeature | OlRenderFeature), resolution: number) {
+function styleFunction(feature: (OlFeature | OlRenderFeature), _resolution: number) {
     // console.log('style func: properties: ', feature.getProperties());
     // console.log('style func: style: ', (feature as any).getStyle());
 
@@ -173,7 +173,7 @@ function findFeaturesByIds(map: OlMap, featureIds: FeatureId[]): (OlFeature | nu
 }
 
 function findFeatureById(map: OlMap, featureId: FeatureId): OlFeature | null {
-    for (let layer of map.getLayers().getArray()) {
+    for (const layer of map.getLayers().getArray()) {
         if (layer instanceof OlVectorLayer) {
             const vectorLayer = layer as OlVectorLayer<OlVectorSource>;
             const feature = vectorLayer.getSource()?.getFeatureById(featureId);

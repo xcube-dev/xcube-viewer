@@ -35,7 +35,7 @@ const defaults = {
     format: (value: any): string => {
         return typeof value === 'string' ? value : `${value}`;
     },
-    validate: (value: any): boolean => {
+    validate: (_value: any): boolean => {
         return true;
     },
 }

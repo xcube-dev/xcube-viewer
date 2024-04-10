@@ -56,7 +56,7 @@ export const ColorBarCanvas: React.FC<ColorBarCanvasProps> = (
     }, [colorBar, opacity]);
 
     return <>
-        {Boolean(colorBar.imageData) ? (
+        {colorBar.imageData ? (
             <canvas
                 ref={canvasRef}
                 width={width || 240}

@@ -167,13 +167,13 @@ export default function ColorBarLegend({
         setColorBarMinMaxAnchorEl(null);
     };
 
-    const handleColorBarMinMaxChange = (event: Event, value: number | number[]) => {
+    const handleColorBarMinMaxChange = (_event: Event, value: number | number[]) => {
         if (Array.isArray(value)) {
             setCurrentColorBarMinMax([value[0], value[1]]);
         }
     };
 
-    const handleColorBarMinMaxChangeCommitted = (event: Event | SyntheticEvent, value: number | number[]) => {
+    const handleColorBarMinMaxChangeCommitted = (_event: Event | SyntheticEvent, value: number | number[]) => {
         if (Array.isArray(value)) {
             updateVariableColorBar([value[0], value[1]], variableColorBarName, variableOpacity);
         }
@@ -212,7 +212,7 @@ export default function ColorBarLegend({
         );
     };
 
-    const handleVariableOpacity = (event: Event, value: number | number[]) => {
+    const handleVariableOpacity = (_event: Event, value: number | number[]) => {
         updateVariableColorBar(
             variableColorBarMinMax,
             variableColorBarName,
@@ -267,9 +267,9 @@ export default function ColorBarLegend({
         const distNorm = dist * Math.pow(10, -distExp);
 
         let numStepsInner = null;
-        for (let delta of [0.25, 0.2, 0.15, 0.125, 0.1]) {
-            let numStepsFloat = distNorm / delta;
-            let numStepsInt = Math.floor(numStepsFloat);
+        for (const delta of [0.25, 0.2, 0.15, 0.125, 0.1]) {
+            const numStepsFloat = distNorm / delta;
+            const numStepsInt = Math.floor(numStepsFloat);
             if (Math.abs(numStepsInt - numStepsFloat) < 1e-10) {
                 numStepsInner = numStepsInt;
                 break;
@@ -345,7 +345,7 @@ export default function ColorBarLegend({
     if (colorBarNameEditorOpen) {
         let key = 0;
         const entries = [];
-        for (let cbg of colorBars.groups) {
+        for (const cbg of colorBars.groups) {
             if (!cbg.names || cbg.names.length === 0) {
                 continue;
             }
@@ -356,7 +356,7 @@ export default function ColorBarLegend({
                     </Box>
                 </Tooltip>
             );
-            for (let name of cbg.names) {
+            for (const name of cbg.names) {
                 entries.push(
                     <Box
                         key={key++}

@@ -4,21 +4,18 @@
   from [create-react-app](https://create-react-app.dev/) and `yarn`
   to [vite](https://vitejs.dev/) and `npm`. (#296)
 
+TODO:
 
-## Changes in version 1.1.1
+* Allow running in `.github/workflows/ci.yaml`:   
+  - `run: npm run lint`
+  - `run: npm run coverage`
 
-### Fixes
+* Remove `"@typescript-eslint/no-explicit-any": "off"` in `.eslintrc.cjs`
+  and change code base accordingly
 
-* Fixed a crash when plotting more than 10 points on map. (#299)
+* After linting is green, set `--max-warnings 0` in
+  `"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 100"`
 
-* Fixed a crash when resizing browser window. (#301)
-
-### Other changes
-
-* Changed the development environment for the `xcube-viewer` project 
-  from [create-react-app](https://create-react-app.dev/) and `yarn`
-  to [vite](https://vitejs.dev/) and `npm`. (#296)
-  
 
 ## Changes in version 1.1.1
 
@@ -262,10 +259,8 @@
       },
       "headerIconStyle": {
         "color": "black"
-      },
-      ...
-    },
-    ...
+      }
+    }
   }
   ```
 

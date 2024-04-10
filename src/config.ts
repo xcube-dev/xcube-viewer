@@ -70,7 +70,7 @@ export class Config {
 
     static async load(): Promise<Config> {
         let configPath = appParams.get('configPath') || 'config';
-        let rawConfig = await this.loadRawConfig(configPath);
+        const rawConfig = await this.loadRawConfig(configPath);
         if (rawConfig === rawDefaultConfig) {
             configPath = '';
         }
@@ -83,7 +83,7 @@ export class Config {
             {
                 ...rawDefaultConfig.branding,
                 ...rawConfig.branding,
-                compact: compact || !!rawConfig.branding.compact
+                compact: compact || rawConfig.branding.compact
             },
             configPath
         );
@@ -103,7 +103,7 @@ export class Config {
 
     private static getAuthConfig(rawConfig: any) {
         let authClient = rawConfig.authClient && {...rawConfig.authClient};
-        let authClientFromEnv = Config.getAuthClientFromEnv();
+        const authClientFromEnv = Config.getAuthClientFromEnv();
         if (!authClient && authClientFromEnv.authority && authClientFromEnv.clientId) {
             authClient = {
                 authority: authClientFromEnv.authority,
@@ -138,7 +138,7 @@ export class Config {
 
     private static getServerConfig(rawConfig: any) {
         const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
-        let serverFromEnv = Config.getApiServerFromEnv();
+        const serverFromEnv = Config.getApiServerFromEnv();
         server.id = appParams.get('serverId') || serverFromEnv.id || server.id;
         server.name = appParams.get('serverName') || serverFromEnv.name || server.name;
         server.url = appParams.get('serverUrl') || serverFromEnv.url || server.url;

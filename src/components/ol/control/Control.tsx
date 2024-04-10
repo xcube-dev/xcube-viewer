@@ -48,12 +48,12 @@ export class Control extends MapComponent<OlControl, ControlProps> {
         return control;
     }
 
-    updateMapObject(map: OlMap, control: OlControl, prevProps: Readonly<ControlProps>): OlControl {
+    updateMapObject(_map: OlMap, control: OlControl, _prevProps: Readonly<ControlProps>): OlControl {
         return control;
     }
 
     removeMapObject(map: OlMap, control: OlControl): void {
-        for (let addedControl of map.getControls().getArray()) {
+        for (const addedControl of map.getControls().getArray()) {
             if (addedControl === control) {
                 // console.log(`Control: removing control '${this.props.id}'`);
                 map.removeControl(control);
