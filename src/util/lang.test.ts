@@ -24,6 +24,7 @@
 
 // Based on https://codeburst.io/easy-i18n-in-10-lines-of-javascript-poc-eb9e5444d71e
 
+import { expect, it, describe } from "vitest";
 import { LanguageDictionary } from './lang';
 
 

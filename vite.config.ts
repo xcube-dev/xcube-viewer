@@ -16,10 +16,24 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    setupFiles: ["src/setupTests.ts"],
     onConsoleLog: (/*_log: string, _type: "stdout" | "stderr"*/):
       | false
       | void => {
       // return false to disable logging entirely
+    },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      include: [
+        "src/actions",
+        "src/api",
+        "src/model",
+        "src/reducers",
+        "src/states",
+        "src/selectors",
+        "src/util",
+      ],
     },
   },
 });

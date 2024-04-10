@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { expect, it, describe } from "vitest";
 import { parseCsv } from "./csv";
 
 
