@@ -1,3 +1,10 @@
+## Changes in version 1.2.0 (in development)
+
+* Changed the development environment for the `xcube-viewer` project
+  from [create-react-app](https://create-react-app.dev/) and `yarn`
+  to [vite](https://vitejs.dev/) and `npm`. (#296)
+
+
 ## Changes in version 1.1.1
 
 ### Fixes
