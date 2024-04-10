@@ -24,6 +24,8 @@
 * Added brief section in `README.md` of how to update xcube with a new
   xcube-viewer build.
 
+* Renamed git default branch on GitHub from `master` into `main`. 
+
 
 ## Changes in version 1.1.0
 
