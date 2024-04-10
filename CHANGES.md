@@ -1,26 +1,31 @@
-## Changes in version 1.2.0 (in development)
-
-* Inlined the help menu into the app bar. The help icon button now opens the
-  [xcube Viewer documentation](https://xcube.readthedocs.io/en/latest/viewer.html)
-  in a new browser tab.  
-
-* No longer obtaining Roboto font from Google servers. 
-  Using the static version from 
-  [`@fontsource/roboto`](https://fontsource.org/fonts/roboto/install)
-  instead.
-
-* Updated development dependencies and updated TypeScript code base accordingly.
-  - `typescript` from v4 to v5
-  - `react-scripts` from v4 to v5
-
-* Added brief section in `README.md` of how to update xcube with a new 
-  xcube-viewer build.
+## Changes in version 1.1.1
 
 ### Fixes
 
 * Fixed a crash when plotting more than 10 points on map. (#299)
 
 * Fixed a crash when resizing browser window. (#301)
+
+### Other changes
+
+* Inlined the help menu into the app bar. The help icon button now opens the
+  [xcube Viewer documentation](https://xcube.readthedocs.io/en/latest/viewer.html)
+  in a new browser tab.
+
+* No longer obtaining Roboto font from Google servers.
+  Using the static version from
+  [`@fontsource/roboto`](https://fontsource.org/fonts/roboto/install)
+  instead.
+
+* Updated development dependencies and updated TypeScript code base accordingly.
+    - `typescript` from v4 to v5
+    - `react-scripts` from v4 to v5
+
+* Added brief section in `README.md` of how to update xcube with a new
+  xcube-viewer build.
+
+* Renamed git default branch on GitHub from `master` into `main`. 
+
 
 ## Changes in version 1.1.0
 
