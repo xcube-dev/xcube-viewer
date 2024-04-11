@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
-import { AppState } from '../states/appState';
-import UserControl from '../components/UserControl';
-import { updateAccessToken } from '../actions/userAuthActions';
-
+import { connect } from "react-redux";
+import { AppState } from "../states/appState";
+import UserControl from "../components/UserControl";
+import { updateAccessToken } from "../actions/userAuthActions";
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (_state: AppState) => {
-    return {};
+  return {};
 };
 
 const mapDispatchToProps = {
-    updateAccessToken
+  updateAccessToken,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserControl);

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -25,11 +25,11 @@
 import { MessageLogState } from "./messageLogState";
 import { DataState } from "./dataState";
 import { ControlState } from "./controlState";
-import { UserAuthState } from './userAuthState';
+import { UserAuthState } from "./userAuthState";
 
 export interface AppState {
-    dataState: DataState;
-    controlState: ControlState;
-    messageLogState: MessageLogState;
-    userAuthState: UserAuthState;
+  dataState: DataState;
+  controlState: ControlState;
+  messageLogState: MessageLogState;
+  userAuthState: UserAuthState;
 }

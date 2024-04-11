@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,60 +22,63 @@
  * SOFTWARE.
  */
 
-import i18n from '../i18n';
-import { HTTPError } from './errors';
-
+import i18n from "../i18n";
+import { HTTPError } from "./errors";
 
 export type QueryComponent = [string, string];
 
 export function makeRequestInit(accessToken: string | null): RequestInit {
-    if (accessToken) {
-        return {
-            headers: [['Authorization', `Bearer ${accessToken}`]],
-        };
-    }
-    return {};
+  if (accessToken) {
+    return {
+      headers: [["Authorization", `Bearer ${accessToken}`]],
+    };
+  }
+  return {};
 }
 
 export function makeRequestUrl(url: string, query: QueryComponent[]) {
-    if (query.length > 0) {
-        const queryString = query.map(kv => kv.map(encodeURIComponent).join('=')).join('&');
-        if (!url.includes('?')) {
-            return url + '?' + queryString;
-        } else if (!url.endsWith('&')) {
-            return url +  '&' + queryString;
-        } else {
-            return url +  queryString;
-        }
+  if (query.length > 0) {
+    const queryString = query
+      .map((kv) => kv.map(encodeURIComponent).join("="))
+      .join("&");
+    if (!url.includes("?")) {
+      return url + "?" + queryString;
+    } else if (!url.endsWith("&")) {
+      return url + "&" + queryString;
+    } else {
+      return url + queryString;
     }
-    return url;
+  }
+  return url;
 }
 
 export function callApi(url: string, init?: RequestInit): Promise<Response> {
+  if (import.meta.env.DEV) {
+    console.debug("Calling API: ", url, init);
+  }
 
-    if (import.meta.env.DEV) {
-        console.debug('Calling API: ', url, init);
-    }
-
-    return fetch(url, init)
-        .then(response => {
-            if (!response.ok) {
-                throw new HTTPError(response.status, response.statusText);
-            }
-            return response;
-        })
-        .catch(error => {
-            if (error instanceof TypeError) {
-                console.error(`Server did not respond for ${url}. `
-                              +  "May be caused by timeout, refused connection, network error, etc.", error);
-                throw new Error(i18n.get("Cannot reach server"));
-            } else {
-                console.error(error);
-                throw error;
-            }
-        });
+  return fetch(url, init)
+    .then((response) => {
+      if (!response.ok) {
+        throw new HTTPError(response.status, response.statusText);
+      }
+      return response;
+    })
+    .catch((error) => {
+      if (error instanceof TypeError) {
+        console.error(
+          `Server did not respond for ${url}. ` +
+            "May be caused by timeout, refused connection, network error, etc.",
+          error,
+        );
+        throw new Error(i18n.get("Cannot reach server"));
+      } else {
+        console.error(error);
+        throw error;
+      }
+    });
 }
 
 export function callJsonApi<T>(url: string, init?: RequestInit): Promise<T> {
-    return callApi(url, init).then(response => response.json());
+  return callApi(url, init).then((response) => response.json());
 }

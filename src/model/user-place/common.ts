@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,46 +22,44 @@
  * SOFTWARE.
  */
 
-
 export interface Format {
-    name: string;
-    fileExt: string;
-    checkError: (text: string) => string | null;
+  name: string;
+  fileExt: string;
+  checkError: (text: string) => string | null;
 }
 
-
 const WKT_GEOM_NAMES = [
-    "Point",
-    "LineString",
-    "Polygon",
-    "MultiPoint",
-    "MultiLineString",
-    "MultiPolygon",
-    "GeometryCollection",
-].map(k => k.toLowerCase());
-
+  "Point",
+  "LineString",
+  "Polygon",
+  "MultiPoint",
+  "MultiLineString",
+  "MultiPolygon",
+  "GeometryCollection",
+].map((k) => k.toLowerCase());
 
 export function detectFormatName(text: string): "csv" | "geojson" | "wkt" {
-    text = text.trim();
-    if (text === "") {
-        return "csv";
-    }
-
-    if (text[0] === "{") {
-        return "geojson";
-    }
-
-    const marker = text.substr(0, 20).toLowerCase();
-    const geomName = WKT_GEOM_NAMES.find(
-        geomName => marker.startsWith(geomName)
-            && (marker.length === geomName.length
-                || "\n\t (".indexOf(marker[geomName.length]) >= 0)
-    );
-    if (geomName) {
-        return "wkt";
-    }
-
+  text = text.trim();
+  if (text === "") {
     return "csv";
+  }
+
+  if (text[0] === "{") {
+    return "geojson";
+  }
+
+  const marker = text.substr(0, 20).toLowerCase();
+  const geomName = WKT_GEOM_NAMES.find(
+    (geomName) =>
+      marker.startsWith(geomName) &&
+      (marker.length === geomName.length ||
+        "\n\t (".indexOf(marker[geomName.length]) >= 0),
+  );
+  if (geomName) {
+    return "wkt";
+  }
+
+  return "csv";
 }
 
 /**
@@ -71,8 +69,8 @@ export function detectFormatName(text: string): "csv" | "geojson" | "wkt" {
  * @param alternatives
  */
 export function parseAlternativeNames(alternatives: string): string[] {
-    return alternatives
-        .split(',')
-        .map(s => s.trim().toLowerCase())
-        .filter(name => name !== '');
+  return alternatives
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter((name) => name !== "");
 }

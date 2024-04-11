@@ -3,7 +3,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,151 +24,155 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Theme } from '@mui/material';
-import { WithStyles } from '@mui/styles';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
-import { default as OlMap } from 'ol/Map';
+import * as React from "react";
+import { connect } from "react-redux";
+import { Theme } from "@mui/material";
+import { WithStyles } from "@mui/styles";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
+import { default as OlMap } from "ol/Map";
 
-import { AppState } from '../states/appState';
-import Viewer from './Viewer';
-import TimeSeriesCharts from './TimeSeriesCharts';
-import VolumeCard from './VolumeCard';
-import InfoCard from './InfoCard';
-import SplitPane from '../components/SplitPane';
-
+import { AppState } from "../states/appState";
+import Viewer from "./Viewer";
+import TimeSeriesCharts from "./TimeSeriesCharts";
+import VolumeCard from "./VolumeCard";
+import InfoCard from "./InfoCard";
+import SplitPane from "../components/SplitPane";
 
 // Adjust for debugging split pane style
-const mapExtraStyle: React.CSSProperties = {padding: 0};
+const mapExtraStyle: React.CSSProperties = { padding: 0 };
 
-const styles = (_theme: Theme) => createStyles(
-        {
+const styles = (_theme: Theme) =>
+  createStyles({
+    splitPaneHor: {
+      flexGrow: 1,
+      overflow: "hidden",
+    },
+    splitPaneVer: {
+      flexGrow: 1,
+      overflowX: "hidden",
+      overflowY: "auto",
+    },
 
-            splitPaneHor: {
-                flexGrow: 1,
-                overflow: 'hidden',
-            },
-            splitPaneVer: {
-                flexGrow: 1,
-                overflowX: 'hidden',
-                overflowY: 'auto'
-            },
+    mapPaneHor: {
+      height: "100%",
+      overflow: "hidden",
+      ...mapExtraStyle,
+    },
+    mapPaneVer: {
+      width: "100%",
+      overflow: "hidden",
+      ...mapExtraStyle,
+    },
 
-            mapPaneHor: {
-                height: '100%',
-                overflow: 'hidden',
-                ...mapExtraStyle
-            },
-            mapPaneVer: {
-                width: '100%',
-                overflow: 'hidden',
-                ...mapExtraStyle
-            },
+    detailsPaneHor: {
+      flex: "auto",
+      overflowX: "hidden",
+      overflowY: "auto",
+    },
+    detailsPaneVer: {
+      width: "100%",
+      overflow: "hidden",
+    },
 
-            detailsPaneHor: {
-                flex: 'auto',
-                overflowX: 'hidden',
-                overflowY: 'auto',
-            },
-            detailsPaneVer: {
-                width: '100%',
-                overflow: 'hidden',
-            },
-
-            viewerContainer: {
-                overflow: 'hidden',
-                width: '100%',
-                height: '100%',
-            },
-        });
+    viewerContainer: {
+      overflow: "hidden",
+      width: "100%",
+      height: "100%",
+    },
+  });
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
-    hasInfoCard: boolean;
-    hasVolumeCard: boolean;
-    hasTimeseries: boolean;
+  hasInfoCard: boolean;
+  hasVolumeCard: boolean;
+  hasTimeseries: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
-    const hasDatasets = state.controlState.selectedDatasetId !== null
-                        && state.dataState.datasets.length > 0;
-    return {
-        hasInfoCard: state.controlState.infoCardOpen && hasDatasets,
-        hasVolumeCard: state.controlState.volumeCardOpen && hasDatasets,
-        hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
-    };
+  const hasDatasets =
+    state.controlState.selectedDatasetId !== null &&
+    state.dataState.datasets.length > 0;
+  return {
+    hasInfoCard: state.controlState.infoCardOpen && hasDatasets,
+    hasVolumeCard: state.controlState.volumeCardOpen && hasDatasets,
+    hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
+  };
 };
 
 const mapDispatchToProps = {};
 
-
-type Layout = 'hor' | 'ver';
+type Layout = "hor" | "ver";
 const getLayout = (): Layout => {
-    return window.innerWidth / window.innerHeight >= 1 ? 'hor' : 'ver';
+  return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
 };
 
 const Workspace: React.FC<WorkspaceProps> = ({
-                                                 classes,
-                                                 hasInfoCard,
-                                                 hasVolumeCard,
-                                                 hasTimeseries
-                                             }) => {
-    const [map, setMap] = React.useState<OlMap | null>(null);
-    const [layout, setLayout] = React.useState<Layout>(getLayout());
-    const resizeObserver = React.useRef<ResizeObserver | null>(null);
-                                              
-    React.useEffect(() => {
-        updateLayout();
-        resizeObserver.current = new ResizeObserver(updateLayout);
-        resizeObserver.current.observe(document.documentElement);
+  classes,
+  hasInfoCard,
+  hasVolumeCard,
+  hasTimeseries,
+}) => {
+  const [map, setMap] = React.useState<OlMap | null>(null);
+  const [layout, setLayout] = React.useState<Layout>(getLayout());
+  const resizeObserver = React.useRef<ResizeObserver | null>(null);
 
-        return () => {
-            if (resizeObserver.current) {
-                resizeObserver.current.disconnect();
-            }
-        };
-    }, []);
+  React.useEffect(() => {
+    updateLayout();
+    resizeObserver.current = new ResizeObserver(updateLayout);
+    resizeObserver.current.observe(document.documentElement);
 
-    const updateLayout = () => {
-        setLayout(getLayout());
+    return () => {
+      if (resizeObserver.current) {
+        resizeObserver.current.disconnect();
+      }
     };
+  }, []);
 
-    function handleResize(_size: number) {
-        if (map) {
-            map.updateSize();
-        }
-    }
+  const updateLayout = () => {
+    setLayout(getLayout());
+  };
 
-    if (hasInfoCard || hasVolumeCard || hasTimeseries) {
-        const splitPaneClassName = layout === 'hor' ? classes.splitPaneHor : classes.splitPaneVer;
-        const mapPaneClassName = layout === 'hor' ? classes.mapPaneHor : classes.mapPaneVer;
-        const detailsPaneClassName = layout === 'hor' ? classes.detailsPaneHor : classes.detailsPaneVer;
-        return (
-                <SplitPane
-                        dir={layout}
-                        initialSize={Math.max(window.innerWidth, window.innerHeight) / 2}
-                        onChange={handleResize}
-                        className={splitPaneClassName}
-                        child1ClassName={mapPaneClassName}
-                        child2ClassName={detailsPaneClassName}
-                >
-                    <Viewer onMapRef={setMap}/>
-                    <div>
-                        <InfoCard/>
-                        <VolumeCard/>
-                        <TimeSeriesCharts/>
-                    </div>
-                </SplitPane>
-        );
-    } else {
-        return (
-                <div className={classes.viewerContainer}>
-                    <Viewer onMapRef={setMap}/>
-                </div>
-        );
+  function handleResize(_size: number) {
+    if (map) {
+      map.updateSize();
     }
+  }
+
+  if (hasInfoCard || hasVolumeCard || hasTimeseries) {
+    const splitPaneClassName =
+      layout === "hor" ? classes.splitPaneHor : classes.splitPaneVer;
+    const mapPaneClassName =
+      layout === "hor" ? classes.mapPaneHor : classes.mapPaneVer;
+    const detailsPaneClassName =
+      layout === "hor" ? classes.detailsPaneHor : classes.detailsPaneVer;
+    return (
+      <SplitPane
+        dir={layout}
+        initialSize={Math.max(window.innerWidth, window.innerHeight) / 2}
+        onChange={handleResize}
+        className={splitPaneClassName}
+        child1ClassName={mapPaneClassName}
+        child2ClassName={detailsPaneClassName}
+      >
+        <Viewer onMapRef={setMap} />
+        <div>
+          <InfoCard />
+          <VolumeCard />
+          <TimeSeriesCharts />
+        </div>
+      </SplitPane>
+    );
+  } else {
+    return (
+      <div className={classes.viewerContainer}>
+        <Viewer onMapRef={setMap} />
+      </div>
+    );
+  }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Workspace));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withStyles(styles)(Workspace));

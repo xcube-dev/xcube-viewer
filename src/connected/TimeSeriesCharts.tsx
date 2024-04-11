@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,42 +22,49 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import TimeSeriesCharts from '../components/TimeSeriesCharts';
-import { removeTimeSeries, removeTimeSeriesGroup, addPlaceGroupTimeSeries } from "../actions/dataActions";
-import { selectPlace, selectTime, selectTimeRange } from "../actions/controlActions";
+import { AppState } from "../states/appState";
+import TimeSeriesCharts from "../components/TimeSeriesCharts";
 import {
-    selectedDatasetTimeRangeSelector,
-    selectedPlaceGroupPlacesSelector,
-    timeSeriesPlaceInfosSelector
-} from '../selectors/controlSelectors';
+  removeTimeSeries,
+  removeTimeSeriesGroup,
+  addPlaceGroupTimeSeries,
+} from "../actions/dataActions";
+import {
+  selectPlace,
+  selectTime,
+  selectTimeRange,
+} from "../actions/controlActions";
+import {
+  selectedDatasetTimeRangeSelector,
+  selectedPlaceGroupPlacesSelector,
+  timeSeriesPlaceInfosSelector,
+} from "../selectors/controlSelectors";
 import { placeGroupTimeSeriesSelector } from "../selectors/dataSelectors";
 
-
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        timeSeriesGroups: state.dataState.timeSeriesGroups,
-        selectedTime: state.controlState.selectedTime,
-        selectedTimeRange: state.controlState.selectedTimeRange,
-        dataTimeRange: selectedDatasetTimeRangeSelector(state),
-        showPointsOnly: state.controlState.showTimeSeriesPointsOnly,
-        showErrorBars: state.controlState.showTimeSeriesErrorBars,
-        placeInfos: timeSeriesPlaceInfosSelector(state),
-        places: selectedPlaceGroupPlacesSelector(state),
-        placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
-    }
+  return {
+    locale: state.controlState.locale,
+    timeSeriesGroups: state.dataState.timeSeriesGroups,
+    selectedTime: state.controlState.selectedTime,
+    selectedTimeRange: state.controlState.selectedTimeRange,
+    dataTimeRange: selectedDatasetTimeRangeSelector(state),
+    showPointsOnly: state.controlState.showTimeSeriesPointsOnly,
+    showErrorBars: state.controlState.showTimeSeriesErrorBars,
+    placeInfos: timeSeriesPlaceInfosSelector(state),
+    places: selectedPlaceGroupPlacesSelector(state),
+    placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
+  };
 };
 
 const mapDispatchToProps = {
-    selectTime,
-    selectTimeRange,
-    removeTimeSeries,
-    removeTimeSeriesGroup,
-    selectPlace,
-    addPlaceGroupTimeSeries,
+  selectTime,
+  selectTimeRange,
+  removeTimeSeries,
+  removeTimeSeriesGroup,
+  selectPlace,
+  addPlaceGroupTimeSeries,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TimeSeriesCharts);

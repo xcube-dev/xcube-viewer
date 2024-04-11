@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,24 +22,23 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import { setRgbLayerVisibility } from '../actions/controlActions';
-import { selectedDatasetRgbSchemaSelector } from '../selectors/controlSelectors';
-import RgbSwitch from '../components/RgbSwitch';
-
+import { AppState } from "../states/appState";
+import { setRgbLayerVisibility } from "../actions/controlActions";
+import { selectedDatasetRgbSchemaSelector } from "../selectors/controlSelectors";
+import RgbSwitch from "../components/RgbSwitch";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        rgbSchema: selectedDatasetRgbSchemaSelector(state),
-        showRgbLayer: state.controlState.showRgbLayer,
-    };
+  return {
+    locale: state.controlState.locale,
+    rgbSchema: selectedDatasetRgbSchemaSelector(state),
+    showRgbLayer: state.controlState.showRgbLayer,
+  };
 };
 
 const mapDispatchToProps = {
-    setRgbLayerVisibility,
+  setRgbLayerVisibility,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RgbSwitch);

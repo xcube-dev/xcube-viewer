@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,25 +26,27 @@ import * as THREE from "three";
 import { ColorBar, formatColorBar } from "../model/colorBar";
 
 class ColorBarTextures {
+  private readonly textures: { [cmName: string]: THREE.Texture };
 
-    private readonly textures: { [cmName: string]: THREE.Texture };
+  constructor() {
+    this.textures = {};
+  }
 
-    constructor() {
-        this.textures = {};
+  get(colorBar: ColorBar, onLoad?: () => any): THREE.Texture {
+    const key = formatColorBar(colorBar);
+    let texture = this.textures[key];
+    if (!texture) {
+      // const image = new Image();
+      // loadColorBarImage(colorBar, image).then();
+      // texture = new THREE.Texture(image);
+      texture = new THREE.TextureLoader().load(
+        `data:image/png;base64,${colorBar.imageData}`,
+        onLoad,
+      );
+      this.textures[key] = texture;
     }
-
-    get(colorBar: ColorBar, onLoad?: () => any): THREE.Texture {
-        const key = formatColorBar(colorBar);
-        let texture = this.textures[key];
-        if (!texture) {
-            // const image = new Image();
-            // loadColorBarImage(colorBar, image).then();
-            // texture = new THREE.Texture(image);
-            texture = new THREE.TextureLoader().load(`data:image/png;base64,${colorBar.imageData}`, onLoad);
-            this.textures[key] = texture;
-        }
-        return texture;
-    }
+    return texture;
+  }
 }
 
 export const colorBarTextures = new ColorBarTextures();

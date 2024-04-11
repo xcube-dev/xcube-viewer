@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,18 +24,18 @@
 
 // Thanks to alexurquhart, maps.json is content of https://github.com/alexurquhart/free-tiles/blob/master/tiles.json
 // Check http://alexurquhart.github.io/free-tiles/
-import _maps from '../resources/maps.json';
+import _maps from "../resources/maps.json";
 
-export const maps = _maps as  MapGroup[];
+export const maps = _maps as MapGroup[];
 
 export interface MapGroup {
-    name: string;
-    link: string;
-    datasets: MapSource[];
-    overlays: MapSource[];
+  name: string;
+  link: string;
+  datasets: MapSource[];
+  overlays: MapSource[];
 }
 
 export interface MapSource {
-    name: string;
-    endpoint: string;
+  name: string;
+  endpoint: string;
 }

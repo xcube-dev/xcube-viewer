@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,90 +22,90 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
+import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-import { WithLocale } from '../util/lang';
+import { WithLocale } from "../util/lang";
 import { PlaceGroupTimeSeries, TimeSeries } from "../model/timeSeries";
 
-
 interface AddTimeSeriesButtonProps extends WithLocale {
-    className: string;
-    timeSeriesGroupId: string;
-    placeGroupTimeSeries: PlaceGroupTimeSeries[];
-    addPlaceGroupTimeSeries: (timeSeriesGroupId: string, timeSeries: TimeSeries) => void;
+  className: string;
+  timeSeriesGroupId: string;
+  placeGroupTimeSeries: PlaceGroupTimeSeries[];
+  addPlaceGroupTimeSeries: (
+    timeSeriesGroupId: string,
+    timeSeries: TimeSeries,
+  ) => void;
 }
 
-const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
-    {
-        className,
-        timeSeriesGroupId,
-        placeGroupTimeSeries,
-        addPlaceGroupTimeSeries
-    }
-) => {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = ({
+  className,
+  timeSeriesGroupId,
+  placeGroupTimeSeries,
+  addPlaceGroupTimeSeries,
+}) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-    const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
-    const handleMenuItemClick = (timeSeries: TimeSeries) => {
-        setAnchorEl(null);
-        addPlaceGroupTimeSeries(timeSeriesGroupId, timeSeries);
-    };
+  const handleMenuItemClick = (timeSeries: TimeSeries) => {
+    setAnchorEl(null);
+    addPlaceGroupTimeSeries(timeSeriesGroupId, timeSeries);
+  };
 
-    const menuItems: React.ReactNode[] = [];
-    placeGroupTimeSeries.forEach(pgTs => {
-        Object.getOwnPropertyNames(pgTs.timeSeries).forEach(propertyName => {
-            const menuLabel = `${pgTs.placeGroup.title} / ${propertyName}`;
-            menuItems.push(
-                <MenuItem
-                    key={menuLabel}
-                    onClick={() => handleMenuItemClick(pgTs.timeSeries[propertyName])}
-                >
-                    {menuLabel}
-                </MenuItem>
-            );
-        });
+  const menuItems: React.ReactNode[] = [];
+  placeGroupTimeSeries.forEach((pgTs) => {
+    Object.getOwnPropertyNames(pgTs.timeSeries).forEach((propertyName) => {
+      const menuLabel = `${pgTs.placeGroup.title} / ${propertyName}`;
+      menuItems.push(
+        <MenuItem
+          key={menuLabel}
+          onClick={() => handleMenuItemClick(pgTs.timeSeries[propertyName])}
+        >
+          {menuLabel}
+        </MenuItem>,
+      );
     });
+  });
 
-    const isOpen = Boolean(anchorEl);
+  const isOpen = Boolean(anchorEl);
 
-    return (
-        <>
-            <IconButton
-                size="small"
-                className={className}
-                aria-label="Add"
-                aria-controls={isOpen ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={isOpen ? 'true' : undefined}
-                onClick={handleButtonClick}
-                disabled={menuItems.length === 0}
-            >
-                <AddCircleOutlineIcon/>
-            </IconButton>
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={isOpen}
-                onClose={handleMenuClose}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
-            >
-                {menuItems}
-            </Menu>
-        </>
-    )
+  return (
+    <>
+      <IconButton
+        size="small"
+        className={className}
+        aria-label="Add"
+        aria-controls={isOpen ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={isOpen ? "true" : undefined}
+        onClick={handleButtonClick}
+        disabled={menuItems.length === 0}
+      >
+        <AddCircleOutlineIcon />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={isOpen}
+        onClose={handleMenuClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        {menuItems}
+      </Menu>
+    </>
+  );
 };
 
 export default AddTimeSeriesButton;

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,39 +22,40 @@
  * SOFTWARE.
  */
 
-import { default as OlMap } from 'ol/Map';
-import { default as OlVectorLayer } from 'ol/layer/Vector';
-import { default as OlVectorSource } from 'ol/source/Vector';
-import { Options as OlVectorLayerOptions } from 'ol/layer/BaseVector';
+import { default as OlMap } from "ol/Map";
+import { default as OlVectorLayer } from "ol/layer/Vector";
+import { default as OlVectorSource } from "ol/source/Vector";
+import { Options as OlVectorLayerOptions } from "ol/layer/BaseVector";
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 import { processLayerProperties } from "./common";
 
+interface VectorProps extends MapComponentProps, OlVectorLayerOptions<any> {}
 
-interface VectorProps extends MapComponentProps, OlVectorLayerOptions<any> {
+export class Vector extends MapComponent<
+  OlVectorLayer<OlVectorSource>,
+  VectorProps
+> {
+  addMapObject(map: OlMap): OlVectorLayer<OlVectorSource> {
+    const layer = new OlVectorLayer<OlVectorSource>(this.props);
+    map.getLayers().push(layer);
+    return layer;
+  }
+
+  updateMapObject(
+    _map: OlMap,
+    layer: OlVectorLayer<OlVectorSource>,
+    prevProps: Readonly<VectorProps>,
+  ): OlVectorLayer<OlVectorSource> {
+    // TODO: Code duplication in ./Tile.tsx
+    if (this.props.source !== prevProps.source && this.props.source) {
+      layer.setSource(this.props.source);
+    }
+    processLayerProperties(layer, prevProps, this.props);
+    return layer;
+  }
+
+  removeMapObject(map: OlMap, layer: OlVectorLayer<OlVectorSource>): void {
+    map.getLayers().remove(layer);
+  }
 }
-
-export class Vector extends MapComponent<OlVectorLayer<OlVectorSource>, VectorProps> {
-    addMapObject(map: OlMap): OlVectorLayer<OlVectorSource> {
-        const layer = new OlVectorLayer<OlVectorSource>(this.props);
-        map.getLayers().push(layer);
-        return layer;
-    }
-
-    updateMapObject(_map: OlMap,
-                    layer: OlVectorLayer<OlVectorSource>,
-                    prevProps: Readonly<VectorProps>): OlVectorLayer<OlVectorSource> {
-        // TODO: Code duplication in ./Tile.tsx
-        if (this.props.source !== prevProps.source && this.props.source) {
-            layer.setSource(this.props.source);
-        }
-        processLayerProperties(layer, prevProps, this.props);
-        return layer;
-    }
-
-    removeMapObject(map: OlMap, layer: OlVectorLayer<OlVectorSource>): void {
-        map.getLayers().remove(layer);
-    }
-}
-
-

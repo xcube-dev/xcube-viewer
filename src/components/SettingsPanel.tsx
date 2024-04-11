@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,67 +22,72 @@
  * SOFTWARE.
  */
 
-import React from 'react';
+import React from "react";
 import { Theme } from "@mui/material";
-import Typography from '@mui/material/Typography';
-import { darken, lighten } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-
+import Typography from "@mui/material/Typography";
+import { darken, lighten } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import Divider from "@mui/material/Divider";
+import List from "@mui/material/List";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 
 const useStyles = makeStyles((theme: Theme) => ({
-        settingsPanelTitle: {
-            marginBottom: theme.spacing(1),
-        },
-        settingsPanelPaper: {
-            backgroundColor: (theme.palette.mode === 'dark' ? lighten : darken)(theme.palette.background.paper, 0.1),
-            marginBottom: theme.spacing(2),
-        },
-        settingsPanelList: {
-            margin: 0,
-        },
-    }
-));
+  settingsPanelTitle: {
+    marginBottom: theme.spacing(1),
+  },
+  settingsPanelPaper: {
+    backgroundColor: (theme.palette.mode === "dark" ? lighten : darken)(
+      theme.palette.background.paper,
+      0.1,
+    ),
+    marginBottom: theme.spacing(2),
+  },
+  settingsPanelList: {
+    margin: 0,
+  },
+}));
 
 interface SettingsPanelProps {
-    title?: string;
+  title?: string;
 }
 
-export const SettingsPanel: React.FC<SettingsPanelProps> = (
-    {
-        title,
-        children
+export const SettingsPanel: React.FC<SettingsPanelProps> = ({
+  title,
+  children,
+}) => {
+  const classes = useStyles();
+
+  const childCount = React.Children.count(children);
+
+  const listItems: React.ReactNode[] = [];
+  React.Children.forEach(children, (child: React.ReactNode, index: number) => {
+    listItems.push(child);
+    if (index < childCount - 1) {
+      listItems.push(
+        <Divider key={childCount + index} variant="fullWidth" component="li" />,
+      );
     }
-) => {
-    const classes = useStyles();
+  });
 
-    const childCount = React.Children.count(children);
-
-    const listItems: React.ReactNode[] = [];
-    React.Children.forEach(children, (child: React.ReactNode, index: number) => {
-        listItems.push(child);
-        if (index < childCount - 1) {
-            listItems.push(<Divider key={childCount + index} variant="fullWidth" component="li"/>);
-        }
-    });
-
-    return (
-        <Box>
-            {title && title !== '' && (
-                <Typography variant='body1' className={classes.settingsPanelTitle}>
-                    {title}
-                </Typography>
-            )}
-            <Paper elevation={4} className={classes.settingsPanelPaper}>
-                <List component="nav" dense={true} className={classes.settingsPanelList}>
-                    {listItems}
-                </List>
-            </Paper>
-        </Box>
-    );
+  return (
+    <Box>
+      {title && title !== "" && (
+        <Typography variant="body1" className={classes.settingsPanelTitle}>
+          {title}
+        </Typography>
+      )}
+      <Paper elevation={4} className={classes.settingsPanelPaper}>
+        <List
+          component="nav"
+          dense={true}
+          className={classes.settingsPanelList}
+        >
+          {listItems}
+        </List>
+      </Paper>
+    </Box>
+  );
 };
 
 export default SettingsPanel;

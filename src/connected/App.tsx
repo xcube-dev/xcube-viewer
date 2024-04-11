@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,71 +22,78 @@
  * SOFTWARE.
  */
 
-import { adaptV4Theme, createTheme, CssBaseline, StyledEngineProvider, ThemeProvider, } from '@mui/material';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Config } from '../config';
+import {
+  adaptV4Theme,
+  createTheme,
+  CssBaseline,
+  StyledEngineProvider,
+  ThemeProvider,
+} from "@mui/material";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Config } from "../config";
 
-import { AppState } from '../states/appState';
-import AppBar from './AppBar';
-import AppPane from './AppPane';
-import LegalAgreementDialog from './LegalAgreementDialog';
-import LoadingDialog from './LoadingDialog';
-import MessageLog from './MessageLog';
+import { AppState } from "../states/appState";
+import AppBar from "./AppBar";
+import AppPane from "./AppPane";
+import LegalAgreementDialog from "./LegalAgreementDialog";
+import LoadingDialog from "./LoadingDialog";
+import MessageLog from "./MessageLog";
 import AuthWrapper from "../components/AuthWrapper";
 import ServerDialog from "./ServerDialog";
 import SettingsDialog from "./SettingsDialog";
 import ExportDialog from "./ExportDialog";
 import AddPlaceDialog from "./UserPlacesDialog";
 
-
 interface AppProps {
-    compact: boolean;
+  compact: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (_state: AppState) => {
-    return {
-        compact: Config.instance.branding.compact
-    };
+  return {
+    compact: Config.instance.branding.compact,
+  };
 };
 
 const mapDispatchToProps = {};
 
-const newTheme = () => createTheme(
+const newTheme = () =>
+  createTheme(
     adaptV4Theme({
-        typography: {
-            fontSize: 12,
-            htmlFontSize: 14,
-        },
-        palette: {
-            mode: Config.instance.branding.themeName,
-            primary: Config.instance.branding.primaryColor,
-            secondary: Config.instance.branding.secondaryColor,
-        },
-    }));
+      typography: {
+        fontSize: 12,
+        htmlFontSize: 14,
+      },
+      palette: {
+        mode: Config.instance.branding.themeName,
+        primary: Config.instance.branding.primaryColor,
+        secondary: Config.instance.branding.secondaryColor,
+      },
+    }),
+  );
 
-const App: React.FC<AppProps> = ({compact}) => {
-    return (
-        <AuthWrapper>
-            <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={newTheme()}>
-                    <CssBaseline/>
-                    {!compact && <AppBar/>}
-                    <AppPane/>
-                    <>
-                        <LoadingDialog/>
-                        <ServerDialog/>
-                        <SettingsDialog/>
-                        <ExportDialog/>
-                        <AddPlaceDialog/>
-                        <LegalAgreementDialog/>
-                        <MessageLog/>
-                    </>
-                </ThemeProvider>
-            </StyledEngineProvider>
-        </AuthWrapper>
-    );
+const App: React.FC<AppProps> = ({ compact }) => {
+  return (
+    <AuthWrapper>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={newTheme()}>
+          <CssBaseline />
+          {!compact && <AppBar />}
+          <AppPane />
+          <>
+            <LoadingDialog />
+            <ServerDialog />
+            <SettingsDialog />
+            <ExportDialog />
+            <AddPlaceDialog />
+            <LegalAgreementDialog />
+            <MessageLog />
+          </>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </AuthWrapper>
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,21 +22,20 @@
  * SOFTWARE.
  */
 
-import {callJsonApi, makeRequestInit} from './callApi';
-import {PlaceGroup} from '../model/place';
-
+import { callJsonApi, makeRequestInit } from "./callApi";
+import { PlaceGroup } from "../model/place";
 
 export function getDatasetPlaceGroup(
-    apiServerUrl: string,
-    datasetId: string,
-    placeGroupId: string,
-    accessToken: string | null
+  apiServerUrl: string,
+  datasetId: string,
+  placeGroupId: string,
+  accessToken: string | null,
 ): Promise<PlaceGroup> {
-    const init = makeRequestInit(accessToken);
-    const dsId = encodeURIComponent(datasetId);
-    const pgId = encodeURIComponent(placeGroupId);
-    return callJsonApi<PlaceGroup>(
-        `${apiServerUrl}/datasets/${dsId}/places/${pgId}`,
-        init
-    );
+  const init = makeRequestInit(accessToken);
+  const dsId = encodeURIComponent(datasetId);
+  const pgId = encodeURIComponent(placeGroupId);
+  return callJsonApi<PlaceGroup>(
+    `${apiServerUrl}/datasets/${dsId}/places/${pgId}`,
+    init,
+  );
 }

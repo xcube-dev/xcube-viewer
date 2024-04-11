@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,23 +22,26 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import LegalAgreementDialog from '../components/LegalAgreementDialog';
-import { updateSettings } from '../actions/controlActions';
-import { syncWithServer } from '../actions/dataActions';
+import { AppState } from "../states/appState";
+import LegalAgreementDialog from "../components/LegalAgreementDialog";
+import { updateSettings } from "../actions/controlActions";
+import { syncWithServer } from "../actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        open: !state.controlState.privacyNoticeAccepted,
-        settings: state.controlState,
-    };
+  return {
+    open: !state.controlState.privacyNoticeAccepted,
+    settings: state.controlState,
+  };
 };
 
 const mapDispatchToProps = {
-    updateSettings,
-    syncWithServer
+  updateSettings,
+  syncWithServer,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LegalAgreementDialog);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LegalAgreementDialog);

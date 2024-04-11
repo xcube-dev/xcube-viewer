@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,20 +22,20 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import MapInteractionsBar from '../components/MapInteractionsBar';
-import { AppState } from '../states/appState';
-import { setMapInteraction } from '../actions/controlActions';
+import MapInteractionsBar from "../components/MapInteractionsBar";
+import { AppState } from "../states/appState";
+import { setMapInteraction } from "../actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        mapInteraction: state.controlState.mapInteraction,
-    };
+  return {
+    mapInteraction: state.controlState.mapInteraction,
+  };
 };
 
 const mapDispatchToProps = {
-    setMapInteraction,
+  setMapInteraction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapInteractionsBar);

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,28 +22,30 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 import VariableSelect from "../components/VariableSelect";
-import { AppState } from '../states/appState';
+import { AppState } from "../states/appState";
 import { addTimeSeries } from "../actions/dataActions";
-import { selectVariable } from '../actions/controlActions';
-import { canAddTimeSeriesSelector, selectedDatasetVariablesSelector } from '../selectors/controlSelectors';
-
+import { selectVariable } from "../actions/controlActions";
+import {
+  canAddTimeSeriesSelector,
+  selectedDatasetVariablesSelector,
+} from "../selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
+  return {
+    locale: state.controlState.locale,
 
-        selectedVariableName: state.controlState.selectedVariableName,
-        canAddTimeSeries: canAddTimeSeriesSelector(state),
-        variables: selectedDatasetVariablesSelector(state),
-    };
+    selectedVariableName: state.controlState.selectedVariableName,
+    canAddTimeSeries: canAddTimeSeriesSelector(state),
+    variables: selectedDatasetVariablesSelector(state),
+  };
 };
 
 const mapDispatchToProps = {
-    selectVariable,
-    addTimeSeries,
+  selectVariable,
+  addTimeSeries,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VariableSelect);

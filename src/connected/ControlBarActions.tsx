@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,37 +22,39 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import ControlBarActions from '../components/ControlBarActions';
+import { AppState } from "../states/appState";
+import ControlBarActions from "../components/ControlBarActions";
 import {
-    flyToSelectedObject,
-    openDialog,
-    showInfoCard,
-    showVolumeCard,
-} from '../actions/controlActions';
-import { Config } from '../config';
-import { updateResources } from '../actions/dataActions';
+  flyToSelectedObject,
+  openDialog,
+  showInfoCard,
+  showVolumeCard,
+} from "../actions/controlActions";
+import { Config } from "../config";
+import { updateResources } from "../actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        visible: !!(state.controlState.selectedDatasetId || state.controlState.selectedPlaceId),
-        volumeCardOpen: state.controlState.volumeCardOpen,
-        infoCardOpen: state.controlState.infoCardOpen,
-        timeSeriesGroups: state.dataState.timeSeriesGroups,
-        compact: Config.instance.branding.compact,
-        allowRefresh: Config.instance.branding.allowRefresh,
-    }
+  return {
+    locale: state.controlState.locale,
+    visible: !!(
+      state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
+    ),
+    volumeCardOpen: state.controlState.volumeCardOpen,
+    infoCardOpen: state.controlState.infoCardOpen,
+    timeSeriesGroups: state.dataState.timeSeriesGroups,
+    compact: Config.instance.branding.compact,
+    allowRefresh: Config.instance.branding.allowRefresh,
+  };
 };
 
 const mapDispatchToProps = {
-    showVolumeCard,
-    showInfoCard,
-    flyToSelectedObject,
-    openDialog,
-    updateResources,
+  showVolumeCard,
+  showInfoCard,
+  flyToSelectedObject,
+  openDialog,
+  updateResources,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);

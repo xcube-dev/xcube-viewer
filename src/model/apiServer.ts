@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,18 +23,15 @@
  */
 
 export interface ApiServerConfig {
-    id: string;
-    name: string;
-    url: string;
+  id: string;
+  name: string;
+  url: string;
 }
 
 export interface ApiServerInfo {
-    name: string;
-    description: string;
-    version: string;
-    configTime: string;
-    serverTime: string;
+  name: string;
+  description: string;
+  version: string;
+  configTime: string;
+  serverTime: string;
 }
-
-
-

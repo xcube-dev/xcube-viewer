@@ -1,28 +1,28 @@
 @keyframes hint {
-    0%,
-    100% {
-        opacity: 20%;
-    }
-    10% {
-        opacity: 100%;
-    }
-    90% {
-        opacity: 100%;
-    }
+  0%,
+  100% {
+    opacity: 20%;
+  }
+  10% {
+    opacity: 100%;
+  }
+  90% {
+    opacity: 100%;
+  }
 }
 
 .hint_wrap {
-    animation: hint 4s linear none;
-    opacity: 20%;
-    transition: all .3s ease-in-out;
+  animation: hint 4s linear none;
+  opacity: 20%;
+  transition: all 0.3s ease-in-out;
 
-    color: orange;
-    position: absolute;
-    bottom: 8px;
-    right: 16px;
-    z-index: 10;
+  color: orange;
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+  z-index: 10;
 }
 
 .hint_wrap:hover {
-    opacity: 100%;
+  opacity: 100%;
 }

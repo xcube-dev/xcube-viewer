@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,45 +26,51 @@ import { AppState } from "../states/appState";
 import { createSelector } from "reselect";
 import { Dataset } from "../model/dataset";
 import { PlaceGroup } from "../model/place";
-import { PlaceGroupTimeSeries, placeGroupToTimeSeries } from "../model/timeSeries";
+import {
+  PlaceGroupTimeSeries,
+  placeGroupToTimeSeries,
+} from "../model/timeSeries";
 
-export const datasetsSelector = (state: AppState) => state.dataState.datasets || [];
+export const datasetsSelector = (state: AppState) =>
+  state.dataState.datasets || [];
 export const colorBarsSelector = (state: AppState) => state.dataState.colorBars;
-export const timeSeriesGroupsSelector = (state: AppState) => state.dataState.timeSeriesGroups;
-export const userPlaceGroupsSelector = (state: AppState) => state.dataState.userPlaceGroups;
-export const userServersSelector = (state: AppState) => state.dataState.userServers || [];
+export const timeSeriesGroupsSelector = (state: AppState) =>
+  state.dataState.timeSeriesGroups;
+export const userPlaceGroupsSelector = (state: AppState) =>
+  state.dataState.userPlaceGroups;
+export const userServersSelector = (state: AppState) =>
+  state.dataState.userServers || [];
 
 export const placeGroupsSelector = createSelector(
-    datasetsSelector,
-    userPlaceGroupsSelector,
-    (datasets: Dataset[], userPlaceGroups: PlaceGroup[]): PlaceGroup[] => {
-        const placeGroups: any = {};
-        const datasetPlaceGroups: PlaceGroup[] = [];
-        datasets.forEach(dataset => {
-            if (dataset.placeGroups) {
-                dataset.placeGroups.forEach(placeGroup => {
-                    if (!placeGroups[placeGroup.id]) {
-                        placeGroups[placeGroup.id] = placeGroup;
-                        datasetPlaceGroups.push(placeGroup);
-                    }
-                });
-            }
+  datasetsSelector,
+  userPlaceGroupsSelector,
+  (datasets: Dataset[], userPlaceGroups: PlaceGroup[]): PlaceGroup[] => {
+    const placeGroups: any = {};
+    const datasetPlaceGroups: PlaceGroup[] = [];
+    datasets.forEach((dataset) => {
+      if (dataset.placeGroups) {
+        dataset.placeGroups.forEach((placeGroup) => {
+          if (!placeGroups[placeGroup.id]) {
+            placeGroups[placeGroup.id] = placeGroup;
+            datasetPlaceGroups.push(placeGroup);
+          }
         });
-        return [...datasetPlaceGroups, ...userPlaceGroups];
-    }
+      }
+    });
+    return [...datasetPlaceGroups, ...userPlaceGroups];
+  },
 );
 
 export const placeGroupTimeSeriesSelector = createSelector(
-    placeGroupsSelector,
-    (placeGroups: PlaceGroup[]): PlaceGroupTimeSeries[] => {
-        const placeGroupTimeSeries: PlaceGroupTimeSeries[] = [];
-        placeGroups.forEach(placeGroup => {
-            const timeSeries = placeGroupToTimeSeries(placeGroup);
-            if (timeSeries !== null) {
-                placeGroupTimeSeries.push(timeSeries);
-            }
-        });
-        return placeGroupTimeSeries;
-    }
+  placeGroupsSelector,
+  (placeGroups: PlaceGroup[]): PlaceGroupTimeSeries[] => {
+    const placeGroupTimeSeries: PlaceGroupTimeSeries[] = [];
+    placeGroups.forEach((placeGroup) => {
+      const timeSeries = placeGroupToTimeSeries(placeGroup);
+      if (timeSeries !== null) {
+        placeGroupTimeSeries.push(timeSeries);
+      }
+    });
+    return placeGroupTimeSeries;
+  },
 );
-

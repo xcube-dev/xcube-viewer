@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,87 +22,84 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { WithStyles } from '@mui/styles';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
+import * as React from "react";
+import { Theme } from "@mui/material/styles";
+import { WithStyles } from "@mui/styles";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
 
-import i18n from '../i18n';
-import { Dataset } from '../model/dataset';
-import { WithLocale } from '../util/lang';
-import ControlBarItem from './ControlBarItem';
+import i18n from "../i18n";
+import { Dataset } from "../model/dataset";
+import { WithLocale } from "../util/lang";
+import ControlBarItem from "./ControlBarItem";
 
-
-const styles = (theme: Theme) => createStyles(
-    {
-        formControl: {
-            marginRight: theme.spacing(2),
-            marginBottom: theme.spacing(1),
-            minWidth: 120,
-        },
-        selectEmpty: {},
-    });
+const styles = (theme: Theme) =>
+  createStyles({
+    formControl: {
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {},
+  });
 
 interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
-    selectedDatasetId: string | null;
-    datasets: Dataset[];
-    selectDataset: (datasetId: string | null, datasets: Dataset[], showInMap: boolean) => void;
+  selectedDatasetId: string | null;
+  datasets: Dataset[];
+  selectDataset: (
+    datasetId: string | null,
+    datasets: Dataset[],
+    showInMap: boolean,
+  ) => void;
 }
 
 const DatasetSelect: React.FC<DatasetSelectProps> = ({
-                                                         classes,
-                                                         selectedDatasetId,
-                                                         datasets,
-                                                         selectDataset,
-                                                     }) => {
+  classes,
+  selectedDatasetId,
+  datasets,
+  selectDataset,
+}) => {
+  const handleDatasetChange = (event: SelectChangeEvent) => {
+    const datasetId = event.target.value || null;
+    selectDataset(datasetId, datasets, true);
+  };
 
-    const handleDatasetChange = (event: SelectChangeEvent) => {
-        const datasetId = event.target.value || null;
-        selectDataset(datasetId, datasets, true);
-    };
+  selectedDatasetId = selectedDatasetId || "";
+  datasets = datasets || [];
 
-    selectedDatasetId = selectedDatasetId || '';
-    datasets = datasets || [];
+  const datasetSelectLabel = (
+    <InputLabel shrink htmlFor="dataset-select">
+      {i18n.get("Dataset")}
+    </InputLabel>
+  );
 
-    const datasetSelectLabel = (
-        <InputLabel shrink htmlFor="dataset-select">
-            {i18n.get('Dataset')}
-        </InputLabel>
-    );
+  const datasetSelect = (
+    <Select
+      variant="standard"
+      value={selectedDatasetId}
+      onChange={handleDatasetChange}
+      input={<Input name="dataset" id="dataset-select" />}
+      displayEmpty
+      name="dataset"
+      className={classes.selectEmpty}
+    >
+      {datasets.map((dataset) => (
+        <MenuItem
+          key={dataset.id}
+          value={dataset.id}
+          selected={dataset.id === selectedDatasetId}
+        >
+          {dataset.title}
+        </MenuItem>
+      ))}
+    </Select>
+  );
 
-    const datasetSelect = (
-        <Select
-            variant="standard"
-            value={selectedDatasetId}
-            onChange={handleDatasetChange}
-            input={<Input name="dataset" id="dataset-select"/>}
-            displayEmpty
-            name="dataset"
-            className={classes.selectEmpty}>
-            {datasets.map(dataset => (
-                <MenuItem
-                    key={dataset.id}
-                    value={dataset.id}
-                    selected={dataset.id === selectedDatasetId}
-                >
-                    {dataset.title}
-                </MenuItem>
-            ))}
-        </Select>
-    );
-
-    return (
-        <ControlBarItem
-            label={datasetSelectLabel}
-            control={datasetSelect}
-        />
-    );
+  return <ControlBarItem label={datasetSelectLabel} control={datasetSelect} />;
 };
 
 export default withStyles(styles)(DatasetSelect);
-

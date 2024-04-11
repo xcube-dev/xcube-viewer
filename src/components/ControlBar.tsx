@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,34 +22,33 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { Theme } from '@mui/material/styles';
+import * as React from "react";
+import { Theme } from "@mui/material/styles";
 
-import { WithStyles } from '@mui/styles';
-import withStyles from '@mui/styles/withStyles';
-import createStyles from '@mui/styles/createStyles';
+import { WithStyles } from "@mui/styles";
+import withStyles from "@mui/styles/withStyles";
+import createStyles from "@mui/styles/createStyles";
 
-const styles = (theme: Theme) => createStyles(
-    {
-        form: {
-            display: 'flex',
-            flexWrap: 'wrap',
-            paddingTop: theme.spacing(1),
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-            flexGrow: 0,
-        },
-    });
+const styles = (theme: Theme) =>
+  createStyles({
+    form: {
+      display: "flex",
+      flexWrap: "wrap",
+      paddingTop: theme.spacing(1),
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      flexGrow: 0,
+    },
+  });
 
-interface ControlBarProps extends WithStyles<typeof styles> {
-}
+interface ControlBarProps extends WithStyles<typeof styles> {}
 
-const _ControlBar: React.FC<ControlBarProps> = ({classes, children}) => {
-    return (
-        <form className={classes.form} autoComplete="off">
-            {children}
-        </form>
-    );
+const _ControlBar: React.FC<ControlBarProps> = ({ classes, children }) => {
+  return (
+    <form className={classes.form} autoComplete="off">
+      {children}
+    </form>
+  );
 };
 
 const ControlBar = withStyles(styles)(_ControlBar);

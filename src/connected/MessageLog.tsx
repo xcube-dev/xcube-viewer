@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,23 +22,22 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import MessageLog from '../components/MessageLog';
-import { hideMessage } from '../actions/messageLogActions';
-
+import { AppState } from "../states/appState";
+import MessageLog from "../components/MessageLog";
+import { hideMessage } from "../actions/messageLogActions";
 
 const mapStateToProps = (state: AppState) => {
-    const newEntries = state.messageLogState.newEntries;
-    return {
-        locale: state.controlState.locale,
-        message: newEntries.length > 0 ? newEntries[0] : null,
-    };
+  const newEntries = state.messageLogState.newEntries;
+  return {
+    locale: state.controlState.locale,
+    message: newEntries.length > 0 ? newEntries[0] : null,
+  };
 };
 
 const mapDispatchToProps = {
-    hideMessage,
+  hideMessage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessageLog);

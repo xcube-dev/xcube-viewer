@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,34 +22,33 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 import PlaceSelect from "../components/PlaceSelect";
-import { AppState } from '../states/appState';
+import { AppState } from "../states/appState";
 import { renameUserPlace, removeUserPlace } from "../actions/dataActions";
-import { selectPlace, openDialog } from '../actions/controlActions';
+import { selectPlace, openDialog } from "../actions/controlActions";
 import {
-    selectedPlaceGroupPlacesSelector,
-    selectedPlaceGroupPlaceLabelsSelector
-} from '../selectors/controlSelectors';
-
+  selectedPlaceGroupPlacesSelector,
+  selectedPlaceGroupPlaceLabelsSelector,
+} from "../selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        datasets: state.dataState.datasets,
-        selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
-        selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedPlaceGroupPlacesSelector(state),
-        placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
-    };
+  return {
+    locale: state.controlState.locale,
+    datasets: state.dataState.datasets,
+    selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
+    selectedPlaceId: state.controlState.selectedPlaceId,
+    places: selectedPlaceGroupPlacesSelector(state),
+    placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
+  };
 };
 
 const mapDispatchToProps = {
-    selectPlace,
-    renameUserPlace,
-    removeUserPlace,
-    openDialog,
+  selectPlace,
+  renameUserPlace,
+  removeUserPlace,
+  openDialog,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlaceSelect);

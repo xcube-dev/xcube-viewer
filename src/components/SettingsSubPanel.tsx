@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,58 +22,52 @@
  * SOFTWARE.
  */
 
-import React from 'react';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-
+import React from "react";
+import ListItemText from "@mui/material/ListItemText";
+import ListItem from "@mui/material/ListItem";
+import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 
 interface SettingsSubPanelProps {
-    label: string;
-    value?: string | number;
-    onClick?: (event: any) => void;
+  label: string;
+  value?: string | number;
+  onClick?: (event: any) => void;
 }
 
-const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (
-    {
-        label,
-        value,
-        onClick,
-        children,
-    }
-) => {
+const SettingsSubPanel: React.FC<SettingsSubPanelProps> = ({
+  label,
+  value,
+  onClick,
+  children,
+}) => {
+  let listItemStyle;
+  if (!value) {
+    listItemStyle = { marginBottom: 10 };
+  }
 
-    let listItemStyle;
-    if (!value) {
-        listItemStyle = {marginBottom: 10};
-    }
+  const listItemText = <ListItemText primary={label} secondary={value} />;
 
-    const listItemText = (<ListItemText primary={label} secondary={value}/>);
-
-    let listItemSecondaryAction;
-    if (children) {
-        listItemSecondaryAction = (
-            <ListItemSecondaryAction>
-                {children}
-            </ListItemSecondaryAction>
-        );
-    }
-
-    if (onClick) {
-        return (
-            <ListItem style={listItemStyle} button onClick={onClick}>
-                {listItemText}
-                {listItemSecondaryAction}
-            </ListItem>
-        );
-    }
-
-    return (
-        <ListItem style={listItemStyle}>
-            {listItemText}
-            {listItemSecondaryAction}
-        </ListItem>
+  let listItemSecondaryAction;
+  if (children) {
+    listItemSecondaryAction = (
+      <ListItemSecondaryAction>{children}</ListItemSecondaryAction>
     );
+  }
+
+  if (onClick) {
+    return (
+      <ListItem style={listItemStyle} button onClick={onClick}>
+        {listItemText}
+        {listItemSecondaryAction}
+      </ListItem>
+    );
+  }
+
+  return (
+    <ListItem style={listItemStyle}>
+      {listItemText}
+      {listItemSecondaryAction}
+    </ListItem>
+  );
 };
 
 export default SettingsSubPanel;

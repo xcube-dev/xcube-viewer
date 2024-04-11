@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,34 +23,42 @@
  */
 
 import { expect, it, describe } from "vitest";
-import { render } from '@testing-library/react';
-import ErrorBoundary from './ErrorBoundary';
+import { render } from "@testing-library/react";
+import ErrorBoundary from "./ErrorBoundary";
 
 function MyWidget(props: { name: string | null }) {
-    if (!props.name) {
-        throw new Error('Oh no!');
-    }
-    return <div className="myWidget">{`Hi ${props.name}!`}</div>;
+  if (!props.name) {
+    throw new Error("Oh no!");
+  }
+  return <div className="myWidget">{`Hi ${props.name}!`}</div>;
 }
 
-describe('ErrorBoundary', () => {
-    it('renders the child if child does not throw', () => {
-        const {getByText} = render(<ErrorBoundary><MyWidget name="Bibo"/></ErrorBoundary>);
-        const element = getByText(/Hi Bibo!/i);
-        expect(element).toBeInTheDocument();
-    });
+describe("ErrorBoundary", () => {
+  it("renders the child if child does not throw", () => {
+    const { getByText } = render(
+      <ErrorBoundary>
+        <MyWidget name="Bibo" />
+      </ErrorBoundary>,
+    );
+    const element = getByText(/Hi Bibo!/i);
+    expect(element).toBeInTheDocument();
+  });
 
-    it('renders the correct text when a child throws', () => {
-        const {getByText} = render(<ErrorBoundary><MyWidget name={null}/></ErrorBoundary>);
-        const element1 = getByText(/Something went wrong/i);
-        expect(element1).toBeInTheDocument();
-        const element2 = getByText(/Oh no/i);
-        expect(element2).toBeInTheDocument();
-    });
+  it("renders the correct text when a child throws", () => {
+    const { getByText } = render(
+      <ErrorBoundary>
+        <MyWidget name={null} />
+      </ErrorBoundary>,
+    );
+    const element1 = getByText(/Something went wrong/i);
+    expect(element1).toBeInTheDocument();
+    const element2 = getByText(/Oh no/i);
+    expect(element2).toBeInTheDocument();
+  });
 
-    it('throws when no children given', () => {
-        expect(() => {
-            render(<ErrorBoundary/>);
-        }).toThrow();
-    });
+  it("throws when no children given", () => {
+    expect(() => {
+      render(<ErrorBoundary />);
+    }).toThrow();
+  });
 });

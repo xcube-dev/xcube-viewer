@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,50 +22,63 @@
  * SOFTWARE.
  */
 
-import { default as OlMap } from 'ol/Map';
-import { Geometry as OlGeometry } from 'ol/geom';
-import { Extent as OlExtent } from 'ol/extent';
-import { transformExtent as olProjTransformExtent } from 'ol/proj';
-import { default as OlSimpleGeometry } from 'ol/geom/SimpleGeometry';
-import { GEOGRAPHIC_CRS } from '../model/proj';
-import { MAP_OBJECTS } from '../states/controlState';
-
+import { default as OlMap } from "ol/Map";
+import { Geometry as OlGeometry } from "ol/geom";
+import { Extent as OlExtent } from "ol/extent";
+import { transformExtent as olProjTransformExtent } from "ol/proj";
+import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
+import { GEOGRAPHIC_CRS } from "../model/proj";
+import { MAP_OBJECTS } from "../states/controlState";
 
 // noinspection JSUnusedLocalSymbols
-export function renameUserPlaceInLayer(placeGroupId: string, _placeId: string, _newName: string) {
-    if (MAP_OBJECTS[placeGroupId]) {
-        // const userLayer = MAP_OBJECTS[placeGroupId] as OlVectorLayer;
-        // const source = userLayer.getSource();
-        // TODO (forman): update feature source in user layer to reflect newName.
-        //  Note, this is not yet an issue, because we still don't show user places labels
-        //  in the viewer.
-    }
+export function renameUserPlaceInLayer(
+  placeGroupId: string,
+  _placeId: string,
+  _newName: string,
+) {
+  if (MAP_OBJECTS[placeGroupId]) {
+    // const userLayer = MAP_OBJECTS[placeGroupId] as OlVectorLayer;
+    // const source = userLayer.getSource();
+    // TODO (forman): update feature source in user layer to reflect newName.
+    //  Note, this is not yet an issue, because we still don't show user places labels
+    //  in the viewer.
+  }
 }
 
-export function flyToLocation(mapId: string, location: OlGeometry | OlExtent | null) {
-    if (MAP_OBJECTS[mapId]) {
-        const map = MAP_OBJECTS[mapId] as OlMap;
-        const flyToCurr = location;
-        if (flyToCurr !== null) {
-            const projection = map.getView().getProjection();
-            let flyToTarget;
-            // noinspection JSDeprecatedSymbols
-            if (Array.isArray(flyToCurr)) {
-                // Fly to extent (bounding box)
-                flyToTarget = olProjTransformExtent(flyToCurr as OlExtent, GEOGRAPHIC_CRS, projection);
-                map.getView().fit(flyToTarget, {size: map.getSize()});
-            } else {
-                // Transform Geometry object
-                flyToTarget = flyToCurr.transform(GEOGRAPHIC_CRS, projection) as OlSimpleGeometry;
-                if (flyToTarget.getType() === 'Point') {
-                    // Points don't zoom. Just reset map center.
-                    // Not ideal, but better than zooming in too deep (see #54)
-                    map.getView().setCenter(flyToTarget.getFirstCoordinate());
-                } else {
-                    // Fly to shape
-                    map.getView().fit(flyToTarget, {size: map.getSize()});
-                }
-            }
+export function flyToLocation(
+  mapId: string,
+  location: OlGeometry | OlExtent | null,
+) {
+  if (MAP_OBJECTS[mapId]) {
+    const map = MAP_OBJECTS[mapId] as OlMap;
+    const flyToCurr = location;
+    if (flyToCurr !== null) {
+      const projection = map.getView().getProjection();
+      let flyToTarget;
+      // noinspection JSDeprecatedSymbols
+      if (Array.isArray(flyToCurr)) {
+        // Fly to extent (bounding box)
+        flyToTarget = olProjTransformExtent(
+          flyToCurr as OlExtent,
+          GEOGRAPHIC_CRS,
+          projection,
+        );
+        map.getView().fit(flyToTarget, { size: map.getSize() });
+      } else {
+        // Transform Geometry object
+        flyToTarget = flyToCurr.transform(
+          GEOGRAPHIC_CRS,
+          projection,
+        ) as OlSimpleGeometry;
+        if (flyToTarget.getType() === "Point") {
+          // Points don't zoom. Just reset map center.
+          // Not ideal, but better than zooming in too deep (see #54)
+          map.getView().setCenter(flyToTarget.getFirstCoordinate());
+        } else {
+          // Fly to shape
+          map.getView().fit(flyToTarget, { size: map.getSize() });
         }
+      }
     }
+  }
 }

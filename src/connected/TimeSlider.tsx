@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,27 +22,26 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import TimeSlider from '../components/TimeSlider';
-import { selectTime, selectTimeRange } from '../actions/controlActions';
-import { selectedDatasetTimeDimensionSelector } from '../selectors/controlSelectors';
-
+import { AppState } from "../states/appState";
+import TimeSlider from "../components/TimeSlider";
+import { selectTime, selectTimeRange } from "../actions/controlActions";
+import { selectedDatasetTimeDimensionSelector } from "../selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
+  return {
+    locale: state.controlState.locale,
 
-        hasTimeDimension: !!selectedDatasetTimeDimensionSelector(state),
-        selectedTime: state.controlState.selectedTime,
-        selectedTimeRange: state.controlState.selectedTimeRange,
-    };
+    hasTimeDimension: !!selectedDatasetTimeDimensionSelector(state),
+    selectedTime: state.controlState.selectedTime,
+    selectedTimeRange: state.controlState.selectedTimeRange,
+  };
 };
 
 const mapDispatchToProps = {
-    selectTime,
-    selectTimeRange,
+  selectTime,
+  selectTimeRange,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TimeSlider);

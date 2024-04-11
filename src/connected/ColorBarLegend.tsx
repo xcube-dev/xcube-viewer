@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,35 +22,34 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
+import { AppState } from "../states/appState";
 import {
-    selectedVariableNameSelector,
-    selectedVariableUnitsSelector,
-    selectedVariableColorBarNameSelector,
-    selectedVariableColorBarMinMaxSelector,
-    selectedVariableOpacitySelector,
-    selectedVariableColorBarSelector,
-} from '../selectors/controlSelectors';
-import { updateVariableColorBar } from '../actions/dataActions';
-import ColorBarLegend from '../components/ColorBarLegend';
-
+  selectedVariableNameSelector,
+  selectedVariableUnitsSelector,
+  selectedVariableColorBarNameSelector,
+  selectedVariableColorBarMinMaxSelector,
+  selectedVariableOpacitySelector,
+  selectedVariableColorBarSelector,
+} from "../selectors/controlSelectors";
+import { updateVariableColorBar } from "../actions/dataActions";
+import ColorBarLegend from "../components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        variableName: selectedVariableNameSelector(state),
-        variableUnits: selectedVariableUnitsSelector(state),
-        variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),
-        variableColorBarName: selectedVariableColorBarNameSelector(state),
-        variableColorBar: selectedVariableColorBarSelector(state),
-        variableOpacity: selectedVariableOpacitySelector(state),
-        colorBars: state.dataState.colorBars,
-    }
+  return {
+    variableName: selectedVariableNameSelector(state),
+    variableUnits: selectedVariableUnitsSelector(state),
+    variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),
+    variableColorBarName: selectedVariableColorBarNameSelector(state),
+    variableColorBar: selectedVariableColorBarSelector(state),
+    variableOpacity: selectedVariableOpacitySelector(state),
+    colorBars: state.dataState.colorBars,
+  };
 };
 
 const mapDispatchToProps = {
-    updateVariableColorBar,
+  updateVariableColorBar,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ColorBarLegend);

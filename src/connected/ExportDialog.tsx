@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,26 +22,25 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import ExportDialog from '../components/ExportDialog';
-import { closeDialog, updateSettings } from '../actions/controlActions';
-import { exportData } from '../actions/dataActions';
-
+import { AppState } from "../states/appState";
+import ExportDialog from "../components/ExportDialog";
+import { closeDialog, updateSettings } from "../actions/controlActions";
+import { exportData } from "../actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        open: Boolean(state.controlState.dialogOpen['export']),
-        settings: state.controlState,
-    };
+  return {
+    locale: state.controlState.locale,
+    open: Boolean(state.controlState.dialogOpen["export"]),
+    settings: state.controlState,
+  };
 };
 
 const mapDispatchToProps = {
-    closeDialog,
-    updateSettings,
-    downloadTimeSeries: exportData,
+  closeDialog,
+  updateSettings,
+  downloadTimeSeries: exportData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportDialog);

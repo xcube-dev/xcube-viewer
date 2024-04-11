@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,40 +22,43 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { MouseEvent } from 'react';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-
+import * as React from "react";
+import { MouseEvent } from "react";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 interface ToolButtonProps {
-    icon: React.ReactElement;
-    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
-    disabled?: boolean;
-    tooltipText?: string;
-    className?: string;
+  icon: React.ReactElement;
+  onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  tooltipText?: string;
+  className?: string;
 }
 
-const ToolButton: React.FC<ToolButtonProps> = (
-    {
-        className,
-        disabled,
-        onClick,
-        icon,
-        tooltipText
-    }
-) => {
-    const iconComp = tooltipText ? (<Tooltip arrow title={tooltipText}>{icon}</Tooltip>) : icon;
-    return (
-        <IconButton
-            className={className}
-            disabled={disabled}
-            onClick={onClick}
-            size="small"
-        >
-            {iconComp}
-        </IconButton>
-    );
+const ToolButton: React.FC<ToolButtonProps> = ({
+  className,
+  disabled,
+  onClick,
+  icon,
+  tooltipText,
+}) => {
+  const iconComp = tooltipText ? (
+    <Tooltip arrow title={tooltipText}>
+      {icon}
+    </Tooltip>
+  ) : (
+    icon
+  );
+  return (
+    <IconButton
+      className={className}
+      disabled={disabled}
+      onClick={onClick}
+      size="small"
+    >
+      {iconComp}
+    </IconButton>
+  );
 };
 
 export default ToolButton;

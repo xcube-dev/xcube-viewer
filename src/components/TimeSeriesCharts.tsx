@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,125 +22,134 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { WithStyles } from '@mui/styles';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
-import { Theme } from '@mui/material';
+import * as React from "react";
+import { WithStyles } from "@mui/styles";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
+import { Theme } from "@mui/material";
 
-import { WithLocale } from '../util/lang';
-import TimeSeriesChart from './TimeSeriesChart';
-import { PlaceGroupTimeSeries, Time, TimeRange, TimeSeries, TimeSeriesGroup } from '../model/timeSeries';
-import { Place, PlaceInfo } from '../model/place';
-import TimeRangeSlider from './TimeRangeSlider';
-
+import { WithLocale } from "../util/lang";
+import TimeSeriesChart from "./TimeSeriesChart";
+import {
+  PlaceGroupTimeSeries,
+  Time,
+  TimeRange,
+  TimeSeries,
+  TimeSeriesGroup,
+} from "../model/timeSeries";
+import { Place, PlaceInfo } from "../model/place";
+import TimeRangeSlider from "./TimeRangeSlider";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) => createStyles(
-    {
-        chartContainer: {
-            display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'wrap',
-            flexFlow: 'flex-start',
-            alignItems: 'center',
-        },
-        noChartsCard: {
-            width: '20em',
-        },
-        noChartsTitle: {
-            fontSize: 14,
-        },
-    });
-
+const styles = (_theme: Theme) =>
+  createStyles({
+    chartContainer: {
+      display: "flex",
+      flexDirection: "column",
+      flexWrap: "wrap",
+      flexFlow: "flex-start",
+      alignItems: "center",
+    },
+    noChartsCard: {
+      width: "20em",
+    },
+    noChartsTitle: {
+      fontSize: 14,
+    },
+  });
 
 interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
-    theme: Theme;
-    timeSeriesGroups: TimeSeriesGroup[];
-    selectedTime?: Time | null;
-    selectTime?: (time: Time | null) => void;
+  theme: Theme;
+  timeSeriesGroups: TimeSeriesGroup[];
+  selectedTime?: Time | null;
+  selectTime?: (time: Time | null) => void;
 
-    showPointsOnly: boolean;
-    showErrorBars: boolean;
+  showPointsOnly: boolean;
+  showErrorBars: boolean;
 
-    dataTimeRange?: TimeRange | null;
-    selectedTimeRange?: TimeRange | null;
-    selectTimeRange?: (timeRange: TimeRange | null) => void;
+  dataTimeRange?: TimeRange | null;
+  selectedTimeRange?: TimeRange | null;
+  selectTimeRange?: (timeRange: TimeRange | null) => void;
 
-    removeTimeSeries?: (groupId: string, index: number) => void;
-    removeTimeSeriesGroup?: (groupId: string) => void;
-    placeInfos?: { [placeId: string]: PlaceInfo };
-    selectPlace: (placeId: string | null, places: Place[], showInMap: boolean) => void;
-    places: Place[];
+  removeTimeSeries?: (groupId: string, index: number) => void;
+  removeTimeSeriesGroup?: (groupId: string) => void;
+  placeInfos?: { [placeId: string]: PlaceInfo };
+  selectPlace: (
+    placeId: string | null,
+    places: Place[],
+    showInMap: boolean,
+  ) => void;
+  places: Place[];
 
-    placeGroupTimeSeries: PlaceGroupTimeSeries[];
-    addPlaceGroupTimeSeries: (timeSeriesGroupId: string, timeSeries: TimeSeries) => void;
+  placeGroupTimeSeries: PlaceGroupTimeSeries[];
+  addPlaceGroupTimeSeries: (
+    timeSeriesGroupId: string,
+    timeSeries: TimeSeries,
+  ) => void;
 }
 
-const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = (
-    {
-        classes,
-        locale,
-        timeSeriesGroups,
-        selectedTime,
-        selectedTimeRange,
-        dataTimeRange,
-        selectTime,
-        selectTimeRange,
-        removeTimeSeries,
-        removeTimeSeriesGroup,
-        showPointsOnly,
-        showErrorBars,
-        placeInfos,
-        places,
-        selectPlace,
-        placeGroupTimeSeries,
-        addPlaceGroupTimeSeries
-    }
-) => {
-    const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
-        const completed = timeSeriesGroup.timeSeriesArray.map(item => (
-            item.dataProgress ? 100 * item.dataProgress : 0
-        ));
-
-        return (
-            <TimeSeriesChart
-                key={timeSeriesGroup.id}
-                locale={locale}
-                timeSeriesGroup={timeSeriesGroup}
-                selectedTime={selectedTime}
-                selectedTimeRange={selectedTimeRange}
-                dataTimeRange={dataTimeRange}
-                selectTime={selectTime}
-                selectTimeRange={selectTimeRange}
-                removeTimeSeries={removeTimeSeries}
-                removeTimeSeriesGroup={removeTimeSeriesGroup}
-                completed={completed}
-                showPointsOnly={showPointsOnly}
-                showErrorBars={showErrorBars}
-                placeInfos={placeInfos}
-                places={places}
-                selectPlace={selectPlace}
-                placeGroupTimeSeries={placeGroupTimeSeries}
-                addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
-            />
-        );
-    });
-
-    if (charts.length === 0) {
-        return null;
-    }
+const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = ({
+  classes,
+  locale,
+  timeSeriesGroups,
+  selectedTime,
+  selectedTimeRange,
+  dataTimeRange,
+  selectTime,
+  selectTimeRange,
+  removeTimeSeries,
+  removeTimeSeriesGroup,
+  showPointsOnly,
+  showErrorBars,
+  placeInfos,
+  places,
+  selectPlace,
+  placeGroupTimeSeries,
+  addPlaceGroupTimeSeries,
+}) => {
+  const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
+    const completed = timeSeriesGroup.timeSeriesArray.map((item) =>
+      item.dataProgress ? 100 * item.dataProgress : 0,
+    );
 
     return (
-        <div className={classes.chartContainer}>
-            <TimeRangeSlider
-                selectedTimeRange={selectedTimeRange}
-                dataTimeRange={dataTimeRange}
-                selectTimeRange={selectTimeRange}
-            />
-            {charts}
-        </div>
+      <TimeSeriesChart
+        key={timeSeriesGroup.id}
+        locale={locale}
+        timeSeriesGroup={timeSeriesGroup}
+        selectedTime={selectedTime}
+        selectedTimeRange={selectedTimeRange}
+        dataTimeRange={dataTimeRange}
+        selectTime={selectTime}
+        selectTimeRange={selectTimeRange}
+        removeTimeSeries={removeTimeSeries}
+        removeTimeSeriesGroup={removeTimeSeriesGroup}
+        completed={completed}
+        showPointsOnly={showPointsOnly}
+        showErrorBars={showErrorBars}
+        placeInfos={placeInfos}
+        places={places}
+        selectPlace={selectPlace}
+        placeGroupTimeSeries={placeGroupTimeSeries}
+        addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
+      />
     );
+  });
+
+  if (charts.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className={classes.chartContainer}>
+      <TimeRangeSlider
+        selectedTimeRange={selectedTimeRange}
+        dataTimeRange={dataTimeRange}
+        selectTimeRange={selectTimeRange}
+      />
+      {charts}
+    </div>
+  );
 };
 
-export default withStyles(styles, {withTheme: true})(TimeSeriesCharts);
+export default withStyles(styles, { withTheme: true })(TimeSeriesCharts);

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,53 +22,57 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { default as OlMap } from 'ol/Map';
-import { Control as OlControl } from 'ol/control';
+import * as React from "react";
+import { default as OlMap } from "ol/Map";
+import { Control as OlControl } from "ol/control";
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 
-
 interface ControlProps extends MapComponentProps {
-    style?: React.CSSProperties;
-    className?: string;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export class Control extends MapComponent<OlControl, ControlProps> {
-    divRef: HTMLDivElement | null = null;
+  divRef: HTMLDivElement | null = null;
 
-    handleDivRef = (divRef: HTMLDivElement | null) => {
-        this.divRef = divRef;
-    };
+  handleDivRef = (divRef: HTMLDivElement | null) => {
+    this.divRef = divRef;
+  };
 
-    addMapObject(map: OlMap): OlControl {
-        // console.log(`Control: added control '${this.props.id}'`);
-        const control = new OlControl({element: this.divRef!});
-        map.addControl(control);
-        return control;
+  addMapObject(map: OlMap): OlControl {
+    // console.log(`Control: added control '${this.props.id}'`);
+    const control = new OlControl({ element: this.divRef! });
+    map.addControl(control);
+    return control;
+  }
+
+  updateMapObject(
+    _map: OlMap,
+    control: OlControl,
+    _prevProps: Readonly<ControlProps>,
+  ): OlControl {
+    return control;
+  }
+
+  removeMapObject(map: OlMap, control: OlControl): void {
+    for (const addedControl of map.getControls().getArray()) {
+      if (addedControl === control) {
+        // console.log(`Control: removing control '${this.props.id}'`);
+        map.removeControl(control);
+        break;
+      }
     }
+  }
 
-    updateMapObject(_map: OlMap, control: OlControl, _prevProps: Readonly<ControlProps>): OlControl {
-        return control;
-    }
-
-    removeMapObject(map: OlMap, control: OlControl): void {
-        for (const addedControl of map.getControls().getArray()) {
-            if (addedControl === control) {
-                // console.log(`Control: removing control '${this.props.id}'`);
-                map.removeControl(control);
-                break;
-            }
-        }
-    }
-
-    render() {
-        const {children, style, className} = this.props;
-        const _className = (className ? className + ' ' : '') + 'ol-unselectable ol-control';
-        return <div style={style} className={_className} ref={this.handleDivRef}>{children}</div>;
-    }
+  render() {
+    const { children, style, className } = this.props;
+    const _className =
+      (className ? className + " " : "") + "ol-unselectable ol-control";
+    return (
+      <div style={style} className={_className} ref={this.handleDivRef}>
+        {children}
+      </div>
+    );
+  }
 }
-
-
-
-

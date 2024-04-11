@@ -12,8 +12,7 @@
         "endpoint": "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
       }
     ],
-    "overlays": [
-    ]
+    "overlays": []
   },
   {
     "name": "ESRI",
