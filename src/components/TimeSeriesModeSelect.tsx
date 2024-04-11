@@ -44,7 +44,7 @@ interface TimeSeriesModeSelectProps
   selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: "add" | "replace") => void;
 }
 
-const TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({
+const _TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({
   timeSeriesUpdateMode,
   selectTimeSeriesUpdateMode,
 }) => {
@@ -68,4 +68,5 @@ const TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({
   );
 };
 
-export default withStyles(styles)(TimeSeriesModeSelect);
+const TimeSeriesModeSelect = withStyles(styles)(_TimeSeriesModeSelect);
+export default TimeSeriesModeSelect;

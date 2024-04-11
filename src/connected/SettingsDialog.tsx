@@ -29,7 +29,7 @@ import {
   openDialog,
   updateSettings,
 } from "../actions/controlActions";
-import SettingsDialog from "../components/SettingsDialog";
+import _SettingsDialog from "../components/SettingsDialog";
 import { selectedServerSelector } from "../selectors/controlSelectors";
 
 import { AppState } from "../states/appState";
@@ -53,4 +53,8 @@ const mapDispatchToProps = {
   openDialog,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsDialog);
+const SettingsDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_SettingsDialog);
+export default SettingsDialog;

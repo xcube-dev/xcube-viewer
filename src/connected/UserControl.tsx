@@ -24,7 +24,7 @@
 
 import { connect } from "react-redux";
 import { AppState } from "../states/appState";
-import UserControl from "../components/UserControl";
+import _UserControl from "../components/UserControl";
 import { updateAccessToken } from "../actions/userAuthActions";
 
 // noinspection JSUnusedLocalSymbols
@@ -36,4 +36,5 @@ const mapDispatchToProps = {
   updateAccessToken,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserControl);
+const UserControl = connect(mapStateToProps, mapDispatchToProps)(_UserControl);
+export default UserControl;

@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import LegalAgreementDialog from "../components/LegalAgreementDialog";
+import _LegalAgreementDialog from "../components/LegalAgreementDialog";
 import { updateSettings } from "../actions/controlActions";
 import { syncWithServer } from "../actions/dataActions";
 
@@ -41,7 +41,8 @@ const mapDispatchToProps = {
   syncWithServer,
 };
 
-export default connect(
+const LegalAgreementDialog = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LegalAgreementDialog);
+)(_LegalAgreementDialog);
+export default LegalAgreementDialog;

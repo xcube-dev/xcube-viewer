@@ -26,7 +26,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { WithStyles } from "@mui/styles";
 import { Theme } from "@mui/material";
-import AppBar from "@mui/material/AppBar";
+import AppBarComponent from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
@@ -152,7 +152,7 @@ const _AppBar: React.FC<AppBarProps> = ({
   };
 
   return (
-    <AppBar position="absolute" className={classNames(classes.appBar)}>
+    <AppBarComponent position="absolute" className={classNames(classes.appBar)}>
       <Toolbar disableGutters className={classes.toolbar} variant="dense">
         <a
           href={Config.instance.branding.organisationUrl || ""}
@@ -222,11 +222,12 @@ const _AppBar: React.FC<AppBarProps> = ({
         open={imprintOpen}
         onClose={handleCloseImprint}
       />
-    </AppBar>
+    </AppBarComponent>
   );
 };
 
-export default connect(
+const AppBar = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(withStyles(styles)(_AppBar));
+export default AppBar;

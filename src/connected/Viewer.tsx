@@ -41,7 +41,7 @@ import {
   addDrawnUserPlace,
   importUserPlacesFromText,
 } from "../actions/dataActions";
-import Viewer from "../components/Viewer";
+import _Viewer from "../components/Viewer";
 import { userPlaceGroupsSelector } from "../selectors/dataSelectors";
 import { selectPlace } from "../actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
@@ -78,4 +78,5 @@ const mapDispatchToProps = {
   selectPlace,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Viewer);
+const Viewer = connect(mapStateToProps, mapDispatchToProps)(_Viewer);
+export default Viewer;

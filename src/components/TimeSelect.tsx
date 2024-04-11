@@ -54,7 +54,7 @@ interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
   selectedTimeRange: TimeRange | null;
 }
 
-const TimeSelect: React.FC<TimeSelectProps> = ({
+const _TimeSelect: React.FC<TimeSelectProps> = ({
   classes,
   hasTimeDimension,
   selectedTime,
@@ -111,4 +111,5 @@ const TimeSelect: React.FC<TimeSelectProps> = ({
   return <ControlBarItem label={timeInputLabel} control={timeInput} />;
 };
 
-export default withStyles(styles)(TimeSelect);
+const TimeSelect = withStyles(styles)(_TimeSelect);
+export default TimeSelect;

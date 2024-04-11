@@ -83,7 +83,7 @@ interface ServerDialogProps extends WithStyles<typeof styles>, WithLocale {
   closeDialog: (dialogId: string) => void;
 }
 
-const ServerDialog: React.FC<ServerDialogProps> = ({
+const _ServerDialog: React.FC<ServerDialogProps> = ({
   classes,
   open,
   servers,
@@ -334,4 +334,5 @@ const ServerDialog: React.FC<ServerDialogProps> = ({
   );
 };
 
-export default withStyles(styles)(ServerDialog);
+const ServerDialog = withStyles(styles)(_ServerDialog);
+export default ServerDialog;

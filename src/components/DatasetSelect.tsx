@@ -57,7 +57,7 @@ interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const DatasetSelect: React.FC<DatasetSelectProps> = ({
+const _DatasetSelect: React.FC<DatasetSelectProps> = ({
   classes,
   selectedDatasetId,
   datasets,
@@ -102,4 +102,5 @@ const DatasetSelect: React.FC<DatasetSelectProps> = ({
   return <ControlBarItem label={datasetSelectLabel} control={datasetSelect} />;
 };
 
-export default withStyles(styles)(DatasetSelect);
+const DatasetSelect = withStyles(styles)(_DatasetSelect);
+export default DatasetSelect;

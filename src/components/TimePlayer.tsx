@@ -66,7 +66,7 @@ interface TimePlayerProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const TimePlayer: React.FC<TimePlayerProps> = ({
+const _TimePlayer: React.FC<TimePlayerProps> = ({
   classes,
   timeAnimationActive,
   timeAnimationInterval,
@@ -203,4 +203,5 @@ const TimePlayer: React.FC<TimePlayerProps> = ({
   );
 };
 
-export default withStyles(styles)(TimePlayer);
+const TimePlayer = withStyles(styles)(_TimePlayer);
+export default TimePlayer;

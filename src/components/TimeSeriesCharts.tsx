@@ -88,7 +88,7 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = ({
+const _TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = ({
   classes,
   locale,
   timeSeriesGroups,
@@ -152,4 +152,7 @@ const TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = ({
   );
 };
 
-export default withStyles(styles, { withTheme: true })(TimeSeriesCharts);
+const TimeSeriesCharts = withStyles(styles, { withTheme: true })(
+  _TimeSeriesCharts,
+);
+export default TimeSeriesCharts;

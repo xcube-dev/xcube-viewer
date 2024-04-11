@@ -61,7 +61,7 @@ interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
   language?: string;
 }
 
-const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
+const _PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
   classes,
   placeGroups,
   selectPlaceGroups,
@@ -172,4 +172,5 @@ const PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
   );
 };
 
-export default withStyles(styles)(PlaceGroupsSelect);
+const PlaceGroupsSelect = withStyles(styles)(_PlaceGroupsSelect);
+export default PlaceGroupsSelect;

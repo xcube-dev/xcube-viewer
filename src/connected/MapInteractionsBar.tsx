@@ -24,7 +24,7 @@
 
 import { connect } from "react-redux";
 
-import MapInteractionsBar from "../components/MapInteractionsBar";
+import _MapInteractionsBar from "../components/MapInteractionsBar";
 import { AppState } from "../states/appState";
 import { setMapInteraction } from "../actions/controlActions";
 
@@ -38,4 +38,8 @@ const mapDispatchToProps = {
   setMapInteraction,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapInteractionsBar);
+const MapInteractionsBar = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_MapInteractionsBar);
+export default MapInteractionsBar;

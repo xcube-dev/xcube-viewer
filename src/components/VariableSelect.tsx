@@ -61,7 +61,7 @@ interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
   addTimeSeries: () => void;
 }
 
-const VariableSelect: React.FC<VariableSelectProps> = ({
+const _VariableSelect: React.FC<VariableSelectProps> = ({
   classes,
   canAddTimeSeries,
   selectedVariableName,
@@ -69,7 +69,7 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
   selectVariable,
   addTimeSeries,
 }) => {
-  const handleVariableChange = (event: SelectChangeEvent<string>) => {
+  const handleVariableChange = (event: SelectChangeEvent) => {
     selectVariable(event.target.value || null);
   };
 
@@ -129,4 +129,5 @@ const VariableSelect: React.FC<VariableSelectProps> = ({
   );
 };
 
-export default withStyles(styles)(VariableSelect);
+const VariableSelect = withStyles(styles)(_VariableSelect);
+export default VariableSelect;

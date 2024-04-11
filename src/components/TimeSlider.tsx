@@ -65,7 +65,7 @@ interface TimeSliderProps extends WithStyles<typeof styles> {
   selectTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
-const TimeSlider: React.FC<TimeSliderProps> = ({
+const _TimeSlider: React.FC<TimeSliderProps> = ({
   classes,
   hasTimeDimension,
   selectedTime,
@@ -139,4 +139,5 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   );
 };
 
-export default withStyles(styles)(TimeSlider);
+const TimeSlider = withStyles(styles)(_TimeSlider);
+export default TimeSlider;

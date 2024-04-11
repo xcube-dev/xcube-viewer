@@ -45,7 +45,7 @@ interface ControlBarItemProps extends WithStyles<typeof styles>, WithLocale {
   actions?: React.ReactNode | null;
 }
 
-const ControlBarItem: React.FC<ControlBarItemProps> = ({
+const _ControlBarItem: React.FC<ControlBarItemProps> = ({
   classes,
   label,
   control,
@@ -62,4 +62,5 @@ const ControlBarItem: React.FC<ControlBarItemProps> = ({
   );
 };
 
-export default withStyles(styles)(ControlBarItem);
+const ControlBarItem = withStyles(styles)(_ControlBarItem);
+export default ControlBarItem;

@@ -3,19 +3,16 @@
 * Numerous changes regard development environment renewal and 
   code quality improvements:
 
-  - Changed the development environment for the `xcube-viewer` project
-    from [create-react-app](https://create-react-app.dev/) and `yarn`
-    to [vite](https://vitejs.dev/) and `npm`. (#296)
+  - Changed the development environment from [create-react-app](https://create-react-app.dev/) 
+    and `yarn` to [vite](https://vitejs.dev/) and `npm`. (#296)
   - Reformatted code base with [prettier](https://prettier.io/) 
     using its default settings.
-  - Project CI now also runs [ESlint](https://eslint.org/)
+  - Project CI now also runs [ESlint](https://eslint.org/).
   - Updated copyright headers of source files.
  
 
 TODO:
 
-* After linting is green, set `--max-warnings 0` in
-  `"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 100"`
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:   
 * Remove `"@typescript-eslint/no-explicit-any": "off"` in `.eslintrc.cjs`
   and change code base accordingly

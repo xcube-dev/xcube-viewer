@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import TimeSlider from "../components/TimeSlider";
+import _TimeSlider from "../components/TimeSlider";
 import { selectTime, selectTimeRange } from "../actions/controlActions";
 import { selectedDatasetTimeDimensionSelector } from "../selectors/controlSelectors";
 
@@ -44,4 +44,5 @@ const mapDispatchToProps = {
   selectTimeRange,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeSlider);
+const TimeSlider = connect(mapStateToProps, mapDispatchToProps)(_TimeSlider);
+export default TimeSlider;

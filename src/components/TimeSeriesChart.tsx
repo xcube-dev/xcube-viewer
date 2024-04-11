@@ -180,7 +180,7 @@ interface TimeRangeSelection {
   secondTime?: number;
 }
 
-const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
+const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   classes,
   timeSeriesGroup,
   selectTimeSeries,
@@ -591,7 +591,10 @@ const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   );
 };
 
-export default withStyles(styles, { withTheme: true })(TimeSeriesChart);
+const TimeSeriesChart = withStyles(styles, { withTheme: true })(
+  _TimeSeriesChart,
+);
+export default TimeSeriesChart;
 
 interface _CustomTooltipProps
   extends TooltipProps<number, string>,

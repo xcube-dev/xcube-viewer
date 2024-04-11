@@ -26,7 +26,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import ControlBar from "../components/ControlBar";
+import ControlBarComponent from "../components/ControlBar";
 import { WithLocale } from "../util/lang";
 import DatasetSelect from "./DatasetSelect";
 import VariableSelect from "./VariableSelect";
@@ -57,7 +57,7 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
     return null;
   }
   return (
-    <ControlBar>
+    <ControlBarComponent>
       <DatasetSelect />
       <VariableSelect />
       <RgbSwitch />
@@ -68,8 +68,9 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
       <TimePlayer />
       <TimeSlider />
       <ControlBarActions />
-    </ControlBar>
+    </ControlBarComponent>
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(_ControlBar);
+const ControlBar = connect(mapStateToProps, mapDispatchToProps)(_ControlBar);
+export default ControlBar;
