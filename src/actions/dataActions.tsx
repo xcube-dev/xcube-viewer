@@ -72,7 +72,7 @@ import { VolumeRenderMode } from "../states/controlState";
 import { MessageLogAction, PostMessage, postMessage } from './messageLogActions';
 import { renameUserPlaceInLayer } from "./mapActions";
 
-const saveAs = require('file-saver');
+import { saveAs } from "file-saver";
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -660,7 +660,7 @@ export function updateVariableVolume(
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function exportData() {
-    return (dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
+    return (_dispatch: Dispatch<UpdateVariableColorBar>, getState: () => AppState) => {
         const {
             exportTimeSeries,
             exportTimeSeriesSeparator,
@@ -753,13 +753,16 @@ function _exportData(timeSeriesGroups: TimeSeriesGroup[],
                      placeGroups: PlaceGroup[],
                      options: ExportOptions) {
 
-    let {
+    const {
         includeTimeSeries,
-        separator,
         includePlaces,
-        fileName,
         placesAsCollection,
         zip,
+    } = options;
+
+    let {
+        separator,
+        fileName,
     } = options;
 
     separator = separator || 'TAB';

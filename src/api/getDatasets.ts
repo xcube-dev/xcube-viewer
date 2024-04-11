@@ -44,10 +44,10 @@ function adjustTimeDimensionsForDataset(dataset: Dataset): Dataset {
         const index = dimensions.findIndex((dimension: Dimension) => dimension.name === 'time');
         if (index > -1) {
             const timeDimension = dimensions[index];
-            let timeCoordinates: any = timeDimension.coordinates;
+            const timeCoordinates: any = timeDimension.coordinates;
             if (timeCoordinates && timeCoordinates.length && typeof timeCoordinates[0] === 'string') {
-                let labels = timeCoordinates as string[];
-                let coordinates = labels.map((label: string) => new Date(label).getTime());
+                const labels = timeCoordinates as string[];
+                const coordinates = labels.map((label: string) => new Date(label).getTime());
                 dimensions = [...dimensions];
                 dimensions[index] = {...timeDimension, coordinates, labels} as TimeDimension;
                 return {...dataset, dimensions};

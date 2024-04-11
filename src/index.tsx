@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as Redux from 'redux';
@@ -40,12 +39,12 @@ import { syncWithServer } from './actions/dataActions';
 import { Config } from './config';
 import App from './connected/App';
 import { appReducer } from './reducers/appReducer';
-import * as serviceWorker from './serviceWorker';
 
 
 Config.load().then(() => {
     const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
-    const store = Redux.createStore(appReducer, Redux.applyMiddleware(thunk, logger));
+    const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
+    const store = Redux.createStore(appReducer, middlewares);
 
     store.dispatch(changeLocale(store.getState().controlState.locale) as any);
 
@@ -57,9 +56,4 @@ Config.load().then(() => {
         <Provider store={store}>{<App/>}</Provider>,
         document.getElementById('root') as HTMLElement
     );
-
-    // If you want your app to work offline and load faster, you can change
-    // unregister() to register() below. Note this comes with some pitfalls.
-    // Learn more about service workers: https://bit.ly/CRA-PWA
-    serviceWorker.unregister();
 });

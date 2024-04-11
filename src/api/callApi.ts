@@ -53,7 +53,7 @@ export function makeRequestUrl(url: string, query: QueryComponent[]) {
 
 export function callApi(url: string, init?: RequestInit): Promise<Response> {
 
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
         console.debug('Calling API: ', url, init);
     }
 

@@ -32,7 +32,7 @@ import { MAP_OBJECTS } from '../states/controlState';
 
 
 // noinspection JSUnusedLocalSymbols
-export function renameUserPlaceInLayer(placeGroupId: string, placeId: string, newName: string) {
+export function renameUserPlaceInLayer(placeGroupId: string, _placeId: string, _newName: string) {
     if (MAP_OBJECTS[placeGroupId]) {
         // const userLayer = MAP_OBJECTS[placeGroupId] as OlVectorLayer;
         // const source = userLayer.getSource();

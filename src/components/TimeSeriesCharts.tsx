@@ -36,7 +36,7 @@ import TimeRangeSlider from './TimeRangeSlider';
 
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) => createStyles(
+const styles = (_theme: Theme) => createStyles(
     {
         chartContainer: {
             display: 'flex',

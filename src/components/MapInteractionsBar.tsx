@@ -57,7 +57,7 @@ interface MapInteractionsBarProps extends WithLocale {
 export default function MapInteractionsBar({mapInteraction, setMapInteraction}: MapInteractionsBarProps) {
     const classes = useStyles();
 
-    function handleChange(event: React.MouseEvent<HTMLElement>, value: MapInteraction | null) {
+    function handleChange(_event: React.MouseEvent<HTMLElement>, value: MapInteraction | null) {
         if (value !== null) {
             setMapInteraction(value);
         } else {

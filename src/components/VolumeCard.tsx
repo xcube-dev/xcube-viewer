@@ -146,7 +146,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
         );
     }
 
-    const handleVolumeRenderModeChange = (event: React.MouseEvent<HTMLElement>,
+    const handleVolumeRenderModeChange = (_event: React.MouseEvent<HTMLElement>,
                                           volumeRenderMode: VolumeRenderMode) => {
         if (volumeRenderMode !== null) {
             setVolumeRenderMode(volumeRenderMode);
@@ -288,12 +288,12 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = (
         }
     }
 
-    function handleSliderValueChanged(evt: Event, value: number | number[]) {
+    function handleSliderValueChanged(_evt: Event, value: number | number[]) {
         setSliderValue(value as number);
         setTextValue((value as number).toFixed(2));
     }
 
-    function handleSliderValueCommitted(evt: Event | SyntheticEvent, value: number | number[]) {
+    function handleSliderValueCommitted(_evt: Event | SyntheticEvent, value: number | number[]) {
         setValue(value as number);
     }
 

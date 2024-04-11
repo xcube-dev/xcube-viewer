@@ -42,7 +42,7 @@ import ToolButton from "./ToolButton";
 
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) => createStyles(
+const styles = (_theme: Theme) => createStyles(
     {
         select: {
             minWidth: '5em',

@@ -121,7 +121,7 @@ export function loadColorBarImage(colorBar: ColorBar, image?: HTMLImageElement):
             im.onload = () => {
                 resolve(im);
             };
-            im.onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
+            im.onerror = (_event: Event | string, _source?: string, _lineno?: number, _colno?: number, error?: Error) => {
                 reject(error);
             }
             im.src = `data:image/png;base64,${colorBar.imageData}`;

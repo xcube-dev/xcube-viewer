@@ -1,3 +1,23 @@
+## Changes in version 1.2.0 (in development)
+
+* Changed the development environment for the `xcube-viewer` project
+  from [create-react-app](https://create-react-app.dev/) and `yarn`
+  to [vite](https://vitejs.dev/) and `npm`. (#296)
+
+TODO:
+
+* Why is the build in `/dist` not working?
+* Reformat code using `prettier`
+* Update copyright headers
+* Allow running in `.github/workflows/ci.yaml`:   
+  - `run: npm run lint`
+  - `run: npm run coverage`
+* Remove `"@typescript-eslint/no-explicit-any": "off"` in `.eslintrc.cjs`
+  and change code base accordingly
+* After linting is green, set `--max-warnings 0` in
+  `"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 100"`
+
+
 ## Changes in version 1.1.1
 
 ### Fixes
@@ -240,10 +260,8 @@
       },
       "headerIconStyle": {
         "color": "black"
-      },
-      ...
-    },
-    ...
+      }
+    }
   }
   ```
 

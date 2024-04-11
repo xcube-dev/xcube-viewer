@@ -89,12 +89,12 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
     const [userMenuAnchorEl, setUserMenuAnchorEl] = React.useState<null | HTMLElement>(null);
     const [profileDialogOpen, setProfileDialogOpen] = React.useState(false);
 
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
         console.debug('User: ', auth.user);
     }
 
     React.useEffect(() => {
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
             console.log("User changed:", auth.user);
         }
         if (auth.user && auth.user.access_token) {
@@ -123,7 +123,7 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
 
     const handleSignInButtonClicked = () => {
         auth.signinRedirect().then(() => {
-            if (process.env.NODE_ENV === 'development') {
+            if (import.meta.env.DEV) {
                 console.debug('Signed in:', auth.user);
             }
         }).catch(e => {
@@ -134,7 +134,7 @@ const UserControlContent: React.FC<UserControlProps> = ({classes, updateAccessTo
     const handleSignOutMenuItemClicked = () => {
         handleUserMenuClose();
         auth.signoutRedirect().then(() => {
-            if (process.env.NODE_ENV === 'development') {
+            if (import.meta.env.DEV) {
                 console.debug('Signed out:', auth.user);
             }
         }).catch(e => {

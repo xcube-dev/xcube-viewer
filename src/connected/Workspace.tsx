@@ -43,7 +43,7 @@ import SplitPane from '../components/SplitPane';
 // Adjust for debugging split pane style
 const mapExtraStyle: React.CSSProperties = {padding: 0};
 
-const styles = (theme: Theme) => createStyles(
+const styles = (_theme: Theme) => createStyles(
         {
 
             splitPaneHor: {
@@ -135,7 +135,7 @@ const Workspace: React.FC<WorkspaceProps> = ({
         setLayout(getLayout());
     };
 
-    function handleResize(size: number) {
+    function handleResize(_size: number) {
         if (map) {
             map.updateSize();
         }

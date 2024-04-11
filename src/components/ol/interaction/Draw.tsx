@@ -45,7 +45,7 @@ export class Draw extends MapComponent<OlDrawInteraction, DrawProps> {
 
     addMapObject(map: OlMap): OlDrawInteraction {
         const draw = new OlDrawInteraction(this.getOptions());
-        let active = !!this.props.active;
+        const active = !!this.props.active;
         draw.setActive(active);
         map.addInteraction(draw);
         if (active) {
@@ -54,9 +54,9 @@ export class Draw extends MapComponent<OlDrawInteraction, DrawProps> {
         return draw;
     }
 
-    updateMapObject(map: OlMap, draw: OlDrawInteraction, prevProps: Readonly<DrawProps>): OlDrawInteraction {
+    updateMapObject(_map: OlMap, draw: OlDrawInteraction, prevProps: Readonly<DrawProps>): OlDrawInteraction {
         draw.setProperties(this.getOptions());
-        let active = !!this.props.active;
+        const active = !!this.props.active;
         draw.setActive(active);
         this.unlisten(draw, prevProps);
         if (active) {
@@ -71,7 +71,7 @@ export class Draw extends MapComponent<OlDrawInteraction, DrawProps> {
     }
 
     getOptions(): OlDrawInteractionOptions {
-        let options = super.getOptions();
+        const options = super.getOptions();
         delete options['layerId'];
         delete options['active'];
         delete options['onDrawStart'];

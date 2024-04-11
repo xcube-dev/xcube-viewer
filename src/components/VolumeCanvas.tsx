@@ -104,8 +104,8 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
     private static getVolumeOptions(props: Readonly<VolumeCanvasProps>): VolumeOptions {
         const {selectedVariable, variableColorBar, volumeIsoThreshold, volumeRenderMode} = props;
         return {
-            value1: !!selectedVariable ? selectedVariable.colorBarMin : 0,
-            value2: !!selectedVariable ? selectedVariable.colorBarMax : 1,
+            value1: selectedVariable ? selectedVariable.colorBarMin : 0,
+            value2: selectedVariable ? selectedVariable.colorBarMax : 1,
             renderMode: volumeRenderMode,
             isoThreshold: volumeIsoThreshold,
             colorBar: variableColorBar,
@@ -116,7 +116,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         this.updateVolumeScene();
     }
 
-    componentDidUpdate(prevProps: Readonly<VolumeCanvasProps>): void {
+    componentDidUpdate(_prevProps: Readonly<VolumeCanvasProps>): void {
         this.updateVolumeScene();
     }
 

@@ -79,7 +79,7 @@ export function storeUserSettings(settings: ControlState) {
             storage.setPrimitiveProperty('exportFileName', settings);
             storage.setPrimitiveProperty('userPlacesFormatName', settings);
             storage.setObjectProperty('userPlacesFormatOptions', settings);
-            if (process.env.NODE_ENV === 'development') {
+            if (import.meta.env.DEV) {
                 console.debug('Stored user settings:', settings);
             }
         } catch (e) {
@@ -117,7 +117,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
             storage.getStringProperty('exportFileName', settings, defaultSettings);
             storage.getStringProperty('userPlacesFormatName', settings, defaultSettings);
             storage.getObjectProperty('userPlacesFormatOptions', settings, defaultSettings);
-            if (process.env.NODE_ENV === 'development') {
+            if (import.meta.env.DEV) {
                 console.debug('Loaded user settings:', settings);
             }
         } catch (e) {

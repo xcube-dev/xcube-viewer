@@ -135,7 +135,7 @@ function updatePlaceInfo(infoObj: { [name: string]: any },
 function getInterpolatedPropertyValue(place: Place, propertyValue: string) {
     let interpolatedValue = propertyValue;
     if (place.properties) {
-        for (let name of Object.getOwnPropertyNames(place.properties)) {
+        for (const name of Object.getOwnPropertyNames(place.properties)) {
             if (!interpolatedValue.includes('${')) {
                 break;
             }
@@ -150,7 +150,7 @@ function getInterpolatedPropertyValue(place: Place, propertyValue: string) {
 
 function getPropertyValue(container: any, propertyNames: string[]) {
     let value;
-    for (let propertyName of propertyNames) {
+    for (const propertyName of propertyNames) {
         if (propertyName in container) {
             return container[propertyName];
         }
@@ -161,7 +161,7 @@ function getPropertyValue(container: any, propertyNames: string[]) {
 
 function mkCases(names: string[]): string[] {
     let nameCases: string[] = [];
-    for (let name of names) {
+    for (const name of names) {
         nameCases = nameCases.concat(name.toLowerCase(),
             name.toUpperCase(),
             name[0].toUpperCase() + name.substr(1).toLowerCase())
@@ -180,7 +180,7 @@ export function forEachPlace(placeGroups: PlaceGroup[], callback: (placeGroup: P
 }
 
 export function findPlaceInfo(placeGroups: PlaceGroup[], predicate: (placeGroup: PlaceGroup, place: Place) => boolean): PlaceInfo | null {
-    for (let placeGroup of placeGroups) {
+    for (const placeGroup of placeGroups) {
         if (isValidPlaceGroup(placeGroup)) {
             const place = placeGroup.features.find((place: Place) => predicate(placeGroup, place));
             if (place) {
@@ -214,14 +214,14 @@ export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | 
         return null;
     }
     const place = placeGroup.features.find(place => place.id === placeId);
-    if (!!place) {
+    if (place) {
         return place as Place;
     }
-    let subPlaceGroups = placeGroup.placeGroups;
+    const subPlaceGroups = placeGroup.placeGroups;
     if (subPlaceGroups) {
-        for (let parentPlaceId in subPlaceGroups) {
+        for (const parentPlaceId in subPlaceGroups) {
             const place = findPlaceInPlaceGroup(subPlaceGroups[parentPlaceId], placeId);
-            if (!!place) {
+            if (place) {
                 return place;
             }
         }
@@ -231,7 +231,7 @@ export function findPlaceInPlaceGroup(placeGroup: PlaceGroup, placeId: string | 
 
 export function findPlaceInPlaceGroups(placeGroups: PlaceGroup[], placeId: string | null): Place | null {
     if (placeId) {
-        for (let placeGroup of placeGroups) {
+        for (const placeGroup of placeGroups) {
             const place = findPlaceInPlaceGroup(placeGroup, placeId);
             if (place !== null) {
                 return place;

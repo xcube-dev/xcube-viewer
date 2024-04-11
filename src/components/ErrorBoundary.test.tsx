@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React from 'react';
+import { expect, it, describe } from "vitest";
 import { render } from '@testing-library/react';
 import ErrorBoundary from './ErrorBoundary';
 

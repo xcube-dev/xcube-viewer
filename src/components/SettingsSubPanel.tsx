@@ -59,7 +59,7 @@ const SettingsSubPanel: React.FC<SettingsSubPanelProps> = (
         );
     }
 
-    if (!!onClick) {
+    if (onClick) {
         return (
             <ListItem style={listItemStyle} button onClick={onClick}>
                 {listItemText}

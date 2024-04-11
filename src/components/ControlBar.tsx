@@ -44,7 +44,7 @@ const styles = (theme: Theme) => createStyles(
 interface ControlBarProps extends WithStyles<typeof styles> {
 }
 
-const ControlBar: React.FC<ControlBarProps> = ({classes, children}) => {
+const _ControlBar: React.FC<ControlBarProps> = ({classes, children}) => {
     return (
         <form className={classes.form} autoComplete="off">
             {children}
@@ -52,4 +52,6 @@ const ControlBar: React.FC<ControlBarProps> = ({classes, children}) => {
     );
 };
 
-export default withStyles(styles)(ControlBar);
+const ControlBar = withStyles(styles)(_ControlBar);
+
+export default ControlBar;

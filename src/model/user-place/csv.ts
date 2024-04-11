@@ -81,12 +81,12 @@ let LAST_PLACE_LABEL_ID_CSV = 0;
 
 
 export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGroup[] {
-    let table = parseCsv(text, options);
+    const table = parseCsv(text, options);
     if (table.length < 2) {
         throw new Error(i18n.get('Missing header line in CSV'));
     }
 
-    for (let v of table[0]) {
+    for (const v of table[0]) {
         if (typeof v !== 'string' || v === '') {
             throw new Error(i18n.get('Invalid header line in CSV'));
         }
@@ -96,7 +96,7 @@ export function getUserPlacesFromCsv(text: string, options: CsvOptions): PlaceGr
     const headerRowLC = headerRow.map(v => v.toLowerCase());
     const numColumns = headerRow.length;
 
-    for (let row of table) {
+    for (const row of table) {
         if (row.length !== numColumns) {
             throw new Error(i18n.get('All rows must have same length'));
         }
@@ -225,7 +225,7 @@ function getColumnNameToIndex(columnNames: string[]): ColumnNameToIndex {
 
 function findColumnIndex(columnNameToIndex: ColumnNameToIndex, alternatives: string): number {
     const names = parseAlternativeNames(alternatives);
-    for (let name of names) {
+    for (const name of names) {
         const columnIndex: number | undefined = columnNameToIndex[name];
         // noinspection SuspiciousTypeOfGuard
         if (typeof columnIndex === 'number') {

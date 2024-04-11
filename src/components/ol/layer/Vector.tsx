@@ -41,7 +41,7 @@ export class Vector extends MapComponent<OlVectorLayer<OlVectorSource>, VectorPr
         return layer;
     }
 
-    updateMapObject(map: OlMap,
+    updateMapObject(_map: OlMap,
                     layer: OlVectorLayer<OlVectorSource>,
                     prevProps: Readonly<VectorProps>): OlVectorLayer<OlVectorSource> {
         // TODO: Code duplication in ./Tile.tsx

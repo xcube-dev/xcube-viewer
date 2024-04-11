@@ -43,7 +43,7 @@ import i18n from '../i18n';
 
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) => createStyles(
+const styles = (_theme: Theme) => createStyles(
     {
         select: {
             minWidth: '5em',

@@ -19,14 +19,14 @@ export class VolumeScene {
 
     readonly canvas: HTMLCanvasElement;
     private readonly camera: THREE.OrthographicCamera;
-    private readonly controls: THREE.EventDispatcher;
     private readonly renderer: THREE.WebGLRenderer;
+    // private readonly controls: THREE.EventDispatcher;
     // private readonly cmTextures: { [cmName: string]: THREE.Texture };
 
     // Instantiated after volume is set
     private scene: THREE.Scene | null;
-    private texture: THREE.Data3DTexture | null;
     private material: THREE.ShaderMaterial | null;
+    // private texture: THREE.Data3DTexture | null;
 
     constructor(canvas: HTMLCanvasElement) {
 
@@ -72,11 +72,11 @@ export class VolumeScene {
         this.canvas = canvas;
         this.renderer = renderer;
         this.camera = camera;
-        this.controls = controls;
+        // this.controls = controls;
 
         this.scene = null;
-        this.texture = null;
         this.material = null;
+        // this.texture = null;
 
         // Colormap textures
         // this.cmTextures = {
@@ -172,7 +172,7 @@ export class VolumeScene {
 
         this.scene = scene;
         this.material = material;
-        this.texture = texture;
+        // this.texture = texture;
 
         this.setVolumeOptions(options);
     }

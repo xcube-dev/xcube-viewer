@@ -26,9 +26,9 @@ import { Action, createBrowserHistory, Location } from 'history';
 
 const history = createBrowserHistory();
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
     history.listen((location: Location, action: Action,) => {
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
             console.debug(`history ${action}:`, location);
         }
     });

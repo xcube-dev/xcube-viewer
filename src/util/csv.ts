@@ -79,7 +79,7 @@ class Parser {
                 }
                 return [line, index];
             })
-            .filter(([line, index]): boolean => {
+            .filter(([line, _index]): boolean => {
                 return line.trim() !== "" && !line.startsWith(comment);
             });
     }
@@ -87,7 +87,7 @@ class Parser {
     parseLine([line, index]: Line): Value[] {
         const {separator, quote, escape} = this.options;
         let quoteSeen = false;
-        let values: Value[] = [];
+        const values: Value[] = [];
         let start = 0;
         let end = 0;
         for (; end < line.length; end++) {

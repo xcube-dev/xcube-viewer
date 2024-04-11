@@ -39,10 +39,10 @@ export class View extends MapComponent<OlView, ViewProps> {
         return this.updateView(map);
     }
 
-    removeMapObject(map: OlMap, object: OlView): void {
+    removeMapObject(_map: OlMap, _object: OlView): void {
     }
 
-    updateMapObject(map: OlMap, object: OlView): OlView {
+    updateMapObject(map: OlMap, _object: OlView): OlView {
         return this.updateView(map);
     }
 

@@ -62,7 +62,7 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = (
         addPlaceGroupTimeSeries(timeSeriesGroupId, timeSeries);
     };
 
-    let menuItems: React.ReactNode[] = [];
+    const menuItems: React.ReactNode[] = [];
     placeGroupTimeSeries.forEach(pgTs => {
         Object.getOwnPropertyNames(pgTs.timeSeries).forEach(propertyName => {
             const menuLabel = `${pgTs.placeGroup.title} / ${propertyName}`;

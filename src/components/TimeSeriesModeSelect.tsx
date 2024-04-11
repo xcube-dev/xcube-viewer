@@ -35,7 +35,7 @@ import { WithLocale } from '../util/lang';
 
 // TODO (forman): this component doesn't seem to be in use - remove!
 
-const styles = (theme: Theme) => createStyles(
+const styles = (_theme: Theme) => createStyles(
     {});
 
 interface TimeSeriesModeSelectProps extends WithStyles<typeof styles>, WithLocale {

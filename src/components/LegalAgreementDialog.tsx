@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
 import { Theme } from "@mui/material";
 import Button from '@mui/material/Button';

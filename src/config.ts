@@ -70,7 +70,7 @@ export class Config {
 
     static async load(): Promise<Config> {
         let configPath = appParams.get('configPath') || 'config';
-        let rawConfig = await this.loadRawConfig(configPath);
+        const rawConfig = await this.loadRawConfig(configPath);
         if (rawConfig === rawDefaultConfig) {
             configPath = '';
         }
@@ -83,13 +83,13 @@ export class Config {
             {
                 ...rawDefaultConfig.branding,
                 ...rawConfig.branding,
-                compact: compact || !!rawConfig.branding.compact
+                compact: compact || rawConfig.branding.compact
             },
             configPath
         );
         branding.allow3D = !!parseInt(appParams.get('allow3D') || '0') || branding.allow3D;
         Config._instance = new Config(name, server, branding, authClient);
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
             console.debug('Configuration:', Config._instance);
         }
         if (branding.windowTitle) {
@@ -103,7 +103,7 @@ export class Config {
 
     private static getAuthConfig(rawConfig: any) {
         let authClient = rawConfig.authClient && {...rawConfig.authClient};
-        let authClientFromEnv = Config.getAuthClientFromEnv();
+        const authClientFromEnv = Config.getAuthClientFromEnv();
         if (!authClient && authClientFromEnv.authority && authClientFromEnv.clientId) {
             authClient = {
                 authority: authClientFromEnv.authority,
@@ -138,7 +138,7 @@ export class Config {
 
     private static getServerConfig(rawConfig: any) {
         const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
-        let serverFromEnv = Config.getApiServerFromEnv();
+        const serverFromEnv = Config.getApiServerFromEnv();
         server.id = appParams.get('serverId') || serverFromEnv.id || server.id;
         server.name = appParams.get('serverName') || serverFromEnv.name || server.name;
         server.url = appParams.get('serverUrl') || serverFromEnv.url || server.url;
@@ -153,7 +153,7 @@ export class Config {
             const rawConfigResponse = await fetch(configUrl);
             if (rawConfigResponse.ok) {
                 rawConfig = await rawConfigResponse.json();
-                if (process.env.NODE_ENV === 'development') {
+                if (import.meta.env.DEV) {
                     console.debug(`Configuration loaded from ${configUrl}`);
                 }
             } else {
@@ -169,7 +169,7 @@ export class Config {
         }
         if (rawConfig === null) {
             rawConfig = rawDefaultConfig;
-            if (process.env.NODE_ENV === 'development') {
+            if (import.meta.env.DEV) {
                 console.debug(`Failed loading configuration from ${configUrl}:`, rawConfigError);
                 console.debug(`Using defaults.`);
             }
@@ -205,16 +205,16 @@ export class Config {
     }
 
     private static getAuthClientFromEnv() {
-        const authority = process.env.REACT_APP_OAUTH2_AUTHORITY;
-        const clientId = process.env.REACT_APP_OAUTH2_CLIENT_ID;
-        const audience = process.env.REACT_APP_OAUTH2_AUDIENCE;
+        const authority = import.meta.env.XCV_OAUTH2_AUTHORITY;
+        const clientId = import.meta.env.XCV_OAUTH2_CLIENT_ID;
+        const audience = import.meta.env.XCV_OAUTH2_AUDIENCE;
         return {authority, clientId, audience};
     }
 
     private static getApiServerFromEnv(): Partial<ApiServerConfig> {
-        const id = process.env.REACT_APP_SERVER_ID;
-        const name = process.env.REACT_APP_SERVER_NAME;
-        const url = process.env.REACT_APP_SERVER_URL;
+        const id = import.meta.env.XCV_APP_SERVER_ID;
+        const name = import.meta.env.XCV_SERVER_NAME;
+        const url = import.meta.env.XCV_SERVER_URL;
         return {id, name, url};
     }
 }

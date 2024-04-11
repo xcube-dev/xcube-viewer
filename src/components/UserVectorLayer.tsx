@@ -72,7 +72,7 @@ const UserVectorLayer: React.FC<UserVectorLayerProps> = (
                     feature.setId(place.id);
                 }
                 const color = (place.properties || {}).color || 'red';
-                const pointSymbol = Boolean((place.properties || {}).source) ? 'diamond' : 'circle';
+                const pointSymbol = (place.properties || {}).source ? 'diamond' : 'circle';
                 setFeatureStyle(feature, color, Config.instance.branding.polygonFillOpacity, pointSymbol);
                 source.addFeature(feature);
             });

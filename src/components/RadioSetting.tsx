@@ -47,7 +47,7 @@ const RadioSetting: React.FC<RadioSettingProps> = (
         disabled,
     }
 ) => {
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    const handleChange = (_event: React.ChangeEvent<HTMLInputElement>, value: string) => {
         updateSettings({...settings, [propertyName]: value});
     };
     return (

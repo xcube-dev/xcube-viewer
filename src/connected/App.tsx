@@ -45,7 +45,7 @@ interface AppProps {
 }
 
 // noinspection JSUnusedLocalSymbols
-const mapStateToProps = (state: AppState) => {
+const mapStateToProps = (_state: AppState) => {
     return {
         compact: Config.instance.branding.compact
     };

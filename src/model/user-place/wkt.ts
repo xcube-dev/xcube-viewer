@@ -32,7 +32,7 @@ import { utcTimeToIsoDateTimeString } from "../../util/time";
 
 
 // noinspection JSUnusedLocalSymbols
-const checkError = (text: string): string | null => {
+const checkError = (_text: string): string | null => {
     // TODO
     return null;
 };

@@ -202,7 +202,7 @@ export function controlReducer(state: ControlState | undefined,
                         index = 0;
                     }
                     let selectedTime = timeCoordinates[index];
-                    let selectedTimeRange = state.selectedTimeRange;
+                    const selectedTimeRange = state.selectedTimeRange;
                     if (selectedTimeRange !== null) {
                         if (selectedTime < selectedTimeRange[0]) {
                             selectedTime = selectedTimeRange[0];

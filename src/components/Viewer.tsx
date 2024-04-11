@@ -62,7 +62,7 @@ import UserVectorLayer from "./UserVectorLayer";
 
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) => createStyles({});
+const styles = (_theme: Theme) => createStyles({});
 
 const SELECTION_LAYER_ID = 'selection';
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
@@ -184,7 +184,7 @@ const Viewer: React.FC<ViewerProps> = (
             let selectedPlaceId: string | null = null;
             const features = map.getFeaturesAtPixel(event.pixel);
             if (features) {
-                for (let f of features) {
+                for (const f of features) {
                     if (typeof f['getId'] === 'function') {
                         selectedPlaceId = f['getId']() + '';
                         break;
@@ -219,7 +219,7 @@ const Viewer: React.FC<ViewerProps> = (
             const geoJSONGeometry = new OlGeoJSONFormat().writeGeometryObject(geometry) as any;
             feature.setId(placeId);
             let colorIndex = 0;
-            if (Boolean(MAP_OBJECTS[USER_DRAWN_PLACE_GROUP_ID])) {
+            if (MAP_OBJECTS[USER_DRAWN_PLACE_GROUP_ID]) {
                 const userLayer = MAP_OBJECTS[USER_DRAWN_PLACE_GROUP_ID] as OlVectorLayer<OlVectorSource>;
                 const features = userLayer?.getSource()?.getFeatures();
                 if (features)
@@ -349,7 +349,7 @@ export default withStyles(styles, {withTheme: true})(Viewer);
 
 
 function findFeatureById(map: OlMap, featureId: string | number): OlFeature | null {
-    for (let layer of map.getLayers().getArray()) {
+    for (const layer of map.getLayers().getArray()) {
         if (layer instanceof OlVectorLayer) {
             const vectorLayer = layer as OlVectorLayer<OlVectorSource>;
             const feature = vectorLayer.getSource()?.getFeatureById(featureId);
@@ -364,11 +364,11 @@ function findFeatureById(map: OlMap, featureId: string | number): OlFeature | nu
 function findNextLabel(userPlaceGroups: PlaceGroup[], mapInteraction: MapInteraction) {
     const nameBase = i18n.get(mapInteraction);
     const drawingPlaceGroup = userPlaceGroups.find(pg => pg.id === USER_DRAWN_PLACE_GROUP_ID);
-    if (Boolean(drawingPlaceGroup)) {
+    if (drawingPlaceGroup) {
         for (let index = 1; ; index++) {
             const label = `${nameBase} ${index}`;
             const exists = !!drawingPlaceGroup!.features.find(p => {
-                    if (!Boolean(p.properties)) {
+                    if (!p.properties) {
                         return false;
                     }
                     return p.properties!['label'] === label;

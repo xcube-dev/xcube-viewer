@@ -43,7 +43,7 @@ export class ScaleLine extends MapComponent<OlScaleLineControl, ScaleLineProps> 
         return control;
     }
 
-    updateMapObject(map: OlMap, control: OlScaleLineControl, prevProps: Readonly<ScaleLineProps>): OlScaleLineControl {
+    updateMapObject(_map: OlMap, control: OlScaleLineControl, _prevProps: Readonly<ScaleLineProps>): OlScaleLineControl {
         control.setProperties(this.getOptions());
         return control;
     }

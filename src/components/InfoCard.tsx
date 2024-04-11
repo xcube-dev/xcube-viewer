@@ -140,7 +140,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
         return null;
     }
 
-    const handleInfoElementsChanges = (event: React.MouseEvent<HTMLElement>, visibleElementTypes: string[]) => {
+    const handleInfoElementsChanges = (_event: React.MouseEvent<HTMLElement>, visibleElementTypes: string[]) => {
         setVisibleInfoCardElements(visibleElementTypes);
     };
 
@@ -430,7 +430,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = (
             <JsonCodeContent code={JSON.stringify(place, null, 2)}/>
         );
     } else if (viewMode === 'list') {
-        if (!!place.properties) {
+        if (place.properties) {
             const data: KeyValue[] = Object.getOwnPropertyNames(place.properties).map(
                 (name: any) => [name, place.properties![name]]
             );
@@ -496,7 +496,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
                                                              children,
                                                          }) => {
 
-    const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, viewMode: ViewMode) => {
+    const handleViewModeChange = (_event: React.MouseEvent<HTMLElement>, viewMode: ViewMode) => {
         setViewMode(viewMode);
     };
 
@@ -632,7 +632,7 @@ const PythonCodeContent: React.FC<CodeContentBaseProps> = ({code}) => {
 
 function selectObj(obj: any, keys: string[]): any {
     const newObj: { [name: string]: any } = {};
-    for (let key of keys) {
+    for (const key of keys) {
         if (key in obj) {
             newObj[key] = obj[key];
         }
@@ -662,7 +662,7 @@ function getDatasetPythonCode(serverConfig: ApiServerConfig,
 }
 
 
-function getVariablePythonCode(serverConfig: ApiServerConfig,
+function getVariablePythonCode(_serverConfig: ApiServerConfig,
                                variable: Variable,
                                time: Time | null) {
     const name = variable.name;

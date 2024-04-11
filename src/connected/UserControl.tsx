@@ -29,7 +29,7 @@ import { updateAccessToken } from '../actions/userAuthActions';
 
 
 // noinspection JSUnusedLocalSymbols
-const mapStateToProps = (state: AppState) => {
+const mapStateToProps = (_state: AppState) => {
     return {};
 };
 
