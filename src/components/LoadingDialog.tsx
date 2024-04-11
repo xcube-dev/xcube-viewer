@@ -56,7 +56,10 @@ interface LoadingDialogProps extends WithStyles<typeof styles>, WithLocale {
   messages: string[];
 }
 
-const LoadingDialog: React.FC<LoadingDialogProps> = ({ classes, messages }) => {
+const _LoadingDialog: React.FC<LoadingDialogProps> = ({
+  classes,
+  messages,
+}) => {
   if (messages.length === 0) {
     return null;
   }
@@ -76,4 +79,5 @@ const LoadingDialog: React.FC<LoadingDialogProps> = ({ classes, messages }) => {
   );
 };
 
-export default withStyles(styles)(LoadingDialog);
+const LoadingDialog = withStyles(styles)(_LoadingDialog);
+export default LoadingDialog;

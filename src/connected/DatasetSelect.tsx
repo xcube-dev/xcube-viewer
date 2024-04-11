@@ -24,7 +24,7 @@
 
 import { connect } from "react-redux";
 
-import DatasetSelect from "../components/DatasetSelect";
+import _DatasetSelect from "../components/DatasetSelect";
 import { AppState } from "../states/appState";
 import { selectDataset } from "../actions/controlActions";
 
@@ -40,4 +40,8 @@ const mapDispatchToProps = {
   selectDataset,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DatasetSelect);
+const DatasetSelect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_DatasetSelect);
+export default DatasetSelect;

@@ -82,7 +82,7 @@ type EventListenerItem = [string, (e: any) => any];
  * either in x-direction if direction is "hor" or y-direction if direction is "ver". The callback must then
  * adjust either a container's width if direction is "hor" or its height if direction is "ver".
  */
-class Splitter extends React.PureComponent<ISplitterProps, any> {
+class _Splitter extends React.PureComponent<ISplitterProps, any> {
   private lastPosition: null | number = null;
   private bodyEventListeners: Array<EventListenerItem>;
 
@@ -184,4 +184,5 @@ class Splitter extends React.PureComponent<ISplitterProps, any> {
   }
 }
 
-export default withStyles(styles)(Splitter);
+const Splitter = withStyles(styles)(_Splitter);
+export default Splitter;

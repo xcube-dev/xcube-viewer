@@ -34,7 +34,7 @@ import {
   selectedVariableColorBarSelector,
 } from "../selectors/controlSelectors";
 import { updateVariableColorBar } from "../actions/dataActions";
-import ColorBarLegend from "../components/ColorBarLegend";
+import _ColorBarLegend from "../components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -52,4 +52,8 @@ const mapDispatchToProps = {
   updateVariableColorBar,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ColorBarLegend);
+const ColorBarLegend = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_ColorBarLegend);
+export default ColorBarLegend;

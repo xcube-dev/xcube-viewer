@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import TimeSelect from "../components/TimeSelect";
+import _TimeSelect from "../components/TimeSelect";
 import { selectTime } from "../actions/controlActions";
 import { selectedDatasetTimeDimensionSelector } from "../selectors/controlSelectors";
 
@@ -43,4 +43,5 @@ const mapDispatchToProps = {
   selectTime,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeSelect);
+const TimeSelect = connect(mapStateToProps, mapDispatchToProps)(_TimeSelect);
+export default TimeSelect;

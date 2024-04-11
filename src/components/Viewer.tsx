@@ -129,7 +129,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   importUserPlacesFromText?: (text: string) => any;
 }
 
-const Viewer: React.FC<ViewerProps> = ({
+const _Viewer: React.FC<ViewerProps> = ({
   theme,
   mapId,
   mapInteraction,
@@ -377,7 +377,8 @@ const Viewer: React.FC<ViewerProps> = ({
   );
 };
 
-export default withStyles(styles, { withTheme: true })(Viewer);
+const Viewer = withStyles(styles, { withTheme: true })(_Viewer);
+export default Viewer;
 
 function findFeatureById(
   map: OlMap,

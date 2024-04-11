@@ -24,7 +24,7 @@
 
 import { connect } from "react-redux";
 
-import PlaceSelect from "../components/PlaceSelect";
+import _PlaceSelect from "../components/PlaceSelect";
 import { AppState } from "../states/appState";
 import { renameUserPlace, removeUserPlace } from "../actions/dataActions";
 import { selectPlace, openDialog } from "../actions/controlActions";
@@ -51,4 +51,5 @@ const mapDispatchToProps = {
   openDialog,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceSelect);
+const PlaceSelect = connect(mapStateToProps, mapDispatchToProps)(_PlaceSelect);
+export default PlaceSelect;

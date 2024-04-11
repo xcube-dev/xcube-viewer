@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import ServerDialog from "../components/ServerDialog";
+import _ServerDialog from "../components/ServerDialog";
 import { closeDialog } from "../actions/controlActions";
 import { configureServers } from "../actions/dataActions";
 import { selectedServerSelector } from "../selectors/controlSelectors";
@@ -44,4 +44,8 @@ const mapDispatchToProps = {
   configureServers,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ServerDialog);
+const ServerDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_ServerDialog);
+export default ServerDialog;

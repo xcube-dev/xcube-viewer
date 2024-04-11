@@ -67,7 +67,7 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
   compact: boolean;
 }
 
-const ControlBarActions: React.FC<ControlBarActionsProps> = ({
+const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   classes,
   visible,
   flyToSelectedObject,
@@ -171,4 +171,5 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
   );
 };
 
-export default withStyles(styles)(ControlBarActions);
+const ControlBarActions = withStyles(styles)(_ControlBarActions);
+export default ControlBarActions;

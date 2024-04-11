@@ -94,7 +94,7 @@ const SNACKBAR_ANCHOR_ORIGIN: SnackbarOrigin = {
   horizontal: "center",
 };
 
-const MessageLog: React.FC<MessageLogProps> = ({
+const _MessageLog: React.FC<MessageLogProps> = ({
   classes,
   className,
   message,
@@ -146,4 +146,5 @@ const MessageLog: React.FC<MessageLogProps> = ({
   );
 };
 
-export default withStyles(styles)(MessageLog);
+const MessageLog = withStyles(styles)(_MessageLog);
+export default MessageLog;

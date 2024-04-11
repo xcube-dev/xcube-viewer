@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import LoadingDialog from "../components/LoadingDialog";
+import _LoadingDialog from "../components/LoadingDialog";
 import { activityMessagesSelector } from "../selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
@@ -37,4 +37,8 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoadingDialog);
+const LoadingDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_LoadingDialog);
+export default LoadingDialog;

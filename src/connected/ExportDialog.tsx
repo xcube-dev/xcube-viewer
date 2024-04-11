@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import ExportDialog from "../components/ExportDialog";
+import _ExportDialog from "../components/ExportDialog";
 import { closeDialog, updateSettings } from "../actions/controlActions";
 import { exportData } from "../actions/dataActions";
 
@@ -43,4 +43,8 @@ const mapDispatchToProps = {
   downloadTimeSeries: exportData,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExportDialog);
+const ExportDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_ExportDialog);
+export default ExportDialog;

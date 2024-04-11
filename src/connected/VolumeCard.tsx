@@ -39,7 +39,7 @@ import {
   updateVolumeState,
 } from "../actions/controlActions";
 import { updateVariableVolume } from "../actions/dataActions";
-import VolumeCard from "../components/VolumeCard";
+import _VolumeCard from "../components/VolumeCard";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -63,4 +63,5 @@ const mapDispatchToProps = {
   updateVariableVolume,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(VolumeCard);
+const VolumeCard = connect(mapStateToProps, mapDispatchToProps)(_VolumeCard);
+export default VolumeCard;

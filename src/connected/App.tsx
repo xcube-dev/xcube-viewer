@@ -73,7 +73,7 @@ const newTheme = () =>
     }),
   );
 
-const App: React.FC<AppProps> = ({ compact }) => {
+const _App: React.FC<AppProps> = ({ compact }) => {
   return (
     <AuthWrapper>
       <StyledEngineProvider injectFirst>
@@ -96,4 +96,5 @@ const App: React.FC<AppProps> = ({ compact }) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+const App = connect(mapStateToProps, mapDispatchToProps)(_App);
+export default App;

@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import TimeSeriesCharts from "../components/TimeSeriesCharts";
+import _TimeSeriesCharts from "../components/TimeSeriesCharts";
 import {
   removeTimeSeries,
   removeTimeSeriesGroup,
@@ -67,4 +67,8 @@ const mapDispatchToProps = {
   addPlaceGroupTimeSeries,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeSeriesCharts);
+const TimeSeriesCharts = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_TimeSeriesCharts);
+export default TimeSeriesCharts;

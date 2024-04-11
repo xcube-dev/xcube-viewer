@@ -67,7 +67,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-const AppPane: React.FC<AppPaneProps> = ({ classes, hasConsent, compact }) => {
+const _AppPane: React.FC<AppPaneProps> = ({ classes, hasConsent, compact }) => {
   // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
   return (
     <main className={classes.main}>
@@ -82,7 +82,8 @@ const AppPane: React.FC<AppPaneProps> = ({ classes, hasConsent, compact }) => {
   );
 };
 
-export default connect(
+const AppPane = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withStyles(styles)(AppPane));
+)(withStyles(styles)(_AppPane));
+export default AppPane;

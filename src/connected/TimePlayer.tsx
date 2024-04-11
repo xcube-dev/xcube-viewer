@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import TimePlayer from "../components/TimePlayer";
+import _TimePlayer from "../components/TimePlayer";
 import {
   selectTime,
   incSelectedTime,
@@ -49,4 +49,5 @@ const mapDispatchToProps = {
   updateTimeAnimation,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimePlayer);
+const TimePlayer = connect(mapStateToProps, mapDispatchToProps)(_TimePlayer);
+export default TimePlayer;

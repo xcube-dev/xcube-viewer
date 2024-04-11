@@ -249,11 +249,12 @@ const UserControlContent: React.FC<UserControlProps> = ({
   }
 };
 
-const UserControl: React.FC<UserControlProps> = (props) => {
+const _UserControl: React.FC<UserControlProps> = (props) => {
   if (!Config.instance.authClient) {
     return null;
   }
   return <UserControlContent {...props} />;
 };
 
-export default withStyles(styles)(UserControl);
+const UserControl = withStyles(styles)(_UserControl);
+export default UserControl;

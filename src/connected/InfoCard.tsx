@@ -39,7 +39,7 @@ import {
   showInfoCard,
   updateInfoCardElementViewMode,
 } from "../actions/controlActions";
-import InfoCard from "../components/InfoCard";
+import _InfoCard from "../components/InfoCard";
 import { Config } from "../config";
 
 const mapStateToProps = (state: AppState) => {
@@ -63,4 +63,5 @@ const mapDispatchToProps = {
   updateInfoCardElementViewMode,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(InfoCard);
+const InfoCard = connect(mapStateToProps, mapDispatchToProps)(_InfoCard);
+export default InfoCard;

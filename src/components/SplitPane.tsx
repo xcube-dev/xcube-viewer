@@ -77,7 +77,7 @@ export interface ISplitPaneState {
  * - dir: the split direction, either "hor" or "ver"
  * - initialSize: the initial width ("hor") or height ("ver") of the first child's container
  */
-class SplitPane extends React.PureComponent<ISplitPaneProps, ISplitPaneState> {
+class _SplitPane extends React.PureComponent<ISplitPaneProps, ISplitPaneState> {
   constructor(props: ISplitPaneProps) {
     super(props);
     this.handleSplitDelta = this.handleSplitDelta.bind(this);
@@ -149,4 +149,5 @@ class SplitPane extends React.PureComponent<ISplitPaneProps, ISplitPaneState> {
   }
 }
 
-export default withStyles(styles)(SplitPane);
+const SplitPane = withStyles(styles)(_SplitPane);
+export default SplitPane;

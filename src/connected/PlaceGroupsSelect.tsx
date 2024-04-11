@@ -24,7 +24,7 @@
 
 import { connect } from "react-redux";
 
-import PlaceGroupsSelect from "../components/PlaceGroupsSelect";
+import _PlaceGroupsSelect from "../components/PlaceGroupsSelect";
 import { AppState } from "../states/appState";
 import {
   renameUserPlaceGroup,
@@ -52,4 +52,8 @@ const mapDispatchToProps = {
   removeUserPlaceGroup,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaceGroupsSelect);
+const PlaceGroupsSelect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_PlaceGroupsSelect);
+export default PlaceGroupsSelect;

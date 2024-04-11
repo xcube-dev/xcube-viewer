@@ -24,7 +24,7 @@
 
 import { connect } from "react-redux";
 
-import VariableSelect from "../components/VariableSelect";
+import _VariableSelect from "../components/VariableSelect";
 import { AppState } from "../states/appState";
 import { addTimeSeries } from "../actions/dataActions";
 import { selectVariable } from "../actions/controlActions";
@@ -48,4 +48,8 @@ const mapDispatchToProps = {
   addTimeSeries,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(VariableSelect);
+const VariableSelect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_VariableSelect);
+export default VariableSelect;

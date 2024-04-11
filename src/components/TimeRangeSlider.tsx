@@ -61,7 +61,7 @@ interface TimeRangeSliderProps extends WithStyles<typeof styles> {
   updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
-const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
+const _TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
   classes,
   dataTimeRange,
   selectedTimeRange,
@@ -127,4 +127,5 @@ const TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
   );
 };
 
-export default withStyles(styles)(TimeRangeSlider);
+const TimeRangeSlider = withStyles(styles)(_TimeRangeSlider);
+export default TimeRangeSlider;

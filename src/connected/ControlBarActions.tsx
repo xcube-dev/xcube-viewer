@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import ControlBarActions from "../components/ControlBarActions";
+import _ControlBarActions from "../components/ControlBarActions";
 import {
   flyToSelectedObject,
   openDialog,
@@ -57,4 +57,8 @@ const mapDispatchToProps = {
   updateResources,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ControlBarActions);
+const ControlBarActions = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_ControlBarActions);
+export default ControlBarActions;

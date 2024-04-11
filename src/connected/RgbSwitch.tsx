@@ -27,7 +27,7 @@ import { connect } from "react-redux";
 import { AppState } from "../states/appState";
 import { setRgbLayerVisibility } from "../actions/controlActions";
 import { selectedDatasetRgbSchemaSelector } from "../selectors/controlSelectors";
-import RgbSwitch from "../components/RgbSwitch";
+import _RgbSwitch from "../components/RgbSwitch";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -41,4 +41,5 @@ const mapDispatchToProps = {
   setRgbLayerVisibility,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RgbSwitch);
+const RgbSwitch = connect(mapStateToProps, mapDispatchToProps)(_RgbSwitch);
+export default RgbSwitch;

@@ -44,7 +44,7 @@ interface RgbSwitchProps extends WithStyles<typeof styles>, WithLocale {
   setRgbLayerVisibility: (showRgbLayer: boolean) => void;
 }
 
-const RgbSwitch: React.FC<RgbSwitchProps> = ({
+const _RgbSwitch: React.FC<RgbSwitchProps> = ({
   showRgbLayer,
   rgbSchema,
   setRgbLayerVisibility,
@@ -70,4 +70,5 @@ const RgbSwitch: React.FC<RgbSwitchProps> = ({
   );
 };
 
-export default withStyles(styles)(RgbSwitch);
+const RgbSwitch = withStyles(styles)(_RgbSwitch);
+export default RgbSwitch;

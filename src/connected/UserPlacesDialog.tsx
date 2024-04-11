@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import UserPlacesDialog from "../components/UserPlacesDialog";
+import _UserPlacesDialog from "../components/UserPlacesDialog";
 import {
   closeDialog,
   updateSettings,
@@ -11,7 +11,7 @@ import { importUserPlacesFromText } from "../actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
-    open: !!state.controlState.dialogOpen["addUserPlacesFromText"],
+    open: state.controlState.dialogOpen["addUserPlacesFromText"],
     userPlacesFormatName: state.controlState.userPlacesFormatName,
     userPlacesFormatOptions: state.controlState.userPlacesFormatOptions,
     nextMapInteraction: state.controlState.lastMapInteraction,
@@ -25,4 +25,8 @@ const mapDispatchToProps = {
   addUserPlacesFromText: importUserPlacesFromText,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserPlacesDialog);
+const UserPlacesDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_UserPlacesDialog);
+export default UserPlacesDialog;

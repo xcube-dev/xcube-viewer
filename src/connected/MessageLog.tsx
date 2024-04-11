@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "../states/appState";
-import MessageLog from "../components/MessageLog";
+import _MessageLog from "../components/MessageLog";
 import { hideMessage } from "../actions/messageLogActions";
 
 const mapStateToProps = (state: AppState) => {
@@ -40,4 +40,5 @@ const mapDispatchToProps = {
   hideMessage,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageLog);
+const MessageLog = connect(mapStateToProps, mapDispatchToProps)(_MessageLog);
+export default MessageLog;

@@ -107,7 +107,7 @@ const getLayout = (): Layout => {
   return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
 };
 
-const Workspace: React.FC<WorkspaceProps> = ({
+const _Workspace: React.FC<WorkspaceProps> = ({
   classes,
   hasInfoCard,
   hasVolumeCard,
@@ -172,7 +172,8 @@ const Workspace: React.FC<WorkspaceProps> = ({
   }
 };
 
-export default connect(
+const Workspace = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withStyles(styles)(Workspace));
+)(withStyles(styles)(_Workspace));
+export default Workspace;

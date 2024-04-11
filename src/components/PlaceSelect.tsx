@@ -72,7 +72,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
   openDialog: (dialogId: string) => void;
 }
 
-const PlaceSelect: React.FC<PlaceSelectProps> = ({
+const _PlaceSelect: React.FC<PlaceSelectProps> = ({
   classes,
   selectPlace,
   placeLabels,
@@ -171,4 +171,5 @@ const PlaceSelect: React.FC<PlaceSelectProps> = ({
   );
 };
 
-export default withStyles(styles)(PlaceSelect);
+const PlaceSelect = withStyles(styles)(_PlaceSelect);
+export default PlaceSelect;
