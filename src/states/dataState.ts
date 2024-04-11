@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,40 +22,39 @@
  * SOFTWARE.
  */
 
-import { Config } from '../config';
+import { Config } from "../config";
 import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
-import { ColorBars } from '../model/colorBar';
-import { Dataset } from '../model/dataset';
-import { PlaceGroup, } from '../model/place';
-import { TimeSeriesGroup } from '../model/timeSeries';
-import { loadUserServers } from './userSettings';
+import { ColorBars } from "../model/colorBar";
+import { Dataset } from "../model/dataset";
+import { PlaceGroup } from "../model/place";
+import { TimeSeriesGroup } from "../model/timeSeries";
+import { loadUserServers } from "./userSettings";
 
 export interface DataState {
-    serverInfo: ApiServerInfo | null;
-    datasets: Dataset[];
-    colorBars: ColorBars | null;
-    timeSeriesGroups: TimeSeriesGroup[];
-    userPlaceGroups: PlaceGroup[];
-    userServers: ApiServerConfig[]; // Will contain at least 1 item
+  serverInfo: ApiServerInfo | null;
+  datasets: Dataset[];
+  colorBars: ColorBars | null;
+  timeSeriesGroups: TimeSeriesGroup[];
+  userPlaceGroups: PlaceGroup[];
+  userServers: ApiServerConfig[]; // Will contain at least 1 item
 }
 
 export function newDataState(): DataState {
-    const extraUserServers = loadUserServers();
-    const userServers = [
-        {...Config.instance.server},
-    ];
-    extraUserServers.forEach(extraUserServer => {
-        if (!userServers.find(userServer => userServer.id === extraUserServer.id)) {
-            userServers.push(extraUserServer);
-        }
-    });
-    return {
-        serverInfo: null,
-        datasets: [],
-        colorBars: null,
-        timeSeriesGroups: [],
-        userPlaceGroups: [],
-        userServers,
-    };
+  const extraUserServers = loadUserServers();
+  const userServers = [{ ...Config.instance.server }];
+  extraUserServers.forEach((extraUserServer) => {
+    if (
+      !userServers.find((userServer) => userServer.id === extraUserServer.id)
+    ) {
+      userServers.push(extraUserServer);
+    }
+  });
+  return {
+    serverInfo: null,
+    datasets: [],
+    colorBars: null,
+    timeSeriesGroups: [],
+    userPlaceGroups: [],
+    userServers,
+  };
 }
-

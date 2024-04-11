@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,28 +22,31 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import TimePlayer from '../components/TimePlayer';
-import { selectTime, incSelectedTime, updateTimeAnimation } from '../actions/controlActions';
-
+import { AppState } from "../states/appState";
+import TimePlayer from "../components/TimePlayer";
+import {
+  selectTime,
+  incSelectedTime,
+  updateTimeAnimation,
+} from "../actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
+  return {
+    locale: state.controlState.locale,
 
-        selectedTime: state.controlState.selectedTime,
-        selectedTimeRange: state.controlState.selectedTimeRange,
-        timeAnimationActive: state.controlState.timeAnimationActive,
-        timeAnimationInterval: state.controlState.timeAnimationInterval,
-    };
+    selectedTime: state.controlState.selectedTime,
+    selectedTimeRange: state.controlState.selectedTimeRange,
+    timeAnimationActive: state.controlState.timeAnimationActive,
+    timeAnimationInterval: state.controlState.timeAnimationInterval,
+  };
 };
 
 const mapDispatchToProps = {
-    selectTime,
-    incSelectedTime,
-    updateTimeAnimation,
+  selectTime,
+  incSelectedTime,
+  updateTimeAnimation,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TimePlayer);

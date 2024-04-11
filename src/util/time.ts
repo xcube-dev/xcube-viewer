@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,29 +22,23 @@
  * SOFTWARE.
  */
 
-
 function getTimezoneOffset(date: Date): number {
-    return date.getTimezoneOffset() * 60000;
+  return date.getTimezoneOffset() * 60000;
 }
 
 export function localToUtcTime(local: Date): number {
-    return local.getTime() - getTimezoneOffset(local);
+  return local.getTime() - getTimezoneOffset(local);
 }
 
 export function utcTimeToLocal(utcTime: number): Date {
-    const dateTime = new Date(utcTime);
-    return new Date(dateTime.getTime() + getTimezoneOffset(dateTime));
+  const dateTime = new Date(utcTime);
+  return new Date(dateTime.getTime() + getTimezoneOffset(dateTime));
 }
 
 export function utcTimeToIsoDateString(utcTime: number) {
-    return new Date(utcTime)
-        .toISOString()
-        .substr(0, 10);
+  return new Date(utcTime).toISOString().substr(0, 10);
 }
 
 export function utcTimeToIsoDateTimeString(utcTime: number) {
-    return new Date(utcTime)
-        .toISOString()
-        .substr(0, 19)
-        .replace("T", " ");
+  return new Date(utcTime).toISOString().substr(0, 19).replace("T", " ");
 }

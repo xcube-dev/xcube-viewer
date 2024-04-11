@@ -2,8 +2,7 @@
   "$schema": "http://json-schema.org/draft/2019-09/schema#",
 
   "definitions": {
-
-    "AuthClientConfig":   {
+    "AuthClientConfig": {
       "type": "object",
       "properties": {
         "authority": {
@@ -41,9 +40,13 @@
     "ApiServerConfig": {
       "type": "object",
       "properties": {
-        "id": {"type": "string", "examples": ["local"]},
-        "name": {"type": "string", "examples": ["Local Server"]},
-        "url": {"type": "string", "format": "uri", "examples": ["https://blueants.eu/api/"]}
+        "id": { "type": "string", "examples": ["local"] },
+        "name": { "type": "string", "examples": ["Local Server"] },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "examples": ["https://blueants.eu/api/"]
+        }
       },
       "required": ["id", "name", "url"],
       "additionalProperties": false
@@ -61,19 +64,35 @@
           "description": "Predefined color name.",
           "examples": ["lime", "red", "lightBlue"],
           "enum": [
-            "amber", "blue", "blueGrey", "brown",
-            "cyan", "deepOrange", "deepPurple", "green",
-            "grey", "indigo", "lightBlue", "lightGreen", "lime",
-            "orange", "pink", "purple", "red",
-            "teal", "yellow"
+            "amber",
+            "blue",
+            "blueGrey",
+            "brown",
+            "cyan",
+            "deepOrange",
+            "deepPurple",
+            "green",
+            "grey",
+            "indigo",
+            "lightBlue",
+            "lightGreen",
+            "lime",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "teal",
+            "yellow"
           ]
         },
         {
           "description": "MUI color palette object.",
-          "examples": [{
-            "main": "#9abc31",
-            "contrastText": "#ffffff"
-          }],
+          "examples": [
+            {
+              "main": "#9abc31",
+              "contrastText": "#ffffff"
+            }
+          ],
           "type": "object",
           "properties": {
             "light": { "type": "string", "examples": ["#ceef64"] },
@@ -90,19 +109,28 @@
     "Branding": {
       "type": "object",
       "properties": {
-        "appBarTitle": {"type": "string", "examples": ["xcube Viewer"]},
-        "windowTitle": {"type": "string", "examples": ["xcube Viewer"]},
-        "windowIcon": {"type": ["string", "null"], "examples": ["images/favicon.ico"]},
-        "themeName": {"type": "string", "examples": ["light"], "enum": ["dark", "light"]},
+        "appBarTitle": { "type": "string", "examples": ["xcube Viewer"] },
+        "windowTitle": { "type": "string", "examples": ["xcube Viewer"] },
+        "windowIcon": {
+          "type": ["string", "null"],
+          "examples": ["images/favicon.ico"]
+        },
+        "themeName": {
+          "type": "string",
+          "examples": ["light"],
+          "enum": ["dark", "light"]
+        },
         "primaryColor": { "$ref": "#/definitions/ColorSchema" },
         "secondaryColor": { "$ref": "#/definitions/ColorSchema" },
-        "headerBackgroundColor": {"type": "string", "examples": ["#fafafa"]},
-        "logoImage": {"type": "string", "examples": ["images/logo.png"]},
+        "headerBackgroundColor": { "type": "string", "examples": ["#fafafa"] },
+        "logoImage": { "type": "string", "examples": ["images/logo.png"] },
         "logoWidth": { "type": "integer", "examples": [32], "minimum": 0 },
         "baseMapUrl": {
           "type": "string",
           "format": "uri-template",
-          "examples": ["https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"]
+          "examples": [
+            "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          ]
         },
         "defaultAgg": {
           "type": "string",
@@ -143,10 +171,10 @@
   "type": "object",
 
   "properties": {
-    "name": {"type": "string"},
-    "authClient": {"$ref": "#/definitions/AuthClientConfig"},
-    "server": {"$ref": "#/definitions/ApiServerConfig"},
-    "branding": {"$ref": "#/definitions/Branding"}
+    "name": { "type": "string" },
+    "authClient": { "$ref": "#/definitions/AuthClientConfig" },
+    "server": { "$ref": "#/definitions/ApiServerConfig" },
+    "branding": { "$ref": "#/definitions/Branding" }
   },
 
   "required": ["name", "server", "branding"],

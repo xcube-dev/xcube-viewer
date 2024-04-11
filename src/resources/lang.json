@@ -680,16 +680,16 @@
       "de": "Escape character",
       "se": "Escape karaktär"
     },
-   {
+    {
       "en": "Not-a-number token",
       "de": "Token für 'keine Zahl'",
       "se": "Not-a-number token"
     },
-   {
+    {
       "en": "True token",
       "de": "Token für 'wahr'",
       "se": "Sann token"
-   },
+    },
     {
       "en": "False token",
       "de": "Token für 'falsch'",

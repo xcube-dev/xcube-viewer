@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,62 +22,59 @@
  * SOFTWARE.
  */
 
-import * as React from 'react'
+import * as React from "react";
 import { Theme } from "@mui/material/styles";
 
+import { WithStyles } from "@mui/styles";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
 
-import { WithStyles } from '@mui/styles';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
+const styles = (theme: Theme) =>
+  createStyles({
+    hor: {
+      flex: "none",
+      border: "none",
+      outline: "none",
+      width: "8px",
+      minHeight: "100%",
+      maxHeight: "100%",
+      cursor: "col-resize",
 
+      backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
+      opacity: 0.0,
+    },
+    ver: {
+      flex: "none",
+      border: "none",
+      outline: "none",
+      height: "8px",
+      minWidth: "100%",
+      maxWidth: "100%",
+      cursor: "row-resize",
 
-const styles = (theme: Theme) => createStyles(
-    {
-        hor: {
-            flex: "none",
-            border: "none",
-            outline: "none",
-            width: "8px",
-            minHeight: "100%",
-            maxHeight: "100%",
-            cursor: "col-resize",
+      backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
+      opacity: 0.0,
+    },
+  });
 
-            backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
-            opacity: 0.0,
-        },
-        ver: {
-            flex: "none",
-            border: "none",
-            outline: "none",
-            height: "8px",
-            minWidth: "100%",
-            maxWidth: "100%",
-            cursor: "row-resize",
-
-            backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
-            opacity: 0.0,
-        }
-    });
-
-export type SplitDir = 'hor' | 'ver';
+export type SplitDir = "hor" | "ver";
 
 interface ISplitterProps extends WithStyles<typeof styles> {
-    dir?: SplitDir;
-    onChange: (delta: number) => any;
+  dir?: SplitDir;
+  onChange: (delta: number) => any;
 }
 
 interface IButtonEvent {
-    button: number;
-    buttons: number;
+  button: number;
+  buttons: number;
 }
 
 interface IScreenEvent {
-    screenX: number;
-    screenY: number;
+  screenX: number;
+  screenY: number;
 }
 
 type EventListenerItem = [string, (e: any) => any];
-
 
 /**
  * A splitter component.
@@ -86,99 +83,105 @@ type EventListenerItem = [string, (e: any) => any];
  * adjust either a container's width if direction is "hor" or its height if direction is "ver".
  */
 class Splitter extends React.PureComponent<ISplitterProps, any> {
-    private lastPosition: null | number = null;
-    private bodyEventListeners: Array<EventListenerItem>;
+  private lastPosition: null | number = null;
+  private bodyEventListeners: Array<EventListenerItem>;
 
-    constructor(props: ISplitterProps) {
-        super(props);
-        if (!props.onChange) {
-            throw Error('onChange property must be provided');
+  constructor(props: ISplitterProps) {
+    super(props);
+    if (!props.onChange) {
+      throw Error("onChange property must be provided");
+    }
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.bodyEventListeners = [
+      ["mousemove", this.onBodyMouseMove.bind(this)],
+      ["mouseup", this.onBodyMouseUp.bind(this)],
+      ["onmouseenter", this.onBodyMouseEnter.bind(this)],
+      ["onmouseleave", this.onBodyMouseLeave.bind(this)],
+    ];
+  }
+
+  componentWillUnmount() {
+    this.removeBodyMouseListeners();
+  }
+
+  render() {
+    return (
+      <div
+        className={
+          this.props.dir === "hor"
+            ? this.props.classes.hor
+            : this.props.classes.ver
         }
-        this.onMouseDown = this.onMouseDown.bind(this);
-        this.bodyEventListeners = [
-            ['mousemove', this.onBodyMouseMove.bind(this)],
-            ['mouseup', this.onBodyMouseUp.bind(this)],
-            ['onmouseenter', this.onBodyMouseEnter.bind(this)],
-            ['onmouseleave', this.onBodyMouseLeave.bind(this)],
-        ];
-    }
+        onMouseDown={this.onMouseDown}
+      />
+    );
+  }
 
-    componentWillUnmount() {
-        this.removeBodyMouseListeners();
+  private onMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+    if (this.isButton1Pressed(event)) {
+      this.lastPosition = this.getCurrentPosition(event);
+      this.removeBodyMouseListeners();
+      this.addBodyMouseListeners();
+    } else {
+      this.lastPosition = null;
     }
+  }
 
-    render() {
-        return (
-            <div
-                className={this.props.dir === 'hor' ? this.props.classes.hor : this.props.classes.ver}
-                onMouseDown={this.onMouseDown}
-            />
-        );
+  private onBodyMouseMove(event: MouseEvent) {
+    if (this.lastPosition === null || !this.isButton1Pressed(event)) {
+      return;
     }
+    const currentPosition = this.getCurrentPosition(event);
+    const positionDelta = currentPosition - this.lastPosition;
+    this.lastPosition = currentPosition;
+    if (positionDelta !== 0) {
+      this.props.onChange(positionDelta);
+    }
+  }
 
-    private onMouseDown(event: React.MouseEvent<HTMLDivElement>) {
-        if (this.isButton1Pressed(event)) {
-            this.lastPosition = this.getCurrentPosition(event);
-            this.removeBodyMouseListeners();
-            this.addBodyMouseListeners();
-        } else {
-            this.lastPosition = null;
-        }
-    }
+  //noinspection JSUnusedLocalSymbols
+  private onBodyMouseUp(_event: MouseEvent) {
+    // console.log("onBodyMouseUp: ", event, this);
+    this.endDragging();
+  }
 
-    private onBodyMouseMove(event: MouseEvent) {
-        if (this.lastPosition === null || !this.isButton1Pressed(event)) {
-            return;
-        }
-        const currentPosition = this.getCurrentPosition(event);
-        const positionDelta = currentPosition - this.lastPosition;
-        this.lastPosition = currentPosition;
-        if (positionDelta !== 0) {
-            this.props.onChange(positionDelta);
-        }
-    }
+  //noinspection JSUnusedLocalSymbols
+  private onBodyMouseEnter(_event: MouseEvent) {
+    // console.log("onBodyMouseEnter: ", event, this);
+    this.endDragging();
+  }
 
-    //noinspection JSUnusedLocalSymbols
-    private onBodyMouseUp(_event: MouseEvent) {
-        // console.log("onBodyMouseUp: ", event, this);
-        this.endDragging();
-    }
+  //noinspection JSUnusedLocalSymbols
+  private onBodyMouseLeave(_event: MouseEvent) {
+    // console.log("onBodyMouseLeave: ", event, this);
+    this.endDragging();
+  }
 
-    //noinspection JSUnusedLocalSymbols
-    private onBodyMouseEnter(_event: MouseEvent) {
-        // console.log("onBodyMouseEnter: ", event, this);
-        this.endDragging();
-    }
+  //noinspection JSMethodCanBeStatic
+  private isButton1Pressed(event: IButtonEvent) {
+    return event.button === 0 && event.buttons === 1;
+  }
 
-    //noinspection JSUnusedLocalSymbols
-    private onBodyMouseLeave(_event: MouseEvent) {
-        // console.log("onBodyMouseLeave: ", event, this);
-        this.endDragging();
-    }
+  private getCurrentPosition(event: IScreenEvent) {
+    return this.props.dir === "hor" ? event.screenX : event.screenY;
+  }
 
-    //noinspection JSMethodCanBeStatic
-    private isButton1Pressed(event: IButtonEvent) {
-        return event.button === 0 && event.buttons === 1;
-    }
+  private endDragging() {
+    this.removeBodyMouseListeners();
+    this.lastPosition = null;
+  }
 
-    private getCurrentPosition(event: IScreenEvent) {
-        return this.props.dir === 'hor' ? event.screenX:event.screenY;
-    }
+  private addBodyMouseListeners() {
+    this.bodyEventListeners.forEach((pair: EventListenerItem) =>
+      document.body.addEventListener(pair[0], pair[1]),
+    );
+  }
 
-    private endDragging() {
-        this.removeBodyMouseListeners();
-        this.lastPosition = null;
-    }
-
-    private addBodyMouseListeners() {
-        this.bodyEventListeners.forEach((pair: EventListenerItem) =>
-            document.body.addEventListener(pair[0], pair[1]));
-    }
-
-    private removeBodyMouseListeners() {
-        this.bodyEventListeners.forEach((pair: EventListenerItem) =>
-            document.body.removeEventListener(pair[0], pair[1]));
-    }
+  private removeBodyMouseListeners() {
+    this.bodyEventListeners.forEach((pair: EventListenerItem) =>
+      document.body.removeEventListener(pair[0], pair[1]),
+    );
+  }
 }
 
 export default withStyles(styles)(Splitter);

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,40 +23,48 @@
  */
 
 import { expect, it, describe } from "vitest";
-import { getQueryParameterByName } from './qparam';
+import { getQueryParameterByName } from "./qparam";
 
+describe("getQueryParameterByName", () => {
+  it("works", () => {
+    const serverUrl = "http://xcube-org:3000/xcube-server/api/v1.0";
+    const serverName = "Default Server";
 
-describe('getQueryParameterByName', () => {
+    const queryStr = `?serverUrl=${encodeURIComponent(serverUrl)}&serverName=${encodeURIComponent(serverName)}`;
 
-    it('works', () => {
-        const serverUrl = 'http://xcube-org:3000/xcube-server/api/v1.0';
-        const serverName = 'Default Server';
+    const actualServerUrl = getQueryParameterByName(queryStr, "serverUrl");
+    expect(actualServerUrl).toEqual(serverUrl);
 
-        const queryStr = `?serverUrl=${encodeURIComponent(serverUrl)}&serverName=${encodeURIComponent(serverName)}`;
+    const actualServerName = getQueryParameterByName(queryStr, "serverName");
+    expect(actualServerName).toEqual(serverName);
+  });
 
-        const actualServerUrl = getQueryParameterByName(queryStr, 'serverUrl');
-        expect(actualServerUrl).toEqual(serverUrl);
+  it("works with default (missing param)", () => {
+    const serverUrl = "http://xcube-org:3000/xcube-server/api/v1.0";
+    const serverName = "Default Server";
 
-        const actualServerName = getQueryParameterByName(queryStr, 'serverName');
-        expect(actualServerName).toEqual(serverName);
-    });
+    const queryStr = `?server=${encodeURIComponent(serverUrl)}&serverName=${encodeURIComponent(serverName)}`;
 
-    it('works with default (missing param)', () => {
-        const serverUrl = 'http://xcube-org:3000/xcube-server/api/v1.0';
-        const serverName = 'Default Server';
+    const actualServerUrl = getQueryParameterByName(
+      queryStr,
+      "serverUrl",
+      "https://pippo",
+    );
+    expect(actualServerUrl).toEqual("https://pippo");
+    const actualServerName = getQueryParameterByName(
+      queryStr,
+      "serverName",
+      "https://pippo",
+    );
+    expect(actualServerName).toEqual(serverName);
+  });
 
-        const queryStr = `?server=${encodeURIComponent(serverUrl)}&serverName=${encodeURIComponent(serverName)}`;
-
-        const actualServerUrl = getQueryParameterByName(queryStr, 'serverUrl', 'https://pippo');
-        expect(actualServerUrl).toEqual('https://pippo');
-        const actualServerName = getQueryParameterByName(queryStr, 'serverName', 'https://pippo');
-        expect(actualServerName).toEqual(serverName);
-    });
-
-    it('works with default (no queryStr)', () => {
-        const actualServerUrl = getQueryParameterByName(null, 'serverUrl', 'https://pippo');
-        expect(actualServerUrl).toEqual('https://pippo');
-    });
-
+  it("works with default (no queryStr)", () => {
+    const actualServerUrl = getQueryParameterByName(
+      null,
+      "serverUrl",
+      "https://pippo",
+    );
+    expect(actualServerUrl).toEqual("https://pippo");
+  });
 });
-

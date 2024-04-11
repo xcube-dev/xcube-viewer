@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -25,19 +25,19 @@
 export type MessageType = "error" | "warning" | "info" | "success";
 
 export interface MessageLogEntry {
-    id: number;
-    type: MessageType;
-    text: string;
+  id: number;
+  type: MessageType;
+  text: string;
 }
 
 export interface MessageLogState {
-    newEntries: MessageLogEntry[];
-    oldEntries: MessageLogEntry[];
+  newEntries: MessageLogEntry[];
+  oldEntries: MessageLogEntry[];
 }
 
 export function newMessageLogState() {
-    return {
-        newEntries: [],
-        oldEntries: [],
-    }
+  return {
+    newEntries: [],
+    oldEntries: [],
+  };
 }

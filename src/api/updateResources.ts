@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2022 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,23 +22,25 @@
  * SOFTWARE.
  */
 
-import { callJsonApi, makeRequestInit, makeRequestUrl } from './callApi';
+import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
 
-
-export function updateResources(apiServerUrl: string, accessToken: string | null): Promise<boolean> {
-    const url = makeRequestUrl(`${apiServerUrl}/maintenance/update`, []);
-    const init = makeRequestInit(accessToken);
-    try {
-        return callJsonApi<boolean>(url, init)
-            .then(() => {
-                return true;
-            })
-            .catch(error => {
-                console.error(error);
-                return false;
-            });
-    } catch (error) {
+export function updateResources(
+  apiServerUrl: string,
+  accessToken: string | null,
+): Promise<boolean> {
+  const url = makeRequestUrl(`${apiServerUrl}/maintenance/update`, []);
+  const init = makeRequestInit(accessToken);
+  try {
+    return callJsonApi<boolean>(url, init)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
         console.error(error);
-        return Promise.resolve(false);
-    }
+        return false;
+      });
+  } catch (error) {
+    console.error(error);
+    return Promise.resolve(false);
+  }
 }

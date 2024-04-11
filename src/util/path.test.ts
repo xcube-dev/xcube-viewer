@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,30 +23,28 @@
  */
 
 import { expect, it, describe } from "vitest";
-import { buildPath } from './path';
+import { buildPath } from "./path";
 
-
-describe('buildPath', () => {
-    it('works', () => {
-        expect(buildPath('')).toEqual('');
-        expect(buildPath('p1')).toEqual('p1');
-        expect(buildPath('p1', 'p2', '')).toEqual('p1/p2');
-        expect(buildPath('p1', '', 'p2')).toEqual('p1/p2');
-        expect(buildPath('p1', '', '', 'p2')).toEqual('p1/p2');
-        expect(buildPath('', 'p1', 'p2')).toEqual('/p1/p2');
-    });
-    it('works with separators', () => {
-        expect(buildPath('p1/')).toEqual('p1/');
-        expect(buildPath('p1/', 'p2')).toEqual('p1/p2');
-        expect(buildPath('p1/', '/p2')).toEqual('p1/p2');
-        expect(buildPath('p1', '/p2')).toEqual('p1/p2');
-        expect(buildPath('/p1/')).toEqual('/p1/');
-        expect(buildPath('/p1/', 'p2')).toEqual('/p1/p2');
-        expect(buildPath('/p1/', '/p2')).toEqual('/p1/p2');
-        expect(buildPath('/p1', '/p2')).toEqual('/p1/p2');
-        expect(buildPath('p1/', 'p2/')).toEqual('p1/p2/');
-        expect(buildPath('p1/', '/p2/')).toEqual('p1/p2/');
-        expect(buildPath('p1', '/p2/')).toEqual('p1/p2/');
-    });
+describe("buildPath", () => {
+  it("works", () => {
+    expect(buildPath("")).toEqual("");
+    expect(buildPath("p1")).toEqual("p1");
+    expect(buildPath("p1", "p2", "")).toEqual("p1/p2");
+    expect(buildPath("p1", "", "p2")).toEqual("p1/p2");
+    expect(buildPath("p1", "", "", "p2")).toEqual("p1/p2");
+    expect(buildPath("", "p1", "p2")).toEqual("/p1/p2");
+  });
+  it("works with separators", () => {
+    expect(buildPath("p1/")).toEqual("p1/");
+    expect(buildPath("p1/", "p2")).toEqual("p1/p2");
+    expect(buildPath("p1/", "/p2")).toEqual("p1/p2");
+    expect(buildPath("p1", "/p2")).toEqual("p1/p2");
+    expect(buildPath("/p1/")).toEqual("/p1/");
+    expect(buildPath("/p1/", "p2")).toEqual("/p1/p2");
+    expect(buildPath("/p1/", "/p2")).toEqual("/p1/p2");
+    expect(buildPath("/p1", "/p2")).toEqual("/p1/p2");
+    expect(buildPath("p1/", "p2/")).toEqual("p1/p2/");
+    expect(buildPath("p1/", "/p2/")).toEqual("p1/p2/");
+    expect(buildPath("p1", "/p2/")).toEqual("p1/p2/");
+  });
 });
-

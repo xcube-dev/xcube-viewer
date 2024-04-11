@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,156 +22,163 @@
  * SOFTWARE.
  */
 
-import { Extent as OlExtent } from 'ol/extent';
-import { Geometry as OlGeometry } from 'ol/geom';
-import { default as OlBaseObject } from 'ol/Object';
+import { Extent as OlExtent } from "ol/extent";
+import { Geometry as OlGeometry } from "ol/geom";
+import { default as OlBaseObject } from "ol/Object";
 
-import { Config } from '../config';
-import { Time, TimeRange } from '../model/timeSeries';
-import { loadUserSettings } from './userSettings';
+import { Config } from "../config";
+import { Time, TimeRange } from "../model/timeSeries";
+import { loadUserSettings } from "./userSettings";
 import { DEFAULT_MAP_CRS } from "../model/proj";
 import { CsvOptions, defaultCsvOptions } from "../model/user-place/csv";
-import { defaultGeoJsonOptions, GeoJsonOptions } from "../model/user-place/geojson";
+import {
+  defaultGeoJsonOptions,
+  GeoJsonOptions,
+} from "../model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "../model/user-place/wkt";
 
-
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
-export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [250, 500, 1000, 2500];
+export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
+  250, 500, 1000, 2500,
+];
 
-export type MapInteraction = 'Select' | 'Point' | 'Polygon' | 'Circle' | 'Geometry';
+export type MapInteraction =
+  | "Select"
+  | "Point"
+  | "Polygon"
+  | "Circle"
+  | "Geometry";
 
-export type ViewMode = 'text' | 'list' | 'code' | 'python';
-
+export type ViewMode = "text" | "list" | "code" | "python";
 
 export interface InfoCardElementState {
-    visible?: boolean;
-    viewMode?: ViewMode;
+  visible?: boolean;
+  viewMode?: ViewMode;
 }
 
 export interface InfoCardElementStates {
-    [key: string]: InfoCardElementState;
+  [key: string]: InfoCardElementState;
 }
 
-export type UserPlacesFormatName = 'geojson' | 'csv' | 'wkt';
+export type UserPlacesFormatName = "geojson" | "csv" | "wkt";
 
 export interface UserPlacesFormatOptions {
-    csv: CsvOptions;
-    geojson: GeoJsonOptions;
-    wkt: WktOptions;
+  csv: CsvOptions;
+  geojson: GeoJsonOptions;
+  wkt: WktOptions;
 }
 
 export interface ExportSettings {
-    format: "GeoJSON" | "CSV";
-    multiFile: boolean;
-    zipArchive: boolean;
+  format: "GeoJSON" | "CSV";
+  multiFile: boolean;
+  zipArchive: boolean;
 }
 
-export type VolumeRenderMode = 'mip' | 'aip' | 'iso';
-export type VolumeStatus = 'loading' | 'ok' | 'error';
-export type VolumeState = { status: VolumeStatus; message?: string; };
+export type VolumeRenderMode = "mip" | "aip" | "iso";
+export type VolumeStatus = "loading" | "ok" | "error";
+export type VolumeState = { status: VolumeStatus; message?: string };
 export type VolumeStates = { [volumeId: string]: VolumeState };
 
 export interface ControlState {
-    selectedDatasetId: string | null;
-    selectedVariableName: string | null;
-    selectedPlaceGroupIds: string[] | null;
-    selectedPlaceId: string | null;
-    selectedUserPlaceId: string | null;
-    selectedServerId: string;
-    selectedTime: Time | null;
-    selectedTimeRange: TimeRange | null;
-    timeSeriesUpdateMode: 'add' | 'replace';
-    timeAnimationActive: boolean;
-    timeAnimationInterval: TimeAnimationInterval;
-    timeChunkSize: number;
-    autoShowTimeSeries: boolean;
-    showTimeSeriesPointsOnly: boolean;
-    showTimeSeriesErrorBars: boolean;
-    showTimeSeriesMedian: boolean;
-    userDrawnPlaceGroupName: string,
-    userPlacesFormatName: UserPlacesFormatName;
-    userPlacesFormatOptions: UserPlacesFormatOptions;
-    flyTo: OlGeometry | OlExtent | null;
-    activities: { [id: string]: string };
-    locale: string;
-    dialogOpen: { [dialogId: string]: boolean };
-    privacyNoticeAccepted: boolean;
-    mapInteraction: MapInteraction;
-    lastMapInteraction: MapInteraction;
-    volumeCardOpen: boolean;
-    volumeRenderMode: VolumeRenderMode;
-    volumeStates: VolumeStates;
-    infoCardOpen: boolean;
-    infoCardElementStates: InfoCardElementStates;
-    mapProjection: string;
-    imageSmoothingEnabled: boolean;
-    showDatasetBoundaries: boolean;
-    baseMapUrl: string;
-    showRgbLayer: boolean;
-    exportTimeSeries: boolean;
-    exportPlaces: boolean;
-    exportTimeSeriesSeparator: string;
-    exportPlacesAsCollection: boolean;
-    exportZipArchive: boolean;
-    exportFileName: string;
+  selectedDatasetId: string | null;
+  selectedVariableName: string | null;
+  selectedPlaceGroupIds: string[] | null;
+  selectedPlaceId: string | null;
+  selectedUserPlaceId: string | null;
+  selectedServerId: string;
+  selectedTime: Time | null;
+  selectedTimeRange: TimeRange | null;
+  timeSeriesUpdateMode: "add" | "replace";
+  timeAnimationActive: boolean;
+  timeAnimationInterval: TimeAnimationInterval;
+  timeChunkSize: number;
+  autoShowTimeSeries: boolean;
+  showTimeSeriesPointsOnly: boolean;
+  showTimeSeriesErrorBars: boolean;
+  showTimeSeriesMedian: boolean;
+  userDrawnPlaceGroupName: string;
+  userPlacesFormatName: UserPlacesFormatName;
+  userPlacesFormatOptions: UserPlacesFormatOptions;
+  flyTo: OlGeometry | OlExtent | null;
+  activities: { [id: string]: string };
+  locale: string;
+  dialogOpen: { [dialogId: string]: boolean };
+  privacyNoticeAccepted: boolean;
+  mapInteraction: MapInteraction;
+  lastMapInteraction: MapInteraction;
+  volumeCardOpen: boolean;
+  volumeRenderMode: VolumeRenderMode;
+  volumeStates: VolumeStates;
+  infoCardOpen: boolean;
+  infoCardElementStates: InfoCardElementStates;
+  mapProjection: string;
+  imageSmoothingEnabled: boolean;
+  showDatasetBoundaries: boolean;
+  baseMapUrl: string;
+  showRgbLayer: boolean;
+  exportTimeSeries: boolean;
+  exportPlaces: boolean;
+  exportTimeSeriesSeparator: string;
+  exportPlacesAsCollection: boolean;
+  exportZipArchive: boolean;
+  exportFileName: string;
 }
 
-
 export function newControlState(): ControlState {
-    const branding = Config.instance.branding;
-    const state: ControlState = {
-        selectedDatasetId: null,
-        selectedVariableName: null,
-        selectedPlaceGroupIds: [],
-        selectedPlaceId: null,
-        selectedUserPlaceId: null,
-        selectedServerId: Config.instance.server.id,
-        selectedTime: null,
-        selectedTimeRange: null,
-        timeSeriesUpdateMode: 'add',
-        timeAnimationActive: false,
-        timeAnimationInterval: 1000,
-        timeChunkSize: 20,
-        autoShowTimeSeries: true,
-        showTimeSeriesPointsOnly: false,
-        showTimeSeriesErrorBars: true,
-        showTimeSeriesMedian: branding.defaultAgg === 'median',
-        userDrawnPlaceGroupName: '',
-        userPlacesFormatName: 'csv',
-        userPlacesFormatOptions: {
-            csv: {...defaultCsvOptions},
-            geojson: {...defaultGeoJsonOptions},
-            wkt: {...defaultWktOptions},
-        },
-        flyTo: null,
-        activities: {},
-        locale: 'en',
-        dialogOpen: {},
-        privacyNoticeAccepted: false,
-        mapInteraction: 'Point',
-        lastMapInteraction: 'Point',
-        showRgbLayer: false,
-        volumeCardOpen: false,
-        volumeRenderMode: 'mip',
-        volumeStates: {},
-        infoCardOpen: false,
-        infoCardElementStates: {
-            dataset: {visible: true, viewMode: 'text'},
-            variable: {visible: true, viewMode: 'text'},
-            place: {visible: true, viewMode: 'text'},
-        },
-        mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
-        imageSmoothingEnabled: false,
-        showDatasetBoundaries: false,
-        baseMapUrl: branding.baseMapUrl || 'http://a.tile.osm.org/{z}/{x}/{y}.png',
-        exportTimeSeries: true,
-        exportTimeSeriesSeparator: 'TAB',
-        exportPlaces: true,
-        exportPlacesAsCollection: true,
-        exportZipArchive: true,
-        exportFileName: 'export',
-    };
-    return loadUserSettings(state);
+  const branding = Config.instance.branding;
+  const state: ControlState = {
+    selectedDatasetId: null,
+    selectedVariableName: null,
+    selectedPlaceGroupIds: [],
+    selectedPlaceId: null,
+    selectedUserPlaceId: null,
+    selectedServerId: Config.instance.server.id,
+    selectedTime: null,
+    selectedTimeRange: null,
+    timeSeriesUpdateMode: "add",
+    timeAnimationActive: false,
+    timeAnimationInterval: 1000,
+    timeChunkSize: 20,
+    autoShowTimeSeries: true,
+    showTimeSeriesPointsOnly: false,
+    showTimeSeriesErrorBars: true,
+    showTimeSeriesMedian: branding.defaultAgg === "median",
+    userDrawnPlaceGroupName: "",
+    userPlacesFormatName: "csv",
+    userPlacesFormatOptions: {
+      csv: { ...defaultCsvOptions },
+      geojson: { ...defaultGeoJsonOptions },
+      wkt: { ...defaultWktOptions },
+    },
+    flyTo: null,
+    activities: {},
+    locale: "en",
+    dialogOpen: {},
+    privacyNoticeAccepted: false,
+    mapInteraction: "Point",
+    lastMapInteraction: "Point",
+    showRgbLayer: false,
+    volumeCardOpen: false,
+    volumeRenderMode: "mip",
+    volumeStates: {},
+    infoCardOpen: false,
+    infoCardElementStates: {
+      dataset: { visible: true, viewMode: "text" },
+      variable: { visible: true, viewMode: "text" },
+      place: { visible: true, viewMode: "text" },
+    },
+    mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
+    imageSmoothingEnabled: false,
+    showDatasetBoundaries: false,
+    baseMapUrl: branding.baseMapUrl || "http://a.tile.osm.org/{z}/{x}/{y}.png",
+    exportTimeSeries: true,
+    exportTimeSeriesSeparator: "TAB",
+    exportPlaces: true,
+    exportPlacesAsCollection: true,
+    exportZipArchive: true,
+    exportFileName: "export",
+  };
+  return loadUserSettings(state);
 }
 
 // We cannot keep "MAP_OBJECTS" in control state object, because these objects are (1) not serializable

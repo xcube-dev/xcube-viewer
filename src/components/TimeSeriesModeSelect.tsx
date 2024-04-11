@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,43 +22,50 @@
  * SOFTWARE.
  */
 
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Theme } from '@mui/material/styles';
-import { WithStyles } from '@mui/styles';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
-import Switch from '@mui/material/Switch';
-import * as React from 'react';
-import i18n from '../i18n';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Theme } from "@mui/material/styles";
+import { WithStyles } from "@mui/styles";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
+import Switch from "@mui/material/Switch";
+import * as React from "react";
+import i18n from "../i18n";
 
-import { WithLocale } from '../util/lang';
+import { WithLocale } from "../util/lang";
 
 // TODO (forman): this component doesn't seem to be in use - remove!
 
-const styles = (_theme: Theme) => createStyles(
-    {});
+const styles = (_theme: Theme) => createStyles({});
 
-interface TimeSeriesModeSelectProps extends WithStyles<typeof styles>, WithLocale {
-    timeSeriesUpdateMode: 'add' | 'replace';
-    selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: 'add' | 'replace') => void;
+interface TimeSeriesModeSelectProps
+  extends WithStyles<typeof styles>,
+    WithLocale {
+  timeSeriesUpdateMode: "add" | "replace";
+  selectTimeSeriesUpdateMode: (timeSeriesUpdateMode: "add" | "replace") => void;
 }
 
-const TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({timeSeriesUpdateMode, selectTimeSeriesUpdateMode}) => {
+const TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({
+  timeSeriesUpdateMode,
+  selectTimeSeriesUpdateMode,
+}) => {
+  const handleTimeSeriesUpdateModeChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    selectTimeSeriesUpdateMode(event.target.checked ? "add" : "replace");
+  };
 
-    const handleTimeSeriesUpdateModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        selectTimeSeriesUpdateMode(event.target.checked ? 'add' : 'replace');
-    };
-
-    return (
-        <FormControlLabel label={i18n.get('Multi')} control={
-            <Switch
-                color={'primary'}
-                checked={timeSeriesUpdateMode === 'add'}
-                onChange={handleTimeSeriesUpdateModeChange}
-            />
-        }/>
-    );
+  return (
+    <FormControlLabel
+      label={i18n.get("Multi")}
+      control={
+        <Switch
+          color={"primary"}
+          checked={timeSeriesUpdateMode === "add"}
+          onChange={handleTimeSeriesUpdateModeChange}
+        />
+      }
+    />
+  );
 };
 
 export default withStyles(styles)(TimeSeriesModeSelect);
-

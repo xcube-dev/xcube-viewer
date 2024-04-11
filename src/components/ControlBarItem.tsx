@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,47 +22,44 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { WithStyles } from '@mui/styles';
-import withStyles from '@mui/styles/withStyles';
-import createStyles from '@mui/styles/createStyles';
-import FormControl from '@mui/material/FormControl';
+import * as React from "react";
+import { Theme } from "@mui/material/styles";
+import { WithStyles } from "@mui/styles";
+import withStyles from "@mui/styles/withStyles";
+import createStyles from "@mui/styles/createStyles";
+import FormControl from "@mui/material/FormControl";
 
-import { WithLocale } from '../util/lang';
-import Box from '@mui/material/Box';
+import { WithLocale } from "../util/lang";
+import Box from "@mui/material/Box";
 
-
-const styles = (theme: Theme) => createStyles(
-    {
-        formControl: {
-            marginRight: theme.spacing(1),
-        }
-    }
-);
+const styles = (theme: Theme) =>
+  createStyles({
+    formControl: {
+      marginRight: theme.spacing(1),
+    },
+  });
 
 interface ControlBarItemProps extends WithStyles<typeof styles>, WithLocale {
-    label: React.ReactNode;
-    control: React.ReactNode;
-    actions?: React.ReactNode | null;
+  label: React.ReactNode;
+  control: React.ReactNode;
+  actions?: React.ReactNode | null;
 }
 
 const ControlBarItem: React.FC<ControlBarItemProps> = ({
-                                                           classes,
-                                                           label,
-                                                           control,
-                                                           actions
-                                                       }) => {
-    return (
-        <FormControl variant="standard" className={classes.formControl}>
-            <Box>
-                {label}
-                {control}
-                {actions}
-            </Box>
-        </FormControl>
-    );
+  classes,
+  label,
+  control,
+  actions,
+}) => {
+  return (
+    <FormControl variant="standard" className={classes.formControl}>
+      <Box>
+        {label}
+        {control}
+        {actions}
+      </Box>
+    </FormControl>
+  );
 };
 
 export default withStyles(styles)(ControlBarItem);
-

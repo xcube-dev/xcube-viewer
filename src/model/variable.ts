@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,30 +22,30 @@
  * SOFTWARE.
  */
 
-import { TileSourceOptions } from './tile';
+import { TileSourceOptions } from "./tile";
 import { VolumeRenderMode } from "../states/controlState";
 
 export interface Variable {
-    id: string;
-    name: string;
-    dims: string[],
-    shape: number[],
-    dtype: string;
-    units: string;
-    title: string;
-    timeChunkSize: number | null;
-    // The following are new since xcube 0.11
-    tileUrl?: string;  // no longer used since 0.13
-    tileLevelMin?: number;
-    tileLevelMax?: number;
-    // tileSourceOptions are no longer used since xcube 0.11
-    tileSourceOptions?: TileSourceOptions;
-    colorBarName: string;
-    colorBarMin: number;
-    colorBarMax: number;
-    opacity?: number;
-    volumeRenderMode?: VolumeRenderMode;
-    volumeIsoThreshold?: number;
-    htmlRepr?: string;
-    attrs: { [name: string]: any };
+  id: string;
+  name: string;
+  dims: string[];
+  shape: number[];
+  dtype: string;
+  units: string;
+  title: string;
+  timeChunkSize: number | null;
+  // The following are new since xcube 0.11
+  tileUrl?: string; // no longer used since 0.13
+  tileLevelMin?: number;
+  tileLevelMax?: number;
+  // tileSourceOptions are no longer used since xcube 0.11
+  tileSourceOptions?: TileSourceOptions;
+  colorBarName: string;
+  colorBarMin: number;
+  colorBarMax: number;
+  opacity?: number;
+  volumeRenderMode?: VolumeRenderMode;
+  volumeIsoThreshold?: number;
+  htmlRepr?: string;
+  attrs: { [name: string]: any };
 }

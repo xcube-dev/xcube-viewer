@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,39 +22,43 @@
  * SOFTWARE.
  */
 
-import { default as OlVectorLayer } from 'ol/layer/Vector';
-import { Options as OlVectorLayerOptions } from 'ol/layer/BaseVector';
-import { default as OlVectorSource } from 'ol/source/Vector';
-import { default as OlTileLayer } from 'ol/layer/Tile';
-import { default as OlTileSource } from 'ol/source/Tile';
-import { Options as OlTileLayerOptions } from 'ol/layer/BaseTile';
+import { default as OlVectorLayer } from "ol/layer/Vector";
+import { Options as OlVectorLayerOptions } from "ol/layer/BaseVector";
+import { default as OlVectorSource } from "ol/source/Vector";
+import { default as OlTileLayer } from "ol/layer/Tile";
+import { default as OlTileSource } from "ol/source/Tile";
+import { Options as OlTileLayerOptions } from "ol/layer/BaseTile";
 
 type Layer = OlVectorLayer<OlVectorSource> | OlTileLayer<OlTileSource>;
 type LayerOptions = OlVectorLayerOptions<any> | OlTileLayerOptions<any>;
 
-export function processLayerProperties(layer: Layer,
-                                       prevProps: LayerOptions,
-                                       nextProps: LayerOptions) {
-    updateLayerProperty(layer, prevProps, nextProps, 'visible', true);
-    updateLayerProperty(layer, prevProps, nextProps, 'opacity', 1.0);
-    updateLayerProperty(layer, prevProps, nextProps, 'zIndex', undefined);
-    updateLayerProperty(layer, prevProps, nextProps, 'minResolution', undefined);
-    updateLayerProperty(layer, prevProps, nextProps, 'maxResolution', undefined);
-    // TODO: add more props here
+export function processLayerProperties(
+  layer: Layer,
+  prevProps: LayerOptions,
+  nextProps: LayerOptions,
+) {
+  updateLayerProperty(layer, prevProps, nextProps, "visible", true);
+  updateLayerProperty(layer, prevProps, nextProps, "opacity", 1.0);
+  updateLayerProperty(layer, prevProps, nextProps, "zIndex", undefined);
+  updateLayerProperty(layer, prevProps, nextProps, "minResolution", undefined);
+  updateLayerProperty(layer, prevProps, nextProps, "maxResolution", undefined);
+  // TODO: add more props here
 }
 
-function updateLayerProperty<T>(layer: Layer,
-                                prevProps: LayerOptions,
-                                nextProps: LayerOptions,
-                                propertyName: keyof LayerOptions,
-                                defaultValue: T) {
-    const prevValue = normalizeValue(prevProps[propertyName], defaultValue);
-    const nextValue = normalizeValue(nextProps[propertyName], defaultValue);
-    if (prevValue !== nextValue) {
-        layer.set(propertyName as string, nextValue);
-    }
+function updateLayerProperty<T>(
+  layer: Layer,
+  prevProps: LayerOptions,
+  nextProps: LayerOptions,
+  propertyName: keyof LayerOptions,
+  defaultValue: T,
+) {
+  const prevValue = normalizeValue(prevProps[propertyName], defaultValue);
+  const nextValue = normalizeValue(nextProps[propertyName], defaultValue);
+  if (prevValue !== nextValue) {
+    layer.set(propertyName as string, nextValue);
+  }
 }
 
 function normalizeValue<T>(value: T | undefined, defaultValue: T): T {
-    return value === undefined ? defaultValue : value;
+  return value === undefined ? defaultValue : value;
 }

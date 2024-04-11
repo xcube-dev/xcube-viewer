@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 /**
  * Builds a path by concatenating a base path and subsequent path components.
  * The function ensures that only single path separators are used between
@@ -32,23 +31,23 @@
  * @param components
  */
 export function buildPath(base: string, ...components: string[]): string {
-    let path = base;
-    for (const c of components) {
-        if (c !== '') {
-            if (path.endsWith('/')) {
-                if (c.startsWith('/')) {
-                    path += c.substr(1);
-                } else {
-                    path += c;
-                }
-            } else {
-                if (c.startsWith('/')) {
-                    path += c;
-                } else {
-                    path += '/' + c;
-                }
-            }
+  let path = base;
+  for (const c of components) {
+    if (c !== "") {
+      if (path.endsWith("/")) {
+        if (c.startsWith("/")) {
+          path += c.substr(1);
+        } else {
+          path += c;
         }
+      } else {
+        if (c.startsWith("/")) {
+          path += c;
+        } else {
+          path += "/" + c;
+        }
+      }
     }
-    return path;
+  }
+  return path;
 }

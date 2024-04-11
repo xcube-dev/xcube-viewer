@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2022 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Vector2, Vector3 } from 'three';
+import { Vector2, Vector3 } from "three";
 
 /**
  * Shaders to render 3D volumes using raycasting.
@@ -30,17 +30,16 @@ import { Vector2, Vector3 } from 'three';
  */
 
 const VolumeShader = {
+  uniforms: {
+    u_size: { value: new Vector3(1, 1, 1) },
+    u_renderstyle: { value: 0 },
+    u_renderthreshold: { value: 0.5 },
+    u_clim: { value: new Vector2(0, 1) },
+    u_data: { value: null },
+    u_cmdata: { value: null },
+  },
 
-    uniforms: {
-        'u_size': {value: new Vector3(1, 1, 1)},
-        'u_renderstyle': {value: 0},
-        'u_renderthreshold': {value: 0.5},
-        'u_clim': {value: new Vector2(0, 1)},
-        'u_data': {value: null},
-        'u_cmdata': {value: null}
-    },
-
-    vertexShader: /* glsl */`
+  vertexShader: /* glsl */ `
 
         varying vec4 v_nearpos;
         varying vec4 v_farpos;
@@ -74,7 +73,7 @@ const VolumeShader = {
             gl_Position = projectionMatrix * viewMatrix * modelMatrix * position4;
         }`,
 
-    fragmentShader: /* glsl */`
+  fragmentShader: /* glsl */ `
 
         precision highp float;
         precision mediump sampler3D;
@@ -325,9 +324,7 @@ const VolumeShader = {
             final_color = color * (ambient_color + diffuse_color) + specular_color;
             final_color.a = color.a;
             return final_color;
-        }`
+        }`,
 };
 
 export { VolumeShader };
-
-

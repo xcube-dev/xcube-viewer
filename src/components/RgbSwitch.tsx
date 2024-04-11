@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,49 +22,52 @@
  * SOFTWARE.
  */
 
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { Theme } from '@mui/material/styles';
-import { WithStyles } from '@mui/styles';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
-import Switch from '@mui/material/Switch';
-import Tooltip from '@mui/material/Tooltip';
-import * as React from 'react';
-import i18n from '../i18n';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Theme } from "@mui/material/styles";
+import { WithStyles } from "@mui/styles";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
+import Switch from "@mui/material/Switch";
+import Tooltip from "@mui/material/Tooltip";
+import * as React from "react";
+import i18n from "../i18n";
 
-import { RgbSchema } from '../model/dataset';
-import { WithLocale } from '../util/lang';
-
+import { RgbSchema } from "../model/dataset";
+import { WithLocale } from "../util/lang";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) => createStyles(
-    {});
+const styles = (_theme: Theme) => createStyles({});
 
 interface RgbSwitchProps extends WithStyles<typeof styles>, WithLocale {
-    showRgbLayer: boolean;
-    rgbSchema: RgbSchema | null;
-    setRgbLayerVisibility: (showRgbLayer: boolean) => void;
+  showRgbLayer: boolean;
+  rgbSchema: RgbSchema | null;
+  setRgbLayerVisibility: (showRgbLayer: boolean) => void;
 }
 
-const RgbSwitch: React.FC<RgbSwitchProps> = ({showRgbLayer, rgbSchema, setRgbLayerVisibility}) => {
+const RgbSwitch: React.FC<RgbSwitchProps> = ({
+  showRgbLayer,
+  rgbSchema,
+  setRgbLayerVisibility,
+}) => {
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRgbLayerVisibility(event.target.checked);
+  };
 
-    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRgbLayerVisibility(event.target.checked);
-    };
-
-    return (
-        <Tooltip arrow title={i18n.get('Show RGB layer instead')}>
-            <FormControlLabel label={i18n.get('RGB')} control={
-                <Switch
-                    color={'primary'}
-                    checked={rgbSchema !== null ? showRgbLayer : false}
-                    disabled={rgbSchema === null}
-                    onChange={handleSwitchChange}
-                />
-            }/>
-        </Tooltip>
-    );
+  return (
+    <Tooltip arrow title={i18n.get("Show RGB layer instead")}>
+      <FormControlLabel
+        label={i18n.get("RGB")}
+        control={
+          <Switch
+            color={"primary"}
+            checked={rgbSchema !== null ? showRgbLayer : false}
+            disabled={rgbSchema === null}
+            onChange={handleSwitchChange}
+          />
+        }
+      />
+    </Tooltip>
+  );
 };
 
 export default withStyles(styles)(RgbSwitch);
-

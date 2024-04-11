@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,38 +22,37 @@
  * SOFTWARE.
  */
 
-import * as ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import * as Redux from 'redux';
-import * as ReduxLogger from 'redux-logger';
-import thunk from 'redux-thunk';
+import * as ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import * as Redux from "redux";
+import * as ReduxLogger from "redux-logger";
+import thunk from "redux-thunk";
 
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import './index.css';
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import "./index.css";
 
-import { changeLocale } from './actions/controlActions';
-import { syncWithServer } from './actions/dataActions';
-import { Config } from './config';
-import App from './connected/App';
-import { appReducer } from './reducers/appReducer';
-
+import { changeLocale } from "./actions/controlActions";
+import { syncWithServer } from "./actions/dataActions";
+import { Config } from "./config";
+import App from "./connected/App";
+import { appReducer } from "./reducers/appReducer";
 
 Config.load().then(() => {
-    const logger = ReduxLogger.createLogger({collapsed: true, diff: false});
-    const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
-    const store = Redux.createStore(appReducer, middlewares);
+  const logger = ReduxLogger.createLogger({ collapsed: true, diff: false });
+  const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
+  const store = Redux.createStore(appReducer, middlewares);
 
-    store.dispatch(changeLocale(store.getState().controlState.locale) as any);
+  store.dispatch(changeLocale(store.getState().controlState.locale) as any);
 
-    if (store.getState().controlState.privacyNoticeAccepted) {
-        store.dispatch(syncWithServer() as any);
-    }
+  if (store.getState().controlState.privacyNoticeAccepted) {
+    store.dispatch(syncWithServer() as any);
+  }
 
-    ReactDOM.render(
-        <Provider store={store}>{<App/>}</Provider>,
-        document.getElementById('root') as HTMLElement
-    );
+  ReactDOM.render(
+    <Provider store={store}>{<App />}</Provider>,
+    document.getElementById("root") as HTMLElement,
+  );
 });

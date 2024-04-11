@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,21 +22,25 @@
  * SOFTWARE.
  */
 
-import { UPDATE_ACCESS_TOKEN, UserAuthAction } from '../actions/userAuthActions';
-import { newUserAuthState, UserAuthState } from '../states/userAuthState';
+import {
+  UPDATE_ACCESS_TOKEN,
+  UserAuthAction,
+} from "../actions/userAuthActions";
+import { newUserAuthState, UserAuthState } from "../states/userAuthState";
 
-
-export function userAuthReducer(state: UserAuthState | undefined, action: UserAuthAction): UserAuthState {
-    if (state === undefined) {
-        state = newUserAuthState();
-    }
-    switch (action.type) {
-        case UPDATE_ACCESS_TOKEN:
-            return {
-                ...state,
-                accessToken: action.accessToken,
-            };
-    }
-    return state!;
+export function userAuthReducer(
+  state: UserAuthState | undefined,
+  action: UserAuthAction,
+): UserAuthState {
+  if (state === undefined) {
+    state = newUserAuthState();
+  }
+  switch (action.type) {
+    case UPDATE_ACCESS_TOKEN:
+      return {
+        ...state,
+        accessToken: action.accessToken,
+      };
+  }
+  return state!;
 }
-

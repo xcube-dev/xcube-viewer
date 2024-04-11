@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,33 +22,40 @@
  * SOFTWARE.
  */
 
-import { MessageType } from '../states/messageLogState';
+import { MessageType } from "../states/messageLogState";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const POST_MESSAGE = 'POST_MESSAGE';
+export const POST_MESSAGE = "POST_MESSAGE";
 
 export interface PostMessage {
-    type: typeof POST_MESSAGE;
-    messageType: MessageType;
-    messageText: string;
+  type: typeof POST_MESSAGE;
+  messageType: MessageType;
+  messageText: string;
 }
 
-export function postMessage(messageType: MessageType, messageText: string | Error): PostMessage {
-    return {type: POST_MESSAGE, messageType, messageText: (messageText as any).message || messageText + ''};
+export function postMessage(
+  messageType: MessageType,
+  messageText: string | Error,
+): PostMessage {
+  return {
+    type: POST_MESSAGE,
+    messageType,
+    messageText: (messageText as any).message || messageText + "",
+  };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const HIDE_MESSAGE = 'HIDE_MESSAGE';
+export const HIDE_MESSAGE = "HIDE_MESSAGE";
 
 export interface HideMessage {
-    type: typeof HIDE_MESSAGE;
-    messageId: number;
+  type: typeof HIDE_MESSAGE;
+  messageId: number;
 }
 
 export function hideMessage(messageId: number): HideMessage {
-    return {type: HIDE_MESSAGE, messageId};
+  return { type: HIDE_MESSAGE, messageId };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

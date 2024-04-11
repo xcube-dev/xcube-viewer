@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,58 +22,60 @@
  * SOFTWARE.
  */
 
-import {connect} from 'react-redux';
+import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
 
-import {AppState} from '../states/appState';
+import { AppState } from "../states/appState";
 import {
-    baseMapLayerSelector,
-    imageSmoothingSelector,
-    mapProjectionSelector,
-    selectedDatasetBoundaryLayerSelector,
-    selectedDatasetPlaceGroupLayersSelector,
-    selectedDatasetRgbLayerSelector,
-    selectedDatasetVariableLayerSelector,
-    selectedPlaceGroupPlacesSelector,
-    userPlaceGroupsVisibilitySelector,
-} from '../selectors/controlSelectors';
-import { addDrawnUserPlace, importUserPlacesFromText } from '../actions/dataActions';
-import Viewer from '../components/Viewer';
-import {userPlaceGroupsSelector} from "../selectors/dataSelectors";
-import {selectPlace} from "../actions/controlActions";
+  baseMapLayerSelector,
+  imageSmoothingSelector,
+  mapProjectionSelector,
+  selectedDatasetBoundaryLayerSelector,
+  selectedDatasetPlaceGroupLayersSelector,
+  selectedDatasetRgbLayerSelector,
+  selectedDatasetVariableLayerSelector,
+  selectedPlaceGroupPlacesSelector,
+  userPlaceGroupsVisibilitySelector,
+} from "../selectors/controlSelectors";
+import {
+  addDrawnUserPlace,
+  importUserPlacesFromText,
+} from "../actions/dataActions";
+import Viewer from "../components/Viewer";
+import { userPlaceGroupsSelector } from "../selectors/dataSelectors";
+import { selectPlace } from "../actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
 
-
 interface OwnProps {
-    onMapRef?: (map: OlMap | null) => void;
+  onMapRef?: (map: OlMap | null) => void;
 }
 
 const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
-    return {
-        locale: state.controlState.locale,
-        variableLayer: selectedDatasetVariableLayerSelector(state),
-        rgbLayer: selectedDatasetRgbLayerSelector(state),
-        datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
-        placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
-        colorBarLegend: <ColorBarLegend/>,
-        userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
-        userPlaceGroups: userPlaceGroupsSelector(state),
-        userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
-        mapId: 'map',
-        mapInteraction: state.controlState.mapInteraction,
-        mapProjection: mapProjectionSelector(state),
-        selectedPlaceId: state.controlState.selectedPlaceId,
-        places: selectedPlaceGroupPlacesSelector(state),
-        baseMapLayer: baseMapLayerSelector(state),
-        imageSmoothing: imageSmoothingSelector(state),
-        onMapRef: ownProps.onMapRef,
-    }
+  return {
+    locale: state.controlState.locale,
+    variableLayer: selectedDatasetVariableLayerSelector(state),
+    rgbLayer: selectedDatasetRgbLayerSelector(state),
+    datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
+    placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
+    colorBarLegend: <ColorBarLegend />,
+    userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
+    userPlaceGroups: userPlaceGroupsSelector(state),
+    userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
+    mapId: "map",
+    mapInteraction: state.controlState.mapInteraction,
+    mapProjection: mapProjectionSelector(state),
+    selectedPlaceId: state.controlState.selectedPlaceId,
+    places: selectedPlaceGroupPlacesSelector(state),
+    baseMapLayer: baseMapLayerSelector(state),
+    imageSmoothing: imageSmoothingSelector(state),
+    onMapRef: ownProps.onMapRef,
+  };
 };
 
 const mapDispatchToProps = {
-    addDrawnUserPlace,
-    importUserPlacesFromText,
-    selectPlace,
+  addDrawnUserPlace,
+  importUserPlacesFromText,
+  selectPlace,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Viewer);

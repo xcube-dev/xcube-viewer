@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,29 +22,29 @@
  * SOFTWARE.
  */
 
-import { callJsonApi } from './callApi';
+import { callJsonApi } from "./callApi";
 import { ColorBars, ColorBarGroup } from "../model/colorBar";
 
-
 export function getColorBars(apiServerUrl: string): Promise<ColorBars> {
-    return callJsonApi<ColorBars>(`${apiServerUrl}/colorbars`)
-        .then(parseColorBars);
+  return callJsonApi<ColorBars>(`${apiServerUrl}/colorbars`).then(
+    parseColorBars,
+  );
 }
 
 function parseColorBars(colorBarGroups: any): ColorBars {
-    const groups: ColorBarGroup[] = [];
-    const images: any = {};
-    colorBarGroups.forEach((colorBarGroup: [string, string, any[]]) => {
-        const title = colorBarGroup[0];
-        const description = colorBarGroup[1];
-        const names: string[] = [];
-        colorBarGroup[2].forEach((colorBar: [string, string]) => {
-            const name = colorBar[0];
-            const image = colorBar[1];
-            names.push(name);
-            images[name] = image;
-        });
-        groups.push({title, description, names});
+  const groups: ColorBarGroup[] = [];
+  const images: any = {};
+  colorBarGroups.forEach((colorBarGroup: [string, string, any[]]) => {
+    const title = colorBarGroup[0];
+    const description = colorBarGroup[1];
+    const names: string[] = [];
+    colorBarGroup[2].forEach((colorBar: [string, string]) => {
+      const name = colorBar[0];
+      const image = colorBar[1];
+      names.push(name);
+      images[name] = image;
     });
-    return {groups, images};
+    groups.push({ title, description, names });
+  });
+  return { groups, images };
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,260 +22,270 @@
  * SOFTWARE.
  */
 
-import { Color, PaletteMode } from '@mui/material';
+import { Color, PaletteMode } from "@mui/material";
 import {
-    brown,
-    cyan,
-    green,
-    indigo,
-    lightBlue,
-    lime,
-    orange,
-    pink,
-    purple,
-    red,
-    yellow,
-} from '@mui/material/colors';
-import { ApiServerConfig } from './model/apiServer';
-import rawDefaultConfig from './resources/config.json';
-import { AuthClientConfig } from './util/auth';
-import { Branding, parseBranding } from './util/branding';
-import baseUrl from './util/baseurl';
-import { buildPath } from './util/path';
-
+  brown,
+  cyan,
+  green,
+  indigo,
+  lightBlue,
+  lime,
+  orange,
+  pink,
+  purple,
+  red,
+  yellow,
+} from "@mui/material/colors";
+import { ApiServerConfig } from "./model/apiServer";
+import rawDefaultConfig from "./resources/config.json";
+import { AuthClientConfig } from "./util/auth";
+import { Branding, parseBranding } from "./util/branding";
+import baseUrl from "./util/baseurl";
+import { buildPath } from "./util/path";
 
 export const appParams = new URLSearchParams(window.location.search);
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class Config {
-    readonly name: string;
-    readonly server: ApiServerConfig;
-    readonly branding: Branding;
-    readonly authClient?: AuthClientConfig;
-    private static _instance: Config;
+  readonly name: string;
+  readonly server: ApiServerConfig;
+  readonly branding: Branding;
+  readonly authClient?: AuthClientConfig;
+  private static _instance: Config;
 
-    constructor(
-        name: string,
-        server: ApiServerConfig,
-        branding: Branding,
-        authClient?: AuthClientConfig
+  constructor(
+    name: string,
+    server: ApiServerConfig,
+    branding: Branding,
+    authClient?: AuthClientConfig,
+  ) {
+    this.name = name;
+    this.server = server;
+    this.branding = branding;
+    this.authClient = authClient;
+  }
+
+  static async load(): Promise<Config> {
+    let configPath = appParams.get("configPath") || "config";
+    const rawConfig = await this.loadRawConfig(configPath);
+    if (rawConfig === rawDefaultConfig) {
+      configPath = "";
+    }
+
+    const name = rawConfig.name || "default";
+    const authClient = this.getAuthConfig(rawConfig);
+    const server = this.getServerConfig(rawConfig);
+    const compact = parseInt(appParams.get("compact") || "0") !== 0;
+    const branding = parseBranding(
+      {
+        ...rawDefaultConfig.branding,
+        ...rawConfig.branding,
+        compact: compact || rawConfig.branding.compact,
+      },
+      configPath,
+    );
+    branding.allow3D =
+      !!parseInt(appParams.get("allow3D") || "0") || branding.allow3D;
+    Config._instance = new Config(name, server, branding, authClient);
+    if (import.meta.env.DEV) {
+      console.debug("Configuration:", Config._instance);
+    }
+    if (branding.windowTitle) {
+      this.changeWindowTitle(branding.windowTitle);
+    }
+    if (branding.windowIcon) {
+      this.changeWindowIcon(branding.windowIcon);
+    }
+    return Config._instance;
+  }
+
+  private static getAuthConfig(rawConfig: any) {
+    let authClient = rawConfig.authClient && { ...rawConfig.authClient };
+    const authClientFromEnv = Config.getAuthClientFromEnv();
+    if (
+      !authClient &&
+      authClientFromEnv.authority &&
+      authClientFromEnv.clientId
     ) {
-        this.name = name;
-        this.server = server;
-        this.branding = branding;
-        this.authClient = authClient;
+      authClient = {
+        authority: authClientFromEnv.authority,
+        client_id: authClientFromEnv.clientId,
+      };
     }
+    if (authClient) {
+      if (authClientFromEnv.authority) {
+        authClient = {
+          ...authClient,
+          authority: authClientFromEnv.authority,
+        };
+      }
+      if (authClientFromEnv.clientId) {
+        authClient = {
+          ...authClient,
+          client_id: authClientFromEnv.clientId,
+        };
+      }
+      if (authClientFromEnv.audience) {
+        authClient = {
+          ...authClient,
+          extraQueryParams: {
+            ...authClient.extraQueryParams,
+            audience: authClientFromEnv.audience,
+          },
+        };
+      }
+    }
+    return authClient;
+  }
 
-    static async load(): Promise<Config> {
-        let configPath = appParams.get('configPath') || 'config';
-        const rawConfig = await this.loadRawConfig(configPath);
-        if (rawConfig === rawDefaultConfig) {
-            configPath = '';
-        }
+  private static getServerConfig(rawConfig: any) {
+    const server = {
+      ...rawDefaultConfig.server,
+      ...rawConfig.server,
+    } as ApiServerConfig;
+    const serverFromEnv = Config.getApiServerFromEnv();
+    server.id = appParams.get("serverId") || serverFromEnv.id || server.id;
+    server.name =
+      appParams.get("serverName") || serverFromEnv.name || server.name;
+    server.url = appParams.get("serverUrl") || serverFromEnv.url || server.url;
+    return server;
+  }
 
-        const name = rawConfig.name || 'default';
-        const authClient = this.getAuthConfig(rawConfig);
-        const server = this.getServerConfig(rawConfig);
-        const compact = parseInt(appParams.get('compact') || '0') !== 0;
-        const branding = parseBranding(
-            {
-                ...rawDefaultConfig.branding,
-                ...rawConfig.branding,
-                compact: compact || rawConfig.branding.compact
-            },
-            configPath
-        );
-        branding.allow3D = !!parseInt(appParams.get('allow3D') || '0') || branding.allow3D;
-        Config._instance = new Config(name, server, branding, authClient);
+  private static async loadRawConfig(configPath: string) {
+    let rawConfig = null;
+    let rawConfigError = null;
+    const configUrl = buildPath(baseUrl.href, configPath, "config.json");
+    try {
+      const rawConfigResponse = await fetch(configUrl);
+      if (rawConfigResponse.ok) {
+        rawConfig = await rawConfigResponse.json();
         if (import.meta.env.DEV) {
-            console.debug('Configuration:', Config._instance);
+          console.debug(`Configuration loaded from ${configUrl}`);
         }
-        if (branding.windowTitle) {
-            this.changeWindowTitle(branding.windowTitle);
+      } else {
+        const { status, statusText } = rawConfigResponse;
+        rawConfigError = `HTTP status ${status}`;
+        if (statusText) {
+          rawConfigError += ` (${statusText})`;
         }
-        if (branding.windowIcon) {
-            this.changeWindowIcon(branding.windowIcon);
-        }
-        return Config._instance;
+      }
+    } catch (e) {
+      rawConfig = null;
+      rawConfigError = `${e}`;
     }
+    if (rawConfig === null) {
+      rawConfig = rawDefaultConfig;
+      if (import.meta.env.DEV) {
+        console.debug(
+          `Failed loading configuration from ${configUrl}:`,
+          rawConfigError,
+        );
+        console.debug(`Using defaults.`);
+      }
+    }
+    return rawConfig;
+  }
 
-    private static getAuthConfig(rawConfig: any) {
-        let authClient = rawConfig.authClient && {...rawConfig.authClient};
-        const authClientFromEnv = Config.getAuthClientFromEnv();
-        if (!authClient && authClientFromEnv.authority && authClientFromEnv.clientId) {
-            authClient = {
-                authority: authClientFromEnv.authority,
-                client_id: authClientFromEnv.clientId
-            };
-        }
-        if (authClient) {
-            if (authClientFromEnv.authority) {
-                authClient = {
-                    ...authClient,
-                    authority: authClientFromEnv.authority
-                };
-            }
-            if (authClientFromEnv.clientId) {
-                authClient = {
-                    ...authClient,
-                    client_id: authClientFromEnv.clientId
-                };
-            }
-            if (authClientFromEnv.audience) {
-                authClient = {
-                    ...authClient,
-                    extraQueryParams: {
-                        ...authClient.extraQueryParams,
-                        audience: authClientFromEnv.audience
-                    }
-                };
-            }
-        }
-        return authClient;
-    }
+  static get instance(): Config {
+    Config.assertConfigLoaded();
+    return Config._instance;
+  }
 
-    private static getServerConfig(rawConfig: any) {
-        const server = {...rawDefaultConfig.server, ...rawConfig.server} as ApiServerConfig;
-        const serverFromEnv = Config.getApiServerFromEnv();
-        server.id = appParams.get('serverId') || serverFromEnv.id || server.id;
-        server.name = appParams.get('serverName') || serverFromEnv.name || server.name;
-        server.url = appParams.get('serverUrl') || serverFromEnv.url || server.url;
-        return server;
+  private static assertConfigLoaded() {
+    if (!Config._instance) {
+      throw new Error("internal error: configuration not available yet");
     }
+  }
 
-    private static async loadRawConfig(configPath: string) {
-        let rawConfig = null;
-        let rawConfigError = null;
-        const configUrl = buildPath(baseUrl.href, configPath, 'config.json');
-        try {
-            const rawConfigResponse = await fetch(configUrl);
-            if (rawConfigResponse.ok) {
-                rawConfig = await rawConfigResponse.json();
-                if (import.meta.env.DEV) {
-                    console.debug(`Configuration loaded from ${configUrl}`);
-                }
-            } else {
-                const {status, statusText} = rawConfigResponse;
-                rawConfigError = `HTTP status ${status}`;
-                if (statusText) {
-                    rawConfigError += ` (${statusText})`;
-                }
-            }
-        } catch (e) {
-            rawConfig = null;
-            rawConfigError = `${e}`;
-        }
-        if (rawConfig === null) {
-            rawConfig = rawDefaultConfig;
-            if (import.meta.env.DEV) {
-                console.debug(`Failed loading configuration from ${configUrl}:`, rawConfigError);
-                console.debug(`Using defaults.`);
-            }
-        }
-        return rawConfig;
-    }
+  private static changeWindowTitle(title: string) {
+    document.title = title;
+  }
 
-    static get instance(): Config {
-        Config.assertConfigLoaded();
-        return Config._instance;
+  private static changeWindowIcon(iconUrl: string) {
+    let favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (favicon !== null) {
+      favicon.href = iconUrl;
+    } else {
+      favicon = document.createElement("link");
+      favicon.rel = "icon";
+      favicon.href = iconUrl;
+      document.head.appendChild(favicon);
     }
+  }
 
-    private static assertConfigLoaded() {
-        if (!Config._instance) {
-            throw new Error('internal error: configuration not available yet');
-        }
-    }
+  private static getAuthClientFromEnv() {
+    const authority = import.meta.env.XCV_OAUTH2_AUTHORITY;
+    const clientId = import.meta.env.XCV_OAUTH2_CLIENT_ID;
+    const audience = import.meta.env.XCV_OAUTH2_AUDIENCE;
+    return { authority, clientId, audience };
+  }
 
-    private static changeWindowTitle(title: string) {
-        document.title = title;
-    }
-
-    private static changeWindowIcon(iconUrl: string) {
-        let favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-        if (favicon !== null) {
-            favicon.href = iconUrl;
-        } else {
-            favicon = document.createElement("link");
-            favicon.rel = "icon";
-            favicon.href = iconUrl;
-            document.head.appendChild(favicon);
-        }
-    }
-
-    private static getAuthClientFromEnv() {
-        const authority = import.meta.env.XCV_OAUTH2_AUTHORITY;
-        const clientId = import.meta.env.XCV_OAUTH2_CLIENT_ID;
-        const audience = import.meta.env.XCV_OAUTH2_AUDIENCE;
-        return {authority, clientId, audience};
-    }
-
-    private static getApiServerFromEnv(): Partial<ApiServerConfig> {
-        const id = import.meta.env.XCV_APP_SERVER_ID;
-        const name = import.meta.env.XCV_SERVER_NAME;
-        const url = import.meta.env.XCV_SERVER_URL;
-        return {id, name, url};
-    }
+  private static getApiServerFromEnv(): Partial<ApiServerConfig> {
+    const id = import.meta.env.XCV_APP_SERVER_ID;
+    const name = import.meta.env.XCV_SERVER_NAME;
+    const url = import.meta.env.XCV_SERVER_URL;
+    return { id, name, url };
+  }
 }
-
 
 interface TileAccess {
-    param: string;
-    token: string;
+  param: string;
+  token: string;
 }
-
 
 // Array of user place colors in stable order (see #153)
 const userPlaceColorsArray: [string, Color][] = [
-    ["red", red],
-    ["yellow", yellow],
-    ["pink", pink],
-    ["lightBlue", lightBlue],
-    ["green", green],
-    ["orange", orange],
-    ["lime", lime],
-    ["purple", purple],
-    ["indigo", indigo],
-    ["cyan", cyan],
-    ["brown", brown]
+  ["red", red],
+  ["yellow", yellow],
+  ["pink", pink],
+  ["lightBlue", lightBlue],
+  ["green", green],
+  ["orange", orange],
+  ["lime", lime],
+  ["purple", purple],
+  ["indigo", indigo],
+  ["cyan", cyan],
+  ["brown", brown],
 ];
 
 const userPlaceColors: { [name: string]: Color } = (() => {
-    const obj: { [name: string]: Color } = {};
-    userPlaceColorsArray.forEach(([name, color]) => {
-        obj[name] = color;
-    });
-    return obj;
+  const obj: { [name: string]: Color } = {};
+  userPlaceColorsArray.forEach(([name, color]) => {
+    obj[name] = color;
+  });
+  return obj;
 })();
 
-export const userPlaceColorNames = userPlaceColorsArray.map(([name, _]) => name);
-
+export const userPlaceColorNames = userPlaceColorsArray.map(
+  ([name, _]) => name,
+);
 
 export function getStrokeShade(paletteMode: PaletteMode) {
-    return paletteMode === 'light' ? 800 : 400;
+  return paletteMode === "light" ? 800 : 400;
 }
 
 export function getUserPlaceColorName(index: number): string {
-    return userPlaceColorNames[index % userPlaceColorNames.length];
+  return userPlaceColorNames[index % userPlaceColorNames.length];
 }
 
-export function getUserPlaceColor(colorName: string, paletteMode: PaletteMode): string {
-    const shade = getStrokeShade(paletteMode);
-    return userPlaceColors[colorName][shade];
+export function getUserPlaceColor(
+  colorName: string,
+  paletteMode: PaletteMode,
+): string {
+  const shade = getStrokeShade(paletteMode);
+  return userPlaceColors[colorName][shade];
 }
 
 // See resources/maps.json
 const tileAccess: { [name: string]: TileAccess } = {
-    'Mapbox': {
-        param: 'access_token',
-        token: 'pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg'
-    },
+  Mapbox: {
+    param: "access_token",
+    token:
+      "pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg",
+  },
 };
 
-
 export function getTileAccess(groupName: string) {
-    return tileAccess[groupName];
+  return tileAccess[groupName];
 }
-
-

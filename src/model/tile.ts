@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,22 +22,21 @@
  * SOFTWARE.
  */
 
-
 // No longer used since xcube 0.11
 export interface TileGrid {
-    minZoom?: number;
-    extent: [number, number, number, number];
-    origin?: [number, number];
-    tileSize: [number, number];
-    resolutions: number[];
-    sizes: Array<[number, number]>;
+  minZoom?: number;
+  extent: [number, number, number, number];
+  origin?: [number, number];
+  tileSize: [number, number];
+  resolutions: number[];
+  sizes: Array<[number, number]>;
 }
 
 // No longer used since xcube 0.11
 export interface TileSourceOptions {
-    url: string;
-    projection: string;
-    minZoom?: number;
-    maxZoom?: number;
-    tileGrid: TileGrid;
+  url: string;
+  projection: string;
+  minZoom?: number;
+  maxZoom?: number;
+  tileGrid: TileGrid;
 }

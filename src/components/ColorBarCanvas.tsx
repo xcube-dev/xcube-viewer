@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,50 +22,48 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { useEffect, useRef } from 'react';
+import * as React from "react";
+import { useEffect, useRef } from "react";
 
-import i18n from '../i18n';
-import { ColorBar, renderColorBar } from '../model/colorBar';
-
+import i18n from "../i18n";
+import { ColorBar, renderColorBar } from "../model/colorBar";
 
 interface ColorBarCanvasProps {
-    colorBar: ColorBar;
-    opacity: number;
-    width: number | string | undefined;
-    height: number | string | undefined;
-    onOpenEditor: (event: React.MouseEvent<HTMLCanvasElement>) => void;
+  colorBar: ColorBar;
+  opacity: number;
+  width: number | string | undefined;
+  height: number | string | undefined;
+  onOpenEditor: (event: React.MouseEvent<HTMLCanvasElement>) => void;
 }
 
-export const ColorBarCanvas: React.FC<ColorBarCanvasProps> = (
-    {
-        colorBar,
-        opacity,
-        width,
-        height,
-        onOpenEditor
+export const ColorBarCanvas: React.FC<ColorBarCanvasProps> = ({
+  colorBar,
+  opacity,
+  width,
+  height,
+  onOpenEditor,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas !== null) {
+      renderColorBar(colorBar, opacity, canvas);
     }
-) => {
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  }, [colorBar, opacity]);
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (canvas !== null) {
-            renderColorBar(colorBar, opacity, canvas);
-        }
-    }, [colorBar, opacity]);
-
-    return <>
-        {colorBar.imageData ? (
-            <canvas
-                ref={canvasRef}
-                width={width || 240}
-                height={height || 24}
-                onClick={onOpenEditor}
-            />
-        ):(
-            <div>{i18n.get('Unknown color bar') + `: ${colorBar.baseName}`}</div>
-        )}
-    </>;
-}
-
+  return (
+    <>
+      {colorBar.imageData ? (
+        <canvas
+          ref={canvasRef}
+          width={width || 240}
+          height={height || 24}
+          onClick={onOpenEditor}
+        />
+      ) : (
+        <div>{i18n.get("Unknown color bar") + `: ${colorBar.baseName}`}</div>
+      )}
+    </>
+  );
+};

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,44 +22,45 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import {
-    infoCardElementViewModesSelector,
-    selectedDatasetSelector,
-    selectedPlaceInfoSelector, selectedServerSelector, selectedTimeSelector,
-    selectedVariableSelector,
-    visibleInfoCardElementsSelector
-} from '../selectors/controlSelectors';
+  infoCardElementViewModesSelector,
+  selectedDatasetSelector,
+  selectedPlaceInfoSelector,
+  selectedServerSelector,
+  selectedTimeSelector,
+  selectedVariableSelector,
+  visibleInfoCardElementsSelector,
+} from "../selectors/controlSelectors";
 
-import { AppState } from '../states/appState';
+import { AppState } from "../states/appState";
 import {
-    setVisibleInfoCardElements,
-    showInfoCard,
-    updateInfoCardElementViewMode,
-} from '../actions/controlActions';
-import InfoCard from '../components/InfoCard';
+  setVisibleInfoCardElements,
+  showInfoCard,
+  updateInfoCardElementViewMode,
+} from "../actions/controlActions";
+import InfoCard from "../components/InfoCard";
 import { Config } from "../config";
 
-
 const mapStateToProps = (state: AppState) => {
-    return {
-        locale: state.controlState.locale,
-        infoCardOpen: state.controlState.infoCardOpen,
-        visibleInfoCardElements: visibleInfoCardElementsSelector(state),
-        infoCardElementViewModes: infoCardElementViewModesSelector(state),
-        selectedDataset: selectedDatasetSelector(state),
-        selectedVariable: selectedVariableSelector(state),
-        selectedPlaceInfo: selectedPlaceInfoSelector(state),
-        selectedTime: selectedTimeSelector(state),
-        serverConfig: selectedServerSelector(state),
-        allowViewModePython: !!Config.instance.branding.allowViewModePython,
-    }
+  return {
+    locale: state.controlState.locale,
+    infoCardOpen: state.controlState.infoCardOpen,
+    visibleInfoCardElements: visibleInfoCardElementsSelector(state),
+    infoCardElementViewModes: infoCardElementViewModesSelector(state),
+    selectedDataset: selectedDatasetSelector(state),
+    selectedVariable: selectedVariableSelector(state),
+    selectedPlaceInfo: selectedPlaceInfoSelector(state),
+    selectedTime: selectedTimeSelector(state),
+    serverConfig: selectedServerSelector(state),
+    allowViewModePython: !!Config.instance.branding.allowViewModePython,
+  };
 };
 
 const mapDispatchToProps = {
-    showInfoCard,
-    setVisibleInfoCardElements,
-    updateInfoCardElementViewMode,
+  showInfoCard,
+  setVisibleInfoCardElements,
+  updateInfoCardElementViewMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfoCard);

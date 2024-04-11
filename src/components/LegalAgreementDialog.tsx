@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,108 +22,101 @@
  * SOFTWARE.
  */
 
-import { useEffect, useState } from 'react';
-import Markdown from 'react-markdown';
+import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
 import { Theme } from "@mui/material";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import makeStyles from '@mui/styles/makeStyles';
-import CircularProgress from '@mui/material/CircularProgress';
-import CheckIcon from '@mui/icons-material/Check';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import makeStyles from "@mui/styles/makeStyles";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckIcon from "@mui/icons-material/Check";
 
-import i18n from '../i18n';
-import { ControlState } from '../states/controlState';
-
+import i18n from "../i18n";
+import { ControlState } from "../states/controlState";
 
 const useStyles = makeStyles((theme: Theme) => ({
-        icon: {
-            marginRight: theme.spacing(2),
-        },
-    }
-));
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+}));
 
 interface LegalAgreementDialogProps {
-    open: boolean;
-    settings: ControlState;
-    updateSettings: (settings: ControlState) => void;
-    syncWithServer: () => void;
+  open: boolean;
+  settings: ControlState;
+  updateSettings: (settings: ControlState) => void;
+  syncWithServer: () => void;
 }
 
-export default function LegalAgreementDialog(
-    {
-        open,
-        settings,
-        updateSettings,
-        syncWithServer
-    }: LegalAgreementDialogProps) {
-    const [markdownText, setMarkdownText] = useState<string | null>(null);
+export default function LegalAgreementDialog({
+  open,
+  settings,
+  updateSettings,
+  syncWithServer,
+}: LegalAgreementDialogProps) {
+  const [markdownText, setMarkdownText] = useState<string | null>(null);
 
-    useEffect(() => {
-        const href = i18n.get("legal/privacy-note.en.md")
-        // fetch(window.location.href + href)
-        fetch(href)
-            .then(response => response.text())
-            .then(text => setMarkdownText(text));
-    });
+  useEffect(() => {
+    const href = i18n.get("legal/privacy-note.en.md");
+    // fetch(window.location.href + href)
+    fetch(href)
+      .then((response) => response.text())
+      .then((text) => setMarkdownText(text));
+  });
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    if (!open) {
-        return null;
+  if (!open) {
+    return null;
+  }
+
+  function handleConfirm() {
+    updateSettings({ ...settings, privacyNoticeAccepted: true });
+    syncWithServer();
+  }
+
+  function handleLeave() {
+    try {
+      if (window.history.length > 0) {
+        window.history.back();
+      } else if (typeof (window as any).home === "function") {
+        (window as any).home();
+      } else {
+        window.location.href = "about:home";
+      }
+    } catch (e) {
+      console.error(e);
     }
+  }
 
-    function handleConfirm() {
-        updateSettings({...settings, privacyNoticeAccepted: true});
-        syncWithServer();
-    }
+  return (
+    <Dialog
+      open={open}
+      disableEscapeKeyDown={true}
+      keepMounted={true}
+      scroll="body"
+    >
+      <DialogTitle>{i18n.get("Privacy Notice")}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {markdownText === null ? (
+            <CircularProgress />
+          ) : (
+            <Markdown children={markdownText} linkTarget="_blank" />
+          )}
+        </DialogContentText>
+      </DialogContent>
 
-    function handleLeave() {
-        try {
-            if (window.history.length > 0) {
-                window.history.back();
-            } else if (typeof (window as any).home === 'function') {
-                (window as any).home();
-            } else {
-                window.location.href = 'about:home';
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    return (
-        <Dialog
-            open={open}
-            disableEscapeKeyDown={true}
-            keepMounted={true}
-            scroll='body'
-        >
-            <DialogTitle>{i18n.get("Privacy Notice")}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    {
-                        markdownText === null
-                            ? <CircularProgress/>
-                            :<Markdown children={markdownText} linkTarget="_blank"/>
-                    }
-                </DialogContentText>
-            </DialogContent>
-
-            <DialogActions>
-                <Button onClick={handleConfirm} color="primary">
-                    <CheckIcon className={classes.icon}/>
-                    {i18n.get('Accept and continue')}
-                </Button>
-                <Button onClick={handleLeave}>
-                    {i18n.get('Leave')}
-                </Button>
-            </DialogActions>
-
-        </Dialog>
-    );
+      <DialogActions>
+        <Button onClick={handleConfirm} color="primary">
+          <CheckIcon className={classes.icon} />
+          {i18n.get("Accept and continue")}
+        </Button>
+        <Button onClick={handleLeave}>{i18n.get("Leave")}</Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
-

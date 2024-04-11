@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,27 +22,26 @@
  * SOFTWARE.
  */
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { AppState } from '../states/appState';
-import ServerDialog from '../components/ServerDialog';
+import { AppState } from "../states/appState";
+import ServerDialog from "../components/ServerDialog";
 import { closeDialog } from "../actions/controlActions";
 import { configureServers } from "../actions/dataActions";
 import { selectedServerSelector } from "../selectors/controlSelectors";
 import { userServersSelector } from "../selectors/dataSelectors";
 
-
 const mapStateToProps = (state: AppState) => {
-    return {
-        open: !!state.controlState.dialogOpen["server"],
-        servers: userServersSelector(state),
-        selectedServer: selectedServerSelector(state),
-    };
+  return {
+    open: !!state.controlState.dialogOpen["server"],
+    servers: userServersSelector(state),
+    selectedServer: selectedServerSelector(state),
+  };
 };
 
 const mapDispatchToProps = {
-    closeDialog,
-    configureServers,
+  closeDialog,
+  configureServers,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServerDialog);

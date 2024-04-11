@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
-import { MapElement } from '../Map';
+import * as React from "react";
+import { MapElement } from "../Map";
 
 interface LayersProps {
-    children: MapElement[];
+  children: MapElement[];
 }
 
 export function Layers(props: LayersProps) {
-    return (<React.Fragment>{props.children}</React.Fragment>);
+  return <React.Fragment>{props.children}</React.Fragment>;
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2023 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,67 +22,70 @@
  * SOFTWARE.
  */
 
-import * as React from 'react';
+import * as React from "react";
 
-import { WktOptions } from '../../model/user-place/wkt';
+import { WktOptions } from "../../model/user-place/wkt";
 import OptionsField from "./OptionsTextField";
-
 
 const WktTextField = OptionsField<WktOptions, string>();
 
-
 interface WktOptionsEditorProps {
-    options: WktOptions;
-    updateOptions: (options: Partial<WktOptions>) => any;
-    className: string;
+  options: WktOptions;
+  updateOptions: (options: Partial<WktOptions>) => any;
+  className: string;
 }
 
-const WktOptionsEditor: React.FC<WktOptionsEditorProps> = (
-    {
-        options,
-        updateOptions,
-        className
-    }
-) => {
-    return (
-        <div className={className}>
-            <div style={{display: "grid", gap: 12, paddingTop: 12, gridTemplateColumns: "auto auto"}}>
-                <WktTextField
-                    optionKey={'time'}
-                    label={'Time (UTC, ISO-format)'}
-                    options={options}
-                    updateOptions={updateOptions}
-                />
-                <div id="spareField"/>
-                <WktTextField
-                    label={'Group'}
-                    options={options}
-                    optionKey='group'
-                    updateOptions={updateOptions}
-                />
-                <WktTextField
-                    label={'Group prefix (used as fallback)'}
-                    optionKey='groupPrefix'
-                    options={options}
-                    updateOptions={updateOptions}
-                    disabled={options.group.trim() !== ''}
-                />
-                <WktTextField
-                    label={'Label'}
-                    optionKey='label'
-                    options={options}
-                    updateOptions={updateOptions}
-                />
-                <WktTextField
-                    label={'Label prefix (used as fallback)'}
-                    optionKey='labelPrefix'
-                    options={options}
-                    updateOptions={updateOptions}
-                    disabled={options.label.trim() !== ''}
-                />
-            </div>
-        </div>
-    );
-}
+const WktOptionsEditor: React.FC<WktOptionsEditorProps> = ({
+  options,
+  updateOptions,
+  className,
+}) => {
+  return (
+    <div className={className}>
+      <div
+        style={{
+          display: "grid",
+          gap: 12,
+          paddingTop: 12,
+          gridTemplateColumns: "auto auto",
+        }}
+      >
+        <WktTextField
+          optionKey={"time"}
+          label={"Time (UTC, ISO-format)"}
+          options={options}
+          updateOptions={updateOptions}
+        />
+        <div id="spareField" />
+        <WktTextField
+          label={"Group"}
+          options={options}
+          optionKey="group"
+          updateOptions={updateOptions}
+        />
+        <WktTextField
+          label={"Group prefix (used as fallback)"}
+          optionKey="groupPrefix"
+          options={options}
+          updateOptions={updateOptions}
+          disabled={options.group.trim() !== ""}
+        />
+        <WktTextField
+          label={"Label"}
+          optionKey="label"
+          options={options}
+          updateOptions={updateOptions}
+        />
+        <WktTextField
+          label={"Label prefix (used as fallback)"}
+          optionKey="labelPrefix"
+          options={options}
+          updateOptions={updateOptions}
+          disabled={options.label.trim() !== ""}
+        />
+      </div>
+    </div>
+  );
+};
 
 export default WktOptionsEditor;

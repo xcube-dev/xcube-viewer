@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019-2021 by the xcube development team and contributors.
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -22,60 +22,58 @@
  * SOFTWARE.
  */
 
-import CircularProgress from '@mui/material/CircularProgress';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import { Theme } from '@mui/material/styles';
-import { WithStyles } from '@mui/styles';
-import createStyles from '@mui/styles/createStyles';
-import withStyles from '@mui/styles/withStyles';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
-import i18n from '../i18n';
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import { Theme } from "@mui/material/styles";
+import { WithStyles } from "@mui/styles";
+import createStyles from "@mui/styles/createStyles";
+import withStyles from "@mui/styles/withStyles";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
+import i18n from "../i18n";
 
-import { WithLocale } from '../util/lang';
+import { WithLocale } from "../util/lang";
 
-
-const styles = (theme: Theme) => createStyles(
-    {
-        progress: {
-            margin: theme.spacing(2),
-        },
-        message: {
-            margin: theme.spacing(1),
-        },
-        contentContainer: {
-            margin: theme.spacing(1),
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'column',
-        },
-    });
+const styles = (theme: Theme) =>
+  createStyles({
+    progress: {
+      margin: theme.spacing(2),
+    },
+    message: {
+      margin: theme.spacing(1),
+    },
+    contentContainer: {
+      margin: theme.spacing(1),
+      textAlign: "center",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+    },
+  });
 
 interface LoadingDialogProps extends WithStyles<typeof styles>, WithLocale {
-    messages: string[];
+  messages: string[];
 }
 
-const LoadingDialog: React.FC<LoadingDialogProps> = ({classes, messages}) => {
+const LoadingDialog: React.FC<LoadingDialogProps> = ({ classes, messages }) => {
+  if (messages.length === 0) {
+    return null;
+  }
 
-    if (messages.length === 0) {
-        return null;
-    }
-
-    return (
-        <Dialog open={true} aria-labelledby="loading">
-            <DialogTitle id="loading">{i18n.get('Please wait...')}</DialogTitle>
-            <div className={classes.contentContainer}>
-                <CircularProgress className={classes.progress}/>
-                {messages.map((message, i) => (
-                    <Typography component="div" key={i}
-                                className={classes.message}>{message}</Typography>
-                ))}
-            </div>
-        </Dialog>
-    );
+  return (
+    <Dialog open={true} aria-labelledby="loading">
+      <DialogTitle id="loading">{i18n.get("Please wait...")}</DialogTitle>
+      <div className={classes.contentContainer}>
+        <CircularProgress className={classes.progress} />
+        {messages.map((message, i) => (
+          <Typography component="div" key={i} className={classes.message}>
+            {message}
+          </Typography>
+        ))}
+      </div>
+    </Dialog>
+  );
 };
 
 export default withStyles(styles)(LoadingDialog);
-
