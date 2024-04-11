@@ -54,7 +54,7 @@ interface OptionsTextFieldProps<T, V = string> {
 }
 
 function OptionsTextField<T, V>() {
-  return (props: OptionsTextFieldProps<T, V>): JSX.Element => {
+  return (props: OptionsTextFieldProps<T, V>): React.JSX.Element => {
     const {
       options,
       updateOptions,

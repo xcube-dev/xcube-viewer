@@ -36,7 +36,7 @@ export function buildPath(base: string, ...components: string[]): string {
     if (c !== "") {
       if (path.endsWith("/")) {
         if (c.startsWith("/")) {
-          path += c.substr(1);
+          path += c.substring(1);
         } else {
           path += c;
         }

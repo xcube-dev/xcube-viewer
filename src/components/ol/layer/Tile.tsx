@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { JSX } from "react";
 import { default as OlMap } from "ol/Map";
 import { default as OlTileLayer } from "ol/layer/Tile";
 import { default as OlTileSource } from "ol/source/Tile";

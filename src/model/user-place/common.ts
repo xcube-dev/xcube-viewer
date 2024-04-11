@@ -48,7 +48,7 @@ export function detectFormatName(text: string): "csv" | "geojson" | "wkt" {
     return "geojson";
   }
 
-  const marker = text.substr(0, 20).toLowerCase();
+  const marker = text.substring(0, 20).toLowerCase();
   const geomName = WKT_GEOM_NAMES.find(
     (geomName) =>
       marker.startsWith(geomName) &&

@@ -36,9 +36,9 @@ export function utcTimeToLocal(utcTime: number): Date {
 }
 
 export function utcTimeToIsoDateString(utcTime: number) {
-  return new Date(utcTime).toISOString().substr(0, 10);
+  return new Date(utcTime).toISOString().substring(0, 10);
 }
 
 export function utcTimeToIsoDateTimeString(utcTime: number) {
-  return new Date(utcTime).toISOString().substr(0, 19).replace("T", " ");
+  return new Date(utcTime).toISOString().substring(0, 19).replace("T", " ");
 }
