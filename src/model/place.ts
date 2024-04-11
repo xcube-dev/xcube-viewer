@@ -221,7 +221,7 @@ function mkCases(names: string[]): string[] {
     nameCases = nameCases.concat(
       name.toLowerCase(),
       name.toUpperCase(),
-      name[0].toUpperCase() + name.substr(1).toLowerCase(),
+      name[0].toUpperCase() + name.substring(1).toLowerCase(),
     );
   }
   return nameCases;

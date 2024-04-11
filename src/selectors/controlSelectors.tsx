@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { JSX } from "react";
 import { createSelector } from "reselect";
 import { default as OlMap } from "ol/Map";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
