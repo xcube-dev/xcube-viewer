@@ -32,7 +32,7 @@ const CsvTextField = OptionsTextField<CsvOptions, string>();
 
 interface CsvOptionsEditorProps {
   options: CsvOptions;
-  updateOptions: (options: Partial<CsvOptions>) => any;
+  updateOptions: (options: Partial<CsvOptions>) => unknown;
   className: string;
 }
 

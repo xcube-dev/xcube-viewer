@@ -31,7 +31,7 @@ const GeoJsonTextField = OptionsField<GeoJsonOptions, string>();
 
 interface GeoJsonOptionsEditorProps {
   options: GeoJsonOptions;
-  updateOptions: (options: Partial<GeoJsonOptions>) => any;
+  updateOptions: (options: Partial<GeoJsonOptions>) => void;
   className: string;
 }
 

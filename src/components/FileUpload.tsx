@@ -30,7 +30,7 @@ interface FileUploadProps {
   accept?: string;
   multiple?: boolean;
   disabled?: boolean;
-  onSelect: (selection: File[]) => any;
+  onSelect: (selection: File[]) => void;
   className?: string;
 }
 

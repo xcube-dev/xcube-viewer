@@ -41,7 +41,8 @@ export function postMessage(
   return {
     type: POST_MESSAGE,
     messageType,
-    messageText: (messageText as any).message || messageText + "",
+    messageText:
+      typeof messageText === "string" ? messageText : messageText.message,
   };
 }
 

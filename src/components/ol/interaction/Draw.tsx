@@ -90,7 +90,7 @@ export class Draw extends MapComponent<OlDrawInteraction, DrawProps> {
         ).getSource();
       }
     }
-    return options;
+    return options as OlDrawInteractionOptions;
   }
 
   private listen(draw: OlDrawInteraction, props: Readonly<DrawProps>) {

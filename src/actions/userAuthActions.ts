@@ -24,7 +24,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { Dispatch } from "redux";
+import { Action, Dispatch } from "redux";
 import { AppState } from "../states/appState";
 import { updateDatasets } from "./dataActions";
 
@@ -41,7 +41,7 @@ export function updateAccessToken(accessToken: string | null) {
     if (prevAccessToken !== accessToken) {
       dispatch(_updateAccessToken(accessToken));
       if (accessToken === null || prevAccessToken === null) {
-        dispatch(updateDatasets() as any);
+        dispatch(updateDatasets() as unknown as Action);
       }
     }
   };

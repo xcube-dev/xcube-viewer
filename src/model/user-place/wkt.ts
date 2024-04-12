@@ -89,7 +89,7 @@ export function getUserPlacesFromWkt(
 
   try {
     const geometry = new OlWktFormat().readGeometry(text);
-    let geoJsonProps: { [name: string]: any } = {
+    let geoJsonProps: Record<string, unknown> = {
       color: getUserPlaceColorName(Math.floor(1000 * Math.random())),
       label,
       source: "WKT",

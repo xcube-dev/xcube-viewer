@@ -25,6 +25,7 @@
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import * as Redux from "redux";
+import { Action, Dispatch } from "redux";
 import * as ReduxLogger from "redux-logger";
 import thunk from "redux-thunk";
 
@@ -45,10 +46,12 @@ Config.load().then(() => {
   const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
   const store = Redux.createStore(appReducer, middlewares);
 
-  store.dispatch(changeLocale(store.getState().controlState.locale) as any);
+  const dispatch: Dispatch = store.dispatch;
+
+  dispatch(changeLocale(store.getState().controlState.locale));
 
   if (store.getState().controlState.privacyNoticeAccepted) {
-    store.dispatch(syncWithServer() as any);
+    dispatch(syncWithServer() as unknown as Action);
   }
 
   ReactDOM.render(

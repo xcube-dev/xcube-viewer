@@ -111,7 +111,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   addDrawnUserPlace?: (
     placeGroupTitle: string,
     id: string,
-    properties: { [name: string]: any },
+    properties: Record<string, unknown>,
     geometry: geojson.Geometry,
     selected: boolean,
   ) => void;
@@ -126,7 +126,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   places: Place[];
   imageSmoothing?: boolean;
   onMapRef?: (map: OlMap | null) => void;
-  importUserPlacesFromText?: (text: string) => any;
+  importUserPlacesFromText?: (text: string) => void;
 }
 
 const _Viewer: React.FC<ViewerProps> = ({
@@ -196,7 +196,7 @@ const _Viewer: React.FC<ViewerProps> = ({
     }
   }, [map, imageSmoothing]);
 
-  const handleMapClick = (event: OlMapBrowserEvent<any>) => {
+  const handleMapClick = (event: OlMapBrowserEvent<UIEvent>) => {
     if (mapInteraction === "Select") {
       const map = event.map;
       let selectedPlaceId: string | null = null;
@@ -241,7 +241,7 @@ const _Viewer: React.FC<ViewerProps> = ({
         .transform(projection, GEOGRAPHIC_CRS);
       const geoJSONGeometry = new OlGeoJSONFormat().writeGeometryObject(
         geometry,
-      ) as any;
+      ) as geojson.Geometry;
       feature.setId(placeId);
       let colorIndex = 0;
       if (MAP_OBJECTS[USER_DRAWN_PLACE_GROUP_ID]) {
@@ -264,7 +264,7 @@ const _Viewer: React.FC<ViewerProps> = ({
         userDrawnPlaceGroupName,
         placeId,
         { label, color },
-        geoJSONGeometry as geojson.Geometry,
+        geoJSONGeometry,
         true,
       );
     }

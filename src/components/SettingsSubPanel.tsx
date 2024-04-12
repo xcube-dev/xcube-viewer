@@ -26,11 +26,12 @@ import React from "react";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import { ListItemButton } from "@mui/material";
 
 interface SettingsSubPanelProps {
   label: string;
   value?: string | number;
-  onClick?: (event: any) => void;
+  onClick?: (event: React.MouseEvent) => void;
 }
 
 const SettingsSubPanel: React.FC<SettingsSubPanelProps> = ({
@@ -55,10 +56,10 @@ const SettingsSubPanel: React.FC<SettingsSubPanelProps> = ({
 
   if (onClick) {
     return (
-      <ListItem style={listItemStyle} button onClick={onClick}>
+      <ListItemButton style={listItemStyle} onClick={onClick}>
         {listItemText}
         {listItemSecondaryAction}
-      </ListItem>
+      </ListItemButton>
     );
   }
 

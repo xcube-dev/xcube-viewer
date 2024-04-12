@@ -30,7 +30,9 @@ import { default as OlTileSource } from "ol/source/Tile";
 import { Options as OlTileLayerOptions } from "ol/layer/BaseTile";
 
 type Layer = OlVectorLayer<OlVectorSource> | OlTileLayer<OlTileSource>;
-type LayerOptions = OlVectorLayerOptions<any> | OlTileLayerOptions<any>;
+type LayerOptions =
+  | OlVectorLayerOptions<OlVectorSource>
+  | OlTileLayerOptions<OlTileSource>;
 
 export function processLayerProperties(
   layer: Layer,
@@ -52,8 +54,8 @@ function updateLayerProperty<T>(
   propertyName: keyof LayerOptions,
   defaultValue: T,
 ) {
-  const prevValue = normalizeValue(prevProps[propertyName], defaultValue);
-  const nextValue = normalizeValue(nextProps[propertyName], defaultValue);
+  const prevValue = normalizeValue(prevProps[propertyName] as T, defaultValue);
+  const nextValue = normalizeValue(nextProps[propertyName] as T, defaultValue);
   if (prevValue !== nextValue) {
     layer.set(propertyName as string, nextValue);
   }

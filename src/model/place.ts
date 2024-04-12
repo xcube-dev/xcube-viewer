@@ -40,8 +40,7 @@ export const USER_DRAWN_PLACE_GROUP_ID = USER_ID_PREFIX + "drawing";
  */
 export interface Place extends GeoJSON.Feature {
   id: string;
-
-  [name: string]: any;
+  [name: string]: unknown;
 }
 
 /**
@@ -78,7 +77,7 @@ export function newUserPlaceGroup(title: string, places: Place[]): PlaceGroup {
 
 export function newUserPlace(
   geometry: OlGeometry,
-  properties: { [name: string]: any },
+  properties: Record<string, unknown>,
 ): Place {
   return {
     type: "Feature",
@@ -151,11 +150,11 @@ export function computePlaceInfo(
 export const getPlaceInfo = defaultMemoize(computePlaceInfo);
 
 function updatePlaceInfo(
-  infoObj: { [name: string]: any },
+  infoObj: Record<string, unknown>,
   placeGroup: PlaceGroup,
   place: Place,
   propertyName: string,
-  defaultValue: any,
+  defaultValue: unknown,
   defaultPropertyNames: string[],
 ) {
   let propertyValue;
@@ -204,7 +203,10 @@ function getInterpolatedPropertyValue(place: Place, propertyValue: string) {
   return interpolatedValue;
 }
 
-function getPropertyValue(container: any, propertyNames: string[]) {
+function getPropertyValue(
+  container: Record<string, unknown>,
+  propertyNames: string[],
+) {
   let value;
   for (const propertyName of propertyNames) {
     if (propertyName in container) {

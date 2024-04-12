@@ -47,5 +47,5 @@ export interface Variable {
   volumeRenderMode?: VolumeRenderMode;
   volumeIsoThreshold?: number;
   htmlRepr?: string;
-  attrs: { [name: string]: any };
+  attrs: Record<string, unknown>;
 }

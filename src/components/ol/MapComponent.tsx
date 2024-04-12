@@ -52,8 +52,8 @@ export abstract class MapComponent<
     return (this.context.mapObjects && this.context.mapObjects[id]) || null;
   }
 
-  getOptions(): any {
-    const options: any = { ...this.props };
+  getOptions(): Record<string, unknown> {
+    const options: Record<string, unknown> = { ...this.props };
     delete options.id;
     return options;
   }

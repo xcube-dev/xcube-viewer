@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { Theme } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -90,8 +90,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   viewerVersion,
   serverInfo,
 }) => {
-  const [languageMenuAnchor, setLanguageMenuAnchor] = React.useState(null);
-  const [baseMapMenuAnchor, setBaseMapMenuAnchor] = React.useState(null);
+  const [languageMenuAnchor, setLanguageMenuAnchor] =
+    React.useState<Element | null>(null);
+  const [baseMapMenuAnchor, setBaseMapMenuAnchor] =
+    React.useState<Element | null>(null);
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
   );
@@ -120,7 +122,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   }
 
   function handleTimeAnimationIntervalChange(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
       timeAnimationInterval: parseInt(
@@ -130,7 +132,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   }
 
   function handleTimeChunkSizeChange(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     setTimeChunkSize(event.target.value);
   }
@@ -153,7 +155,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     );
   }
 
-  function handleLanguageMenuOpen(event: any) {
+  function handleLanguageMenuOpen(event: React.MouseEvent) {
     setLanguageMenuAnchor(event.currentTarget);
   }
 
@@ -184,7 +186,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     });
   }
 
-  function handleBaseMapMenuOpen(event: any) {
+  function handleBaseMapMenuOpen(event: React.MouseEvent) {
     setBaseMapMenuAnchor(event.currentTarget);
   }
 

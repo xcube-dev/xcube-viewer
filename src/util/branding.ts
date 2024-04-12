@@ -49,7 +49,7 @@ import { PaletteColorOptions } from "@mui/material/styles";
 import baseUrl from "./baseurl";
 import { buildPath } from "./path";
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 const COLOR_NAMES: { [name: string]: ColorPartial } = {
   amber,
@@ -88,7 +88,7 @@ export interface Branding {
   headerTitleStyle?: CSSProperties;
   headerIconStyle?: CSSProperties;
   organisationUrl?: string;
-  logoImage: any;
+  logoImage: string;
   logoWidth: number;
   baseMapUrl?: string;
   defaultAgg?: "median" | "mean";
@@ -100,7 +100,10 @@ export interface Branding {
   allow3D?: boolean;
 }
 
-function setBrandingColor(brandingConfig: any, key: keyof Branding) {
+function setBrandingColor(
+  brandingConfig: { [key: string]: unknown },
+  key: keyof Branding,
+) {
   const rawColor = brandingConfig[key];
   let color: PaletteColorOptions | null = null;
   if (typeof rawColor === "string") {
@@ -112,9 +115,9 @@ function setBrandingColor(brandingConfig: any, key: keyof Branding) {
     ) {
       color = { main: rawColor };
     }
-  } else if (typeof rawColor === "object") {
+  } else if (typeof rawColor === "object" && rawColor !== null) {
     if ("main" in rawColor) {
-      color = rawColor;
+      color = rawColor as unknown as PaletteColorOptions;
     }
   }
   if (color !== null) {
@@ -125,7 +128,7 @@ function setBrandingColor(brandingConfig: any, key: keyof Branding) {
 }
 
 function setBrandingImage(
-  brandingConfig: any,
+  brandingConfig: { [key: string]: unknown },
   key: keyof Branding,
   configPath: string,
 ) {
@@ -136,14 +139,14 @@ function setBrandingImage(
 }
 
 export function parseBranding(
-  brandingConfig: any,
+  brandingConfig: Record<string, unknown>,
   configPath: string,
 ): Branding {
   brandingConfig = { ...brandingConfig };
   setBrandingColor(brandingConfig, "primaryColor");
   setBrandingColor(brandingConfig, "secondaryColor");
   setBrandingImage(brandingConfig, "logoImage", configPath);
-  return brandingConfig as Branding;
+  return brandingConfig as unknown as Branding;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////

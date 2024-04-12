@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -33,8 +35,6 @@ import Typography from "@mui/material/Typography";
 import AllOutIcon from "@mui/icons-material/AllOut";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import * as React from "react";
-import { useState } from "react";
 import {
   CartesianGrid,
   DotProps,
@@ -51,7 +51,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Payload } from "recharts/types/component/DefaultTooltipContent";
+import { Payload as TooltipPayload } from "recharts/types/component/DefaultTooltipContent";
+import { Payload as LegendPayload } from "recharts/types/component/DefaultLegendContent";
 import { AxisDomain } from "recharts/types/util/types";
 
 import i18n from "../i18n";
@@ -72,6 +73,7 @@ import {
   utcTimeToIsoDateTimeString,
 } from "../util/time";
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
+import { CategoricalChartState } from "recharts/types/chart/types";
 
 const INVISIBLE_LINE_COLOR = "#00000000";
 const SUBSTITUTE_LABEL_COLOR = "#FAFFDD";
@@ -221,21 +223,16 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     [time1, time2] = selectedTimeRange;
   }
 
-  const tickFormatter = (value: any) => {
+  const tickFormatter = (value: number | string) => {
     if (typeof value !== "number" || !Number.isFinite(value)) {
       return "";
     }
     return utcTimeToIsoDateString(value);
   };
 
-  const handleClick = (event: any) => {
-    if (
-      event &&
-      selectTime &&
-      event.activeLabel !== null &&
-      Number.isFinite(event.activeLabel)
-    ) {
-      selectTime(event.activeLabel!);
+  const handleClick = (chartState: CategoricalChartState) => {
+    if (chartState && selectTime && Number.isFinite(chartState.activeItem)) {
+      selectTime(chartState.activeItem!);
     }
     clearTimeRangeSelection();
   };
@@ -251,16 +248,20 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     selectPlace(timeSeries.source.placeId, places, true);
   };
 
-  const handleMouseDown = (event: any) => {
-    const firstTime = event && event.activeLabel;
-    setTimeRangeSelection({ firstTime });
+  const handleMouseDown = (chartState: CategoricalChartState) => {
+    const firstTime = chartState && chartState.activeItem;
+    if (typeof firstTime === "number") {
+      setTimeRangeSelection({ firstTime });
+    }
   };
 
-  const handleMouseMove = (event: any) => {
+  const handleMouseMove = (chartState: CategoricalChartState) => {
     const firstTime = timeRangeSelection.firstTime;
     if (firstTime !== undefined) {
-      const secondTime = event && event.activeLabel;
-      setTimeRangeSelection({ ...timeRangeSelection, secondTime });
+      const secondTime = chartState && chartState.activeItem;
+      if (typeof secondTime === "number") {
+        setTimeRangeSelection({ ...timeRangeSelection, secondTime });
+      }
     }
   };
 
@@ -615,43 +616,45 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({
   if (!payload || payload.length === 0) {
     return null;
   }
-  const items = payload.map((p: Payload<number, string>, index: number) => {
-    //console.log("payload:", p);
-    const { name, value, unit, dataKey } = p;
-    let color = p.color;
-    if (typeof value !== "number") {
-      return null;
-    }
-    // let valueText;
-    // if (typeof p.std === 'number') {
-    //     valueText = `${value.toFixed(2)} ±${p.std.toFixed(2)} (std)`;
-    // } else {
-    //     valueText = value.toFixed(3);
-    // }
-    const nameText = name || "?";
-    const valueText = value.toFixed(3);
-    if (color === INVISIBLE_LINE_COLOR) {
-      color = SUBSTITUTE_LABEL_COLOR;
-    }
-    const isPoint = nameText.indexOf(":") !== -1;
-    let suffixText = isPoint ? "" : ` (${dataKey})`;
-    if (typeof unit === "string") {
-      if (suffixText !== "") {
-        suffixText = `${unit} ${suffixText}`;
-      } else {
-        suffixText = unit;
+  const items = payload.map(
+    (p: TooltipPayload<number, string>, index: number) => {
+      //console.log("payload:", p);
+      const { name, value, unit, dataKey } = p;
+      let color = p.color;
+      if (typeof value !== "number") {
+        return null;
       }
-    }
-    return (
-      <div key={index}>
-        <span>{nameText}:&nbsp;</span>
-        <span className={classes.toolTipValue} style={{ color }}>
-          {valueText}
-        </span>
-        <span>&nbsp;{suffixText}</span>
-      </div>
-    );
-  });
+      // let valueText;
+      // if (typeof p.std === 'number') {
+      //     valueText = `${value.toFixed(2)} ±${p.std.toFixed(2)} (std)`;
+      // } else {
+      //     valueText = value.toFixed(3);
+      // }
+      const nameText = name || "?";
+      const valueText = value.toFixed(3);
+      if (color === INVISIBLE_LINE_COLOR) {
+        color = SUBSTITUTE_LABEL_COLOR;
+      }
+      const isPoint = nameText.indexOf(":") !== -1;
+      let suffixText = isPoint ? "" : ` (${dataKey})`;
+      if (typeof unit === "string") {
+        if (suffixText !== "") {
+          suffixText = `${unit} ${suffixText}`;
+        } else {
+          suffixText = unit;
+        }
+      }
+      return (
+        <div key={index}>
+          <span>{nameText}:&nbsp;</span>
+          <span className={classes.toolTipValue} style={{ color }}>
+            {valueText}
+          </span>
+          <span>&nbsp;{suffixText}</span>
+        </div>
+      );
+    },
+  );
 
   if (!items) {
     return null;
@@ -747,7 +750,7 @@ const _CustomLegendContent: React.FC<CustomLegendProps & LegendProps> = (
   }
   return (
     <div className={classes.legendContainer}>
-      {payload.map((pl: any, index: number) => (
+      {payload.map((pl: LegendPayload, index: number) => (
         <div
           key={pl.value}
           className={classes.legendItem}
@@ -757,7 +760,7 @@ const _CustomLegendContent: React.FC<CustomLegendProps & LegendProps> = (
           {removeTimeSeries && (
             <span
               className={classes.legendCloseIcon}
-              // Note, onClick() does not fire in any sub-component
+              // Note, onClick() does not fire in any subcomponent
               // of <Legend/>!
               onMouseUp={() => removeTimeSeries(index)}
             >

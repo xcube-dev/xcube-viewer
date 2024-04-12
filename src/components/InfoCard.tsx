@@ -480,7 +480,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
   } else if (viewMode === "list") {
     if (place.properties) {
       const data: KeyValue[] = Object.getOwnPropertyNames(place.properties).map(
-        (name: any) => [name, place.properties![name]],
+        (name: string) => [name, place.properties![name]],
       );
       content = (
         <CardContent2>
@@ -593,7 +593,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type KeyValue = [any, any];
+type KeyValue = [string, unknown];
 
 interface KeyValueTableProps {
   data: KeyValue[];
@@ -677,8 +677,11 @@ const PythonCodeContent: React.FC<CodeContentBaseProps> = ({ code }) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function selectObj(obj: any, keys: string[]): any {
-  const newObj: { [name: string]: any } = {};
+function selectObj(
+  obj: Record<string, unknown>,
+  keys: string[],
+): Record<string, unknown> {
+  const newObj: Record<string, unknown> = {};
   for (const key of keys) {
     if (key in obj) {
       newObj[key] = obj[key];

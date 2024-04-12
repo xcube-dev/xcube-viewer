@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Dispatch } from "redux";
+import { Action, Dispatch } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 
@@ -66,27 +66,19 @@ import {
   AddActivity,
   addActivity,
   openDialog,
-  OpenDialog,
   RemoveActivity,
   removeActivity,
   SelectDataset,
   selectDataset,
   selectPlace,
-  SelectPlace,
-  SelectPlaceGroups,
-  UpdateSettings,
 } from "./controlActions";
 import { VolumeRenderMode } from "../states/controlState";
-import {
-  MessageLogAction,
-  PostMessage,
-  postMessage,
-} from "./messageLogActions";
+import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer } from "./mapActions";
 
 import { saveAs } from "file-saver";
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_SERVER_INFO = "UPDATE_SERVER_INFO";
 
@@ -111,7 +103,7 @@ export function updateServerInfo() {
       .then((serverInfo: ApiServerInfo) => {
         dispatch(_updateServerInfo(serverInfo));
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         dispatch(postMessage("error", error));
       })
       // 'then' because Microsoft Edge does not understand method finally
@@ -125,7 +117,7 @@ export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
   return { type: UPDATE_SERVER_INFO, serverInfo };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_RESOURCES = "UPDATE_RESOURCES";
 
@@ -153,7 +145,7 @@ export function updateResources() {
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_DATASETS = "UPDATE_DATASETS";
 
@@ -163,16 +155,7 @@ export interface UpdateDatasets {
 }
 
 export function updateDatasets() {
-  return (
-    dispatch: Dispatch<
-      | UpdateDatasets
-      | SelectDataset
-      | AddActivity
-      | RemoveActivity
-      | MessageLogAction
-    >,
-    getState: () => AppState,
-  ) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     const apiServer = selectedServerSelector(getState());
 
     dispatch(addActivity(UPDATE_DATASETS, i18n.get("Loading data")));
@@ -184,10 +167,16 @@ export function updateDatasets() {
         if (datasets.length > 0) {
           const selectedDatasetId =
             getState().controlState.selectedDatasetId || datasets[0].id;
-          dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
+          dispatch(
+            selectDataset(
+              selectedDatasetId,
+              datasets,
+              true,
+            ) as unknown as Action,
+          );
         }
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         dispatch(postMessage("error", error));
         dispatch(_updateDatasets([]));
       })
@@ -202,7 +191,7 @@ export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
   return { type: UPDATE_DATASETS, datasets };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_DATASET_PLACE_GROUP = "UPDATE_DATASET_PLACE_GROUP";
 
@@ -219,7 +208,7 @@ export function updateDatasetPlaceGroup(
   return { type: UPDATE_DATASET_PLACE_GROUP, datasetId, placeGroup };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const ADD_DRAWN_USER_PLACE = "ADD_DRAWN_USER_PLACE";
 
@@ -227,7 +216,7 @@ export interface AddDrawnUserPlace {
   type: typeof ADD_DRAWN_USER_PLACE;
   placeGroupTitle: string;
   id: string;
-  properties: { [name: string]: any };
+  properties: { [name: string]: unknown };
   geometry: geojson.Geometry;
   selected: boolean;
 }
@@ -235,11 +224,11 @@ export interface AddDrawnUserPlace {
 export function addDrawnUserPlace(
   placeGroupTitle: string,
   id: string,
-  properties: { [name: string]: any },
+  properties: { [name: string]: unknown },
   geometry: geojson.Geometry,
   selected: boolean,
 ) {
-  return (dispatch: Dispatch<AddDrawnUserPlace>, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(
       _addDrawnUserPlace(placeGroupTitle, id, properties, geometry, selected),
     );
@@ -247,7 +236,7 @@ export function addDrawnUserPlace(
       getState().controlState.autoShowTimeSeries &&
       getState().controlState.selectedPlaceId === id
     ) {
-      dispatch(addTimeSeries() as any);
+      dispatch(addTimeSeries() as unknown as Action);
     }
   };
 }
@@ -255,7 +244,7 @@ export function addDrawnUserPlace(
 export function _addDrawnUserPlace(
   placeGroupTitle: string,
   id: string,
-  properties: { [name: string]: any },
+  properties: { [name: string]: unknown },
   geometry: geojson.Geometry,
   selected: boolean,
 ): AddDrawnUserPlace {
@@ -269,7 +258,7 @@ export function _addDrawnUserPlace(
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const ADD_IMPORTED_USER_PLACE_GROUPS = "ADD_IMPORTED_USER_PLACES";
 
@@ -293,19 +282,10 @@ export function addImportedUserPlaces(
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-type UserPlacesDispatch = Dispatch<
-  | AddImportedUserPlaces
-  | SelectPlaceGroups
-  | SelectPlace
-  | UpdateSettings
-  | OpenDialog
-  | PostMessage
->;
+/////////////////////////////////////////////////////////////////////////////
 
 export function importUserPlacesFromText(text: string) {
-  return (dispatch: UserPlacesDispatch, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     const formatName = userPlacesFormatNameSelector(getState());
     let placeGroups: PlaceGroup[];
     try {
@@ -321,8 +301,8 @@ export function importUserPlacesFromText(text: string) {
       } else {
         placeGroups = [];
       }
-    } catch (e: any) {
-      dispatch(postMessage("error", e));
+    } catch (error: unknown) {
+      dispatch(postMessage("error", error as Error));
       dispatch(openDialog("addUserPlacesFromText"));
       placeGroups = [];
     }
@@ -332,7 +312,7 @@ export function importUserPlacesFromText(text: string) {
           placeGroups,
           mapProjectionSelector(getState()),
           true,
-        ) as any,
+        ),
       );
       // dispatch(selectPlaceGroups(placeGroups.map(pg => pg.id)) as any);
       if (placeGroups.length === 1 && placeGroups[0].features.length === 1) {
@@ -342,10 +322,10 @@ export function importUserPlacesFromText(text: string) {
             place.id,
             selectedPlaceGroupPlacesSelector(getState()),
             true,
-          ) as any,
+          ) as unknown as Action,
         );
         if (getState().controlState.autoShowTimeSeries) {
-          dispatch(addTimeSeries() as any);
+          dispatch(addTimeSeries() as unknown as Action);
         }
       }
       let numPlaces = 0;
@@ -366,7 +346,7 @@ export function importUserPlacesFromText(text: string) {
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const RENAME_USER_PLACE_GROUP = "RENAME_USER_PLACE_GROUP";
 
@@ -383,7 +363,7 @@ export function renameUserPlaceGroup(
   return { type: RENAME_USER_PLACE_GROUP, placeGroupId, newName };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const RENAME_USER_PLACE = "RENAME_USER_PLACE";
 
@@ -413,7 +393,7 @@ export function _renameUserPlace(
   return { type: RENAME_USER_PLACE, placeGroupId, placeId, newName };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_USER_PLACE = "REMOVE_USER_PLACE";
 
@@ -432,7 +412,7 @@ export function removeUserPlace(
   return { type: REMOVE_USER_PLACE, placeGroupId, placeId, places };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_USER_PLACE_GROUP = "REMOVE_USER_PLACE_GROUP";
 
@@ -447,7 +427,7 @@ export function removeUserPlaceGroup(
   return { type: REMOVE_USER_PLACE_GROUP, placeGroupId };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export function addTimeSeries() {
   return (
@@ -533,7 +513,7 @@ export function addTimeSeries() {
 
       getTimeSeriesChunk()
         .then(successAction)
-        .catch((error: any) => {
+        .catch((error: Error) => {
           dispatch(postMessage("error", error));
         });
     }
@@ -544,7 +524,7 @@ function isValidPlace(placeGroups: PlaceGroup[], placeId: string) {
   return findPlaceInPlaceGroups(placeGroups, placeId) !== null;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_TIME_SERIES = "UPDATE_TIME_SERIES";
 
@@ -563,7 +543,7 @@ export function updateTimeSeries(
   return { type: UPDATE_TIME_SERIES, timeSeries, updateMode, dataMode };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const ADD_PLACE_GROUP_TIME_SERIES = "ADD_PLACE_GROUP_TIME_SERIES";
 
@@ -580,7 +560,7 @@ export function addPlaceGroupTimeSeries(
   return { type: ADD_PLACE_GROUP_TIME_SERIES, timeSeriesGroupId, timeSeries };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_TIME_SERIES = "REMOVE_TIME_SERIES";
 
@@ -597,7 +577,7 @@ export function removeTimeSeries(
   return { type: REMOVE_TIME_SERIES, groupId, index };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_TIME_SERIES_GROUP = "REMOVE_TIME_SERIES_GROUP";
 
@@ -610,7 +590,7 @@ export function removeTimeSeriesGroup(id: string): RemoveTimeSeriesGroup {
   return { type: REMOVE_TIME_SERIES_GROUP, id };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const REMOVE_ALL_TIME_SERIES = "REMOVE_ALL_TIME_SERIES";
 
@@ -636,11 +616,11 @@ export function configureServers(
   servers: ApiServerConfig[],
   selectedServerId: string,
 ) {
-  return (dispatch: Dispatch<any>, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     if (getState().controlState.selectedServerId !== selectedServerId) {
       dispatch(removeAllTimeSeries());
       dispatch(_configureServers(servers, selectedServerId));
-      dispatch(syncWithServer());
+      dispatch(syncWithServer() as unknown as Action);
     } else if (getState().dataState.userServers !== servers) {
       dispatch(_configureServers(servers, selectedServerId));
     }
@@ -654,17 +634,17 @@ export function _configureServers(
   return { type: CONFIGURE_SERVERS, servers, selectedServerId };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export function syncWithServer() {
-  return (dispatch: Dispatch<any>) => {
-    dispatch(updateServerInfo());
-    dispatch(updateDatasets());
-    dispatch(updateColorBars());
+  return (dispatch: Dispatch) => {
+    dispatch(updateServerInfo() as unknown as Action);
+    dispatch(updateDatasets() as unknown as Action);
+    dispatch(updateColorBars() as unknown as Action);
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_COLOR_BARS = "UPDATE_COLOR_BARS";
 
@@ -685,7 +665,7 @@ export function updateColorBars() {
       .then((colorBars: ColorBars) => {
         dispatch(_updateColorBars(colorBars));
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         dispatch(postMessage("error", error));
       });
   };
@@ -695,7 +675,7 @@ export function _updateColorBars(colorBars: ColorBars): UpdateColorBars {
   return { type: UPDATE_COLOR_BARS, colorBars };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_VARIABLE_COLOR_BAR = "UPDATE_VARIABLE_COLOR_BAR";
 
@@ -750,7 +730,7 @@ export function _updateVariableColorBar(
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_VARIABLE_VOLUME = "UPDATE_VARIABLE_VOLUME";
 
@@ -780,7 +760,7 @@ export function updateVariableVolume(
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export function exportData() {
   return (
@@ -825,9 +805,9 @@ export function exportData() {
 }
 
 abstract class Exporter {
-  abstract write(path: string, content: string): any;
+  abstract write(path: string, content: string): void;
 
-  abstract close(): any;
+  abstract close(): void;
 }
 
 class ZipExporter extends Exporter {
@@ -991,7 +971,7 @@ function _downloadTimeSeriesGeoJSON(timeSeriesGroups: TimeSeriesGroup[],
 }
 */
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 export type DataAction =
   | UpdateServerInfo

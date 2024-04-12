@@ -82,8 +82,10 @@ export default function LegalAgreementDialog({
     try {
       if (window.history.length > 0) {
         window.history.back();
-      } else if (typeof (window as any).home === "function") {
-        (window as any).home();
+      } else if (
+        typeof (window as unknown as { home?: unknown }).home === "function"
+      ) {
+        (window as unknown as { home: () => void }).home();
       } else {
         window.location.href = "about:home";
       }

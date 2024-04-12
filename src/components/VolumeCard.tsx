@@ -90,16 +90,16 @@ interface VolumeCardProps extends WithLocale {
   variableColorBar: ColorBar;
   volumeId: string | null;
   volumeRenderMode: VolumeRenderMode;
-  setVolumeRenderMode: (volumeRenderMode: VolumeRenderMode) => any;
+  setVolumeRenderMode: (volumeRenderMode: VolumeRenderMode) => void;
   volumeStates: VolumeStates;
-  updateVolumeState: (volumeId: string, volumeState: VolumeState) => any;
+  updateVolumeState: (volumeId: string, volumeState: VolumeState) => void;
   updateVariableVolume: (
     datasetId: string,
     variableName: string,
     variableColorBar: ColorBar,
     volumeRenderMode: VolumeRenderMode,
     volumeIsoThreshold: number,
-  ) => any;
+  ) => void;
   serverUrl: string;
 }
 
@@ -246,7 +246,7 @@ interface IsoThresholdEditorProps {
   value: number;
   minValue: number;
   maxValue: number;
-  setValue: (value: number) => any;
+  setValue: (value: number) => void;
   disabled?: boolean;
 }
 

@@ -38,6 +38,7 @@ import { Time, TimeRange } from "../model/timeSeries";
 import { WithLocale } from "../util/lang";
 import { localToUtcTime, utcTimeToLocal } from "../util/time";
 import ControlBarItem from "./ControlBarItem";
+import { TextFieldProps as MuiTextFieldPropsType } from "@mui/material/TextField/TextField";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) =>
@@ -101,7 +102,7 @@ const _TimeSelect: React.FC<TimeSelectProps> = ({
         maxDateTime={maxTimeValue}
         onChange={handleTimeChange}
         ampm={false}
-        renderInput={(props: any) => (
+        renderInput={(props: MuiTextFieldPropsType) => (
           <TextField {...props} variant="standard" size="small" />
         )}
       />

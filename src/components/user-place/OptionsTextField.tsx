@@ -32,17 +32,17 @@ const defaults = {
   parse: (text: string) => {
     return text;
   },
-  format: (value: any): string => {
+  format: (value: unknown): string => {
     return typeof value === "string" ? value : `${value}`;
   },
-  validate: (_value: any): boolean => {
+  validate: (_value: unknown): boolean => {
     return true;
   },
 };
 
 interface OptionsTextFieldProps<T, V = string> {
   options: T;
-  updateOptions: (options: Partial<T>) => any;
+  updateOptions: (options: Partial<T>) => void;
   optionKey: keyof T;
   label: string;
   style?: React.CSSProperties;

@@ -32,7 +32,9 @@ export function getDatasets(
   const url = makeRequestUrl(`${apiServerUrl}/datasets`, [["details", "1"]]);
   const init = makeRequestInit(accessToken);
   return callJsonApi<Dataset[]>(url, init)
-    .then((result: any) => result["datasets"])
+    .then(
+      (result: unknown) => (result as { datasets?: Dataset[] }).datasets || [],
+    )
     .then(adjustTimeDimensionsForDatasets);
 }
 
@@ -48,13 +50,13 @@ function adjustTimeDimensionsForDataset(dataset: Dataset): Dataset {
     );
     if (index > -1) {
       const timeDimension = dimensions[index];
-      const timeCoordinates: any = timeDimension.coordinates;
+      const timeCoordinates: number[] | string[] = timeDimension.coordinates;
       if (
         timeCoordinates &&
         timeCoordinates.length &&
         typeof timeCoordinates[0] === "string"
       ) {
-        const labels = timeCoordinates as string[];
+        const labels = timeCoordinates as unknown as string[];
         const coordinates = labels.map((label: string) =>
           new Date(label).getTime(),
         );

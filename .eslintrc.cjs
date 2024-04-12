@@ -13,7 +13,7 @@ module.exports = {
     // note we must disable the base rule as it can report incorrect errors
     "no-unused-vars": "off",
     // TODO: remove the following in a subsequent PR
-    "@typescript-eslint/no-explicit-any": "off",
+    //  "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
