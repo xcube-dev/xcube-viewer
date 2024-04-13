@@ -98,7 +98,7 @@ export class LanguageDictionary {
     this._locale = value;
   }
 
-  get(phrase: string, values?: { [name: string]: unknown }): string {
+  get(phrase: string, values?: Record<string, unknown>): string {
     const key = getPhraseKey(phrase);
     const entry = this._content[key];
     let translatedPhrase: string;
@@ -132,8 +132,8 @@ export const getCurrentLocale = (): string => {
     locale = navigator.languages[0];
   } else {
     locale = (navigator.language ||
-      (navigator as unknown as { [k: string]: unknown }).userLanguage ||
-      (navigator as unknown as { [k: string]: unknown }).browserLanguage ||
+      (navigator as unknown as Record<string, unknown>).userLanguage ||
+      (navigator as unknown as Record<string, unknown>).browserLanguage ||
       "en") as string;
   }
   return locale.split("-")[0];

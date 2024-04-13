@@ -51,9 +51,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { AxisDomain } from "recharts/types/util/types";
 import { Payload as TooltipPayload } from "recharts/types/component/DefaultTooltipContent";
 import { Payload as LegendPayload } from "recharts/types/component/DefaultLegendContent";
-import { AxisDomain } from "recharts/types/util/types";
+import { CategoricalChartState } from "recharts/types/chart/types";
 
 import i18n from "../i18n";
 import { getUserPlaceColor } from "../config";
@@ -73,9 +74,8 @@ import {
   utcTimeToIsoDateTimeString,
 } from "../util/time";
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
-import { CategoricalChartState } from "recharts/types/chart/types";
 
-// Typing problem in recharts v2.12.4
+// Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
   CategoricalChartState,
   "activeLabel"

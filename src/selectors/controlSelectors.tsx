@@ -355,8 +355,8 @@ export const timeSeriesPlaceInfosSelector = createSelector(
   (
     timeSeriesGroups: TimeSeriesGroup[],
     placeGroups: PlaceGroup[],
-  ): { [placeId: string]: PlaceInfo } => {
-    const placeInfos: { [placeId: string]: PlaceInfo } = {};
+  ): Record<string, PlaceInfo> => {
+    const placeInfos: Record<string, PlaceInfo> = {};
     forEachPlace(placeGroups, (placeGroup, place) => {
       for (const timeSeriesGroup of timeSeriesGroups) {
         if (

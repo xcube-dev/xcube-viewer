@@ -101,7 +101,7 @@ export interface Branding {
 }
 
 function setBrandingColor(
-  brandingConfig: { [key: string]: unknown },
+  brandingConfig: Record<string, unknown>,
   key: keyof Branding,
 ) {
   const rawColor = brandingConfig[key];
@@ -128,7 +128,7 @@ function setBrandingColor(
 }
 
 function setBrandingImage(
-  brandingConfig: { [key: string]: unknown },
+  brandingConfig: Record<string, unknown>,
   key: keyof Branding,
   configPath: string,
 ) {
