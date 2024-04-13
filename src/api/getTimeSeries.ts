@@ -34,8 +34,10 @@ import {
 } from "./callApi";
 import { Dataset } from "../model/dataset";
 
+type RawTimeSeriesPoint = Omit<TimeSeriesPoint, 'time'> & { time: string };
+
 interface TimeSeriesResult {
-  result?: { time: string }[];
+  result?: RawTimeSeriesPoint[];
 }
 
 export function getTimeSeriesForGeometry(
@@ -90,7 +92,7 @@ export function getTimeSeriesForGeometry(
     if (!result || result.length === 0) {
       return null;
     }
-    const data = result.map((item: { time: string }) => {
+    const data = result.map((item): TimeSeriesPoint => {
       return { ...item, time: new Date(item.time).getTime() };
     });
     const source = {
@@ -103,7 +105,7 @@ export function getTimeSeriesForGeometry(
       valueDataKey,
       errorDataKey,
     };
-    return { source, data, color: "green" };
+    return { source, data};
   };
 
   return callJsonApi<TimeSeriesResult>(url, init).then(convertTimeSeriesResult);

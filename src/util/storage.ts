@@ -80,13 +80,13 @@ export class Storage {
     return typeof defaultValue === "undefined" ? null : defaultValue;
   }
 
-  getObjectItem<T extends Object>(propertyName: string, defaultValue?: T): T {
+  getObjectItem<T extends object>(propertyName: string, defaultValue?: T): T {
     return this.getItem(propertyName, defaultValue, (value) =>
       JSON.parse(value),
     ) as T;
   }
 
-  getBooleanProperty<T extends Object>(
+  getBooleanProperty<T extends object>(
     propertyName: keyof T,
     target: T,
     defaultObj: T,
@@ -99,7 +99,7 @@ export class Storage {
     );
   }
 
-  getIntProperty<T extends Object>(
+  getIntProperty<T extends object>(
     propertyName: keyof T,
     target: T,
     defaultObj: T,
@@ -107,7 +107,7 @@ export class Storage {
     this.getProperty(propertyName, target, defaultObj, parseInt);
   }
 
-  getStringProperty<T extends Object>(
+  getStringProperty<T extends object>(
     propertyName: keyof T,
     target: T,
     defaultObj: T,
@@ -115,7 +115,7 @@ export class Storage {
     this.getProperty(propertyName, target, defaultObj, (value) => value);
   }
 
-  getObjectProperty<T extends Object>(
+  getObjectProperty<T extends object>(
     propertyName: keyof T,
     target: T,
     defaultObj: T,
@@ -138,7 +138,7 @@ export class Storage {
     });
   }
 
-  private getProperty<T extends Object>(
+  private getProperty<T extends object>(
     propertyName: keyof T,
     target: T,
     defaultObj: T,
@@ -168,11 +168,11 @@ export class Storage {
     this.setItem(propertyName, value, (value) => JSON.stringify(value));
   }
 
-  setPrimitiveProperty<T extends Object>(propertyName: keyof T, source: T) {
+  setPrimitiveProperty<T extends object>(propertyName: keyof T, source: T) {
     this.setItem(propertyName as string, source[propertyName]);
   }
 
-  setObjectProperty<T extends Object>(propertyName: keyof T, source: T) {
+  setObjectProperty<T extends object>(propertyName: keyof T, source: T) {
     this.setObjectItem(propertyName as string, source[propertyName]);
   }
 
@@ -181,7 +181,7 @@ export class Storage {
   }
 }
 
-function isObject(value: unknown): value is Object {
+function isObject(value: unknown): value is object {
   return (
     value !== null && typeof value === "object" && value.constructor === Object
   );
