@@ -25,7 +25,7 @@
 import React from "react";
 import Switch from "@mui/material/Switch";
 
-import { ControlState } from "../states/controlState";
+import { ControlState } from "@/states/controlState";
 
 interface ToggleSettingProps {
   propertyName: keyof ControlState;

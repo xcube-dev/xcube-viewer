@@ -35,8 +35,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import CircularProgress from "@mui/material/CircularProgress";
 import CheckIcon from "@mui/icons-material/Check";
 
-import i18n from "../i18n";
-import { ControlState } from "../states/controlState";
+import i18n from "@/i18n";
+import { ControlState } from "@/states/controlState";
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {

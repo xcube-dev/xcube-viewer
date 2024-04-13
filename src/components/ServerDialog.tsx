@@ -44,10 +44,10 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import i18n from "../i18n";
-import { ApiServerConfig } from "../model/apiServer";
-import { newId } from "../util/id";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { ApiServerConfig } from "@/model/apiServer";
+import { newId } from "@/util/id";
+import { WithLocale } from "@/util/lang";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) =>

@@ -32,11 +32,11 @@ import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
 import Box from "@mui/material/Box";
 
-import { TimeRange, UNIT } from "../model/timeSeries";
+import { TimeRange, UNIT } from "@/model/timeSeries";
 import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
-} from "../util/time";
+} from "@/util/time";
 
 const HOR_MARGIN = 5;
 

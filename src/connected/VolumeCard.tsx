@@ -23,6 +23,7 @@
  */
 
 import { connect } from "react-redux";
+
 import {
   selectedDatasetSelector,
   selectedPlaceInfoSelector,
@@ -30,16 +31,15 @@ import {
   selectedVariableColorBarSelector,
   selectedVariableSelector,
   selectedVolumeIdSelector,
-} from "../selectors/controlSelectors";
-
-import { AppState } from "../states/appState";
+} from "@/selectors/controlSelectors";
+import { AppState } from "@/states/appState";
 import {
   setVolumeRenderMode,
   showVolumeCard,
   updateVolumeState,
-} from "../actions/controlActions";
-import { updateVariableVolume } from "../actions/dataActions";
-import _VolumeCard from "../components/VolumeCard";
+} from "@/actions/controlActions";
+import { updateVariableVolume } from "@/actions/dataActions";
+import _VolumeCard from "@/components/VolumeCard";
 
 const mapStateToProps = (state: AppState) => {
   return {

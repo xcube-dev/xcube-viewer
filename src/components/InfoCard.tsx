@@ -55,17 +55,18 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 import { python } from "@codemirror/lang-python";
-import i18n from "../i18n";
-import { Dataset } from "../model/dataset";
-import { PlaceInfo } from "../model/place";
-import { Variable } from "../model/variable";
-import { WithLocale } from "../util/lang";
-import pythonLogo from "../resources/python-bw.png";
-import { ApiServerConfig } from "../model/apiServer";
-import { Config } from "../config";
 import { Extension } from "@codemirror/state";
-import { Time } from "../model/timeSeries";
-import { utcTimeToIsoDateTimeString } from "../util/time";
+
+import i18n from "@/i18n";
+import { Config } from "@/config";
+import { WithLocale } from "@/util/lang";
+import { utcTimeToIsoDateTimeString } from "@/util/time";
+import { Dataset } from "@/model/dataset";
+import { PlaceInfo } from "@/model/place";
+import { Time } from "@/model/timeSeries";
+import { Variable } from "@/model/variable";
+import pythonLogo from "@/resources/python-bw.png";
+import { ApiServerConfig } from "@/model/apiServer";
 
 type ViewMode = "text" | "list" | "code" | "python";
 
@@ -286,11 +287,9 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
   // const classes = useStyles();
   let content;
   if (viewMode === "code") {
-    const jsonDimensions = dataset.dimensions.map((dim) => selectObj(dim, [
-      "name",
-      "size",
-      "dtype",
-    ]));
+    const jsonDimensions = dataset.dimensions.map((dim) =>
+      selectObj(dim, ["name", "size", "dtype"]),
+    );
     const jsonDataset = selectObj(dataset, ["id", "title", "bbox", "attrs"]);
     jsonDataset["dimensions"] = jsonDimensions;
     content = <JsonCodeContent code={JSON.stringify(jsonDataset, null, 2)} />;

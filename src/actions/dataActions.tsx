@@ -25,21 +25,22 @@
 import { Action, Dispatch } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
-import * as api from "../api";
-import i18n from "../i18n";
-import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
-import { ColorBar, ColorBars } from "../model/colorBar";
-import { Dataset } from "../model/dataset";
-import { findPlaceInPlaceGroups, Place, PlaceGroup } from "../model/place";
-import { getUserPlacesFromCsv } from "../model/user-place/csv";
-import { getUserPlacesFromGeoJson } from "../model/user-place/geojson";
-import { getUserPlacesFromWkt } from "../model/user-place/wkt";
+import * as api from "@/api";
+import i18n from "@/i18n";
+import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
+import { ColorBar, ColorBars } from "@/model/colorBar";
+import { Dataset } from "@/model/dataset";
+import { findPlaceInPlaceGroups, Place, PlaceGroup } from "@/model/place";
+import { getUserPlacesFromCsv } from "@/model/user-place/csv";
+import { getUserPlacesFromGeoJson } from "@/model/user-place/geojson";
+import { getUserPlacesFromWkt } from "@/model/user-place/wkt";
 import {
   TimeSeries,
   TimeSeriesGroup,
   timeSeriesGroupsToTable,
-} from "../model/timeSeries";
+} from "@/model/timeSeries";
 import {
   mapProjectionSelector,
   selectedDatasetSelector,
@@ -55,13 +56,13 @@ import {
   userPlacesFormatOptionsCsvSelector,
   userPlacesFormatOptionsGeoJsonSelector,
   userPlacesFormatOptionsWktSelector,
-} from "../selectors/controlSelectors";
+} from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
   placeGroupsSelector,
   userPlaceGroupsSelector,
-} from "../selectors/dataSelectors";
-import { AppState } from "../states/appState";
+} from "@/selectors/dataSelectors";
+import { AppState } from "@/states/appState";
 import {
   AddActivity,
   addActivity,
@@ -72,11 +73,9 @@ import {
   selectDataset,
   selectPlace,
 } from "./controlActions";
-import { VolumeRenderMode } from "../states/controlState";
+import { VolumeRenderMode } from "@/states/controlState";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer } from "./mapActions";
-
-import { saveAs } from "file-saver";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

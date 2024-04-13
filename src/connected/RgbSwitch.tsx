@@ -24,10 +24,10 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import { setRgbLayerVisibility } from "../actions/controlActions";
-import { selectedDatasetRgbSchemaSelector } from "../selectors/controlSelectors";
-import _RgbSwitch from "../components/RgbSwitch";
+import { AppState } from "@/states/appState";
+import { setRgbLayerVisibility } from "@/actions/controlActions";
+import { selectedDatasetRgbSchemaSelector } from "@/selectors/controlSelectors";
+import _RgbSwitch from "@/components/RgbSwitch";
 
 const mapStateToProps = (state: AppState) => {
   return {

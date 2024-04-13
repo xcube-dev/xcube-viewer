@@ -35,21 +35,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import VolumeIcon from "@mui/icons-material/ThreeDRotation";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import TextField from "@mui/material/TextField";
+import Slider from "@mui/material/Slider";
 
-import { Dataset } from "../model/dataset";
-import { PlaceInfo } from "../model/place";
-import { Variable } from "../model/variable";
-import { WithLocale } from "../util/lang";
+import { Dataset } from "@/model/dataset";
+import { PlaceInfo } from "@/model/place";
+import { Variable } from "@/model/variable";
+import { WithLocale } from "@/util/lang";
 import {
   VolumeRenderMode,
   VolumeState,
   VolumeStates,
-} from "../states/controlState";
+} from "@/states/controlState";
+import { ColorBar } from "@/model/colorBar";
 import VolumeCanvas from "./VolumeCanvas";
-import TextField from "@mui/material/TextField";
-import Slider from "@mui/material/Slider";
-import { ColorBar } from "../model/colorBar";
-// import i18n from '../i18n';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

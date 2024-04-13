@@ -42,23 +42,23 @@ import CodeMirror from "@uiw/react-codemirror";
 import { Extension } from "@codemirror/state";
 import { json } from "@codemirror/lang-json";
 
-import { WithLocale } from "../util/lang";
-import i18n from "../i18n";
-import { Config } from "../config";
+import i18n from "@/i18n";
+import { Config } from "@/config";
+import { WithLocale } from "@/util/lang";
 import { FileUpload } from "./FileUpload";
 import {
   ControlState,
   MapInteraction,
   UserPlacesFormatName,
   UserPlacesFormatOptions,
-} from "../states/controlState";
+} from "@/states/controlState";
 import GeoJsonOptionsEditor from "./user-place/GeoJsonOptionsEditor";
 import CsvOptionsEditor from "./user-place/CsvOptionsEditor";
 import WktOptionsEditor from "./user-place/WktOptionsEditor";
-import { csvFormat, CsvOptions } from "../model/user-place/csv";
-import { geoJsonFormat, GeoJsonOptions } from "../model/user-place/geojson";
-import { wktFormat, WktOptions } from "../model/user-place/wkt";
-import { detectFormatName, Format } from "../model/user-place/common";
+import { csvFormat, CsvOptions } from "@/model/user-place/csv";
+import { geoJsonFormat, GeoJsonOptions } from "@/model/user-place/geojson";
+import { wktFormat, WktOptions } from "@/model/user-place/wkt";
+import { detectFormatName, Format } from "@/model/user-place/common";
 
 interface FormatWithCodeExt extends Format {
   codeExt: Extension[];

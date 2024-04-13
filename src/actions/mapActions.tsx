@@ -27,8 +27,9 @@ import { Geometry as OlGeometry } from "ol/geom";
 import { Extent as OlExtent } from "ol/extent";
 import { transformExtent as olProjTransformExtent } from "ol/proj";
 import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
-import { GEOGRAPHIC_CRS } from "../model/proj";
-import { MAP_OBJECTS } from "../states/controlState";
+
+import { GEOGRAPHIC_CRS } from "@/model/proj";
+import { MAP_OBJECTS } from "@/states/controlState";
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(

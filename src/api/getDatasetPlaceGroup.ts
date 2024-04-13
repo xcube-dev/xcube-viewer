@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
+import { PlaceGroup } from "@/model/place";
 import { callJsonApi, makeRequestInit } from "./callApi";
-import { PlaceGroup } from "../model/place";
 
 export function getDatasetPlaceGroup(
   apiServerUrl: string,

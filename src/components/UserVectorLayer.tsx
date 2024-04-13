@@ -24,12 +24,12 @@
 
 import * as React from "react";
 import { default as OlVectorSource } from "ol/source/Vector";
-
-import { Vector } from "./ol/layer/Vector";
-import { PlaceGroup, USER_DRAWN_PLACE_GROUP_ID } from "../model/place";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
+
+import { Config } from "@/config";
+import { PlaceGroup, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
+import { Vector } from "./ol/layer/Vector";
 import { setFeatureStyle } from "./ol/style";
-import { Config } from "../config";
 
 interface UserVectorLayerProps {
   placeGroup: PlaceGroup;

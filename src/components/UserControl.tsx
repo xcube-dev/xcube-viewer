@@ -41,10 +41,10 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 
-import i18n from "../i18n";
-import { WithLocale } from "../util/lang";
-import { Config } from "../config";
-import UserProfile from "../components/UserProfile";
+import i18n from "@/i18n";
+import { Config } from "@/config";
+import { WithLocale } from "@/util/lang";
+import UserProfile from "@/components/UserProfile";
 
 const styles = (theme: Theme) =>
   createStyles({

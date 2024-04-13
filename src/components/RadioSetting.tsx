@@ -25,9 +25,9 @@
 import React from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-
-import { ControlState } from "../states/controlState";
 import { FormControlLabel } from "@mui/material";
+
+import { ControlState } from "@/states/controlState";
 
 interface RadioSettingProps {
   propertyName: keyof ControlState;

@@ -23,9 +23,9 @@
  */
 
 import * as geojson from "geojson";
-
 import { parseISO } from "date-fns";
-import { utcTimeToIsoDateTimeString } from "../util/time";
+
+import { utcTimeToIsoDateTimeString } from "@/util/time";
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from "./place";
 
 /**

@@ -43,17 +43,18 @@ import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 
-import { Config, getUserPlaceColor, getUserPlaceColorName } from "../config";
-import i18n from "../i18n";
+import i18n from "@/i18n";
+import { Config, getUserPlaceColor, getUserPlaceColorName } from "@/config";
 import {
   Place,
   PlaceGroup,
   USER_DRAWN_PLACE_GROUP_ID,
   USER_ID_PREFIX,
-} from "../model/place";
-import { MAP_OBJECTS, MapInteraction } from "../states/controlState";
-import { newId } from "../util/id";
-import { GEOGRAPHIC_CRS } from "../model/proj";
+} from "@/model/place";
+import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
+import { newId } from "@/util/id";
+import { GEOGRAPHIC_CRS } from "@/model/proj";
+import UserVectorLayer from "./UserVectorLayer";
 import ErrorBoundary from "./ErrorBoundary";
 import { Control } from "./ol/control/Control";
 import { ScaleLine } from "./ol/control/ScaleLine";
@@ -63,7 +64,6 @@ import { Vector } from "./ol/layer/Vector";
 import { Map, MapElement } from "./ol/Map";
 import { View } from "./ol/View";
 import { setFeatureStyle } from "./ol/style";
-import UserVectorLayer from "./UserVectorLayer";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (_theme: Theme) => createStyles({});

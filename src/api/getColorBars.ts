@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
+import { ColorBars, ColorBarGroup } from "@/model/colorBar";
 import { callJsonApi } from "./callApi";
-import { ColorBars, ColorBarGroup } from "../model/colorBar";
 
 type RawColorBar = [string, string];
 type RawColorBarGroup = [string, string, RawColorBar[]];

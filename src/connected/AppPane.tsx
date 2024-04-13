@@ -25,15 +25,14 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { Theme, Toolbar } from "@mui/material";
-
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 
-import { AppState } from "../states/appState";
+import { AppState } from "@/states/appState";
+import { Config } from "@/config";
 import ControlBar from "./ControlBar";
 import Workspace from "./Workspace";
-import { Config } from "../config";
 
 interface AppPaneProps extends WithStyles<typeof styles> {
   hasConsent: boolean;

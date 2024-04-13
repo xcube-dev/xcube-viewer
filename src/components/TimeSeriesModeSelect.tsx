@@ -22,16 +22,16 @@
  * SOFTWARE.
  */
 
+import * as React from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Theme } from "@mui/material/styles";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Switch from "@mui/material/Switch";
-import * as React from "react";
-import i18n from "../i18n";
 
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { WithLocale } from "@/util/lang";
 
 // TODO (forman): this component doesn't seem to be in use - remove!
 

@@ -40,14 +40,14 @@ import PolicyIcon from "@mui/icons-material/Policy";
 import { deepOrange } from "@mui/material/colors";
 import classNames from "classnames";
 
-import { Config } from "../config";
-import i18n from "../i18n";
-import { AppState } from "../states/appState";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { Config } from "@/config";
+import { AppState } from "@/states/appState";
+import { WithLocale } from "@/util/lang";
+import { openDialog } from "@/actions/controlActions";
+import { updateResources } from "@/actions/dataActions";
+import MarkdownPage from "@/components/MarkdownPage";
 import UserControl from "./UserControl";
-import { openDialog } from "../actions/controlActions";
-import { updateResources } from "../actions/dataActions";
-import MarkdownPage from "../components/MarkdownPage";
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
   appName: string;

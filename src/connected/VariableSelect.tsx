@@ -24,14 +24,14 @@
 
 import { connect } from "react-redux";
 
-import _VariableSelect from "../components/VariableSelect";
-import { AppState } from "../states/appState";
-import { addTimeSeries } from "../actions/dataActions";
-import { selectVariable } from "../actions/controlActions";
+import _VariableSelect from "@/components/VariableSelect";
+import { AppState } from "@/states/appState";
+import { addTimeSeries } from "@/actions/dataActions";
+import { selectVariable } from "@/actions/controlActions";
 import {
   canAddTimeSeriesSelector,
   selectedDatasetVariablesSelector,
-} from "../selectors/controlSelectors";
+} from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {

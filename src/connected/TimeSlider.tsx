@@ -24,10 +24,10 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _TimeSlider from "../components/TimeSlider";
-import { selectTime, selectTimeRange } from "../actions/controlActions";
-import { selectedDatasetTimeDimensionSelector } from "../selectors/controlSelectors";
+import { AppState } from "@/states/appState";
+import _TimeSlider from "@/components/TimeSlider";
+import { selectTime, selectTimeRange } from "@/actions/controlActions";
+import { selectedDatasetTimeDimensionSelector } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {

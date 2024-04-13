@@ -37,10 +37,9 @@ import ErrorIcon from "@mui/icons-material/Error";
 import WarningIcon from "@mui/icons-material/Warning";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import InfoIcon from "@mui/icons-material/Info";
-
-import { MessageLogEntry } from "../states/messageLogState";
-
 import { green, amber } from "@mui/material/colors";
+
+import { MessageLogEntry } from "@/states/messageLogState";
 
 const variantIcon = {
   success: CheckCircleIcon,

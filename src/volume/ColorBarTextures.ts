@@ -23,7 +23,8 @@
  */
 
 import * as THREE from "three";
-import { ColorBar, formatColorBar } from "../model/colorBar";
+
+import { ColorBar, formatColorBar } from "@/model/colorBar";
 
 class ColorBarTextures {
   private readonly textures: { [cmName: string]: THREE.Texture };

@@ -25,11 +25,11 @@
 import { default as OlWktFormat } from "ol/format/WKT";
 import { default as OlGeomPoint } from "ol/geom/Point";
 
+import i18n from "@/i18n";
+import { getUserPlaceColorName } from "@/config";
+import { defaultParseOptions, parseCsv, ParseOptions } from "@/util/csv";
+import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "@/model/place";
 import { Format, parseAlternativeNames } from "./common";
-import { defaultParseOptions, parseCsv, ParseOptions } from "../../util/csv";
-import i18n from "../../i18n";
-import { getUserPlaceColorName } from "../../config";
-import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "../place";
 
 const checkError = (text: string): string | null => {
   if (text.trim() !== "") {

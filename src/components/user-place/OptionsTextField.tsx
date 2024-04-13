@@ -25,7 +25,7 @@
 import * as React from "react";
 import TextField from "@mui/material/TextField";
 
-import i18n from "../../i18n";
+import i18n from "@/i18n";
 
 // noinspection JSUnusedLocalSymbols
 const defaults = {

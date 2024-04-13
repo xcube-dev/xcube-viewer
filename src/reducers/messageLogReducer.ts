@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import { MessageLogState, newMessageLogState } from "../states/messageLogState";
+import { MessageLogState, newMessageLogState } from "@/states/messageLogState";
 
 import {
   HIDE_MESSAGE,
   MessageLogAction,
   POST_MESSAGE,
-} from "../actions/messageLogActions";
+} from "@/actions/messageLogActions";
 
 let numMessages = 0;
 

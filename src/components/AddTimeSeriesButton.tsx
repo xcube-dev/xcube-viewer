@@ -28,8 +28,8 @@ import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-import { WithLocale } from "../util/lang";
-import { PlaceGroupTimeSeries, TimeSeries } from "../model/timeSeries";
+import { WithLocale } from "@/util/lang";
+import { PlaceGroupTimeSeries, TimeSeries } from "@/model/timeSeries";
 
 interface AddTimeSeriesButtonProps extends WithLocale {
   className: string;

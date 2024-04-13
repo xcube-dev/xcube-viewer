@@ -25,9 +25,10 @@
 import React from "react";
 import { AuthProvider } from "react-oidc-context";
 import { User } from "oidc-client-ts";
-import { Config } from "../config";
+
+import { Config } from "@/config";
+import baseUrl from "@/util/baseurl";
 import ErrorBoundary from "./ErrorBoundary";
-import baseUrl from "../util/baseurl";
 
 interface AuthWrapperProps {}
 

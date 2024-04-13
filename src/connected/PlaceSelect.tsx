@@ -24,14 +24,14 @@
 
 import { connect } from "react-redux";
 
-import _PlaceSelect from "../components/PlaceSelect";
-import { AppState } from "../states/appState";
-import { renameUserPlace, removeUserPlace } from "../actions/dataActions";
-import { selectPlace, openDialog } from "../actions/controlActions";
+import _PlaceSelect from "@/components/PlaceSelect";
+import { AppState } from "@/states/appState";
+import { renameUserPlace, removeUserPlace } from "@/actions/dataActions";
+import { selectPlace, openDialog } from "@/actions/controlActions";
 import {
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupPlaceLabelsSelector,
-} from "../selectors/controlSelectors";
+} from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {

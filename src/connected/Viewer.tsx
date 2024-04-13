@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
 
-import { AppState } from "../states/appState";
+import { AppState } from "@/states/appState";
 import {
   baseMapLayerSelector,
   imageSmoothingSelector,
@@ -36,14 +36,14 @@ import {
   selectedDatasetVariableLayerSelector,
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
-} from "../selectors/controlSelectors";
+} from "@/selectors/controlSelectors";
 import {
   addDrawnUserPlace,
   importUserPlacesFromText,
-} from "../actions/dataActions";
-import _Viewer from "../components/Viewer";
-import { userPlaceGroupsSelector } from "../selectors/dataSelectors";
-import { selectPlace } from "../actions/controlActions";
+} from "@/actions/dataActions";
+import _Viewer from "@/components/Viewer";
+import { userPlaceGroupsSelector } from "@/selectors/dataSelectors";
+import { selectPlace } from "@/actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
 
 interface OwnProps {

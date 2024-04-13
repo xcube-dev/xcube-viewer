@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-import { Config } from "../config";
-import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
-import { ColorBars } from "../model/colorBar";
-import { Dataset } from "../model/dataset";
-import { PlaceGroup } from "../model/place";
-import { TimeSeriesGroup } from "../model/timeSeries";
+import { Config } from "@/config";
+import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
+import { ColorBars } from "@/model/colorBar";
+import { Dataset } from "@/model/dataset";
+import { PlaceGroup } from "@/model/place";
+import { TimeSeriesGroup } from "@/model/timeSeries";
 import { loadUserServers } from "./userSettings";
 
 export interface DataState {

@@ -35,9 +35,9 @@ import withStyles from "@mui/styles/withStyles";
 import Tooltip from "@mui/material/Tooltip";
 import TimelineIcon from "@mui/icons-material/Timeline";
 
-import i18n from "../i18n";
-import { Variable } from "../model/variable";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { Variable } from "@/model/variable";
+import { WithLocale } from "@/util/lang";
 import ControlBarItem from "./ControlBarItem";
 
 const styles = (theme: Theme) =>

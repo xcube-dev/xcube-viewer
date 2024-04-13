@@ -31,8 +31,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import { UserProfile as UserInfo } from "oidc-client-ts";
 
-import i18n from "../i18n";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { WithLocale } from "@/util/lang";
 
 interface UserProfileProps extends WithLocale {
   userInfo: UserInfo;

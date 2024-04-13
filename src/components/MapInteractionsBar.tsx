@@ -35,9 +35,9 @@ import FileUploadIcon from "@mui/icons-material/CloudUpload";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-import i18n from "../i18n";
-import { MapInteraction } from "../states/controlState";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { MapInteraction } from "@/states/controlState";
+import { WithLocale } from "@/util/lang";
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControl: {

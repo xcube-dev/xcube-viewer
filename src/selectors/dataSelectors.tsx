@@ -22,14 +22,15 @@
  * SOFTWARE.
  */
 
-import { AppState } from "../states/appState";
 import { createSelector } from "reselect";
-import { Dataset } from "../model/dataset";
-import { PlaceGroup } from "../model/place";
+
+import { AppState } from "@/states/appState";
+import { Dataset } from "@/model/dataset";
+import { PlaceGroup } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
   placeGroupToTimeSeries,
-} from "../model/timeSeries";
+} from "@/model/timeSeries";
 
 export const datasetsSelector = (state: AppState) =>
   state.dataState.datasets || [];

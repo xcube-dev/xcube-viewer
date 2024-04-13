@@ -23,6 +23,7 @@
  */
 
 import { connect } from "react-redux";
+
 import {
   infoCardElementViewModesSelector,
   selectedDatasetSelector,
@@ -31,16 +32,15 @@ import {
   selectedTimeSelector,
   selectedVariableSelector,
   visibleInfoCardElementsSelector,
-} from "../selectors/controlSelectors";
-
-import { AppState } from "../states/appState";
+} from "@/selectors/controlSelectors";
+import { AppState } from "@/states/appState";
 import {
   setVisibleInfoCardElements,
   showInfoCard,
   updateInfoCardElementViewMode,
-} from "../actions/controlActions";
-import _InfoCard from "../components/InfoCard";
-import { Config } from "../config";
+} from "@/actions/controlActions";
+import _InfoCard from "@/components/InfoCard";
+import { Config } from "@/config";
 
 const mapStateToProps = (state: AppState) => {
   return {

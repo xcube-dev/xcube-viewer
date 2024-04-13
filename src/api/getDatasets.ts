@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
+import { Dataset, Dimension, TimeDimension } from "@/model/dataset";
 import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
-import { Dataset, Dimension, TimeDimension } from "../model/dataset";
 
 export function getDatasets(
   apiServerUrl: string,

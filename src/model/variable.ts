@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
+import { VolumeRenderMode } from "@/states/controlState";
 import { TileSourceOptions } from "./tile";
-import { VolumeRenderMode } from "../states/controlState";
 
 export interface Variable {
   id: string;

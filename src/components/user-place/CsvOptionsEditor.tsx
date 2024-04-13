@@ -25,7 +25,7 @@
 import * as React from "react";
 import Checkbox from "@mui/material/Checkbox";
 
-import { CsvOptions } from "../../model/user-place/csv";
+import { CsvOptions } from "@/model/user-place/csv";
 import OptionsTextField from "./OptionsTextField";
 
 const CsvTextField = OptionsTextField<CsvOptions, string>();

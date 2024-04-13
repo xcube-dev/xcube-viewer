@@ -22,19 +22,15 @@
  * SOFTWARE.
  */
 
-import { AppState } from "../states/appState";
-
-import { dataReducer } from "./dataReducer";
-import { DataAction } from "../actions/dataActions";
-
+import { AppState } from "@/states/appState";
+import { ChangeLocale, ControlAction } from "@/actions/controlActions";
+import { DataAction } from "@/actions/dataActions";
+import { MessageLogAction } from "@/actions/messageLogActions";
+import { UserAuthAction } from "@/actions/userAuthActions";
 import { controlReducer } from "./controlReducer";
-import { ChangeLocale, ControlAction } from "../actions/controlActions";
-
+import { dataReducer } from "./dataReducer";
 import { messageLogReducer } from "./messageLogReducer";
-import { MessageLogAction } from "../actions/messageLogActions";
-
 import { userAuthReducer } from "./userAuthReducer";
-import { UserAuthAction } from "../actions/userAuthActions";
 
 export function appReducer(
   state: AppState | undefined,

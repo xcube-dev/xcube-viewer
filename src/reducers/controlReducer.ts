@@ -48,7 +48,7 @@ import {
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
   UPDATE_VOLUME_STATE,
-} from "../actions/controlActions";
+} from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
   ADD_IMPORTED_USER_PLACE_GROUPS,
@@ -57,23 +57,23 @@ import {
   REMOVE_USER_PLACE,
   RENAME_USER_PLACE_GROUP,
   UPDATE_DATASETS,
-} from "../actions/dataActions";
-import i18n from "../i18n";
+} from "@/actions/dataActions";
+import i18n from "@/i18n";
 import {
   findDataset,
   findDatasetVariable,
   getDatasetTimeRange,
-} from "../model/dataset";
+} from "@/model/dataset";
 import {
   selectedTimeIndexSelector,
   timeCoordinatesSelector,
-} from "../selectors/controlSelectors";
-import { AppState } from "../states/appState";
-import { ControlState, newControlState } from "../states/controlState";
-import { storeUserSettings } from "../states/userSettings";
-import { findIndexCloseTo } from "../util/find";
-import { appParams } from "../config";
-import { USER_DRAWN_PLACE_GROUP_ID } from "../model/place";
+} from "@/selectors/controlSelectors";
+import { AppState } from "@/states/appState";
+import { ControlState, newControlState } from "@/states/controlState";
+import { storeUserSettings } from "@/states/userSettings";
+import { findIndexCloseTo } from "@/util/find";
+import { appParams } from "@/config";
+import { USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
 //                so they produce a consistent state. E.g. on selected dataset change, ensure selected

@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
+import { Action, Dispatch } from "redux";
 import { Extent as OlExtent } from "ol/extent";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { Geometry as OlGeometry } from "ol/geom";
-import { Action, Dispatch } from "redux";
-import * as api from "../api";
-import i18n from "../i18n";
-import { Dataset, findDataset } from "../model/dataset";
+
+import * as api from "@/api";
+import i18n from "@/i18n";
+import { Dataset, findDataset } from "@/model/dataset";
 import {
   findPlaceInPlaceGroups,
   isValidPlaceGroup,
   Place,
   PlaceGroup,
-} from "../model/place";
-import { Time, TimeRange } from "../model/timeSeries";
-
+} from "@/model/place";
+import { Time, TimeRange } from "@/model/timeSeries";
 import {
   selectedDatasetIdSelector,
   selectedDatasetSelectedPlaceGroupsSelector,
@@ -44,9 +44,9 @@ import {
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
   selectedServerSelector,
-} from "../selectors/controlSelectors";
-import { datasetsSelector } from "../selectors/dataSelectors";
-import { AppState } from "../states/appState";
+} from "@/selectors/controlSelectors";
+import { datasetsSelector } from "@/selectors/dataSelectors";
+import { AppState } from "@/states/appState";
 import {
   ControlState,
   MapInteraction,
@@ -54,7 +54,7 @@ import {
   ViewMode,
   VolumeRenderMode,
   VolumeState,
-} from "../states/controlState";
+} from "@/states/controlState";
 import {
   UPDATE_DATASET_PLACE_GROUP,
   updateDatasetPlaceGroup,

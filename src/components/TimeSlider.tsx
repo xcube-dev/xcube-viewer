@@ -33,12 +33,12 @@ import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
 import Tooltip from "@mui/material/Tooltip";
 
-import i18n from "../i18n";
-import { Time, TimeRange, UNIT } from "../model/timeSeries";
+import i18n from "@/i18n";
+import { Time, TimeRange, UNIT } from "@/model/timeSeries";
 import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
-} from "../util/time";
+} from "@/util/time";
 
 const HOR_MARGIN = 5;
 
