@@ -75,6 +75,12 @@ import {
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
 import { CategoricalChartState } from "recharts/types/chart/types";
 
+// Typing problem in recharts v2.12.4
+type CategoricalChartState_Fixed = Omit<
+  CategoricalChartState,
+  "activeLabel"
+> & { activeLabel?: number };
+
 const INVISIBLE_LINE_COLOR = "#00000000";
 const SUBSTITUTE_LABEL_COLOR = "#FAFFDD";
 
@@ -230,9 +236,17 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     return utcTimeToIsoDateString(value);
   };
 
-  const handleClick = (chartState: CategoricalChartState) => {
-    if (chartState && selectTime && Number.isFinite(chartState.activeItem)) {
-      selectTime(chartState.activeItem!);
+  const handleClick = (
+    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  ) => {
+    console.info(chartState);
+    if (
+      chartState &&
+      selectTime &&
+      Number.isFinite(chartState.activeLabel) &&
+      typeof chartState.activeLabel === "number"
+    ) {
+      selectTime(chartState.activeLabel);
     }
     clearTimeRangeSelection();
   };
@@ -255,10 +269,12 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     }
   };
 
-  const handleMouseMove = (chartState: CategoricalChartState) => {
+  const handleMouseMove = (
+    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  ) => {
     const firstTime = timeRangeSelection.firstTime;
     if (firstTime !== undefined) {
-      const secondTime = chartState && chartState.activeItem;
+      const secondTime = chartState && chartState.activeLabel;
       if (typeof secondTime === "number") {
         setTimeRangeSelection({ ...timeRangeSelection, secondTime });
       }
