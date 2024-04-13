@@ -35,13 +35,13 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import InfoIcon from "@mui/icons-material/Info";
 import VolumeIcon from "@mui/icons-material/ThreeDRotation";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
-
-import { Config } from "../config";
-import i18n from "../i18n";
-import { TimeSeriesGroup } from "../model/timeSeries";
-import { WithLocale } from "../util/lang";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
+
+import i18n from "@/i18n";
+import { Config } from "@/config";
+import { WithLocale } from "@/util/lang";
+import { TimeSeriesGroup } from "@/model/timeSeries";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) =>

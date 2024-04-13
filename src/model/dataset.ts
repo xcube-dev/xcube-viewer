@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { TileSourceOptions } from "./tile";
-import { Variable } from "./variable";
+import { assertArrayNotEmpty, assertDefinedAndNotNull } from "@/util/assert";
 import { PlaceGroup } from "./place";
+import { TileSourceOptions } from "./tile";
 import { TimeRange } from "./timeSeries";
-import { assertArrayNotEmpty, assertDefinedAndNotNull } from "../util/assert";
+import { Variable } from "./variable";
 
 export interface Dimension {
   name: string;

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -30,10 +31,9 @@ import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
-import i18n from "../i18n";
 
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { WithLocale } from "@/util/lang";
 
 const styles = (theme: Theme) =>
   createStyles({

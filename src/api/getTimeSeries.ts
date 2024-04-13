@@ -24,15 +24,15 @@
 
 import * as geojson from "geojson";
 
-import { Variable } from "../model/variable";
-import { TimeSeries, TimeSeriesPoint } from "../model/timeSeries";
+import { Dataset } from "@/model/dataset";
+import { TimeSeries, TimeSeriesPoint } from "@/model/timeSeries";
+import { Variable } from "@/model/variable";
 import {
   callJsonApi,
   makeRequestInit,
   makeRequestUrl,
   QueryComponent,
 } from "./callApi";
-import { Dataset } from "../model/dataset";
 
 type RawTimeSeriesPoint = Omit<TimeSeriesPoint, "time"> & { time: string };
 

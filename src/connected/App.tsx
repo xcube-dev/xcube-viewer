@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import * as React from "react";
+import { connect } from "react-redux";
 import {
   adaptV4Theme,
   createTheme,
@@ -29,17 +31,15 @@ import {
   StyledEngineProvider,
   ThemeProvider,
 } from "@mui/material";
-import * as React from "react";
-import { connect } from "react-redux";
-import { Config } from "../config";
 
-import { AppState } from "../states/appState";
+import { Config } from "@/config";
+import { AppState } from "@/states/appState";
+import AuthWrapper from "@/components/AuthWrapper";
 import AppBar from "./AppBar";
 import AppPane from "./AppPane";
 import LegalAgreementDialog from "./LegalAgreementDialog";
 import LoadingDialog from "./LoadingDialog";
 import MessageLog from "./MessageLog";
-import AuthWrapper from "../components/AuthWrapper";
 import ServerDialog from "./ServerDialog";
 import SettingsDialog from "./SettingsDialog";
 import ExportDialog from "./ExportDialog";

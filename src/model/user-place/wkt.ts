@@ -24,11 +24,11 @@
 
 import { default as OlWktFormat } from "ol/format/WKT";
 
+import i18n from "@/i18n";
+import { getUserPlaceColorName } from "@/config";
+import { utcTimeToIsoDateTimeString } from "@/util/time";
+import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "@/model/place";
 import { Format } from "./common";
-import { getUserPlaceColorName } from "../../config";
-import i18n from "../../i18n";
-import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "../place";
-import { utcTimeToIsoDateTimeString } from "../../util/time";
 
 // noinspection JSUnusedLocalSymbols
 const checkError = (_text: string): string | null => {

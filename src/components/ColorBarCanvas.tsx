@@ -25,8 +25,8 @@
 import * as React from "react";
 import { useEffect, useRef } from "react";
 
-import i18n from "../i18n";
-import { ColorBar, renderColorBar } from "../model/colorBar";
+import i18n from "@/i18n";
+import { ColorBar, renderColorBar } from "@/model/colorBar";
 
 interface ColorBarCanvasProps {
   colorBar: ColorBar;

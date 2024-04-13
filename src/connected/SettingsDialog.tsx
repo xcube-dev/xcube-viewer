@@ -23,17 +23,17 @@
  */
 
 import { connect } from "react-redux";
+
 import {
   changeLocale,
   closeDialog,
   openDialog,
   updateSettings,
-} from "../actions/controlActions";
-import _SettingsDialog from "../components/SettingsDialog";
-import { selectedServerSelector } from "../selectors/controlSelectors";
-
-import { AppState } from "../states/appState";
-import version from "../version";
+} from "@/actions/controlActions";
+import _SettingsDialog from "@/components/SettingsDialog";
+import { selectedServerSelector } from "@/selectors/controlSelectors";
+import { AppState } from "@/states/appState";
+import version from "@/version";
 
 const mapStateToProps = (state: AppState) => {
   return {

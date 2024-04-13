@@ -25,9 +25,9 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import ControlBarComponent from "../components/ControlBar";
-import { WithLocale } from "../util/lang";
+import { AppState } from "@/states/appState";
+import ControlBarComponent from "@/components/ControlBar";
+import { WithLocale } from "@/util/lang";
 import DatasetSelect from "./DatasetSelect";
 import VariableSelect from "./VariableSelect";
 import RgbSwitch from "./RgbSwitch";

@@ -24,17 +24,17 @@
 
 import { connect } from "react-redux";
 
-import _PlaceGroupsSelect from "../components/PlaceGroupsSelect";
-import { AppState } from "../states/appState";
+import _PlaceGroupsSelect from "@/components/PlaceGroupsSelect";
+import { AppState } from "@/states/appState";
 import {
   renameUserPlaceGroup,
   removeUserPlaceGroup,
-} from "../actions/dataActions";
-import { selectPlaceGroups } from "../actions/controlActions";
+} from "@/actions/dataActions";
+import { selectPlaceGroups } from "@/actions/controlActions";
 import {
   selectedDatasetAndUserPlaceGroupsSelector,
   selectedPlaceGroupsTitleSelector,
-} from "../selectors/controlSelectors";
+} from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {

@@ -56,9 +56,9 @@ import { Payload as TooltipPayload } from "recharts/types/component/DefaultToolt
 import { Payload as LegendPayload } from "recharts/types/component/DefaultLegendContent";
 import { CategoricalChartState } from "recharts/types/chart/types";
 
-import i18n from "../i18n";
-import { getUserPlaceColor } from "../config";
-import { Place, PlaceInfo } from "../model/place";
+import i18n from "@/i18n";
+import { getUserPlaceColor } from "@/config";
+import { Place, PlaceInfo } from "@/model/place";
 import {
   equalTimeRanges,
   PlaceGroupTimeSeries,
@@ -67,12 +67,12 @@ import {
   TimeSeries,
   TimeSeriesGroup,
   TimeSeriesPoint,
-} from "../model/timeSeries";
-import { WithLocale } from "../util/lang";
+} from "@/model/timeSeries";
+import { WithLocale } from "@/util/lang";
 import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
-} from "../util/time";
+} from "@/util/time";
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
 
 // Fix typing problem in recharts v2.12.4

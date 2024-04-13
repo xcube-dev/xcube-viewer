@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import { getCurrentLocale, LanguageDictionary } from "./util/lang";
-import lang from "./resources/lang.json";
+import { getCurrentLocale, LanguageDictionary } from "@/util/lang";
+import lang from "@/resources/lang.json";
 
 const i18n = new LanguageDictionary(lang);
 i18n.locale = getCurrentLocale();

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import * as React from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Theme } from "@mui/material/styles";
 import { WithStyles } from "@mui/styles";
@@ -29,11 +30,10 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
-import * as React from "react";
-import i18n from "../i18n";
 
-import { RgbSchema } from "../model/dataset";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { RgbSchema } from "@/model/dataset";
+import { WithLocale } from "@/util/lang";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (_theme: Theme) => createStyles({});

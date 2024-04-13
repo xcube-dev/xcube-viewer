@@ -23,9 +23,10 @@
  */
 
 import { connect } from "react-redux";
-import { AppState } from "../states/appState";
-import _UserControl from "../components/UserControl";
-import { updateAccessToken } from "../actions/userAuthActions";
+
+import { AppState } from "@/states/appState";
+import _UserControl from "@/components/UserControl";
+import { updateAccessToken } from "@/actions/userAuthActions";
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (_state: AppState) => {

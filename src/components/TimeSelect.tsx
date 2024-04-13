@@ -29,16 +29,16 @@ import withStyles from "@mui/styles/withStyles";
 import { WithStyles } from "@mui/styles";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel/InputLabel";
+import { TextFieldProps as MuiTextFieldPropsType } from "@mui/material/TextField/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-import i18n from "../i18n";
-import { Time, TimeRange } from "../model/timeSeries";
-import { WithLocale } from "../util/lang";
-import { localToUtcTime, utcTimeToLocal } from "../util/time";
+import i18n from "@/i18n";
+import { Time, TimeRange } from "@/model/timeSeries";
+import { WithLocale } from "@/util/lang";
+import { localToUtcTime, utcTimeToLocal } from "@/util/time";
 import ControlBarItem from "./ControlBarItem";
-import { TextFieldProps as MuiTextFieldPropsType } from "@mui/material/TextField/TextField";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) =>

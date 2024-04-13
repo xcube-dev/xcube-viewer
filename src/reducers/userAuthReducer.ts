@@ -22,11 +22,8 @@
  * SOFTWARE.
  */
 
-import {
-  UPDATE_ACCESS_TOKEN,
-  UserAuthAction,
-} from "../actions/userAuthActions";
-import { newUserAuthState, UserAuthState } from "../states/userAuthState";
+import { UPDATE_ACCESS_TOKEN, UserAuthAction } from "@/actions/userAuthActions";
+import { newUserAuthState, UserAuthState } from "@/states/userAuthState";
 
 export function userAuthReducer(
   state: UserAuthState | undefined,

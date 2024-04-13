@@ -33,10 +33,10 @@ import withStyles from "@mui/styles/withStyles";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-import i18n from "../i18n";
-import { Dataset } from "../model/dataset";
-import { Place, USER_ID_PREFIX } from "../model/place";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { Dataset } from "@/model/dataset";
+import { Place, USER_ID_PREFIX } from "@/model/place";
+import { WithLocale } from "@/util/lang";
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
 

@@ -28,7 +28,8 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import { Theme } from "@mui/material";
 
-import { WithLocale } from "../util/lang";
+import { WithLocale } from "@/util/lang";
+import { Place, PlaceInfo } from "@/model/place";
 import TimeSeriesChart from "./TimeSeriesChart";
 import {
   PlaceGroupTimeSeries,
@@ -37,7 +38,6 @@ import {
   TimeSeries,
   TimeSeriesGroup,
 } from "../model/timeSeries";
-import { Place, PlaceInfo } from "../model/place";
 import TimeRangeSlider from "./TimeRangeSlider";
 
 // noinspection JSUnusedLocalSymbols

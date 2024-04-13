@@ -24,9 +24,9 @@
 
 import { connect } from "react-redux";
 
-import _MapInteractionsBar from "../components/MapInteractionsBar";
-import { AppState } from "../states/appState";
-import { setMapInteraction } from "../actions/controlActions";
+import _MapInteractionsBar from "@/components/MapInteractionsBar";
+import { AppState } from "@/states/appState";
+import { setMapInteraction } from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {

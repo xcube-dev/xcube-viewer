@@ -24,13 +24,13 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _TimePlayer from "../components/TimePlayer";
+import { AppState } from "@/states/appState";
+import _TimePlayer from "@/components/TimePlayer";
 import {
   selectTime,
   incSelectedTime,
   updateTimeAnimation,
-} from "../actions/controlActions";
+} from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {

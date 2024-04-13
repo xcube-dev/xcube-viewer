@@ -23,8 +23,9 @@
  */
 
 import * as React from "react";
-import i18n from "../i18n";
-import { WithLocale } from "../util/lang";
+
+import i18n from "@/i18n";
+import { WithLocale } from "@/util/lang";
 
 import "./ErrorBoundary.css";
 

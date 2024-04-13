@@ -35,19 +35,19 @@ import makeStyles from "@mui/styles/makeStyles";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import i18n from "../i18n";
-import { ApiServerConfig, ApiServerInfo } from "../model/apiServer";
+import i18n from "@/i18n";
+import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import {
   ControlState,
   TIME_ANIMATION_INTERVALS,
   TimeAnimationInterval,
-} from "../states/controlState";
-import { MapGroup, maps, MapSource } from "../util/maps";
+} from "@/states/controlState";
+import { MapGroup, maps, MapSource } from "@/util/maps";
+import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
 import RadioSetting from "./RadioSetting";
-import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "../model/proj";
 
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {

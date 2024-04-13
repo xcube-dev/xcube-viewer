@@ -30,8 +30,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import makeStyles from "@mui/styles/makeStyles";
 import TextField from "@mui/material/TextField";
-import i18n from "../i18n";
-import { ControlState } from "../states/controlState";
+
+import i18n from "@/i18n";
+import { ControlState } from "@/states/controlState";
 import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";

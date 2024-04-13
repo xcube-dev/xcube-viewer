@@ -26,18 +26,18 @@
 
 import * as React from "react";
 import { connect } from "react-redux";
+import { default as OlMap } from "ol/Map";
 import { Theme } from "@mui/material";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
-import { default as OlMap } from "ol/Map";
 
-import { AppState } from "../states/appState";
+import { AppState } from "@/states/appState";
+import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import TimeSeriesCharts from "./TimeSeriesCharts";
 import VolumeCard from "./VolumeCard";
 import InfoCard from "./InfoCard";
-import SplitPane from "../components/SplitPane";
 
 // Adjust for debugging split pane style
 const mapExtraStyle: React.CSSProperties = { padding: 0 };

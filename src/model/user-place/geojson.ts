@@ -25,10 +25,10 @@
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { default as OlFeature } from "ol/Feature";
 
+import i18n from "@/i18n";
+import { getUserPlaceColorName } from "@/config";
+import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "@/model/place";
 import { Format, parseAlternativeNames } from "./common";
-import i18n from "../../i18n";
-import { getUserPlaceColorName } from "../../config";
-import { newUserPlace, newUserPlaceGroup, PlaceGroup } from "../place";
 
 const checkError = (text: string): string | null => {
   if (text.trim() !== "") {

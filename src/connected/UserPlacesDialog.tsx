@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _UserPlacesDialog from "../components/UserPlacesDialog";
+import { AppState } from "@/states/appState";
+import _UserPlacesDialog from "@/components/UserPlacesDialog";
 import {
   closeDialog,
   updateSettings,
   setMapInteraction,
-} from "../actions/controlActions";
-import { importUserPlacesFromText } from "../actions/dataActions";
+} from "@/actions/controlActions";
+import { importUserPlacesFromText } from "@/actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
   return {

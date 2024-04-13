@@ -24,10 +24,10 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _ExportDialog from "../components/ExportDialog";
-import { closeDialog, updateSettings } from "../actions/controlActions";
-import { exportData } from "../actions/dataActions";
+import { AppState } from "@/states/appState";
+import _ExportDialog from "@/components/ExportDialog";
+import { closeDialog, updateSettings } from "@/actions/controlActions";
+import { exportData } from "@/actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
   return {

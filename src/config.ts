@@ -36,12 +36,13 @@ import {
   red,
   yellow,
 } from "@mui/material/colors";
-import { ApiServerConfig } from "./model/apiServer";
-import rawDefaultConfig from "./resources/config.json";
-import { AuthClientConfig } from "./util/auth";
-import { Branding, parseBranding } from "./util/branding";
-import baseUrl from "./util/baseurl";
-import { buildPath } from "./util/path";
+
+import { ApiServerConfig } from "@/model/apiServer";
+import rawDefaultConfig from "@/resources/config.json";
+import { AuthClientConfig } from "@/util/auth";
+import { Branding, parseBranding } from "@/util/branding";
+import baseUrl from "@/util/baseurl";
+import { buildPath } from "@/util/path";
 
 export const appParams = new URLSearchParams(window.location.search);
 

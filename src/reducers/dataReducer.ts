@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import { DataState, newDataState } from "../states/dataState";
-import { storeUserServers } from "../states/userSettings";
+import { DataState, newDataState } from "@/states/dataState";
+import { storeUserServers } from "@/states/userSettings";
 import {
   ADD_PLACE_GROUP_TIME_SERIES,
   ADD_DRAWN_USER_PLACE,
@@ -44,12 +44,12 @@ import {
   UPDATE_TIME_SERIES,
   UPDATE_VARIABLE_COLOR_BAR,
   UPDATE_VARIABLE_VOLUME,
-} from "../actions/dataActions";
-import { newId } from "../util/id";
-import { Variable } from "../model/variable";
-import { Place, USER_DRAWN_PLACE_GROUP_ID } from "../model/place";
-import { TimeSeries, TimeSeriesGroup } from "../model/timeSeries";
-import i18n from "../i18n";
+} from "@/actions/dataActions";
+import i18n from "@/i18n";
+import { newId } from "@/util/id";
+import { Variable } from "@/model/variable";
+import { Place, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
+import { TimeSeries, TimeSeriesGroup } from "@/model/timeSeries";
 
 export function dataReducer(
   state: DataState | undefined,

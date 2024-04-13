@@ -35,11 +35,11 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./index.css";
 
-import { changeLocale } from "./actions/controlActions";
-import { syncWithServer } from "./actions/dataActions";
-import { Config } from "./config";
-import App from "./connected/App";
-import { appReducer } from "./reducers/appReducer";
+import App from "@/connected/App";
+import { Config } from "@/config";
+import { changeLocale } from "@/actions/controlActions";
+import { syncWithServer } from "@/actions/dataActions";
+import { appReducer } from "@/reducers/appReducer";
 
 Config.load().then(() => {
   const logger = ReduxLogger.createLogger({ collapsed: true, diff: false });

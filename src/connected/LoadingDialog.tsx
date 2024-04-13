@@ -24,9 +24,9 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _LoadingDialog from "../components/LoadingDialog";
-import { activityMessagesSelector } from "../selectors/controlSelectors";
+import { AppState } from "@/states/appState";
+import _LoadingDialog from "@/components/LoadingDialog";
+import { activityMessagesSelector } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {

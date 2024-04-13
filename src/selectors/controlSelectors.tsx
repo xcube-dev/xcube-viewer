@@ -24,6 +24,7 @@
 
 import { JSX } from "react";
 import { createSelector } from "reselect";
+import memoize from "fast-memoize";
 import { Tile as OlTile, ImageTile as OlImageTile } from "ol";
 import { default as OlMap } from "ol/Map";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
@@ -35,13 +36,13 @@ import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
-import { Layers } from "../components/ol/layer/Layers";
-import { Tile } from "../components/ol/layer/Tile";
-import { Vector } from "../components/ol/layer/Vector";
-import { MapElement } from "../components/ol/Map";
-import memoize from "fast-memoize";
-import { Config, getTileAccess } from "../config";
-import { ApiServerConfig } from "../model/apiServer";
+
+import { Config, getTileAccess } from "@/config";
+import { Layers } from "@/components/ol/layer/Layers";
+import { Tile } from "@/components/ol/layer/Tile";
+import { Vector } from "@/components/ol/layer/Vector";
+import { MapElement } from "@/components/ol/Map";
+import { ApiServerConfig } from "@/model/apiServer";
 
 import {
   Dataset,
@@ -51,7 +52,7 @@ import {
   getDatasetTimeRange,
   RgbSchema,
   TimeDimension,
-} from "../model/dataset";
+} from "@/model/dataset";
 import {
   findPlaceInfo,
   forEachPlace,
@@ -60,13 +61,13 @@ import {
   Place,
   PlaceGroup,
   PlaceInfo,
-} from "../model/place";
-import { Time, TimeRange, TimeSeriesGroup } from "../model/timeSeries";
-import { Variable } from "../model/variable";
+} from "@/model/place";
+import { Time, TimeRange, TimeSeriesGroup } from "@/model/timeSeries";
+import { Variable } from "@/model/variable";
 
-import { AppState } from "../states/appState";
-import { findIndexCloseTo } from "../util/find";
-import { MapGroup, maps, MapSource } from "../util/maps";
+import { AppState } from "@/states/appState";
+import { findIndexCloseTo } from "@/util/find";
+import { MapGroup, maps, MapSource } from "@/util/maps";
 import {
   colorBarsSelector,
   datasetsSelector,
@@ -74,10 +75,10 @@ import {
   userPlaceGroupsSelector,
   userServersSelector,
 } from "./dataSelectors";
-import { makeRequestUrl } from "../api/callApi";
-import { MAP_OBJECTS, ViewMode } from "../states/controlState";
-import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "../model/proj";
-import { ColorBar, ColorBars, parseColorBar } from "../model/colorBar";
+import { makeRequestUrl } from "@/api/callApi";
+import { MAP_OBJECTS, ViewMode } from "@/states/controlState";
+import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
+import { ColorBar, ColorBars, parseColorBar } from "@/model/colorBar";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;

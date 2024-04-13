@@ -25,19 +25,19 @@
 import * as React from "react";
 import { SyntheticEvent } from "react";
 import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Popover from "@mui/material/Popover";
 import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
-import Tooltip from "@mui/material/Tooltip";
 
-import i18n from "../i18n";
-import { ColorBar, ColorBars, formatColorBar } from "../model/colorBar";
-import { getLabelsFromArray, getLabelsFromRange } from "../util/label";
+import Tooltip from "@mui/material/Tooltip";
+import i18n from "@/i18n";
+import { ColorBar, ColorBars, formatColorBar } from "@/model/colorBar";
+import { getLabelsFromArray, getLabelsFromRange } from "@/util/label";
 import { ColorBarCanvas } from "./ColorBarCanvas";
-import { Theme } from "@mui/material";
 
 const HOR_SLIDER_MARGIN = 5;
 const COLOR_BAR_BOX_MARGIN = 1;

@@ -31,9 +31,10 @@ import { default as OlEvent } from "ol/events/Event";
 import { EventsKey as OlEventsKey } from "ol/events";
 import { MapOptions as OlMapOptions } from "ol/PluggableMap";
 
+import { DEFAULT_MAP_CRS } from "@/model/proj";
+
 import "ol/ol.css";
 import "./Map.css";
-import { DEFAULT_MAP_CRS } from "../../model/proj";
 
 export type MapElement = React.ReactElement | null | undefined;
 

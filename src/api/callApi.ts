@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import i18n from "../i18n";
+import i18n from "@/i18n";
 import { HTTPError } from "./errors";
 
 export type QueryComponent = [string, string];

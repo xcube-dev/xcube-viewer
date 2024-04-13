@@ -24,7 +24,7 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
+import { AppState } from "@/states/appState";
 import {
   selectedVariableNameSelector,
   selectedVariableUnitsSelector,
@@ -32,9 +32,9 @@ import {
   selectedVariableColorBarMinMaxSelector,
   selectedVariableOpacitySelector,
   selectedVariableColorBarSelector,
-} from "../selectors/controlSelectors";
-import { updateVariableColorBar } from "../actions/dataActions";
-import _ColorBarLegend from "../components/ColorBarLegend";
+} from "@/selectors/controlSelectors";
+import { updateVariableColorBar } from "@/actions/dataActions";
+import _ColorBarLegend from "@/components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
   return {

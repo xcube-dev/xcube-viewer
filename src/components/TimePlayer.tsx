@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import * as React from "react";
+import { useEffect, useRef } from "react";
 import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
@@ -36,13 +38,11 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PauseCircleOutline from "@mui/icons-material/PauseCircleOutline";
 import PlayCircleOutline from "@mui/icons-material/PlayCircleOutline";
-import * as React from "react";
-import { useEffect, useRef } from "react";
-import i18n from "../i18n";
 
-import { Time, TimeRange } from "../model/timeSeries";
-import { TimeAnimationInterval } from "../states/controlState";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { WithLocale } from "@/util/lang";
+import { Time, TimeRange } from "@/model/timeSeries";
+import { TimeAnimationInterval } from "@/states/controlState";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) =>

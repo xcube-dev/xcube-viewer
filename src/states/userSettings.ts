@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import { Config } from "../config";
-import { ApiServerConfig } from "../model/apiServer";
-import { getLocalStorage } from "../util/storage";
+import { Config } from "@/config";
+import { ApiServerConfig } from "@/model/apiServer";
+import { getLocalStorage } from "@/util/storage";
 import { ControlState } from "./controlState";
 
 export function storeUserServers(userServers: ApiServerConfig[]) {

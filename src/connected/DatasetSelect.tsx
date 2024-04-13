@@ -24,9 +24,9 @@
 
 import { connect } from "react-redux";
 
-import _DatasetSelect from "../components/DatasetSelect";
-import { AppState } from "../states/appState";
-import { selectDataset } from "../actions/controlActions";
+import _DatasetSelect from "@/components/DatasetSelect";
+import { AppState } from "@/states/appState";
+import { selectDataset } from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {

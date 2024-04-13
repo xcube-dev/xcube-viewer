@@ -28,20 +28,19 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { BBox, Position } from "geojson";
 
-// import i18n from '../i18n';
-import { Dataset } from "../model/dataset";
-import { PlaceInfo } from "../model/place";
-import { Variable } from "../model/variable";
-import { WithLocale } from "../util/lang";
+import { Dataset } from "@/model/dataset";
+import { PlaceInfo } from "@/model/place";
+import { Variable } from "@/model/variable";
+import { WithLocale } from "@/util/lang";
 import {
   VolumeRenderMode,
   VolumeState,
   VolumeStates,
-} from "../states/controlState";
-import { VolumeOptions, VolumeScene } from "../volume/VolumeScene";
-import { Volume } from "../volume/Volume";
-import { NRRDLoader } from "../volume/NRRDLoader";
-import { ColorBar } from "../model/colorBar";
+} from "@/states/controlState";
+import { VolumeOptions, VolumeScene } from "@/volume/VolumeScene";
+import { Volume } from "@/volume/Volume";
+import { NRRDLoader } from "@/volume/NRRDLoader";
+import { ColorBar } from "@/model/colorBar";
 
 import "./VolumeCanvas.css";
 

@@ -24,24 +24,24 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _TimeSeriesCharts from "../components/TimeSeriesCharts";
+import { AppState } from "@/states/appState";
+import _TimeSeriesCharts from "@/components/TimeSeriesCharts";
 import {
   removeTimeSeries,
   removeTimeSeriesGroup,
   addPlaceGroupTimeSeries,
-} from "../actions/dataActions";
+} from "@/actions/dataActions";
 import {
   selectPlace,
   selectTime,
   selectTimeRange,
-} from "../actions/controlActions";
+} from "@/actions/controlActions";
 import {
   selectedDatasetTimeRangeSelector,
   selectedPlaceGroupPlacesSelector,
   timeSeriesPlaceInfosSelector,
-} from "../selectors/controlSelectors";
-import { placeGroupTimeSeriesSelector } from "../selectors/dataSelectors";
+} from "@/selectors/controlSelectors";
+import { placeGroupTimeSeriesSelector } from "@/selectors/dataSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {

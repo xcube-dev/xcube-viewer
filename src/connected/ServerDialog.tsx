@@ -24,12 +24,12 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _ServerDialog from "../components/ServerDialog";
-import { closeDialog } from "../actions/controlActions";
-import { configureServers } from "../actions/dataActions";
-import { selectedServerSelector } from "../selectors/controlSelectors";
-import { userServersSelector } from "../selectors/dataSelectors";
+import { AppState } from "@/states/appState";
+import _ServerDialog from "@/components/ServerDialog";
+import { closeDialog } from "@/actions/controlActions";
+import { configureServers } from "@/actions/dataActions";
+import { selectedServerSelector } from "@/selectors/controlSelectors";
+import { userServersSelector } from "@/selectors/dataSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {

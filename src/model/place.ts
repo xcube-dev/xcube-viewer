@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-import * as GeoJSON from "geojson";
 import { defaultMemoize } from "reselect";
+import * as GeoJSON from "geojson";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { default as OlGeometry } from "ol/geom/Geometry";
-import { newId } from "../util/id";
-import { getUserPlaceColorName } from "../config";
+
+import { getUserPlaceColorName } from "@/config";
+import { newId } from "@/util/id";
 
 export const USER_ID_PREFIX = "user-";
 

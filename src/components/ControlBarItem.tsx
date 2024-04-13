@@ -28,9 +28,9 @@ import { WithStyles } from "@mui/styles";
 import withStyles from "@mui/styles/withStyles";
 import createStyles from "@mui/styles/createStyles";
 import FormControl from "@mui/material/FormControl";
-
-import { WithLocale } from "../util/lang";
 import Box from "@mui/material/Box";
+
+import { WithLocale } from "@/util/lang";
 
 const styles = (theme: Theme) =>
   createStyles({

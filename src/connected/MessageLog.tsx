@@ -24,9 +24,9 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "../states/appState";
-import _MessageLog from "../components/MessageLog";
-import { hideMessage } from "../actions/messageLogActions";
+import { AppState } from "@/states/appState";
+import _MessageLog from "@/components/MessageLog";
+import { hideMessage } from "@/actions/messageLogActions";
 
 const mapStateToProps = (state: AppState) => {
   const newEntries = state.messageLogState.newEntries;

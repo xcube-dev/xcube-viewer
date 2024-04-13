@@ -26,16 +26,16 @@ import { Extent as OlExtent } from "ol/extent";
 import { Geometry as OlGeometry } from "ol/geom";
 import { default as OlBaseObject } from "ol/Object";
 
-import { Config } from "../config";
-import { Time, TimeRange } from "../model/timeSeries";
+import { Config } from "@/config";
+import { Time, TimeRange } from "@/model/timeSeries";
 import { loadUserSettings } from "./userSettings";
-import { DEFAULT_MAP_CRS } from "../model/proj";
-import { CsvOptions, defaultCsvOptions } from "../model/user-place/csv";
+import { DEFAULT_MAP_CRS } from "@/model/proj";
+import { CsvOptions, defaultCsvOptions } from "@/model/user-place/csv";
 import {
   defaultGeoJsonOptions,
   GeoJsonOptions,
-} from "../model/user-place/geojson";
-import { defaultWktOptions, WktOptions } from "../model/user-place/wkt";
+} from "@/model/user-place/geojson";
+import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [

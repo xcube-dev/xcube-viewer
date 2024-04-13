@@ -1,9 +1,10 @@
 import * as THREE from "three";
+
+import { ColorBar } from "@/model/colorBar";
 import { OrbitControls } from "./OrbitControls";
 import { Volume } from "./Volume";
 import { VolumeShader } from "./VolumeShader";
 import { isWebGL2Available } from "./webgl-utils";
-import { ColorBar } from "../model/colorBar";
 import { colorBarTextures } from "./ColorBarTextures";
 
 export interface VolumeOptions {

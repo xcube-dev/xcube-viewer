@@ -32,9 +32,9 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 
-import i18n from "../i18n";
-import { Dataset } from "../model/dataset";
-import { WithLocale } from "../util/lang";
+import i18n from "@/i18n";
+import { Dataset } from "@/model/dataset";
+import { WithLocale } from "@/util/lang";
 import ControlBarItem from "./ControlBarItem";
 
 const styles = (theme: Theme) =>

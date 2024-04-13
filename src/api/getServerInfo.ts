@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
+import { ApiServerInfo } from "@/model/apiServer";
 import { callJsonApi } from "./callApi";
-import { ApiServerInfo } from "../model/apiServer";
 
 export function getServerInfo(apiServerUrl: string): Promise<ApiServerInfo> {
   return callJsonApi<ApiServerInfo>(`${apiServerUrl}/`);
