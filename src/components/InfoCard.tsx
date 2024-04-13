@@ -286,11 +286,11 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
   // const classes = useStyles();
   let content;
   if (viewMode === "code") {
-    const jsonDimensions = selectObj(dataset.dimensions, [
+    const jsonDimensions = dataset.dimensions.map((dim) => selectObj(dim, [
       "name",
       "size",
       "dtype",
-    ]);
+    ]));
     const jsonDataset = selectObj(dataset, ["id", "title", "bbox", "attrs"]);
     jsonDataset["dimensions"] = jsonDimensions;
     content = <JsonCodeContent code={JSON.stringify(jsonDataset, null, 2)} />;
@@ -480,7 +480,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
   } else if (viewMode === "list") {
     if (place.properties) {
       const data: KeyValue[] = Object.getOwnPropertyNames(place.properties).map(
-        (name: any) => [name, place.properties![name]],
+        (name: string) => [name, place.properties![name]],
       );
       content = (
         <CardContent2>
@@ -593,7 +593,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type KeyValue = [any, any];
+type KeyValue = [string, unknown];
 
 interface KeyValueTableProps {
   data: KeyValue[];
@@ -677,11 +677,14 @@ const PythonCodeContent: React.FC<CodeContentBaseProps> = ({ code }) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function selectObj(obj: any, keys: string[]): any {
-  const newObj: { [name: string]: any } = {};
+function selectObj<T extends object>(
+  obj: T,
+  keys: Array<keyof T>,
+): Record<string, unknown> {
+  const newObj: Record<string, unknown> = {};
   for (const key of keys) {
     if (key in obj) {
-      newObj[key] = obj[key];
+      newObj[key as string] = obj[key];
     }
   }
   return newObj;

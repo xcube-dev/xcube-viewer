@@ -25,7 +25,7 @@
 import { Extent as OlExtent } from "ol/extent";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { Geometry as OlGeometry } from "ol/geom";
-import { Dispatch } from "redux";
+import { Action, Dispatch } from "redux";
 import * as api from "../api";
 import i18n from "../i18n";
 import { Dataset, findDataset } from "../model/dataset";
@@ -82,10 +82,10 @@ export function selectDataset(
   datasets: Dataset[],
   showInMap: boolean,
 ) {
-  return (dispatch: Dispatch<SelectDataset>) => {
+  return (dispatch: Dispatch) => {
     dispatch(_selectDataset(selectedDatasetId, datasets));
     if (selectedDatasetId && showInMap) {
-      dispatch(flyToDataset(selectedDatasetId) as any);
+      dispatch(flyToDataset(selectedDatasetId) as unknown as Action);
     }
   };
 }
@@ -100,11 +100,11 @@ export function _selectDataset(
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function flyToDataset(selectedDatasetId: string) {
-  return (dispatch: Dispatch<FlyTo>, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     const datasets = datasetsSelector(getState());
     const dataset = findDataset(datasets, selectedDatasetId);
     if (dataset && dataset.bbox) {
-      dispatch(flyTo(dataset.bbox) as any);
+      dispatch(flyTo(dataset.bbox) as unknown as Action);
     }
   };
 }
@@ -123,17 +123,21 @@ const SIMPLE_GEOMETRY_TYPES = [
 ];
 
 export function flyToPlace(selectedPlaceId: string) {
-  return (dispatch: Dispatch<any>, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     const placeGroups = selectedPlaceGroupsSelector(getState());
     const place = findPlaceInPlaceGroups(placeGroups, selectedPlaceId);
     if (place) {
       if (place.bbox && place.bbox.length === 4) {
-        dispatch(flyTo(place.bbox));
+        dispatch(flyTo(place.bbox) as unknown as Action);
       } else if (
         place.geometry &&
         SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)
       ) {
-        dispatch(flyTo(new OlGeoJSONFormat().readGeometry(place.geometry)));
+        dispatch(
+          flyTo(
+            new OlGeoJSONFormat().readGeometry(place.geometry),
+          ) as unknown as Action,
+        );
       }
     }
   };
@@ -146,9 +150,9 @@ export function flyToSelectedObject() {
     const placeId = selectedPlaceIdSelector(getState());
     const datasetId = selectedDatasetIdSelector(getState());
     if (placeId) {
-      dispatch(flyToPlace(placeId) as any);
+      dispatch(flyToPlace(placeId) as unknown as Action);
     } else if (datasetId) {
-      dispatch(flyToDataset(datasetId) as any);
+      dispatch(flyToDataset(datasetId) as unknown as Action);
     }
   };
 }
@@ -221,7 +225,7 @@ export function selectPlaceGroups(selectedPlaceGroupIds: string[] | null) {
             .then((placeGroup: PlaceGroup) => {
               dispatch(updateDatasetPlaceGroup(dataset!.id, placeGroup));
             })
-            .catch((error) => {
+            .catch((error: Error) => {
               dispatch(postMessage("error", error));
             })
             .finally(() => {
@@ -255,10 +259,10 @@ export function selectPlace(
   places: Place[],
   showInMap: boolean,
 ) {
-  return (dispatch: Dispatch<SelectPlace>) => {
+  return (dispatch: Dispatch) => {
     dispatch(_selectPlace(placeId, places));
     if (showInMap && placeId) {
-      dispatch(flyToPlace(placeId) as any);
+      dispatch(flyToPlace(placeId) as unknown as Action);
     }
   };
 }

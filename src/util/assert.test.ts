@@ -41,7 +41,7 @@ describe("assert", () => {
   });
 
   it("assertNotNull", () => {
-    let geom: any = null;
+    let geom: unknown = null;
     expect(() => assertNotNull(geom, "geom")).toThrowError(
       "assertion failed: geom must not be null",
     );
@@ -50,7 +50,7 @@ describe("assert", () => {
   });
 
   it("assertDefined", () => {
-    let geom: any = undefined;
+    let geom: unknown = undefined;
     expect(() => assertDefined(geom, "geom")).toThrowError(
       "assertion failed: geom must not be undefined",
     );
@@ -59,7 +59,7 @@ describe("assert", () => {
   });
 
   it("assertDefinedAndNotNull", () => {
-    let geom: any;
+    let geom: unknown;
     expect(() => assertDefinedAndNotNull(geom, "geom")).toThrowError(
       "assertion failed: geom must not be undefined",
     );
@@ -72,7 +72,7 @@ describe("assert", () => {
   });
 
   it("assertArray", () => {
-    let coords: any;
+    let coords: unknown;
     expect(() => assertArray(coords, "coords")).toThrowError(
       "assertion failed: coords must be an array",
     );
@@ -89,7 +89,7 @@ describe("assert", () => {
   });
 
   it("assertArrayNotEmpty", () => {
-    let coords: any;
+    let coords: unknown;
     expect(() => assertArrayNotEmpty(coords, "coords")).toThrowError(
       "assertion failed: coords must be an array",
     );

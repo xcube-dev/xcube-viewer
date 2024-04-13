@@ -32,7 +32,7 @@ class ColorBarTextures {
     this.textures = {};
   }
 
-  get(colorBar: ColorBar, onLoad?: () => any): THREE.Texture {
+  get(colorBar: ColorBar, onLoad?: () => void): THREE.Texture {
     const key = formatColorBar(colorBar);
     let texture = this.textures[key];
     if (!texture) {

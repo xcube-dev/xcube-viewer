@@ -9,13 +9,11 @@
     using its default settings.
   - Project CI now also runs [ESlint](https://eslint.org/).
   - Updated copyright headers of source files.
- 
+  - Removed all usages of explicit `any` type in TypeScript files.
 
 TODO:
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:   
-* Remove `"@typescript-eslint/no-explicit-any": "off"` in `.eslintrc.cjs`
-  and change code base accordingly
 * No longer use deprecated `adaptV4Theme` from `@mui/material`; use MUI v5
   styling alternatives.
 

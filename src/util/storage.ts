@@ -34,9 +34,11 @@ export function getLocalStorage(brandingName: string): Storage | null {
   return _getStorage("localStorage", brandingName);
 }
 
-export function getSessionStorage(brandingName: string): Storage | null {
-  return _getStorage("sessionStorage", brandingName);
-}
+// Not used:
+//
+// export function getSessionStorage(brandingName: string): Storage | null {
+//   return _getStorage("sessionStorage", brandingName);
+// }
 
 function _getStorage(
   type: "localStorage" | "sessionStorage",
@@ -64,9 +66,9 @@ export class Storage {
 
   getItem(
     propertyName: string,
-    defaultValue?: any,
-    parser?: (value: string) => any,
-  ): any {
+    defaultValue?: unknown,
+    parser?: (value: string) => unknown,
+  ): unknown {
     const value = this.nativeStorage.getItem(this.makeKey(propertyName));
     if (value !== null) {
       try {
@@ -75,16 +77,20 @@ export class Storage {
         console.error(`Failed parsing user setting "${propertyName}": ${e}`);
       }
     }
-    return defaultValue;
+    return typeof defaultValue === "undefined" ? null : defaultValue;
   }
 
-  getObjectItem(propertyName: string, defaultValue?: any): any {
+  getObjectItem<T extends object>(propertyName: string, defaultValue?: T): T {
     return this.getItem(propertyName, defaultValue, (value) =>
       JSON.parse(value),
-    );
+    ) as T;
   }
 
-  getBooleanProperty<T>(propertyName: keyof T, target: T, defaultObj: T) {
+  getBooleanProperty<T extends object>(
+    propertyName: keyof T,
+    target: T,
+    defaultObj: T,
+  ) {
     this.getProperty(
       propertyName,
       target,
@@ -93,24 +99,36 @@ export class Storage {
     );
   }
 
-  getIntProperty(propertyName: string, target: any, defaultObj: any) {
+  getIntProperty<T extends object>(
+    propertyName: keyof T,
+    target: T,
+    defaultObj: T,
+  ) {
     this.getProperty(propertyName, target, defaultObj, parseInt);
   }
 
-  getStringProperty<T>(propertyName: keyof T, target: T, defaultObj: T) {
+  getStringProperty<T extends object>(
+    propertyName: keyof T,
+    target: T,
+    defaultObj: T,
+  ) {
     this.getProperty(propertyName, target, defaultObj, (value) => value);
   }
 
-  getObjectProperty<T>(propertyName: keyof T, target: T, defaultObj: T) {
+  getObjectProperty<T extends object>(
+    propertyName: keyof T,
+    target: T,
+    defaultObj: T,
+  ) {
     this.getProperty(propertyName, target, defaultObj, (value) => {
       const parsedObj = JSON.parse(value);
       const defaultObjValue = defaultObj[propertyName];
-      const resultObj: { [key: string]: any } = {
+      const resultObj = {
         ...defaultObjValue,
         ...parsedObj,
       };
       Object.getOwnPropertyNames(parsedObj).forEach((key) => {
-        const defaultValue = (defaultObjValue as any)[key];
+        const defaultValue = (defaultObjValue as Record<string, unknown>)[key];
         const parsedValue = parsedObj[key];
         if (isObject(defaultValue) && isObject(parsedValue)) {
           resultObj[key] = { ...defaultValue, ...parsedValue };
@@ -120,23 +138,23 @@ export class Storage {
     });
   }
 
-  private getProperty<T>(
+  private getProperty<T extends object>(
     propertyName: keyof T,
     target: T,
     defaultObj: T,
-    parser: (value: string) => any,
+    parser: (value: string) => unknown,
   ) {
-    target[propertyName] = this.getItem(
+    (target as Record<keyof T, unknown>)[propertyName] = this.getItem(
       propertyName as string,
-      defaultObj[propertyName],
+      (defaultObj as Record<keyof T, unknown>)[propertyName],
       parser,
     );
   }
 
   setItem(
     propertyName: string,
-    value: any,
-    formatter?: (value: any) => string,
+    value: unknown,
+    formatter?: (value: unknown) => string,
   ) {
     if (typeof value === "undefined" || value === null) {
       this.nativeStorage.removeItem(this.makeKey(propertyName));
@@ -146,15 +164,15 @@ export class Storage {
     }
   }
 
-  setObjectItem(propertyName: string, value: any) {
+  setObjectItem(propertyName: string, value: unknown) {
     this.setItem(propertyName, value, (value) => JSON.stringify(value));
   }
 
-  setPrimitiveProperty<T>(propertyName: keyof T, source: T) {
+  setPrimitiveProperty<T extends object>(propertyName: keyof T, source: T) {
     this.setItem(propertyName as string, source[propertyName]);
   }
 
-  setObjectProperty<T>(propertyName: keyof T, source: T) {
+  setObjectProperty<T extends object>(propertyName: keyof T, source: T) {
     this.setObjectItem(propertyName as string, source[propertyName]);
   }
 
@@ -163,6 +181,8 @@ export class Storage {
   }
 }
 
-function isObject(value: any) {
-  return Boolean(value) && value.constructor === Object;
+function isObject(value: unknown): value is object {
+  return (
+    value !== null && typeof value === "object" && value.constructor === Object
+  );
 }

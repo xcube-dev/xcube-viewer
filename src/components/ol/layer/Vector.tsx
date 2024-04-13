@@ -30,7 +30,9 @@ import { Options as OlVectorLayerOptions } from "ol/layer/BaseVector";
 import { MapComponent, MapComponentProps } from "../MapComponent";
 import { processLayerProperties } from "./common";
 
-interface VectorProps extends MapComponentProps, OlVectorLayerOptions<any> {}
+interface VectorProps
+  extends MapComponentProps,
+    OlVectorLayerOptions<OlVectorSource> {}
 
 export class Vector extends MapComponent<
   OlVectorLayer<OlVectorSource>,

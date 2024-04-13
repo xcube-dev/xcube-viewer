@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children: React.ReactElement<any, any> },
+  props: TransitionProps & { children: React.ReactElement },
   ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -92,7 +92,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
       fullScreen
       open={open}
       onClose={onClose}
-      TransitionComponent={Transition as any}
+      TransitionComponent={Transition}
       PaperProps={{ tabIndex: -1 }}
     >
       <AppBar className={classes.appBar}>

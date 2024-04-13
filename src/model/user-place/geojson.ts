@@ -111,7 +111,7 @@ export function getUserPlacesFromGeoJson(
       let color = getUserPlaceColorName(0);
 
       if (properties) {
-        const lcProperties: { [name: string]: any } = {};
+        const lcProperties: Record<string, unknown> = {};
         Object.getOwnPropertyNames(properties).forEach((propertyName) => {
           lcProperties[propertyName.toLowerCase()] = properties[propertyName];
         });
@@ -152,15 +152,15 @@ export function getUserPlacesFromGeoJson(
   );
 }
 
-function getValueFromProperties(
-  properties: { [p: string]: any },
+function getValueFromProperties<T>(
+  properties: Record<string, unknown>,
   names: string[],
-  currentValue: string,
-): string {
+  currentValue: T,
+): T {
   if (currentValue === "") {
     for (const lcName of names) {
       if (properties[lcName] === "string") {
-        return properties[lcName];
+        return properties[lcName] as T;
       }
     }
   }

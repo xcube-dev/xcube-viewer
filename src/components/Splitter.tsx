@@ -61,7 +61,7 @@ export type SplitDir = "hor" | "ver";
 
 interface ISplitterProps extends WithStyles<typeof styles> {
   dir?: SplitDir;
-  onChange: (delta: number) => any;
+  onChange: (delta: number) => void;
 }
 
 interface IButtonEvent {
@@ -74,7 +74,10 @@ interface IScreenEvent {
   screenY: number;
 }
 
-type EventListenerItem = [string, (e: any) => any];
+type EventListenerItem = [
+  string,
+  EventListener | ((event: MouseEvent) => void),
+];
 
 /**
  * A splitter component.
@@ -82,7 +85,7 @@ type EventListenerItem = [string, (e: any) => any];
  * either in x-direction if direction is "hor" or y-direction if direction is "ver". The callback must then
  * adjust either a container's width if direction is "hor" or its height if direction is "ver".
  */
-class _Splitter extends React.PureComponent<ISplitterProps, any> {
+class _Splitter extends React.PureComponent<ISplitterProps> {
   private lastPosition: null | number = null;
   private bodyEventListeners: Array<EventListenerItem>;
 
@@ -173,13 +176,13 @@ class _Splitter extends React.PureComponent<ISplitterProps, any> {
 
   private addBodyMouseListeners() {
     this.bodyEventListeners.forEach((pair: EventListenerItem) =>
-      document.body.addEventListener(pair[0], pair[1]),
+      document.body.addEventListener(pair[0], pair[1] as EventListener),
     );
   }
 
   private removeBodyMouseListeners() {
     this.bodyEventListeners.forEach((pair: EventListenerItem) =>
-      document.body.removeEventListener(pair[0], pair[1]),
+      document.body.removeEventListener(pair[0], pair[1] as EventListener),
     );
   }
 }

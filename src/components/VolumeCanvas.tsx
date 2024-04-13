@@ -54,7 +54,7 @@ interface VolumeCanvasProps extends WithLocale {
   volumeRenderMode: VolumeRenderMode;
   volumeIsoThreshold: number;
   volumeStates: VolumeStates;
-  updateVolumeState: (volumeId: string, volumeState: VolumeState) => any;
+  updateVolumeState: (volumeId: string, volumeState: VolumeState) => void;
   serverUrl: string;
 }
 
@@ -187,19 +187,25 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
             updateVolumeState(volumeId, { status: "ok" });
           },
           () => {},
-          (e: any) => {
+          (e: { response?: Response }) => {
             if (e.response instanceof Response) {
-              e.response.json().then((responseObject: { [k: string]: any }) => {
-                const errorObject = responseObject.error;
-                const message = !!errorObject && errorObject.message;
-                if (errorObject && errorObject.exception) {
-                  console.debug("exception:", errorObject.exception);
-                }
-                updateVolumeState(volumeId, {
-                  status: "error",
-                  message: message || `${e}`,
-                });
-              });
+              e.response
+                .json()
+                .then(
+                  (responseObject: {
+                    error?: { exception?: unknown; message?: string };
+                  }) => {
+                    const errorObject = responseObject.error;
+                    const message = !!errorObject && errorObject.message;
+                    if (errorObject && errorObject.exception) {
+                      console.debug("exception:", errorObject.exception);
+                    }
+                    updateVolumeState(volumeId, {
+                      status: "error",
+                      message: message || `${e}`,
+                    });
+                  },
+                );
             } else {
               updateVolumeState(volumeId, {
                 status: "error",

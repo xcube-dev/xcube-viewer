@@ -31,7 +31,7 @@ const WktTextField = OptionsField<WktOptions, string>();
 
 interface WktOptionsEditorProps {
   options: WktOptions;
-  updateOptions: (options: Partial<WktOptions>) => any;
+  updateOptions: (options: Partial<WktOptions>) => void;
   className: string;
 }
 

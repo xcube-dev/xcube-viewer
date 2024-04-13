@@ -25,22 +25,24 @@
 import { callJsonApi } from "./callApi";
 import { ColorBars, ColorBarGroup } from "../model/colorBar";
 
+type RawColorBar = [string, string];
+type RawColorBarGroup = [string, string, RawColorBar[]];
+type RawColorBarGroups = RawColorBarGroup[];
+
 export function getColorBars(apiServerUrl: string): Promise<ColorBars> {
-  return callJsonApi<ColorBars>(`${apiServerUrl}/colorbars`).then(
+  return callJsonApi<RawColorBarGroups>(`${apiServerUrl}/colorbars`).then(
     parseColorBars,
   );
 }
 
-function parseColorBars(colorBarGroups: any): ColorBars {
+function parseColorBars(colorBarGroups: RawColorBarGroups): ColorBars {
   const groups: ColorBarGroup[] = [];
-  const images: any = {};
-  colorBarGroups.forEach((colorBarGroup: [string, string, any[]]) => {
-    const title = colorBarGroup[0];
-    const description = colorBarGroup[1];
+  const images: Record<string, string> = {};
+  colorBarGroups.forEach((colorBarGroup) => {
+    const [title, description, colorBars] = colorBarGroup;
     const names: string[] = [];
-    colorBarGroup[2].forEach((colorBar: [string, string]) => {
-      const name = colorBar[0];
-      const image = colorBar[1];
+    colorBars.forEach((colorBar) => {
+      const [name, image] = colorBar;
       names.push(name);
       images[name] = image;
     });

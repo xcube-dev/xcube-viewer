@@ -100,7 +100,7 @@ interface UserPlacesDialogProps extends WithLocale {
   updateSettings: (settings: Partial<ControlState>) => void;
   addUserPlacesFromText: (userPlacesText: string) => void;
   nextMapInteraction: MapInteraction;
-  setMapInteraction: (mapInteraction: MapInteraction) => any;
+  setMapInteraction: (mapInteraction: MapInteraction) => void;
 }
 
 const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({

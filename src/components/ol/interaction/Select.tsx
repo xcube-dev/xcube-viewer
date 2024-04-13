@@ -150,7 +150,7 @@ function styleFunction(
       style = style(feature, 0) as OlStyleLike;
     }
     if (style instanceof OlStyle) {
-      const imageStyle = style.getImage() as any;
+      const imageStyle = style.getImage() as unknown;
       if (imageStyle instanceof OlCircleStyle) {
         defaultFill = imageStyle.getFill();
         defaultStroke = imageStyle.getStroke();

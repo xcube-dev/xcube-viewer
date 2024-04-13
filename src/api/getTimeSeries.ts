@@ -34,6 +34,12 @@ import {
 } from "./callApi";
 import { Dataset } from "../model/dataset";
 
+type RawTimeSeriesPoint = Omit<TimeSeriesPoint, "time"> & { time: string };
+
+interface RawTimeSeries {
+  result?: RawTimeSeriesPoint[];
+}
+
 export function getTimeSeriesForGeometry(
   apiServerUrl: string,
   dataset: Dataset,
@@ -79,13 +85,15 @@ export function getTimeSeriesForGeometry(
     body: JSON.stringify(geometry),
   };
 
-  const convertTimeSeriesResult = (result: { [name: string]: any }) => {
-    result = result["result"];
-    if (!result || result.length === 0) {
+  const convertTimeSeriesResult = (
+    result_: RawTimeSeries,
+  ): TimeSeries | null => {
+    const rawPoints = result_.result;
+    if (!rawPoints || rawPoints.length === 0) {
       return null;
     }
-    const data = result.map((item: any) => {
-      return { ...item, time: new Date(item.time).getTime() };
+    const points = rawPoints.map((rawPoint): TimeSeriesPoint => {
+      return { ...rawPoint, time: new Date(rawPoint.time).getTime() };
     });
     const source = {
       datasetId: dataset.id,
@@ -97,8 +105,8 @@ export function getTimeSeriesForGeometry(
       valueDataKey,
       errorDataKey,
     };
-    return { source, data, color: "green" };
+    return { source, data: points };
   };
 
-  return callJsonApi<TimeSeries>(url, init).then(convertTimeSeriesResult);
+  return callJsonApi<RawTimeSeries>(url, init).then(convertTimeSeriesResult);
 }

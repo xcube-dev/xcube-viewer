@@ -24,6 +24,7 @@
 
 import { JSX } from "react";
 import { createSelector } from "reselect";
+import { Tile as OlTile, ImageTile as OlImageTile } from "ol";
 import { default as OlMap } from "ol/Map";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { default as OlVectorSource } from "ol/source/Vector";
@@ -33,6 +34,7 @@ import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
+import { LoadFunction } from "ol/Tile";
 import { Layers } from "../components/ol/layer/Layers";
 import { Tile } from "../components/ol/layer/Tile";
 import { Vector } from "../components/ol/layer/Vector";
@@ -353,8 +355,8 @@ export const timeSeriesPlaceInfosSelector = createSelector(
   (
     timeSeriesGroups: TimeSeriesGroup[],
     placeGroups: PlaceGroup[],
-  ): { [placeId: string]: PlaceInfo } => {
-    const placeInfos: any = {};
+  ): Record<string, PlaceInfo> => {
+    const placeInfos: Record<string, PlaceInfo> = {};
     forEachPlace(placeGroups, (placeGroup, place) => {
       for (const timeSeriesGroup of timeSeriesGroups) {
         if (
@@ -467,7 +469,7 @@ function getOlXYZSource(
   attributions: string[] | null,
   timeAnimationActive: boolean,
   imageSmoothing: boolean,
-  tileLoadFunction: any,
+  tileLoadFunction: LoadFunction | undefined,
   _tileLevelMin: number | undefined,
   tileLevelMax: number | undefined,
 ) {
@@ -492,13 +494,15 @@ function __getLoadTileOnlyAfterMove(map: OlMap | undefined) {
     // Define a special tileLoadFunction
     // that prevents tiles from being loaded while the user
     // pans or zooms, because this leads to high server loads.
-    return (tile: any, src: string) => {
-      if (map.getView().getInteracting()) {
-        map.once("moveend", function () {
-          tile.getImage().src = src;
-        });
-      } else {
-        tile.getImage().src = src;
+    return (tile: OlTile, src: string) => {
+      if (tile instanceof OlImageTile) {
+        if (map.getView().getInteracting()) {
+          map.once("moveend", function () {
+            (tile.getImage() as HTMLImageElement).src = src;
+          });
+        } else {
+          (tile.getImage() as HTMLImageElement).src = src;
+        }
       }
     };
   }

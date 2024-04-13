@@ -63,7 +63,7 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
   timeSeriesGroups: TimeSeriesGroup[];
   openDialog: (dialogId: string) => void;
   allowRefresh?: boolean;
-  updateResources: () => any;
+  updateResources: () => void;
   compact: boolean;
 }
 

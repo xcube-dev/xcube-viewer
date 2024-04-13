@@ -48,7 +48,7 @@ export class LanguageDictionary {
       );
     }
 
-    const content: any = {};
+    const content: LanguageDictionaryContent = {};
     json.dictionary.forEach((entry, index) => {
       locales.forEach((locale) => {
         if (!entry[locale]) {
@@ -98,7 +98,7 @@ export class LanguageDictionary {
     this._locale = value;
   }
 
-  get(phrase: string, values?: { [name: string]: any }): string {
+  get(phrase: string, values?: Record<string, unknown>): string {
     const key = getPhraseKey(phrase);
     const entry = this._content[key];
     let translatedPhrase: string;
@@ -131,11 +131,10 @@ export const getCurrentLocale = (): string => {
   if (navigator.languages && navigator.languages.length > 0) {
     locale = navigator.languages[0];
   } else {
-    locale =
-      navigator.language ||
-      (navigator as any).userLanguage ||
-      (navigator as any).browserLanguage ||
-      "en";
+    locale = (navigator.language ||
+      (navigator as unknown as Record<string, unknown>).userLanguage ||
+      (navigator as unknown as Record<string, unknown>).browserLanguage ||
+      "en") as string;
   }
   return locale.split("-")[0];
 };

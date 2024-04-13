@@ -26,7 +26,7 @@ import bgImageData from "./bg.png";
 
 export interface ColorBars {
   groups: ColorBarGroup[];
-  images: { [name: string]: string };
+  images: Record<string, string>;
 }
 
 export interface ColorBarGroup {
@@ -113,7 +113,7 @@ export function loadColorBarImage(
       resolve: (
         value: HTMLImageElement | PromiseLike<HTMLImageElement>,
       ) => void,
-      reject: (reason?: any) => void,
+      reject: (reason?: unknown) => void,
     ) => {
       const im = image || new Image();
       im.onload = () => {

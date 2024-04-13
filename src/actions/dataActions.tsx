@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Dispatch } from "redux";
+import { Action, Dispatch } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 
@@ -66,22 +66,14 @@ import {
   AddActivity,
   addActivity,
   openDialog,
-  OpenDialog,
   RemoveActivity,
   removeActivity,
   SelectDataset,
   selectDataset,
   selectPlace,
-  SelectPlace,
-  SelectPlaceGroups,
-  UpdateSettings,
 } from "./controlActions";
 import { VolumeRenderMode } from "../states/controlState";
-import {
-  MessageLogAction,
-  PostMessage,
-  postMessage,
-} from "./messageLogActions";
+import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer } from "./mapActions";
 
 import { saveAs } from "file-saver";
@@ -111,7 +103,7 @@ export function updateServerInfo() {
       .then((serverInfo: ApiServerInfo) => {
         dispatch(_updateServerInfo(serverInfo));
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         dispatch(postMessage("error", error));
       })
       // 'then' because Microsoft Edge does not understand method finally
@@ -163,16 +155,7 @@ export interface UpdateDatasets {
 }
 
 export function updateDatasets() {
-  return (
-    dispatch: Dispatch<
-      | UpdateDatasets
-      | SelectDataset
-      | AddActivity
-      | RemoveActivity
-      | MessageLogAction
-    >,
-    getState: () => AppState,
-  ) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     const apiServer = selectedServerSelector(getState());
 
     dispatch(addActivity(UPDATE_DATASETS, i18n.get("Loading data")));
@@ -184,10 +167,16 @@ export function updateDatasets() {
         if (datasets.length > 0) {
           const selectedDatasetId =
             getState().controlState.selectedDatasetId || datasets[0].id;
-          dispatch(selectDataset(selectedDatasetId, datasets, true) as any);
+          dispatch(
+            selectDataset(
+              selectedDatasetId,
+              datasets,
+              true,
+            ) as unknown as Action,
+          );
         }
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         dispatch(postMessage("error", error));
         dispatch(_updateDatasets([]));
       })
@@ -227,7 +216,7 @@ export interface AddDrawnUserPlace {
   type: typeof ADD_DRAWN_USER_PLACE;
   placeGroupTitle: string;
   id: string;
-  properties: { [name: string]: any };
+  properties: { [name: string]: unknown };
   geometry: geojson.Geometry;
   selected: boolean;
 }
@@ -235,11 +224,11 @@ export interface AddDrawnUserPlace {
 export function addDrawnUserPlace(
   placeGroupTitle: string,
   id: string,
-  properties: { [name: string]: any },
+  properties: { [name: string]: unknown },
   geometry: geojson.Geometry,
   selected: boolean,
 ) {
-  return (dispatch: Dispatch<AddDrawnUserPlace>, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(
       _addDrawnUserPlace(placeGroupTitle, id, properties, geometry, selected),
     );
@@ -247,7 +236,7 @@ export function addDrawnUserPlace(
       getState().controlState.autoShowTimeSeries &&
       getState().controlState.selectedPlaceId === id
     ) {
-      dispatch(addTimeSeries() as any);
+      dispatch(addTimeSeries() as unknown as Action);
     }
   };
 }
@@ -255,7 +244,7 @@ export function addDrawnUserPlace(
 export function _addDrawnUserPlace(
   placeGroupTitle: string,
   id: string,
-  properties: { [name: string]: any },
+  properties: { [name: string]: unknown },
   geometry: geojson.Geometry,
   selected: boolean,
 ): AddDrawnUserPlace {
@@ -295,17 +284,8 @@ export function addImportedUserPlaces(
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-type UserPlacesDispatch = Dispatch<
-  | AddImportedUserPlaces
-  | SelectPlaceGroups
-  | SelectPlace
-  | UpdateSettings
-  | OpenDialog
-  | PostMessage
->;
-
 export function importUserPlacesFromText(text: string) {
-  return (dispatch: UserPlacesDispatch, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     const formatName = userPlacesFormatNameSelector(getState());
     let placeGroups: PlaceGroup[];
     try {
@@ -321,8 +301,8 @@ export function importUserPlacesFromText(text: string) {
       } else {
         placeGroups = [];
       }
-    } catch (e: any) {
-      dispatch(postMessage("error", e));
+    } catch (error: unknown) {
+      dispatch(postMessage("error", error as Error));
       dispatch(openDialog("addUserPlacesFromText"));
       placeGroups = [];
     }
@@ -332,7 +312,7 @@ export function importUserPlacesFromText(text: string) {
           placeGroups,
           mapProjectionSelector(getState()),
           true,
-        ) as any,
+        ),
       );
       // dispatch(selectPlaceGroups(placeGroups.map(pg => pg.id)) as any);
       if (placeGroups.length === 1 && placeGroups[0].features.length === 1) {
@@ -342,10 +322,10 @@ export function importUserPlacesFromText(text: string) {
             place.id,
             selectedPlaceGroupPlacesSelector(getState()),
             true,
-          ) as any,
+          ) as unknown as Action,
         );
         if (getState().controlState.autoShowTimeSeries) {
-          dispatch(addTimeSeries() as any);
+          dispatch(addTimeSeries() as unknown as Action);
         }
       }
       let numPlaces = 0;
@@ -533,7 +513,7 @@ export function addTimeSeries() {
 
       getTimeSeriesChunk()
         .then(successAction)
-        .catch((error: any) => {
+        .catch((error: Error) => {
           dispatch(postMessage("error", error));
         });
     }
@@ -636,11 +616,11 @@ export function configureServers(
   servers: ApiServerConfig[],
   selectedServerId: string,
 ) {
-  return (dispatch: Dispatch<any>, getState: () => AppState) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     if (getState().controlState.selectedServerId !== selectedServerId) {
       dispatch(removeAllTimeSeries());
       dispatch(_configureServers(servers, selectedServerId));
-      dispatch(syncWithServer());
+      dispatch(syncWithServer() as unknown as Action);
     } else if (getState().dataState.userServers !== servers) {
       dispatch(_configureServers(servers, selectedServerId));
     }
@@ -657,10 +637,10 @@ export function _configureServers(
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function syncWithServer() {
-  return (dispatch: Dispatch<any>) => {
-    dispatch(updateServerInfo());
-    dispatch(updateDatasets());
-    dispatch(updateColorBars());
+  return (dispatch: Dispatch) => {
+    dispatch(updateServerInfo() as unknown as Action);
+    dispatch(updateDatasets() as unknown as Action);
+    dispatch(updateColorBars() as unknown as Action);
   };
 }
 
@@ -685,7 +665,7 @@ export function updateColorBars() {
       .then((colorBars: ColorBars) => {
         dispatch(_updateColorBars(colorBars));
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         dispatch(postMessage("error", error));
       });
   };
@@ -825,9 +805,9 @@ export function exportData() {
 }
 
 abstract class Exporter {
-  abstract write(path: string, content: string): any;
+  abstract write(path: string, content: string): void;
 
-  abstract close(): any;
+  abstract close(): void;
 }
 
 class ZipExporter extends Exporter {

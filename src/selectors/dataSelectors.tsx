@@ -45,7 +45,7 @@ export const placeGroupsSelector = createSelector(
   datasetsSelector,
   userPlaceGroupsSelector,
   (datasets: Dataset[], userPlaceGroups: PlaceGroup[]): PlaceGroup[] => {
-    const placeGroups: any = {};
+    const placeGroups: Record<string, PlaceGroup> = {};
     const datasetPlaceGroups: PlaceGroup[] = [];
     datasets.forEach((dataset) => {
       if (dataset.placeGroups) {

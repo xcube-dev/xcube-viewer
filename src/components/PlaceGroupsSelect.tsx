@@ -87,7 +87,7 @@ const _PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
   };
 
   const handlePlaceGroupsChange = (event: SelectChangeEvent<string[]>) => {
-    selectPlaceGroups((event.target.value as any as string[]) || null);
+    selectPlaceGroups((event.target.value as unknown as string[]) || null);
   };
 
   const renderSelectedPlaceGroupsTitle = () => {

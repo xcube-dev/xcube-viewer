@@ -45,6 +45,12 @@ import { buildPath } from "./util/path";
 
 export const appParams = new URLSearchParams(window.location.search);
 
+interface AuthClient {
+  authority?: string;
+  clientId?: string;
+  audience?: string;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export class Config {
@@ -73,15 +79,16 @@ export class Config {
       configPath = "";
     }
 
-    const name = rawConfig.name || "default";
+    const name = (rawConfig.name || "default") as string;
     const authClient = this.getAuthConfig(rawConfig);
     const server = this.getServerConfig(rawConfig);
     const compact = parseInt(appParams.get("compact") || "0") !== 0;
     const branding = parseBranding(
       {
         ...rawDefaultConfig.branding,
-        ...rawConfig.branding,
-        compact: compact || rawConfig.branding.compact,
+        ...(rawConfig.branding as Record<string, unknown>),
+        compact:
+          compact || (rawConfig.branding as Record<string, unknown>).compact,
       },
       configPath,
     );
@@ -100,8 +107,12 @@ export class Config {
     return Config._instance;
   }
 
-  private static getAuthConfig(rawConfig: any) {
-    let authClient = rawConfig.authClient && { ...rawConfig.authClient };
+  private static getAuthConfig(
+    rawConfig: Record<string, unknown>,
+  ): AuthClientConfig | undefined {
+    let authClient = (rawConfig.authClient && {
+      ...rawConfig.authClient,
+    }) as Record<string, unknown> | undefined;
     const authClientFromEnv = Config.getAuthClientFromEnv();
     if (
       !authClient &&
@@ -115,34 +126,33 @@ export class Config {
     }
     if (authClient) {
       if (authClientFromEnv.authority) {
-        authClient = {
-          ...authClient,
-          authority: authClientFromEnv.authority,
-        };
+        const authority = authClientFromEnv.authority;
+        authClient = { ...authClient, authority };
       }
       if (authClientFromEnv.clientId) {
-        authClient = {
-          ...authClient,
-          client_id: authClientFromEnv.clientId,
-        };
+        const client_id = authClientFromEnv.clientId;
+        authClient = { ...authClient, client_id };
       }
       if (authClientFromEnv.audience) {
+        const audience = authClientFromEnv.audience;
+        const extraQueryParams = authClient.extraQueryParams as
+          | Record<string, unknown>
+          | undefined;
         authClient = {
           ...authClient,
-          extraQueryParams: {
-            ...authClient.extraQueryParams,
-            audience: authClientFromEnv.audience,
-          },
+          extraQueryParams: { ...extraQueryParams, audience },
         };
       }
     }
-    return authClient;
+    return authClient as AuthClientConfig | undefined;
   }
 
-  private static getServerConfig(rawConfig: any) {
+  private static getServerConfig(
+    rawConfig: Record<string, unknown>,
+  ): ApiServerConfig {
     const server = {
       ...rawDefaultConfig.server,
-      ...rawConfig.server,
+      ...(rawConfig.server as ApiServerConfig),
     } as ApiServerConfig;
     const serverFromEnv = Config.getApiServerFromEnv();
     server.id = appParams.get("serverId") || serverFromEnv.id || server.id;
@@ -153,7 +163,7 @@ export class Config {
   }
 
   private static async loadRawConfig(configPath: string) {
-    let rawConfig = null;
+    let rawConfig: Record<string, unknown> | null = null;
     let rawConfigError = null;
     const configUrl = buildPath(baseUrl.href, configPath, "config.json");
     try {
@@ -214,7 +224,7 @@ export class Config {
     }
   }
 
-  private static getAuthClientFromEnv() {
+  private static getAuthClientFromEnv(): AuthClient {
     const authority = import.meta.env.XCV_OAUTH2_AUTHORITY;
     const clientId = import.meta.env.XCV_OAUTH2_CLIENT_ID;
     const audience = import.meta.env.XCV_OAUTH2_AUDIENCE;

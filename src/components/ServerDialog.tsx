@@ -23,7 +23,7 @@
  */
 
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Theme } from "@mui/material";
 import { WithStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
@@ -127,7 +127,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
     doClose();
   };
 
-  const handleSelectServer = (event: SelectChangeEvent<string>) => {
+  const handleSelectServer = (event: SelectChangeEvent) => {
     const selectedServerId = event.target.value;
     const selectedServer = servers_.find(
       (server) => server.id === selectedServerId,
@@ -135,13 +135,13 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
     setSelectedServer_(selectedServer);
   };
 
-  const handleServerNameChange = (event: any) => {
+  const handleServerNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedServerName = event.target.value;
     const selectedServer = { ...selectedServer_, name: selectedServerName };
     setSelectedServer_(selectedServer);
   };
 
-  const handleServerURLChange = (event: any) => {
+  const handleServerURLChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedServerURL = event.target.value;
     const selectedServer = { ...selectedServer_, url: selectedServerURL };
     setSelectedServer_(selectedServer);

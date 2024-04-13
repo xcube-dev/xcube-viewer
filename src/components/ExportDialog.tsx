@@ -52,10 +52,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface ExportDialogProps {
   open: boolean;
-  closeDialog: (dialogId: string) => any;
+  closeDialog: (dialogId: string) => void;
   settings: ControlState;
-  updateSettings: (settings: Partial<ControlState>) => any;
-  downloadTimeSeries: () => any;
+  updateSettings: (settings: Partial<ControlState>) => void;
+  downloadTimeSeries: () => void;
 }
 
 const ExportDialog: React.FC<ExportDialogProps> = ({

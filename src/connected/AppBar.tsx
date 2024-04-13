@@ -51,9 +51,9 @@ import MarkdownPage from "../components/MarkdownPage";
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
   appName: string;
-  openDialog: (dialogId: string) => any;
+  openDialog: (dialogId: string) => unknown;
   allowRefresh?: boolean;
-  updateResources: () => any;
+  updateResources: () => unknown;
 }
 
 // noinspection JSUnusedLocalSymbols

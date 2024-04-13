@@ -74,7 +74,7 @@ export interface Dataset {
   variables: Variable[];
   placeGroups?: PlaceGroup[];
   attributions?: string[];
-  attrs: { [name: string]: any };
+  attrs: Record<string, unknown>;
   rgbSchema?: RgbSchema;
 }
 
@@ -105,14 +105,17 @@ export function getDatasetTimeDimension(
 ): TimeDimension | null {
   assertDefinedAndNotNull(dataset, "dataset");
   assertArrayNotEmpty(dataset.dimensions, "dataset.dimensions");
-  const dimension: any = dataset.dimensions.find(
+  const dimension = dataset.dimensions.find(
     (dimension) => dimension.name === "time",
   );
   if (!dimension) {
     return null;
   }
-  assertArrayNotEmpty(dimension!.coordinates, "timeDimension.coordinates");
-  assertArrayNotEmpty(dimension!.labels, "timeDimension.labels");
+  assertArrayNotEmpty(dimension.coordinates, "timeDimension.coordinates");
+  assertArrayNotEmpty(
+    (dimension as TimeDimension).labels,
+    "timeDimension.labels",
+  );
   return dimension as TimeDimension;
 }
 

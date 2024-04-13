@@ -79,7 +79,7 @@ const styles = (theme: Theme) =>
   });
 
 interface UserControlProps extends WithStyles<typeof styles>, WithLocale {
-  updateAccessToken: (accessToken: string | null) => any;
+  updateAccessToken: (accessToken: string | null) => void;
 }
 
 const UserControlContent: React.FC<UserControlProps> = ({
