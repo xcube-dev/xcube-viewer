@@ -9,7 +9,7 @@
     using its default settings.
   - Project CI now also runs [ESlint](https://eslint.org/).
   - Updated copyright headers of source files.
-  - Removed any usage of explicit `any` in TypeScript
+  - Removed all usages of explicit `any` type in TypeScript files.
 
 TODO:
 
