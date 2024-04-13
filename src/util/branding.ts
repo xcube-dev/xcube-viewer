@@ -49,8 +49,6 @@ import { PaletteColorOptions } from "@mui/material/styles";
 import baseUrl from "./baseurl";
 import { buildPath } from "./path";
 
-/////////////////////////////////////////////////////////////////////////////
-
 const COLOR_NAMES: { [name: string]: ColorPartial } = {
   amber,
   blue,
@@ -148,5 +146,3 @@ export function parseBranding(
   setBrandingImage(brandingConfig, "logoImage", configPath);
   return brandingConfig as unknown as Branding;
 }
-
-/////////////////////////////////////////////////////////////////////////////

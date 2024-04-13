@@ -239,8 +239,6 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
 
 export default VolumeCard;
 
-/////////////////////////////////////////////////////////
-
 interface IsoThresholdEditorProps {
   value: number;
   minValue: number;
