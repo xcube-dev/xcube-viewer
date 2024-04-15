@@ -1,5 +1,9 @@
 ## Changes in version 1.2.0 (in development)
 
+* The current variable layer is now always on top of the RGB layer of the 
+  same dataset, if switched on. Layer opacity only affects the variable
+  layer, not the RGB layer-
+
 * Numerous changes regard development environment renewal and 
   code quality improvements:
 

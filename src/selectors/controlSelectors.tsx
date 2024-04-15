@@ -543,6 +543,7 @@ function getTileLayer(
   mapProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
+  zIndex: number = 10,
 ) {
   if (time !== null) {
     let timeString;
@@ -579,9 +580,10 @@ function getTileLayer(
     tileLevelMin,
     tileLevelMax,
   );
-  // console.debug('source = ', source)
 
-  return <Tile id={layerId} source={source} zIndex={10} opacity={opacity} />;
+  return (
+    <Tile id={layerId} source={source} zIndex={zIndex} opacity={opacity} />
+  );
 }
 
 export const selectedDatasetBoundaryLayerSelector = createSelector(
@@ -711,6 +713,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
       mapProjection,
       attributions,
       imageSmoothing,
+      11,
     );
   },
 );
@@ -720,7 +723,6 @@ export const selectedDatasetRgbLayerSelector = createSelector(
   selectedDatasetIdSelector,
   showRgbLayerSelector,
   selectedDatasetRgbSchemaSelector,
-  selectedVariableOpacitySelector,
   selectedDatasetTimeDimensionSelector,
   selectedTimeSelector,
   timeAnimationActiveSelector,
@@ -732,7 +734,6 @@ export const selectedDatasetRgbLayerSelector = createSelector(
     datasetId,
     showRgbLayer: boolean,
     rgbSchema: RgbSchema | null,
-    opacity: number,
     timeDimension: TimeDimension | null,
     time: Time | null,
     timeAnimationActive: boolean,
@@ -750,13 +751,14 @@ export const selectedDatasetRgbLayerSelector = createSelector(
       rgbSchema.tileLevelMin,
       rgbSchema.tileLevelMax,
       queryParams,
-      opacity,
+      1.0,
       timeDimension,
       time,
       timeAnimationActive,
       mapProjection,
       attributions,
       imageSmoothing,
+      10,
     );
   },
 );
