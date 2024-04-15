@@ -38,8 +38,9 @@ import Button from "@mui/material/Button";
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import {
-  ControlState,
   TIME_ANIMATION_INTERVALS,
+  ControlState,
+  ItemFlyMode,
   TimeAnimationInterval,
 } from "@/states/controlState";
 import { MapGroup, maps, MapSource } from "@/util/maps";
@@ -65,6 +66,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 10,
   },
 }));
+
+const itemFlyModeLabels: [ItemFlyMode, string][] = [
+  ["none", "Do nothing"],
+  ["flyTo", "Fly to"],
+  ["flyToZoom", "Fly to and zoom"],
+];
 
 interface SettingsDialogProps {
   open: boolean;
@@ -128,6 +135,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       timeAnimationInterval: parseInt(
         event.target.value,
       ) as TimeAnimationInterval,
+    });
+  }
+
+  function handleDatasetFlyModeChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      datasetFlyMode: event.target.value as ItemFlyMode,
+    });
+  }
+
+  function handlePlaceFlyModeChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      placeFlyMode: event.target.value as ItemFlyMode,
     });
   }
 
@@ -338,6 +361,38 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 settings={settings}
                 updateSettings={updateSettings}
               />
+            </SettingsSubPanel>
+            <SettingsSubPanel label={i18n.get("On dataset selection")}>
+              <TextField
+                variant="standard"
+                select
+                className={classes.textField}
+                value={settings.datasetFlyMode}
+                onChange={handleDatasetFlyModeChange}
+                margin="normal"
+              >
+                {itemFlyModeLabels.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </SettingsSubPanel>
+            <SettingsSubPanel label={i18n.get("On place selection")}>
+              <TextField
+                variant="standard"
+                select
+                className={classes.textField}
+                value={settings.placeFlyMode}
+                onChange={handlePlaceFlyModeChange}
+                margin="normal"
+              >
+                {itemFlyModeLabels.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </SettingsSubPanel>
           </SettingsPanel>
 

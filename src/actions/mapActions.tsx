@@ -24,12 +24,13 @@
 
 import { default as OlMap } from "ol/Map";
 import { Geometry as OlGeometry } from "ol/geom";
+import { fromExtent } from "ol/geom/Polygon";
 import { Extent as OlExtent } from "ol/extent";
-import { transformExtent as olProjTransformExtent } from "ol/proj";
+import { getCenter } from "ol/extent";
 import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
 
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import { MAP_OBJECTS } from "@/states/controlState";
+import { ItemFlyMode, MAP_OBJECTS } from "@/states/controlState";
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(
@@ -49,37 +50,27 @@ export function renameUserPlaceInLayer(
 export function flyToLocation(
   mapId: string,
   location: OlGeometry | OlExtent | null,
+  itemFlyMode: ItemFlyMode,
 ) {
+  if (location === null || itemFlyMode === "none") {
+    return;
+  }
   if (MAP_OBJECTS[mapId]) {
     const map = MAP_OBJECTS[mapId] as OlMap;
-    const flyToCurr = location;
-    if (flyToCurr !== null) {
-      const projection = map.getView().getProjection();
-      let flyToTarget;
-      // noinspection JSDeprecatedSymbols
-      if (Array.isArray(flyToCurr)) {
-        // Fly to extent (bounding box)
-        flyToTarget = olProjTransformExtent(
-          flyToCurr as OlExtent,
-          GEOGRAPHIC_CRS,
-          projection,
-        );
-        map.getView().fit(flyToTarget, { size: map.getSize() });
-      } else {
-        // Transform Geometry object
-        flyToTarget = flyToCurr.transform(
-          GEOGRAPHIC_CRS,
-          projection,
-        ) as OlSimpleGeometry;
-        if (flyToTarget.getType() === "Point") {
-          // Points don't zoom. Just reset map center.
-          // Not ideal, but better than zooming in too deep (see #54)
-          map.getView().setCenter(flyToTarget.getFirstCoordinate());
-        } else {
-          // Fly to shape
-          map.getView().fit(flyToTarget, { size: map.getSize() });
-        }
-      }
+    const projection = map.getView().getProjection();
+    const flyToCurr = Array.isArray(location) ? fromExtent(location) : location;
+    const flyToTarget = flyToCurr.transform(
+      GEOGRAPHIC_CRS,
+      projection,
+    ) as OlSimpleGeometry;
+    if (flyToTarget.getType() === "Point") {
+      // Points don't zoom. Just reset map center.
+      // Not ideal, but better than zooming in too deep (see #54)
+      map.getView().setCenter(flyToTarget.getFirstCoordinate());
+    } else if (itemFlyMode === "flyTo") {
+      map.getView().setCenter(getCenter(flyToTarget.getExtent()));
+    } else if (itemFlyMode === "flyToZoom") {
+      map.getView().fit(flyToTarget, { size: map.getSize() });
     }
   }
 }

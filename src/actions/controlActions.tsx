@@ -49,6 +49,7 @@ import { datasetsSelector } from "@/selectors/dataSelectors";
 import { AppState } from "@/states/appState";
 import {
   ControlState,
+  ItemFlyMode,
   MapInteraction,
   TimeAnimationInterval,
   ViewMode,
@@ -104,7 +105,12 @@ export function flyToDataset(selectedDatasetId: string) {
     const datasets = datasetsSelector(getState());
     const dataset = findDataset(datasets, selectedDatasetId);
     if (dataset && dataset.bbox) {
-      dispatch(flyTo(dataset.bbox) as unknown as Action);
+      dispatch(
+        flyTo(
+          dataset.bbox,
+          getState().controlState.datasetFlyMode,
+        ) as unknown as Action,
+      );
     }
   };
 }
@@ -127,8 +133,9 @@ export function flyToPlace(selectedPlaceId: string) {
     const placeGroups = selectedPlaceGroupsSelector(getState());
     const place = findPlaceInPlaceGroups(placeGroups, selectedPlaceId);
     if (place) {
+      const placeFlyMode = getState().controlState.placeFlyMode;
       if (place.bbox && place.bbox.length === 4) {
-        dispatch(flyTo(place.bbox) as unknown as Action);
+        dispatch(flyTo(place.bbox, placeFlyMode) as unknown as Action);
       } else if (
         place.geometry &&
         SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)
@@ -136,6 +143,7 @@ export function flyToPlace(selectedPlaceId: string) {
         dispatch(
           flyTo(
             new OlGeoJSONFormat().readGeometry(place.geometry),
+            placeFlyMode,
           ) as unknown as Action,
         );
       }
@@ -167,11 +175,14 @@ export interface FlyTo {
   location: OlGeometry | OlExtent | null;
 }
 
-export function flyTo(location: OlGeometry | OlExtent | null) {
+export function flyTo(
+  location: OlGeometry | OlExtent | null,
+  itemFlyMode: ItemFlyMode,
+) {
   return (dispatch: Dispatch<FlyTo>) => {
     const mapId = "map";
     dispatch(_flyTo(mapId, location));
-    flyToLocation(mapId, location);
+    flyToLocation(mapId, location, itemFlyMode);
   };
 }
 

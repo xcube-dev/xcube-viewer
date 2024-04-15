@@ -1,5 +1,10 @@
 ## Changes in version 1.2.0 (in development)
 
+* It is now possible to specify the map view behaviour when a new dataset or
+  place is selected. In the settings, users can now choose between doing 
+  nothing, fly to the center of dataset bounding box or the place, 
+  or fly to the center and zoom to the extend of the dataset or place. 
+
 * The current variable layer is now always on top of the RGB layer of the 
   same dataset, if switched on. Layer opacity only affects the variable
   layer, not the RGB layer.
