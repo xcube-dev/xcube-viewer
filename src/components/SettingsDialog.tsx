@@ -40,7 +40,7 @@ import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import {
   TIME_ANIMATION_INTERVALS,
   ControlState,
-  ItemFlyMode,
+  LocateMode,
   TimeAnimationInterval,
 } from "@/states/controlState";
 import { MapGroup, maps, MapSource } from "@/util/maps";
@@ -67,10 +67,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const itemFlyModeLabels: [ItemFlyMode, string][] = [
-  ["none", "Do nothing"],
-  ["flyTo", "Fly to"],
-  ["flyToZoom", "Fly to and zoom"],
+const LOCATE_MODE_LABELS: [LocateMode, string][] = [
+  ["doNothing", "do nothing"],
+  ["pan", "pan"],
+  ["panAndZoom", "pan and zoom"],
 ];
 
 interface SettingsDialogProps {
@@ -138,19 +138,19 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     });
   }
 
-  function handleDatasetFlyModeChange(
+  function handleDatasetLocateModeChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
-      datasetFlyMode: event.target.value as ItemFlyMode,
+      datasetLocateMode: event.target.value as LocateMode,
     });
   }
 
-  function handlePlaceFlyModeChange(
+  function handlePlaceLocateModeChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
-      placeFlyMode: event.target.value as ItemFlyMode,
+      placeLocateMode: event.target.value as LocateMode,
     });
   }
 
@@ -367,11 +367,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 variant="standard"
                 select
                 className={classes.textField}
-                value={settings.datasetFlyMode}
-                onChange={handleDatasetFlyModeChange}
+                value={settings.datasetLocateMode}
+                onChange={handleDatasetLocateModeChange}
                 margin="normal"
               >
-                {itemFlyModeLabels.map(([value, label]) => (
+                {LOCATE_MODE_LABELS.map(([value, label]) => (
                   <MenuItem key={value} value={value}>
                     {label}
                   </MenuItem>
@@ -383,11 +383,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 variant="standard"
                 select
                 className={classes.textField}
-                value={settings.placeFlyMode}
-                onChange={handlePlaceFlyModeChange}
+                value={settings.placeLocateMode}
+                onChange={handlePlaceLocateModeChange}
                 margin="normal"
               >
-                {itemFlyModeLabels.map(([value, label]) => (
+                {LOCATE_MODE_LABELS.map(([value, label]) => (
                   <MenuItem key={value} value={value}>
                     {label}
                   </MenuItem>

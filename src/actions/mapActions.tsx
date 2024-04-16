@@ -30,7 +30,7 @@ import { getCenter } from "ol/extent";
 import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
 
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import { ItemFlyMode, MAP_OBJECTS } from "@/states/controlState";
+import { MAP_OBJECTS } from "@/states/controlState";
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(
@@ -47,30 +47,27 @@ export function renameUserPlaceInLayer(
   }
 }
 
-export function flyToLocation(
+export function locateInMap(
   mapId: string,
-  location: OlGeometry | OlExtent | null,
-  itemFlyMode: ItemFlyMode,
+  location: OlGeometry | OlExtent,
+  shouldZoom: boolean,
 ) {
-  if (location === null || itemFlyMode === "none") {
-    return;
-  }
   if (MAP_OBJECTS[mapId]) {
     const map = MAP_OBJECTS[mapId] as OlMap;
     const projection = map.getView().getProjection();
-    const flyToCurr = Array.isArray(location) ? fromExtent(location) : location;
-    const flyToTarget = flyToCurr.transform(
+    const _geometry = Array.isArray(location) ? fromExtent(location) : location;
+    const geometry = _geometry.transform(
       GEOGRAPHIC_CRS,
       projection,
     ) as OlSimpleGeometry;
-    if (flyToTarget.getType() === "Point") {
+    if (geometry.getType() === "Point") {
       // Points don't zoom. Just reset map center.
       // Not ideal, but better than zooming in too deep (see #54)
-      map.getView().setCenter(flyToTarget.getFirstCoordinate());
-    } else if (itemFlyMode === "flyTo") {
-      map.getView().setCenter(getCenter(flyToTarget.getExtent()));
-    } else if (itemFlyMode === "flyToZoom") {
-      map.getView().fit(flyToTarget, { size: map.getSize() });
+      map.getView().setCenter(geometry.getFirstCoordinate());
+    } else if (!shouldZoom) {
+      map.getView().setCenter(getCenter(geometry.getExtent()));
+    } else {
+      map.getView().fit(geometry, { size: map.getSize() });
     }
   }
 }

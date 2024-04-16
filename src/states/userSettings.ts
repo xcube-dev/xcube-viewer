@@ -70,6 +70,9 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("mapProjection", settings);
       storage.setPrimitiveProperty("baseMapUrl", settings);
       storage.setPrimitiveProperty("userDrawnPlaceGroupName", settings);
+      storage.setPrimitiveProperty("showDatasetBoundaries", settings);
+      storage.setPrimitiveProperty("datasetLocateMode", settings);
+      storage.setPrimitiveProperty("placeLocateMode", settings);
       storage.setPrimitiveProperty("exportTimeSeries", settings);
       storage.setPrimitiveProperty("exportTimeSeriesSeparator", settings);
       storage.setPrimitiveProperty("exportPlaces", settings);
@@ -144,6 +147,13 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         settings,
         defaultSettings,
       );
+      storage.getBooleanProperty(
+        "showDatasetBoundaries",
+        settings,
+        defaultSettings,
+      );
+      storage.getStringProperty("datasetLocateMode", settings, defaultSettings);
+      storage.getStringProperty("placeLocateMode", settings, defaultSettings);
       storage.getBooleanProperty("exportTimeSeries", settings, defaultSettings);
       storage.getStringProperty(
         "exportTimeSeriesSeparator",

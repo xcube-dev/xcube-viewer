@@ -26,7 +26,10 @@ import { connect } from "react-redux";
 
 import _DatasetSelect from "@/components/DatasetSelect";
 import { AppState } from "@/states/appState";
-import { selectDataset } from "@/actions/controlActions";
+import {
+  selectDataset,
+  locateSelectedDatasetInMap,
+} from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -38,6 +41,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   selectDataset,
+  locateSelectedDataset: locateSelectedDatasetInMap,
 };
 
 const DatasetSelect = connect(

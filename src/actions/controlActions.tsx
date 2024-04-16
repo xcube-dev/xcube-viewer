@@ -49,7 +49,6 @@ import { datasetsSelector } from "@/selectors/dataSelectors";
 import { AppState } from "@/states/appState";
 import {
   ControlState,
-  ItemFlyMode,
   MapInteraction,
   TimeAnimationInterval,
   ViewMode,
@@ -62,7 +61,7 @@ import {
   UpdateDatasetPlaceGroup,
 } from "./dataActions";
 import { MessageLogAction, postMessage } from "./messageLogActions";
-import { flyToLocation } from "./mapActions";
+import { locateInMap } from "./mapActions";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -83,10 +82,15 @@ export function selectDataset(
   datasets: Dataset[],
   showInMap: boolean,
 ) {
-  return (dispatch: Dispatch) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(_selectDataset(selectedDatasetId, datasets));
     if (selectedDatasetId && showInMap) {
-      dispatch(flyToDataset(selectedDatasetId) as unknown as Action);
+      dispatch(
+        locateDatasetInMap(
+          selectedDatasetId,
+          getState().controlState.datasetLocateMode === "panAndZoom",
+        ) as unknown as Action,
+      );
     }
   };
 }
@@ -100,22 +104,48 @@ export function _selectDataset(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function flyToDataset(selectedDatasetId: string) {
+export function locateSelectedDatasetInMap() {
   return (dispatch: Dispatch, getState: () => AppState) => {
-    const datasets = datasetsSelector(getState());
-    const dataset = findDataset(datasets, selectedDatasetId);
-    if (dataset && dataset.bbox) {
+    const datasetId = selectedDatasetIdSelector(getState());
+    const locateMode = getState().controlState.datasetLocateMode;
+    if (datasetId && locateMode !== "doNothing") {
       dispatch(
-        flyTo(
-          dataset.bbox,
-          getState().controlState.datasetFlyMode,
+        locateDatasetInMap(
+          datasetId,
+          locateMode === "panAndZoom",
         ) as unknown as Action,
       );
     }
   };
 }
 
-////////////////////////////////////////////////////////////////////////////////
+export function locateSelectedPlaceInMap() {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    const placeId = selectedPlaceIdSelector(getState());
+    const locateMode = getState().controlState.placeLocateMode;
+    if (placeId && locateMode !== "doNothing") {
+      dispatch(
+        locatePlaceInMap(
+          placeId,
+          locateMode === "panAndZoom",
+        ) as unknown as Action,
+      );
+    }
+  };
+}
+
+export function locateDatasetInMap(
+  selectedDatasetId: string,
+  shouldZoom: boolean,
+) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    const datasets = datasetsSelector(getState());
+    const dataset = findDataset(datasets, selectedDatasetId);
+    if (dataset && dataset.bbox) {
+      dispatch(locateShapeInMap(dataset.bbox, shouldZoom) as unknown as Action);
+    }
+  };
+}
 
 const SIMPLE_GEOMETRY_TYPES = [
   "Point",
@@ -128,22 +158,21 @@ const SIMPLE_GEOMETRY_TYPES = [
   "Circle",
 ];
 
-export function flyToPlace(selectedPlaceId: string) {
+export function locatePlaceInMap(selectedPlaceId: string, shouldZoom: boolean) {
   return (dispatch: Dispatch, getState: () => AppState) => {
     const placeGroups = selectedPlaceGroupsSelector(getState());
     const place = findPlaceInPlaceGroups(placeGroups, selectedPlaceId);
     if (place) {
-      const placeFlyMode = getState().controlState.placeFlyMode;
       if (place.bbox && place.bbox.length === 4) {
-        dispatch(flyTo(place.bbox, placeFlyMode) as unknown as Action);
+        dispatch(locateShapeInMap(place.bbox, shouldZoom) as unknown as Action);
       } else if (
         place.geometry &&
         SIMPLE_GEOMETRY_TYPES.includes(place.geometry.type)
       ) {
         dispatch(
-          flyTo(
+          locateShapeInMap(
             new OlGeoJSONFormat().readGeometry(place.geometry),
-            placeFlyMode,
+            shouldZoom,
           ) as unknown as Action,
         );
       }
@@ -151,21 +180,22 @@ export function flyToPlace(selectedPlaceId: string) {
   };
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-export function flyToSelectedObject() {
-  return (dispatch: Dispatch, getState: () => AppState) => {
-    const placeId = selectedPlaceIdSelector(getState());
-    const datasetId = selectedDatasetIdSelector(getState());
-    if (placeId) {
-      dispatch(flyToPlace(placeId) as unknown as Action);
-    } else if (datasetId) {
-      dispatch(flyToDataset(datasetId) as unknown as Action);
+export function locateShapeInMap(
+  location: OlGeometry | OlExtent | null,
+  shouldZoom: boolean,
+) {
+  return (dispatch: Dispatch<FlyTo>) => {
+    if (location !== null) {
+      const mapId = "map";
+      dispatch(_flyTo(mapId, location));
+      locateInMap(mapId, location, shouldZoom);
     }
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+// TODO: check, seems that this action is not needed at all
 
 export const FLY_TO = "FLY_TO";
 
@@ -173,17 +203,6 @@ export interface FlyTo {
   type: typeof FLY_TO;
   mapId: string;
   location: OlGeometry | OlExtent | null;
-}
-
-export function flyTo(
-  location: OlGeometry | OlExtent | null,
-  itemFlyMode: ItemFlyMode,
-) {
-  return (dispatch: Dispatch<FlyTo>) => {
-    const mapId = "map";
-    dispatch(_flyTo(mapId, location));
-    flyToLocation(mapId, location, itemFlyMode);
-  };
 }
 
 export function _flyTo(
@@ -270,10 +289,15 @@ export function selectPlace(
   places: Place[],
   showInMap: boolean,
 ) {
-  return (dispatch: Dispatch) => {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(_selectPlace(placeId, places));
     if (showInMap && placeId) {
-      dispatch(flyToPlace(placeId) as unknown as Action);
+      dispatch(
+        locatePlaceInMap(
+          placeId,
+          getState().controlState.placeLocateMode === "panAndZoom",
+        ) as unknown as Action,
+      );
     }
   };
 }
@@ -363,6 +387,8 @@ export interface SelectTimeSeriesUpdateMode {
   type: typeof SELECT_TIME_SERIES_UPDATE_MODE;
   timeSeriesUpdateMode: "add" | "replace";
 }
+
+// TODO: check, if we can remove this action, seems not in use
 
 export function selectTimeSeriesUpdateMode(
   timeSeriesUpdateMode: "add" | "replace",

@@ -34,7 +34,6 @@ import Tooltip from "@mui/material/Tooltip";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import InfoIcon from "@mui/icons-material/Info";
 import VolumeIcon from "@mui/icons-material/ThreeDRotation";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
 
@@ -55,7 +54,6 @@ const styles = (theme: Theme) =>
 
 interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
   visible: boolean;
-  flyToSelectedObject: () => void;
   volumeCardOpen: boolean;
   showVolumeCard: (open: boolean) => void;
   infoCardOpen: boolean;
@@ -70,7 +68,6 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
 const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   classes,
   visible,
-  flyToSelectedObject,
   volumeCardOpen,
   showVolumeCard,
   infoCardOpen,
@@ -101,14 +98,6 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
       </IconButton>
     );
   }
-
-  const flyToButton = (
-    <IconButton onClick={flyToSelectedObject} size="small">
-      <Tooltip arrow title={i18n.get("Show selected place in map")}>
-        <MyLocationIcon />
-      </Tooltip>
-    </IconButton>
-  );
 
   /*TODO: I18N*/
   const volumeButton = Config.instance.branding.allow3D && (
@@ -162,7 +151,6 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
       <Box>
         {refreshButton}
         {downloadButton}
-        {flyToButton}
         {volumeButton}
         {infoButton}
         {settingsButton}

@@ -471,9 +471,14 @@
       "se": "Ladda ner"
     },
     {
-      "en": "Show selected place in map",
-      "de": "Ausgewählten Ort in der Karte anzeigen",
-      "se": "Visa vald plats på kartan"
+      "en": "Locate place in map",
+      "de": "Lokalisiere Ort in Karte",
+      "se": "Leta upp plats på kartan"
+    },
+    {
+      "en": "Locate dataset in map",
+      "de": "Lokalisiere Datensatz in Karte",
+      "se": "Leta upp dataset på kartan"
     },
     {
       "en": "Open information panel",

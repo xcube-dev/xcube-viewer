@@ -3,7 +3,14 @@
 * It is now possible to specify the map view behaviour when a new dataset or
   place is selected. In the settings, users can now choose between doing 
   nothing, fly to the center of dataset bounding box or the place, 
-  or fly to the center and zoom to the extend of the dataset or place. 
+  or fly to the center and zoom to the extent of the dataset or place.
+
+* Specific "locate" actions have been added to the dataset and place selectors.
+  At the same time the general "locate" action has been removed from the 
+  control bar.
+
+* The map setting "Show dataset boundaries" is now stored in the browser's
+  local storage.
 
 * The current variable layer is now always on top of the RGB layer of the 
   same dataset, if switched on. Layer opacity only affects the variable
