@@ -43,7 +43,13 @@ import {
   LocateMode,
   TimeAnimationInterval,
 } from "@/states/controlState";
-import { MapGroup, maps, MapSource } from "@/util/maps";
+import {
+  getBaseMapLabel,
+  getOverlayMapLabel,
+  MapGroup,
+  maps,
+  MapSource,
+} from "@/util/maps";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
@@ -100,6 +106,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [languageMenuAnchor, setLanguageMenuAnchor] =
     React.useState<Element | null>(null);
   const [baseMapMenuAnchor, setBaseMapMenuAnchor] =
+    React.useState<Element | null>(null);
+  const [overlayMapMenuAnchor, setOverlayMapMenuAnchor] =
     React.useState<Element | null>(null);
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
@@ -217,14 +225,29 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     setBaseMapMenuAnchor(null);
   }
 
-  let baseMapLabel = settings.baseMapUrl;
-  maps.forEach((mapGroup: MapGroup) => {
-    mapGroup.datasets.forEach((mapSource: MapSource) => {
-      if (mapSource.endpoint === settings.baseMapUrl) {
-        baseMapLabel = `${mapGroup.name} / ${mapSource.name}`;
-      }
-    });
-  });
+  const handleManageUserBaseMaps = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+  };
+
+  const baseMapLabel = getBaseMapLabel(settings.baseMapUrl);
+
+  function handleOverlayMapMenuOpen(event: React.MouseEvent) {
+    setOverlayMapMenuAnchor(event.currentTarget);
+  }
+
+  function handleOverlayMapMenuClose() {
+    setOverlayMapMenuAnchor(null);
+  }
+
+  const handleManageUserOverlayMaps = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+  };
+
+  const overlayMapLabel = settings.overlayMapUrl
+    ? getOverlayMapLabel(settings.overlayMapUrl)
+    : "-";
 
   return (
     <div>
@@ -330,7 +353,18 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               label={i18n.get("Base map")}
               value={baseMapLabel}
               onClick={handleBaseMapMenuOpen}
-            ></SettingsSubPanel>
+            >
+              <Button onClick={handleManageUserBaseMaps}>User Maps...</Button>
+            </SettingsSubPanel>
+            <SettingsSubPanel
+              label={i18n.get("Overlay map")}
+              value={overlayMapLabel}
+              onClick={handleOverlayMapMenuOpen}
+            >
+              <Button onClick={handleManageUserOverlayMaps}>
+                User Maps...
+              </Button>
+            </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("Projection")}>
               <RadioSetting
                 propertyName={"mapProjection"}
@@ -397,14 +431,20 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           </SettingsPanel>
 
           <SettingsPanel title={i18n.get("Legal Agreement")}>
-            <Button
-              onClick={() => {
-                updateSettings({ privacyNoticeAccepted: false });
-                window.location.reload();
-              }}
+            <SettingsSubPanel
+              label={i18n.get("Privacy notice")}
+              value={settings.privacyNoticeAccepted ? i18n.get("Accepted") : ""}
             >
-              {i18n.get("Revoke consent")}
-            </Button>
+              <Button
+                disabled={!settings.privacyNoticeAccepted}
+                onClick={() => {
+                  updateSettings({ privacyNoticeAccepted: false });
+                  window.location.reload();
+                }}
+              >
+                {i18n.get("Revoke consent")}
+              </Button>
+            </SettingsSubPanel>
           </SettingsPanel>
 
           <SettingsPanel title={i18n.get("System Information")}>
@@ -440,6 +480,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         onClose={handleBaseMapMenuClose}
       >
         {baseMapMenuItems}
+      </Menu>
+
+      <Menu
+        anchorEl={overlayMapMenuAnchor}
+        keepMounted
+        open={Boolean(overlayMapMenuAnchor)}
+        onClose={handleOverlayMapMenuClose}
+      >
+        {/*overlayMapMenuItems*/}
       </Menu>
     </div>
   );

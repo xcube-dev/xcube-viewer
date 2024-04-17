@@ -117,6 +117,7 @@ export interface ControlState {
   imageSmoothingEnabled: boolean;
   showDatasetBoundaries: boolean;
   baseMapUrl: string;
+  overlayMapUrl: string | null;
   showRgbLayer: boolean;
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
@@ -177,6 +178,7 @@ export function newControlState(): ControlState {
     imageSmoothingEnabled: false,
     showDatasetBoundaries: false,
     baseMapUrl: branding.baseMapUrl || "http://a.tile.osm.org/{z}/{x}/{y}.png",
+    overlayMapUrl: null,
     exportTimeSeries: true,
     exportTimeSeriesSeparator: "TAB",
     exportPlaces: true,

@@ -706,6 +706,11 @@
       "se": "Återkalla samtycke "
     },
     {
+      "en": "Accepted",
+      "de": "Akzeptiert",
+      "se": "Accepterad"
+    },
+    {
       "en": "Legal Agreement",
       "de": "Rechtliches Übereinkommen",
       "se": "Laglig Överenskommelse"
