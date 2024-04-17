@@ -172,7 +172,6 @@ export function newControlState(): ControlState {
     privacyNoticeAccepted: false,
     mapInteraction: "Point",
     lastMapInteraction: "Point",
-    showRgbLayer: false,
     layerVisibilities: {
       baseMap: true,
       datasetRgb: false,

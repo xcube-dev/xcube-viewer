@@ -196,7 +196,10 @@ export function controlReducer(
     case SET_RGB_LAYER_VISIBILITY: {
       return {
         ...state,
-        showRgbLayer: action.showRgbLayer,
+        layerVisibilities: {
+          ...state.layerVisibilities,
+          datasetRgb: action.showRgbLayer,
+        },
       };
     }
     case SET_LAYER_VISIBILITY: {

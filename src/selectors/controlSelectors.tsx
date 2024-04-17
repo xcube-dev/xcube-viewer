@@ -101,7 +101,7 @@ export const imageSmoothingSelector = (state: AppState) =>
 export const baseMapUrlSelector = (state: AppState) =>
   state.controlState.baseMapUrl;
 export const showRgbLayerSelector = (state: AppState) =>
-  state.controlState.showRgbLayer;
+  !!state.controlState.layerVisibilities.datasetRgb;
 export const layerVisibilitiesSelector = (state: AppState) =>
   state.controlState.layerVisibilities;
 export const infoCardElementStatesSelector = (state: AppState) =>
