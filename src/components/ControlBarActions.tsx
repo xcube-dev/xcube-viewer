@@ -41,6 +41,8 @@ import i18n from "@/i18n";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { TimeSeriesGroup } from "@/model/timeSeries";
+import { LayerVisibilities } from "@/states/controlState";
+import LayerSelect from "./LayerSelect";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (theme: Theme) =>
@@ -63,6 +65,11 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
   allowRefresh?: boolean;
   updateResources: () => void;
   compact: boolean;
+  layerVisibilities: LayerVisibilities;
+  setLayerVisibility: (
+    layerId: keyof LayerVisibilities,
+    visible: boolean,
+  ) => void;
 }
 
 const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
@@ -77,12 +84,21 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   allowRefresh,
   updateResources,
   compact,
+  layerVisibilities,
+  setLayerVisibility,
 }) => {
   if (!visible) {
     return null;
   }
 
   const canDownload = timeSeriesGroups.length > 0;
+
+  const layerSelect = (
+    <LayerSelect
+      layerVisibilities={layerVisibilities}
+      setLayerVisibility={setLayerVisibility}
+    />
+  );
 
   let downloadButton;
   if (Config.instance.branding.allowDownloads) {
@@ -150,6 +166,7 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
     <FormControl variant="standard" className={classes.formControl}>
       <Box>
         {refreshButton}
+        {layerSelect}
         {downloadButton}
         {volumeButton}
         {infoButton}

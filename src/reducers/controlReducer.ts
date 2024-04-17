@@ -38,6 +38,7 @@ import {
   SELECT_TIME_RANGE,
   SELECT_TIME_SERIES_UPDATE_MODE,
   SELECT_VARIABLE,
+  SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
   SET_RGB_LAYER_VISIBILITY,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
@@ -196,6 +197,15 @@ export function controlReducer(
       return {
         ...state,
         showRgbLayer: action.showRgbLayer,
+      };
+    }
+    case SET_LAYER_VISIBILITY: {
+      return {
+        ...state,
+        layerVisibilities: {
+          ...state.layerVisibilities,
+          [action.layerId]: action.visible,
+        },
       };
     }
     case SELECT_TIME: {

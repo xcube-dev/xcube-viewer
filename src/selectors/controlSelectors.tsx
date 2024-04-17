@@ -102,6 +102,8 @@ export const baseMapUrlSelector = (state: AppState) =>
   state.controlState.baseMapUrl;
 export const showRgbLayerSelector = (state: AppState) =>
   state.controlState.showRgbLayer;
+export const layerVisibilitiesSelector = (state: AppState) =>
+  state.controlState.layerVisibilities;
 export const infoCardElementStatesSelector = (state: AppState) =>
   state.controlState.infoCardElementStates;
 export const mapProjectionSelector = (state: AppState) =>

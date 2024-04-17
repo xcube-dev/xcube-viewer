@@ -70,6 +70,15 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
+export interface LayerVisibilities {
+  baseMap?: boolean;
+  datasetRgb?: boolean;
+  datasetVariable?: boolean;
+  datasetPlaces?: boolean;
+  userPlaces?: boolean;
+  overlay?: boolean;
+}
+
 export interface ExportSettings {
   format: "GeoJSON" | "CSV";
   multiFile: boolean;
@@ -119,6 +128,7 @@ export interface ControlState {
   baseMapUrl: string;
   overlayMapUrl: string | null;
   showRgbLayer: boolean;
+  layerVisibilities: LayerVisibilities;
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
   exportTimeSeries: boolean;
@@ -163,6 +173,14 @@ export function newControlState(): ControlState {
     mapInteraction: "Point",
     lastMapInteraction: "Point",
     showRgbLayer: false,
+    layerVisibilities: {
+      baseMap: true,
+      datasetRgb: false,
+      datasetVariable: true,
+      datasetPlaces: false,
+      userPlaces: true,
+      overlay: false,
+    },
     datasetLocateMode: "pan",
     placeLocateMode: "panAndZoom",
     volumeCardOpen: false,

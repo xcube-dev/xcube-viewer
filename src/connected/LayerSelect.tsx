@@ -25,42 +25,20 @@
 import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
-import _ControlBarActions from "@/components/ControlBarActions";
-import {
-  openDialog,
-  setLayerVisibility,
-  showInfoCard,
-  showVolumeCard,
-} from "@/actions/controlActions";
-import { Config } from "@/config";
-import { updateResources } from "@/actions/dataActions";
+import { setLayerVisibility } from "@/actions/controlActions";
 import { layerVisibilitiesSelector } from "@/selectors/controlSelectors";
+import _LayerSelect from "@/components/LayerSelect";
 
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
-    visible: !!(
-      state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
-    ),
-    volumeCardOpen: state.controlState.volumeCardOpen,
-    infoCardOpen: state.controlState.infoCardOpen,
-    timeSeriesGroups: state.dataState.timeSeriesGroups,
-    compact: Config.instance.branding.compact,
-    allowRefresh: Config.instance.branding.allowRefresh,
     layerVisibilities: layerVisibilitiesSelector(state),
   };
 };
 
 const mapDispatchToProps = {
-  showVolumeCard,
-  showInfoCard,
-  openDialog,
-  updateResources,
   setLayerVisibility,
 };
 
-const ControlBarActions = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_ControlBarActions);
-export default ControlBarActions;
+const LayerSelect = connect(mapStateToProps, mapDispatchToProps)(_LayerSelect);
+export default LayerSelect;
