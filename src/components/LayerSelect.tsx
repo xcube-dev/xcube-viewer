@@ -29,13 +29,13 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import LayersIcon from "@mui/icons-material/Layers";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Menu from "@mui/material/Menu";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import LayerSelectItem from "@/components/LayerSelectItem";
-import { LayerVisibilities } from "@/states/controlState.ts";
+import { LayerVisibilities } from "@/states/controlState";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (_theme: Theme) => createStyles({});
@@ -55,7 +55,7 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
     <>
       <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} size="small">
         <Tooltip arrow title={i18n.get("Layer visibilities")}>
-          <LayersIcon />
+          <VisibilityIcon />
         </Tooltip>
       </IconButton>
       <Menu

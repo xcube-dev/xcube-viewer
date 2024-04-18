@@ -43,7 +43,8 @@ import MessageLog from "./MessageLog";
 import ServerDialog from "./ServerDialog";
 import SettingsDialog from "./SettingsDialog";
 import ExportDialog from "./ExportDialog";
-import AddPlaceDialog from "./UserPlacesDialog";
+import UserPlacesDialog from "./UserPlacesDialog";
+import UserLayersDialog from "./UserLayersDialog";
 
 interface AppProps {
   compact: boolean;
@@ -85,8 +86,9 @@ const _App: React.FC<AppProps> = ({ compact }) => {
             <LoadingDialog />
             <ServerDialog />
             <SettingsDialog />
+            <UserLayersDialog />
+            <UserPlacesDialog />
             <ExportDialog />
-            <AddPlaceDialog />
             <LegalAgreementDialog />
             <MessageLog />
           </>

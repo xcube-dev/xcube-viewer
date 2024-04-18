@@ -79,6 +79,15 @@ export interface LayerVisibilities {
   overlay?: boolean;
 }
 
+export interface UserLayer {
+  id: string;
+  name: string;
+  url: string;
+  attribution?: string;
+}
+
+// TODO: check if really unused
+// noinspection JSUnusedGlobalSymbols
 export interface ExportSettings {
   format: "GeoJSON" | "CSV";
   multiFile: boolean;
@@ -127,7 +136,6 @@ export interface ControlState {
   showDatasetBoundaries: boolean;
   baseMapUrl: string;
   overlayMapUrl: string | null;
-  showRgbLayer: boolean;
   layerVisibilities: LayerVisibilities;
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
@@ -168,7 +176,7 @@ export function newControlState(): ControlState {
     flyTo: null,
     activities: {},
     locale: "en",
-    dialogOpen: {},
+    dialogOpen: { userLayers: true },
     privacyNoticeAccepted: false,
     mapInteraction: "Point",
     lastMapInteraction: "Point",

@@ -29,7 +29,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
 import i18n from "@/i18n";
-import { LayerVisibilities } from "@/states/controlState.ts";
+import { LayerVisibilities } from "@/states/controlState";
 
 const layerLabels: Record<keyof LayerVisibilities, string> = {
   baseMap: "Base map",
