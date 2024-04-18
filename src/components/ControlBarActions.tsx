@@ -97,6 +97,7 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
     <LayerSelect
       layerVisibilities={layerVisibilities}
       setLayerVisibility={setLayerVisibility}
+      openDialog={openDialog}
     />
   );
 

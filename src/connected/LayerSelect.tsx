@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
-import { setLayerVisibility } from "@/actions/controlActions";
+import { openDialog, setLayerVisibility } from "@/actions/controlActions";
 import { layerVisibilitiesSelector } from "@/selectors/controlSelectors";
 import _LayerSelect from "@/components/LayerSelect";
 
@@ -38,6 +38,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   setLayerVisibility,
+  openDialog,
 };
 
 const LayerSelect = connect(mapStateToProps, mapDispatchToProps)(_LayerSelect);

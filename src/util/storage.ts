@@ -115,6 +115,24 @@ export class Storage {
     this.getProperty(propertyName, target, defaultObj, (value) => value);
   }
 
+  getArrayProperty<T extends object>(
+    propertyName: keyof T,
+    target: T,
+    defaultObj: T,
+  ) {
+    this.getProperty(propertyName, target, defaultObj, (value) => {
+      const parsedArray = JSON.parse(value);
+      if (Array.isArray(parsedArray)) {
+        return parsedArray;
+      }
+      const defaultArray = defaultObj[propertyName];
+      if (Array.isArray(defaultArray)) {
+        return defaultArray;
+      }
+      return [];
+    });
+  }
+
   getObjectProperty<T extends object>(
     propertyName: keyof T,
     target: T,
@@ -170,6 +188,10 @@ export class Storage {
 
   setPrimitiveProperty<T extends object>(propertyName: keyof T, source: T) {
     this.setItem(propertyName as string, source[propertyName]);
+  }
+
+  setArrayProperty<T extends object>(propertyName: keyof T, source: T) {
+    this.setObjectItem(propertyName as string, source[propertyName]);
   }
 
   setObjectProperty<T extends object>(propertyName: keyof T, source: T) {

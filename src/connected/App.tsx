@@ -86,7 +86,8 @@ const _App: React.FC<AppProps> = ({ compact }) => {
             <LoadingDialog />
             <ServerDialog />
             <SettingsDialog />
-            <UserLayersDialog />
+            <UserLayersDialog dialogId="userOverlays" />
+            <UserLayersDialog dialogId="userBaseMaps" />
             <UserPlacesDialog />
             <ExportDialog />
             <LegalAgreementDialog />

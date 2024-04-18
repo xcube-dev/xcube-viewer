@@ -44,7 +44,7 @@ export function getBaseMapLabel(mapUrl: string): string {
   return getMapLabel(mapUrl, "datasets");
 }
 
-export function getOverlayMapLabel(mapUrl: string): string {
+export function getOverlayLabel(mapUrl: string): string {
   return getMapLabel(mapUrl, "overlays");
 }
 

@@ -27,20 +27,23 @@ import { Theme } from "@mui/material/styles";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
-import Tooltip from "@mui/material/Tooltip";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Tooltip from "@mui/material/Tooltip";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
-import LayerSelectItem from "@/components/LayerSelectItem";
 import { LayerVisibilities } from "@/states/controlState";
+import LayerSelectItem from "./LayerSelectItem";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (_theme: Theme) => createStyles({});
 
 interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
+  openDialog: (dialogId: string) => void;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
@@ -49,7 +52,20 @@ interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
 }
 
 const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
+  const { openDialog, ...otherProps } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<Element | null>(null);
+
+  console.log("_LayerSelect", props);
+
+  const handleUserOverlays = () => {
+    setMenuAnchor(null);
+    openDialog("userOverlays");
+  };
+
+  const handleUserBaseMaps = () => {
+    setMenuAnchor(null);
+    openDialog("userBaseMaps");
+  };
 
   return (
     <>
@@ -64,12 +80,19 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
         open={Boolean(menuAnchor)}
         onClose={() => setMenuAnchor(null)}
       >
-        <LayerSelectItem layerId="baseMap" {...props} />
-        <LayerSelectItem layerId="datasetRgb" {...props} />
-        <LayerSelectItem layerId="datasetVariable" {...props} />
-        <LayerSelectItem layerId="datasetPlaces" {...props} />
-        <LayerSelectItem layerId="userPlaces" {...props} />
-        <LayerSelectItem layerId="overlay" {...props} />
+        <LayerSelectItem layerId="baseMap" {...otherProps} />
+        <LayerSelectItem layerId="datasetRgb" {...otherProps} />
+        <LayerSelectItem layerId="datasetVariable" {...otherProps} />
+        <LayerSelectItem layerId="datasetPlaces" {...otherProps} />
+        <LayerSelectItem layerId="userPlaces" {...otherProps} />
+        <LayerSelectItem layerId="overlay" {...otherProps} />
+        <Divider />
+        <MenuItem onClick={handleUserOverlays}>
+          {i18n.get("User Overlays...")}
+        </MenuItem>
+        <MenuItem onClick={handleUserBaseMaps}>
+          {i18n.get("User Base Maps...")}
+        </MenuItem>
       </Menu>
     </>
   );

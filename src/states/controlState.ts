@@ -134,9 +134,12 @@ export interface ControlState {
   mapProjection: string;
   imageSmoothingEnabled: boolean;
   showDatasetBoundaries: boolean;
-  baseMapUrl: string;
-  overlayMapUrl: string | null;
   layerVisibilities: LayerVisibilities;
+  // TODO: the following two should be a UserLayer.id
+  baseMapUrl: string;
+  overlayUrl: string | null;
+  userBaseMaps: UserLayer[];
+  userOverlays: UserLayer[];
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
   exportTimeSeries: boolean;
@@ -176,7 +179,7 @@ export function newControlState(): ControlState {
     flyTo: null,
     activities: {},
     locale: "en",
-    dialogOpen: { userLayers: true },
+    dialogOpen: {},
     privacyNoticeAccepted: false,
     mapInteraction: "Point",
     lastMapInteraction: "Point",
@@ -203,7 +206,9 @@ export function newControlState(): ControlState {
     imageSmoothingEnabled: false,
     showDatasetBoundaries: false,
     baseMapUrl: branding.baseMapUrl || "http://a.tile.osm.org/{z}/{x}/{y}.png",
-    overlayMapUrl: null,
+    overlayUrl: null,
+    userBaseMaps: [],
+    userOverlays: [],
     exportTimeSeries: true,
     exportTimeSeriesSeparator: "TAB",
     exportPlaces: true,

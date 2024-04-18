@@ -45,7 +45,7 @@ import {
 } from "@/states/controlState";
 import {
   getBaseMapLabel,
-  getOverlayMapLabel,
+  getOverlayLabel,
   MapGroup,
   maps,
   MapSource,
@@ -232,7 +232,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
   const baseMapLabel = getBaseMapLabel(settings.baseMapUrl);
 
-  function handleOverlayMapMenuOpen(event: React.MouseEvent) {
+  function handleOverlayMenuOpen(event: React.MouseEvent) {
     setOverlayMapMenuAnchor(event.currentTarget);
   }
 
@@ -240,13 +240,13 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     setOverlayMapMenuAnchor(null);
   }
 
-  const handleManageUserOverlayMaps = (event: React.MouseEvent) => {
+  const handleManageUserOverlays = (event: React.MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
   };
 
-  const overlayMapLabel = settings.overlayMapUrl
-    ? getOverlayMapLabel(settings.overlayMapUrl)
+  const overlayMapLabel = settings.overlayUrl
+    ? getOverlayLabel(settings.overlayUrl)
     : "-";
 
   return (
@@ -354,16 +354,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               value={baseMapLabel}
               onClick={handleBaseMapMenuOpen}
             >
-              <Button onClick={handleManageUserBaseMaps}>User Maps...</Button>
+              <Button onClick={handleManageUserBaseMaps}>Customize...</Button>
             </SettingsSubPanel>
             <SettingsSubPanel
-              label={i18n.get("Overlay map")}
+              a
+              label={i18n.get("Overlay")}
               value={overlayMapLabel}
-              onClick={handleOverlayMapMenuOpen}
+              onClick={handleOverlayMenuOpen}
             >
-              <Button onClick={handleManageUserOverlayMaps}>
-                User Maps...
-              </Button>
+              <Button onClick={handleManageUserOverlays}>Customize...</Button>
             </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("Projection")}>
               <RadioSetting

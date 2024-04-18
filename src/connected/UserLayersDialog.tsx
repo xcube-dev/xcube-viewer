@@ -25,13 +25,18 @@
 import { connect } from "react-redux";
 
 import { closeDialog, updateSettings } from "@/actions/controlActions";
-import _UserLayersDialog from "@/components/UserLayersDialog.tsx";
 import { AppState } from "@/states/appState";
+import _UserLayersDialog from "@/components/UserLayersDialog";
 
-const mapStateToProps = (state: AppState) => {
+interface OwnProps {
+  dialogId: "userOverlays" | "userBaseMaps";
+}
+
+const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
   return {
-    open: state.controlState.dialogOpen["userLayers"],
+    open: state.controlState.dialogOpen[ownProps.dialogId],
     settings: state.controlState,
+    dialogId: ownProps.dialogId,
   };
 };
 
