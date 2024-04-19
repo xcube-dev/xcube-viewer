@@ -102,6 +102,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   mapInteraction: MapInteraction;
   mapProjection: string;
   baseMapLayer?: MapElement;
+  overlayLayer?: MapElement;
   rgbLayer?: MapElement;
   variableLayer?: MapElement;
   datasetBoundaryLayer?: MapElement;
@@ -135,6 +136,7 @@ const _Viewer: React.FC<ViewerProps> = ({
   mapInteraction,
   mapProjection,
   baseMapLayer,
+  overlayLayer,
   rgbLayer,
   variableLayer,
   datasetBoundaryLayer,
@@ -316,6 +318,7 @@ const _Viewer: React.FC<ViewerProps> = ({
           {baseMapLayer}
           {rgbLayer}
           {variableLayer}
+          {overlayLayer}
           {datasetBoundaryLayer}
           {
             <>

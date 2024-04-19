@@ -100,6 +100,8 @@ export const imageSmoothingSelector = (state: AppState) =>
   state.controlState.imageSmoothingEnabled;
 export const baseMapUrlSelector = (state: AppState) =>
   state.controlState.baseMapUrl;
+export const overlayUrlSelector = (state: AppState) =>
+  state.controlState.overlayUrl;
 export const showRgbLayerSelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetRgb;
 export const layerVisibilitiesSelector = (state: AppState) =>
@@ -876,35 +878,32 @@ export const activityMessagesSelector = createSelector(
   },
 );
 
-export const baseMapLayerSelector = createSelector(
-  baseMapUrlSelector,
-  (baseMapUrl: string): JSX.Element | null => {
-    const map = findMap(baseMapUrl);
-    if (map) {
-      const access = getTileAccess(map.group.name);
-      const source = new OlXYZSource({
-        url:
-          map.dataset.endpoint +
-          (access ? `?${access.param}=${access.token}` : ""),
-        attributions: [
-          `&copy; <a href=&quot;${map.group.link}&quot;>${map.group.name}</a>`,
-        ],
-      });
-      return (
-        <Tile
-          id={map.group.name + "-" + map.dataset.name}
-          source={source}
-          zIndex={0}
-        />
-      );
-    }
-    if (baseMapUrl) {
-      const source = new OlXYZSource({ url: baseMapUrl });
-      return <Tile id={baseMapUrl} source={source} zIndex={0} />;
-    }
-    return null;
-  },
-);
+const getMapTileLayer = (url: string): JSX.Element | null => {
+  const map = findMap(url);
+  if (map) {
+    const access = getTileAccess(map.group.name);
+    const source = new OlXYZSource({
+      url:
+        map.dataset.endpoint +
+        (access ? `?${access.param}=${access.token}` : ""),
+      attributions: [
+        `&copy; <a href=&quot;${map.group.link}&quot;>${map.group.name}</a>`,
+      ],
+    });
+    return (
+      <Tile
+        id={`${map.group.name}-${map.dataset.name}`}
+        source={source}
+        zIndex={0}
+      />
+    );
+  }
+  if (url) {
+    const source = new OlXYZSource({ url });
+    return <Tile id={url} source={source} zIndex={0} />;
+  }
+  return null;
+};
 
 function findMap(
   endpoint: string,
@@ -919,3 +918,14 @@ function findMap(
   }
   return null;
 }
+
+export const baseMapLayerSelector = createSelector(
+  baseMapUrlSelector,
+  getMapTileLayer,
+);
+
+export const overlayLayerSelector = createSelector(
+  overlayUrlSelector,
+  (overlayUrl: string | null) =>
+    overlayUrl ? getMapTileLayer(overlayUrl) : null,
+);

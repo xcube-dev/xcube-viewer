@@ -28,6 +28,7 @@ import { default as OlMap } from "ol/Map";
 import { AppState } from "@/states/appState";
 import {
   baseMapLayerSelector,
+  overlayLayerSelector,
   imageSmoothingSelector,
   mapProjectionSelector,
   selectedDatasetBoundaryLayerSelector,
@@ -67,6 +68,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     selectedPlaceId: state.controlState.selectedPlaceId,
     places: selectedPlaceGroupPlacesSelector(state),
     baseMapLayer: baseMapLayerSelector(state),
+    overlayLayer: overlayLayerSelector(state),
     imageSmoothing: imageSmoothingSelector(state),
     onMapRef: ownProps.onMapRef,
   };
