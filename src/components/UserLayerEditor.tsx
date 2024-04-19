@@ -51,8 +51,7 @@ const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
     const nameOk = name !== "";
     const urlOk =
       url !== "" &&
-      (url.startsWith("http://") || url.trim().startsWith("https://")) &&
-      url.includes(".");
+      (url.startsWith("http://") || url.trim().startsWith("https://"));
     return nameOk && urlOk;
   };
 

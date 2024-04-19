@@ -34,35 +34,21 @@ import i18n from "@/i18n";
 import { UserLayer, ControlState } from "@/states/controlState";
 import UserLayersPanel from "./UserLayersPanel";
 
-const testLayers: UserLayer[] = [
-  { id: "pipapo1", name: "Pipapo 1", url: "https://pipapo1.maps.co.uk" },
-  { id: "pipapo2", name: "Pipapo 2", url: "https://pipapo2.maps.co.uk" },
-  { id: "pipapo3", name: "Pipapo 3", url: "https://pipapo3.maps.co.uk" },
-];
-
 interface UserLayersDialogProps {
+  dialogId: "userOverlays" | "userBaseMaps";
   open: boolean;
   closeDialog: (dialogId: string) => void;
   settings: ControlState;
   updateSettings: (settings: Partial<ControlState>) => void;
-  dialogId: "userOverlays" | "userBaseMaps";
 }
 
 const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
+  dialogId,
   open,
   closeDialog,
-  dialogId,
-  // settings,
-  // updateSettings,
+  settings,
+  updateSettings,
 }) => {
-  const [baseMaps, setBaseMaps] = React.useState<UserLayer[]>([...testLayers]);
-  const [selectedBaseMapId, setSelectedBaseMapId] = React.useState<
-    string | null
-  >(null);
-  const [overlays, setOverlays] = React.useState<UserLayer[]>([...testLayers]);
-  const [selectedOverlayId, setSelectedOverlayId] = React.useState<
-    string | null
-  >(null);
   const [tabIndex, setTabIndex] = React.useState(
     dialogId === "userBaseMaps" ? 0 : 1,
   );
@@ -70,6 +56,26 @@ const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
   if (!open) {
     return null;
   }
+
+  const baseMaps = settings.userBaseMaps;
+  const setBaseMaps = (userBaseMaps: UserLayer[]) => {
+    updateSettings({ userBaseMaps });
+  };
+
+  const overlays = settings.userOverlays;
+  const setOverlays = (userOverlays: UserLayer[]) => {
+    updateSettings({ userOverlays });
+  };
+
+  const selectedBaseMapId = settings.selectedBaseMapId;
+  const setSelectedBaseMapId = (selectedBaseMapId: string | null) => {
+    updateSettings({ selectedBaseMapId });
+  };
+
+  const selectedOverlayId = settings.selectedOverlayId;
+  const setSelectedOverlayId = (selectedOverlayId: string | null) => {
+    updateSettings({ selectedOverlayId });
+  };
 
   function handleCloseDialog() {
     closeDialog(dialogId);

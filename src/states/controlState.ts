@@ -135,9 +135,12 @@ export interface ControlState {
   imageSmoothingEnabled: boolean;
   showDatasetBoundaries: boolean;
   layerVisibilities: LayerVisibilities;
-  // TODO: the following two should be a UserLayer.id
+  // TODO: no longer user the following two
   baseMapUrl: string;
   overlayUrl: string | null;
+  // TODO: use the following two instead
+  selectedBaseMapId: string | null;
+  selectedOverlayId: string | null;
   userBaseMaps: UserLayer[];
   userOverlays: UserLayer[];
   datasetLocateMode: LocateMode;
@@ -149,6 +152,13 @@ export interface ControlState {
   exportZipArchive: boolean;
   exportFileName: string;
 }
+
+// TODO: remove
+const testLayers: UserLayer[] = [
+  { id: "pipapo1", name: "Pipapo 1", url: "https://pipapo1.maps.co.uk" },
+  { id: "pipapo2", name: "Pipapo 2", url: "https://pipapo2.maps.co.uk" },
+  { id: "pipapo3", name: "Pipapo 3", url: "https://pipapo3.maps.co.uk" },
+];
 
 export function newControlState(): ControlState {
   const branding = Config.instance.branding;
@@ -205,10 +215,14 @@ export function newControlState(): ControlState {
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
     showDatasetBoundaries: false,
+    // TODO: no longer user the following two
     baseMapUrl: branding.baseMapUrl || "http://a.tile.osm.org/{z}/{x}/{y}.png",
     overlayUrl: null,
-    userBaseMaps: [],
-    userOverlays: [],
+    // TODO: use the following two instead
+    selectedBaseMapId: null,
+    selectedOverlayId: null,
+    userBaseMaps: testLayers,
+    userOverlays: testLayers,
     exportTimeSeries: true,
     exportTimeSeriesSeparator: "TAB",
     exportPlaces: true,
