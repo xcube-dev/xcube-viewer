@@ -67,7 +67,6 @@ import { Variable } from "@/model/variable";
 
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
-import { MapGroup, maps, MapSource } from "@/util/maps";
 import {
   colorBarsSelector,
   datasetsSelector,
@@ -79,6 +78,13 @@ import { makeRequestUrl } from "@/api/callApi";
 import { MAP_OBJECTS, ViewMode } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import { ColorBar, ColorBars, parseColorBar } from "@/model/colorBar";
+import {
+  defaultBaseMapLayers,
+  defaultOverlayLayers,
+  // defaultBaseMapId,
+  LayerDefinition,
+  findLayer,
+} from "@/model/layerDefinition";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -98,10 +104,14 @@ export const timeAnimationActiveSelector = (state: AppState) =>
   state.controlState.timeAnimationActive;
 export const imageSmoothingSelector = (state: AppState) =>
   state.controlState.imageSmoothingEnabled;
-export const baseMapUrlSelector = (state: AppState) =>
-  state.controlState.baseMapUrl;
-export const overlayUrlSelector = (state: AppState) =>
-  state.controlState.overlayUrl;
+export const userBaseMapsSelector = (state: AppState) =>
+  state.controlState.userBaseMaps;
+export const userOverlaysSelector = (state: AppState) =>
+  state.controlState.userOverlays;
+export const selectedBaseMapIdSelector = (state: AppState) =>
+  state.controlState.selectedBaseMapId;
+export const selectedOverlayIdSelector = (state: AppState) =>
+  state.controlState.selectedOverlayId;
 export const showRgbLayerSelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetRgb;
 export const layerVisibilitiesSelector = (state: AppState) =>
@@ -878,54 +888,49 @@ export const activityMessagesSelector = createSelector(
   },
 );
 
-const getMapTileLayer = (url: string): JSX.Element | null => {
-  const map = findMap(url);
-  if (map) {
-    const access = getTileAccess(map.group.name);
-    const source = new OlXYZSource({
-      url:
-        map.dataset.endpoint +
-        (access ? `?${access.param}=${access.token}` : ""),
-      attributions: [
-        `&copy; <a href=&quot;${map.group.link}&quot;>${map.group.name}</a>`,
-      ],
-    });
-    return (
-      <Tile
-        id={`${map.group.name}-${map.dataset.name}`}
-        source={source}
-        zIndex={0}
-      />
-    );
+export const baseMapsSelector = createSelector(
+  userBaseMapsSelector,
+  (userBaseMaps): LayerDefinition[] => {
+    return [...userBaseMaps, ...defaultBaseMapLayers];
+  },
+);
+
+export const overlaysSelector = createSelector(
+  userOverlaysSelector,
+  (userOverlays): LayerDefinition[] => {
+    return [...userOverlays, ...defaultOverlayLayers];
+  },
+);
+
+const getLayer = (
+  layers: LayerDefinition[],
+  layerId: string | null,
+): JSX.Element | null => {
+  if (!layerId) {
+    return null;
   }
-  if (url) {
-    const source = new OlXYZSource({ url });
-    return <Tile id={url} source={source} zIndex={0} />;
+  const layer = findLayer(layers, layerId);
+  if (!layer) {
+    return null;
   }
-  return null;
+  const access = getTileAccess(layer.group);
+  const source = new OlXYZSource({
+    url: layer.url + (access ? `?${access.param}=${access.token}` : ""),
+    attributions: layer.attribution
+      ? [`&copy; <a href=&quot;${layer.attribution}&quot;>${layer.group}</a>`]
+      : [],
+  });
+  return <Tile id={layer.id} source={source} zIndex={0} />;
 };
 
-function findMap(
-  endpoint: string,
-): { group: MapGroup; dataset: MapSource } | null {
-  for (const group of maps) {
-    const dataset = group.datasets.find(
-      (dataset) => dataset.endpoint === endpoint,
-    );
-    if (dataset) {
-      return { group, dataset };
-    }
-  }
-  return null;
-}
-
 export const baseMapLayerSelector = createSelector(
-  baseMapUrlSelector,
-  getMapTileLayer,
+  baseMapsSelector,
+  selectedBaseMapIdSelector,
+  getLayer,
 );
 
 export const overlayLayerSelector = createSelector(
-  overlayUrlSelector,
-  (overlayUrl: string | null) =>
-    overlayUrl ? getMapTileLayer(overlayUrl) : null,
+  overlaysSelector,
+  selectedOverlayIdSelector,
+  getLayer,
 );

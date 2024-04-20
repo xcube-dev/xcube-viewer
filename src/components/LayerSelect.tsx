@@ -87,11 +87,11 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
         <LayerSelectItem layerId="userPlaces" {...otherProps} />
         <LayerSelectItem layerId="overlay" {...otherProps} />
         <Divider />
-        <MenuItem onClick={handleUserOverlays}>
-          {i18n.get("User Overlays...")}
-        </MenuItem>
         <MenuItem onClick={handleUserBaseMaps}>
-          {i18n.get("User Base Maps...")}
+          {i18n.get("User Base Maps") + "..."}
+        </MenuItem>
+        <MenuItem onClick={handleUserOverlays}>
+          {i18n.get("User Overlays") + "..."}
         </MenuItem>
       </Menu>
     </>

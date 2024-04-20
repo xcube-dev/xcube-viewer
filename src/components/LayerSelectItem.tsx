@@ -32,11 +32,11 @@ import i18n from "@/i18n";
 import { LayerVisibilities } from "@/states/controlState";
 
 const layerLabels: Record<keyof LayerVisibilities, string> = {
-  baseMap: "Base map",
+  baseMap: "Base Map",
   datasetRgb: "Dataset RGB",
-  datasetVariable: "Dataset variable",
-  datasetPlaces: "Dataset places",
-  userPlaces: "User places",
+  datasetVariable: "Dataset Variable",
+  datasetPlaces: "Dataset Places",
+  userPlaces: "User Places",
   overlay: "Overlay",
 };
 

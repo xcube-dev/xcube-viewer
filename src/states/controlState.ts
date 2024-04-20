@@ -28,6 +28,7 @@ import { default as OlBaseObject } from "ol/Object";
 
 import { Config } from "@/config";
 import { Time, TimeRange } from "@/model/timeSeries";
+import { defaultBaseMapId, LayerDefinition } from "@/model/layerDefinition.ts";
 import { loadUserSettings } from "./userSettings";
 import { DEFAULT_MAP_CRS } from "@/model/proj";
 import { CsvOptions, defaultCsvOptions } from "@/model/user-place/csv";
@@ -79,13 +80,6 @@ export interface LayerVisibilities {
   overlay?: boolean;
 }
 
-export interface UserLayer {
-  id: string;
-  name: string;
-  url: string;
-  attribution?: string;
-}
-
 // TODO: check if really unused
 // noinspection JSUnusedGlobalSymbols
 export interface ExportSettings {
@@ -135,14 +129,10 @@ export interface ControlState {
   imageSmoothingEnabled: boolean;
   showDatasetBoundaries: boolean;
   layerVisibilities: LayerVisibilities;
-  // TODO: no longer user the following two
-  baseMapUrl: string;
-  overlayUrl: string | null;
-  // TODO: use the following two instead
   selectedBaseMapId: string | null;
   selectedOverlayId: string | null;
-  userBaseMaps: UserLayer[];
-  userOverlays: UserLayer[];
+  userBaseMaps: LayerDefinition[];
+  userOverlays: LayerDefinition[];
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
   exportTimeSeries: boolean;
@@ -152,13 +142,6 @@ export interface ControlState {
   exportZipArchive: boolean;
   exportFileName: string;
 }
-
-// TODO: remove
-const testLayers: UserLayer[] = [
-  { id: "pipapo1", name: "Pipapo 1", url: "https://pipapo1.maps.co.uk" },
-  { id: "pipapo2", name: "Pipapo 2", url: "https://pipapo2.maps.co.uk" },
-  { id: "pipapo3", name: "Pipapo 3", url: "https://pipapo3.maps.co.uk" },
-];
 
 export function newControlState(): ControlState {
   const branding = Config.instance.branding;
@@ -215,14 +198,10 @@ export function newControlState(): ControlState {
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
     showDatasetBoundaries: false,
-    // TODO: no longer user the following two
-    baseMapUrl: branding.baseMapUrl || "http://a.tile.osm.org/{z}/{x}/{y}.png",
-    overlayUrl: null,
-    // TODO: use the following two instead
-    selectedBaseMapId: null,
+    selectedBaseMapId: defaultBaseMapId,
     selectedOverlayId: null,
-    userBaseMaps: testLayers,
-    userOverlays: testLayers,
+    userBaseMaps: [],
+    userOverlays: [],
     exportTimeSeries: true,
     exportTimeSeriesSeparator: "TAB",
     exportPlaces: true,

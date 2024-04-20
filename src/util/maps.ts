@@ -39,23 +39,3 @@ export interface MapSource {
   name: string;
   endpoint: string;
 }
-
-export function getBaseMapLabel(mapUrl: string): string {
-  return getMapLabel(mapUrl, "datasets");
-}
-
-export function getOverlayLabel(mapUrl: string): string {
-  return getMapLabel(mapUrl, "overlays");
-}
-
-function getMapLabel(mapUrl: string, type: "datasets" | "overlays"): string {
-  let mapLabel = mapUrl;
-  maps.forEach((mapGroup: MapGroup) => {
-    mapGroup[type].forEach((mapSource: MapSource) => {
-      if (mapSource.endpoint === mapUrl) {
-        mapLabel = `${mapGroup.name} / ${mapSource.name}`;
-      }
-    });
-  });
-  return mapLabel;
-}

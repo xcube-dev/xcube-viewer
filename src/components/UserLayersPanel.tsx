@@ -40,7 +40,7 @@ import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 
 // import i18n from "@/i18n";
 import { newId } from "@/util/id";
-import { UserLayer } from "@/states/controlState";
+import { LayerDefinition } from "@/model/layerDefinition";
 import UserLayerEditor from "@/components/UserLayerEditor";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -59,8 +59,8 @@ interface EditedLayer {
 }
 
 interface UserLayersPanelProps {
-  userLayers: UserLayer[];
-  setUserLayers: (userLayers: UserLayer[]) => void;
+  userLayers: LayerDefinition[];
+  setUserLayers: (userLayers: LayerDefinition[]) => void;
   selectedId: string | null;
   setSelectedId: (selectedId: string | null) => void;
 }
@@ -71,6 +71,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   selectedId,
   setSelectedId,
 }) => {
+  const [selectedDefaultId, setSelectedDefaultId] = React.useState(selectedId);
   const [editedLayer, setEditedLayer] = React.useState<EditedLayer | null>(
     null,
   );
@@ -81,11 +82,11 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     return null;
   }
 
-  const handleUserLayerEdit = (userLayer: UserLayer) => {
+  const handleUserLayerEdit = (userLayer: LayerDefinition) => {
     setEditedLayer({ editId: userLayer.id, editMode: "edit" });
   };
 
-  const handleUserLayerCopy = (userLayer: UserLayer) => {
+  const handleUserLayerCopy = (userLayer: LayerDefinition) => {
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     setUserLayers([
       ...userLayers.slice(0, index + 1),
@@ -98,10 +99,13 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     ]);
   };
 
-  const handleUserLayerRemove = (userLayer: UserLayer) => {
+  const handleUserLayerRemove = (userLayer: LayerDefinition) => {
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
-    if (selectedId === userLayer.id) {
-      setSelectedId(null);
+    if (userLayer.id === selectedId) {
+      setSelectedId(selectedDefaultId);
+    }
+    if (userLayer.id === selectedDefaultId) {
+      setSelectedDefaultId(null);
     }
     setUserLayers([
       ...userLayers.slice(0, index),
@@ -111,14 +115,18 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
 
   const handleUserLayerAdd = () => {
     const id = newId("user-layer-");
-    setUserLayers([...userLayers, { id, name: "", url: "", attribution: "" }]);
+    setUserLayers([
+      ...userLayers,
+      // TODO: I18N
+      { id, group: "User", name: "", url: "", attribution: "" },
+    ]);
     setEditedLayer({ editId: id, editMode: "add" });
   };
 
-  const handleUserLayerChange = (userLayer: UserLayer) => {
+  const handleUserLayerChange = (userLayer: LayerDefinition) => {
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     if (selectedId === userLayer.id) {
-      setSelectedId(null);
+      setSelectedId(selectedDefaultId);
     }
     setUserLayers([
       ...userLayers.slice(0, index),

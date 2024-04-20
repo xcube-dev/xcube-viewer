@@ -25,14 +25,15 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { UserLayer } from "@/states/controlState";
 import IconButton from "@mui/material/IconButton";
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 
+import { LayerDefinition } from "@/model/layerDefinition";
+
 interface UserLayerEditorProps {
-  userLayer: UserLayer;
-  onChange: (userLayer: UserLayer) => void;
+  userLayer: LayerDefinition;
+  onChange: (userLayer: LayerDefinition) => void;
   onCancel: () => void;
 }
 
@@ -62,6 +63,8 @@ const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
   const handleUserLayerChange = () =>
     onChange({
       ...userLayer,
+      // TODO: I18N
+      group: "User",
       name: name.trim(),
       url: url.trim(),
       attribution: attribution.trim(),

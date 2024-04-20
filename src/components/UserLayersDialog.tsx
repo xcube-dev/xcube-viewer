@@ -31,7 +31,8 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 
 import i18n from "@/i18n";
-import { UserLayer, ControlState } from "@/states/controlState";
+import { LayerDefinition } from "@/model/layerDefinition";
+import { ControlState } from "@/states/controlState";
 import UserLayersPanel from "./UserLayersPanel";
 
 interface UserLayersDialogProps {
@@ -58,12 +59,12 @@ const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
   }
 
   const baseMaps = settings.userBaseMaps;
-  const setBaseMaps = (userBaseMaps: UserLayer[]) => {
+  const setBaseMaps = (userBaseMaps: LayerDefinition[]) => {
     updateSettings({ userBaseMaps });
   };
 
   const overlays = settings.userOverlays;
-  const setOverlays = (userOverlays: UserLayer[]) => {
+  const setOverlays = (userOverlays: LayerDefinition[]) => {
     updateSettings({ userOverlays });
   };
 
