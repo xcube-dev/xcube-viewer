@@ -73,7 +73,6 @@ export function storeUserSettings(settings: ControlState) {
       storage.setArrayProperty("userBaseMaps", settings);
       storage.setArrayProperty("userOverlays", settings);
       storage.setPrimitiveProperty("userDrawnPlaceGroupName", settings);
-      storage.setPrimitiveProperty("showDatasetBoundaries", settings);
       storage.setPrimitiveProperty("datasetLocateMode", settings);
       storage.setPrimitiveProperty("placeLocateMode", settings);
       storage.setPrimitiveProperty("exportTimeSeries", settings);
@@ -150,11 +149,6 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
       storage.getArrayProperty("userOverlays", settings, defaultSettings);
       storage.getStringProperty(
         "userDrawnPlaceGroupName",
-        settings,
-        defaultSettings,
-      );
-      storage.getBooleanProperty(
-        "showDatasetBoundaries",
         settings,
         defaultSettings,
       );

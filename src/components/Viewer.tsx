@@ -118,6 +118,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   ) => void;
   userPlaceGroups: PlaceGroup[];
   userPlaceGroupsVisibility: { [pgId: string]: boolean };
+  showUserPlaces: boolean;
   selectPlace?: (
     placeId: string | null,
     places: Place[],
@@ -147,6 +148,7 @@ const _Viewer: React.FC<ViewerProps> = ({
   importUserPlacesFromText,
   userPlaceGroups,
   userPlaceGroupsVisibility,
+  showUserPlaces,
   selectPlace,
   selectedPlaceId,
   places,
@@ -327,7 +329,9 @@ const _Viewer: React.FC<ViewerProps> = ({
                   key={placeGroup.id}
                   placeGroup={placeGroup}
                   mapProjection={mapProjection}
-                  visible={userPlaceGroupsVisibility[placeGroup.id]}
+                  visible={
+                    showUserPlaces && userPlaceGroupsVisibility[placeGroup.id]
+                  }
                 />
               ))}
             </>

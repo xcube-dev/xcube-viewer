@@ -35,6 +35,7 @@ const layerLabels: Record<keyof LayerVisibilities, string> = {
   baseMap: "Base Map",
   datasetRgb: "Dataset RGB",
   datasetVariable: "Dataset Variable",
+  datasetBoundary: "Dataset Boundary",
   datasetPlaces: "Dataset Places",
   userPlaces: "User Places",
   overlay: "Overlay",

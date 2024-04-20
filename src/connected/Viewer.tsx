@@ -37,6 +37,7 @@ import {
   selectedDatasetVariableLayerSelector,
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
+  showUserPlacesLayerSelector,
 } from "@/selectors/controlSelectors";
 import {
   addDrawnUserPlace,
@@ -62,6 +63,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
     userPlaceGroups: userPlaceGroupsSelector(state),
     userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
+    showUserPlaces: showUserPlacesLayerSelector(state),
     mapId: "map",
     mapInteraction: state.controlState.mapInteraction,
     mapProjection: mapProjectionSelector(state),

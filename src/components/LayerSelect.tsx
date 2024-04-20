@@ -83,6 +83,7 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
         <LayerSelectItem layerId="baseMap" {...otherProps} />
         <LayerSelectItem layerId="datasetRgb" {...otherProps} />
         <LayerSelectItem layerId="datasetVariable" {...otherProps} />
+        <LayerSelectItem layerId="datasetBoundary" {...otherProps} />
         <LayerSelectItem layerId="datasetPlaces" {...otherProps} />
         <LayerSelectItem layerId="userPlaces" {...otherProps} />
         <LayerSelectItem layerId="overlay" {...otherProps} />

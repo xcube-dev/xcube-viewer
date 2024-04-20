@@ -31,7 +31,9 @@ const LayerMenu = ({
           <MenuItem
             key={layer.id}
             selected={layer.id === selectedLayerId}
-            onClick={() => setSelectedLayerId(layer.id)}
+            onClick={() =>
+              setSelectedLayerId(layer.id === selectedLayerId ? null : layer.id)
+            }
             dense
           >
             <ListItemText primary={getLayerLabel(layer)} />

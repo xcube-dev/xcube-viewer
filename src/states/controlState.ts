@@ -75,6 +75,7 @@ export interface LayerVisibilities {
   baseMap?: boolean;
   datasetRgb?: boolean;
   datasetVariable?: boolean;
+  datasetBoundary?: boolean;
   datasetPlaces?: boolean;
   userPlaces?: boolean;
   overlay?: boolean;
@@ -127,7 +128,6 @@ export interface ControlState {
   infoCardElementStates: InfoCardElementStates;
   mapProjection: string;
   imageSmoothingEnabled: boolean;
-  showDatasetBoundaries: boolean;
   layerVisibilities: LayerVisibilities;
   selectedBaseMapId: string | null;
   selectedOverlayId: string | null;
@@ -180,9 +180,10 @@ export function newControlState(): ControlState {
       baseMap: true,
       datasetRgb: false,
       datasetVariable: true,
-      datasetPlaces: false,
+      datasetBoundary: false,
+      datasetPlaces: true,
       userPlaces: true,
-      overlay: false,
+      overlay: true,
     },
     datasetLocateMode: "pan",
     placeLocateMode: "panAndZoom",
@@ -197,7 +198,6 @@ export function newControlState(): ControlState {
     },
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
-    showDatasetBoundaries: false,
     selectedBaseMapId: defaultBaseMapId,
     selectedOverlayId: null,
     userBaseMaps: [],
