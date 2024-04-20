@@ -366,16 +366,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 updateSettings={updateSettings}
               />
             </SettingsSubPanel>
-            <SettingsSubPanel
-              label={i18n.get("Show dataset boundaries")}
-              value={getOnOff(settings.showDatasetBoundaries)}
-            >
-              <ToggleSetting
-                propertyName={"showDatasetBoundaries"}
-                settings={settings}
-                updateSettings={updateSettings}
-              />
-            </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("On dataset selection")}>
               <TextField
                 variant="standard"
