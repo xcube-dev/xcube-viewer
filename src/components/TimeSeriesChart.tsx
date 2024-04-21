@@ -262,8 +262,10 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     selectPlace(timeSeries.source.placeId, places, true);
   };
 
-  const handleMouseDown = (chartState: CategoricalChartState) => {
-    const firstTime = chartState && chartState.activeItem;
+  const handleMouseDown = (
+    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  ) => {
+    const firstTime = chartState && chartState.activeLabel;
     if (typeof firstTime === "number") {
       setTimeRangeSelection({ firstTime });
     }
