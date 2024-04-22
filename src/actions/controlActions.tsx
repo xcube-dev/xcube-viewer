@@ -387,12 +387,21 @@ export const SELECT_TIME_RANGE = "SELECT_TIME_RANGE";
 export interface SelectTimeRange {
   type: typeof SELECT_TIME_RANGE;
   selectedTimeRange: TimeRange | null;
+  selectedGroupId?: string;
+  selectedValueRange?: [number, number] | null;
 }
 
 export function selectTimeRange(
   selectedTimeRange: TimeRange | null,
+  selectedGroupId?: string,
+  selectedValueRange?: [number, number] | null,
 ): SelectTimeRange {
-  return { type: SELECT_TIME_RANGE, selectedTimeRange };
+  return {
+    type: SELECT_TIME_RANGE,
+    selectedTimeRange,
+    selectedGroupId,
+    selectedValueRange,
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

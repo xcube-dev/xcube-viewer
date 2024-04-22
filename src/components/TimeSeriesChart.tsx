@@ -23,7 +23,7 @@
  */
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -75,11 +75,20 @@ import {
 } from "@/util/time";
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
 
+// const RECHARTS_DEFAULT_X_AXIS_WIDTH = 60; // px
+// const RECHARTS_DEFAULT_LINE_CHART_MARGIN_TOP = 5; // px
+
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
   CategoricalChartState,
   "activeLabel"
 > & { activeLabel?: number };
+
+interface ChartPayload {
+  name: string;
+  unit: string;
+  value: number;
+}
 
 const INVISIBLE_LINE_COLOR = "#00000000";
 const SUBSTITUTE_LABEL_COLOR = "#FAFFDD";
@@ -147,7 +156,11 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
 
   dataTimeRange?: TimeRange | null;
   selectedTimeRange?: TimeRange | null;
-  selectTimeRange?: (timeRange: TimeRange | null) => void;
+  selectTimeRange?: (
+    timeRange: TimeRange | null,
+    groupId?: string,
+    valueRange?: [number, number] | null,
+  ) => void;
 
   showPointsOnly: boolean;
   showErrorBars: boolean;
@@ -186,6 +199,9 @@ const Y_AXIS_DOMAIN: AxisDomain = ["auto", "auto"];
 interface TimeRangeSelection {
   firstTime?: number;
   secondTime?: number;
+
+  firstPayload?: ChartPayload[];
+  secondPayload?: ChartPayload[];
 }
 
 const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
@@ -212,6 +228,8 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const [timeRangeSelection, setTimeRangeSelection] =
     useState<TimeRangeSelection>({});
 
+  const chartSize = useRef<[number, number]>();
+
   const clearTimeRangeSelection = () => {
     setTimeRangeSelection({});
   };
@@ -229,7 +247,7 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     [time1, time2] = selectedTimeRange;
   }
 
-  const tickFormatter = (value: number | string) => {
+  const formatTimeTick = (value: number | string) => {
     if (typeof value !== "number" || !Number.isFinite(value)) {
       return "";
     }
@@ -263,22 +281,47 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   };
 
   const handleMouseDown = (
-    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+    chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
   ) => {
-    const firstTime = chartState && chartState.activeLabel;
-    if (typeof firstTime === "number") {
-      setTimeRangeSelection({ firstTime });
+    if (chartState) {
+      const firstTime =
+        typeof chartState.activeLabel === "number"
+          ? chartState.activeLabel
+          : undefined;
+      const firstPayload = Array.isArray(chartState.activePayload)
+        ? [...chartState.activePayload]
+        : undefined;
+      if (firstTime !== undefined) {
+        setTimeRangeSelection({ firstTime, firstPayload });
+      }
     }
   };
 
   const handleMouseMove = (
-    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+    chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
+    mouseEvent: React.MouseEvent<HTMLElement>,
   ) => {
-    const firstTime = timeRangeSelection.firstTime;
-    if (firstTime !== undefined) {
-      const secondTime = chartState && chartState.activeLabel;
-      if (typeof secondTime === "number") {
-        setTimeRangeSelection({ ...timeRangeSelection, secondTime });
+    if (chartState) {
+      const firstTime = timeRangeSelection.firstTime;
+      if (firstTime !== undefined) {
+        const secondTime =
+          typeof chartState.activeLabel === "number"
+            ? chartState.activeLabel
+            : undefined;
+        if (mouseEvent.ctrlKey) {
+          // console.log(chartState.chartX, chartState.chartY);
+          // console.log(chartState.activeCoordinate, chartState);
+        }
+        const secondPayload = Array.isArray(chartState.activePayload)
+          ? [...chartState.activePayload]
+          : undefined;
+        if (secondTime !== undefined) {
+          setTimeRangeSelection({
+            ...timeRangeSelection,
+            secondTime,
+            secondPayload,
+          });
+        }
       }
     }
   };
@@ -310,7 +353,10 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   };
 
   const zoomIn = () => {
-    const { firstTime, secondTime } = timeRangeSelection;
+    // console.info("------------------------------------------------------");
+    // console.info("timeRangeSelection:", timeRangeSelection);
+    const { firstTime, secondTime, firstPayload, secondPayload } =
+      timeRangeSelection;
     if (
       firstTime === secondTime ||
       firstTime === undefined ||
@@ -319,20 +365,34 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       clearTimeRangeSelection();
       return;
     }
-    let [minTime, maxTime] = [firstTime, secondTime];
-    if (minTime > maxTime) {
-      [minTime, maxTime] = [maxTime, minTime];
+    let timeRange: [number, number];
+    if (firstTime < secondTime) {
+      timeRange = [firstTime, secondTime];
+    } else {
+      timeRange = [secondTime, firstTime];
+    }
+    let valueRange: [number, number] | undefined = undefined;
+    if (Array.isArray(firstPayload) && Array.isArray(secondPayload)) {
+      const values = [
+        ...firstPayload.map((p) => p.value),
+        ...secondPayload.map((p) => p.value),
+      ];
+      const minValue = Math.min(...values);
+      const maxValue = Math.max(...values);
+      if (minValue < maxValue) {
+        valueRange = [minValue, maxValue];
+      }
     }
     clearTimeRangeSelection();
     if (selectTimeRange) {
-      selectTimeRange([minTime, maxTime]);
+      selectTimeRange(timeRange, timeSeriesGroup.id, valueRange);
     }
   };
 
   const zoomOut = () => {
     clearTimeRangeSelection();
     if (selectTimeRange) {
-      selectTimeRange(dataTimeRange || null);
+      selectTimeRange(dataTimeRange || null, timeSeriesGroup.id, null);
     }
   };
 
@@ -547,7 +607,9 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
   const chartTitle = `${timeSeriesText} (${unitsText})`;
 
-  // 99% per https://github.com/recharts/recharts/issues/172
+  const handleChartResize = (w: number, h: number) =>
+    (chartSize.current = [w, h]);
+
   return (
     <div className={classes.chartContainer}>
       <Box
@@ -566,7 +628,12 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
           {actionButtons}
         </Box>
       </Box>
-      <ResponsiveContainer width="99%" className={classes.responsiveContainer}>
+      <ResponsiveContainer
+        // 99% per https://github.com/recharts/recharts/issues/172
+        width="99%"
+        className={classes.responsiveContainer}
+        onResize={handleChartResize}
+      >
         <LineChart
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
@@ -582,14 +649,18 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
             type="number"
             tickCount={6}
             domain={selectedTimeRange || X_AXIS_DOMAIN}
-            tickFormatter={tickFormatter}
+            tickFormatter={formatTimeTick}
             stroke={labelTextColor}
             allowDuplicatedCategory={false}
           />
           <YAxis
             dataKey={commonValueDataKey || "mean"}
             type="number"
-            domain={Y_AXIS_DOMAIN}
+            tickCount={5}
+            domain={timeSeriesGroup.variableRange || Y_AXIS_DOMAIN}
+            // tickFormatter={(value, index) => {
+            //   return `${Math.floor(value + 0.5)}/${index}`;
+            // }}
             stroke={labelTextColor}
           />
           <CartesianGrid strokeDasharray="3 3" />

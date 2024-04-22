@@ -69,7 +69,11 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
 
   dataTimeRange?: TimeRange | null;
   selectedTimeRange?: TimeRange | null;
-  selectTimeRange?: (timeRange: TimeRange | null) => void;
+  selectTimeRange?: (
+    timeRange: TimeRange | null,
+    groupId?: string,
+    valueRange?: [number, number] | null,
+  ) => void;
 
   removeTimeSeries?: (groupId: string, index: number) => void;
   removeTimeSeriesGroup?: (groupId: string) => void;

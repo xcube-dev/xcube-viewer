@@ -75,6 +75,7 @@ export interface TimeSeries {
 export interface TimeSeriesGroup {
   id: string;
   variableUnits?: string;
+  variableRange?: [number, number];
   timeSeriesArray: TimeSeries[];
 }
 
