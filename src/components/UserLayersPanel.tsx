@@ -27,6 +27,7 @@ import Paper from "@mui/material/Paper";
 import { Theme } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { darken, lighten } from "@mui/material/styles";
+import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -38,10 +39,11 @@ import CopyIcon from "@mui/icons-material/ContentCopy";
 import IconButton from "@mui/material/IconButton";
 import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 
-// import i18n from "@/i18n";
+import i18n from "@/i18n";
 import { newId } from "@/util/id";
 import { LayerDefinition } from "@/model/layerDefinition";
-import UserLayerEditor from "@/components/UserLayerEditor";
+import UserLayerEditorWms from "./UserLayerEditorWms";
+import UserLayerEditorXyz from "./UserLayerEditorXyz";
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -83,7 +85,10 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   }
 
   const handleUserLayerEdit = (userLayer: LayerDefinition) => {
-    setEditedLayer({ editId: userLayer.id, editMode: "edit" });
+    setEditedLayer({
+      editId: userLayer.id,
+      editMode: "edit",
+    });
   };
 
   const handleUserLayerCopy = (userLayer: LayerDefinition) => {
@@ -113,14 +118,29 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     ]);
   };
 
-  const handleUserLayerAdd = () => {
+  const addUserLayer = (layerType: "xyz" | "wms") => {
     const id = newId("user-layer-");
     setUserLayers([
       ...userLayers,
       // TODO: I18N
-      { id, group: "User", name: "", url: "", attribution: "" },
+      {
+        id,
+        group: "User",
+        name: "",
+        url: "",
+        attributions: "",
+        wms: layerType === "wms" ? { layers: "" } : undefined,
+      },
     ]);
     setEditedLayer({ editId: id, editMode: "add" });
+  };
+
+  const handleAddUserLayerXyz = () => {
+    addUserLayer("xyz");
+  };
+
+  const handleAddUserLayerWms = () => {
+    addUserLayer("wms");
   };
 
   const handleUserLayerChange = (userLayer: LayerDefinition) => {
@@ -157,8 +177,14 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
         {userLayers.map((userLayer) => {
           const selected = selectedId === userLayer.id;
           if (editedLayer && editedLayer.editId === userLayer.id) {
-            return (
-              <UserLayerEditor
+            return userLayer.wms ? (
+              <UserLayerEditorWms
+                userLayer={userLayer}
+                onChange={handleUserLayerChange}
+                onCancel={handleEditorCanceled}
+              />
+            ) : (
+              <UserLayerEditorXyz
                 userLayer={userLayer}
                 onChange={handleUserLayerChange}
                 onCancel={handleEditorCanceled}
@@ -204,13 +230,22 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
         {!editing && (
           <ListItem sx={{ minHeight: "3em" }}>
             <ListItemSecondaryAction>
-              <IconButton
-                onClick={handleUserLayerAdd}
+              <Button
+                onClick={handleAddUserLayerWms}
                 size="small"
+                startIcon={<AddIcon />}
                 color="primary"
               >
-                <AddIcon />
-              </IconButton>
+                {i18n.get("Add WMS")}
+              </Button>
+              <Button
+                onClick={handleAddUserLayerXyz}
+                size="small"
+                startIcon={<AddIcon />}
+                color="primary"
+              >
+                {i18n.get("Add XYZ")}
+              </Button>
             </ListItemSecondaryAction>
           </ListItem>
         )}

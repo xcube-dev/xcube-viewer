@@ -31,13 +31,13 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 import { LayerDefinition } from "@/model/layerDefinition";
 
-interface UserLayerEditorProps {
+interface UserLayerEditorXyzProps {
   userLayer: LayerDefinition;
   onChange: (userLayer: LayerDefinition) => void;
   onCancel: () => void;
 }
 
-const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
+const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
   userLayer,
   onChange,
   onCancel,
@@ -45,7 +45,7 @@ const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
   const [name, setName] = React.useState<string>(userLayer.name);
   const [url, setUrl] = React.useState<string>(userLayer.url);
   const [attribution, setAttribution] = React.useState<string>(
-    userLayer.attribution || "",
+    userLayer.attributions || "",
   );
 
   const _canCommit = (name: string, url: string) => {
@@ -67,7 +67,7 @@ const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
       group: "User",
       name: name.trim(),
       url: url.trim(),
-      attribution: attribution.trim(),
+      attributions: attribution.trim(),
     });
 
   return (
@@ -79,6 +79,15 @@ const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
         padding: "5px 15px",
       }}
     >
+      <TextField
+        required
+        label="URL"
+        variant="standard"
+        size="small"
+        value={url}
+        fullWidth
+        onChange={(e) => setUrl(e.currentTarget.value)}
+      />
       <Box sx={{ display: "flex", gap: 1 }}>
         <TextField
           required
@@ -98,15 +107,6 @@ const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
           onChange={(e) => setAttribution(e.currentTarget.value)}
         />
       </Box>
-      <TextField
-        required
-        label="URL"
-        variant="standard"
-        size="small"
-        value={url}
-        fullWidth
-        onChange={(e) => setUrl(e.currentTarget.value)}
-      />
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <IconButton
           onClick={handleUserLayerChange}
@@ -123,4 +123,4 @@ const UserLayerEditor: React.FC<UserLayerEditorProps> = ({
   );
 };
 
-export default UserLayerEditor;
+export default UserLayerEditorXyz;

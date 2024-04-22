@@ -5,34 +5,39 @@ export interface LayerDefinition {
   name: string;
   group: string;
   url: string;
-  attribution?: string;
+  attributions?: string;
+  wms?: {
+    layers: string;
+    styles?: string;
+    format?: string;
+  };
 }
 
-export function getLayerLabel(layer: LayerDefinition | null): string {
-  return layer ? `${layer.group} / ${layer.name}` : "-";
+export function getLayerLabel(layerDef: LayerDefinition | null): string {
+  return layerDef ? `${layerDef.group} / ${layerDef.name}` : "-";
 }
 
 export function findLayer(
-  layers: LayerDefinition[],
+  layerDefs: LayerDefinition[],
   layerId: string | null,
 ): LayerDefinition | null {
-  return layers.find((layer) => layer.id === layerId) || null;
+  return layerDefs.find((layer) => layer.id === layerId) || null;
 }
 
 function getDefaultLayers(key: "datasets" | "overlays" = "datasets") {
-  const layers: LayerDefinition[] = [];
+  const layerDefs: LayerDefinition[] = [];
   maps.forEach((mapGroup) => {
     mapGroup[key].forEach((mapSource) => {
-      layers.push({
+      layerDefs.push({
         id: `${mapGroup.name}-${mapSource.name}`,
         group: mapGroup.name,
-        attribution: mapGroup.link,
+        attributions: mapGroup.link,
         name: mapSource.name,
         url: mapSource.endpoint,
       });
     });
   });
-  return layers;
+  return layerDefs;
 }
 
 export const defaultBaseMapLayers: LayerDefinition[] =

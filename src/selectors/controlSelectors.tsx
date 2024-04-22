@@ -25,11 +25,12 @@
 import { JSX } from "react";
 import { createSelector } from "reselect";
 import memoize from "fast-memoize";
-import { Tile as OlTile, ImageTile as OlImageTile } from "ol";
+import { ImageTile as OlImageTile, Tile as OlTile } from "ol";
 import { default as OlMap } from "ol/Map";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { default as OlVectorSource } from "ol/source/Vector";
 import { default as OlXYZSource } from "ol/source/XYZ";
+import { default as OlTileWMSSource } from "ol/source/TileWMS";
 import { default as OlCircle } from "ol/style/Circle";
 import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
@@ -81,9 +82,8 @@ import { ColorBar, ColorBars, parseColorBar } from "@/model/colorBar";
 import {
   defaultBaseMapLayers,
   defaultOverlayLayers,
-  // defaultBaseMapId,
-  LayerDefinition,
   findLayer,
+  LayerDefinition,
 } from "@/model/layerDefinition";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
@@ -920,8 +920,8 @@ export const overlaysSelector = createSelector(
   },
 );
 
-const getSimpleXYZLayer = (
-  layers: LayerDefinition[],
+const getLayerFromLayerDefinition = (
+  layerDefs: LayerDefinition[],
   layerId: string | null,
   showLayer: boolean,
   zIndex: number,
@@ -929,18 +929,39 @@ const getSimpleXYZLayer = (
   if (!showLayer || !layerId) {
     return null;
   }
-  const layer = findLayer(layers, layerId);
-  if (!layer) {
+  const layerDef = findLayer(layerDefs, layerId);
+  if (!layerDef) {
     return null;
   }
-  const access = getTileAccess(layer.group);
-  const source = new OlXYZSource({
-    url: layer.url + (access ? `?${access.param}=${access.token}` : ""),
-    attributions: layer.attribution
-      ? [`&copy; <a href=&quot;${layer.attribution}&quot;>${layer.group}</a>`]
-      : [],
-  });
-  return <Tile id={layer.id} source={source} zIndex={zIndex} />;
+  const attributions = (
+    layerDef.attributions ? layerDef.attributions.split(":") : []
+  ).map((a) =>
+    a.startsWith("http://") || a.startsWith("https://")
+      ? `&copy; <a href=&quot;${layerDef.attributions}&quot;>${layerDef.group}</a>`
+      : a,
+  );
+  let source: OlTileWMSSource | OlXYZSource;
+  if (layerDef.wms) {
+    const { layers, styles, format } = layerDef.wms;
+    source = new OlTileWMSSource({
+      url: layerDef.url,
+      params: {
+        LAYERS: layers,
+        STYLES: styles ? styles : "",
+        FORMAT: format ? format : "image/png",
+      },
+      attributions,
+      attributionsCollapsible: true,
+    });
+  } else {
+    const access = getTileAccess(layerDef.group);
+    source = new OlXYZSource({
+      url: layerDef.url + (access ? `?${access.param}=${access.token}` : ""),
+      attributions,
+      attributionsCollapsible: true,
+    });
+  }
+  return <Tile id={layerDef.id} source={source} zIndex={zIndex} />;
 };
 
 export const baseMapLayerSelector = createSelector(
@@ -948,7 +969,7 @@ export const baseMapLayerSelector = createSelector(
   selectedBaseMapIdSelector,
   showBaseMapLayerSelector,
   () => 0,
-  getSimpleXYZLayer,
+  getLayerFromLayerDefinition,
 );
 
 export const overlayLayerSelector = createSelector(
@@ -956,5 +977,5 @@ export const overlayLayerSelector = createSelector(
   selectedOverlayIdSelector,
   showOverlayLayerSelector,
   () => 20,
-  getSimpleXYZLayer,
+  getLayerFromLayerDefinition,
 );
