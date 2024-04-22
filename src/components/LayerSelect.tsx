@@ -55,8 +55,6 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
   const { openDialog, ...otherProps } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<Element | null>(null);
 
-  console.log("_LayerSelect", props);
-
   const handleUserOverlays = () => {
     setMenuAnchor(null);
     openDialog("userOverlays");
