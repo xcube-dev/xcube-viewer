@@ -27,7 +27,6 @@ import { connect } from "react-redux";
 import { AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
 import {
-  flyToSelectedObject,
   openDialog,
   showInfoCard,
   showVolumeCard,
@@ -52,7 +51,6 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   showVolumeCard,
   showInfoCard,
-  flyToSelectedObject,
   openDialog,
   updateResources,
 };

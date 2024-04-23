@@ -38,8 +38,9 @@ import Button from "@mui/material/Button";
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import {
-  ControlState,
   TIME_ANIMATION_INTERVALS,
+  ControlState,
+  LocateMode,
   TimeAnimationInterval,
 } from "@/states/controlState";
 import { MapGroup, maps, MapSource } from "@/util/maps";
@@ -65,6 +66,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 10,
   },
 }));
+
+const LOCATE_MODE_LABELS: [LocateMode, string][] = [
+  ["doNothing", "do nothing"],
+  ["pan", "pan"],
+  ["panAndZoom", "pan and zoom"],
+];
 
 interface SettingsDialogProps {
   open: boolean;
@@ -128,6 +135,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       timeAnimationInterval: parseInt(
         event.target.value,
       ) as TimeAnimationInterval,
+    });
+  }
+
+  function handleDatasetLocateModeChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      datasetLocateMode: event.target.value as LocateMode,
+    });
+  }
+
+  function handlePlaceLocateModeChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      placeLocateMode: event.target.value as LocateMode,
     });
   }
 
@@ -338,6 +361,38 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 settings={settings}
                 updateSettings={updateSettings}
               />
+            </SettingsSubPanel>
+            <SettingsSubPanel label={i18n.get("On dataset selection")}>
+              <TextField
+                variant="standard"
+                select
+                className={classes.textField}
+                value={settings.datasetLocateMode}
+                onChange={handleDatasetLocateModeChange}
+                margin="normal"
+              >
+                {LOCATE_MODE_LABELS.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </SettingsSubPanel>
+            <SettingsSubPanel label={i18n.get("On place selection")}>
+              <TextField
+                variant="standard"
+                select
+                className={classes.textField}
+                value={settings.placeLocateMode}
+                onChange={handlePlaceLocateModeChange}
+                margin="normal"
+              >
+                {LOCATE_MODE_LABELS.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </SettingsSubPanel>
           </SettingsPanel>
 

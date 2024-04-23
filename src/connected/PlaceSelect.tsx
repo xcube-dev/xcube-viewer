@@ -27,7 +27,11 @@ import { connect } from "react-redux";
 import _PlaceSelect from "@/components/PlaceSelect";
 import { AppState } from "@/states/appState";
 import { renameUserPlace, removeUserPlace } from "@/actions/dataActions";
-import { selectPlace, openDialog } from "@/actions/controlActions";
+import {
+  selectPlace,
+  locateSelectedPlaceInMap,
+  openDialog,
+} from "@/actions/controlActions";
 import {
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupPlaceLabelsSelector,
@@ -48,6 +52,7 @@ const mapDispatchToProps = {
   selectPlace,
   renameUserPlace,
   removeUserPlace,
+  locateSelectedPlace: locateSelectedPlaceInMap,
   openDialog,
 };
 

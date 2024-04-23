@@ -32,6 +32,7 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 import i18n from "@/i18n";
 import { Dataset } from "@/model/dataset";
@@ -70,6 +71,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
     places: Place[],
   ) => void;
   openDialog: (dialogId: string) => void;
+  locateSelectedPlace: () => void;
 }
 
 const _PlaceSelect: React.FC<PlaceSelectProps> = ({
@@ -81,6 +83,7 @@ const _PlaceSelect: React.FC<PlaceSelectProps> = ({
   renameUserPlace,
   removeUserPlace,
   places,
+  locateSelectedPlace,
 }) => {
   const [editMode, setEditMode] = React.useState(false);
 
@@ -153,6 +156,12 @@ const _PlaceSelect: React.FC<PlaceSelectProps> = ({
         onClick={handleRemoveButtonClick}
         tooltipText={i18n.get("Remove place")}
         icon={<RemoveCircleOutlineIcon />}
+      />,
+      <ToolButton
+        key="locatePlace"
+        onClick={locateSelectedPlace}
+        tooltipText={i18n.get("Locate place in map")}
+        icon={<TravelExploreIcon />}
       />,
     ];
   }

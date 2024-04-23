@@ -29,12 +29,14 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 
 import i18n from "@/i18n";
 import { Dataset } from "@/model/dataset";
 import { WithLocale } from "@/util/lang";
+import ToolButton from "@/components/ToolButton";
 import ControlBarItem from "./ControlBarItem";
 
 const styles = (theme: Theme) =>
@@ -55,6 +57,7 @@ interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
     datasets: Dataset[],
     showInMap: boolean,
   ) => void;
+  locateSelectedDataset: () => void;
 }
 
 const _DatasetSelect: React.FC<DatasetSelectProps> = ({
@@ -62,6 +65,7 @@ const _DatasetSelect: React.FC<DatasetSelectProps> = ({
   selectedDatasetId,
   datasets,
   selectDataset,
+  locateSelectedDataset,
 }) => {
   const handleDatasetChange = (event: SelectChangeEvent) => {
     const datasetId = event.target.value || null;
@@ -99,7 +103,21 @@ const _DatasetSelect: React.FC<DatasetSelectProps> = ({
     </Select>
   );
 
-  return <ControlBarItem label={datasetSelectLabel} control={datasetSelect} />;
+  const locateDatasetButton = (
+    <ToolButton
+      onClick={locateSelectedDataset}
+      tooltipText={i18n.get("Locate dataset in map")}
+      icon={<TravelExploreIcon />}
+    />
+  );
+
+  return (
+    <ControlBarItem
+      label={datasetSelectLabel}
+      control={datasetSelect}
+      actions={locateDatasetButton}
+    />
+  );
 };
 
 const DatasetSelect = withStyles(styles)(_DatasetSelect);

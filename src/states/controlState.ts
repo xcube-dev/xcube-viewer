@@ -60,6 +60,8 @@ export interface InfoCardElementStates {
   [key: string]: InfoCardElementState;
 }
 
+export type LocateMode = "doNothing" | "pan" | "panAndZoom";
+
 export type UserPlacesFormatName = "geojson" | "csv" | "wkt";
 
 export interface UserPlacesFormatOptions {
@@ -116,6 +118,8 @@ export interface ControlState {
   showDatasetBoundaries: boolean;
   baseMapUrl: string;
   showRgbLayer: boolean;
+  datasetLocateMode: LocateMode;
+  placeLocateMode: LocateMode;
   exportTimeSeries: boolean;
   exportPlaces: boolean;
   exportTimeSeriesSeparator: string;
@@ -158,6 +162,8 @@ export function newControlState(): ControlState {
     mapInteraction: "Point",
     lastMapInteraction: "Point",
     showRgbLayer: false,
+    datasetLocateMode: "pan",
+    placeLocateMode: "panAndZoom",
     volumeCardOpen: false,
     volumeRenderMode: "mip",
     volumeStates: {},
