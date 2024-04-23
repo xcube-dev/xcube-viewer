@@ -287,11 +287,6 @@ const _Viewer: React.FC<ViewerProps> = ({
     );
   }
 
-  // TODO (forman): fix me! this is a workaround to avoid that rgbLayer is never visible.
-  if (rgbLayer !== null) {
-    variableLayer = rgbLayer;
-  }
-
   const handleDropFiles = (files: File[]) => {
     if (importUserPlacesFromText) {
       files.forEach((file) => {
@@ -319,6 +314,7 @@ const _Viewer: React.FC<ViewerProps> = ({
         <View id="view" projection={mapProjection} />
         <Layers>
           {baseMapLayer}
+          {rgbLayer}
           {variableLayer}
           {datasetBoundaryLayer}
           {
