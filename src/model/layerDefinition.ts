@@ -1,38 +1,41 @@
 import { maps } from "@/util/maps";
 
+export const USER_GROUP_NAME = "User";
+
 export interface LayerDefinition {
   id: string;
-  name: string;
+  title: string;
   group: string;
   url: string;
   attribution?: string;
+  wms?: { layerName: string; styleName?: string };
 }
 
-export function getLayerLabel(layer: LayerDefinition | null): string {
-  return layer ? `${layer.group} / ${layer.name}` : "-";
+export function getLayerLabel(layerDef: LayerDefinition | null): string {
+  return layerDef ? `${layerDef.group}: ${layerDef.title}` : "-";
 }
 
 export function findLayer(
-  layers: LayerDefinition[],
+  layerDefs: LayerDefinition[],
   layerId: string | null,
 ): LayerDefinition | null {
-  return layers.find((layer) => layer.id === layerId) || null;
+  return layerDefs.find((layer) => layer.id === layerId) || null;
 }
 
 function getDefaultLayers(key: "datasets" | "overlays" = "datasets") {
-  const layers: LayerDefinition[] = [];
+  const layerDefs: LayerDefinition[] = [];
   maps.forEach((mapGroup) => {
     mapGroup[key].forEach((mapSource) => {
-      layers.push({
+      layerDefs.push({
         id: `${mapGroup.name}-${mapSource.name}`,
         group: mapGroup.name,
         attribution: mapGroup.link,
-        name: mapSource.name,
+        title: mapSource.name,
         url: mapSource.endpoint,
       });
     });
   });
-  return layers;
+  return layerDefs;
 }
 
 export const defaultBaseMapLayers: LayerDefinition[] =
