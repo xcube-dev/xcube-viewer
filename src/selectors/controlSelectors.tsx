@@ -25,11 +25,12 @@
 import { JSX } from "react";
 import { createSelector } from "reselect";
 import memoize from "fast-memoize";
-import { Tile as OlTile, ImageTile as OlImageTile } from "ol";
+import { ImageTile as OlImageTile, Tile as OlTile } from "ol";
 import { default as OlMap } from "ol/Map";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 import { default as OlVectorSource } from "ol/source/Vector";
 import { default as OlXYZSource } from "ol/source/XYZ";
+import { default as OlTileWMSSource } from "ol/source/TileWMS";
 import { default as OlCircle } from "ol/style/Circle";
 import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
@@ -67,7 +68,6 @@ import { Variable } from "@/model/variable";
 
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
-import { MapGroup, maps, MapSource } from "@/util/maps";
 import {
   colorBarsSelector,
   datasetsSelector,
@@ -79,6 +79,12 @@ import { makeRequestUrl } from "@/api/callApi";
 import { MAP_OBJECTS, ViewMode } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import { ColorBar, ColorBars, parseColorBar } from "@/model/colorBar";
+import {
+  defaultBaseMapLayers,
+  defaultOverlayLayers,
+  findLayer,
+  LayerDefinition,
+} from "@/model/layerDefinition";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -98,18 +104,36 @@ export const timeAnimationActiveSelector = (state: AppState) =>
   state.controlState.timeAnimationActive;
 export const imageSmoothingSelector = (state: AppState) =>
   state.controlState.imageSmoothingEnabled;
-export const baseMapUrlSelector = (state: AppState) =>
-  state.controlState.baseMapUrl;
-export const showRgbLayerSelector = (state: AppState) =>
-  state.controlState.showRgbLayer;
+export const userBaseMapsSelector = (state: AppState) =>
+  state.controlState.userBaseMaps;
+export const userOverlaysSelector = (state: AppState) =>
+  state.controlState.userOverlays;
+export const selectedBaseMapIdSelector = (state: AppState) =>
+  state.controlState.selectedBaseMapId;
+export const selectedOverlayIdSelector = (state: AppState) =>
+  state.controlState.selectedOverlayId;
+export const showBaseMapLayerSelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.baseMap;
+export const showDatasetBoundaryLayerSelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.datasetBoundary;
+export const showDatasetVariableLayerSelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.datasetVariable;
+export const showDatasetRgbLayerSelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.datasetRgb;
+export const showDatasetPlacesLayerSelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.datasetPlaces;
+export const showUserPlacesLayerSelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.userPlaces;
+export const showOverlayLayerSelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.overlay;
+export const layerVisibilitiesSelector = (state: AppState) =>
+  state.controlState.layerVisibilities;
 export const infoCardElementStatesSelector = (state: AppState) =>
   state.controlState.infoCardElementStates;
 export const mapProjectionSelector = (state: AppState) =>
   state.controlState.mapProjection;
 export const timeChunkSizeSelector = (state: AppState) =>
   state.controlState.timeChunkSize;
-export const showDatasetBoundariesSelector = (state: AppState) =>
-  state.controlState.showDatasetBoundaries;
 export const userPlacesFormatNameSelector = (state: AppState) =>
   state.controlState.userPlacesFormatName;
 export const userPlacesFormatOptionsCsvSelector = (state: AppState) =>
@@ -229,6 +253,7 @@ function selectPlaceGroups(
 export const userPlaceGroupsVisibilitySelector = createSelector(
   userPlaceGroupsSelector,
   selectedPlaceGroupIdsSelector,
+  showUserPlacesLayerSelector,
   (
     userPlaceGroups: PlaceGroup[],
     selectedPlaceGroupIds: string[] | null,
@@ -589,13 +614,13 @@ function getTileLayer(
 export const selectedDatasetBoundaryLayerSelector = createSelector(
   selectedDatasetSelector,
   mapProjectionSelector,
-  showDatasetBoundariesSelector,
+  showDatasetBoundaryLayerSelector,
   (
     dataset: Dataset | null,
     mapProjection: string,
-    showDatasetBoundaries: boolean,
+    showDatasetBoundary: boolean,
   ): MapElement | null => {
-    if (!dataset || !showDatasetBoundaries) {
+    if (!dataset || !showDatasetBoundary) {
       return null;
     }
 
@@ -666,6 +691,7 @@ export const selectedServerSelector = createSelector(
 export const selectedDatasetVariableLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetIdSelector,
+  showDatasetVariableLayerSelector,
   selectedDatasetVariableSelector,
   selectedDatasetTimeDimensionSelector,
   selectedTimeSelector,
@@ -679,6 +705,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   (
     server: ApiServerConfig,
     datasetId,
+    showDatasetVariable: boolean,
     variable: Variable | null,
     timeDimension: TimeDimension | null,
     time: Time | null,
@@ -690,7 +717,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     attributions: string[] | null,
     imageSmoothing: boolean,
   ): MapElement => {
-    if (!variable) {
+    if (!showDatasetVariable || !variable) {
       return null;
     }
     const queryParams: Array<[string, string]> = [
@@ -721,7 +748,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
 export const selectedDatasetRgbLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetIdSelector,
-  showRgbLayerSelector,
+  showDatasetRgbLayerSelector,
   selectedDatasetRgbSchemaSelector,
   selectedDatasetTimeDimensionSelector,
   selectedTimeSelector,
@@ -814,8 +841,13 @@ export function getDefaultPlaceGroupStyle() {
 export const selectedDatasetPlaceGroupLayersSelector = createSelector(
   selectedDatasetSelectedPlaceGroupsSelector,
   mapProjectionSelector,
-  (placeGroups: PlaceGroup[], mapProjection: string): MapElement => {
-    if (placeGroups.length === 0) {
+  showDatasetPlacesLayerSelector,
+  (
+    placeGroups: PlaceGroup[],
+    mapProjection: string,
+    showDatasetPlaces: boolean,
+  ): MapElement => {
+    if (!showDatasetPlaces || placeGroups.length === 0) {
       return null;
     }
     const layers: MapElement[] = [];
@@ -874,46 +906,75 @@ export const activityMessagesSelector = createSelector(
   },
 );
 
-export const baseMapLayerSelector = createSelector(
-  baseMapUrlSelector,
-  (baseMapUrl: string): JSX.Element | null => {
-    const map = findMap(baseMapUrl);
-    if (map) {
-      const access = getTileAccess(map.group.name);
-      const source = new OlXYZSource({
-        url:
-          map.dataset.endpoint +
-          (access ? `?${access.param}=${access.token}` : ""),
-        attributions: [
-          `&copy; <a href=&quot;${map.group.link}&quot;>${map.group.name}</a>`,
-        ],
-      });
-      return (
-        <Tile
-          id={map.group.name + "-" + map.dataset.name}
-          source={source}
-          zIndex={0}
-        />
-      );
-    }
-    if (baseMapUrl) {
-      const source = new OlXYZSource({ url: baseMapUrl });
-      return <Tile id={baseMapUrl} source={source} zIndex={0} />;
-    }
-    return null;
+export const baseMapsSelector = createSelector(
+  userBaseMapsSelector,
+  (userBaseMaps): LayerDefinition[] => {
+    return [...userBaseMaps, ...defaultBaseMapLayers];
   },
 );
 
-function findMap(
-  endpoint: string,
-): { group: MapGroup; dataset: MapSource } | null {
-  for (const group of maps) {
-    const dataset = group.datasets.find(
-      (dataset) => dataset.endpoint === endpoint,
-    );
-    if (dataset) {
-      return { group, dataset };
-    }
+export const overlaysSelector = createSelector(
+  userOverlaysSelector,
+  (userOverlays): LayerDefinition[] => {
+    return [...userOverlays, ...defaultOverlayLayers];
+  },
+);
+
+const getLayerFromLayerDefinition = (
+  layerDefs: LayerDefinition[],
+  layerId: string | null,
+  showLayer: boolean,
+  zIndex: number,
+): JSX.Element | null => {
+  if (!showLayer || !layerId) {
+    return null;
   }
-  return null;
-}
+  const layerDef = findLayer(layerDefs, layerId);
+  if (!layerDef) {
+    return null;
+  }
+  let attributions = layerDef.attribution;
+  if (
+    attributions &&
+    (attributions.startsWith("http://") || attributions.startsWith("https://"))
+  ) {
+    attributions = `&copy; <a href=&quot;${layerDef.attribution}&quot;>${layerDef.group}</a>`;
+  }
+  let source: OlTileWMSSource | OlXYZSource;
+  if (layerDef.wms) {
+    const { layerName, styleName } = layerDef.wms;
+    source = new OlTileWMSSource({
+      url: layerDef.url,
+      params: {
+        ...(styleName ? { STYLES: styleName } : {}),
+        LAYERS: layerName,
+      },
+      attributions,
+      attributionsCollapsible: true,
+    });
+  } else {
+    const access = getTileAccess(layerDef.group);
+    source = new OlXYZSource({
+      url: layerDef.url + (access ? `?${access.param}=${access.token}` : ""),
+      attributions,
+      attributionsCollapsible: true,
+    });
+  }
+  return <Tile id={layerDef.id} source={source} zIndex={zIndex} />;
+};
+
+export const baseMapLayerSelector = createSelector(
+  baseMapsSelector,
+  selectedBaseMapIdSelector,
+  showBaseMapLayerSelector,
+  () => 0,
+  getLayerFromLayerDefinition,
+);
+
+export const overlayLayerSelector = createSelector(
+  overlaysSelector,
+  selectedOverlayIdSelector,
+  showOverlayLayerSelector,
+  () => 20,
+  getLayerFromLayerDefinition,
+);

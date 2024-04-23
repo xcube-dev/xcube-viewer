@@ -239,7 +239,6 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const handleClick = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed,
   ) => {
-    console.info(chartState);
     if (
       chartState &&
       selectTime &&
@@ -262,8 +261,10 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     selectPlace(timeSeries.source.placeId, places, true);
   };
 
-  const handleMouseDown = (chartState: CategoricalChartState) => {
-    const firstTime = chartState && chartState.activeItem;
+  const handleMouseDown = (
+    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  ) => {
+    const firstTime = chartState && chartState.activeLabel;
     if (typeof firstTime === "number") {
       setTimeRangeSelection({ firstTime });
     }
@@ -634,7 +635,6 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({
   }
   const items = payload.map(
     (p: TooltipPayload<number, string>, index: number) => {
-      //console.log("payload:", p);
       const { name, value, unit, dataKey } = p;
       let color = p.color;
       if (typeof value !== "number") {
@@ -758,8 +758,6 @@ interface CustomLegendProps extends WithStyles<typeof styles> {
 const _CustomLegendContent: React.FC<CustomLegendProps & LegendProps> = (
   props,
 ) => {
-  // console.log(props)
-
   const { payload, removeTimeSeries, classes } = props;
   if (!payload || payload.length === 0) {
     return null;

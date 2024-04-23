@@ -28,6 +28,7 @@ import { default as OlBaseObject } from "ol/Object";
 
 import { Config } from "@/config";
 import { Time, TimeRange } from "@/model/timeSeries";
+import { defaultBaseMapId, LayerDefinition } from "@/model/layerDefinition.ts";
 import { loadUserSettings } from "./userSettings";
 import { DEFAULT_MAP_CRS } from "@/model/proj";
 import { CsvOptions, defaultCsvOptions } from "@/model/user-place/csv";
@@ -70,6 +71,18 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
+export interface LayerVisibilities {
+  baseMap?: boolean;
+  datasetRgb?: boolean;
+  datasetVariable?: boolean;
+  datasetBoundary?: boolean;
+  datasetPlaces?: boolean;
+  userPlaces?: boolean;
+  overlay?: boolean;
+}
+
+// TODO: check if really unused
+// noinspection JSUnusedGlobalSymbols
 export interface ExportSettings {
   format: "GeoJSON" | "CSV";
   multiFile: boolean;
@@ -115,9 +128,11 @@ export interface ControlState {
   infoCardElementStates: InfoCardElementStates;
   mapProjection: string;
   imageSmoothingEnabled: boolean;
-  showDatasetBoundaries: boolean;
-  baseMapUrl: string;
-  showRgbLayer: boolean;
+  layerVisibilities: LayerVisibilities;
+  selectedBaseMapId: string | null;
+  selectedOverlayId: string | null;
+  userBaseMaps: LayerDefinition[];
+  userOverlays: LayerDefinition[];
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
   exportTimeSeries: boolean;
@@ -161,7 +176,15 @@ export function newControlState(): ControlState {
     privacyNoticeAccepted: false,
     mapInteraction: "Point",
     lastMapInteraction: "Point",
-    showRgbLayer: false,
+    layerVisibilities: {
+      baseMap: true,
+      datasetRgb: false,
+      datasetVariable: true,
+      datasetBoundary: false,
+      datasetPlaces: true,
+      userPlaces: true,
+      overlay: true,
+    },
     datasetLocateMode: "pan",
     placeLocateMode: "panAndZoom",
     volumeCardOpen: false,
@@ -175,8 +198,10 @@ export function newControlState(): ControlState {
     },
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
-    showDatasetBoundaries: false,
-    baseMapUrl: branding.baseMapUrl || "http://a.tile.osm.org/{z}/{x}/{y}.png",
+    selectedBaseMapId: defaultBaseMapId,
+    selectedOverlayId: null,
+    userBaseMaps: [],
+    userOverlays: [],
     exportTimeSeries: true,
     exportTimeSeriesSeparator: "TAB",
     exportPlaces: true,

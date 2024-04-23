@@ -68,9 +68,11 @@ export function storeUserSettings(settings: ControlState) {
       storage.setObjectProperty("infoCardElementStates", settings);
       storage.setPrimitiveProperty("imageSmoothingEnabled", settings);
       storage.setPrimitiveProperty("mapProjection", settings);
-      storage.setPrimitiveProperty("baseMapUrl", settings);
+      storage.setPrimitiveProperty("selectedBaseMapId", settings);
+      storage.setPrimitiveProperty("selectedOverlayId", settings);
+      storage.setArrayProperty("userBaseMaps", settings);
+      storage.setArrayProperty("userOverlays", settings);
       storage.setPrimitiveProperty("userDrawnPlaceGroupName", settings);
-      storage.setPrimitiveProperty("showDatasetBoundaries", settings);
       storage.setPrimitiveProperty("datasetLocateMode", settings);
       storage.setPrimitiveProperty("placeLocateMode", settings);
       storage.setPrimitiveProperty("exportTimeSeries", settings);
@@ -141,14 +143,12 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getStringProperty("mapProjection", settings, defaultSettings);
-      storage.getStringProperty("baseMapUrl", settings, defaultSettings);
+      storage.getStringProperty("selectedBaseMapId", settings, defaultSettings);
+      storage.getStringProperty("selectedOverlayId", settings, defaultSettings);
+      storage.getArrayProperty("userBaseMaps", settings, defaultSettings);
+      storage.getArrayProperty("userOverlays", settings, defaultSettings);
       storage.getStringProperty(
         "userDrawnPlaceGroupName",
-        settings,
-        defaultSettings,
-      );
-      storage.getBooleanProperty(
-        "showDatasetBoundaries",
         settings,
         defaultSettings,
       );

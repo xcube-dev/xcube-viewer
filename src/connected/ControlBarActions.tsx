@@ -28,11 +28,13 @@ import { AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
 import {
   openDialog,
+  setLayerVisibility,
   showInfoCard,
   showVolumeCard,
 } from "@/actions/controlActions";
 import { Config } from "@/config";
 import { updateResources } from "@/actions/dataActions";
+import { layerVisibilitiesSelector } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -45,6 +47,7 @@ const mapStateToProps = (state: AppState) => {
     timeSeriesGroups: state.dataState.timeSeriesGroups,
     compact: Config.instance.branding.compact,
     allowRefresh: Config.instance.branding.allowRefresh,
+    layerVisibilities: layerVisibilitiesSelector(state),
   };
 };
 
@@ -53,6 +56,7 @@ const mapDispatchToProps = {
   showInfoCard,
   openDialog,
   updateResources,
+  setLayerVisibility,
 };
 
 const ControlBarActions = connect(

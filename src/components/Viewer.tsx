@@ -102,6 +102,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   mapInteraction: MapInteraction;
   mapProjection: string;
   baseMapLayer?: MapElement;
+  overlayLayer?: MapElement;
   rgbLayer?: MapElement;
   variableLayer?: MapElement;
   datasetBoundaryLayer?: MapElement;
@@ -117,6 +118,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   ) => void;
   userPlaceGroups: PlaceGroup[];
   userPlaceGroupsVisibility: { [pgId: string]: boolean };
+  showUserPlaces: boolean;
   selectPlace?: (
     placeId: string | null,
     places: Place[],
@@ -135,6 +137,7 @@ const _Viewer: React.FC<ViewerProps> = ({
   mapInteraction,
   mapProjection,
   baseMapLayer,
+  overlayLayer,
   rgbLayer,
   variableLayer,
   datasetBoundaryLayer,
@@ -145,6 +148,7 @@ const _Viewer: React.FC<ViewerProps> = ({
   importUserPlacesFromText,
   userPlaceGroups,
   userPlaceGroupsVisibility,
+  showUserPlaces,
   selectPlace,
   selectedPlaceId,
   places,
@@ -316,6 +320,7 @@ const _Viewer: React.FC<ViewerProps> = ({
           {baseMapLayer}
           {rgbLayer}
           {variableLayer}
+          {overlayLayer}
           {datasetBoundaryLayer}
           {
             <>
@@ -324,7 +329,9 @@ const _Viewer: React.FC<ViewerProps> = ({
                   key={placeGroup.id}
                   placeGroup={placeGroup}
                   mapProjection={mapProjection}
-                  visible={userPlaceGroupsVisibility[placeGroup.id]}
+                  visible={
+                    showUserPlaces && userPlaceGroupsVisibility[placeGroup.id]
+                  }
                 />
               ))}
             </>

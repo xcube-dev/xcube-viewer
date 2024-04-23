@@ -24,25 +24,29 @@
 
 import { connect } from "react-redux";
 
+import { closeDialog, updateSettings } from "@/actions/controlActions";
 import { AppState } from "@/states/appState";
-import { setRgbLayerVisibility } from "@/actions/controlActions";
-import {
-  selectedDatasetRgbSchemaSelector,
-  showDatasetRgbLayerSelector,
-} from "@/selectors/controlSelectors";
-import _RgbSwitch from "@/components/RgbSwitch";
+import _UserLayersDialog from "@/components/UserLayersDialog";
 
-const mapStateToProps = (state: AppState) => {
+interface OwnProps {
+  dialogId: "userOverlays" | "userBaseMaps";
+}
+
+const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
   return {
-    locale: state.controlState.locale,
-    rgbSchema: selectedDatasetRgbSchemaSelector(state),
-    showRgbLayer: showDatasetRgbLayerSelector(state),
+    open: state.controlState.dialogOpen[ownProps.dialogId],
+    settings: state.controlState,
+    dialogId: ownProps.dialogId,
   };
 };
 
 const mapDispatchToProps = {
-  setRgbLayerVisibility,
+  closeDialog,
+  updateSettings,
 };
 
-const RgbSwitch = connect(mapStateToProps, mapDispatchToProps)(_RgbSwitch);
-export default RgbSwitch;
+const UserLayersDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_UserLayersDialog);
+export default UserLayersDialog;

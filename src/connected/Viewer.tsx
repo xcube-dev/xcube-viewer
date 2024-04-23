@@ -28,6 +28,7 @@ import { default as OlMap } from "ol/Map";
 import { AppState } from "@/states/appState";
 import {
   baseMapLayerSelector,
+  overlayLayerSelector,
   imageSmoothingSelector,
   mapProjectionSelector,
   selectedDatasetBoundaryLayerSelector,
@@ -36,6 +37,7 @@ import {
   selectedDatasetVariableLayerSelector,
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
+  showUserPlacesLayerSelector,
 } from "@/selectors/controlSelectors";
 import {
   addDrawnUserPlace,
@@ -61,12 +63,14 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
     userPlaceGroups: userPlaceGroupsSelector(state),
     userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
+    showUserPlaces: showUserPlacesLayerSelector(state),
     mapId: "map",
     mapInteraction: state.controlState.mapInteraction,
     mapProjection: mapProjectionSelector(state),
     selectedPlaceId: state.controlState.selectedPlaceId,
     places: selectedPlaceGroupPlacesSelector(state),
     baseMapLayer: baseMapLayerSelector(state),
+    overlayLayer: overlayLayerSelector(state),
     imageSmoothing: imageSmoothingSelector(state),
     onMapRef: ownProps.onMapRef,
   };

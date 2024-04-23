@@ -1,5 +1,11 @@
 ## Changes in version 1.2.0 (in development)
 
+* Introduced overlay layers that can be selected in the settings.
+
+* Users can now define their own base maps and overlay layers.
+
+* Introduced layer visibility dropdown menu in the control bar.
+
 * It is now possible to specify the map view behaviour when a new dataset or
   place is selected. In the settings, users can now choose between doing 
   nothing, fly to the center of dataset bounding box or the place, 

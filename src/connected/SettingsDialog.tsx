@@ -31,7 +31,11 @@ import {
   updateSettings,
 } from "@/actions/controlActions";
 import _SettingsDialog from "@/components/SettingsDialog";
-import { selectedServerSelector } from "@/selectors/controlSelectors";
+import {
+  baseMapsSelector,
+  overlaysSelector,
+  selectedServerSelector,
+} from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
 import version from "@/version";
 
@@ -40,6 +44,8 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     open: state.controlState.dialogOpen["settings"],
     settings: state.controlState,
+    baseMapLayers: baseMapsSelector(state),
+    overlayLayers: overlaysSelector(state),
     selectedServer: selectedServerSelector(state),
     viewerVersion: version,
     serverInfo: state.dataState.serverInfo,
