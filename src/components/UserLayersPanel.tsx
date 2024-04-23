@@ -27,6 +27,7 @@ import Paper from "@mui/material/Paper";
 import { Theme } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { darken, lighten } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -128,19 +129,19 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
         group: "User",
         name: "",
         url: "",
-        attributions: "",
-        wms: layerType === "wms" ? { layers: "" } : undefined,
+        attribution: "",
+        wms: layerType === "wms" ? true : undefined,
       },
     ]);
     setEditedLayer({ editId: id, editMode: "add" });
   };
 
-  const handleAddUserLayerXyz = () => {
-    addUserLayer("xyz");
-  };
-
   const handleAddUserLayerWms = () => {
     addUserLayer("wms");
+  };
+
+  const handleAddUserLayerXyz = () => {
+    addUserLayer("xyz");
   };
 
   const handleUserLayerChange = (userLayer: LayerDefinition) => {
@@ -230,22 +231,22 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
         {!editing && (
           <ListItem sx={{ minHeight: "3em" }}>
             <ListItemSecondaryAction>
-              <Button
-                onClick={handleAddUserLayerWms}
-                size="small"
-                startIcon={<AddIcon />}
-                color="primary"
-              >
-                {i18n.get("Add WMS")}
-              </Button>
-              <Button
-                onClick={handleAddUserLayerXyz}
-                size="small"
-                startIcon={<AddIcon />}
-                color="primary"
-              >
-                {i18n.get("Add XYZ")}
-              </Button>
+              <Box sx={{ display: "flex", gap: 2, paddingTop: 2 }}>
+                <Button
+                  onClick={handleAddUserLayerWms}
+                  startIcon={<AddIcon />}
+                  color="primary"
+                >
+                  {i18n.get("WMS")}
+                </Button>
+                <Button
+                  onClick={handleAddUserLayerXyz}
+                  startIcon={<AddIcon />}
+                  color="primary"
+                >
+                  {i18n.get("XYZ")}
+                </Button>
+              </Box>
             </ListItemSecondaryAction>
           </ListItem>
         )}

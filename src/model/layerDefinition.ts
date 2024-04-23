@@ -5,12 +5,8 @@ export interface LayerDefinition {
   name: string;
   group: string;
   url: string;
-  attributions?: string;
-  wms?: {
-    layers: string;
-    styles?: string;
-    format?: string;
-  };
+  attribution?: string;
+  wms?: boolean;
 }
 
 export function getLayerLabel(layerDef: LayerDefinition | null): string {
@@ -31,7 +27,7 @@ function getDefaultLayers(key: "datasets" | "overlays" = "datasets") {
       layerDefs.push({
         id: `${mapGroup.name}-${mapSource.name}`,
         group: mapGroup.name,
-        attributions: mapGroup.link,
+        attribution: mapGroup.link,
         name: mapSource.name,
         url: mapSource.endpoint,
       });

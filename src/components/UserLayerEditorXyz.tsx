@@ -45,7 +45,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
   const [name, setName] = React.useState<string>(userLayer.name);
   const [url, setUrl] = React.useState<string>(userLayer.url);
   const [attribution, setAttribution] = React.useState<string>(
-    userLayer.attributions || "",
+    userLayer.attribution || "",
   );
 
   const _canCommit = (name: string, url: string) => {
@@ -67,7 +67,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
       group: "User",
       name: name.trim(),
       url: url.trim(),
-      attributions: attribution.trim(),
+      attribution: attribution.trim(),
     });
 
   return (
@@ -81,7 +81,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
     >
       <TextField
         required
-        label="URL"
+        label="XYZ URL"
         variant="standard"
         size="small"
         value={url}

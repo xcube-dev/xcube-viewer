@@ -32,10 +32,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { LayerDefinition } from "@/model/layerDefinition";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
-import { WmsCapabilities, getWmsCapabilities } from "@/util/wms.ts";
-import Input from "@mui/material/Input";
+import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms.ts";
 
 interface UserLayerEditorWmsProps {
   userLayer: LayerDefinition;
@@ -48,121 +46,84 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
   onChange,
   onCancel,
 }) => {
-  const wms = userLayer.wms || { layers: "" };
-  const [url, setUrl] = useState<string>(userLayer.url);
-  const [layers, setLayers] = useState(wms.layers);
-  const [styles, setStyles] = useState(wms.styles ? wms.styles : "");
-  const [format, setFormat] = useState(wms.format ? wms.format : "");
-  const [wmsCapabilities, setWmsCapabilities] =
-    useState<WmsCapabilities | null>(null);
+  const [wmsUrl, setWmsUrl] = useState<string>(userLayer.url);
+  const [wmsLayers, setWmsLayers] = useState<WmsLayerDefinition[] | null>(null);
+  const [wmsLayerIndex, setWmsLayerIndex] = useState(-1);
 
   useEffect(() => {
-    getWmsCapabilities(url).then(setWmsCapabilities);
-  }, [url]);
+    fetchWmsLayers(wmsUrl).then((wmsLayers) => {
+      setWmsLayers(wmsLayers);
+    });
+  }, [wmsUrl]);
 
-  const _canCommit = (url: string, layers: string) => {
-    const urlOk =
-      url !== "" &&
-      (url.startsWith("http://") || url.trim().startsWith("https://"));
-    const layersOk = layers !== "";
-    return layersOk && urlOk;
-  };
+  useEffect(() => {
+    if (wmsLayers) {
+      setWmsLayerIndex(
+        wmsLayers.findIndex((wmsLayer) => wmsLayer.name === userLayer.name),
+      );
+    } else {
+      setWmsLayerIndex(-1);
+    }
+  }, [wmsLayers, userLayer.name]);
 
   const canCommit = () => {
-    return _canCommit(url.trim(), layers.trim());
+    return wmsLayers && wmsLayers.length && wmsLayerIndex != -1;
   };
 
-  const handleUserLayerChange = () =>
-    onChange({
-      ...userLayer,
-      // TODO: I18N
-      group: "User",
-      name: layers.trim(),
-      url: url.trim(),
-      // attributions: attribution.trim(),
-      wms: {
-        layers,
-        styles,
-        format,
-      },
-    });
-
-  const availableLayers = wmsCapabilities ? wmsCapabilities.layers : [];
-  const availableStyles = wmsCapabilities ? wmsCapabilities.styles : [];
-  const availableFormats = wmsCapabilities ? wmsCapabilities.formats : [];
-
-  const selectedLayers = parseList(layers);
-  const selectedStyles = parseList(styles);
+  const handleUserLayerChange = () => {
+    if (wmsLayers && wmsLayerIndex !== -1) {
+      onChange({
+        ...userLayer,
+        // TODO: I18N
+        group: "User",
+        name: wmsLayers[wmsLayerIndex].name,
+        url: wmsUrl.trim(),
+        attribution: wmsLayers[wmsLayerIndex].attribution,
+        wms: true,
+      });
+    }
+  };
 
   return (
     <Box
       sx={{
         display: "flex",
-        gap: 1,
+        gap: 2,
         flexDirection: "column",
         padding: "5px 15px",
       }}
     >
       <TextField
         required
-        label="URL"
+        label="WMS URL"
         variant="standard"
         size="small"
-        value={url}
+        value={wmsUrl}
         fullWidth
-        onChange={(e) => setUrl(e.currentTarget.value)}
+        onChange={(e) => setWmsUrl(e.currentTarget.value)}
       />
-      <Box sx={{ display: "flex", gap: 1 }}>
-        <Select
-          disabled={!availableLayers.length}
-          variant="standard"
-          multiple
-          onChange={(e) => setLayers(formatList(e.target.value as string[]))}
-          value={selectedLayers}
-          //className={classes.select}
-          size="small"
-          renderValue={() => layers}
-        >
-          {availableLayers.map((layerName) => (
-            <MenuItem key={layerName} value={layerName}>
-              <Checkbox checked={selectedLayers.indexOf(layerName) > -1} />
-              <ListItemText primary={layerName} />
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          disabled={!availableStyles.length}
-          variant="standard"
-          multiple
-          onChange={(e) => setStyles(formatList(e.target.value as string[]))}
-          value={selectedStyles}
-          //className={classes.select}
-          size="small"
-          renderValue={() => styles}
-        >
-          {availableStyles.map((styleName) => (
-            <MenuItem key={styleName} value={styleName}>
-              <Checkbox checked={selectedStyles.indexOf(styleName) > -1} />
-              <ListItemText primary={styleName} />
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          disabled={!availableFormats.length}
-          variant="standard"
-          onChange={(e) => setFormat(e.target.value as string)}
-          value={format}
-          input={<Input id="layer-format" />}
-          //className={classes.select}
-          size="small"
-        >
-          {availableFormats.map((formatName) => (
-            <MenuItem key={formatName} value={formatName}>
-              <ListItemText primary={formatName} />
-            </MenuItem>
-          ))}
-        </Select>
-      </Box>
+      <Select
+        disabled={!wmsLayers || !wmsLayers.length}
+        variant="standard"
+        onChange={(e) => setWmsLayerIndex(e.target.value as number)}
+        value={wmsLayerIndex}
+        size="small"
+        renderValue={() =>
+          wmsLayers && wmsLayers.length && wmsLayerIndex >= 0
+            ? wmsLayers[wmsLayerIndex].title
+            : "WMS Layer"
+        }
+      >
+        {(wmsLayers || []).map((wmsLayer, index) => (
+          <MenuItem
+            key={wmsLayer.name}
+            value={index}
+            selected={wmsLayerIndex === index}
+          >
+            <ListItemText primary={wmsLayer.title} />
+          </MenuItem>
+        ))}
+      </Select>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
         <IconButton
           onClick={handleUserLayerChange}
@@ -180,12 +141,3 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
 };
 
 export default UserLayerEditorWms;
-
-function parseList(text: string): string[] {
-  const parts = text.split(":");
-  return parts.length === 1 && parts[0] === "" ? [] : parts;
-}
-
-function formatList(list: string[]): string {
-  return list.join(":");
-}

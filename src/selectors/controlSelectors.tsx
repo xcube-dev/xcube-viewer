@@ -933,22 +933,19 @@ const getLayerFromLayerDefinition = (
   if (!layerDef) {
     return null;
   }
-  const attributions = (
-    layerDef.attributions ? layerDef.attributions.split(":") : []
-  ).map((a) =>
-    a.startsWith("http://") || a.startsWith("https://")
-      ? `&copy; <a href=&quot;${layerDef.attributions}&quot;>${layerDef.group}</a>`
-      : a,
-  );
+  let attributions = layerDef.attribution;
+  if (
+    attributions &&
+    (attributions.startsWith("http://") || attributions.startsWith("https://"))
+  ) {
+    attributions = `&copy; <a href=&quot;${layerDef.attribution}&quot;>${layerDef.group}</a>`;
+  }
   let source: OlTileWMSSource | OlXYZSource;
   if (layerDef.wms) {
-    const { layers, styles, format } = layerDef.wms;
     source = new OlTileWMSSource({
       url: layerDef.url,
       params: {
-        LAYERS: layers,
-        STYLES: styles ? styles : "",
-        FORMAT: format ? format : "image/png",
+        LAYERS: layerDef.name,
       },
       attributions,
       attributionsCollapsible: true,

@@ -1,0 +1,295 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<WMS_Capabilities version="1.3.0" updateSequence="0" xmlns="http://www.opengis.net/wms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sld="http://www.opengis.net/sld" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd">
+  <Service>
+    <Name>WMS</Name>
+    <Title>WMS Gewässerunterhaltung Hamburg</Title>
+    <Abstract>Der WebMapService (WMS) Gewässerunterhaltung stellt die Grundlage für die Gewässerunterhaltung, z.B. für die Erstellung von Gewässerunterhaltungsplänen, dar.
+Zur genaueren Beschreibung der Daten und Datenverantwortung nutzen Sie bitte den Verweis zur Datensatzbeschreibung.
+Weitere Daten des Dienstes, die nicht standard-konform (ISO 19119) hinterlegt werden können, zum Teil gemäß INSPIRE-Direktive aber bereit zu stellen sind*:
+Systemumgebung: OpenSource
+(environmentDescription/gco:CharacterString= OpenSource)
+---
+* Nähere Informationen zur INSPIRE-Direktive: http://inspire.jrc.ec.europa.eu/implementingRulesDocs_md.cfm</Abstract>
+    <OnlineResource xlink:type="simple" xlink:href="http://www.geoinfo.hamburg.de"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson></ContactPerson>
+        <ContactOrganization>LGV Hamburg</ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition>Geobasisinfrastruktur</ContactPosition>
+      <ContactAddress>
+        <AddressType>postal</AddressType>
+        <Address>Neuenfelder Straße 19</Address>
+        <City>Hamburg</City>
+        <StateOrProvince>HH</StateOrProvince>
+        <PostCode>21109</PostCode>
+        <Country>Germany</Country>
+      </ContactAddress>
+      <ContactVoiceTelephone></ContactVoiceTelephone>
+      <ContactFacsimileTelephone></ContactFacsimileTelephone>
+      <ContactElectronicMailAddress>udp-hilfe@gv.hamburg.de</ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>Datenlizenz Deutschland Namensnennung 2.0, Quellenvermerk: Freie und Hansestadt Hamburg, Behörde für Umwelt und Energie</Fees>
+    <AccessConstraints>Es gelten keine Zugriffsbeschränkungen, Hamburgisches Geodateninfrastrukturgesetz (HmbGDIG)</AccessConstraints>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?"/>
+            </Get>
+            <Post>
+              <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <Format>image/png; subtype=8bit</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/gif</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/tiff</Format>
+        <Format>image/x-ms-bmp</Format>
+        <Format>image/svg+xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?"/>
+            </Get>
+            <Post>
+              <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>application/vnd.ogc.gml</Format>
+        <Format>text/xml</Format>
+        <Format>text/plain</Format>
+        <Format>text/html</Format>
+        <Format>application/gml+xml; version=2.1</Format>
+        <Format>application/gml+xml; version=3.0</Format>
+        <Format>application/gml+xml; version=3.1</Format>
+        <Format>application/gml+xml; version=3.2</Format>
+        <Format>text/xml; subtype=gml/2.1.2</Format>
+        <Format>text/xml; subtype=gml/3.0.1</Format>
+        <Format>text/xml; subtype=gml/3.1.1</Format>
+        <Format>text/xml; subtype=gml/3.2.1</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?"/>
+            </Get>
+            <Post>
+              <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+      <sld:GetLegendGraphic>
+        <Format>image/png</Format>
+        <Format>image/png; subtype=8bit</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/gif</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/tiff</Format>
+        <Format>image/x-ms-bmp</Format>
+        <Format>image/svg+xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </sld:GetLegendGraphic>
+    </Request>
+    <Exception>
+      <Format>BLANK</Format>
+      <Format>XML</Format>
+      <Format>INIMAGE</Format>
+    </Exception>
+    <inspire_vs:ExtendedCapabilities xmlns="http://www.deegree.org/services/metadata" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://inspire.ec.europa.eu/schemas/common/1.0 http://inspire.ec.europa.eu/schemas/common/1.0/common.xsd http://inspire.ec.europa.eu/schemas/inspire_vs/1.0 http://inspire.ec.europa.eu/schemas/inspire_vs/1.0/inspire_vs.xsd">
+      <inspire_common:MetadataUrl>
+        <inspire_common:URL>https://metaver.de/csw?Service=CSW&amp;Request=GetRecordById&amp;Version=2.0.2&amp;id=0AF98C51-A6E3-4913-BC0C-5A7CC06B748D&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full</inspire_common:URL>
+        <inspire_common:MediaType>application/vnd.ogc.csw.GetRecordByIdResponse_xml</inspire_common:MediaType>
+            
+      </inspire_common:MetadataUrl>
+      <inspire_common:SupportedLanguages>
+        <inspire_common:DefaultLanguage>
+          <inspire_common:Language>ger</inspire_common:Language>
+                
+        </inspire_common:DefaultLanguage>
+            
+      </inspire_common:SupportedLanguages>
+      <inspire_common:ResponseLanguage>
+        <inspire_common:Language>ger</inspire_common:Language>
+            
+      </inspire_common:ResponseLanguage>
+        
+    </inspire_vs:ExtendedCapabilities>
+    <soapwms:ExtendedCapabilities xmlns:soapwms="http://schemas.deegree.org/extensions/services/wms/1.3.0" xmlns:wms="http://www.opengis.net/wms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://schemas.deegree.org/extensions/services/wms/1.3.0 http://schemas.deegree.org/3.5/extensions/services/wms/soapwms.xsd">
+      <soapwms:SOAP>
+        <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung"/>
+        <soapwms:Constraint name="SOAPVersion">
+          <soapwms:Value>1.1</soapwms:Value>
+          <soapwms:Value>1.2</soapwms:Value>
+        </soapwms:Constraint>
+        <soapwms:SupportedOperations>
+          <soapwms:Operation name="GetCapabilities"/>
+          <soapwms:Operation name="GetMap"/>
+          <soapwms:Operation name="GetFeatureInfo"/>
+        </soapwms:SupportedOperations>
+      </soapwms:SOAP>
+    </soapwms:ExtendedCapabilities>
+    <Layer queryable="1" cascaded="0" opaque="0" noSubsets="0" fixedWidth="0" fixedHeight="0">
+      <Name>gewaesserunterhaltung</Name>
+      <Title>Gewässerunterhaltung</Title>
+      <Abstract>Gewässerunterhaltung</Abstract>
+      <CRS>EPSG:25832</CRS>
+      <CRS>EPSG:31467</CRS>
+      <CRS>EPSG:25833</CRS>
+      <CRS>EPSG:4258</CRS>
+      <CRS>EPSG:4326</CRS>
+      <CRS>EPSG:3044</CRS>
+      <CRS>EPSG:3045</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>CRS:84</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>9.32522123</westBoundLongitude>
+        <eastBoundLongitude>10.70435400</eastBoundLongitude>
+        <southBoundLatitude>53.23745361</southBoundLatitude>
+        <northBoundLatitude>53.90497716</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:25832" minx="521700.00000000" miny="5900000.00000000" maxx="612000.00000000" maxy="5973000.00000000"/>
+      <BoundingBox CRS="EPSG:31467" minx="5901921.35386264" miny="3521779.39159954" maxx="5974951.37675557" maxy="3612116.16924480"/>
+      <BoundingBox CRS="EPSG:25833" minx="121532.76206035" miny="5907405.76490243" maxx="217783.82529498" maxy="5987854.86897638"/>
+      <BoundingBox CRS="EPSG:4258" minx="53.23745361" miny="9.32522123" maxx="53.90497716" maxy="10.70435400"/>
+      <BoundingBox CRS="EPSG:4326" minx="53.23745361" miny="9.32522123" maxx="53.90497716" maxy="10.70435400"/>
+      <BoundingBox CRS="EPSG:3044" minx="5899999.99999976" miny="521700.00000000" maxx="5973000.00000000" maxy="612000.00000005"/>
+      <BoundingBox CRS="EPSG:3045" minx="121532.76206035" miny="5907405.76490243" maxx="217783.82529498" maxy="5987854.86897638"/>
+      <BoundingBox CRS="EPSG:3857" minx="1038078.87860431" miny="7027041.76308130" maxx="1191603.23651931" maxy="7152180.60524784"/>
+      <BoundingBox CRS="CRS:84" minx="9.32522123" miny="53.23745361" maxx="10.70435400" maxy="53.90497716"/>
+      <AuthorityURL name="LGV">
+        <OnlineResource xlink:type="simple" xlink:href="http://www.hamburg.de/bsu/landesbetrieb-geoinformation-und-vermessung/"/>
+      </AuthorityURL>
+      <MinScaleDenominator>0.0</MinScaleDenominator>
+      <MaxScaleDenominator>2362351.19047619</MaxScaleDenominator>
+      <Layer queryable="1" cascaded="0" opaque="0" noSubsets="0" fixedWidth="0" fixedHeight="0">
+        <Name>gewaesserflaechen</Name>
+        <Title>Gewässerflächen</Title>
+        <Abstract>Gewässerflächen</Abstract>
+        <CRS>EPSG:25832</CRS>
+        <CRS>EPSG:31467</CRS>
+        <CRS>EPSG:25833</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3044</CRS>
+        <CRS>EPSG:3045</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>9.32522123</westBoundLongitude>
+          <eastBoundLongitude>10.70435400</eastBoundLongitude>
+          <southBoundLatitude>53.23745361</southBoundLatitude>
+          <northBoundLatitude>53.90497716</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:25832" minx="521700.00000000" miny="5900000.00000000" maxx="612000.00000000" maxy="5973000.00000000"/>
+        <BoundingBox CRS="EPSG:31467" minx="5901921.35386264" miny="3521779.39159954" maxx="5974951.37675557" maxy="3612116.16924480"/>
+        <BoundingBox CRS="EPSG:25833" minx="121532.76206035" miny="5907405.76490243" maxx="217783.82529498" maxy="5987854.86897638"/>
+        <BoundingBox CRS="EPSG:4258" minx="53.23745361" miny="9.32522123" maxx="53.90497716" maxy="10.70435400"/>
+        <BoundingBox CRS="EPSG:4326" minx="53.23745361" miny="9.32522123" maxx="53.90497716" maxy="10.70435400"/>
+        <BoundingBox CRS="EPSG:3044" minx="5899999.99999976" miny="521700.00000000" maxx="5973000.00000000" maxy="612000.00000005"/>
+        <BoundingBox CRS="EPSG:3045" minx="121532.76206035" miny="5907405.76490243" maxx="217783.82529498" maxy="5987854.86897638"/>
+        <BoundingBox CRS="EPSG:3857" minx="1038078.87860431" miny="7027041.76308130" maxx="1191603.23651931" maxy="7152180.60524784"/>
+        <BoundingBox CRS="CRS:84" minx="9.32522123" miny="53.23745361" maxx="10.70435400" maxy="53.90497716"/>
+        <AuthorityURL name="LGV">
+          <OnlineResource xlink:type="simple" xlink:href="http://www.hamburg.de/bsu/landesbetrieb-geoinformation-und-vermessung/"/>
+        </AuthorityURL>
+        <Identifier authority="LGV">https://registry.gdi-de.org/id/de.hh/1e92e97f-7d76-4927-84e0-14f2e2dddef1</Identifier>
+        <MetadataURL type="ISO19115:2003">
+          <Format>application/xml</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://metaver.de/csw?Service=CSW&amp;Request=GetRecordById&amp;Version=2.0.2&amp;id=72C3C8A3-6F6B-48A1-A5C2-2191D4D13196&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full"/>
+        </MetadataURL>
+        <Style>
+          <Name>gewaesserflaechen</Name>
+          <Title>gewaesserflaechen</Title>
+          <LegendURL width="135" height="27">
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?request=GetLegendGraphic&amp;version=1.3.0&amp;service=WMS&amp;layer=gewaesserflaechen&amp;style=gewaesserflaechen&amp;format=image/png"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="135" height="27">
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?request=GetLegendGraphic&amp;version=1.3.0&amp;service=WMS&amp;layer=gewaesserflaechen&amp;style=gewaesserflaechen&amp;format=image/png"/>
+          </LegendURL>
+        </Style>
+        <MinScaleDenominator>0.0</MinScaleDenominator>
+        <MaxScaleDenominator>2362351.19047619</MaxScaleDenominator>
+      </Layer>
+      <Layer queryable="1" cascaded="0" opaque="0" noSubsets="0" fixedWidth="0" fixedHeight="0">
+        <Name>gewaessernetz</Name>
+        <Title>Gewässernetz</Title>
+        <Abstract>Gewässernetz</Abstract>
+        <CRS>EPSG:25832</CRS>
+        <CRS>EPSG:31467</CRS>
+        <CRS>EPSG:25833</CRS>
+        <CRS>EPSG:4258</CRS>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3044</CRS>
+        <CRS>EPSG:3045</CRS>
+        <CRS>EPSG:3857</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>9.32522123</westBoundLongitude>
+          <eastBoundLongitude>10.70435400</eastBoundLongitude>
+          <southBoundLatitude>53.23745361</southBoundLatitude>
+          <northBoundLatitude>53.90497716</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:25832" minx="521700.00000000" miny="5900000.00000000" maxx="612000.00000000" maxy="5973000.00000000"/>
+        <BoundingBox CRS="EPSG:31467" minx="5901921.35386264" miny="3521779.39159954" maxx="5974951.37675557" maxy="3612116.16924480"/>
+        <BoundingBox CRS="EPSG:25833" minx="121532.76206035" miny="5907405.76490243" maxx="217783.82529498" maxy="5987854.86897638"/>
+        <BoundingBox CRS="EPSG:4258" minx="53.23745361" miny="9.32522123" maxx="53.90497716" maxy="10.70435400"/>
+        <BoundingBox CRS="EPSG:4326" minx="53.23745361" miny="9.32522123" maxx="53.90497716" maxy="10.70435400"/>
+        <BoundingBox CRS="EPSG:3044" minx="5899999.99999976" miny="521700.00000000" maxx="5973000.00000000" maxy="612000.00000005"/>
+        <BoundingBox CRS="EPSG:3045" minx="121532.76206035" miny="5907405.76490243" maxx="217783.82529498" maxy="5987854.86897638"/>
+        <BoundingBox CRS="EPSG:3857" minx="1038078.87860431" miny="7027041.76308130" maxx="1191603.23651931" maxy="7152180.60524784"/>
+        <BoundingBox CRS="CRS:84" minx="9.32522123" miny="53.23745361" maxx="10.70435400" maxy="53.90497716"/>
+        <AuthorityURL name="LGV">
+          <OnlineResource xlink:type="simple" xlink:href="http://www.hamburg.de/bsu/landesbetrieb-geoinformation-und-vermessung/"/>
+        </AuthorityURL>
+        <Identifier authority="LGV">https://registry.gdi-de.org/id/de.hh/1e92e97f-7d76-4927-84e0-14f2e2dddef1</Identifier>
+        <MetadataURL type="ISO19115:2003">
+          <Format>application/xml</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://metaver.de/csw?Service=CSW&amp;Request=GetRecordById&amp;Version=2.0.2&amp;id=72C3C8A3-6F6B-48A1-A5C2-2191D4D13196&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full"/>
+        </MetadataURL>
+        <Style>
+          <Name>gewaessernetz</Name>
+          <Title>gewaessernetz</Title>
+          <LegendURL width="221" height="54">
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?request=GetLegendGraphic&amp;version=1.3.0&amp;service=WMS&amp;layer=gewaessernetz&amp;style=gewaessernetz&amp;format=image/png"/>
+          </LegendURL>
+        </Style>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="221" height="54">
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xlink:href="https://geodienste.hamburg.de/HH_WMS_Gewaesserunterhaltung?request=GetLegendGraphic&amp;version=1.3.0&amp;service=WMS&amp;layer=gewaessernetz&amp;style=gewaessernetz&amp;format=image/png"/>
+          </LegendURL>
+        </Style>
+        <MinScaleDenominator>0.0</MinScaleDenominator>
+        <MaxScaleDenominator>2362351.19047619</MaxScaleDenominator>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>
