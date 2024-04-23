@@ -29,7 +29,7 @@ import IconButton from "@mui/material/IconButton";
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-import { LayerDefinition } from "@/model/layerDefinition";
+import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 
 interface UserLayerEditorXyzProps {
   userLayer: LayerDefinition;
@@ -42,30 +42,30 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
   onChange,
   onCancel,
 }) => {
-  const [name, setName] = React.useState<string>(userLayer.name);
+  const [title, setTitle] = React.useState<string>(userLayer.title);
   const [url, setUrl] = React.useState<string>(userLayer.url);
   const [attribution, setAttribution] = React.useState<string>(
     userLayer.attribution || "",
   );
 
-  const _canCommit = (name: string, url: string) => {
-    const nameOk = name !== "";
+  const _canCommit = (title: string, url: string) => {
+    const titleOk = title !== "";
     const urlOk =
       url !== "" &&
       (url.startsWith("http://") || url.trim().startsWith("https://"));
-    return nameOk && urlOk;
+    return titleOk && urlOk;
   };
 
   const canCommit = () => {
-    return _canCommit(name.trim(), url.trim());
+    return _canCommit(title.trim(), url.trim());
   };
 
   const handleUserLayerChange = () =>
     onChange({
       ...userLayer,
       // TODO: I18N
-      group: "User",
-      name: name.trim(),
+      group: USER_GROUP_NAME,
+      title: title.trim(),
       url: url.trim(),
       attribution: attribution.trim(),
     });
@@ -95,8 +95,8 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
           variant="standard"
           size="small"
           sx={{ flexGrow: 0.3 }}
-          value={name}
-          onChange={(e) => setName(e.currentTarget.value)}
+          value={title}
+          onChange={(e) => setTitle(e.currentTarget.value)}
         />
         <TextField
           label="Attribution"

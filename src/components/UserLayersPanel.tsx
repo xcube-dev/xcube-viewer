@@ -99,7 +99,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
       {
         ...userLayer,
         id: newId("user-layer"),
-        name: userLayer.name + " Copy",
+        title: userLayer.title + " Copy",
       },
       ...userLayers.slice(index + 1),
     ]);
@@ -127,10 +127,10 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
       {
         id,
         group: "User",
-        name: "",
+        title: "",
         url: "",
         attribution: "",
-        wms: layerType === "wms" ? true : undefined,
+        wms: layerType === "wms" ? { layerName: "" } : undefined,
       },
     ]);
     setEditedLayer({ editId: id, editMode: "add" });
@@ -199,7 +199,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
               onClick={() => setSelectedId(selected ? null : userLayer.id)}
             >
               <ListItemText
-                primary={userLayer.name}
+                primary={userLayer.title}
                 secondary={userLayer.url}
               />
               <ListItemSecondaryAction>

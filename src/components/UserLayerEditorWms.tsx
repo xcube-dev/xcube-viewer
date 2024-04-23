@@ -29,7 +29,7 @@ import IconButton from "@mui/material/IconButton";
 import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-import { LayerDefinition } from "@/model/layerDefinition";
+import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -57,14 +57,15 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
   }, [wmsUrl]);
 
   useEffect(() => {
-    if (wmsLayers) {
+    if (wmsLayers && userLayer.wms) {
+      const { layerName } = userLayer.wms;
       setWmsLayerIndex(
-        wmsLayers.findIndex((wmsLayer) => wmsLayer.name === userLayer.name),
+        wmsLayers.findIndex((wmsLayer) => wmsLayer.name === layerName),
       );
     } else {
       setWmsLayerIndex(-1);
     }
-  }, [wmsLayers, userLayer.name]);
+  }, [wmsLayers, userLayer.wms]);
 
   const canCommit = () => {
     return wmsLayers && wmsLayers.length && wmsLayerIndex != -1;
@@ -75,11 +76,14 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
       onChange({
         ...userLayer,
         // TODO: I18N
-        group: "User",
-        name: wmsLayers[wmsLayerIndex].name,
+        group: USER_GROUP_NAME,
+        title: wmsLayers[wmsLayerIndex].title,
         url: wmsUrl.trim(),
         attribution: wmsLayers[wmsLayerIndex].attribution,
-        wms: true,
+        wms: {
+          layerName: wmsLayers[wmsLayerIndex].name,
+          // styleName not yet supported
+        },
       });
     }
   };

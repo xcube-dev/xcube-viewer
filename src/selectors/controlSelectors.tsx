@@ -942,10 +942,12 @@ const getLayerFromLayerDefinition = (
   }
   let source: OlTileWMSSource | OlXYZSource;
   if (layerDef.wms) {
+    const { layerName, styleName } = layerDef.wms;
     source = new OlTileWMSSource({
       url: layerDef.url,
       params: {
-        LAYERS: layerDef.name,
+        ...(styleName ? { STYLES: styleName } : {}),
+        LAYERS: layerName,
       },
       attributions,
       attributionsCollapsible: true,

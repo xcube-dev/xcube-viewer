@@ -1,16 +1,18 @@
 import { maps } from "@/util/maps";
 
+export const USER_GROUP_NAME = "User";
+
 export interface LayerDefinition {
   id: string;
-  name: string;
+  title: string;
   group: string;
   url: string;
   attribution?: string;
-  wms?: boolean;
+  wms?: { layerName: string; styleName?: string };
 }
 
 export function getLayerLabel(layerDef: LayerDefinition | null): string {
-  return layerDef ? `${layerDef.group} / ${layerDef.name}` : "-";
+  return layerDef ? `${layerDef.group}: ${layerDef.title}` : "-";
 }
 
 export function findLayer(
@@ -28,7 +30,7 @@ function getDefaultLayers(key: "datasets" | "overlays" = "datasets") {
         id: `${mapGroup.name}-${mapSource.name}`,
         group: mapGroup.name,
         attribution: mapGroup.link,
-        name: mapSource.name,
+        title: mapSource.name,
         url: mapSource.endpoint,
       });
     });
