@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -32,9 +32,20 @@ import Tooltip from "@mui/material/Tooltip";
 
 import i18n from "@/i18n";
 import { ColorBar, ColorBars, formatColorBar } from "@/model/colorBar";
+import { newId } from "@/util/id.ts";
 
 const COLOR_BAR_BOX_MARGIN = 1;
 const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
+
+interface EditedUserColorBar {
+  editId: string;
+  editMode: "add" | "edit";
+}
+
+interface UserColorBar {
+  id: string;
+  code: string;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarBox: {
@@ -77,6 +88,10 @@ export default function ColorBarSelect({
 }: ColorBarSelectProps) {
   const classes = useStyles();
 
+  const [userColorBars, setUserColorBars] = useState<UserColorBar[]>([]);
+  const [editedUserColorBar, setEditedUserColorBar] =
+    useState<EditedUserColorBar | null>(null);
+
   const handleColorBarNameChange = (baseName: string) => {
     variableColorBarName = formatColorBar({ ...variableColorBar, baseName });
     updateVariableColorBar(
@@ -116,6 +131,15 @@ export default function ColorBarSelect({
     );
   };
 
+  const addUserColorBar = () => {
+    const id = newId("user-layer-");
+    setUserColorBars([
+      { id, code: "0.0: #23FF52\n0.5: red\n1.0: 120,30,255" },
+      ...userColorBars,
+    ]);
+    setEditedUserColorBar({ editId: id, editMode: "add" });
+  };
+
   let key = 0;
   const entries = [];
   for (const cbg of colorBars.groups) {
@@ -152,6 +176,7 @@ export default function ColorBarSelect({
       );
     }
   }
+
   return (
     <Box className={classes.colorBarBox}>
       <Box component="span">
