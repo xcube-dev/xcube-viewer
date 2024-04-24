@@ -28,7 +28,7 @@ import { default as OlBaseObject } from "ol/Object";
 
 import { Config } from "@/config";
 import { Time, TimeRange } from "@/model/timeSeries";
-import { defaultBaseMapId, LayerDefinition } from "@/model/layerDefinition.ts";
+import { defaultBaseMapId, LayerDefinition } from "@/model/layerDefinition";
 import { loadUserSettings } from "./userSettings";
 import { DEFAULT_MAP_CRS } from "@/model/proj";
 import { CsvOptions, defaultCsvOptions } from "@/model/user-place/csv";
