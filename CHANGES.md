@@ -38,7 +38,8 @@
 
 TODO:
 
-* Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:   
+* Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
+* Use MUI v5 styling alternatives.
 
 ## Changes in version 1.1.1
 
