@@ -22,46 +22,35 @@
  * SOFTWARE.
  */
 
-import React, { useState } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import Slider from "@mui/material/Slider";
 import Tooltip from "@mui/material/Tooltip";
 
-import i18n from "@/i18n";
 import { ColorBar, ColorBars, formatColorBar } from "@/model/colorBar";
-import { newId } from "@/util/id.ts";
 
-const COLOR_BAR_BOX_MARGIN = 1;
 const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
-interface EditedUserColorBar {
-  editId: string;
-  editMode: "add" | "edit";
-}
-
-interface UserColorBar {
-  id: string;
-  code: string;
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
-  colorBarBox: {
-    marginTop: theme.spacing(
-      COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_BOX_MARGIN,
-    ),
-    marginLeft: theme.spacing(COLOR_BAR_BOX_MARGIN),
-    marginRight: theme.spacing(COLOR_BAR_BOX_MARGIN),
-    marginBottom: theme.spacing(COLOR_BAR_BOX_MARGIN),
-  },
   colorBarGroupTitle: {
     marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
     color: theme.palette.grey[400],
   },
-  colorBarGroupItemBox: {
+  colorBarGroupItem: {
     marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
+    width: 240,
+    height: 20,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: theme.palette.mode === "dark" ? "white" : "black",
+  },
+  colorBarGroupItemSelected: {
+    marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
+    width: 240,
+    height: 20,
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "orange",
   },
 }));
 
@@ -76,6 +65,7 @@ interface ColorBarSelectProps {
     opacity: number,
   ) => void;
   colorBars: ColorBars;
+  changeColorBars: (colorBars: ColorBars) => void;
 }
 
 export default function ColorBarSelect({
@@ -88,10 +78,6 @@ export default function ColorBarSelect({
 }: ColorBarSelectProps) {
   const classes = useStyles();
 
-  const [userColorBars, setUserColorBars] = useState<UserColorBar[]>([]);
-  const [editedUserColorBar, setEditedUserColorBar] =
-    useState<EditedUserColorBar | null>(null);
-
   const handleColorBarNameChange = (baseName: string) => {
     variableColorBarName = formatColorBar({ ...variableColorBar, baseName });
     updateVariableColorBar(
@@ -99,45 +85,6 @@ export default function ColorBarSelect({
       variableColorBarName,
       variableOpacity,
     );
-  };
-
-  const handleColorBarAlpha = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const isAlpha = event.currentTarget.checked;
-    variableColorBarName = formatColorBar({ ...variableColorBar, isAlpha });
-    updateVariableColorBar(
-      variableColorBarMinMax,
-      variableColorBarName,
-      variableOpacity,
-    );
-  };
-
-  const handleColorBarReversed = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const isReversed = event.currentTarget.checked;
-    variableColorBarName = formatColorBar({ ...variableColorBar, isReversed });
-    updateVariableColorBar(
-      variableColorBarMinMax,
-      variableColorBarName,
-      variableOpacity,
-    );
-  };
-
-  const handleVariableOpacity = (_event: Event, value: number | number[]) => {
-    updateVariableColorBar(
-      variableColorBarMinMax,
-      variableColorBarName,
-      value as number,
-    );
-  };
-
-  const addUserColorBar = () => {
-    const id = newId("user-layer-");
-    setUserColorBars([
-      { id, code: "0.0: #23FF52\n0.5: red\n1.0: 120,30,255" },
-      ...userColorBars,
-    ]);
-    setEditedUserColorBar({ editId: id, editMode: "add" });
   };
 
   let key = 0;
@@ -155,11 +102,11 @@ export default function ColorBarSelect({
       entries.push(
         <Box
           key={key++}
-          className={classes.colorBarGroupItemBox}
-          border={1}
-          borderColor={name === variableColorBar.baseName ? "orange" : "black"}
-          width={240}
-          height={20}
+          className={
+            name === variableColorBar.baseName
+              ? classes.colorBarGroupItemSelected
+              : classes.colorBarGroupItem
+          }
         >
           <Tooltip arrow title={name} placement="left">
             <img
@@ -177,49 +124,5 @@ export default function ColorBarSelect({
     }
   }
 
-  return (
-    <Box className={classes.colorBarBox}>
-      <Box component="span">
-        <Checkbox
-          color="primary"
-          checked={variableColorBar.isAlpha}
-          onChange={handleColorBarAlpha}
-          size="small"
-          style={{
-            paddingLeft: 0,
-            paddingRight: 2,
-            paddingTop: 4,
-            paddingBottom: 4,
-          }}
-        />
-        <Box component="span">{i18n.get("Hide small values")}</Box>
-        <Checkbox
-          color="primary"
-          checked={variableColorBar.isReversed}
-          onChange={handleColorBarReversed}
-          size="small"
-          style={{
-            paddingLeft: 10,
-            paddingRight: 2,
-            paddingTop: 4,
-            paddingBottom: 4,
-          }}
-        />
-        <Box component="span">{i18n.get("Reverse")}</Box>
-      </Box>
-      <Box component="div" style={{ display: "flex", alignItems: "center" }}>
-        <span>{i18n.get("Opacity")}</span>
-        <Slider
-          min={0}
-          max={1}
-          value={variableOpacity}
-          step={0.01}
-          style={{ flexGrow: 1, marginLeft: 10, marginRight: 10 }}
-          onChange={handleVariableOpacity}
-          size="small"
-        />
-      </Box>
-      {entries}
-    </Box>
-  );
+  return <>{entries}</>;
 }

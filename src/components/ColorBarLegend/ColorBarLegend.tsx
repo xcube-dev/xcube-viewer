@@ -29,7 +29,7 @@ import Popover from "@mui/material/Popover";
 
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import ColorBarCanvas from "./ColorBarCanvas";
-import ColorBarSelect from "./ColorBarSelect";
+import ColorBarColorEditor from "./ColorBarColorEditor";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";
 import ColorBarLabels from "./ColorBarLabels";
 
@@ -168,7 +168,7 @@ export default function ColorBarLegend({
           horizontal: "left",
         }}
       >
-        <ColorBarSelect
+        <ColorBarColorEditor
           variableColorBarMinMax={variableColorBarMinMax}
           variableColorBarName={variableColorBarName}
           variableColorBar={variableColorBar}
