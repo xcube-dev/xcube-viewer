@@ -24,16 +24,16 @@
 
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import DoneIcon from "@mui/icons-material/Done";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DoneIcon from "@mui/icons-material/Done";
+import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
 
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemText from "@mui/material/ListItemText";
-import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms.ts";
+import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms";
 
 interface UserLayerEditorWmsProps {
   userLayer: LayerDefinition;
