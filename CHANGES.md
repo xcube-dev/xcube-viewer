@@ -32,7 +32,8 @@
   - Project CI now also runs [ESlint](https://eslint.org/).
   - Updated copyright headers of source files.
   - Removed all usages of explicit `any` type in TypeScript files.
-  - Removed `adaptV4Theme` from `@mui/material` as its deprecated.
+  - No longer using deprecated `adaptV4Theme()` function from `@mui/material`.
+
 
 
 TODO:
