@@ -24,6 +24,8 @@
 
 import bgImageData from "./bg.png";
 
+export const USER_COLOR_BAR_GROUP_TITLE = "User";
+
 export interface ColorBars {
   groups: ColorBarGroup[];
   images: Record<string, string>;
@@ -47,6 +49,19 @@ export interface ColorBar {
   isReversed: boolean;
   // https://stackoverflow.com/questions/13416800/how-to-generate-an-image-from-imagedata-in-javascript
   imageData: string | null;
+}
+
+export interface UserColorBar {
+  id: string;
+  name: string;
+  /**
+   * Format of the code value:
+   *
+   * code   := record {"\n" record}
+   * record := value ":" color
+   * color  := color-name | hex-color | red "," green "," blue ["," alpha]
+   */
+  code: string;
 }
 
 export function parseColorBar(

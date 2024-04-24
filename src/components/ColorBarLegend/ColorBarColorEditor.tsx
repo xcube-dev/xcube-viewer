@@ -26,7 +26,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import { ColorBar, ColorBars } from "@/model/colorBar";
+import { ColorBar, ColorBars, UserColorBar } from "@/model/colorBar";
 import ColorBarStyleEditor from "@/components/ColorBarLegend/ColorBarStyleEditor";
 import ColorBarSelect from "@/components/ColorBarLegend/ColorBarSelect";
 
@@ -55,15 +55,22 @@ interface ColorBarColorEditorProps {
     opacity: number,
   ) => void;
   colorBars: ColorBars;
+  userColorBars: UserColorBar[];
+  updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
 
 export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
   const classes = useStyles();
-  const { colorBars, ...baseProps } = props;
+  const { colorBars, userColorBars, updateUserColorBars, ...baseProps } = props;
   return (
     <Box className={classes.colorBarBox}>
       <ColorBarStyleEditor {...baseProps} />
-      <ColorBarSelect {...baseProps} colorBars={colorBars} />
+      <ColorBarSelect
+        {...baseProps}
+        colorBars={colorBars}
+        userColorBars={userColorBars}
+        updateUserColorBars={updateUserColorBars}
+      />
     </Box>
   );
 }

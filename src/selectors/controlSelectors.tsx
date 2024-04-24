@@ -69,7 +69,7 @@ import { Variable } from "@/model/variable";
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
 import {
-  colorBarsSelector,
+  predefinedColorBarsSelector,
   datasetsSelector,
   timeSeriesGroupsSelector,
   userPlaceGroupsSelector,
@@ -78,7 +78,13 @@ import {
 import { makeRequestUrl } from "@/api/callApi";
 import { MAP_OBJECTS, ViewMode } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
-import { ColorBar, ColorBars, parseColorBar } from "@/model/colorBar";
+import {
+  ColorBar,
+  ColorBarGroup,
+  ColorBars,
+  parseColorBar,
+  USER_COLOR_BAR_GROUP_TITLE,
+} from "@/model/colorBar";
 import {
   defaultBaseMapLayers,
   defaultOverlayLayers,
@@ -142,6 +148,8 @@ export const userPlacesFormatOptionsGeoJsonSelector = (state: AppState) =>
   state.controlState.userPlacesFormatOptions.geojson;
 export const userPlacesFormatOptionsWktSelector = (state: AppState) =>
   state.controlState.userPlacesFormatOptions.wkt;
+export const userColorBarsSelector = (state: AppState) =>
+  state.controlState.userColorBars;
 
 export const selectedDatasetSelector = createSelector(
   datasetsSelector,
@@ -188,10 +196,30 @@ export const selectedVariableColorBarNameSelector = createSelector(
   },
 );
 
+export const colorBarsSelector = createSelector(
+  userColorBarsSelector,
+  predefinedColorBarsSelector,
+  (userColorBars, predefinedColorBars): ColorBars => {
+    const userGroup: ColorBarGroup = {
+      title: USER_COLOR_BAR_GROUP_TITLE,
+      description: "User-defined color bars.",
+      names: userColorBars.map((colorBar) => colorBar.id),
+    };
+    if (predefinedColorBars) {
+      return {
+        ...predefinedColorBars,
+        groups: [userGroup, ...predefinedColorBars.groups],
+      };
+    } else {
+      return { groups: [userGroup], images: {} };
+    }
+  },
+);
+
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
   colorBarsSelector,
-  (colorBarName: string, colorBars: ColorBars | null): ColorBar => {
+  (colorBarName: string, colorBars: ColorBars): ColorBar => {
     return parseColorBar(colorBarName, colorBars);
   },
 );

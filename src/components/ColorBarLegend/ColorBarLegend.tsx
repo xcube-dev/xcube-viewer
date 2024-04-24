@@ -27,7 +27,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 import Popover from "@mui/material/Popover";
 
-import { ColorBar, ColorBars } from "@/model/colorBar";
+import { ColorBar, ColorBars, UserColorBar } from "@/model/colorBar";
 import ColorBarCanvas from "./ColorBarCanvas";
 import ColorBarColorEditor from "./ColorBarColorEditor";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";
@@ -64,7 +64,9 @@ interface ColorBarLegendProps {
     colorBarName: string,
     opacity: number,
   ) => void;
-  colorBars: ColorBars | null;
+  colorBars: ColorBars;
+  userColorBars: UserColorBar[];
+  updateUserColorBars: (userColorBars: UserColorBar[]) => void;
   width?: number | string;
   height?: number | string;
   numTicks?: number;
@@ -79,6 +81,8 @@ export default function ColorBarLegend({
   variableOpacity,
   updateVariableColorBar,
   colorBars,
+  userColorBars,
+  updateUserColorBars,
   width,
   height,
   numTicks,
@@ -90,7 +94,7 @@ export default function ColorBarLegend({
   const [colorBarSelectAnchor, setColorBarSelectAnchor] =
     useState<HTMLCanvasElement | null>(null);
 
-  if (!variableName || !colorBars) {
+  if (!variableName) {
     return null;
   }
 
@@ -175,6 +179,8 @@ export default function ColorBarLegend({
           variableOpacity={variableOpacity}
           updateVariableColorBar={updateVariableColorBar}
           colorBars={colorBars}
+          userColorBars={userColorBars}
+          updateUserColorBars={updateUserColorBars}
         />
       </Popover>
     </div>

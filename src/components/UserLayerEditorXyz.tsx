@@ -25,11 +25,9 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import DoneIcon from "@mui/icons-material/Done";
-import CancelIcon from "@mui/icons-material/Cancel";
 
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
+import DoneCancel from "@/components/DoneCancel";
 
 interface UserLayerEditorXyzProps {
   userLayer: LayerDefinition;
@@ -107,18 +105,11 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
           onChange={(e) => setAttribution(e.currentTarget.value)}
         />
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <IconButton
-          onClick={handleUserLayerChange}
-          color="primary"
-          disabled={!canCommit()}
-        >
-          <DoneIcon />
-        </IconButton>
-        <IconButton onClick={onCancel} color="primary">
-          <CancelIcon />
-        </IconButton>
-      </Box>
+      <DoneCancel
+        onOk={handleUserLayerChange}
+        onCancel={onCancel}
+        doneDisabled={!canCommit()}
+      />
     </Box>
   );
 };

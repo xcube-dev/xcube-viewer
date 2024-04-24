@@ -34,7 +34,8 @@ import {
 
 export const datasetsSelector = (state: AppState) =>
   state.dataState.datasets || [];
-export const colorBarsSelector = (state: AppState) => state.dataState.colorBars;
+export const predefinedColorBarsSelector = (state: AppState) =>
+  state.dataState.colorBars;
 export const timeSeriesGroupsSelector = (state: AppState) =>
   state.dataState.timeSeriesGroups;
 export const userPlaceGroupsSelector = (state: AppState) =>

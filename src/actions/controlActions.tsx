@@ -37,6 +37,7 @@ import {
   PlaceGroup,
 } from "@/model/place";
 import { Time, TimeRange } from "@/model/timeSeries";
+import { UserColorBar } from "@/model/colorBar";
 import {
   selectedDatasetIdSelector,
   selectedDatasetSelectedPlaceGroupsSelector,
@@ -620,6 +621,14 @@ export function updateSettings(
   settings: Partial<ControlState>,
 ): UpdateSettings {
   return { type: UPDATE_SETTINGS, settings };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateUserColorBars(
+  userColorBars: UserColorBar[],
+): UpdateSettings {
+  return { type: UPDATE_SETTINGS, settings: { userColorBars } };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
