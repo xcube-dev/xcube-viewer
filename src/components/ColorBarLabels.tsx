@@ -22,49 +22,41 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useRef } from "react";
+import makeStyles from "@mui/styles/makeStyles";
 
-import i18n from "@/i18n";
-import { ColorBar, renderColorBar } from "@/model/colorBar";
+import { getLabelsFromRange } from "@/util/label";
+import React from "react";
 
-interface ColorBarCanvasProps {
-  colorBar: ColorBar;
-  opacity: number;
-  width: number | string | undefined;
-  height: number | string | undefined;
-  onClick: (event: React.MouseEvent<HTMLCanvasElement>) => void;
+const useStyles = makeStyles(() => ({
+  label: {
+    fontSize: "x-small",
+    fontWeight: "bold",
+    width: "100%",
+    display: "flex",
+    flexWrap: "nowrap",
+    justifyContent: "space-between",
+  },
+}));
+
+interface ColorBarLabelsProps {
+  minValue: number;
+  maxValue: number;
+  numTicks: number;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const ColorBarCanvas: React.FC<ColorBarCanvasProps> = ({
-  colorBar,
-  opacity,
-  width,
-  height,
+export default function ColorBarLabels({
+  minValue,
+  maxValue,
+  numTicks,
   onClick,
-}) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas !== null) {
-      renderColorBar(colorBar, opacity, canvas);
-    }
-  }, [colorBar, opacity]);
-
+}: ColorBarLabelsProps) {
+  const classes = useStyles();
   return (
-    <>
-      {colorBar.imageData ? (
-        <canvas
-          ref={canvasRef}
-          width={width || 240}
-          height={height || 24}
-          onClick={onClick}
-        />
-      ) : (
-        <div>{i18n.get("Unknown color bar") + `: ${colorBar.baseName}`}</div>
-      )}
-    </>
+    <div className={classes.label} onClick={onClick}>
+      {getLabelsFromRange(minValue, maxValue, numTicks).map((label, i) => (
+        <span key={i}>{label}</span>
+      ))}
+    </div>
   );
-};
-
-export default ColorBarCanvas;
+}
