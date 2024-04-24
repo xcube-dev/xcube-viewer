@@ -32,12 +32,12 @@
   - Project CI now also runs [ESlint](https://eslint.org/).
   - Updated copyright headers of source files.
   - Removed all usages of explicit `any` type in TypeScript files.
+  - Removed `adaptV4Theme` from `@mui/material` as its deprecated.
+
 
 TODO:
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:   
-* No longer use deprecated `adaptV4Theme` from `@mui/material`; use MUI v5
-  styling alternatives.
 
 ## Changes in version 1.1.1
 

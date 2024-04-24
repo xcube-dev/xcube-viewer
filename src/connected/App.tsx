@@ -25,7 +25,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import {
-  adaptV4Theme,
   createTheme,
   CssBaseline,
   StyledEngineProvider,
@@ -60,19 +59,17 @@ const mapStateToProps = (_state: AppState) => {
 const mapDispatchToProps = {};
 
 const newTheme = () =>
-  createTheme(
-    adaptV4Theme({
-      typography: {
-        fontSize: 12,
-        htmlFontSize: 14,
-      },
-      palette: {
-        mode: Config.instance.branding.themeName,
-        primary: Config.instance.branding.primaryColor,
-        secondary: Config.instance.branding.secondaryColor,
-      },
-    }),
-  );
+  createTheme({
+    typography: {
+      fontSize: 12,
+      htmlFontSize: 14,
+    },
+    palette: {
+      mode: Config.instance.branding.themeName,
+      primary: Config.instance.branding.primaryColor,
+      secondary: Config.instance.branding.secondaryColor,
+    },
+  });
 
 const _App: React.FC<AppProps> = ({ compact }) => {
   return (
