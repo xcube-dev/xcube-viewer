@@ -63,7 +63,7 @@ export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
   return (
     <Box className={classes.colorBarBox}>
       <ColorBarStyleEditor {...baseProps} />
-      <ColorBarSelect {...baseProps}  colorBars={colorBars} />
+      <ColorBarSelect {...baseProps} colorBars={colorBars} />
     </Box>
   );
 }
