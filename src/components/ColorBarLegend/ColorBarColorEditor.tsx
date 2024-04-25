@@ -55,15 +55,19 @@ interface ColorBarColorEditorProps {
     opacity: number,
   ) => void;
   colorBars: ColorBars;
+  changeColorBars: (colorBars: ColorBars) => void;
 }
 
 export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
   const classes = useStyles();
   const { colorBars, ...baseProps } = props;
+  const changeColorBars = (colorBars:ColorBars) => {
+    colorBars = colorBars
+  }
   return (
     <Box className={classes.colorBarBox}>
       <ColorBarStyleEditor {...baseProps} />
-      <ColorBarSelect {...baseProps} colorBars={colorBars} />
+      <ColorBarSelect {...baseProps} changeColorBars={changeColorBars} colorBars={colorBars} />
     </Box>
   );
 }
