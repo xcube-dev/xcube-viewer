@@ -49,25 +49,25 @@ interface EditedUserColorBar {
   editMode?: "add" | "edit";
 }
 
+const colorBarGroupItemStyle = (theme: Theme) => ({
+  marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
+  width: 240,
+  height: 20,
+  borderWidth: 1,
+  borderStyle: "solid",
+});
+
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarGroupTitle: {
     marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
     color: theme.palette.grey[400],
   },
   colorBarGroupItem: {
-    marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
-    width: 240,
-    height: 20,
-    borderWidth: 1,
-    borderStyle: "solid",
+    ...colorBarGroupItemStyle(theme),
     borderColor: theme.palette.mode === "dark" ? "white" : "black",
   },
   colorBarGroupItemSelected: {
-    marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
-    width: 240,
-    height: 20,
-    borderWidth: 1,
-    borderStyle: "solid",
+    ...colorBarGroupItemStyle(theme),
     borderColor: "orange",
   },
 }));
@@ -152,7 +152,7 @@ export default function ColorBarSelect({
     updateUserColorBars([
       ...userColorBars.slice(0, userColorBarIndex),
       { ...userColorBars[userColorBarIndex], code: event.currentTarget.value },
-      ...userColorBars.slice(0, userColorBarIndex + 1),
+      ...userColorBars.slice(userColorBarIndex + 1),
     ]);
   };
 
@@ -163,8 +163,8 @@ export default function ColorBarSelect({
   let key = 0;
   const entries = [];
   for (const cbg of colorBars.groups) {
-    entries.push(
-      cbg.title === USER_COLOR_BAR_GROUP_TITLE ? (
+    if (cbg.title === USER_COLOR_BAR_GROUP_TITLE) {
+      entries.push(
         <Box
           key={key++}
           sx={{
@@ -185,39 +185,65 @@ export default function ColorBarSelect({
           >
             <AddIcon />
           </IconButton>
-        </Box>
-      ) : (
+        </Box>,
+      );
+      for (const name of cbg.names) {
+        entries.push(
+          editedUserColorBar.editId === name && userColorBarIndex >= 0 ? (
+            <Box>
+              <Box className={classes.colorBarGroupTitle}>
+                <img alt="edited color bar" width="100%" src={""} />
+              </Box>
+              <TextField
+                label="Value to color mapping"
+                placeholder="Your code goes here"
+                multiline
+                fullWidth
+                size="small"
+                minRows={3}
+                sx={{ marginTop: 0.5, fontFamily: "monospace" }}
+                value={userColorBars[userColorBarIndex].code}
+                onChange={handleUserColorBarCodeChange}
+              />
+              <DoneCancel
+                onOk={handleDoneUserColorBarEdit}
+                onCancel={handleCancelUserColorBarEdit}
+                doneDisabled={!canAddUserColorBar()}
+                size="small"
+              />
+            </Box>
+          ) : (
+            <Box
+              key={key++}
+              className={
+                name === variableColorBar.baseName
+                  ? classes.colorBarGroupItemSelected
+                  : classes.colorBarGroupItem
+              }
+            >
+              <Tooltip arrow title={name} placement="left">
+                <img
+                  src={`data:image/png;base64,${colorBars.images[name]}`}
+                  alt={"Color Bar"}
+                  width={"100%"}
+                  height={"100%"}
+                  onClick={() => {
+                    handleColorBarNameChange(name);
+                  }}
+                />
+              </Tooltip>
+            </Box>
+          ),
+        );
+      }
+    } else {
+      entries.push(
         <Tooltip arrow key={key++} title={cbg.description} placement="left">
           <Box className={classes.colorBarGroupTitle}>{cbg.title}</Box>
-        </Tooltip>
-      ),
-    );
-    for (const name of cbg.names) {
-      entries.push(
-        editedUserColorBar.editId === name && userColorBarIndex >= 0 ? (
-          <Box>
-            <Box className={classes.colorBarGroupTitle}>
-              <img alt="edited color bar" width="100%" src={""} />
-            </Box>
-            <TextField
-              label="Value to color mapping"
-              placeholder="Your code goes here"
-              multiline
-              fullWidth
-              size="small"
-              minRows={3}
-              sx={{ marginTop: 0.5, fontFamily: "monospace" }}
-              value={userColorBars[userColorBarIndex].code}
-              onChange={handleUserColorBarCodeChange}
-            />
-            <DoneCancel
-              onOk={handleDoneUserColorBarEdit}
-              onCancel={handleCancelUserColorBarEdit}
-              doneDisabled={!canAddUserColorBar()}
-              size="small"
-            />
-          </Box>
-        ) : (
+        </Tooltip>,
+      );
+      for (const name of cbg.names) {
+        entries.push(
           <Box
             key={key++}
             className={
@@ -237,9 +263,9 @@ export default function ColorBarSelect({
                 }}
               />
             </Tooltip>
-          </Box>
-        ),
-      );
+          </Box>,
+        );
+      }
     }
   }
 
