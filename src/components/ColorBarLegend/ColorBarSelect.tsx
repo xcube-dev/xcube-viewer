@@ -65,7 +65,6 @@ interface ColorBarSelectProps {
     opacity: number,
   ) => void;
   colorBars: ColorBars;
-  changeColorBars: (colorBars: ColorBars) => void;
 }
 
 export default function ColorBarSelect({
