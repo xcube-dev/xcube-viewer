@@ -127,7 +127,7 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
         ))}
       </Select>
       <DoneCancel
-        onOk={handleUserLayerChange}
+        onDone={handleUserLayerChange}
         onCancel={onCancel}
         doneDisabled={!canCommit()}
       />

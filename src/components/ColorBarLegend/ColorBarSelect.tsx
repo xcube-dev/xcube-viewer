@@ -206,7 +206,7 @@ export default function ColorBarSelect({
                 onChange={handleUserColorBarCodeChange}
               />
               <DoneCancel
-                onOk={handleDoneUserColorBarEdit}
+                onDone={handleDoneUserColorBarEdit}
                 onCancel={handleCancelUserColorBarEdit}
                 doneDisabled={!canAddUserColorBar()}
                 size="small"

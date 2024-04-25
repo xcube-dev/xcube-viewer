@@ -22,48 +22,33 @@
  * SOFTWARE.
  */
 
-import { SxProps } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import DoneIcon from "@mui/icons-material/Done";
+import { Theme } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
-const SX: SxProps = { display: "flex", justifyContent: "flex-end", gap: 1 };
+import { ColorBarGroup } from "@/model/colorBar";
 
-interface DoneCancelProps {
-  onDone: () => void;
-  onCancel: () => void;
-  doneDisabled?: boolean;
-  cancelDisabled?: boolean;
-  size?: "small" | "medium" | "large";
+const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  colorBarGroupTitle: {
+    marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
+    color: theme.palette.grey[400],
+  },
+}));
+
+interface ColorBarGroupHeaderProps {
+  colorBarGroup: ColorBarGroup;
 }
 
-export default function DoneCancel({
-  onDone,
-  onCancel,
-  doneDisabled,
-  cancelDisabled,
-  size,
-}: DoneCancelProps) {
-  size = size || "medium";
+export default function ColorBarGroupHeader({
+  colorBarGroup,
+}: ColorBarGroupHeaderProps) {
+  const classes = useStyles();
   return (
-    <Box sx={SX}>
-      <IconButton
-        onClick={onDone}
-        color="primary"
-        disabled={doneDisabled}
-        size={size}
-      >
-        <DoneIcon />
-      </IconButton>
-      <IconButton
-        onClick={onCancel}
-        color="primary"
-        disabled={cancelDisabled}
-        size={size}
-      >
-        <CancelIcon />
-      </IconButton>
-    </Box>
+    <Tooltip arrow title={colorBarGroup.description} placement="left">
+      <Box className={classes.colorBarGroupTitle}>{colorBarGroup.title}</Box>
+    </Tooltip>
   );
 }

@@ -106,7 +106,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
         />
       </Box>
       <DoneCancel
-        onOk={handleUserLayerChange}
+        onDone={handleUserLayerChange}
         onCancel={onCancel}
         doneDisabled={!canCommit()}
       />

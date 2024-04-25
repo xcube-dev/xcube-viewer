@@ -22,48 +22,57 @@
  * SOFTWARE.
  */
 
-import { SxProps } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import DoneIcon from "@mui/icons-material/Done";
+import { ChangeEvent } from "react";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
 
-const SX: SxProps = { display: "flex", justifyContent: "flex-end", gap: 1 };
+import { UserColorBar } from "@/model/colorBar";
+import DoneCancel from "@/components/DoneCancel";
 
-interface DoneCancelProps {
+interface UserColorBarEditorProps {
+  userColorBar: UserColorBar;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
   onDone: () => void;
   onCancel: () => void;
-  doneDisabled?: boolean;
-  cancelDisabled?: boolean;
-  size?: "small" | "medium" | "large";
 }
 
-export default function DoneCancel({
+export default function UserColorBarEditor({
+  userColorBar,
+  updateUserColorBar,
   onDone,
   onCancel,
-  doneDisabled,
-  cancelDisabled,
-  size,
-}: DoneCancelProps) {
-  size = size || "medium";
+}: UserColorBarEditorProps) {
+  const isValid = () => {
+    // TODO: validate code here
+    return true;
+  };
+
+  const handleCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    updateUserColorBar({ ...userColorBar, code: event.currentTarget.value });
+  };
+
   return (
-    <Box sx={SX}>
-      <IconButton
-        onClick={onDone}
-        color="primary"
-        disabled={doneDisabled}
-        size={size}
-      >
-        <DoneIcon />
-      </IconButton>
-      <IconButton
-        onClick={onCancel}
-        color="primary"
-        disabled={cancelDisabled}
-        size={size}
-      >
-        <CancelIcon />
-      </IconButton>
+    <Box>
+      <Box>
+        <img alt="edited color bar" width="100%" src={""} />
+      </Box>
+      <TextField
+        label="Mapping from value to color mapping"
+        placeholder="Your code goes here"
+        multiline
+        fullWidth
+        size="small"
+        minRows={3}
+        sx={{ marginTop: 0.5, fontFamily: "monospace" }}
+        value={userColorBar.code}
+        onChange={handleCodeChange}
+      />
+      <DoneCancel
+        onDone={onDone}
+        onCancel={onCancel}
+        doneDisabled={!isValid()}
+        size="small"
+      />
     </Box>
   );
 }
