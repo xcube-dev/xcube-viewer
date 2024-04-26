@@ -22,45 +22,28 @@
  * SOFTWARE.
  */
 
-import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
+import { Theme } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 
-import useItemStyles from "./useItemStyles";
+export const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
-interface ColorBarGroupItemProps {
-  name: string;
-  imageData: string;
-  selected: boolean;
-  onSelect: (colorBarName: string) => void;
-}
+const colorBarGroupItemStyle = (theme: Theme) => ({
+  marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
+  width: 240,
+  height: 20,
+  borderWidth: 1,
+  borderStyle: "solid",
+});
 
-export default function ColorBarGroupItem({
-  name,
-  imageData,
-  selected,
-  onSelect,
-}: ColorBarGroupItemProps) {
-  const classes = useItemStyles();
+const useItemStyles = makeStyles((theme: Theme) => ({
+  colorBarGroupItem: {
+    ...colorBarGroupItemStyle(theme),
+    borderColor: theme.palette.mode === "dark" ? "white" : "black",
+  },
+  colorBarGroupItemSelected: {
+    ...colorBarGroupItemStyle(theme),
+    borderColor: "orange",
+  },
+}));
 
-  const handleSelect = () => {
-    onSelect(name);
-  };
-
-  return (
-    <Box
-      className={
-        selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
-      }
-    >
-      <Tooltip arrow title={name} placement="left">
-        <img
-          src={`data:image/png;base64,${imageData}`}
-          alt={"Color Bar"}
-          width={"100%"}
-          height={"100%"}
-          onClick={handleSelect}
-        />
-      </Tooltip>
-    </Box>
-  );
-}
+export default useItemStyles;

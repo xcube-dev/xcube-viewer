@@ -26,21 +26,25 @@ import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
 import useItemStyles from "./useItemStyles";
+import useColorRecords from "./useColorRecords";
+import UserColorBarCanvas from "./UserColorBarCanvas";
 
-interface ColorBarGroupItemProps {
+interface UserColorBarGroupItemProps {
   name: string;
-  imageData: string;
+  code: string;
   selected: boolean;
-  onSelect: (colorBarName: string) => void;
+  onSelect: (name: string) => void;
 }
 
-export default function ColorBarGroupItem({
+export default function UserColorBarGroupItem({
   name,
-  imageData,
+  code,
   selected,
   onSelect,
-}: ColorBarGroupItemProps) {
+}: UserColorBarGroupItemProps) {
   const classes = useItemStyles();
+
+  const { colorRecords, errorMessage } = useColorRecords(code);
 
   const handleSelect = () => {
     onSelect(name);
@@ -53,12 +57,10 @@ export default function ColorBarGroupItem({
       }
     >
       <Tooltip arrow title={name} placement="left">
-        <img
-          src={`data:image/png;base64,${imageData}`}
-          alt={"Color Bar"}
-          width={"100%"}
-          height={"100%"}
-          onClick={handleSelect}
+        <UserColorBarCanvas
+          colorRecords={colorRecords}
+          errorMessage={errorMessage}
+          onSelect={handleSelect}
         />
       </Tooltip>
     </Box>

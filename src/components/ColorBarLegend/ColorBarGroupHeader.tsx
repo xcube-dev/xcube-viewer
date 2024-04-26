@@ -27,8 +27,6 @@ import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
-import { ColorBarGroup } from "@/model/colorBar";
-
 const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,16 +37,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface ColorBarGroupHeaderProps {
-  colorBarGroup: ColorBarGroup;
+  title: string;
+  description: string;
 }
 
 export default function ColorBarGroupHeader({
-  colorBarGroup,
+  title,
+  description,
 }: ColorBarGroupHeaderProps) {
   const classes = useStyles();
   return (
-    <Tooltip arrow title={colorBarGroup.description} placement="left">
-      <Box className={classes.colorBarGroupTitle}>{colorBarGroup.title}</Box>
+    <Tooltip arrow title={description} placement="left">
+      <Box className={classes.colorBarGroupTitle}>{title}</Box>
     </Tooltip>
   );
 }

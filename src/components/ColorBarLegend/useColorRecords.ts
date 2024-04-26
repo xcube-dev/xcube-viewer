@@ -22,45 +22,15 @@
  * SOFTWARE.
  */
 
-import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
+import { useMemo } from "react";
+import { parseUserColorBarCode } from "@/model/colorBar";
 
-import useItemStyles from "./useItemStyles";
-
-interface ColorBarGroupItemProps {
-  name: string;
-  imageData: string;
-  selected: boolean;
-  onSelect: (colorBarName: string) => void;
-}
-
-export default function ColorBarGroupItem({
-  name,
-  imageData,
-  selected,
-  onSelect,
-}: ColorBarGroupItemProps) {
-  const classes = useItemStyles();
-
-  const handleSelect = () => {
-    onSelect(name);
-  };
-
-  return (
-    <Box
-      className={
-        selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
-      }
-    >
-      <Tooltip arrow title={name} placement="left">
-        <img
-          src={`data:image/png;base64,${imageData}`}
-          alt={"Color Bar"}
-          width={"100%"}
-          height={"100%"}
-          onClick={handleSelect}
-        />
-      </Tooltip>
-    </Box>
-  );
+export default function useColorRecords(code: string) {
+  return useMemo(() => {
+    try {
+      return { colorRecords: parseUserColorBarCode(code) };
+    } catch (error) {
+      return { errorMessage: `${error}` };
+    }
+  }, [code]);
 }

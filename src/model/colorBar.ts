@@ -23,6 +23,7 @@
  */
 
 import bgImageData from "./bg.png";
+import { parseColor, RGB } from "@/util/color";
 
 export const USER_COLOR_BAR_GROUP_TITLE = "User";
 
@@ -210,4 +211,102 @@ function getColorBarImageData(
   }
 
   return new ImageData(rgbaArray, rgbaArray.length / 4, 1);
+}
+
+export const USER_COLOR_BAR_CODE_EXAMPLE =
+  "0.0: #23FF52\n" + // tie point 1
+  "0.5: red\n" + // tie point 2
+  "1.0: 120,30,255"; // tie point 3
+
+export type ColorRecord = [number, RGB];
+
+export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
+  const n = records.length;
+  const min = records[0][0];
+  const max = records[n - 1][0];
+  const values = records.map((record) => (record[0] - min) / (max - min));
+  const rgbaArray = new Uint8ClampedArray(4 * size);
+  let recordIndex = 0;
+  let v1 = values[0];
+  let v2 = values[1];
+  for (let i = 0, j = 0; i < size; i++, j += 4) {
+    const v = i / (size - 1);
+    if (v > v2) {
+      recordIndex++;
+      v1 = values[recordIndex];
+      v2 = values[recordIndex + 1];
+    }
+    const w = (v - v1) / (v2 - v1);
+    const [r1, g1, b1] = records[recordIndex][1];
+    const [r2, g2, b2] = records[recordIndex + 1][1];
+    rgbaArray[j] = r1 + w * (r2 - r1);
+    rgbaArray[j + 1] = g1 + w * (g2 - g1);
+    rgbaArray[j + 2] = b1 + w * (b2 - b1);
+    rgbaArray[j + 3] = 255;
+  }
+  return rgbaArray;
+}
+
+export function renderUserColorBar(
+  records: ColorRecord[],
+  canvas: HTMLCanvasElement,
+) {
+  const data = getUserColorBarRgbaArray(records, canvas.width);
+  const imageData = new ImageData(data, data.length / 4, 1);
+  createImageBitmap(imageData).then((bitMap) => {
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.drawImage(bitMap, 0, 0, canvas.width, canvas.height);
+    }
+  });
+}
+
+/**
+ * Parses the given `code` and returns
+ * @param code The color records as text
+ * @returns The parse color records
+ * @throws SyntaxError
+ */
+export function parseUserColorBarCode(code: string): ColorRecord[] {
+  const points: ColorRecord[] = [];
+  code
+    .split("\n")
+    .map((line) =>
+      line
+        .trim()
+        .split(":")
+        .map((comp) => comp.trim()),
+    )
+    .forEach((recordParts, index) => {
+      if (recordParts.length == 2) {
+        const [valueText, rgbText] = recordParts;
+        const value = parseFloat(valueText);
+        const rgb = parseColor(rgbText);
+        if (!Number.isFinite(value)) {
+          throw new SyntaxError(
+            `Line ${index + 1}: invalid value: ${valueText}`,
+          );
+        }
+        if (!rgb) {
+          throw new SyntaxError(`Line ${index + 1}: invalid color: ${rgbText}`);
+        }
+        points.push([value, rgb]);
+      } else if (recordParts.length === 1) {
+        if (recordParts[0] !== "") {
+          throw new SyntaxError(
+            `Line ${index + 1}: invalid color record: ${recordParts[0]}`,
+          );
+        }
+      }
+    });
+  if (points.length < 2) {
+    throw new SyntaxError(`At least two color records must be given`);
+  }
+  return points.sort((r1: ColorRecord, r2: ColorRecord) => {
+    const delta = r1[0] - r2[0];
+    if (delta === 0) {
+      throw new SyntaxError("Values must be unique");
+    }
+    return delta;
+  });
 }

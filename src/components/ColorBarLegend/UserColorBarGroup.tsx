@@ -22,51 +22,28 @@
  * SOFTWARE.
  */
 
-import { useMemo, useState } from "react";
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 
-// import i18n from "@/i18n";
 import { newId } from "@/util/id";
-import { ColorBarGroup, UserColorBar } from "@/model/colorBar";
+import {
+  ColorBarGroup,
+  USER_COLOR_BAR_CODE_EXAMPLE,
+  UserColorBar,
+} from "@/model/colorBar";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
+import UserColorBarGroupItem from "./UserColorBarGroupItem";
 
-const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
-
-interface EditedUserColorBar {
-  editId?: string;
-  editMode?: "add" | "edit";
+interface EditMode {
+  action?: "add" | "edit";
+  colorBarId?: string;
+  userColorBars?: UserColorBar[];
 }
 
-const colorBarGroupItemStyle = (theme: Theme) => ({
-  marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
-  width: 240,
-  height: 20,
-  borderWidth: 1,
-  borderStyle: "solid",
-});
-
-const useStyles = makeStyles((theme: Theme) => ({
-  colorBarGroupTitle: {
-    marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
-    color: theme.palette.grey[400],
-  },
-  colorBarGroupItem: {
-    ...colorBarGroupItemStyle(theme),
-    borderColor: theme.palette.mode === "dark" ? "white" : "black",
-  },
-  colorBarGroupItemSelected: {
-    ...colorBarGroupItemStyle(theme),
-    borderColor: "orange",
-  },
-}));
-
-interface ColorBarSelectProps {
+interface UserColorBarGroupProps {
   colorBarGroup: ColorBarGroup;
   selectedColorBarName: string | null;
   onSelectColorBar: (colorBarName: string) => void;
@@ -80,25 +57,33 @@ export default function ColorBarSelect({
   onSelectColorBar,
   userColorBars,
   updateUserColorBars,
-}: ColorBarSelectProps) {
-  const classes = useStyles();
-
-  const [editedUserColorBar, setEditedUserColorBar] =
-    useState<EditedUserColorBar>({});
+}: UserColorBarGroupProps) {
+  const [editMode, setEditMode] = useState<EditMode>({});
+  const handleUnmount = useRef(() => {
+    // Undo any pending edits
+    if (editMode.userColorBars) {
+      console.log("UNDO!");
+      updateUserColorBars(editMode.userColorBars);
+    }
+  });
+  useEffect(() => {
+    return handleUnmount.current();
+  }, []);
 
   const userColorBarIndex = useMemo(() => {
-    return userColorBars.findIndex(
-      (ucb) => ucb.id === editedUserColorBar.editId,
-    );
-  }, [userColorBars, editedUserColorBar.editId]);
+    return userColorBars.findIndex((ucb) => ucb.id === editMode.colorBarId);
+  }, [userColorBars, editMode.colorBarId]);
 
-  const startUserColorBarEdit = (editMode: "add" | "edit") => {
-    const id = newId("user-layer-");
-    updateUserColorBars([
-      { id, name: id, code: "0.0: #23FF52\n0.5: red\n1.0: 120,30,255" },
-      ...userColorBars,
-    ]);
-    setEditedUserColorBar({ editId: id, editMode });
+  const startUserColorBarEdit = (action: "add" | "edit") => {
+    if (action === "add") {
+      const colorBarId = newId("user-layer-");
+      const editMode: EditMode = { action, colorBarId, userColorBars };
+      updateUserColorBars([
+        { id: colorBarId, name: colorBarId, code: USER_COLOR_BAR_CODE_EXAMPLE },
+        ...userColorBars,
+      ]);
+      setEditMode(editMode);
+    }
   };
 
   const handleStartUserColorBarAdd = () => {
@@ -110,18 +95,18 @@ export default function ColorBarSelect({
   // };
 
   const handleDoneUserColorBarEdit = () => {
-    setEditedUserColorBar({});
+    setEditMode({});
   };
 
   const handleCancelUserColorBarEdit = () => {
-    if (editedUserColorBar.editMode === "add") {
-      const [_, ...restUserColorBars] = userColorBars;
-      updateUserColorBars(restUserColorBars);
+    const userColorBarsBackup = editMode.userColorBars;
+    if (userColorBarsBackup) {
+      updateUserColorBars(userColorBarsBackup);
     }
-    setEditedUserColorBar({});
+    setEditMode({});
   };
 
-  const handleUserColorBarCodeChange = (userColorBar: UserColorBar) => {
+  const handleUpdateUserColorBar = (userColorBar: UserColorBar) => {
     updateUserColorBars([
       ...userColorBars.slice(0, userColorBarIndex),
       { ...userColorBar },
@@ -139,44 +124,36 @@ export default function ColorBarSelect({
           gap: 1,
         }}
       >
-        <ColorBarGroupHeader colorBarGroup={colorBarGroup} />
+        <ColorBarGroupHeader
+          title={colorBarGroup.title}
+          description={colorBarGroup.description}
+        />
         <IconButton
           onClick={handleStartUserColorBarAdd}
           size="small"
           color="primary"
-          disabled={!!editedUserColorBar.editMode}
+          disabled={!!editMode.action}
         >
           <AddIcon />
         </IconButton>
       </Box>
-      {colorBarGroup.names.map((name) =>
-        name === editedUserColorBar.editId && userColorBarIndex >= 0 ? (
+      {userColorBars.map((userColorBar) =>
+        userColorBar.id === editMode.colorBarId && userColorBarIndex >= 0 ? (
           <UserColorBarEditor
-            key={name}
-            userColorBar={userColorBars[userColorBarIndex]}
-            updateUserColorBar={handleUserColorBarCodeChange}
+            key={userColorBar.id}
+            userColorBar={userColorBar}
+            updateUserColorBar={handleUpdateUserColorBar}
             onDone={handleDoneUserColorBarEdit}
             onCancel={handleCancelUserColorBarEdit}
           />
         ) : (
-          <Box
-            key={name}
-            className={
-              name === selectedColorBarName
-                ? classes.colorBarGroupItemSelected
-                : classes.colorBarGroupItem
-            }
-          >
-            <Tooltip arrow title={name} placement="left">
-              <img
-                // src={`data:image/png;base64,${colorBars.images[name]}`}
-                alt={"Color Bar"}
-                width={"100%"}
-                height={"100%"}
-                onClick={() => onSelectColorBar(name)}
-              />
-            </Tooltip>
-          </Box>
+          <UserColorBarGroupItem
+            key={userColorBar.id}
+            name={userColorBar.name}
+            code={userColorBar.code}
+            selected={userColorBar.id === selectedColorBarName}
+            onSelect={() => onSelectColorBar(userColorBar.id)}
+          />
         ),
       )}
     </>

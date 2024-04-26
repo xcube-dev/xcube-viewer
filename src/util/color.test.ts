@@ -22,45 +22,32 @@
  * SOFTWARE.
  */
 
-import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
+import { expect, it, describe } from "vitest";
+import { parseColor } from "./color";
 
-import useItemStyles from "./useItemStyles";
+describe("Assert that color.parseColor()", () => {
+  it("works for hex colors", () => {
+    expect(parseColor("#000")).toEqual([0, 0, 0]);
+    expect(parseColor("#fff")).toEqual([255, 255, 255]);
+    expect(parseColor("#E9967A")).toEqual([233, 150, 122]);
+    expect(parseColor("#e9967a")).toEqual([233, 150, 122]);
+  });
 
-interface ColorBarGroupItemProps {
-  name: string;
-  imageData: string;
-  selected: boolean;
-  onSelect: (colorBarName: string) => void;
-}
+  it("works for RGB colors", () => {
+    expect(parseColor("0,0,0")).toEqual([0, 0, 0]);
+    expect(parseColor("255, 255, 255")).toEqual([255, 255, 255]);
+    expect(parseColor("233, 150, 122")).toEqual([233, 150, 122]);
+  });
 
-export default function ColorBarGroupItem({
-  name,
-  imageData,
-  selected,
-  onSelect,
-}: ColorBarGroupItemProps) {
-  const classes = useItemStyles();
+  it("works for color names", () => {
+    expect(parseColor("darksalmon")).toEqual([233, 150, 122]);
+    expect(parseColor("DarkSalmon")).toEqual([233, 150, 122]);
+  });
 
-  const handleSelect = () => {
-    onSelect(name);
-  };
-
-  return (
-    <Box
-      className={
-        selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
-      }
-    >
-      <Tooltip arrow title={name} placement="left">
-        <img
-          src={`data:image/png;base64,${imageData}`}
-          alt={"Color Bar"}
-          width={"100%"}
-          height={"100%"}
-          onClick={handleSelect}
-        />
-      </Tooltip>
-    </Box>
-  );
-}
+  it("detects invalid color strings", () => {
+    expect(parseColor("#P9FF7A")).toBeUndefined();
+    expect(parseColor("0, 0")).toBeUndefined();
+    expect(parseColor("0, 0, 256")).toBeUndefined();
+    expect(parseColor("DarkMetal")).toBeUndefined();
+  });
+});

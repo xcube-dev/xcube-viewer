@@ -28,6 +28,8 @@ import TextField from "@mui/material/TextField";
 
 import { UserColorBar } from "@/model/colorBar";
 import DoneCancel from "@/components/DoneCancel";
+import UserColorBarCanvas from "./UserColorBarCanvas";
+import useColorRecords from "./useColorRecords";
 
 interface UserColorBarEditorProps {
   userColorBar: UserColorBar;
@@ -42,10 +44,7 @@ export default function UserColorBarEditor({
   onDone,
   onCancel,
 }: UserColorBarEditorProps) {
-  const isValid = () => {
-    // TODO: validate code here
-    return true;
-  };
+  const { colorRecords, errorMessage } = useColorRecords(userColorBar.code);
 
   const handleCodeChange = (event: ChangeEvent<HTMLInputElement>) => {
     updateUserColorBar({ ...userColorBar, code: event.currentTarget.value });
@@ -53,8 +52,21 @@ export default function UserColorBarEditor({
 
   return (
     <Box>
-      <Box>
-        <img alt="edited color bar" width="100%" src={""} />
+      <Box
+        sx={{
+          borderColor: "black",
+          borderStyle: "solid",
+          borderWidth: 1,
+          width: 240,
+          height: 24,
+        }}
+      >
+        <UserColorBarCanvas
+          colorRecords={colorRecords}
+          errorMessage={errorMessage}
+          width={"100%"}
+          height={22}
+        />
       </Box>
       <TextField
         label="Mapping from value to color mapping"
@@ -63,14 +75,14 @@ export default function UserColorBarEditor({
         fullWidth
         size="small"
         minRows={3}
-        sx={{ marginTop: 0.5, fontFamily: "monospace" }}
+        sx={{ marginTop: 2, fontFamily: "monospace" }}
         value={userColorBar.code}
         onChange={handleCodeChange}
       />
       <DoneCancel
         onDone={onDone}
         onCancel={onCancel}
-        doneDisabled={!isValid()}
+        doneDisabled={!colorRecords}
         size="small"
       />
     </Box>
