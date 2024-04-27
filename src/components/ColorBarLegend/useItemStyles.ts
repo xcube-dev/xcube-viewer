@@ -41,7 +41,7 @@ const useItemStyles = makeStyles((theme: Theme) => ({
   },
   colorBarGroupItemSelected: {
     ...colorBarGroupItemStyle(theme),
-    borderColor: "orange",
+    borderColor: "blue",
   },
 }));
 

@@ -28,25 +28,39 @@ import Tooltip from "@mui/material/Tooltip";
 import useItemStyles from "./useItemStyles";
 
 interface ColorBarItemProps {
-  name: string;
   imageData?: string;
-  selected: boolean;
-  onSelect: (colorBarName: string) => void;
+  selected?: boolean;
+  onSelect?: () => void;
   width: number | string;
+  title?: string;
 }
 
 export default function ColorBarItem({
-  name,
   imageData,
   selected,
   onSelect,
   width,
+  title,
 }: ColorBarItemProps) {
   const classes = useItemStyles();
 
-  const handleSelect = () => {
-    onSelect(name);
-  };
+  let image = (
+    <img
+      src={imageData ? `data:image/png;base64,${imageData}` : undefined}
+      alt={imageData ? "color bar" : "error"}
+      width={"100%"}
+      height={"100%"}
+      onClick={onSelect}
+    />
+  );
+
+  if (title) {
+    image = (
+      <Tooltip arrow title={title} placement="left">
+        {image}
+      </Tooltip>
+    );
+  }
 
   return (
     <Box
@@ -55,15 +69,7 @@ export default function ColorBarItem({
         selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
       }
     >
-      <Tooltip arrow title={name} placement="left">
-        <img
-          src={imageData ? `data:image/png;base64,${imageData}` : undefined}
-          alt={"Color bar"}
-          width={"100%"}
-          height={"100%"}
-          onClick={handleSelect}
-        />
-      </Tooltip>
+      {image}
     </Box>
   );
 }

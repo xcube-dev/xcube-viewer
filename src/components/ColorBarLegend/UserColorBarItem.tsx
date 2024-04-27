@@ -34,6 +34,7 @@ import ColorBarItem from "./ColorBarItem";
 
 interface UserColorBarItemProps {
   imageData?: string;
+  title?: string;
   selected: boolean;
   onSelect: () => void;
   onEdit: () => void;
@@ -43,6 +44,7 @@ interface UserColorBarItemProps {
 
 export default function UserColorBarItem({
   imageData,
+  title,
   selected,
   onEdit,
   onRemove,
@@ -74,11 +76,11 @@ export default function UserColorBarItem({
   return (
     <Box sx={{ display: "flex", gap: 1, width: 240, marginTop: 0.2 }}>
       <ColorBarItem
-        name={""}
         imageData={imageData}
         selected={selected}
         onSelect={onSelect}
-        width={200}
+        width={220}
+        title={title}
       />
       <Box
         onMouseEnter={handleMoreOpen}

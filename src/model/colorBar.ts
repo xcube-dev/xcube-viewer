@@ -63,9 +63,13 @@ export interface UserColorBar {
    */
   code: string;
   /**
-   * Rendered by renderUserColorBarAsBase64()
+   * Rendered by renderUserColorBarAsBase64() from code
    */
   imageData?: string;
+  /**
+   * If imageData is undefined, errorMessage should say why.
+   */
+  errorMessage?: string;
 }
 
 export function parseColorBar(
@@ -266,17 +270,17 @@ export function renderUserColorBar(
 
 export function renderUserColorBarAsBase64(
   colorBar: UserColorBar,
-): Promise<string | undefined> {
-  const { colorRecords } = getUserColorBarCode(colorBar.code);
+): Promise<{ imageData?: string; errorMessage?: string }> {
+  const { colorRecords, errorMessage } = getUserColorBarCode(colorBar.code);
   if (!colorRecords) {
-    return Promise.resolve(undefined);
+    return Promise.resolve({ errorMessage });
   }
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 1;
   return renderUserColorBar(colorRecords, canvas).then(() => {
     const dataURL = canvas.toDataURL("image/png");
-    return dataURL.split(",")[1];
+    return { imageData: dataURL.split(",")[1] };
   });
 }
 

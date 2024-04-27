@@ -685,8 +685,8 @@ function updateUserColorBarImageDataById(colorBarId: string) {
 
 function updateUserColorBarImageData(colorBar: UserColorBar) {
   return (dispatch: Dispatch) => {
-    renderUserColorBarAsBase64(colorBar).then((imageData) => {
-      dispatch(_updateUserColorBar({ ...colorBar, imageData }));
+    renderUserColorBarAsBase64(colorBar).then(({ imageData, errorMessage }) => {
+      dispatch(_updateUserColorBar({ ...colorBar, imageData, errorMessage }));
     });
   };
 }

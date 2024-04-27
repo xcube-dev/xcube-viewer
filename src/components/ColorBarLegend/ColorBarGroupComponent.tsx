@@ -48,10 +48,10 @@ export default function ColorBarGroupComponent({
       {colorBarGroup.names.map((name) => (
         <ColorBarItem
           key={name}
-          name={name}
+          title={name}
           imageData={images[name]}
           selected={name === selectedColorBarName}
-          onSelect={onSelectColorBar}
+          onSelect={() => onSelectColorBar(name)}
           width={240}
         />
       ))}
