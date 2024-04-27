@@ -23,7 +23,6 @@
  */
 
 import { useCallback, useEffect, useRef } from "react";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import { ColorRecord, renderUserColorBar } from "@/model/colorBar";
@@ -31,8 +30,8 @@ import { ColorRecord, renderUserColorBar } from "@/model/colorBar";
 interface UserColorBarCanvasProps {
   colorRecords?: ColorRecord[];
   errorMessage?: string;
-  width?: number | string;
-  height?: number | string;
+  width: number | string;
+  height: number | string;
   onSelect?: () => void;
 }
 
@@ -53,7 +52,7 @@ export default function UserColorBarCanvas({
       canvas.width = div.clientWidth;
       canvas.height = div.clientHeight;
       if (colorRecords) {
-        renderUserColorBar(colorRecords, canvas);
+        void renderUserColorBar(colorRecords, canvas);
       }
     }
   }, [colorRecords]);
@@ -72,21 +71,21 @@ export default function UserColorBarCanvas({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas !== null && colorRecords) {
-      renderUserColorBar(colorRecords, canvas);
+      void renderUserColorBar(colorRecords, canvas);
     }
   }, [colorRecords]);
 
-  width = width || "100%";
-  height = height || 24;
-
+  const size = { width, height };
   return (
-    <Box ref={divRef} width={width} height={height}>
-      {colorRecords && <canvas ref={canvasRef} onClick={onSelect} />}
+    <div ref={divRef} style={size}>
+      {colorRecords && (
+        <canvas ref={canvasRef} style={size} onClick={onSelect} />
+      )}
       {errorMessage && (
         <Typography variant="subtitle2" color="red">
           {errorMessage}
         </Typography>
       )}
-    </Box>
+    </div>
   );
 }

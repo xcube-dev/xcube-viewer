@@ -23,7 +23,6 @@
  */
 
 import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
 
 import useItemStyles from "./useItemStyles";
 import useColorRecords from "./useColorRecords";
@@ -56,13 +55,13 @@ export default function UserColorBarGroupItem({
         selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
       }
     >
-      <Tooltip arrow title={name} placement="left">
-        <UserColorBarCanvas
-          colorRecords={colorRecords}
-          errorMessage={errorMessage}
-          onSelect={handleSelect}
-        />
-      </Tooltip>
+      <UserColorBarCanvas
+        colorRecords={colorRecords}
+        errorMessage={errorMessage}
+        onSelect={handleSelect}
+        width={238} // box width - 2 x border
+        height={18} // box height - 2 x border
+      />
     </Box>
   );
 }
