@@ -45,6 +45,7 @@ interface ColorBarSelectProps {
   colorBars: ColorBars;
   userColorBars: UserColorBar[];
   addUserColorBar: (userColorBarId: string) => void;
+  removeUserColorBar: (userColorBarId: string) => void;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
@@ -58,6 +59,7 @@ export default function ColorBarSelect({
   colorBars,
   userColorBars,
   addUserColorBar,
+  removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
 }: ColorBarSelectProps) {
@@ -81,6 +83,7 @@ export default function ColorBarSelect({
             onSelectColorBar={handleSelectColorBar}
             userColorBars={userColorBars}
             addUserColorBar={addUserColorBar}
+            removeUserColorBar={removeUserColorBar}
             updateUserColorBar={updateUserColorBar}
             updateUserColorBars={updateUserColorBars}
           />

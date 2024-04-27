@@ -637,6 +637,19 @@ export function _addUserColorBar(colorBarId: string): AddUserColorBar {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const REMOVE_USER_COLOR_BAR = "REMOVE_USER_COLOR_BAR";
+
+export interface RemoveUserColorBar {
+  type: typeof REMOVE_USER_COLOR_BAR;
+  colorBarId: string;
+}
+
+export function removeUserColorBar(colorBarId: string): RemoveUserColorBar {
+  return { type: REMOVE_USER_COLOR_BAR, colorBarId };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export function updateUserColorBar(userColorBar: UserColorBar) {
   return (dispatch: Dispatch) => {
     dispatch(_updateUserColorBar(userColorBar));
@@ -700,6 +713,7 @@ export type ControlAction =
   | RemoveActivity
   | ChangeLocale
   | AddUserColorBar
+  | RemoveUserColorBar
   | UpdateUserColorBar
   | UpdateSettings
   | OpenDialog

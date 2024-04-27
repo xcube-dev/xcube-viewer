@@ -27,19 +27,19 @@ import Tooltip from "@mui/material/Tooltip";
 
 import useItemStyles from "./useItemStyles";
 
-interface ColorBarGroupItemProps {
+interface ColorBarItemProps {
   name: string;
   imageData: string;
   selected: boolean;
   onSelect: (colorBarName: string) => void;
 }
 
-export default function ColorBarGroupItem({
+export default function ColorBarItem({
   name,
   imageData,
   selected,
   onSelect,
-}: ColorBarGroupItemProps) {
+}: ColorBarItemProps) {
   const classes = useItemStyles();
 
   const handleSelect = () => {

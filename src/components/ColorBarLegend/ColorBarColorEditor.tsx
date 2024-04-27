@@ -57,6 +57,7 @@ interface ColorBarColorEditorProps {
   colorBars: ColorBars;
   userColorBars: UserColorBar[];
   addUserColorBar: (userColorBarId: string) => void;
+  removeUserColorBar: (userColorBarId: string) => void;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
@@ -67,6 +68,7 @@ export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
     colorBars,
     userColorBars,
     addUserColorBar,
+    removeUserColorBar,
     updateUserColorBar,
     updateUserColorBars,
     ...baseProps
@@ -79,6 +81,7 @@ export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
         colorBars={colorBars}
         userColorBars={userColorBars}
         addUserColorBar={addUserColorBar}
+        removeUserColorBar={removeUserColorBar}
         updateUserColorBar={updateUserColorBar}
         updateUserColorBars={updateUserColorBars}
       />

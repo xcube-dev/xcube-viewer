@@ -31,7 +31,7 @@ import { newId } from "@/util/id";
 import { ColorBarGroup, UserColorBar } from "@/model/colorBar";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
-import UserColorBarGroupItem from "./UserColorBarGroupItem";
+import UserColorBarItem from "./UserColorBarItem";
 import useUndo from "./useUndo";
 
 interface EditMode {
@@ -45,6 +45,7 @@ interface UserColorBarGroupProps {
   onSelectColorBar: (colorBarName: string) => void;
   userColorBars: UserColorBar[];
   addUserColorBar: (userColorBarId: string) => void;
+  removeUserColorBar: (userColorBarId: string) => void;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
@@ -55,8 +56,8 @@ export default function ColorBarSelect({
   onSelectColorBar,
   userColorBars,
   addUserColorBar,
-  // TODO: use
-  // updateUserColorBar,
+  removeUserColorBar,
+  updateUserColorBar,
   updateUserColorBars,
 }: UserColorBarGroupProps) {
   const [editMode, setEditMode] = useState<EditMode>({});
@@ -73,9 +74,15 @@ export default function ColorBarSelect({
     setEditMode({ action: "add", colorBarId });
   };
 
-  // TODO: implemeent
-  // const handleStartUserColorBarEdit = () => {
-  // };
+  const handleStartUserColorBarEdit = (colorBarId: string) => {
+    setUndo(() => updateUserColorBars(userColorBars));
+    setEditMode({ action: "edit", colorBarId });
+  };
+
+  const handleRemoveUserColorBar = (colorBarId: string) => {
+    setUndo(undefined);
+    removeUserColorBar(colorBarId);
+  };
 
   const handleDoneUserColorBarEdit = () => {
     setUndo(undefined);
@@ -85,14 +92,6 @@ export default function ColorBarSelect({
   const handleCancelUserColorBarEdit = () => {
     undo();
     setEditMode({});
-  };
-
-  const handleUpdateUserColorBar = (userColorBar: UserColorBar) => {
-    updateUserColorBars([
-      ...userColorBars.slice(0, userColorBarIndex),
-      { ...userColorBar },
-      ...userColorBars.slice(userColorBarIndex + 1),
-    ]);
   };
 
   return (
@@ -115,7 +114,7 @@ export default function ColorBarSelect({
           color="primary"
           disabled={!!editMode.action}
         >
-          <AddIcon />
+          <AddIcon fontSize="inherit" />
         </IconButton>
       </Box>
       {userColorBars.map((userColorBar) =>
@@ -123,17 +122,19 @@ export default function ColorBarSelect({
           <UserColorBarEditor
             key={userColorBar.id}
             userColorBar={userColorBar}
-            updateUserColorBar={handleUpdateUserColorBar}
+            updateUserColorBar={updateUserColorBar}
             onDone={handleDoneUserColorBarEdit}
             onCancel={handleCancelUserColorBarEdit}
           />
         ) : (
-          <UserColorBarGroupItem
+          <UserColorBarItem
             key={userColorBar.id}
-            name={userColorBar.id}
-            code={userColorBar.code}
+            colorBarCode={userColorBar.code}
+            disabled={!!editMode.action}
             selected={userColorBar.id === selectedColorBarName}
             onSelect={() => onSelectColorBar(userColorBar.id)}
+            onEdit={() => handleStartUserColorBarEdit(userColorBar.id)}
+            onRemove={() => handleRemoveUserColorBar(userColorBar.id)}
           />
         ),
       )}

@@ -24,7 +24,7 @@
 
 import { ColorBarGroup } from "@/model/colorBar";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
-import ColorBarGroupItem from "./ColorBarGroupItem";
+import ColorBarItem from "./ColorBarItem";
 
 interface ColorBarGroupComponentProps {
   colorBarGroup: ColorBarGroup;
@@ -46,7 +46,7 @@ export default function ColorBarGroupComponent({
         description={colorBarGroup.description}
       />
       {colorBarGroup.names.map((name) => (
-        <ColorBarGroupItem
+        <ColorBarItem
           key={name}
           name={name}
           imageData={images[name]}

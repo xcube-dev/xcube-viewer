@@ -67,6 +67,7 @@ interface ColorBarLegendProps {
   colorBars: ColorBars;
   userColorBars: UserColorBar[];
   addUserColorBar: (userColorBarId: string) => void;
+  removeUserColorBar: (userColorBarId: string) => void;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
   width?: number | string;
@@ -85,6 +86,7 @@ export default function ColorBarLegend({
   colorBars,
   userColorBars,
   addUserColorBar,
+  removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
   width,
@@ -185,6 +187,7 @@ export default function ColorBarLegend({
           colorBars={colorBars}
           userColorBars={userColorBars}
           addUserColorBar={addUserColorBar}
+          removeUserColorBar={removeUserColorBar}
           updateUserColorBar={updateUserColorBar}
           updateUserColorBars={updateUserColorBars}
         />

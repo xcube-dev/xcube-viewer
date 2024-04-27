@@ -28,7 +28,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
-const SX: SxProps = { display: "flex", justifyContent: "flex-end", gap: 1 };
+const SX: SxProps = { display: "flex", justifyContent: "flex-end", gap: 0.2 };
 
 interface DoneCancelProps {
   onDone: () => void;
@@ -54,7 +54,7 @@ export default function DoneCancel({
         disabled={doneDisabled}
         size={size}
       >
-        <DoneIcon />
+        <DoneIcon fontSize="inherit" />
       </IconButton>
       <IconButton
         onClick={onCancel}
@@ -62,7 +62,7 @@ export default function DoneCancel({
         disabled={cancelDisabled}
         size={size}
       >
-        <CancelIcon />
+        <CancelIcon fontSize="inherit" />
       </IconButton>
     </Box>
   );

@@ -32,6 +32,7 @@ import {
   INC_SELECTED_TIME,
   OPEN_DIALOG,
   REMOVE_ACTIVITY,
+  REMOVE_USER_COLOR_BAR,
   SELECT_DATASET,
   SELECT_PLACE,
   SELECT_PLACE_GROUPS,
@@ -346,6 +347,22 @@ export function controlReducer(
           ...state.userColorBars,
         ],
       };
+    }
+    case REMOVE_USER_COLOR_BAR: {
+      const userColorBarId = action.colorBarId;
+      const index = state.userColorBars.findIndex(
+        (ucb) => ucb.id === userColorBarId,
+      );
+      if (index >= 0) {
+        return {
+          ...state,
+          userColorBars: [
+            ...state.userColorBars.slice(0, index),
+            ...state.userColorBars.slice(index + 1),
+          ],
+        };
+      }
+      return state;
     }
     case UPDATE_USER_COLOR_BAR: {
       const userColorBar = action.userColorBar;

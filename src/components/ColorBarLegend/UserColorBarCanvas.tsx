@@ -30,16 +30,14 @@ import { ColorRecord, renderUserColorBar } from "@/model/colorBar";
 interface UserColorBarCanvasProps {
   colorRecords?: ColorRecord[];
   errorMessage?: string;
-  width: number | string;
-  height: number | string;
+  selected?: boolean;
   onSelect?: () => void;
 }
 
 export default function UserColorBarCanvas({
   colorRecords,
   errorMessage,
-  width,
-  height,
+  selected,
   onSelect,
 }: UserColorBarCanvasProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -75,11 +73,23 @@ export default function UserColorBarCanvas({
     }
   }, [colorRecords]);
 
-  const size = { width, height };
   return (
-    <div ref={divRef} style={size}>
+    <div
+      ref={divRef}
+      style={{
+        flexGrow: 1,
+        borderColor: !selected ? "black" : "orange", // TODO: use theme
+        borderWidth: 1,
+        borderStyle: "solid",
+        height: 20,
+      }}
+    >
       {colorRecords && (
-        <canvas ref={canvasRef} style={size} onClick={onSelect} />
+        <canvas
+          ref={canvasRef}
+          style={{ width: "100%", height: "100%" }}
+          onClick={onSelect}
+        />
       )}
       {errorMessage && (
         <Typography variant="subtitle2" color="red">

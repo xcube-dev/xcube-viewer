@@ -38,6 +38,7 @@ import {
 import { updateVariableColorBar } from "@/actions/dataActions";
 import {
   addUserColorBar,
+  removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
 } from "@/actions/controlActions";
@@ -59,6 +60,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   updateVariableColorBar,
   addUserColorBar,
+  removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
 };

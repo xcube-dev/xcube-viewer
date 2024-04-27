@@ -26,7 +26,7 @@ import { ChangeEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-import { UserColorBar } from "@/model/colorBar";
+import { USER_COLOR_BAR_CODE_EXAMPLE, UserColorBar } from "@/model/colorBar";
 import DoneCancel from "@/components/DoneCancel";
 import UserColorBarCanvas from "./UserColorBarCanvas";
 import useColorRecords from "./useColorRecords";
@@ -52,25 +52,15 @@ export default function UserColorBarEditor({
 
   return (
     <Box>
-      <Box
-        sx={{
-          borderColor: "black",
-          borderStyle: "solid",
-          borderWidth: 1,
-          width: 240,
-          height: 24,
-        }}
-      >
+      <Box width={240} height={20}>
         <UserColorBarCanvas
           colorRecords={colorRecords}
           errorMessage={errorMessage}
-          width={"100%"}
-          height={22}
         />
       </Box>
       <TextField
-        label="Mapping from value to color mapping"
-        placeholder="Your code goes here"
+        label="Color mapping"
+        placeholder={USER_COLOR_BAR_CODE_EXAMPLE}
         multiline
         fullWidth
         size="small"
