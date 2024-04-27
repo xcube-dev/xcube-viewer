@@ -40,7 +40,6 @@ import UserColorBarGroupItem from "./UserColorBarGroupItem";
 interface EditMode {
   action?: "add" | "edit";
   colorBarId?: string;
-  userColorBars?: UserColorBar[];
 }
 
 interface UserColorBarGroupProps {
@@ -59,15 +58,15 @@ export default function ColorBarSelect({
   updateUserColorBars,
 }: UserColorBarGroupProps) {
   const [editMode, setEditMode] = useState<EditMode>({});
-  const handleUnmount = useRef(() => {
-    // Undo any pending edits
-    if (editMode.userColorBars) {
-      console.log("UNDO!");
-      updateUserColorBars(editMode.userColorBars);
-    }
-  });
+  const undo = useRef<() => void>();
+
   useEffect(() => {
-    return handleUnmount.current();
+    return () => {
+      if (undo.current) {
+        undo.current();
+        undo.current = undefined;
+      }
+    };
   }, []);
 
   const userColorBarIndex = useMemo(() => {
@@ -75,9 +74,10 @@ export default function ColorBarSelect({
   }, [userColorBars, editMode.colorBarId]);
 
   const startUserColorBarEdit = (action: "add" | "edit") => {
+    undo.current = () => updateUserColorBars(userColorBars);
     if (action === "add") {
-      const colorBarId = newId("user-layer-");
-      const editMode: EditMode = { action, colorBarId, userColorBars };
+      const colorBarId = newId("user-cb-");
+      const editMode: EditMode = { action, colorBarId };
       updateUserColorBars([
         { id: colorBarId, name: colorBarId, code: USER_COLOR_BAR_CODE_EXAMPLE },
         ...userColorBars,
@@ -99,9 +99,9 @@ export default function ColorBarSelect({
   };
 
   const handleCancelUserColorBarEdit = () => {
-    const userColorBarsBackup = editMode.userColorBars;
-    if (userColorBarsBackup) {
-      updateUserColorBars(userColorBarsBackup);
+    if (undo.current) {
+      undo.current();
+      undo.current = undefined;
     }
     setEditMode({});
   };
