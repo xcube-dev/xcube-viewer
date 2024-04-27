@@ -41,7 +41,10 @@ export default function ColorBarGroupComponent({
 }: ColorBarGroupComponentProps) {
   return (
     <>
-      <ColorBarGroupHeader colorBarGroup={colorBarGroup} />
+      <ColorBarGroupHeader
+        title={colorBarGroup.title}
+        description={colorBarGroup.description}
+      />
       {colorBarGroup.names.map((name) => (
         <ColorBarGroupItem
           key={name}
