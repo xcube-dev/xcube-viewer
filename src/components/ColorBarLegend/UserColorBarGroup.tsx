@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -36,6 +36,7 @@ import {
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarGroupItem from "./UserColorBarGroupItem";
+import useUndo from "./useUndo";
 
 interface EditMode {
   action?: "add" | "edit";
@@ -58,23 +59,14 @@ export default function ColorBarSelect({
   updateUserColorBars,
 }: UserColorBarGroupProps) {
   const [editMode, setEditMode] = useState<EditMode>({});
-  const undo = useRef<() => void>();
-
-  useEffect(() => {
-    return () => {
-      if (undo.current) {
-        undo.current();
-        undo.current = undefined;
-      }
-    };
-  }, []);
+  const [undo, setUndo] = useUndo();
 
   const userColorBarIndex = useMemo(() => {
     return userColorBars.findIndex((ucb) => ucb.id === editMode.colorBarId);
   }, [userColorBars, editMode.colorBarId]);
 
   const startUserColorBarEdit = (action: "add" | "edit") => {
-    undo.current = () => updateUserColorBars(userColorBars);
+    setUndo(() => updateUserColorBars(userColorBars));
     if (action === "add") {
       const colorBarId = newId("user-cb-");
       const editMode: EditMode = { action, colorBarId };
@@ -95,14 +87,12 @@ export default function ColorBarSelect({
   // };
 
   const handleDoneUserColorBarEdit = () => {
+    setUndo(undefined);
     setEditMode({});
   };
 
   const handleCancelUserColorBarEdit = () => {
-    if (undo.current) {
-      undo.current();
-      undo.current = undefined;
-    }
+    undo();
     setEditMode({});
   };
 
