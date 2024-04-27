@@ -25,7 +25,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getUserColorBarRgbaArray,
-  parseUserColorBarCode,
+  getUserColorBarCode,
   USER_COLOR_BAR_CODE_EXAMPLE,
 } from "./colorBar";
 
@@ -51,32 +51,45 @@ describe("Assert that colorBar.getUserColorBarData()", () => {
 
 describe("Assert that colorBar.parseUserColorCode()", () => {
   it("parses the example code as expected", () => {
-    expect(parseUserColorBarCode(USER_COLOR_BAR_CODE_EXAMPLE)).toEqual([
-      [0.0, [35, 255, 82]],
-      [0.5, [255, 0, 0]],
-      [1.0, [120, 30, 255]],
-    ]);
+    expect(getUserColorBarCode(USER_COLOR_BAR_CODE_EXAMPLE)).toEqual({
+      colorRecords: [
+        [0.0, [35, 255, 82]],
+        [0.5, [255, 0, 0]],
+        [1.0, [120, 30, 255]],
+      ],
+    });
+  });
+
+  it("parses the non-unique values", () => {
+    expect(getUserColorBarCode("0:blue\n1:red\n1:green\n2:blue")).toEqual({
+      colorRecords: [
+        [0, [0, 0, 255]],
+        [1, [255, 0, 0]],
+        [1, [0, 128, 0]],
+        [2, [0, 0, 255]],
+      ],
+    });
   });
 
   it("detects invalid code", () => {
-    expect(() => parseUserColorBarCode("")).toThrowError(
-      new SyntaxError("At least two color records must be given"),
-    );
+    expect(getUserColorBarCode("")).toEqual({
+      errorMessage: "At least two color records must be given",
+    });
 
-    expect(() => parseUserColorBarCode("what?")).toThrowError(
-      new SyntaxError("Line 1: invalid color record: what?"),
-    );
+    expect(getUserColorBarCode("what?")).toEqual({
+      errorMessage: "Line 1: invalid color record: what?",
+    });
 
-    expect(() =>
-      parseUserColorBarCode("0: red\n1: green\n\nx: blue"),
-    ).toThrowError(new SyntaxError("Line 4: invalid value: x"));
+    expect(getUserColorBarCode("0: red\n1: green\n\nx: blue")).toEqual({
+      errorMessage: "Line 4: invalid value: x",
+    });
 
-    expect(() =>
-      parseUserColorBarCode("0: red\n1: greeen\n0: blue"),
-    ).toThrowError(new SyntaxError("Line 2: invalid color: greeen"));
+    expect(getUserColorBarCode("0: red\n1: greeen\n0: blue")).toEqual({
+      errorMessage: "Line 2: invalid color: greeen",
+    });
 
-    expect(() =>
-      parseUserColorBarCode("0: red\n1: green\n0: blue"),
-    ).toThrowError(new SyntaxError("Values must be unique"));
+    expect(getUserColorBarCode("0: red\n0: green")).toEqual({
+      errorMessage: "Values must form a range",
+    });
   });
 });

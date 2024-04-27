@@ -284,8 +284,11 @@ export function getUserColorBarCode(code: string) {
   try {
     const colorRecords = parseUserColorBarCode(code);
     return { colorRecords };
-  } catch (e) {
-    return { errorMessage: `${e}` };
+  } catch (error: unknown) {
+    if (error instanceof SyntaxError) {
+      return { errorMessage: `${error.message}` };
+    }
+    throw error;
   }
 }
 
@@ -329,14 +332,15 @@ export function parseUserColorBarCode(code: string): ColorRecord[] {
         }
       }
     });
-  if (points.length < 2) {
+  const n = points.length;
+  if (n < 2) {
     throw new SyntaxError(`At least two color records must be given`);
   }
-  return points.sort((r1: ColorRecord, r2: ColorRecord) => {
-    const delta = r1[0] - r2[0];
-    if (delta === 0) {
-      throw new SyntaxError("Values must be unique");
-    }
-    return delta;
-  });
+  points.sort((r1: ColorRecord, r2: ColorRecord) => r1[0] - r2[0]);
+  const v1 = points[0][0];
+  const v2 = points[n - 1][0];
+  if (v1 === v2) {
+    throw new SyntaxError(`Values must form a range`);
+  }
+  return points;
 }

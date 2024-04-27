@@ -45,6 +45,7 @@ TODO:
   - Use image data and "img" for rendering instead of "canvas"
   - Implement user color bars in xcube server and adjust tile API calls
     in viewer
+  - ~Allow for same values in color bars code~
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
 * Use MUI v5 styling alternatives.
