@@ -22,7 +22,7 @@
   same dataset, if switched on. Layer opacity only affects the variable
   layer, not the RGB layer.
 
-* Numerous changes regard development environment renewal and 
+* Numerous changes regarding development environment renewal and 
   code quality improvements:
 
   - Changed the development environment from [create-react-app](https://create-react-app.dev/) 
@@ -34,9 +34,14 @@
   - Removed all usages of explicit `any` type in TypeScript files.
   - No longer using deprecated `adaptV4Theme()` function from `@mui/material`.
 
-
-
 TODO:
+
+* User color bars:
+  - Fix generation of base64 image data
+  - Fix popover toolbar for editing and removing a color bar
+  - Fix selecting a user color bar
+  - Implement user color bars in xcube server and adjust tile API calls
+    in viewer
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
 * Use MUI v5 styling alternatives.
