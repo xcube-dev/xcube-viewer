@@ -31,6 +31,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import ColorBarItem from "./ColorBarItem";
+import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";
 
 interface UserColorBarItemProps {
   imageData?: string;
@@ -79,10 +80,10 @@ export default function UserColorBarItem({
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 0.2,
           width: 240,
           height: 20,
-          marginTop: 0.2,
+          gap: COLOR_BAR_ITEM_GAP,
+          marginTop: COLOR_BAR_ITEM_GAP,
         }}
       >
         <ColorBarItem

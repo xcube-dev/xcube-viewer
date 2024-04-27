@@ -27,17 +27,15 @@ import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 
 import { ColorBar, ColorBars, UserColorBar } from "@/model/colorBar";
-import ColorBarStyleEditor from "@/components/ColorBarLegend/ColorBarStyleEditor";
-import ColorBarSelect from "@/components/ColorBarLegend/ColorBarSelect";
+import ColorBarStyleEditor from "./ColorBarStyleEditor";
+import ColorBarSelect from "./ColorBarSelect";
+import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";
 
 const COLOR_BAR_BOX_MARGIN = 1;
-const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarBox: {
-    marginTop: theme.spacing(
-      COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_BOX_MARGIN,
-    ),
+    marginTop: theme.spacing(COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_GAP),
     marginLeft: theme.spacing(COLOR_BAR_BOX_MARGIN),
     marginRight: theme.spacing(COLOR_BAR_BOX_MARGIN),
     marginBottom: theme.spacing(COLOR_BAR_BOX_MARGIN),

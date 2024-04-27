@@ -27,11 +27,11 @@ import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
-const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
+import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarGroupTitle: {
-    marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
+    marginTop: theme.spacing(2 * COLOR_BAR_ITEM_GAP),
     color: theme.palette.grey[400],
   },
 }));

@@ -25,10 +25,10 @@
 import { Theme } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 
-export const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
+export const COLOR_BAR_ITEM_GAP = 0.2;
 
 const colorBarGroupItemStyle = (theme: Theme) => ({
-  marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
+  marginTop: theme.spacing(COLOR_BAR_ITEM_GAP),
   height: 20,
   borderWidth: 1,
   borderStyle: "solid",
