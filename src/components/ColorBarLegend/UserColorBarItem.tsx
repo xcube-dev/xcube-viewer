@@ -26,7 +26,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import EditIcon from "@mui/icons-material/Edit";
-import RemoveIcon from "@mui/icons-material/Close";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import useColorRecords from "./useColorRecords";
 import UserColorBarCanvas from "./UserColorBarCanvas";
@@ -110,7 +110,7 @@ export default function UserColorBarItem({
             <EditIcon fontSize="inherit" />
           </IconButton>
           <IconButton onClick={handleRemove} size="small" disabled={disabled}>
-            <RemoveIcon fontSize="inherit" />
+            <RemoveCircleOutlineIcon fontSize="inherit" />
           </IconButton>
         </Box>
       </Popover>
