@@ -29,7 +29,6 @@ export const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
 const colorBarGroupItemStyle = (theme: Theme) => ({
   marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
-  width: 240,
   height: 20,
   borderWidth: 1,
   borderStyle: "solid",

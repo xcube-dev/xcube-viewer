@@ -29,9 +29,10 @@ import useItemStyles from "./useItemStyles";
 
 interface ColorBarItemProps {
   name: string;
-  imageData: string;
+  imageData?: string;
   selected: boolean;
   onSelect: (colorBarName: string) => void;
+  width: number | string;
 }
 
 export default function ColorBarItem({
@@ -39,6 +40,7 @@ export default function ColorBarItem({
   imageData,
   selected,
   onSelect,
+  width,
 }: ColorBarItemProps) {
   const classes = useItemStyles();
 
@@ -48,14 +50,15 @@ export default function ColorBarItem({
 
   return (
     <Box
+      width={width}
       className={
         selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
       }
     >
       <Tooltip arrow title={name} placement="left">
         <img
-          src={`data:image/png;base64,${imageData}`}
-          alt={"Color Bar"}
+          src={imageData ? `data:image/png;base64,${imageData}` : undefined}
+          alt={"Color bar"}
           width={"100%"}
           height={"100%"}
           onClick={handleSelect}

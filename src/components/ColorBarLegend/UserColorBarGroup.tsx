@@ -129,7 +129,7 @@ export default function ColorBarSelect({
         ) : (
           <UserColorBarItem
             key={userColorBar.id}
-            colorBarCode={userColorBar.code}
+            imageData={userColorBar.imageData}
             disabled={!!editMode.action}
             selected={userColorBar.id === selectedColorBarName}
             onSelect={() => onSelectColorBar(userColorBar.id)}

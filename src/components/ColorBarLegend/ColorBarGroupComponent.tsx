@@ -52,6 +52,7 @@ export default function ColorBarGroupComponent({
           imageData={images[name]}
           selected={name === selectedColorBarName}
           onSelect={onSelectColorBar}
+          width={240}
         />
       ))}
     </>

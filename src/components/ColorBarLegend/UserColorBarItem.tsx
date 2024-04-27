@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
+import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-import useColorRecords from "./useColorRecords";
-import UserColorBarCanvas from "./UserColorBarCanvas";
-import Popover from "@mui/material/Popover";
-import React, { useState } from "react";
+import ColorBarItem from "./ColorBarItem";
 
 interface UserColorBarItemProps {
-  colorBarCode: string;
+  imageData?: string;
   selected: boolean;
   onSelect: () => void;
   onEdit: () => void;
@@ -43,14 +42,13 @@ interface UserColorBarItemProps {
 }
 
 export default function UserColorBarItem({
-  colorBarCode,
+  imageData,
   selected,
   onEdit,
   onRemove,
   onSelect,
   disabled,
 }: UserColorBarItemProps) {
-  const { colorRecords, errorMessage } = useColorRecords(colorBarCode);
   const [moreAnchor, setMoreAnchor] = useState<HTMLElement | null>(null);
 
   const handleMoreOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -75,11 +73,12 @@ export default function UserColorBarItem({
 
   return (
     <Box sx={{ display: "flex", gap: 1, width: 240, marginTop: 0.2 }}>
-      <UserColorBarCanvas
-        colorRecords={colorRecords}
-        errorMessage={errorMessage}
+      <ColorBarItem
+        name={""}
+        imageData={imageData}
         selected={selected}
         onSelect={onSelect}
+        width={200}
       />
       <Box
         onMouseEnter={handleMoreOpen}
