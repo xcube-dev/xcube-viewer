@@ -250,10 +250,10 @@ export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
 export function renderUserColorBar(
   records: ColorRecord[],
   canvas: HTMLCanvasElement,
-) {
+): Promise<void> {
   const data = getUserColorBarRgbaArray(records, canvas.width);
   const imageData = new ImageData(data, data.length / 4, 1);
-  createImageBitmap(imageData).then((bitMap) => {
+  return createImageBitmap(imageData).then((bitMap) => {
     const ctx = canvas.getContext("2d");
     if (ctx) {
       ctx.drawImage(bitMap, 0, 0, canvas.width, canvas.height);
@@ -261,8 +261,22 @@ export function renderUserColorBar(
   });
 }
 
+export function renderUserColorBarAsBase64(
+  records: ColorRecord[],
+): Promise<string> {
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 1;
+  return renderUserColorBar(records, canvas).then(() => {
+    const dataURL = canvas.toDataURL("image/png");
+    return dataURL.split(",")[1];
+  });
+}
+
 /**
- * Parses the given `code` and returns
+ * Parses the given color records in text form and returns
+ * an array of color records.
+ *
  * @param code The color records as text
  * @returns The parse color records
  * @throws SyntaxError

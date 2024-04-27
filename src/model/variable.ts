@@ -40,6 +40,7 @@ export interface Variable {
   tileLevelMax?: number;
   // tileSourceOptions are no longer used since xcube 0.11
   tileSourceOptions?: TileSourceOptions;
+  // colorBarName may be prefixed by "_alpha" and/or "_r" (reversed)
   colorBarName: string;
   colorBarMin: number;
   colorBarMax: number;
