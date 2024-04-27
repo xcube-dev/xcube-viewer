@@ -23,7 +23,7 @@
  */
 
 import bgImageData from "./bg.png";
-import { parseColor, RGB } from "@/util/color";
+import { parseColor, RGBA } from "@/util/color";
 
 export const USER_COLOR_BAR_GROUP_TITLE = "User";
 
@@ -58,8 +58,11 @@ export interface UserColorBar {
    * Format of the code value:
    *
    * code   := record {"\n" record}
-   * record := value ":" color
-   * color  := color-name | hex-color | red "," green "," blue
+   * record := value ":" (rgb | rgba)
+   * rgba   := rgb ["," a]
+   * rgb    := name | "#"hex | (r "," g "," b)
+   *
+   * r, g, b in range 0 to 255, a in range 0 to 1
    */
   code: string;
   /**
@@ -225,7 +228,7 @@ export const USER_COLOR_BAR_CODE_EXAMPLE =
   "0.5: red\n" + // tie point 2
   "1.0: 120,30,255"; // tie point 3
 
-export type ColorRecord = [number, RGB];
+export type ColorRecord = [number, RGBA];
 
 export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
   const n = records.length;
@@ -244,12 +247,12 @@ export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
       v2 = values[recordIndex + 1];
     }
     const w = (v - v1) / (v2 - v1);
-    const [r1, g1, b1] = records[recordIndex][1];
-    const [r2, g2, b2] = records[recordIndex + 1][1];
+    const [r1, g1, b1, a1] = records[recordIndex][1];
+    const [r2, g2, b2, a2] = records[recordIndex + 1][1];
     rgbaArray[j] = r1 + w * (r2 - r1);
     rgbaArray[j + 1] = g1 + w * (g2 - g1);
     rgbaArray[j + 2] = b1 + w * (b2 - b1);
-    rgbaArray[j + 3] = 255;
+    rgbaArray[j + 3] = a1 + w * (a2 - a1);
   }
   return rgbaArray;
 }
@@ -318,16 +321,16 @@ export function parseUserColorBarCode(code: string): ColorRecord[] {
       if (recordParts.length == 2) {
         const [valueText, rgbText] = recordParts;
         const value = parseFloat(valueText);
-        const rgb = parseColor(rgbText);
+        const rgba = parseColor(rgbText);
         if (!Number.isFinite(value)) {
           throw new SyntaxError(
             `Line ${index + 1}: invalid value: ${valueText}`,
           );
         }
-        if (!rgb) {
+        if (!rgba) {
           throw new SyntaxError(`Line ${index + 1}: invalid color: ${rgbText}`);
         }
-        points.push([value, rgb]);
+        points.push([value, rgba]);
       } else if (recordParts.length === 1) {
         if (recordParts[0] !== "") {
           throw new SyntaxError(

@@ -33,13 +33,12 @@ describe("Assert that colorBar.getUserColorBarData()", () => {
   it("works as expected", () => {
     const data = getUserColorBarRgbaArray(
       [
-        [0.0, [35, 255, 82]],
-        [0.5, [255, 0, 0]],
-        [1.0, [120, 30, 255]],
+        [0.0, [35, 255, 82, 255]],
+        [0.5, [255, 0, 0, 255]],
+        [1.0, [120, 30, 255, 255]],
       ],
       10,
     );
-    console.log(data);
     expect(data).toBeInstanceOf(Uint8ClampedArray);
     expect([...data]).toEqual([
       35, 255, 82, 255, 84, 198, 64, 255, 133, 142, 46, 255, 182, 85, 27, 255,
@@ -53,9 +52,9 @@ describe("Assert that colorBar.parseUserColorCode()", () => {
   it("parses the example code as expected", () => {
     expect(getUserColorBarCode(USER_COLOR_BAR_CODE_EXAMPLE)).toEqual({
       colorRecords: [
-        [0.0, [35, 255, 82]],
-        [0.5, [255, 0, 0]],
-        [1.0, [120, 30, 255]],
+        [0.0, [35, 255, 82, 255]],
+        [0.5, [255, 0, 0, 255]],
+        [1.0, [120, 30, 255, 255]],
       ],
     });
   });
@@ -63,10 +62,10 @@ describe("Assert that colorBar.parseUserColorCode()", () => {
   it("parses the non-unique values", () => {
     expect(getUserColorBarCode("0:blue\n1:red\n1:green\n2:blue")).toEqual({
       colorRecords: [
-        [0, [0, 0, 255]],
-        [1, [255, 0, 0]],
-        [1, [0, 128, 0]],
-        [2, [0, 0, 255]],
+        [0, [0, 0, 255, 255]],
+        [1, [255, 0, 0, 255]],
+        [1, [0, 128, 0, 255]],
+        [2, [0, 0, 255, 255]],
       ],
     });
   });

@@ -23,43 +23,76 @@
  */
 
 export type RGB = [number, number, number];
+export type RGBA = [number, number, number, number];
 
-const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+const hexRegex = /^#([A-Fa-f0-9]{8}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
-export const parseColor = (color: string): RGB | undefined => {
-  if (color.startsWith("#")) {
-    if (!hexRegex.test(color)) {
-      return undefined;
-    }
-    return hexToRgb(color);
-  }
+export const parseColor = (color: string): RGBA | undefined => {
+  let alpha: number | undefined = undefined;
   if (color.includes(",")) {
     const parts = color.split(",");
-    if (parts.length !== 3) {
+    if (parts.length === 3 || parts.length === 4) {
+      const components: RGBA = [0, 0, 0, 255];
+      for (let i = 0; i < 3; i++) {
+        const c = Number.parseInt(parts[i]);
+        if (c < 0 || c > 255) {
+          return undefined;
+        }
+        components[i] = c;
+      }
+      if (parts.length === 4) {
+        alpha = decToAlpha(parts[3]);
+        if (alpha === undefined) {
+          return undefined;
+        }
+        components[3] = alpha;
+      }
+      return components;
+    }
+    if (parts.length !== 2) {
       return undefined;
     }
-    const rgb = parts.map((part) => parseInt(part.trim())) as RGB;
-    for (const c of rgb) {
-      if (c < 0 || c > 255) {
-        return undefined;
-      }
+    color = parts[0];
+    alpha = decToAlpha(parts[1]);
+    if (alpha === undefined) {
+      return undefined;
     }
-    return rgb;
   }
-  return nameToRgb(color);
+  const components = (color.startsWith("#") ? hexToRgb : nameToRgb)(color);
+  if (components) {
+    if (components.length === 3) {
+      return [...components, alpha === undefined ? 255 : alpha] as RGBA;
+    } else if (components.length === 4 && alpha === undefined) {
+      return components as RGBA;
+    }
+  }
 };
 
-export const nameToHex = (colorName: string): string | undefined =>
+const decToAlpha = (dec: string): number | undefined => {
+  const c = Number.parseFloat(dec);
+  if (c === 0) {
+    return 0;
+  } else if (c === 1) {
+    return 255;
+  } else if (c > 0 && c < 1) {
+    return Math.round(256 * c);
+  }
+};
+
+const nameToHex = (colorName: string): string | undefined =>
   _nameToHex[colorName.toLowerCase()];
 
-export const nameToRgb = (colorName: string): RGB | undefined => {
+const nameToRgb = (colorName: string): RGB | RGBA | undefined => {
   const hex = nameToHex(colorName);
   if (hex) {
     return hexToRgb(hex);
   }
 };
 
-export const hexToRgb = (hex: string): RGB | undefined => {
+const hexToRgb = (hex: string): RGB | RGBA | undefined => {
+  if (!hexRegex.test(hex)) {
+    return undefined;
+  }
   if (hex.length === 4) {
     return [
       parseInt(hex[1] + hex[1], 16),
@@ -71,6 +104,13 @@ export const hexToRgb = (hex: string): RGB | undefined => {
       parseInt(hex.substring(1, 3), 16),
       parseInt(hex.substring(3, 5), 16),
       parseInt(hex.substring(5, 7), 16),
+    ];
+  } else if (hex.length === 9) {
+    return [
+      parseInt(hex.substring(1, 3), 16),
+      parseInt(hex.substring(3, 5), 16),
+      parseInt(hex.substring(5, 7), 16),
+      parseInt(hex.substring(7, 9), 16),
     ];
   }
 };

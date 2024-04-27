@@ -37,10 +37,11 @@
 TODO:
 
 * User color bars:
-  - Use RGBA instead of just RGB
   - Implement user color bars in xcube server and adjust tile API calls
     in viewer
   - Harmonize styling see useItemStyles.ts, search for COLOR_BAR_ITEM_GAP
+  - Support categorical user color bars
+  - ~Use RGBA instead of just RGB~
   - ~Fix code duplication, search for COLOR_BAR_ITEM_BOX_MARGIN~
   - ~Fix popover toolbar for editing and removing a color bar~
   - ~Use image data and "img" for rendering instead of "canvas"~
