@@ -39,7 +39,10 @@ TODO:
 * User color bars:
   - Fix generation of base64 image data
   - Fix popover toolbar for editing and removing a color bar
-  - Fix selecting a user color bar
+  - ~Fix selecting a user color bar~
+  - No longer display code parsing error messages in image,
+    display as tooltip instead and use error border in text field 
+  - Use image data and "img" for rendering instead of "canvas"
   - Implement user color bars in xcube server and adjust tile API calls
     in viewer
 

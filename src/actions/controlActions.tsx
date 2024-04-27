@@ -620,7 +620,7 @@ export function updateSettings(
 export function addUserColorBar(colorBarId: string) {
   return (dispatch: Dispatch) => {
     dispatch(_addUserColorBar(colorBarId));
-    dispatch(updateUserColorBarImageData(colorBarId) as unknown as Action);
+    dispatch(updateUserColorBarImageDataById(colorBarId) as unknown as Action);
   };
 }
 
@@ -653,7 +653,7 @@ export function removeUserColorBar(colorBarId: string): RemoveUserColorBar {
 export function updateUserColorBar(userColorBar: UserColorBar) {
   return (dispatch: Dispatch) => {
     dispatch(_updateUserColorBar(userColorBar));
-    dispatch(updateUserColorBarImageData(userColorBar.id) as unknown as Action);
+    dispatch(updateUserColorBarImageData(userColorBar) as unknown as Action);
   };
 }
 
@@ -672,16 +672,34 @@ export function _updateUserColorBar(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function updateUserColorBarImageData(colorBarId: string) {
+function updateUserColorBarImageDataById(colorBarId: string) {
   return (dispatch: Dispatch, getState: () => AppState) => {
     const colorBar = getState().controlState.userColorBars.find(
       (ucb) => ucb.id === colorBarId,
     );
     if (colorBar) {
-      renderUserColorBarAsBase64(colorBar).then((imageData) => {
-        dispatch(_updateUserColorBar({ ...colorBar, imageData }));
-      });
+      dispatch(updateUserColorBarImageData(colorBar) as unknown as Action);
     }
+  };
+}
+
+function updateUserColorBarImageData(colorBar: UserColorBar) {
+  return (dispatch: Dispatch) => {
+    renderUserColorBarAsBase64(colorBar).then((imageData) => {
+      dispatch(_updateUserColorBar({ ...colorBar, imageData }));
+    });
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateUserColorBarsImageData() {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    getState().controlState.userColorBars.forEach((colorBar) => {
+      if (!colorBar.imageData) {
+        dispatch(updateUserColorBarImageData(colorBar) as unknown as Action);
+      }
+    });
   };
 }
 
