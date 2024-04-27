@@ -38,10 +38,10 @@ TODO:
 
 * User color bars:
   - Use RGBA instead of just RGB
-  - Fix popover toolbar for editing and removing a color bar
   - Fix code duplication, search for COLOR_BAR_ITEM_BOX_MARGIN
   - Implement user color bars in xcube server and adjust tile API calls
     in viewer
+  - ~Fix popover toolbar for editing and removing a color bar~
   - ~Use image data and "img" for rendering instead of "canvas"~
   - ~No longer display code parsing error messages in image,
     display as tooltip instead and use error border in text field~

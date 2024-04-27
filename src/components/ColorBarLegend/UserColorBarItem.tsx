@@ -74,39 +74,41 @@ export default function UserColorBarItem({
   const moreOpen = Boolean(moreAnchor);
 
   return (
-    <Box sx={{ display: "flex", gap: 1, width: 240, marginTop: 0.2 }}>
-      <ColorBarItem
-        imageData={imageData}
-        selected={selected}
-        onSelect={onSelect}
-        width={220}
-        title={title}
-      />
+    <>
       <Box
-        onMouseEnter={handleMoreOpen}
-        onMouseLeave={handleMoreClose}
-        fontSize="small"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.2,
+          width: 240,
+          height: 20,
+          marginTop: 0.2,
+        }}
       >
-        <MoreHorizIcon fontSize="inherit" />
+        <ColorBarItem
+          imageData={imageData}
+          selected={selected}
+          onSelect={onSelect}
+          width={220}
+          title={title}
+        />
+        <IconButton
+          size="small"
+          //onMouseEnter={handleMoreOpen}
+          //onMouseLeave={handleMoreClose}
+          onClick={handleMoreOpen}
+        >
+          <MoreHorizIcon fontSize="inherit" />
+        </IconButton>
       </Box>
       <Popover
-        sx={{
-          pointerEvents: "none",
-        }}
-        anchorOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "center",
-          horizontal: "center",
-        }}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+        transformOrigin={{ vertical: "center", horizontal: "center" }}
         open={moreOpen}
         anchorEl={moreAnchor}
         onClose={handleMoreClose}
-        disableRestoreFocus
       >
-        <Box onMouseLeave={handleMoreClose}>
+        <Box>
           <IconButton onClick={handleEdit} size="small" disabled={disabled}>
             <EditIcon fontSize="inherit" />
           </IconButton>
@@ -115,6 +117,6 @@ export default function UserColorBarItem({
           </IconButton>
         </Box>
       </Popover>
-    </Box>
+    </>
   );
 }
