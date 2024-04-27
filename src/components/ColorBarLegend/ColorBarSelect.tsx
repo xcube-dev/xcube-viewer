@@ -44,6 +44,8 @@ interface ColorBarSelectProps {
   ) => void;
   colorBars: ColorBars;
   userColorBars: UserColorBar[];
+  addUserColorBar: (userColorBarId: string) => void;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
 
@@ -55,6 +57,8 @@ export default function ColorBarSelect({
   updateVariableColorBar,
   colorBars,
   userColorBars,
+  addUserColorBar,
+  updateUserColorBar,
   updateUserColorBars,
 }: ColorBarSelectProps) {
   const handleSelectColorBar = (baseName: string) => {
@@ -76,6 +80,8 @@ export default function ColorBarSelect({
             selectedColorBarName={variableColorBar.baseName}
             onSelectColorBar={handleSelectColorBar}
             userColorBars={userColorBars}
+            addUserColorBar={addUserColorBar}
+            updateUserColorBar={updateUserColorBar}
             updateUserColorBars={updateUserColorBars}
           />
         ) : (

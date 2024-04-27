@@ -205,13 +205,20 @@ export const colorBarsSelector = createSelector(
       description: "User-defined color bars.",
       names: userColorBars.map((colorBar) => colorBar.id),
     };
+    const userImages: Record<string, string> = {};
+    userColorBars.forEach((ucb) => {
+      if (ucb.imageData) {
+        userImages[ucb.id] = ucb.imageData;
+      }
+    });
     if (predefinedColorBars) {
       return {
         ...predefinedColorBars,
         groups: [userGroup, ...predefinedColorBars.groups],
+        images: { ...predefinedColorBars.images, ...userImages },
       };
     } else {
-      return { groups: [userGroup], images: {} };
+      return { groups: [userGroup], images: userImages };
     }
   },
 );

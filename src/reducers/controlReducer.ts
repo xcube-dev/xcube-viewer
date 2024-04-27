@@ -24,6 +24,7 @@
 
 import {
   ADD_ACTIVITY,
+  ADD_USER_COLOR_BAR,
   CHANGE_LOCALE,
   CLOSE_DIALOG,
   ControlAction,
@@ -48,6 +49,7 @@ import {
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
+  UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
 } from "@/actions/controlActions";
 import {
@@ -75,15 +77,17 @@ import { storeUserSettings } from "@/states/userSettings";
 import { findIndexCloseTo } from "@/util/find";
 import { appParams } from "@/config";
 import { USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
+import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/colorBar";
 
-// TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET, SELECT_PLACE, SELECT_VARIABLE
-//                so they produce a consistent state. E.g. on selected dataset change, ensure selected
-//                places and variables are still valid. Write tests for that.
-//                We currently still receiving error logs from Material-UI, e.g.:
-//                  SelectInput.js:304 Material-UI: you have provided an out-of-range value `local`
-//                  for the select (name="dataset") component.
-//                  Consider providing a value that matches one of the available options or ''.
-//                  The available values are "".
+// TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET,
+//  SELECT_PLACE, SELECT_VARIABLE so they produce a consistent state.
+//  E.g. on selected dataset change, ensure selected
+//  places and variables are still valid. Write tests for that.
+//  We currently still receiving error logs from Material-UI, e.g.:
+//  SelectInput.js:304 Material-UI: you have provided an out-of-range
+//    value `local` for the select (name="dataset") component.
+//    Consider providing a value that matches one of the available
+//    options or ''. The available values are "".
 
 export function controlReducer(
   state: ControlState | undefined,
@@ -326,6 +330,36 @@ export function controlReducer(
         return {
           ...state,
           selectedPlaceId,
+        };
+      }
+      return state;
+    }
+    case ADD_USER_COLOR_BAR: {
+      const id = action.colorBarId;
+      return {
+        ...state,
+        userColorBars: [
+          {
+            id: id,
+            code: USER_COLOR_BAR_CODE_EXAMPLE,
+          },
+          ...state.userColorBars,
+        ],
+      };
+    }
+    case UPDATE_USER_COLOR_BAR: {
+      const userColorBar = action.userColorBar;
+      const index = state.userColorBars.findIndex(
+        (ucb) => ucb.id === userColorBar.id,
+      );
+      if (index >= 0) {
+        return {
+          ...state,
+          userColorBars: [
+            ...state.userColorBars.slice(0, index),
+            { ...userColorBar },
+            ...state.userColorBars.slice(index + 1),
+          ],
         };
       }
       return state;

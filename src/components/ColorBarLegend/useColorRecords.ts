@@ -23,14 +23,10 @@
  */
 
 import { useMemo } from "react";
-import { parseUserColorBarCode } from "@/model/colorBar";
+import { getUserColorBarCode } from "@/model/colorBar";
 
 export default function useColorRecords(code: string) {
   return useMemo(() => {
-    try {
-      return { colorRecords: parseUserColorBarCode(code) };
-    } catch (error) {
-      return { errorMessage: `${error}` };
-    }
+    return getUserColorBarCode(code);
   }, [code]);
 }

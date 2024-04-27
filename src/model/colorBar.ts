@@ -54,15 +54,18 @@ export interface ColorBar {
 
 export interface UserColorBar {
   id: string;
-  name: string;
   /**
    * Format of the code value:
    *
    * code   := record {"\n" record}
    * record := value ":" color
-   * color  := color-name | hex-color | red "," green "," blue ["," alpha]
+   * color  := color-name | hex-color | red "," green "," blue
    */
   code: string;
+  /**
+   * Rendered by renderUserColorBarAsBase64()
+   */
+  imageData?: string;
 }
 
 export function parseColorBar(
@@ -262,15 +265,28 @@ export function renderUserColorBar(
 }
 
 export function renderUserColorBarAsBase64(
-  records: ColorRecord[],
-): Promise<string> {
+  colorBar: UserColorBar,
+): Promise<string | undefined> {
+  const { colorRecords } = getUserColorBarCode(colorBar.code);
+  if (!colorRecords) {
+    return Promise.resolve(undefined);
+  }
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 1;
-  return renderUserColorBar(records, canvas).then(() => {
+  return renderUserColorBar(colorRecords, canvas).then(() => {
     const dataURL = canvas.toDataURL("image/png");
     return dataURL.split(",")[1];
   });
+}
+
+export function getUserColorBarCode(code: string) {
+  try {
+    const colorRecords = parseUserColorBarCode(code);
+    return { colorRecords };
+  } catch (e) {
+    return { errorMessage: `${e}` };
+  }
 }
 
 /**

@@ -37,7 +37,7 @@ import {
   PlaceGroup,
 } from "@/model/place";
 import { Time, TimeRange } from "@/model/timeSeries";
-import { UserColorBar } from "@/model/colorBar";
+import { renderUserColorBarAsBase64, UserColorBar } from "@/model/colorBar";
 import {
   selectedDatasetIdSelector,
   selectedDatasetSelectedPlaceGroupsSelector,
@@ -407,14 +407,6 @@ export interface SelectTimeSeriesUpdateMode {
   timeSeriesUpdateMode: "add" | "replace";
 }
 
-// TODO: check, if we can remove this action, seems not in use
-
-export function selectTimeSeriesUpdateMode(
-  timeSeriesUpdateMode: "add" | "replace",
-): SelectTimeSeriesUpdateMode {
-  return { type: SELECT_TIME_SERIES_UPDATE_MODE, timeSeriesUpdateMode };
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_TIME_ANIMATION = "UPDATE_TIME_ANIMATION";
@@ -625,6 +617,63 @@ export function updateSettings(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export function addUserColorBar(colorBarId: string) {
+  return (dispatch: Dispatch) => {
+    dispatch(_addUserColorBar(colorBarId));
+    dispatch(updateUserColorBarImageData(colorBarId) as unknown as Action);
+  };
+}
+
+export const ADD_USER_COLOR_BAR = "ADD_USER_COLOR_BAR";
+
+export interface AddUserColorBar {
+  type: typeof ADD_USER_COLOR_BAR;
+  colorBarId: string;
+}
+
+export function _addUserColorBar(colorBarId: string): AddUserColorBar {
+  return { type: ADD_USER_COLOR_BAR, colorBarId };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateUserColorBar(userColorBar: UserColorBar) {
+  return (dispatch: Dispatch) => {
+    dispatch(_updateUserColorBar(userColorBar));
+    dispatch(updateUserColorBarImageData(userColorBar.id) as unknown as Action);
+  };
+}
+
+export const UPDATE_USER_COLOR_BAR = "UPDATE_USER_COLOR_BAR";
+
+export interface UpdateUserColorBar {
+  type: typeof UPDATE_USER_COLOR_BAR;
+  userColorBar: UserColorBar;
+}
+
+export function _updateUserColorBar(
+  userColorBar: UserColorBar,
+): UpdateUserColorBar {
+  return { type: UPDATE_USER_COLOR_BAR, userColorBar };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function updateUserColorBarImageData(colorBarId: string) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    const colorBar = getState().controlState.userColorBars.find(
+      (ucb) => ucb.id === colorBarId,
+    );
+    if (colorBar) {
+      renderUserColorBarAsBase64(colorBar).then((imageData) => {
+        dispatch(_updateUserColorBar({ ...colorBar, imageData }));
+      });
+    }
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export function updateUserColorBars(
   userColorBars: UserColorBar[],
 ): UpdateSettings {
@@ -650,6 +699,8 @@ export type ControlAction =
   | AddActivity
   | RemoveActivity
   | ChangeLocale
+  | AddUserColorBar
+  | UpdateUserColorBar
   | UpdateSettings
   | OpenDialog
   | CloseDialog

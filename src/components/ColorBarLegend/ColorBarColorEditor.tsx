@@ -56,12 +56,21 @@ interface ColorBarColorEditorProps {
   ) => void;
   colorBars: ColorBars;
   userColorBars: UserColorBar[];
+  addUserColorBar: (userColorBarId: string) => void;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
 
 export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
   const classes = useStyles();
-  const { colorBars, userColorBars, updateUserColorBars, ...baseProps } = props;
+  const {
+    colorBars,
+    userColorBars,
+    addUserColorBar,
+    updateUserColorBar,
+    updateUserColorBars,
+    ...baseProps
+  } = props;
   return (
     <Box className={classes.colorBarBox}>
       <ColorBarStyleEditor {...baseProps} />
@@ -69,6 +78,8 @@ export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
         {...baseProps}
         colorBars={colorBars}
         userColorBars={userColorBars}
+        addUserColorBar={addUserColorBar}
+        updateUserColorBar={updateUserColorBar}
         updateUserColorBars={updateUserColorBars}
       />
     </Box>

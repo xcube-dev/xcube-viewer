@@ -66,6 +66,8 @@ interface ColorBarLegendProps {
   ) => void;
   colorBars: ColorBars;
   userColorBars: UserColorBar[];
+  addUserColorBar: (userColorBarId: string) => void;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
   width?: number | string;
   height?: number | string;
@@ -82,6 +84,8 @@ export default function ColorBarLegend({
   updateVariableColorBar,
   colorBars,
   userColorBars,
+  addUserColorBar,
+  updateUserColorBar,
   updateUserColorBars,
   width,
   height,
@@ -180,6 +184,8 @@ export default function ColorBarLegend({
           updateVariableColorBar={updateVariableColorBar}
           colorBars={colorBars}
           userColorBars={userColorBars}
+          addUserColorBar={addUserColorBar}
+          updateUserColorBar={updateUserColorBar}
           updateUserColorBars={updateUserColorBars}
         />
       </Popover>

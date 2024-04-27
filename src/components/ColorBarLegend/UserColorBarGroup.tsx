@@ -28,11 +28,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
 import { newId } from "@/util/id";
-import {
-  ColorBarGroup,
-  USER_COLOR_BAR_CODE_EXAMPLE,
-  UserColorBar,
-} from "@/model/colorBar";
+import { ColorBarGroup, UserColorBar } from "@/model/colorBar";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarGroupItem from "./UserColorBarGroupItem";
@@ -48,6 +44,8 @@ interface UserColorBarGroupProps {
   selectedColorBarName: string | null;
   onSelectColorBar: (colorBarName: string) => void;
   userColorBars: UserColorBar[];
+  addUserColorBar: (userColorBarId: string) => void;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
 
@@ -56,6 +54,9 @@ export default function ColorBarSelect({
   selectedColorBarName,
   onSelectColorBar,
   userColorBars,
+  addUserColorBar,
+  // TODO: use
+  // updateUserColorBar,
   updateUserColorBars,
 }: UserColorBarGroupProps) {
   const [editMode, setEditMode] = useState<EditMode>({});
@@ -65,25 +66,15 @@ export default function ColorBarSelect({
     return userColorBars.findIndex((ucb) => ucb.id === editMode.colorBarId);
   }, [userColorBars, editMode.colorBarId]);
 
-  const startUserColorBarEdit = (action: "add" | "edit") => {
-    setUndo(() => updateUserColorBars(userColorBars));
-    if (action === "add") {
-      const colorBarId = newId("user-cb-");
-      const editMode: EditMode = { action, colorBarId };
-      updateUserColorBars([
-        { id: colorBarId, name: colorBarId, code: USER_COLOR_BAR_CODE_EXAMPLE },
-        ...userColorBars,
-      ]);
-      setEditMode(editMode);
-    }
-  };
-
   const handleStartUserColorBarAdd = () => {
-    startUserColorBarEdit("add");
+    setUndo(() => updateUserColorBars(userColorBars));
+    const colorBarId = newId("user-cb-");
+    addUserColorBar(colorBarId);
+    setEditMode({ action: "add", colorBarId });
   };
 
+  // TODO: implemeent
   // const handleStartUserColorBarEdit = () => {
-  //   startUserColorBarEdit("edit");
   // };
 
   const handleDoneUserColorBarEdit = () => {
@@ -139,7 +130,7 @@ export default function ColorBarSelect({
         ) : (
           <UserColorBarGroupItem
             key={userColorBar.id}
-            name={userColorBar.name}
+            name={userColorBar.id}
             code={userColorBar.code}
             selected={userColorBar.id === selectedColorBarName}
             onSelect={() => onSelectColorBar(userColorBar.id)}

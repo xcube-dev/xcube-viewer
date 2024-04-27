@@ -36,7 +36,11 @@ import {
   userColorBarsSelector,
 } from "@/selectors/controlSelectors";
 import { updateVariableColorBar } from "@/actions/dataActions";
-import { updateUserColorBars } from "@/actions/controlActions";
+import {
+  addUserColorBar,
+  updateUserColorBar,
+  updateUserColorBars,
+} from "@/actions/controlActions";
 import _ColorBarLegend from "@/components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
@@ -54,6 +58,8 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   updateVariableColorBar,
+  addUserColorBar,
+  updateUserColorBar,
   updateUserColorBars,
 };
 
