@@ -22,26 +22,27 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef, MouseEvent } from "react";
 
 import i18n from "@/i18n";
 import { ColorBar, renderColorBar } from "@/model/colorBar";
+import Tooltip from "@mui/material/Tooltip";
 
 interface ColorBarCanvasProps {
   colorBar: ColorBar;
   opacity: number;
   width: number | string | undefined;
   height: number | string | undefined;
-  onClick: (event: React.MouseEvent<HTMLCanvasElement>) => void;
+  onClick: (event: MouseEvent<HTMLCanvasElement>) => void;
 }
 
-const ColorBarCanvas: React.FC<ColorBarCanvasProps> = ({
+export default function ColorBarCanvas({
   colorBar,
   opacity,
   width,
   height,
   onClick,
-}) => {
+}: ColorBarCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -51,20 +52,20 @@ const ColorBarCanvas: React.FC<ColorBarCanvasProps> = ({
     }
   }, [colorBar, opacity]);
 
-  return (
-    <>
-      {colorBar.imageData ? (
-        <canvas
-          ref={canvasRef}
-          width={width || 240}
-          height={height || 24}
-          onClick={onClick}
-        />
-      ) : (
-        <div>{i18n.get("Unknown color bar") + `: ${colorBar.baseName}`}</div>
-      )}
-    </>
-  );
-};
+  const { baseName, imageData } = colorBar;
+  const tooltipTitle = imageData
+    ? baseName
+    : i18n.get("Unknown color bar") + `: ${baseName}`;
 
-export default ColorBarCanvas;
+  return (
+    <Tooltip title={tooltipTitle}>
+      <canvas
+        ref={canvasRef}
+        width={width || 240}
+        height={height || 24}
+        onClick={onClick}
+        style={!imageData ? { border: "solid red 1" } : undefined}
+      />
+    </Tooltip>
+  );
+}

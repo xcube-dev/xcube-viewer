@@ -22,6 +22,9 @@
   same dataset, if switched on. Layer opacity only affects the variable
   layer, not the RGB layer.
 
+* Fixed problem with color bar selector that occurred if a variable
+  used an unknown color bar name.
+
 * Numerous changes regarding development environment renewal and 
   code quality improvements:
 

@@ -49,7 +49,7 @@ export interface ColorBar {
   isAlpha: boolean;
   isReversed: boolean;
   // https://stackoverflow.com/questions/13416800/how-to-generate-an-image-from-imagedata-in-javascript
-  imageData: string | null;
+  imageData?: string;
 }
 
 export interface UserColorBar {
@@ -75,10 +75,7 @@ export interface UserColorBar {
   errorMessage?: string;
 }
 
-export function parseColorBar(
-  name: string,
-  colorBars: ColorBars | null,
-): ColorBar {
+export function parseColorBar(name: string, colorBars: ColorBars): ColorBar {
   let baseName = name;
 
   const isAlpha = baseName.endsWith(CB_ALPHA_SUFFIX);
@@ -91,7 +88,7 @@ export function parseColorBar(
     baseName = baseName.slice(0, baseName.length - CB_REVERSE_SUFFIX.length);
   }
 
-  const imageData = (colorBars && colorBars.images[baseName]) || null;
+  const imageData = colorBars.images[baseName];
 
   return { baseName, isAlpha, isReversed, imageData };
 }
@@ -142,6 +139,11 @@ export function loadColorBarImage(
       reject: (reason?: unknown) => void,
     ) => {
       const im = image || new Image();
+      const imageData = colorBar.imageData;
+      if (!imageData) {
+        resolve(im);
+        return;
+      }
       im.onload = () => {
         resolve(im);
       };
@@ -154,7 +156,7 @@ export function loadColorBarImage(
       ) => {
         reject(error);
       };
-      im.src = `data:image/png;base64,${colorBar.imageData}`;
+      im.src = `data:image/png;base64,${imageData}`;
     },
   );
 }

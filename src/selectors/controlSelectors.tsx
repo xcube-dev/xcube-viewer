@@ -84,6 +84,7 @@ import {
   ColorBars,
   parseColorBar,
   USER_COLOR_BAR_GROUP_TITLE,
+  UserColorBar,
 } from "@/model/colorBar";
 import {
   defaultBaseMapLayers,
@@ -206,9 +207,9 @@ export const colorBarsSelector = createSelector(
       names: userColorBars.map((colorBar) => colorBar.id),
     };
     const userImages: Record<string, string> = {};
-    userColorBars.forEach((ucb) => {
-      if (ucb.imageData) {
-        userImages[ucb.id] = ucb.imageData;
+    userColorBars.forEach(({ id, imageData }: UserColorBar) => {
+      if (imageData) {
+        userImages[id] = imageData;
       }
     });
     if (predefinedColorBars) {
