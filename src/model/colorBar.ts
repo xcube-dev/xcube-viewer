@@ -181,8 +181,8 @@ function getColorBarImageData(
   image: HTMLImageElement,
 ): ImageData | null {
   const offscreenCanvas = document.createElement("canvas");
-  offscreenCanvas.width = image.width;
-  offscreenCanvas.height = image.height;
+  offscreenCanvas.width = image.width || 1;
+  offscreenCanvas.height = image.height || 1;
   const ctx = offscreenCanvas.getContext("2d");
   if (ctx === null) {
     return null;

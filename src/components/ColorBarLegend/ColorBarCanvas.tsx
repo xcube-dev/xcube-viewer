@@ -64,7 +64,7 @@ export default function ColorBarCanvas({
         width={width || 240}
         height={height || 24}
         onClick={onClick}
-        style={!imageData ? { border: "solid red 1" } : undefined}
+        style={!imageData ? { border: "0.5px solid red" } : undefined}
       />
     </Tooltip>
   );
