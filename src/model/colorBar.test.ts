@@ -23,72 +23,50 @@
  */
 
 import { describe, expect, it } from "vitest";
-import {
-  getUserColorBarRgbaArray,
-  getUserColorBarCode,
-  USER_COLOR_BAR_CODE_EXAMPLE,
-} from "./colorBar";
+import { parseColorBar, formatColorBar } from "./colorBar";
 
-describe("Assert that colorBar.getUserColorBarData()", () => {
+describe("Assert that colorBar.parseColorBar()", () => {
   it("works as expected", () => {
-    const data = getUserColorBarRgbaArray(
-      [
-        [0.0, [35, 255, 82, 255]],
-        [0.5, [255, 0, 0, 255]],
-        [1.0, [120, 30, 255, 255]],
-      ],
-      10,
-    );
-    expect(data).toBeInstanceOf(Uint8ClampedArray);
-    expect([...data]).toEqual([
-      35, 255, 82, 255, 84, 198, 64, 255, 133, 142, 46, 255, 182, 85, 27, 255,
-      231, 28, 9, 255, 240, 3, 28, 255, 210, 10, 85, 255, 180, 17, 142, 255,
-      150, 23, 198, 255, 120, 30, 255, 255,
-    ]);
+    expect(parseColorBar("magma")).toEqual({
+      baseName: "magma",
+      isAlpha: false,
+      isReversed: false,
+    });
+    expect(parseColorBar("magma_r")).toEqual({
+      baseName: "magma",
+      isAlpha: false,
+      isReversed: true,
+    });
+    expect(parseColorBar("magma_alpha")).toEqual({
+      baseName: "magma",
+      isAlpha: true,
+      isReversed: false,
+    });
+    expect(parseColorBar("magma_r_alpha")).toEqual({
+      baseName: "magma",
+      isAlpha: true,
+      isReversed: true,
+    });
   });
 });
 
-describe("Assert that colorBar.parseUserColorCode()", () => {
-  it("parses the example code as expected", () => {
-    expect(getUserColorBarCode(USER_COLOR_BAR_CODE_EXAMPLE)).toEqual({
-      colorRecords: [
-        [0.0, [35, 255, 82, 255]],
-        [0.5, [255, 0, 0, 255]],
-        [1.0, [120, 30, 255, 255]],
-      ],
-    });
-  });
-
-  it("parses the non-unique values", () => {
-    expect(getUserColorBarCode("0:blue\n1:red\n1:green\n2:blue")).toEqual({
-      colorRecords: [
-        [0, [0, 0, 255, 255]],
-        [1, [255, 0, 0, 255]],
-        [1, [0, 128, 0, 255]],
-        [2, [0, 0, 255, 255]],
-      ],
-    });
-  });
-
-  it("detects invalid code", () => {
-    expect(getUserColorBarCode("")).toEqual({
-      errorMessage: "At least two color records must be given",
-    });
-
-    expect(getUserColorBarCode("what?")).toEqual({
-      errorMessage: "Line 1: invalid color record: what?",
-    });
-
-    expect(getUserColorBarCode("0: red\n1: green\n\nx: blue")).toEqual({
-      errorMessage: "Line 4: invalid value: x",
-    });
-
-    expect(getUserColorBarCode("0: red\n1: greeen\n0: blue")).toEqual({
-      errorMessage: "Line 2: invalid color: greeen",
-    });
-
-    expect(getUserColorBarCode("0: red\n0: green")).toEqual({
-      errorMessage: "Values must form a range",
-    });
+describe("Assert that colorBar.formatColorBar()", () => {
+  it("works as expected", () => {
+    expect(
+      formatColorBar({
+        baseName: "viridis",
+        isAlpha: false,
+        isReversed: false,
+      }),
+    ).toEqual("viridis");
+    expect(
+      formatColorBar({ baseName: "viridis", isAlpha: false, isReversed: true }),
+    ).toEqual("viridis_r");
+    expect(
+      formatColorBar({ baseName: "viridis", isAlpha: true, isReversed: false }),
+    ).toEqual("viridis_alpha");
+    expect(
+      formatColorBar({ baseName: "viridis", isAlpha: true, isReversed: true }),
+    ).toEqual("viridis_r_alpha");
   });
 });

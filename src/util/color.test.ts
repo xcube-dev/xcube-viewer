@@ -23,7 +23,7 @@
  */
 
 import { expect, it, describe } from "vitest";
-import { parseColor } from "./color";
+import { hexToRgb, parseColor, rgbToHex } from "./color";
 
 describe("Assert that color.parseColor()", () => {
   it("works for hex colors", () => {
@@ -57,5 +57,13 @@ describe("Assert that color.parseColor()", () => {
     expect(parseColor("0, 0, 256")).toBeUndefined();
     expect(parseColor("DarkMetal")).toBeUndefined();
     expect(parseColor("DarkMetal, 120")).toBeUndefined();
+  });
+});
+
+describe("Assert that rgbToHex(hexToRgb(x)) is x", () => {
+  it("works", () => {
+    expect(rgbToHex(hexToRgb("#000")!)).toEqual("#000000");
+    expect(rgbToHex(hexToRgb("#000000")!)).toEqual("#000000");
+    expect(rgbToHex(hexToRgb("#ff0000ff")!)).toEqual("#ff0000ff");
   });
 });

@@ -26,7 +26,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import { ColorBar, ColorBars, UserColorBar } from "@/model/colorBar";
+import { ColorBar, ColorBars } from "@/model/colorBar";
+import { UserColorBar } from "@/model/userColorBar";
 import ColorBarStyleEditor from "./ColorBarStyleEditor";
 import ColorBarSelect from "./ColorBarSelect";
 import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";

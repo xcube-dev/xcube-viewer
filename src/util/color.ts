@@ -41,7 +41,7 @@ export const parseColor = (color: string): RGBA | undefined => {
         components[i] = c;
       }
       if (parts.length === 4) {
-        alpha = decToAlpha(parts[3]);
+        alpha = floatToUint8(parts[3]);
         if (alpha === undefined) {
           return undefined;
         }
@@ -53,7 +53,7 @@ export const parseColor = (color: string): RGBA | undefined => {
       return undefined;
     }
     color = parts[0];
-    alpha = decToAlpha(parts[1]);
+    alpha = floatToUint8(parts[1]);
     if (alpha === undefined) {
       return undefined;
     }
@@ -68,28 +68,19 @@ export const parseColor = (color: string): RGBA | undefined => {
   }
 };
 
-const decToAlpha = (dec: string): number | undefined => {
-  const c = Number.parseFloat(dec);
-  if (c === 0) {
-    return 0;
-  } else if (c === 1) {
-    return 255;
-  } else if (c > 0 && c < 1) {
-    return Math.round(256 * c);
-  }
-};
+export function rgbToHex(rgb: RGBA | RGB): string {
+  return (
+    "#" +
+    rgb
+      .map((c) => {
+        const s = c.toString(16);
+        return s.length === 1 ? "0" + s : s;
+      })
+      .join("")
+  );
+}
 
-const nameToHex = (colorName: string): string | undefined =>
-  _nameToHex[colorName.toLowerCase()];
-
-const nameToRgb = (colorName: string): RGB | RGBA | undefined => {
-  const hex = nameToHex(colorName);
-  if (hex) {
-    return hexToRgb(hex);
-  }
-};
-
-const hexToRgb = (hex: string): RGB | RGBA | undefined => {
+export function hexToRgb(hex: string): RGB | RGBA | undefined {
   if (!hexRegex.test(hex)) {
     return undefined;
   }
@@ -112,6 +103,27 @@ const hexToRgb = (hex: string): RGB | RGBA | undefined => {
       parseInt(hex.substring(5, 7), 16),
       parseInt(hex.substring(7, 9), 16),
     ];
+  }
+}
+
+const floatToUint8 = (dec: string): number | undefined => {
+  const c = Number.parseFloat(dec);
+  if (c === 0) {
+    return 0;
+  } else if (c === 1) {
+    return 255;
+  } else if (c > 0 && c < 1) {
+    return Math.round(256 * c);
+  }
+};
+
+const nameToHex = (colorName: string): string | undefined =>
+  _nameToHex[colorName.toLowerCase()];
+
+const nameToRgb = (colorName: string): RGB | RGBA | undefined => {
+  const hex = nameToHex(colorName);
+  if (hex) {
+    return hexToRgb(hex);
   }
 };
 

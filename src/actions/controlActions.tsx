@@ -37,7 +37,7 @@ import {
   PlaceGroup,
 } from "@/model/place";
 import { Time, TimeRange } from "@/model/timeSeries";
-import { renderUserColorBarAsBase64, UserColorBar } from "@/model/colorBar";
+import { renderUserColorBarAsBase64, UserColorBar } from "@/model/userColorBar";
 import {
   selectedDatasetIdSelector,
   selectedDatasetSelectedPlaceGroupsSelector,

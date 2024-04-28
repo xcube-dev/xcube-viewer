@@ -22,13 +22,8 @@
  * SOFTWARE.
  */
 
-import {
-  ColorBar,
-  ColorBars,
-  formatColorBar,
-  USER_COLOR_BAR_GROUP_TITLE,
-  UserColorBar,
-} from "@/model/colorBar";
+import { ColorBar, ColorBars, formatColorBar } from "@/model/colorBar";
+import { USER_COLOR_BAR_GROUP_TITLE, UserColorBar } from "@/model/userColorBar";
 import ColorBarGroupComponent from "./ColorBarGroupComponent";
 import UserColorBarGroup from "./UserColorBarGroup";
 

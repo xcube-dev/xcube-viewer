@@ -83,9 +83,12 @@ import {
   ColorBarGroup,
   ColorBars,
   parseColorBar,
+} from "@/model/colorBar";
+import {
+  getUserColorBarColorArray,
   USER_COLOR_BAR_GROUP_TITLE,
   UserColorBar,
-} from "@/model/colorBar";
+} from "@/model/userColorBar";
 import {
   defaultBaseMapLayers,
   defaultOverlayLayers,
@@ -228,7 +231,32 @@ export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
   colorBarsSelector,
   (colorBarName: string, colorBars: ColorBars): ColorBar => {
-    return parseColorBar(colorBarName, colorBars);
+    const colorBar: ColorBar = parseColorBar(colorBarName);
+    const imageData = colorBars.images[colorBar.baseName];
+    return { ...colorBar, imageData };
+  },
+);
+
+export const selectedVariableUserColorBarJsonSelector = createSelector(
+  selectedVariableColorBarSelector,
+  selectedVariableColorBarNameSelector,
+  userColorBarsSelector,
+  (
+    colorBar: ColorBar,
+    colorBarName: string,
+    userColorBars: UserColorBar[],
+  ): string | null => {
+    const { baseName } = colorBar;
+    const userColorBar = userColorBars.find(
+      (userColorBar) => userColorBar.id === baseName,
+    );
+    if (userColorBar) {
+      const colors = getUserColorBarColorArray(userColorBar.code);
+      if (colors) {
+        return JSON.stringify({ name: colorBarName, colors });
+      }
+    }
+    return null;
   },
 );
 
@@ -735,6 +763,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   mapProjectionSelector,
   selectedVariableColorBarMinMaxSelector,
   selectedVariableColorBarNameSelector,
+  selectedVariableUserColorBarJsonSelector,
   selectedVariableOpacitySelector,
   selectedDatasetAttributionsSelector,
   imageSmoothingSelector,
@@ -749,6 +778,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     mapProjection: string,
     colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarJson: string | null,
     opacity: number,
     attributions: string[] | null,
     imageSmoothing: boolean,
@@ -760,7 +790,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
       ["crs", mapProjection],
       ["vmin", `${colorBarMinMax[0]}`],
       ["vmax", `${colorBarMinMax[1]}`],
-      ["cbar", colorBarName],
+      ["cbar", colorBarJson ? colorBarJson : colorBarName],
       // ['retina', '1'],
     ];
     return getTileLayer(

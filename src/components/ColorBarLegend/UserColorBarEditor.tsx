@@ -26,7 +26,10 @@ import { ChangeEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-import { USER_COLOR_BAR_CODE_EXAMPLE, UserColorBar } from "@/model/colorBar";
+import {
+  USER_COLOR_BAR_CODE_EXAMPLE,
+  UserColorBar,
+} from "@/model/userColorBar";
 import DoneCancel from "@/components/DoneCancel";
 import ColorBarItem from "./ColorBarItem";
 

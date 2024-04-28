@@ -78,7 +78,7 @@ import { storeUserSettings } from "@/states/userSettings";
 import { findIndexCloseTo } from "@/util/find";
 import { appParams } from "@/config";
 import { USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
-import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/colorBar";
+import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/userColorBar";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET,
 //  SELECT_PLACE, SELECT_VARIABLE so they produce a consistent state.

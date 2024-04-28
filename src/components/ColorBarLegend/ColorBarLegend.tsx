@@ -27,7 +27,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 import Popover from "@mui/material/Popover";
 
-import { ColorBar, ColorBars, UserColorBar } from "@/model/colorBar";
+import { ColorBar, ColorBars } from "@/model/colorBar";
+import { UserColorBar } from "@/model/userColorBar";
 import ColorBarCanvas from "./ColorBarCanvas";
 import ColorBarColorEditor from "./ColorBarColorEditor";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";

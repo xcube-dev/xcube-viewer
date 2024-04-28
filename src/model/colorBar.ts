@@ -23,9 +23,9 @@
  */
 
 import bgImageData from "./bg.png";
-import { parseColor, RGBA } from "@/util/color";
 
-export const USER_COLOR_BAR_GROUP_TITLE = "User";
+const BG_IMAGE = new Image();
+BG_IMAGE.src = bgImageData;
 
 export interface ColorBars {
   groups: ColorBarGroup[];
@@ -41,41 +41,32 @@ export interface ColorBarGroup {
 export const CB_ALPHA_SUFFIX = "_alpha";
 export const CB_REVERSE_SUFFIX = "_r";
 
-const BG_IMAGE = new Image();
-BG_IMAGE.src = bgImageData;
-
+/**
+ * A color bar
+ */
 export interface ColorBar {
+  /**
+   * Color bar base name, such as "viridis".
+   */
   baseName: string;
+  /**
+   * If current (variable) color bar name has an alpha gradient.
+   * Color bar name is this case is e.g., "viridis_alpha"
+   */
   isAlpha: boolean;
+  /**
+   * If current (variable) color bar name has an alpha gradient.
+   * Color bar name is this case is e.g., "viridis_r"
+   */
   isReversed: boolean;
-  // https://stackoverflow.com/questions/13416800/how-to-generate-an-image-from-imagedata-in-javascript
+  /**
+   * base64-encoded image/png either from server or rendered by
+   * renderUserColorBarAsBase64() from user color bar code.
+   */
   imageData?: string;
 }
 
-export interface UserColorBar {
-  id: string;
-  /**
-   * Format of the code value:
-   *
-   * code   := record {"\n" record}
-   * record := value ":" (rgb | rgba)
-   * rgba   := rgb ["," a]
-   * rgb    := name | "#"hex | (r "," g "," b)
-   *
-   * r, g, b in range 0 to 255, a in range 0 to 1
-   */
-  code: string;
-  /**
-   * Rendered by renderUserColorBarAsBase64() from code
-   */
-  imageData?: string;
-  /**
-   * If imageData is undefined, errorMessage should say why.
-   */
-  errorMessage?: string;
-}
-
-export function parseColorBar(name: string, colorBars: ColorBars): ColorBar {
+export function parseColorBar(name: string): ColorBar {
   let baseName = name;
 
   const isAlpha = baseName.endsWith(CB_ALPHA_SUFFIX);
@@ -88,9 +79,7 @@ export function parseColorBar(name: string, colorBars: ColorBars): ColorBar {
     baseName = baseName.slice(0, baseName.length - CB_REVERSE_SUFFIX.length);
   }
 
-  const imageData = colorBars.images[baseName];
-
-  return { baseName, isAlpha, isReversed, imageData };
+  return { baseName, isAlpha, isReversed };
 }
 
 export function formatColorBar(colorBar: ColorBar): string {
@@ -223,133 +212,4 @@ function getColorBarImageData(
   }
 
   return new ImageData(rgbaArray, rgbaArray.length / 4, 1);
-}
-
-export const USER_COLOR_BAR_CODE_EXAMPLE =
-  "0.0: #23FF52\n" + // tie point 1
-  "0.5: red\n" + // tie point 2
-  "1.0: 120,30,255"; // tie point 3
-
-export type ColorRecord = [number, RGBA];
-
-export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
-  const n = records.length;
-  const min = records[0][0];
-  const max = records[n - 1][0];
-  const values = records.map((record) => (record[0] - min) / (max - min));
-  const rgbaArray = new Uint8ClampedArray(4 * size);
-  let recordIndex = 0;
-  let v1 = values[0];
-  let v2 = values[1];
-  for (let i = 0, j = 0; i < size; i++, j += 4) {
-    const v = i / (size - 1);
-    if (v > v2) {
-      recordIndex++;
-      v1 = values[recordIndex];
-      v2 = values[recordIndex + 1];
-    }
-    const w = (v - v1) / (v2 - v1);
-    const [r1, g1, b1, a1] = records[recordIndex][1];
-    const [r2, g2, b2, a2] = records[recordIndex + 1][1];
-    rgbaArray[j] = r1 + w * (r2 - r1);
-    rgbaArray[j + 1] = g1 + w * (g2 - g1);
-    rgbaArray[j + 2] = b1 + w * (b2 - b1);
-    rgbaArray[j + 3] = a1 + w * (a2 - a1);
-  }
-  return rgbaArray;
-}
-
-export function renderUserColorBar(
-  records: ColorRecord[],
-  canvas: HTMLCanvasElement,
-): Promise<void> {
-  const data = getUserColorBarRgbaArray(records, canvas.width);
-  const imageData = new ImageData(data, data.length / 4, 1);
-  return createImageBitmap(imageData).then((bitMap) => {
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      ctx.drawImage(bitMap, 0, 0, canvas.width, canvas.height);
-    }
-  });
-}
-
-export function renderUserColorBarAsBase64(
-  colorBar: UserColorBar,
-): Promise<{ imageData?: string; errorMessage?: string }> {
-  const { colorRecords, errorMessage } = getUserColorBarCode(colorBar.code);
-  if (!colorRecords) {
-    return Promise.resolve({ errorMessage });
-  }
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 1;
-  return renderUserColorBar(colorRecords, canvas).then(() => {
-    const dataURL = canvas.toDataURL("image/png");
-    return { imageData: dataURL.split(",")[1] };
-  });
-}
-
-export function getUserColorBarCode(code: string) {
-  try {
-    const colorRecords = parseUserColorBarCode(code);
-    return { colorRecords };
-  } catch (error: unknown) {
-    if (error instanceof SyntaxError) {
-      return { errorMessage: `${error.message}` };
-    }
-    throw error;
-  }
-}
-
-/**
- * Parses the given color records in text form and returns
- * an array of color records.
- *
- * @param code The color records as text
- * @returns The parse color records
- * @throws SyntaxError
- */
-export function parseUserColorBarCode(code: string): ColorRecord[] {
-  const points: ColorRecord[] = [];
-  code
-    .split("\n")
-    .map((line) =>
-      line
-        .trim()
-        .split(":")
-        .map((comp) => comp.trim()),
-    )
-    .forEach((recordParts, index) => {
-      if (recordParts.length == 2) {
-        const [valueText, rgbText] = recordParts;
-        const value = parseFloat(valueText);
-        const rgba = parseColor(rgbText);
-        if (!Number.isFinite(value)) {
-          throw new SyntaxError(
-            `Line ${index + 1}: invalid value: ${valueText}`,
-          );
-        }
-        if (!rgba) {
-          throw new SyntaxError(`Line ${index + 1}: invalid color: ${rgbText}`);
-        }
-        points.push([value, rgba]);
-      } else if (recordParts.length === 1) {
-        if (recordParts[0] !== "") {
-          throw new SyntaxError(
-            `Line ${index + 1}: invalid color record: ${recordParts[0]}`,
-          );
-        }
-      }
-    });
-  const n = points.length;
-  if (n < 2) {
-    throw new SyntaxError(`At least two color records must be given`);
-  }
-  points.sort((r1: ColorRecord, r2: ColorRecord) => r1[0] - r2[0]);
-  const v1 = points[0][0];
-  const v2 = points[n - 1][0];
-  if (v1 === v2) {
-    throw new SyntaxError(`Values must form a range`);
-  }
-  return points;
 }

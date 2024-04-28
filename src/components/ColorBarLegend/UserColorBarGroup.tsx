@@ -28,7 +28,8 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
 import { newId } from "@/util/id";
-import { ColorBarGroup, UserColorBar } from "@/model/colorBar";
+import { ColorBarGroup } from "@/model/colorBar";
+import { UserColorBar } from "@/model/userColorBar";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarItem from "./UserColorBarItem";

@@ -27,7 +27,7 @@ import { Geometry as OlGeometry } from "ol/geom";
 import { default as OlBaseObject } from "ol/Object";
 
 import { Config } from "@/config";
-import { UserColorBar } from "@/model/colorBar";
+import { UserColorBar } from "@/model/userColorBar";
 import { defaultBaseMapId, LayerDefinition } from "@/model/layerDefinition";
 import { DEFAULT_MAP_CRS } from "@/model/proj";
 import { Time, TimeRange } from "@/model/timeSeries";
