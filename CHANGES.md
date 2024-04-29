@@ -41,7 +41,6 @@ TODO:
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
 
-
 ## Changes in version 1.1.1
 
 ### Fixes
