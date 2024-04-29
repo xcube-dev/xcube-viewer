@@ -33,13 +33,14 @@
   - Updated copyright headers of source files.
   - Removed all usages of explicit `any` type in TypeScript files.
   - No longer using deprecated `adaptV4Theme()` function from `@mui/material`.
+  - Updated MUI v5 styling alternatives for different components. 
 
 
 
 TODO:
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
-* Use MUI v5 styling alternatives.
+
 
 ## Changes in version 1.1.1
 
