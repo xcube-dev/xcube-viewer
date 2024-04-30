@@ -45,7 +45,7 @@ TODO:
 * Add translations for many new UI texts
 * Support categorical user color bars
 * User color bars:
-  - Allow selecting the currently edited color bar
+  - Select the next color bar after removing a selected color bar
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
 * Use MUI v5 styling alternatives.

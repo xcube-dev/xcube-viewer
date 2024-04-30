@@ -77,7 +77,7 @@ export default function ColorBarSelect({
 
   const handleStartUserColorBarAdd = () => {
     setUndo(() => updateUserColorBars(userColorBars));
-    const colorBarId = newId("user-cb-");
+    const colorBarId = newId("ucb");
     addUserColorBar(colorBarId);
     setEditMode({ action: "add", colorBarId });
   };
@@ -124,6 +124,8 @@ export default function ColorBarSelect({
             key={userColorBar.id}
             userColorBar={userColorBar}
             updateUserColorBar={updateUserColorBar}
+            selected={userColorBar.id === selectedColorBarName}
+            onSelect={() => onSelectColorBar(userColorBar.id)}
             onDone={handleDoneUserColorBarEdit}
             onCancel={handleCancelUserColorBarEdit}
           />

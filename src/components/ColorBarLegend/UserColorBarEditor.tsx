@@ -36,6 +36,8 @@ import ColorBarItem from "./ColorBarItem";
 interface UserColorBarEditorProps {
   userColorBar: UserColorBar;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
+  selected: boolean;
+  onSelect: () => void;
   onDone: () => void;
   onCancel: () => void;
 }
@@ -43,6 +45,8 @@ interface UserColorBarEditorProps {
 export default function UserColorBarEditor({
   userColorBar,
   updateUserColorBar,
+  selected,
+  onSelect,
   onDone,
   onCancel,
 }: UserColorBarEditorProps) {
@@ -55,6 +59,8 @@ export default function UserColorBarEditor({
       <ColorBarItem
         imageData={userColorBar.imageData}
         title={userColorBar.errorMessage}
+        selected={selected}
+        onSelect={onSelect}
       />
       <TextField
         label="Color mapping"
