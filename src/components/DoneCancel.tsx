@@ -22,31 +22,48 @@
  * SOFTWARE.
  */
 
-import { VolumeRenderMode } from "@/states/controlState";
-import { TileSourceOptions } from "./tile";
+import { SxProps } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DoneIcon from "@mui/icons-material/Done";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 
-export interface Variable {
-  id: string;
-  name: string;
-  dims: string[];
-  shape: number[];
-  dtype: string;
-  units: string;
-  title: string;
-  timeChunkSize: number | null;
-  // The following are new since xcube 0.11
-  tileUrl?: string; // no longer used since 0.13
-  tileLevelMin?: number;
-  tileLevelMax?: number;
-  // tileSourceOptions are no longer used since xcube 0.11
-  tileSourceOptions?: TileSourceOptions;
-  // colorBarName may be prefixed by "_alpha" and/or "_r" (reversed)
-  colorBarName: string;
-  colorBarMin: number;
-  colorBarMax: number;
-  opacity?: number;
-  volumeRenderMode?: VolumeRenderMode;
-  volumeIsoThreshold?: number;
-  htmlRepr?: string;
-  attrs: Record<string, unknown>;
+const SX: SxProps = { display: "flex", justifyContent: "flex-end", gap: 0.2 };
+
+interface DoneCancelProps {
+  onDone: () => void;
+  onCancel: () => void;
+  doneDisabled?: boolean;
+  cancelDisabled?: boolean;
+  size?: "small" | "medium" | "large";
+}
+
+export default function DoneCancel({
+  onDone,
+  onCancel,
+  doneDisabled,
+  cancelDisabled,
+  size,
+}: DoneCancelProps) {
+  size = size || "medium";
+  return (
+    <Box sx={SX}>
+      <IconButton
+        onClick={onDone}
+        color="primary"
+        disabled={doneDisabled}
+        size={size}
+      >
+        <DoneIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        onClick={onCancel}
+        color="primary"
+        disabled={cancelDisabled}
+        size={size}
+      >
+        <CancelIcon fontSize="inherit" />
+      </IconButton>
+    </Box>
+  );
 }

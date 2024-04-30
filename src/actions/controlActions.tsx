@@ -37,6 +37,7 @@ import {
   PlaceGroup,
 } from "@/model/place";
 import { Time, TimeRange } from "@/model/timeSeries";
+import { renderUserColorBarAsBase64, UserColorBar } from "@/model/userColorBar";
 import {
   selectedDatasetIdSelector,
   selectedDatasetSelectedPlaceGroupsSelector,
@@ -415,14 +416,6 @@ export interface SelectTimeSeriesUpdateMode {
   timeSeriesUpdateMode: "add" | "replace";
 }
 
-// TODO: check, if we can remove this action, seems not in use
-
-export function selectTimeSeriesUpdateMode(
-  timeSeriesUpdateMode: "add" | "replace",
-): SelectTimeSeriesUpdateMode {
-  return { type: SELECT_TIME_SERIES_UPDATE_MODE, timeSeriesUpdateMode };
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 export const UPDATE_TIME_ANIMATION = "UPDATE_TIME_ANIMATION";
@@ -633,6 +626,102 @@ export function updateSettings(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export function addUserColorBar(colorBarId: string) {
+  return (dispatch: Dispatch) => {
+    dispatch(_addUserColorBar(colorBarId));
+    dispatch(updateUserColorBarImageDataById(colorBarId) as unknown as Action);
+  };
+}
+
+export const ADD_USER_COLOR_BAR = "ADD_USER_COLOR_BAR";
+
+export interface AddUserColorBar {
+  type: typeof ADD_USER_COLOR_BAR;
+  colorBarId: string;
+}
+
+export function _addUserColorBar(colorBarId: string): AddUserColorBar {
+  return { type: ADD_USER_COLOR_BAR, colorBarId };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const REMOVE_USER_COLOR_BAR = "REMOVE_USER_COLOR_BAR";
+
+export interface RemoveUserColorBar {
+  type: typeof REMOVE_USER_COLOR_BAR;
+  colorBarId: string;
+}
+
+export function removeUserColorBar(colorBarId: string): RemoveUserColorBar {
+  return { type: REMOVE_USER_COLOR_BAR, colorBarId };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateUserColorBar(userColorBar: UserColorBar) {
+  return (dispatch: Dispatch) => {
+    dispatch(_updateUserColorBar(userColorBar));
+    dispatch(updateUserColorBarImageData(userColorBar) as unknown as Action);
+  };
+}
+
+export const UPDATE_USER_COLOR_BAR = "UPDATE_USER_COLOR_BAR";
+
+export interface UpdateUserColorBar {
+  type: typeof UPDATE_USER_COLOR_BAR;
+  userColorBar: UserColorBar;
+}
+
+export function _updateUserColorBar(
+  userColorBar: UserColorBar,
+): UpdateUserColorBar {
+  return { type: UPDATE_USER_COLOR_BAR, userColorBar };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function updateUserColorBarImageDataById(colorBarId: string) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    const colorBar = getState().controlState.userColorBars.find(
+      (ucb) => ucb.id === colorBarId,
+    );
+    if (colorBar) {
+      dispatch(updateUserColorBarImageData(colorBar) as unknown as Action);
+    }
+  };
+}
+
+function updateUserColorBarImageData(colorBar: UserColorBar) {
+  return (dispatch: Dispatch) => {
+    renderUserColorBarAsBase64(colorBar).then(({ imageData, errorMessage }) => {
+      dispatch(_updateUserColorBar({ ...colorBar, imageData, errorMessage }));
+    });
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateUserColorBarsImageData() {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    getState().controlState.userColorBars.forEach((colorBar) => {
+      if (!colorBar.imageData) {
+        dispatch(updateUserColorBarImageData(colorBar) as unknown as Action);
+      }
+    });
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateUserColorBars(
+  userColorBars: UserColorBar[],
+): UpdateSettings {
+  return { type: UPDATE_SETTINGS, settings: { userColorBars } };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
   | SelectDataset
   | UpdateDatasetPlaceGroup
@@ -650,6 +739,9 @@ export type ControlAction =
   | AddActivity
   | RemoveActivity
   | ChangeLocale
+  | AddUserColorBar
+  | RemoveUserColorBar
+  | UpdateUserColorBar
   | UpdateSettings
   | OpenDialog
   | CloseDialog

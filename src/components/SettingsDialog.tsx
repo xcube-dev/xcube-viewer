@@ -47,12 +47,12 @@ import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
 import RadioSetting from "./RadioSetting";
-import LayerMenu from "@/components/LayerMenu.tsx";
+import LayerMenu from "@/components/LayerMenu";
 import {
   findLayer,
   getLayerLabel,
   LayerDefinition,
-} from "@/model/layerDefinition.ts";
+} from "@/model/layerDefinition";
 
 const useStyles = makeStyles((theme: Theme) => ({
   textField: {

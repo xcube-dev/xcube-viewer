@@ -22,48 +22,41 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import { useEffect, useRef } from "react";
+import React from "react";
+import makeStyles from "@mui/styles/makeStyles";
 
-import i18n from "@/i18n";
-import { ColorBar, renderColorBar } from "@/model/colorBar";
+import { getLabelsFromRange } from "@/util/label";
 
-interface ColorBarCanvasProps {
-  colorBar: ColorBar;
-  opacity: number;
-  width: number | string | undefined;
-  height: number | string | undefined;
-  onOpenEditor: (event: React.MouseEvent<HTMLCanvasElement>) => void;
+const useStyles = makeStyles(() => ({
+  label: {
+    fontSize: "x-small",
+    fontWeight: "bold",
+    width: "100%",
+    display: "flex",
+    flexWrap: "nowrap",
+    justifyContent: "space-between",
+  },
+}));
+
+interface ColorBarLabelsProps {
+  minValue: number;
+  maxValue: number;
+  numTicks: number;
+  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export const ColorBarCanvas: React.FC<ColorBarCanvasProps> = ({
-  colorBar,
-  opacity,
-  width,
-  height,
-  onOpenEditor,
-}) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas !== null) {
-      renderColorBar(colorBar, opacity, canvas);
-    }
-  }, [colorBar, opacity]);
-
+export default function ColorBarLabels({
+  minValue,
+  maxValue,
+  numTicks,
+  onClick,
+}: ColorBarLabelsProps) {
+  const classes = useStyles();
   return (
-    <>
-      {colorBar.imageData ? (
-        <canvas
-          ref={canvasRef}
-          width={width || 240}
-          height={height || 24}
-          onClick={onOpenEditor}
-        />
-      ) : (
-        <div>{i18n.get("Unknown color bar") + `: ${colorBar.baseName}`}</div>
-      )}
-    </>
+    <div className={classes.label} onClick={onClick}>
+      {getLabelsFromRange(minValue, maxValue, numTicks).map((label, i) => (
+        <span key={i}>{label}</span>
+      ))}
+    </div>
   );
-};
+}

@@ -1,5 +1,8 @@
 ## Changes in version 1.2.0 (in development)
 
+* Users can now define their own color bars.
+  This feature requires xcube server >= 1.6.
+
 * Introduced overlay layers that can be selected in the settings.
 
 * Users can now define their own base maps and overlay layers.
@@ -22,7 +25,10 @@
   same dataset, if switched on. Layer opacity only affects the variable
   layer, not the RGB layer.
 
-* Numerous changes regard development environment renewal and 
+* Fixed problem with color bar selector that occurred if a variable
+  used an unknown color bar name.
+
+* Numerous changes regarding development environment renewal and 
   code quality improvements:
 
   - Changed the development environment from [create-react-app](https://create-react-app.dev/) 
@@ -32,12 +38,17 @@
   - Project CI now also runs [ESlint](https://eslint.org/).
   - Updated copyright headers of source files.
   - Removed all usages of explicit `any` type in TypeScript files.
+  - No longer using deprecated `adaptV4Theme()` function from `@mui/material`.
 
 TODO:
 
-* Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:   
-* No longer use deprecated `adaptV4Theme` from `@mui/material`; use MUI v5
-  styling alternatives.
+* Add translations for many new UI texts
+* Support categorical user color bars
+* User color bars:
+  - Select the next color bar after removing a selected color bar
+
+* Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
+* Use MUI v5 styling alternatives.
 
 ## Changes in version 1.1.1
 

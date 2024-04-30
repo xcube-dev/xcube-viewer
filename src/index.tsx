@@ -37,7 +37,10 @@ import "./index.css";
 
 import App from "@/connected/App";
 import { Config } from "@/config";
-import { changeLocale } from "@/actions/controlActions";
+import {
+  changeLocale,
+  updateUserColorBarsImageData,
+} from "@/actions/controlActions";
 import { syncWithServer } from "@/actions/dataActions";
 import { appReducer } from "@/reducers/appReducer";
 
@@ -49,7 +52,7 @@ Config.load().then(() => {
   const dispatch: Dispatch = store.dispatch;
 
   dispatch(changeLocale(store.getState().controlState.locale));
-
+  dispatch(updateUserColorBarsImageData() as unknown as Action);
   if (store.getState().controlState.privacyNoticeAccepted) {
     dispatch(syncWithServer() as unknown as Action);
   }

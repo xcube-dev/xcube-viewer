@@ -22,31 +22,38 @@
  * SOFTWARE.
  */
 
-import { VolumeRenderMode } from "@/states/controlState";
-import { TileSourceOptions } from "./tile";
+import { ColorBarGroup } from "@/model/colorBar";
+import ColorBarGroupHeader from "./ColorBarGroupHeader";
+import ColorBarItem from "./ColorBarItem";
 
-export interface Variable {
-  id: string;
-  name: string;
-  dims: string[];
-  shape: number[];
-  dtype: string;
-  units: string;
-  title: string;
-  timeChunkSize: number | null;
-  // The following are new since xcube 0.11
-  tileUrl?: string; // no longer used since 0.13
-  tileLevelMin?: number;
-  tileLevelMax?: number;
-  // tileSourceOptions are no longer used since xcube 0.11
-  tileSourceOptions?: TileSourceOptions;
-  // colorBarName may be prefixed by "_alpha" and/or "_r" (reversed)
-  colorBarName: string;
-  colorBarMin: number;
-  colorBarMax: number;
-  opacity?: number;
-  volumeRenderMode?: VolumeRenderMode;
-  volumeIsoThreshold?: number;
-  htmlRepr?: string;
-  attrs: Record<string, unknown>;
+interface ColorBarGroupComponentProps {
+  colorBarGroup: ColorBarGroup;
+  selectedColorBarName: string | null;
+  onSelectColorBar: (colorBarName: string) => void;
+  images: Record<string, string>;
+}
+
+export default function ColorBarGroupComponent({
+  colorBarGroup,
+  selectedColorBarName,
+  onSelectColorBar,
+  images,
+}: ColorBarGroupComponentProps) {
+  return (
+    <>
+      <ColorBarGroupHeader
+        title={colorBarGroup.title}
+        description={colorBarGroup.description}
+      />
+      {colorBarGroup.names.map((name) => (
+        <ColorBarItem
+          key={name}
+          title={name}
+          imageData={images[name]}
+          selected={name === selectedColorBarName}
+          onSelect={() => onSelectColorBar(name)}
+        />
+      ))}
+    </>
+  );
 }

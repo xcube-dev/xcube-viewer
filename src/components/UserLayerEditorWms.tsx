@@ -24,16 +24,14 @@
 
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import DoneIcon from "@mui/icons-material/Done";
-import CancelIcon from "@mui/icons-material/Cancel";
+import MenuItem from "@mui/material/MenuItem";
 
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemText from "@mui/material/ListItemText";
-import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms.ts";
+import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms";
+import DoneCancel from "@/components/DoneCancel";
 
 interface UserLayerEditorWmsProps {
   userLayer: LayerDefinition;
@@ -128,18 +126,11 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
           </MenuItem>
         ))}
       </Select>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <IconButton
-          onClick={handleUserLayerChange}
-          color="primary"
-          disabled={!canCommit()}
-        >
-          <DoneIcon />
-        </IconButton>
-        <IconButton onClick={onCancel} color="primary">
-          <CancelIcon />
-        </IconButton>
-      </Box>
+      <DoneCancel
+        onDone={handleUserLayerChange}
+        onCancel={onCancel}
+        doneDisabled={!canCommit()}
+      />
     </Box>
   );
 };

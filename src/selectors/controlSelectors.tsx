@@ -69,7 +69,7 @@ import { Variable } from "@/model/variable";
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
 import {
-  colorBarsSelector,
+  predefinedColorBarsSelector,
   datasetsSelector,
   timeSeriesGroupsSelector,
   userPlaceGroupsSelector,
@@ -78,7 +78,17 @@ import {
 import { makeRequestUrl } from "@/api/callApi";
 import { MAP_OBJECTS, ViewMode } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
-import { ColorBar, ColorBars, parseColorBar } from "@/model/colorBar";
+import {
+  ColorBar,
+  ColorBarGroup,
+  ColorBars,
+  parseColorBar,
+} from "@/model/colorBar";
+import {
+  getUserColorBarColorArray,
+  USER_COLOR_BAR_GROUP_TITLE,
+  UserColorBar,
+} from "@/model/userColorBar";
 import {
   defaultBaseMapLayers,
   defaultOverlayLayers,
@@ -142,6 +152,8 @@ export const userPlacesFormatOptionsGeoJsonSelector = (state: AppState) =>
   state.controlState.userPlacesFormatOptions.geojson;
 export const userPlacesFormatOptionsWktSelector = (state: AppState) =>
   state.controlState.userPlacesFormatOptions.wkt;
+export const userColorBarsSelector = (state: AppState) =>
+  state.controlState.userColorBars;
 
 export const selectedDatasetSelector = createSelector(
   datasetsSelector,
@@ -188,11 +200,63 @@ export const selectedVariableColorBarNameSelector = createSelector(
   },
 );
 
+export const colorBarsSelector = createSelector(
+  userColorBarsSelector,
+  predefinedColorBarsSelector,
+  (userColorBars, predefinedColorBars): ColorBars => {
+    const userGroup: ColorBarGroup = {
+      title: USER_COLOR_BAR_GROUP_TITLE,
+      description: "User-defined color bars.",
+      names: userColorBars.map((colorBar) => colorBar.id),
+    };
+    const userImages: Record<string, string> = {};
+    userColorBars.forEach(({ id, imageData }: UserColorBar) => {
+      if (imageData) {
+        userImages[id] = imageData;
+      }
+    });
+    if (predefinedColorBars) {
+      return {
+        ...predefinedColorBars,
+        groups: [userGroup, ...predefinedColorBars.groups],
+        images: { ...predefinedColorBars.images, ...userImages },
+      };
+    } else {
+      return { groups: [userGroup], images: userImages };
+    }
+  },
+);
+
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
   colorBarsSelector,
-  (colorBarName: string, colorBars: ColorBars | null): ColorBar => {
-    return parseColorBar(colorBarName, colorBars);
+  (colorBarName: string, colorBars: ColorBars): ColorBar => {
+    const colorBar: ColorBar = parseColorBar(colorBarName);
+    const imageData = colorBars.images[colorBar.baseName];
+    return { ...colorBar, imageData };
+  },
+);
+
+export const selectedVariableUserColorBarJsonSelector = createSelector(
+  selectedVariableColorBarSelector,
+  selectedVariableColorBarNameSelector,
+  userColorBarsSelector,
+  (
+    colorBar: ColorBar,
+    colorBarName: string,
+    userColorBars: UserColorBar[],
+  ): string | null => {
+    const { baseName } = colorBar;
+    const userColorBar = userColorBars.find(
+      (userColorBar) => userColorBar.id === baseName,
+    );
+    if (userColorBar) {
+      const colors = getUserColorBarColorArray(userColorBar.code);
+      if (colors) {
+        return JSON.stringify({ name: colorBarName, colors });
+      }
+    }
+    return null;
   },
 );
 
@@ -699,6 +763,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   mapProjectionSelector,
   selectedVariableColorBarMinMaxSelector,
   selectedVariableColorBarNameSelector,
+  selectedVariableUserColorBarJsonSelector,
   selectedVariableOpacitySelector,
   selectedDatasetAttributionsSelector,
   imageSmoothingSelector,
@@ -713,6 +778,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
     mapProjection: string,
     colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarJson: string | null,
     opacity: number,
     attributions: string[] | null,
     imageSmoothing: boolean,
@@ -724,7 +790,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
       ["crs", mapProjection],
       ["vmin", `${colorBarMinMax[0]}`],
       ["vmax", `${colorBarMinMax[1]}`],
-      ["cbar", colorBarName],
+      ["cbar", colorBarJson ? colorBarJson : colorBarName],
       // ['retina', '1'],
     ];
     return getTileLayer(

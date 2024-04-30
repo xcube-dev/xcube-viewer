@@ -22,31 +22,7 @@
  * SOFTWARE.
  */
 
-import { VolumeRenderMode } from "@/states/controlState";
-import { TileSourceOptions } from "./tile";
-
-export interface Variable {
-  id: string;
-  name: string;
-  dims: string[];
-  shape: number[];
-  dtype: string;
-  units: string;
-  title: string;
-  timeChunkSize: number | null;
-  // The following are new since xcube 0.11
-  tileUrl?: string; // no longer used since 0.13
-  tileLevelMin?: number;
-  tileLevelMax?: number;
-  // tileSourceOptions are no longer used since xcube 0.11
-  tileSourceOptions?: TileSourceOptions;
-  // colorBarName may be prefixed by "_alpha" and/or "_r" (reversed)
-  colorBarName: string;
-  colorBarMin: number;
-  colorBarMax: number;
-  opacity?: number;
-  volumeRenderMode?: VolumeRenderMode;
-  volumeIsoThreshold?: number;
-  htmlRepr?: string;
-  attrs: Record<string, unknown>;
-}
+export const COLOR_BAR_BOX_MARGIN = 1;
+export const COLOR_BAR_ITEM_GAP = 0.2;
+export const COLOR_BAR_ITEM_WIDTH = 240;
+export const COLOR_BAR_ITEM_HEIGHT = 20;
