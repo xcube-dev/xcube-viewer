@@ -30,9 +30,7 @@ import { ColorBar, ColorBars } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
 import ColorBarStyleEditor from "./ColorBarStyleEditor";
 import ColorBarSelect from "./ColorBarSelect";
-import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";
-
-const COLOR_BAR_BOX_MARGIN = 1;
+import { COLOR_BAR_ITEM_GAP, COLOR_BAR_BOX_MARGIN } from "./constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarBox: {

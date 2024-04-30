@@ -42,20 +42,10 @@
 
 TODO:
 
+* Add translations for many new UI texts
+* Support categorical user color bars
 * User color bars:
-  - Harmonize styling see useItemStyles.ts, search for COLOR_BAR_ITEM_GAP
-  - Support categorical user color bars
-  - ~Implement user color bars in xcube server and adjust tile API calls
-    in viewer~
-  - ~Use RGBA instead of just RGB~
-  - ~Fix code duplication, search for COLOR_BAR_ITEM_BOX_MARGIN~
-  - ~Fix popover toolbar for editing and removing a color bar~
-  - ~Use image data and "img" for rendering instead of "canvas"~
-  - ~No longer display code parsing error messages in image,
-    display as tooltip instead and use error border in text field~
-  - ~Fix generation of base64 image data~
-  - ~Fix selecting a user color bar~
-  - ~Allow for same values in color bars code~
+  - Allow selecting the currently edited color bar
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
 * Use MUI v5 styling alternatives.

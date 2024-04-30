@@ -35,6 +35,13 @@ import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarItem from "./UserColorBarItem";
 import useUndo from "./useUndo";
 
+const CONTAINER_STYLE = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: 1,
+};
+
 interface EditMode {
   action?: "add" | "edit";
   colorBarId?: string;
@@ -97,14 +104,7 @@ export default function ColorBarSelect({
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
+      <Box sx={CONTAINER_STYLE}>
         <ColorBarGroupHeader
           title={colorBarGroup.title}
           description={colorBarGroup.description}

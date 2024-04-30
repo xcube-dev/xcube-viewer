@@ -22,27 +22,7 @@
  * SOFTWARE.
  */
 
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-
+export const COLOR_BAR_BOX_MARGIN = 1;
 export const COLOR_BAR_ITEM_GAP = 0.2;
-
-const colorBarGroupItemStyle = (theme: Theme) => ({
-  marginTop: theme.spacing(COLOR_BAR_ITEM_GAP),
-  height: 20,
-  borderWidth: 1,
-  borderStyle: "solid",
-});
-
-const useItemStyles = makeStyles((theme: Theme) => ({
-  colorBarGroupItem: {
-    ...colorBarGroupItemStyle(theme),
-    borderColor: theme.palette.mode === "dark" ? "white" : "black",
-  },
-  colorBarGroupItemSelected: {
-    ...colorBarGroupItemStyle(theme),
-    borderColor: "blue",
-  },
-}));
-
-export default useItemStyles;
+export const COLOR_BAR_ITEM_WIDTH = 240;
+export const COLOR_BAR_ITEM_HEIGHT = 20;

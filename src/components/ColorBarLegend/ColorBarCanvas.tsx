@@ -27,6 +27,10 @@ import { useEffect, useRef, MouseEvent } from "react";
 import i18n from "@/i18n";
 import { ColorBar, renderColorBar } from "@/model/colorBar";
 import Tooltip from "@mui/material/Tooltip";
+import {
+  COLOR_BAR_ITEM_HEIGHT,
+  COLOR_BAR_ITEM_WIDTH,
+} from "@/components/ColorBarLegend/constants";
 
 interface ColorBarCanvasProps {
   colorBar: ColorBar;
@@ -61,8 +65,8 @@ export default function ColorBarCanvas({
     <Tooltip title={tooltipTitle}>
       <canvas
         ref={canvasRef}
-        width={width || 240}
-        height={height || 24}
+        width={width || COLOR_BAR_ITEM_WIDTH}
+        height={height || COLOR_BAR_ITEM_HEIGHT + 4}
         onClick={onClick}
         style={!imageData ? { border: "0.5px solid red" } : undefined}
       />

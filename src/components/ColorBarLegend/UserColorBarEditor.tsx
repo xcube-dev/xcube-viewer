@@ -55,7 +55,6 @@ export default function UserColorBarEditor({
       <ColorBarItem
         imageData={userColorBar.imageData}
         title={userColorBar.errorMessage}
-        width={240}
       />
       <TextField
         label="Color mapping"
