@@ -25,12 +25,6 @@
 import { useState, useRef, MouseEvent } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import AllOutIcon from "@mui/icons-material/AllOut";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   CartesianGrid,
   Legend,
@@ -44,7 +38,6 @@ import {
 } from "recharts";
 import { CategoricalChartState } from "recharts/types/chart/types";
 
-import i18n from "@/i18n";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   equalTimeRanges,
@@ -57,10 +50,10 @@ import {
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
 import { utcTimeToIsoDateString } from "@/util/time";
-import AddTimeSeriesButton from "@/components/AddTimeSeriesButton";
 import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "@/components/TimeSeriesCharts/TimeSeriesLine";
+import TimeSeriesChartHeader from "@/components/TimeSeriesCharts/TimeSeriesChartHeader";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -81,59 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   responsiveContainer: {
     flexGrow: 1,
   },
-  actionButton: {
-    zIndex: 1000,
-    opacity: 0.8,
-  },
-  chartTitle: {
-    fontSize: "inherit",
-    fontWeight: "normal",
-  },
 }));
-
-interface TimeSeriesChartProps extends WithLocale {
-  timeSeriesGroup: TimeSeriesGroup;
-  selectedTime?: Time | null;
-  selectTime?: (time: Time | null) => void;
-
-  dataTimeRange?: TimeRange | null;
-  selectedTimeRange?: TimeRange | null;
-  selectTimeRange?: (
-    timeRange: TimeRange | null,
-    groupId?: string,
-    valueRange?: [number, number] | null,
-  ) => void;
-
-  showPointsOnly: boolean;
-  showErrorBars: boolean;
-
-  selectTimeSeries?: (
-    timeSeriesGroupId: string,
-    timeSeriesIndex: number,
-    timeSeries: TimeSeries,
-  ) => void;
-  removeTimeSeries?: (
-    timeSeriesGroupId: string,
-    timeSeriesIndex: number,
-  ) => void;
-  removeTimeSeriesGroup?: (timeSeriesGroupId: string) => void;
-  completed: number[];
-
-  placeInfos?: { [placeId: string]: PlaceInfo };
-
-  selectPlace: (
-    placeId: string | null,
-    places: Place[],
-    showInMap: boolean,
-  ) => void;
-  places: Place[];
-
-  placeGroupTimeSeries: PlaceGroupTimeSeries[];
-  addPlaceGroupTimeSeries: (
-    timeSeriesGroupId: string,
-    timeSeries: TimeSeries,
-  ) => void;
-}
 
 interface TimeRangeSelection {
   firstTime?: number;
@@ -141,6 +82,44 @@ interface TimeRangeSelection {
 
   firstValue?: number;
   secondValue?: number;
+}
+
+interface TimeSeriesChartProps extends WithLocale {
+  timeSeriesGroup: TimeSeriesGroup;
+  selectedTime: Time | null;
+  selectTime: (time: Time | null) => void;
+  dataTimeRange: TimeRange | null;
+  selectedTimeRange: TimeRange | null;
+  selectTimeRange: (
+    timeRange: TimeRange | null,
+    groupId?: string,
+    valueRange?: [number, number] | null,
+  ) => void;
+  showPointsOnly: boolean;
+  showErrorBars: boolean;
+  // Not implemented yet
+  selectTimeSeries?: (
+    timeSeriesGroupId: string,
+    timeSeriesIndex: number,
+    timeSeries: TimeSeries,
+  ) => void;
+  removeTimeSeries: (
+    timeSeriesGroupId: string,
+    timeSeriesIndex: number,
+  ) => void;
+  removeTimeSeriesGroup: (timeSeriesGroupId: string) => void;
+  placeInfos: { [placeId: string]: PlaceInfo };
+  selectPlace: (
+    placeId: string | null,
+    places: Place[],
+    showInMap: boolean,
+  ) => void;
+  places: Place[];
+  placeGroupTimeSeries: PlaceGroupTimeSeries[];
+  addPlaceGroupTimeSeries: (
+    timeSeriesGroupId: string,
+    timeSeries: TimeSeries,
+  ) => void;
 }
 
 export default function TimeSeriesChart({
@@ -160,7 +139,6 @@ export default function TimeSeriesChart({
   removeTimeSeriesGroup,
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
-  completed,
 }: TimeSeriesChartProps) {
   const theme = useTheme();
   const classes = useStyles();
@@ -173,18 +151,23 @@ export default function TimeSeriesChart({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const legendWrapperRef = useRef<HTMLDivElement | null>(null);
 
-  const clearTimeRangeSelection = () => {
-    setTimeRangeSelection({});
-  };
+  const completed = timeSeriesGroup.timeSeriesArray.map((item) =>
+    item.dataProgress ? item.dataProgress : 0,
+  );
+  const progress =
+    completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
+  const loading = progress > 0 && progress < 1;
+  const zoomed =
+    !!selectedTimeRange &&
+    !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
 
   const lightStroke = theme.palette.primary.light;
   const mainStroke = theme.palette.primary.main;
   const labelTextColor = theme.palette.text.primary;
 
-  let isZoomedIn = false;
-  if (selectedTimeRange) {
-    isZoomedIn = !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
-  }
+  const clearTimeRangeSelection = () => {
+    setTimeRangeSelection({});
+  };
 
   const formatTimeTick = (value: number | string) => {
     if (typeof value !== "number" || !Number.isFinite(value)) {
@@ -281,18 +264,8 @@ export default function TimeSeriesChart({
     clearTimeRangeSelection();
   };
 
-  const handleZoomOutButtonClick = () => {
-    zoomOut();
-  };
-
   const handleRemoveTimeSeriesClick = (index: number) => {
     removeTimeSeries!(timeSeriesGroup.id, index);
-  };
-
-  const handleRemoveTimeSeriesGroupClick = () => {
-    if (removeTimeSeriesGroup) {
-      removeTimeSeriesGroup(timeSeriesGroup.id);
-    }
   };
 
   const zoomIn = () => {
@@ -328,7 +301,7 @@ export default function TimeSeriesChart({
     }
   };
 
-  const zoomOut = () => {
+  const resetZoom = () => {
     clearTimeRangeSelection();
     if (selectTimeRange) {
       selectTimeRange(dataTimeRange || null, timeSeriesGroup.id, null);
@@ -343,115 +316,6 @@ export default function TimeSeriesChart({
       commonValueDataKey = valueDataKey;
     }
   });
-
-  const lines = timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>
-    // Note, we cannot render TimeSeriesLine as JSX node, because
-    // recharts won't recognize the resulting higher-order component as
-    // a "Line" element.
-    TimeSeriesLine({
-      timeSeriesGroup,
-      timeSeriesIndex,
-      selectTimeSeries,
-      selectedTimeRange,
-      showPointsOnly,
-      showErrorBars,
-      places,
-      selectPlace,
-      placeGroupTimeSeries,
-      placeInfos,
-      paletteMode: theme.palette.mode,
-    }),
-  );
-
-  let referenceLine = null;
-  if (selectedTime !== null) {
-    referenceLine = (
-      <ReferenceLine
-        isFront={true}
-        x={selectedTime}
-        stroke={mainStroke}
-        strokeWidth={3}
-        strokeOpacity={0.5}
-      />
-    );
-  }
-
-  const { firstTime, secondTime, firstValue, secondValue } = timeRangeSelection;
-  let referenceArea = null;
-  if (firstTime !== undefined && secondTime !== undefined) {
-    referenceArea = (
-      <ReferenceArea
-        x1={firstTime}
-        x2={secondTime}
-        y1={firstValue}
-        y2={secondValue}
-        strokeOpacity={0.3}
-        fill={lightStroke}
-        fillOpacity={0.3}
-      />
-    );
-  }
-
-  const actionButtons = [];
-
-  if (isZoomedIn) {
-    const zoomOutButton = (
-      <IconButton
-        key={"zoomOutButton"}
-        className={classes.actionButton}
-        aria-label="Zoom Out"
-        onClick={handleZoomOutButtonClick}
-        size="large"
-      >
-        <AllOutIcon />
-      </IconButton>
-    );
-    actionButtons.push(zoomOutButton);
-  }
-  const progress =
-    completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
-  const loading = progress > 0 && progress < 100;
-
-  const addTimeSeriesButton = (
-    <AddTimeSeriesButton
-      key="addTimeSeries"
-      className={classes.actionButton}
-      timeSeriesGroupId={timeSeriesGroup.id}
-      placeGroupTimeSeries={placeGroupTimeSeries}
-      addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
-    />
-  );
-  actionButtons.push(addTimeSeriesButton);
-
-  let removeAllButton;
-  if (loading) {
-    removeAllButton = (
-      <CircularProgress
-        key={"loadingTimeSeriesGroup"}
-        size={24}
-        className={classes.actionButton}
-        color={"secondary"}
-      />
-    );
-  } else {
-    removeAllButton = (
-      <IconButton
-        key={"removeTimeSeriesGroup"}
-        className={classes.actionButton}
-        aria-label="Close"
-        onClick={handleRemoveTimeSeriesGroupClick}
-        size="small"
-      >
-        <CloseIcon />
-      </IconButton>
-    );
-  }
-
-  actionButtons.push(removeAllButton);
-
-  const timeSeriesText = i18n.get("Time-Series");
-  const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
-  const chartTitle = `${timeSeriesText} (${unitsText})`;
 
   const handleChartResize = (w: number, h: number) => {
     chartSize.current = [w, h];
@@ -520,24 +384,19 @@ export default function TimeSeriesChart({
     return [xMin + wx * (xMax - xMin), yMax - wy * (yMax - yMin)];
   };
 
+  const { firstTime, secondTime, firstValue, secondValue } = timeRangeSelection;
+
   return (
     <div ref={containerRef} className={classes.chartContainer}>
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Typography className={classes.chartTitle}>{chartTitle}</Typography>
-        <Box
-          display="flex"
-          flexDirection="row"
-          flexWrap="nowrap"
-          alignItems="center"
-        >
-          {actionButtons}
-        </Box>
-      </Box>
+      <TimeSeriesChartHeader
+        timeSeriesGroup={timeSeriesGroup}
+        placeGroupTimeSeries={placeGroupTimeSeries}
+        addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
+        removeTimeSeriesGroup={removeTimeSeriesGroup}
+        resetZoom={resetZoom}
+        loading={loading}
+        zoomed={zoomed}
+      />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
         width="99%"
@@ -580,9 +439,44 @@ export default function TimeSeriesChart({
               <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
             }
           />
-          {lines}
-          {referenceArea}
-          {referenceLine}
+          {timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>
+            // Note, we cannot render TimeSeriesLine as JSX node, because
+            // recharts won't recognize the resulting higher-order component as
+            // a "Line" element.
+            TimeSeriesLine({
+              timeSeriesGroup,
+              timeSeriesIndex,
+              selectTimeSeries,
+              selectedTimeRange,
+              showPointsOnly,
+              showErrorBars,
+              places,
+              selectPlace,
+              placeGroupTimeSeries,
+              placeInfos,
+              paletteMode: theme.palette.mode,
+            }),
+          )}
+          {firstTime !== undefined && secondTime !== undefined && (
+            <ReferenceArea
+              x1={firstTime}
+              x2={secondTime}
+              y1={firstValue}
+              y2={secondValue}
+              strokeOpacity={0.3}
+              fill={lightStroke}
+              fillOpacity={0.3}
+            />
+          )}
+          {selectedTime !== null && (
+            <ReferenceLine
+              isFront={true}
+              x={selectedTime}
+              stroke={mainStroke}
+              strokeWidth={3}
+              strokeOpacity={0.5}
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
     </div>

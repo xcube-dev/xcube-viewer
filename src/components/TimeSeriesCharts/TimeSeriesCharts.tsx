@@ -22,12 +22,7 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
-import { Theme } from "@mui/material";
-
+import makeStyles from "@mui/styles/makeStyles";
 import { WithLocale } from "@/util/lang";
 import { Place, PlaceInfo } from "@/model/place";
 import {
@@ -41,44 +36,44 @@ import TimeRangeSlider from "./TimeRangeSlider";
 import TimeSeriesChart from "./TimeSeriesChart";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) =>
-  createStyles({
-    chartContainer: {
-      display: "flex",
-      flexDirection: "column",
-      flexWrap: "wrap",
-      flexFlow: "flex-start",
-      alignItems: "center",
-    },
-  });
+const useStyles = makeStyles(() => ({
+  chartContainer: {
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "wrap",
+    flexFlow: "flex-start",
+    alignItems: "center",
+  },
+}));
 
-interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
-  theme: Theme;
+interface TimeSeriesChartsProps extends WithLocale {
   timeSeriesGroups: TimeSeriesGroup[];
-  selectedTime?: Time | null;
-  selectTime?: (time: Time | null) => void;
-
+  selectedTime: Time | null;
+  selectTime: (time: Time | null) => void;
   showPointsOnly: boolean;
   showErrorBars: boolean;
-
-  dataTimeRange?: TimeRange | null;
-  selectedTimeRange?: TimeRange | null;
-  selectTimeRange?: (
+  dataTimeRange: TimeRange | null;
+  selectedTimeRange: TimeRange | null;
+  selectTimeRange: (
     timeRange: TimeRange | null,
     groupId?: string,
     valueRange?: [number, number] | null,
   ) => void;
-
-  removeTimeSeries?: (groupId: string, index: number) => void;
-  removeTimeSeriesGroup?: (groupId: string) => void;
-  placeInfos?: { [placeId: string]: PlaceInfo };
+  // Not implemented yet
+  selectTimeSeries?: (
+    timeSeriesGroupId: string,
+    timeSeriesIndex: number,
+    timeSeries: TimeSeries,
+  ) => void;
+  removeTimeSeries: (groupId: string, index: number) => void;
+  removeTimeSeriesGroup: (groupId: string) => void;
+  placeInfos: { [placeId: string]: PlaceInfo };
   selectPlace: (
     placeId: string | null,
     places: Place[],
     showInMap: boolean,
   ) => void;
   places: Place[];
-
   placeGroupTimeSeries: PlaceGroupTimeSeries[];
   addPlaceGroupTimeSeries: (
     timeSeriesGroupId: string,
@@ -86,71 +81,39 @@ interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const _TimeSeriesCharts: React.FC<TimeSeriesChartsProps> = ({
-  classes,
-  locale,
-  timeSeriesGroups,
-  selectedTime,
-  selectedTimeRange,
-  dataTimeRange,
-  selectTime,
-  selectTimeRange,
-  removeTimeSeries,
-  removeTimeSeriesGroup,
-  showPointsOnly,
-  showErrorBars,
-  placeInfos,
-  places,
-  selectPlace,
-  placeGroupTimeSeries,
-  addPlaceGroupTimeSeries,
-}) => {
-  const charts = timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
-    const completed = timeSeriesGroup.timeSeriesArray.map((item) =>
-      item.dataProgress ? 100 * item.dataProgress : 0,
-    );
+export default function TimeSeriesCharts(props: TimeSeriesChartsProps) {
+  const classes = useStyles();
+  const {
+    timeSeriesGroups,
+    dataTimeRange,
+    selectedTimeRange,
+    selectTimeRange,
+    ...chartProps
+  } = props;
 
-    return (
-      <TimeSeriesChart
-        key={timeSeriesGroup.id}
-        locale={locale}
-        timeSeriesGroup={timeSeriesGroup}
-        selectedTime={selectedTime}
-        selectedTimeRange={selectedTimeRange}
-        dataTimeRange={dataTimeRange}
-        selectTime={selectTime}
-        selectTimeRange={selectTimeRange}
-        removeTimeSeries={removeTimeSeries}
-        removeTimeSeriesGroup={removeTimeSeriesGroup}
-        completed={completed}
-        showPointsOnly={showPointsOnly}
-        showErrorBars={showErrorBars}
-        placeInfos={placeInfos}
-        places={places}
-        selectPlace={selectPlace}
-        placeGroupTimeSeries={placeGroupTimeSeries}
-        addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
-      />
-    );
-  });
-
-  if (charts.length === 0) {
+  if (timeSeriesGroups.length === 0) {
     return null;
   }
 
   return (
     <div className={classes.chartContainer}>
       <TimeRangeSlider
-        selectedTimeRange={selectedTimeRange}
         dataTimeRange={dataTimeRange}
+        selectedTimeRange={selectedTimeRange}
         selectTimeRange={selectTimeRange}
       />
-      {charts}
+      {timeSeriesGroups.map((timeSeriesGroup: TimeSeriesGroup) => {
+        return (
+          <TimeSeriesChart
+            key={timeSeriesGroup.id}
+            timeSeriesGroup={timeSeriesGroup}
+            dataTimeRange={dataTimeRange}
+            selectedTimeRange={selectedTimeRange}
+            selectTimeRange={selectTimeRange}
+            {...chartProps}
+          />
+        );
+      })}
     </div>
   );
-};
-
-const TimeSeriesCharts = withStyles(styles, { withTheme: true })(
-  _TimeSeriesCharts,
-);
-export default TimeSeriesCharts;
+}

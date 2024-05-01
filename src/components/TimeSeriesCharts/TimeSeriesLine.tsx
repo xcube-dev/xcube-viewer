@@ -41,7 +41,8 @@ interface TimeSeriesLineProps {
   timeSeriesIndex: number;
   showPointsOnly: boolean;
   showErrorBars: boolean;
-  selectedTimeRange?: TimeRange | null;
+  selectedTimeRange: TimeRange | null;
+  // Not implemented yet
   selectTimeSeries?: (
     timeSeriesGroupId: string,
     timeSeriesIndex: number,
@@ -53,7 +54,7 @@ interface TimeSeriesLineProps {
     places: Place[],
     showInMap: boolean,
   ) => void;
-  placeInfos?: { [placeId: string]: PlaceInfo };
+  placeInfos: { [placeId: string]: PlaceInfo };
   placeGroupTimeSeries: PlaceGroupTimeSeries[];
   paletteMode: PaletteMode;
 }
