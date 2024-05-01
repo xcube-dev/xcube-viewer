@@ -35,7 +35,6 @@ import AllOutIcon from "@mui/icons-material/AllOut";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   CartesianGrid,
-  DotProps,
   ErrorBar,
   Legend,
   Line,
@@ -69,6 +68,7 @@ import {
   utcTimeToIsoDateTimeString,
 } from "@/util/time";
 import AddTimeSeriesButton from "@/components/AddTimeSeriesButton";
+import CustomDot from "./CustomDot";
 import CustomLegend from "./CustomLegend";
 
 // Fix typing problem in recharts v2.12.4
@@ -490,10 +490,10 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     }
 
     const dot = (
-      <CustomizedDot {...dotProps} stroke={shadedLineColor} fill={"white"} />
+      <CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />
     );
     const activeDot = (
-      <CustomizedDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
+      <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
     );
     return (
       <Line
@@ -822,66 +822,3 @@ const _CustomTooltip: React.FC<_CustomTooltipProps> = ({
 };
 
 const CustomTooltip = withStyles(styles)(_CustomTooltip);
-
-interface CustomizedDotProps extends DotProps {
-  radius: number;
-  stroke: string;
-  strokeWidth: number;
-  fill: string;
-  symbol: "diamond" | "circle";
-}
-
-const CustomizedDot = (props: CustomizedDotProps) => {
-  const { cx, cy, radius, stroke, fill, strokeWidth, symbol } = props;
-
-  const vpSize = 1024;
-  const totalRadius = radius + 0.5 * strokeWidth;
-  const totalDiameter = 2 * totalRadius;
-
-  const sw = Math.floor((100 * strokeWidth) / totalDiameter + 0.5) + "%";
-
-  let shape;
-  if (symbol === "diamond") {
-    const c = vpSize / 2;
-    const cx = c,
-      cy = c;
-    const r = vpSize * (radius / totalDiameter);
-    shape = (
-      <polygon
-        points={`${cx - r},${cy} ${cx},${cy - r} ${cx + r},${cy} ${cx},${cy + r}`}
-        strokeWidth={sw}
-        stroke={stroke}
-        fill={fill}
-      />
-    );
-  } else {
-    const r = Math.floor((100 * radius) / totalDiameter + 0.5) + "%";
-    shape = (
-      <circle
-        cx="50%"
-        cy="50%"
-        r={r}
-        strokeWidth={sw}
-        stroke={stroke}
-        fill={fill}
-      />
-    );
-  }
-
-  // noinspection SuspiciousTypeOfGuard
-  if (typeof cx === "number" && typeof cy === "number") {
-    return (
-      <svg
-        x={cx - totalRadius}
-        y={cy - totalRadius}
-        width={totalDiameter}
-        height={totalDiameter}
-        viewBox={`0 0 ${vpSize} ${vpSize}`}
-      >
-        {shape}
-      </svg>
-    );
-  }
-
-  return null;
-};
