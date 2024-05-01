@@ -33,9 +33,7 @@ import AllOutIcon from "@mui/icons-material/AllOut";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   CartesianGrid,
-  ErrorBar,
   Legend,
-  Line,
   LineChart,
   ReferenceArea,
   ReferenceLine,
@@ -47,7 +45,6 @@ import {
 import { CategoricalChartState } from "recharts/types/chart/types";
 
 import i18n from "@/i18n";
-import { getUserPlaceColor } from "@/config";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   equalTimeRanges,
@@ -61,9 +58,9 @@ import {
 import { WithLocale } from "@/util/lang";
 import { utcTimeToIsoDateString } from "@/util/time";
 import AddTimeSeriesButton from "@/components/AddTimeSeriesButton";
-import CustomDot from "./CustomDot";
 import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
+import TimeSeriesLine from "@/components/TimeSeriesCharts/TimeSeriesLine";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -180,17 +177,13 @@ export default function TimeSeriesChart({
     setTimeRangeSelection({});
   };
 
-  const paletteType = theme.palette.mode;
   const lightStroke = theme.palette.primary.light;
   const mainStroke = theme.palette.primary.main;
   const labelTextColor = theme.palette.text.primary;
 
-  let isZoomedIn = false,
-    time1: number | null = null,
-    time2: number | null = null;
+  let isZoomedIn = false;
   if (selectedTimeRange) {
     isZoomedIn = !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
-    [time1, time2] = selectedTimeRange;
   }
 
   const formatTimeTick = (value: number | string) => {
@@ -212,17 +205,6 @@ export default function TimeSeriesChart({
       selectTime(chartState.activeLabel);
     }
     clearTimeRangeSelection();
-  };
-
-  const handleTimeSeriesClick = (
-    timeSeriesGroupId: string,
-    timeSeriesIndex: number,
-    timeSeries: TimeSeries,
-  ) => {
-    if (selectTimeSeries) {
-      selectTimeSeries(timeSeriesGroupId, timeSeriesIndex, timeSeries);
-    }
-    selectPlace(timeSeries.source.placeId, places, true);
   };
 
   const handleMouseDown = (
@@ -354,127 +336,32 @@ export default function TimeSeriesChart({
   };
 
   let commonValueDataKey: keyof TimeSeriesPoint | null = null;
-
-  const lines = timeSeriesGroup.timeSeriesArray.map((ts, i) => {
-    // TODO (forman): way too much logic here, refactor!
+  timeSeriesGroup.timeSeriesArray.forEach((ts) => {
     const source = ts.source;
     const valueDataKey = source.valueDataKey;
-    let lineName = source.variableName;
-    let lineColor = "red";
-    if (source.placeId === null) {
-      // Time series is from imported CSV or GeoJSON.
-      // Then source.datasetId is the place group name.
-      lineName = `${source.datasetTitle}/${lineName}`;
-      // Try detecting line color from a place group's first place color
-      let placeLineColor: string | null = null;
-      placeGroupTimeSeries.forEach((pgTs) => {
-        if (
-          placeLineColor === null &&
-          pgTs.placeGroup.id === source.datasetId
-        ) {
-          const places = pgTs.placeGroup.features!;
-          if (places.length > 0 && places[0].properties) {
-            placeLineColor = places[0].properties["color"] || null;
-          }
-        }
-      });
-      lineColor = placeLineColor || "red";
-    } else if (placeInfos) {
-      const placeInfo = placeInfos[source.placeId];
-      if (placeInfo) {
-        const { place, label, color } = placeInfo;
-        if (place.geometry.type === "Point") {
-          const lon = place.geometry.coordinates[0];
-          const lat = place.geometry.coordinates[1];
-          lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)})`;
-        } else {
-          lineName += ` (${label})`;
-        }
-        lineColor = color;
-      }
-    }
-
-    const data: TimeSeriesPoint[] = [];
-    ts.data.forEach((point) => {
-      if (point[valueDataKey] !== null) {
-        let time1Ok = true;
-        let time2Ok = true;
-        if (time1 !== null) {
-          time1Ok = point.time >= time1;
-        }
-        if (time2 !== null) {
-          time2Ok = point.time <= time2;
-        }
-        if (time1Ok && time2Ok) {
-          data.push(point);
-        }
-      }
-    });
     if (commonValueDataKey === null) {
       commonValueDataKey = valueDataKey;
     }
-    const shadedLineColor = getUserPlaceColor(lineColor, paletteType);
-    let errorBar;
-    if (valueDataKey && showErrorBars && source.errorDataKey) {
-      errorBar = (
-        <ErrorBar
-          dataKey={source.errorDataKey}
-          width={4}
-          strokeWidth={1}
-          stroke={shadedLineColor}
-        />
-      );
-    }
-    let strokeOpacity;
-    let dotProps: {
-      radius: number;
-      strokeWidth: number;
-      symbol: "diamond" | "circle";
-    };
-    if (ts.source.placeId === null) {
-      strokeOpacity = 0;
-      dotProps = {
-        radius: 5,
-        strokeWidth: 1.5,
-        symbol: "diamond",
-      };
-    } else {
-      strokeOpacity = showPointsOnly ? 0 : ts.dataProgress;
-      dotProps = {
-        radius: 3,
-        strokeWidth: 2,
-        symbol: "circle",
-      };
-    }
-
-    const dot = (
-      <CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />
-    );
-    const activeDot = (
-      <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
-    );
-    return (
-      <Line
-        key={i}
-        type="monotone"
-        name={lineName}
-        unit={source.variableUnits}
-        data={data}
-        dataKey={valueDataKey}
-        dot={dot}
-        activeDot={activeDot}
-        stroke={shadedLineColor}
-        strokeOpacity={strokeOpacity}
-        // strokeWidth={2 * (ts.dataProgress || 1)}
-        // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
-        // isAnimationActive={ts.dataProgress === 1.0}
-        isAnimationActive={false}
-        onClick={() => handleTimeSeriesClick(timeSeriesGroup.id, i, ts)}
-      >
-        {errorBar}
-      </Line>
-    );
   });
+
+  const lines = timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>
+    // Note, we cannot render TimeSeriesLine as JSX node, because
+    // recharts won't recognize the resulting higher-order component as
+    // a "Line" element.
+    TimeSeriesLine({
+      timeSeriesGroup,
+      timeSeriesIndex,
+      selectTimeSeries,
+      selectedTimeRange,
+      showPointsOnly,
+      showErrorBars,
+      places,
+      selectPlace,
+      placeGroupTimeSeries,
+      placeInfos,
+      paletteMode: theme.palette.mode,
+    }),
+  );
 
   let referenceLine = null;
   if (selectedTime !== null) {
