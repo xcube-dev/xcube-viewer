@@ -71,7 +71,7 @@ import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
 } from "@/util/time";
-import AddTimeSeriesButton from "./AddTimeSeriesButton";
+import AddTimeSeriesButton from "../AddTimeSeriesButton";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<

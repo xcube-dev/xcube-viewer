@@ -30,15 +30,15 @@ import { Theme } from "@mui/material";
 
 import { WithLocale } from "@/util/lang";
 import { Place, PlaceInfo } from "@/model/place";
-import TimeSeriesChart from "./TimeSeriesChart";
 import {
   PlaceGroupTimeSeries,
   Time,
   TimeRange,
   TimeSeries,
   TimeSeriesGroup,
-} from "../model/timeSeries";
+} from "@/model/timeSeries";
 import TimeRangeSlider from "./TimeRangeSlider";
+import TimeSeriesChart from "./TimeSeriesChart";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (_theme: Theme) =>
