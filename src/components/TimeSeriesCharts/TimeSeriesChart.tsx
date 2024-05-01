@@ -32,14 +32,12 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Typography from "@mui/material/Typography";
 import AllOutIcon from "@mui/icons-material/AllOut";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   CartesianGrid,
   DotProps,
   ErrorBar,
   Legend,
-  LegendProps,
   Line,
   LineChart,
   ReferenceArea,
@@ -51,7 +49,6 @@ import {
   YAxis,
 } from "recharts";
 import { Payload as TooltipPayload } from "recharts/types/component/DefaultTooltipContent";
-import { Payload as LegendPayload } from "recharts/types/component/DefaultLegendContent";
 import { CategoricalChartState } from "recharts/types/chart/types";
 
 import i18n from "@/i18n";
@@ -71,7 +68,8 @@ import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
 } from "@/util/time";
-import AddTimeSeriesButton from "../AddTimeSeriesButton";
+import AddTimeSeriesButton from "@/components/AddTimeSeriesButton";
+import CustomLegend from "./CustomLegend";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -734,9 +732,7 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
           <Tooltip content={<CustomTooltip />} />
           <Legend
             content={
-              <CustomLegendContent
-                removeTimeSeries={handleRemoveTimeSeriesClick}
-              />
+              <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
             }
           />
           {lines}
@@ -889,41 +885,3 @@ const CustomizedDot = (props: CustomizedDotProps) => {
 
   return null;
 };
-
-interface CustomLegendProps extends WithStyles<typeof styles> {
-  removeTimeSeries?: (index: number) => void;
-}
-
-const _CustomLegendContent: React.FC<CustomLegendProps & LegendProps> = (
-  props,
-) => {
-  const { payload, removeTimeSeries, classes } = props;
-  if (!payload || payload.length === 0) {
-    return null;
-  }
-  return (
-    <div className={classes.legendContainer}>
-      {payload.map((pl: LegendPayload, index: number) => (
-        <div
-          key={pl.value}
-          className={classes.legendItem}
-          style={{ color: pl.color }}
-        >
-          <span>{pl.value}</span>
-          {removeTimeSeries && (
-            <span
-              className={classes.legendCloseIcon}
-              // Note, onClick() does not fire in any subcomponent
-              // of <Legend/>!
-              onMouseUp={() => removeTimeSeries(index)}
-            >
-              <RemoveCircleOutlineIcon fontSize={"small"} />
-            </span>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const CustomLegendContent = withStyles(styles)(_CustomLegendContent);
