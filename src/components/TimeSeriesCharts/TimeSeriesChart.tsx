@@ -23,13 +23,11 @@
  */
 
 import { useState, useRef, MouseEvent } from "react";
+import makeStyles from "@mui/styles/makeStyles";
+import { Theme, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import Typography from "@mui/material/Typography";
 import AllOutIcon from "@mui/icons-material/AllOut";
 import CloseIcon from "@mui/icons-material/Close";
@@ -73,32 +71,30 @@ type CategoricalChartState_Fixed = Omit<
   "activeLabel"
 > & { activeLabel?: number };
 
-const styles = (theme: Theme) =>
-  createStyles({
-    chartContainer: {
-      userSelect: "none",
-      marginTop: theme.spacing(1),
-      width: "99%",
-      height: "32vh",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "flex-stretch",
-    },
-    responsiveContainer: {
-      flexGrow: 1,
-    },
-    actionButton: {
-      zIndex: 1000,
-      opacity: 0.8,
-    },
-    chartTitle: {
-      fontSize: "inherit",
-      fontWeight: "normal",
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  chartContainer: {
+    userSelect: "none",
+    marginTop: theme.spacing(1),
+    width: "99%",
+    height: "32vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-stretch",
+  },
+  responsiveContainer: {
+    flexGrow: 1,
+  },
+  actionButton: {
+    zIndex: 1000,
+    opacity: 0.8,
+  },
+  chartTitle: {
+    fontSize: "inherit",
+    fontWeight: "normal",
+  },
+}));
 
-interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
-  theme: Theme;
+interface TimeSeriesChartProps extends WithLocale {
   timeSeriesGroup: TimeSeriesGroup;
   selectedTime?: Time | null;
   selectTime?: (time: Time | null) => void;
@@ -150,8 +146,7 @@ interface TimeRangeSelection {
   secondValue?: number;
 }
 
-const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
-  classes,
+export default function TimeSeriesChart({
   timeSeriesGroup,
   selectTimeSeries,
   selectedTime,
@@ -162,7 +157,6 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   selectPlace,
   placeInfos,
   dataTimeRange,
-  theme,
   showErrorBars,
   showPointsOnly,
   removeTimeSeries,
@@ -170,10 +164,12 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
   completed,
-}) => {
+}: TimeSeriesChartProps) {
+  const theme = useTheme();
+  const classes = useStyles();
+
   const [timeRangeSelection, setTimeRangeSelection] =
     useState<TimeRangeSelection>({});
-
   const xDomain = useRef<[number, number]>();
   const yDomain = useRef<[number, number]>();
   const chartSize = useRef<[number, number]>();
@@ -704,9 +700,4 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       </ResponsiveContainer>
     </div>
   );
-};
-
-const TimeSeriesChart = withStyles(styles, { withTheme: true })(
-  _TimeSeriesChart,
-);
-export default TimeSeriesChart;
+}
