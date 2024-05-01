@@ -54,6 +54,7 @@ import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "@/components/TimeSeriesCharts/TimeSeriesLine";
 import TimeSeriesChartHeader from "@/components/TimeSeriesCharts/TimeSeriesChartHeader";
+import { isNumber } from "@/util/types";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -161,6 +162,15 @@ export default function TimeSeriesChart({
     !!selectedTimeRange &&
     !equalTimeRanges(selectedTimeRange, dataTimeRange || null);
 
+  let commonValueDataKey: keyof TimeSeriesPoint | null = null;
+  timeSeriesGroup.timeSeriesArray.forEach((ts) => {
+    const source = ts.source;
+    const valueDataKey = source.valueDataKey;
+    if (commonValueDataKey === null) {
+      commonValueDataKey = valueDataKey;
+    }
+  });
+
   const lightStroke = theme.palette.primary.light;
   const mainStroke = theme.palette.primary.main;
   const labelTextColor = theme.palette.text.primary;
@@ -170,7 +180,7 @@ export default function TimeSeriesChart({
   };
 
   const formatTimeTick = (value: number | string) => {
-    if (typeof value !== "number" || !Number.isFinite(value)) {
+    if (!isNumber(value) || !Number.isFinite(value)) {
       return "";
     }
     return utcTimeToIsoDateString(value);
@@ -182,8 +192,8 @@ export default function TimeSeriesChart({
     if (
       chartState &&
       selectTime &&
-      Number.isFinite(chartState.activeLabel) &&
-      typeof chartState.activeLabel === "number"
+      isNumber(chartState.activeLabel) &&
+      Number.isFinite(chartState.activeLabel)
     ) {
       selectTime(chartState.activeLabel);
     }
@@ -192,28 +202,20 @@ export default function TimeSeriesChart({
 
   const handleMouseDown = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
-    mouseEvent: MouseEvent,
   ) => {
     if (!chartState) {
       return;
     }
     const { chartX, chartY } = chartState;
-    if (typeof chartX !== "number" || typeof chartY !== "number") {
+    if (!isNumber(chartX) || !isNumber(chartY)) {
       return;
     }
-    if (mouseEvent.ctrlKey) {
-      const chartCoords = getChartCoords(chartX, chartY);
-      if (chartCoords) {
-        setTimeRangeSelection({
-          firstTime: chartCoords[0],
-          firstValue: chartCoords[1],
-        });
-      }
-    } else {
-      const firstTime = chartState.activeLabel;
-      if (typeof firstTime === "number") {
-        setTimeRangeSelection({ firstTime });
-      }
+    const firstTime = chartState.activeLabel;
+    const chartCoords = getChartCoords(chartX, chartY);
+    if (isNumber(firstTime) && chartCoords) {
+      // Actually we should use firstTime=chartCoords[0] but recharts cannot clip
+      // correctly
+      setTimeRangeSelection({ firstTime, firstValue: chartCoords[1] });
     }
   };
 
@@ -229,21 +231,19 @@ export default function TimeSeriesChart({
       return;
     }
     const { chartX, chartY } = chartState;
-    if (typeof chartX !== "number" || typeof chartY !== "number") {
+    if (!isNumber(chartX) || !isNumber(chartY)) {
       return;
     }
-    if (mouseEvent.ctrlKey) {
-      const chartCoords = getChartCoords(chartX, chartY);
-      if (chartCoords) {
+    const secondTime = chartState.activeLabel;
+    const chartCoords = getChartCoords(chartX, chartY);
+    if (isNumber(secondTime) && chartCoords) {
+      if (mouseEvent.ctrlKey) {
         setTimeRangeSelection({
           ...timeRangeSelection,
-          secondTime: chartCoords[0],
+          secondTime,
           secondValue: chartCoords[1],
         });
-      }
-    } else {
-      const secondTime = chartState.activeLabel;
-      if (typeof secondTime === "number") {
+      } else {
         setTimeRangeSelection({
           ...timeRangeSelection,
           secondTime,
@@ -269,8 +269,6 @@ export default function TimeSeriesChart({
   };
 
   const zoomIn = () => {
-    // console.info("------------------------------------------------------");
-    // console.info("timeRangeSelection:", timeRangeSelection);
     const { firstTime, secondTime, firstValue, secondValue } =
       timeRangeSelection;
     if (
@@ -308,15 +306,6 @@ export default function TimeSeriesChart({
     }
   };
 
-  let commonValueDataKey: keyof TimeSeriesPoint | null = null;
-  timeSeriesGroup.timeSeriesArray.forEach((ts) => {
-    const source = ts.source;
-    const valueDataKey = source.valueDataKey;
-    if (commonValueDataKey === null) {
-      commonValueDataKey = valueDataKey;
-    }
-  });
-
   const handleChartResize = (w: number, h: number) => {
     chartSize.current = [w, h];
     if (containerRef.current) {
@@ -351,7 +340,10 @@ export default function TimeSeriesChart({
     return yDomain.current;
   };
 
-  const getChartCoords = (chartX: number, chartY: number) => {
+  const getChartCoords = (
+    chartX: number,
+    chartY: number,
+  ): [number, number] | undefined => {
     const legendWrapperEl = legendWrapperRef.current;
     if (
       !chartSize.current ||
@@ -433,7 +425,9 @@ export default function TimeSeriesChart({
             stroke={labelTextColor}
           />
           <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip content={<CustomTooltip />} />
+          {!timeRangeSelection.firstTime && (
+            <Tooltip content={<CustomTooltip />} />
+          )}
           <Legend
             content={
               <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
@@ -457,12 +451,20 @@ export default function TimeSeriesChart({
               paletteMode: theme.palette.mode,
             }),
           )}
-          {firstTime !== undefined && secondTime !== undefined && (
+          {isNumber(firstTime) && isNumber(secondTime) && (
             <ReferenceArea
               x1={firstTime}
+              y1={
+                isNumber(firstValue) && isNumber(secondValue)
+                  ? firstValue
+                  : undefined
+              }
               x2={secondTime}
-              y1={firstValue}
-              y2={secondValue}
+              y2={
+                isNumber(firstValue) && isNumber(secondValue)
+                  ? secondValue
+                  : undefined
+              }
               strokeOpacity={0.3}
               fill={lightStroke}
               fillOpacity={0.3}

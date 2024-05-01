@@ -23,6 +23,7 @@
  */
 
 import { DotProps } from "recharts";
+import { isNumber } from "@/util/types";
 
 interface CustomDotProps extends DotProps {
   radius: number;
@@ -76,7 +77,7 @@ export default function CustomDot({
   }
 
   // noinspection SuspiciousTypeOfGuard
-  if (typeof cx === "number" && typeof cy === "number") {
+  if (isNumber(cx) && isNumber(cy)) {
     return (
       <svg
         x={cx - totalRadius}

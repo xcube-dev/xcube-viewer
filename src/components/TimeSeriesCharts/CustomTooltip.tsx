@@ -28,6 +28,7 @@ import { TooltipProps } from "recharts";
 import { Payload as TooltipPayload } from "recharts/types/component/DefaultTooltipContent";
 
 import { utcTimeToIsoDateTimeString } from "@/util/time";
+import { isNumber } from "@/util/types";
 
 const useStyles = makeStyles((theme: Theme) => ({
   toolTipContainer: {
@@ -62,7 +63,7 @@ export default function CustomTooltip({
   if (!active) {
     return null;
   }
-  if (typeof label !== "number") {
+  if (!isNumber(label)) {
     return null;
   }
   if (!payload || payload.length === 0) {
@@ -72,7 +73,7 @@ export default function CustomTooltip({
     (p: TooltipPayload<number, string>, index: number) => {
       const { name, value, unit, dataKey } = p;
       let color = p.color;
-      if (typeof value !== "number") {
+      if (!isNumber(value)) {
         return null;
       }
       // let valueText;
