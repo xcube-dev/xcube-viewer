@@ -43,11 +43,9 @@ import {
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
-  TooltipProps,
   XAxis,
   YAxis,
 } from "recharts";
-import { Payload as TooltipPayload } from "recharts/types/component/DefaultTooltipContent";
 import { CategoricalChartState } from "recharts/types/chart/types";
 
 import i18n from "@/i18n";
@@ -63,22 +61,17 @@ import {
   TimeSeriesPoint,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
-import {
-  utcTimeToIsoDateString,
-  utcTimeToIsoDateTimeString,
-} from "@/util/time";
+import { utcTimeToIsoDateString } from "@/util/time";
 import AddTimeSeriesButton from "@/components/AddTimeSeriesButton";
 import CustomDot from "./CustomDot";
 import CustomLegend from "./CustomLegend";
+import CustomTooltip from "./CustomTooltip";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
   CategoricalChartState,
   "activeLabel"
 > & { activeLabel?: number };
-
-const INVISIBLE_LINE_COLOR = "#00000000";
-const SUBSTITUTE_LABEL_COLOR = "#FAFFDD";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -98,40 +91,9 @@ const styles = (theme: Theme) =>
       zIndex: 1000,
       opacity: 0.8,
     },
-    toolTipContainer: {
-      backgroundColor: "black",
-      opacity: 0.8,
-      color: "white",
-      border: "2px solid black",
-      borderRadius: theme.spacing(2),
-      padding: theme.spacing(1.5),
-    },
-    toolTipValue: {
-      fontWeight: "bold",
-    },
-    toolTipLabel: {
-      fontWeight: "bold",
-      paddingBottom: theme.spacing(1),
-    },
     chartTitle: {
       fontSize: "inherit",
       fontWeight: "normal",
-    },
-    legendContainer: {
-      display: "flex",
-      justifyContent: "center",
-      columnGap: 12,
-      flexWrap: "wrap",
-    },
-    legendItem: {
-      display: "flex",
-      alignItems: "center",
-    },
-    legendCloseIcon: {
-      marginLeft: 4,
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
     },
   });
 
@@ -748,77 +710,3 @@ const TimeSeriesChart = withStyles(styles, { withTheme: true })(
   _TimeSeriesChart,
 );
 export default TimeSeriesChart;
-
-interface _CustomTooltipProps
-  extends TooltipProps<number, string>,
-    WithStyles<typeof styles> {}
-
-const _CustomTooltip: React.FC<_CustomTooltipProps> = ({
-  classes,
-  active,
-  label,
-  payload,
-}) => {
-  if (!active) {
-    return null;
-  }
-  if (typeof label !== "number") {
-    return null;
-  }
-  if (!payload || payload.length === 0) {
-    return null;
-  }
-  const items = payload.map(
-    (p: TooltipPayload<number, string>, index: number) => {
-      const { name, value, unit, dataKey } = p;
-      let color = p.color;
-      if (typeof value !== "number") {
-        return null;
-      }
-      // let valueText;
-      // if (typeof p.std === 'number') {
-      //     valueText = `${value.toFixed(2)} ±${p.std.toFixed(2)} (std)`;
-      // } else {
-      //     valueText = value.toFixed(3);
-      // }
-      const nameText = name || "?";
-      const valueText = value.toFixed(3);
-      if (color === INVISIBLE_LINE_COLOR) {
-        color = SUBSTITUTE_LABEL_COLOR;
-      }
-      const isPoint = nameText.indexOf(":") !== -1;
-      let suffixText = isPoint ? "" : ` (${dataKey})`;
-      if (typeof unit === "string") {
-        if (suffixText !== "") {
-          suffixText = `${unit} ${suffixText}`;
-        } else {
-          suffixText = unit;
-        }
-      }
-      return (
-        <div key={index}>
-          <span>{nameText}:&nbsp;</span>
-          <span className={classes.toolTipValue} style={{ color }}>
-            {valueText}
-          </span>
-          <span>&nbsp;{suffixText}</span>
-        </div>
-      );
-    },
-  );
-
-  if (!items) {
-    return null;
-  }
-
-  return (
-    <div className={classes.toolTipContainer}>
-      <span
-        className={classes.toolTipLabel}
-      >{`${utcTimeToIsoDateTimeString(label)} UTC`}</span>
-      {items}
-    </div>
-  );
-};
-
-const CustomTooltip = withStyles(styles)(_CustomTooltip);
