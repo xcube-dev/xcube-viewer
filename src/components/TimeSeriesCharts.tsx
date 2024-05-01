@@ -50,12 +50,6 @@ const styles = (_theme: Theme) =>
       flexFlow: "flex-start",
       alignItems: "center",
     },
-    noChartsCard: {
-      width: "20em",
-    },
-    noChartsTitle: {
-      fontSize: 14,
-    },
   });
 
 interface TimeSeriesChartsProps extends WithStyles<typeof styles>, WithLocale {
