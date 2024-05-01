@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -51,7 +50,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AxisDomain } from "recharts/types/util/types";
 import { Payload as TooltipPayload } from "recharts/types/component/DefaultTooltipContent";
 import { Payload as LegendPayload } from "recharts/types/component/DefaultLegendContent";
 import { CategoricalChartState } from "recharts/types/chart/types";
@@ -75,20 +73,11 @@ import {
 } from "@/util/time";
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
 
-// const RECHARTS_DEFAULT_X_AXIS_WIDTH = 60; // px
-// const RECHARTS_DEFAULT_LINE_CHART_MARGIN_TOP = 5; // px
-
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
   CategoricalChartState,
   "activeLabel"
 > & { activeLabel?: number };
-
-interface ChartPayload {
-  name: string;
-  unit: string;
-  value: number;
-}
 
 const INVISIBLE_LINE_COLOR = "#00000000";
 const SUBSTITUTE_LABEL_COLOR = "#FAFFDD";
@@ -193,15 +182,12 @@ interface TimeSeriesChartProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const X_AXIS_DOMAIN: AxisDomain = ["dataMin", "dataMax"];
-const Y_AXIS_DOMAIN: AxisDomain = ["auto", "auto"];
-
 interface TimeRangeSelection {
   firstTime?: number;
   secondTime?: number;
 
-  firstPayload?: ChartPayload[];
-  secondPayload?: ChartPayload[];
+  firstValue?: number;
+  secondValue?: number;
 }
 
 const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
@@ -228,7 +214,11 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const [timeRangeSelection, setTimeRangeSelection] =
     useState<TimeRangeSelection>({});
 
+  const xDomain = useRef<[number, number]>();
+  const yDomain = useRef<[number, number]>();
   const chartSize = useRef<[number, number]>();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const legendWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const clearTimeRangeSelection = () => {
     setTimeRangeSelection({});
@@ -281,46 +271,62 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
 
   const handleMouseDown = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
+    mouseEvent: MouseEvent,
   ) => {
-    if (chartState) {
-      const firstTime =
-        typeof chartState.activeLabel === "number"
-          ? chartState.activeLabel
-          : undefined;
-      const firstPayload = Array.isArray(chartState.activePayload)
-        ? [...chartState.activePayload]
-        : undefined;
-      if (firstTime !== undefined) {
-        setTimeRangeSelection({ firstTime, firstPayload });
+    if (!chartState) {
+      return;
+    }
+    const { chartX, chartY } = chartState;
+    if (typeof chartX !== "number" || typeof chartY !== "number") {
+      return;
+    }
+    if (mouseEvent.ctrlKey) {
+      const chartCoords = getChartCoords(chartX, chartY);
+      if (chartCoords) {
+        setTimeRangeSelection({
+          firstTime: chartCoords[0],
+          firstValue: chartCoords[1],
+        });
+      }
+    } else {
+      const firstTime = chartState.activeLabel;
+      if (typeof firstTime === "number") {
+        setTimeRangeSelection({ firstTime });
       }
     }
   };
 
   const handleMouseMove = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
-    mouseEvent: React.MouseEvent<HTMLElement>,
+    mouseEvent: MouseEvent<HTMLElement>,
   ) => {
-    if (chartState) {
-      const firstTime = timeRangeSelection.firstTime;
-      if (firstTime !== undefined) {
-        const secondTime =
-          typeof chartState.activeLabel === "number"
-            ? chartState.activeLabel
-            : undefined;
-        if (mouseEvent.ctrlKey) {
-          // console.log(chartState.chartX, chartState.chartY);
-          // console.log(chartState.activeCoordinate, chartState);
-        }
-        const secondPayload = Array.isArray(chartState.activePayload)
-          ? [...chartState.activePayload]
-          : undefined;
-        if (secondTime !== undefined) {
-          setTimeRangeSelection({
-            ...timeRangeSelection,
-            secondTime,
-            secondPayload,
-          });
-        }
+    const firstTime = timeRangeSelection.firstTime;
+    if (firstTime === undefined) {
+      return;
+    }
+    if (!chartState) {
+      return;
+    }
+    const { chartX, chartY } = chartState;
+    if (typeof chartX !== "number" || typeof chartY !== "number") {
+      return;
+    }
+    if (mouseEvent.ctrlKey) {
+      const chartCoords = getChartCoords(chartX, chartY);
+      if (chartCoords) {
+        setTimeRangeSelection({
+          ...timeRangeSelection,
+          secondTime: chartCoords[0],
+          secondValue: chartCoords[1],
+        });
+      }
+    } else {
+      const secondTime = chartState.activeLabel;
+      if (typeof secondTime === "number") {
+        setTimeRangeSelection({
+          ...timeRangeSelection,
+          secondTime,
+        });
       }
     }
   };
@@ -354,7 +360,7 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const zoomIn = () => {
     // console.info("------------------------------------------------------");
     // console.info("timeRangeSelection:", timeRangeSelection);
-    const { firstTime, secondTime, firstPayload, secondPayload } =
+    const { firstTime, secondTime, firstValue, secondValue } =
       timeRangeSelection;
     if (
       firstTime === secondTime ||
@@ -371,15 +377,11 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
       timeRange = [secondTime, firstTime];
     }
     let valueRange: [number, number] | undefined = undefined;
-    if (Array.isArray(firstPayload) && Array.isArray(secondPayload)) {
-      const values = [
-        ...firstPayload.map((p) => p.value),
-        ...secondPayload.map((p) => p.value),
-      ];
-      const minValue = Math.min(...values);
-      const maxValue = Math.max(...values);
-      if (minValue < maxValue) {
-        valueRange = [minValue, maxValue];
+    if (firstValue !== undefined && secondValue !== undefined) {
+      if (firstValue < secondValue) {
+        valueRange = [firstValue, secondValue];
+      } else {
+        valueRange = [secondValue, firstValue];
       }
     }
     clearTimeRangeSelection();
@@ -531,13 +533,15 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     );
   }
 
-  const { firstTime, secondTime } = timeRangeSelection;
+  const { firstTime, secondTime, firstValue, secondValue } = timeRangeSelection;
   let referenceArea = null;
   if (firstTime !== undefined && secondTime !== undefined) {
     referenceArea = (
       <ReferenceArea
         x1={firstTime}
         x2={secondTime}
+        y1={firstValue}
+        y2={secondValue}
         strokeOpacity={0.3}
         fill={lightStroke}
         fillOpacity={0.3}
@@ -606,11 +610,75 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
   const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
   const chartTitle = `${timeSeriesText} (${unitsText})`;
 
-  const handleChartResize = (w: number, h: number) =>
-    (chartSize.current = [w, h]);
+  const handleChartResize = (w: number, h: number) => {
+    chartSize.current = [w, h];
+    if (containerRef.current) {
+      // Hack: get the recharts legend wrapper div, so we can use its height
+      // to compute cartesian chart coordinates
+      const elements = containerRef.current.getElementsByClassName(
+        "recharts-legend-wrapper",
+      );
+      if (elements.length !== 0) {
+        legendWrapperRef.current = elements.item(0) as HTMLDivElement;
+      }
+    }
+  };
+
+  const getXDomain = ([dataMin, dataMax]: [number, number]) => {
+    const padding = (dataMax - dataMin) * 0.1;
+    if (selectedTimeRange) {
+      xDomain.current = selectedTimeRange;
+    } else {
+      xDomain.current = [dataMin - padding, dataMax + padding];
+    }
+    return xDomain.current;
+  };
+
+  const getYDomain = ([dataMin, dataMax]: [number, number]) => {
+    const padding = (dataMax - dataMin) * 0.1;
+    if (timeSeriesGroup.variableRange) {
+      yDomain.current = timeSeriesGroup.variableRange;
+    } else {
+      yDomain.current = [dataMin - padding, dataMax + padding];
+    }
+    return yDomain.current;
+  };
+
+  const getChartCoords = (chartX: number, chartY: number) => {
+    const legendWrapperEl = legendWrapperRef.current;
+    if (
+      !chartSize.current ||
+      !xDomain.current ||
+      !yDomain.current ||
+      !legendWrapperEl
+    ) {
+      return undefined;
+    }
+    const [xMin, xMax] = xDomain.current;
+    const [yMin, yMax] = yDomain.current;
+    const [chartWidth, chartHeight] = chartSize.current;
+    const legendHeight = legendWrapperEl.clientHeight;
+    // WARNING: There is no recharts API to retrieve margin values of
+    // the cartesian grid SVG group.
+    // They have been found by manual analysis and may change for any
+    // recharts update!
+    const MARGIN_LEFT = 65;
+    const MARGIN_TOP = 5;
+    const MARGIN_RIGHT = 5;
+    const MARGIN_BOTTOM = 34;
+    const cartesianGridWidth = chartWidth - MARGIN_LEFT - MARGIN_RIGHT;
+    const cartesianGridHeight =
+      chartHeight - MARGIN_TOP - MARGIN_BOTTOM - legendHeight;
+    const wx = (chartX - MARGIN_LEFT) / cartesianGridWidth;
+    const wy = (chartY - MARGIN_TOP) / cartesianGridHeight;
+    // Find margin --> wx,wy must be in range 0...1
+    // console.log("-------------------------------------------");
+    // console.log("wx, wy:", wx, wy);
+    return [xMin + wx * (xMax - xMin), yMax - wy * (yMax - yMin)];
+  };
 
   return (
-    <div className={classes.chartContainer}>
+    <div ref={containerRef} className={classes.chartContainer}>
       <Box
         display="flex"
         flexDirection="row"
@@ -647,7 +715,7 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
             dataKey="time"
             type="number"
             tickCount={6}
-            domain={selectedTimeRange || X_AXIS_DOMAIN}
+            domain={getXDomain}
             tickFormatter={formatTimeTick}
             stroke={labelTextColor}
             allowDuplicatedCategory={false}
@@ -656,10 +724,10 @@ const _TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
             dataKey={commonValueDataKey || "mean"}
             type="number"
             tickCount={5}
-            domain={timeSeriesGroup.variableRange || Y_AXIS_DOMAIN}
-            // tickFormatter={(value, index) => {
-            //   return `${Math.floor(value + 0.5)}/${index}`;
-            // }}
+            domain={getYDomain}
+            tickFormatter={(value: number) => {
+              return value.toFixed(2);
+            }}
             stroke={labelTextColor}
           />
           <CartesianGrid strokeDasharray="3 3" />
