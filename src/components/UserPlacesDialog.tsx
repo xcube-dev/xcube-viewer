@@ -342,7 +342,6 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
         <Button
           onClick={handleConfirm}
           disabled={text.trim() === "" || error !== null || loading}
-          color="primary"
           variant="text"
         >
           {i18n.get("OK")}

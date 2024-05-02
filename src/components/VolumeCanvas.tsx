@@ -246,8 +246,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         loadComp = [
           <Button
             key="load"
-            onClick={this.handleLoadVolume}
-            color="primary"
+            onClick={this.handleLoadVolume}           
             disabled={!!volumeState && volumeState.status === "loading"}
           >
             {"Load Volume Data"}
