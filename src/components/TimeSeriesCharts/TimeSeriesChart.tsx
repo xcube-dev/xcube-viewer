@@ -26,6 +26,7 @@ import { useState, useRef, MouseEvent } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
+  Brush,
   CartesianGrid,
   Legend,
   LineChart,
@@ -404,6 +405,8 @@ export default function TimeSeriesChart({
           onClick={handleClick}
           syncId="anyId"
           style={{ color: labelTextColor, fontSize: "0.8em" }}
+          data={timeSeriesGroup.timeSeriesArray[0].data}
+          dataKey={timeSeriesGroup.timeSeriesArray[0].source.valueDataKey}
         >
           <XAxis
             dataKey="time"
@@ -479,6 +482,13 @@ export default function TimeSeriesChart({
               strokeOpacity={0.5}
             />
           )}
+          <Brush
+            dataKey={"time"}
+            tickFormatter={formatTimeTick}
+            onChange={(index) => {
+              console.log(index);
+            }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
