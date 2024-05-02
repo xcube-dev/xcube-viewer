@@ -33,7 +33,8 @@
   - Updated copyright headers of source files.
   - Removed all usages of explicit `any` type in TypeScript files.
   - No longer using deprecated `adaptV4Theme()` function from `@mui/material`.
-  - Updated MUI v5 styling alternatives for different components. 
+  - Applied new MUI v5 styling defaults. 
+
 
 
 
