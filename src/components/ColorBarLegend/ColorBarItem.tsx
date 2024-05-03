@@ -22,16 +22,36 @@
  * SOFTWARE.
  */
 
+import { Theme } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
-import useItemStyles from "./useItemStyles";
+import { COLOR_BAR_ITEM_GAP, COLOR_BAR_ITEM_WIDTH } from "./constants";
+
+const colorBarItemStyle = (theme: Theme) => ({
+  marginTop: theme.spacing(COLOR_BAR_ITEM_GAP),
+  height: 20,
+  borderWidth: 1,
+  borderStyle: "solid",
+});
+
+const useItemStyles = makeStyles((theme: Theme) => ({
+  colorBarItem: {
+    ...colorBarItemStyle(theme),
+    borderColor: theme.palette.mode === "dark" ? "white" : "black",
+  },
+  colorBarItemSelected: {
+    ...colorBarItemStyle(theme),
+    borderColor: "blue",
+  },
+}));
 
 interface ColorBarItemProps {
   imageData?: string;
   selected?: boolean;
   onSelect?: () => void;
-  width: number | string;
+  width?: number | string;
   title?: string;
 }
 
@@ -64,10 +84,8 @@ export default function ColorBarItem({
 
   return (
     <Box
-      width={width}
-      className={
-        selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
-      }
+      width={width || COLOR_BAR_ITEM_WIDTH}
+      className={selected ? classes.colorBarItemSelected : classes.colorBarItem}
     >
       {image}
     </Box>

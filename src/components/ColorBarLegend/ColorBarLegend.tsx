@@ -149,14 +149,8 @@ export default function ColorBarLegend({
         anchorEl={colorBarRangeEditorAnchor}
         open={Boolean(colorBarRangeEditorAnchor)}
         onClose={handleCloseColorBarRangeEditor}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <ColorBarRangeEditor
           variableTitle={variableTitle}
@@ -170,14 +164,8 @@ export default function ColorBarLegend({
         anchorEl={colorBarSelectAnchor}
         open={Boolean(colorBarSelectAnchor)}
         onClose={handleCloseColorBarSelect}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <ColorBarColorEditor
           variableColorBarMinMax={variableColorBarMinMax}

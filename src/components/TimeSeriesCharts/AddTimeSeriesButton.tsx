@@ -91,7 +91,7 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = ({
         onClick={handleButtonClick}
         disabled={menuItems.length === 0}
       >
-        <AddCircleOutlineIcon />
+        <AddCircleOutlineIcon fontSize={"inherit"} />
       </IconButton>
       <Menu
         id="basic-menu"

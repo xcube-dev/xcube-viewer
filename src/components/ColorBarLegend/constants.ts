@@ -22,38 +22,7 @@
  * SOFTWARE.
  */
 
-import { ColorBarGroup } from "@/model/colorBar";
-import ColorBarGroupHeader from "./ColorBarGroupHeader";
-import ColorBarItem from "./ColorBarItem";
-
-interface ColorBarGroupComponentProps {
-  colorBarGroup: ColorBarGroup;
-  selectedColorBarName: string | null;
-  onSelectColorBar: (colorBarName: string) => void;
-  images: Record<string, string>;
-}
-
-export default function ColorBarGroupComponent({
-  colorBarGroup,
-  selectedColorBarName,
-  onSelectColorBar,
-  images,
-}: ColorBarGroupComponentProps) {
-  return (
-    <>
-      <ColorBarGroupHeader
-        title={colorBarGroup.title}
-        description={colorBarGroup.description}
-      />
-      {colorBarGroup.names.map((name) => (
-        <ColorBarItem
-          key={name}
-          title={name}
-          imageData={images[name]}
-          selected={name === selectedColorBarName}
-          onSelect={() => onSelectColorBar(name)}
-        />
-      ))}
-    </>
-  );
-}
+export const COLOR_BAR_BOX_MARGIN = 1;
+export const COLOR_BAR_ITEM_GAP = 0.2;
+export const COLOR_BAR_ITEM_WIDTH = 240;
+export const COLOR_BAR_ITEM_HEIGHT = 20;

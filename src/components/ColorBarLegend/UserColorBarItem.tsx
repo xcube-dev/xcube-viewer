@@ -31,7 +31,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import ColorBarItem from "./ColorBarItem";
-import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";
+import {
+  COLOR_BAR_ITEM_GAP,
+  COLOR_BAR_ITEM_WIDTH,
+  COLOR_BAR_ITEM_HEIGHT,
+} from "./constants";
+
+const CONTAINER_SX = {
+  display: "flex",
+  alignItems: "center",
+  width: COLOR_BAR_ITEM_WIDTH,
+  height: COLOR_BAR_ITEM_HEIGHT,
+  gap: COLOR_BAR_ITEM_GAP,
+  marginTop: COLOR_BAR_ITEM_GAP,
+};
 
 interface UserColorBarItemProps {
   imageData?: string;
@@ -76,21 +89,12 @@ export default function UserColorBarItem({
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          width: 240,
-          height: 20,
-          gap: COLOR_BAR_ITEM_GAP,
-          marginTop: COLOR_BAR_ITEM_GAP,
-        }}
-      >
+      <Box sx={CONTAINER_SX}>
         <ColorBarItem
           imageData={imageData}
           selected={selected}
           onSelect={onSelect}
-          width={220}
+          width={COLOR_BAR_ITEM_WIDTH - 20}
           title={title}
         />
         <IconButton

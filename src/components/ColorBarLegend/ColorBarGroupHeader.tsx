@@ -27,7 +27,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
-import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";
+import { COLOR_BAR_ITEM_GAP } from "./constants";
 
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarGroupTitle: {

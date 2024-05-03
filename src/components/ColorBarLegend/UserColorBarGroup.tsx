@@ -35,6 +35,13 @@ import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarItem from "./UserColorBarItem";
 import useUndo from "./useUndo";
 
+const CONTAINER_STYLE = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: 1,
+};
+
 interface EditMode {
   action?: "add" | "edit";
   colorBarId?: string;
@@ -70,7 +77,7 @@ export default function ColorBarSelect({
 
   const handleStartUserColorBarAdd = () => {
     setUndo(() => updateUserColorBars(userColorBars));
-    const colorBarId = newId("user-cb-");
+    const colorBarId = newId("ucb");
     addUserColorBar(colorBarId);
     setEditMode({ action: "add", colorBarId });
   };
@@ -97,14 +104,7 @@ export default function ColorBarSelect({
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
+      <Box sx={CONTAINER_STYLE}>
         <ColorBarGroupHeader
           title={colorBarGroup.title}
           description={colorBarGroup.description}
@@ -124,6 +124,8 @@ export default function ColorBarSelect({
             key={userColorBar.id}
             userColorBar={userColorBar}
             updateUserColorBar={updateUserColorBar}
+            selected={userColorBar.id === selectedColorBarName}
+            onSelect={() => onSelectColorBar(userColorBar.id)}
             onDone={handleDoneUserColorBarEdit}
             onCancel={handleCancelUserColorBarEdit}
           />

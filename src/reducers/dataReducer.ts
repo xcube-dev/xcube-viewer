@@ -45,6 +45,7 @@ import {
   UPDATE_VARIABLE_COLOR_BAR,
   UPDATE_VARIABLE_VOLUME,
 } from "@/actions/dataActions";
+import { SELECT_TIME_RANGE, SelectTimeRange } from "@/actions/controlActions";
 import i18n from "@/i18n";
 import { newId } from "@/util/id";
 import { Variable } from "@/model/variable";
@@ -53,7 +54,7 @@ import { TimeSeries, TimeSeriesGroup } from "@/model/timeSeries";
 
 export function dataReducer(
   state: DataState | undefined,
-  action: DataAction,
+  action: DataAction | SelectTimeRange,
 ): DataState {
   if (state === undefined) {
     state = newDataState();
@@ -341,6 +342,27 @@ export function dataReducer(
     }
     case REMOVE_ALL_TIME_SERIES: {
       return { ...state, timeSeriesGroups: [] };
+    }
+    case SELECT_TIME_RANGE: {
+      const { selectedGroupId, selectedValueRange } = action;
+      if (!selectedGroupId) {
+        return state;
+      }
+      const index = state.timeSeriesGroups.findIndex(
+        (tsg) => tsg.id === selectedGroupId,
+      );
+      const variableRange = selectedValueRange || undefined;
+      return {
+        ...state,
+        timeSeriesGroups: [
+          ...state.timeSeriesGroups.slice(0, index),
+          {
+            ...state.timeSeriesGroups[index],
+            variableRange,
+          },
+          ...state.timeSeriesGroups.slice(index + 1),
+        ],
+      };
     }
     case CONFIGURE_SERVERS: {
       if (state.userServers !== action.servers) {

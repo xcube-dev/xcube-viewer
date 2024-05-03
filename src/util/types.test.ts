@@ -22,27 +22,22 @@
  * SOFTWARE.
  */
 
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { expect, it, describe } from "vitest";
+import { isNumber } from "@/util/types";
 
-export const COLOR_BAR_ITEM_GAP = 0.2;
+const VALUES = [undefined, null, true, 1.5, "Hi", [], {}, () => {}];
 
-const colorBarGroupItemStyle = (theme: Theme) => ({
-  marginTop: theme.spacing(COLOR_BAR_ITEM_GAP),
-  height: 20,
-  borderWidth: 1,
-  borderStyle: "solid",
+describe("Assert", () => {
+  it("isNumber() works", () => {
+    expect(VALUES.map(isNumber)).toEqual([
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+    ]);
+  });
 });
-
-const useItemStyles = makeStyles((theme: Theme) => ({
-  colorBarGroupItem: {
-    ...colorBarGroupItemStyle(theme),
-    borderColor: theme.palette.mode === "dark" ? "white" : "black",
-  },
-  colorBarGroupItemSelected: {
-    ...colorBarGroupItemStyle(theme),
-    borderColor: "blue",
-  },
-}));
-
-export default useItemStyles;
