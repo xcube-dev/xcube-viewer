@@ -221,7 +221,7 @@ const UserControlContent: React.FC<UserControlProps> = ({
             <UserProfile userInfo={auth.user.profile} />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleUserProfileDialogClose} color="primary">
+            <Button onClick={handleUserProfileDialogClose}>
               OK
             </Button>
           </DialogActions>

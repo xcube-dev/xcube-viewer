@@ -59,7 +59,6 @@ const _RgbSwitch: React.FC<RgbSwitchProps> = ({
         label={i18n.get("RGB")}
         control={
           <Switch
-            color={"primary"}
             checked={rgbSchema !== null ? showRgbLayer : false}
             disabled={rgbSchema === null}
             onChange={handleSwitchChange}

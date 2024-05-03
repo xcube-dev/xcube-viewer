@@ -168,11 +168,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
         </DialogContent>
 
         <DialogActions>
-          <Button
-            onClick={handleDoExport}
-            color={"primary"}
-            disabled={!canDownload(settings)}
-          >
+          <Button onClick={handleDoExport} disabled={!canDownload(settings)}>
             {i18n.get("Download")}
           </Button>
         </DialogActions>
