@@ -22,50 +22,48 @@
  * SOFTWARE.
  */
 
-import { useEffect, useRef, MouseEvent } from "react";
+import { SxProps } from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DoneIcon from "@mui/icons-material/Done";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 
-import i18n from "@/i18n";
-import { ColorBar, renderColorBar } from "@/model/colorBar";
-import Tooltip from "@mui/material/Tooltip";
+const SX: SxProps = { display: "flex", justifyContent: "flex-end", gap: 0.2 };
 
-interface ColorBarCanvasProps {
-  colorBar: ColorBar;
-  opacity: number;
-  width: number | string | undefined;
-  height: number | string | undefined;
-  onClick: (event: MouseEvent<HTMLCanvasElement>) => void;
+interface DoneCancelProps {
+  onDone: () => void;
+  onCancel: () => void;
+  doneDisabled?: boolean;
+  cancelDisabled?: boolean;
+  size?: "small" | "medium" | "large";
 }
 
-export default function ColorBarCanvas({
-  colorBar,
-  opacity,
-  width,
-  height,
-  onClick,
-}: ColorBarCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas !== null) {
-      renderColorBar(colorBar, opacity, canvas);
-    }
-  }, [colorBar, opacity]);
-
-  const { baseName, imageData } = colorBar;
-  const tooltipTitle = imageData
-    ? baseName
-    : i18n.get("Unknown color bar") + `: ${baseName}`;
-
+export default function DoneCancel({
+  onDone,
+  onCancel,
+  doneDisabled,
+  cancelDisabled,
+  size,
+}: DoneCancelProps) {
+  size = size || "medium";
   return (
-    <Tooltip title={tooltipTitle}>
-      <canvas
-        ref={canvasRef}
-        width={width || 240}
-        height={height || 24}
-        onClick={onClick}
-        style={!imageData ? { border: "0.5px solid red" } : undefined}
-      />
-    </Tooltip>
+    <Box sx={SX}>
+      <IconButton
+        onClick={onDone}
+        color="primary"
+        disabled={doneDisabled}
+        size={size}
+      >
+        <DoneIcon fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        onClick={onCancel}
+        color="primary"
+        disabled={cancelDisabled}
+        size={size}
+      >
+        <CancelIcon fontSize="inherit" />
+      </IconButton>
+    </Box>
   );
 }

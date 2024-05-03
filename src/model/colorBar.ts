@@ -24,6 +24,9 @@
 
 import bgImageData from "./bg.png";
 
+const BG_IMAGE = new Image();
+BG_IMAGE.src = bgImageData;
+
 export interface ColorBars {
   groups: ColorBarGroup[];
   images: Record<string, string>;
@@ -38,21 +41,32 @@ export interface ColorBarGroup {
 export const CB_ALPHA_SUFFIX = "_alpha";
 export const CB_REVERSE_SUFFIX = "_r";
 
-const BG_IMAGE = new Image();
-BG_IMAGE.src = bgImageData;
-
+/**
+ * A color bar
+ */
 export interface ColorBar {
+  /**
+   * Color bar base name, such as "viridis".
+   */
   baseName: string;
+  /**
+   * If current (variable) color bar name has an alpha gradient.
+   * Color bar name is this case is e.g., "viridis_alpha"
+   */
   isAlpha: boolean;
+  /**
+   * If current (variable) color bar name has an alpha gradient.
+   * Color bar name is this case is e.g., "viridis_r"
+   */
   isReversed: boolean;
-  // https://stackoverflow.com/questions/13416800/how-to-generate-an-image-from-imagedata-in-javascript
-  imageData: string | null;
+  /**
+   * base64-encoded image/png either from server or rendered by
+   * renderUserColorBarAsBase64() from user color bar code.
+   */
+  imageData?: string;
 }
 
-export function parseColorBar(
-  name: string,
-  colorBars: ColorBars | null,
-): ColorBar {
+export function parseColorBar(name: string): ColorBar {
   let baseName = name;
 
   const isAlpha = baseName.endsWith(CB_ALPHA_SUFFIX);
@@ -65,9 +79,7 @@ export function parseColorBar(
     baseName = baseName.slice(0, baseName.length - CB_REVERSE_SUFFIX.length);
   }
 
-  const imageData = (colorBars && colorBars.images[baseName]) || null;
-
-  return { baseName, isAlpha, isReversed, imageData };
+  return { baseName, isAlpha, isReversed };
 }
 
 export function formatColorBar(colorBar: ColorBar): string {
@@ -116,6 +128,11 @@ export function loadColorBarImage(
       reject: (reason?: unknown) => void,
     ) => {
       const im = image || new Image();
+      const imageData = colorBar.imageData;
+      if (!imageData) {
+        resolve(im);
+        return;
+      }
       im.onload = () => {
         resolve(im);
       };
@@ -128,7 +145,7 @@ export function loadColorBarImage(
       ) => {
         reject(error);
       };
-      im.src = `data:image/png;base64,${colorBar.imageData}`;
+      im.src = `data:image/png;base64,${imageData}`;
     },
   );
 }
@@ -153,8 +170,8 @@ function getColorBarImageData(
   image: HTMLImageElement,
 ): ImageData | null {
   const offscreenCanvas = document.createElement("canvas");
-  offscreenCanvas.width = image.width;
-  offscreenCanvas.height = image.height;
+  offscreenCanvas.width = image.width || 1;
+  offscreenCanvas.height = image.height || 1;
   const ctx = offscreenCanvas.getContext("2d");
   if (ctx === null) {
     return null;

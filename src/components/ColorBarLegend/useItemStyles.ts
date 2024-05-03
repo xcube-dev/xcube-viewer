@@ -22,50 +22,27 @@
  * SOFTWARE.
  */
 
-import { useEffect, useRef, MouseEvent } from "react";
+import { Theme } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 
-import i18n from "@/i18n";
-import { ColorBar, renderColorBar } from "@/model/colorBar";
-import Tooltip from "@mui/material/Tooltip";
+export const COLOR_BAR_ITEM_GAP = 0.2;
 
-interface ColorBarCanvasProps {
-  colorBar: ColorBar;
-  opacity: number;
-  width: number | string | undefined;
-  height: number | string | undefined;
-  onClick: (event: MouseEvent<HTMLCanvasElement>) => void;
-}
+const colorBarGroupItemStyle = (theme: Theme) => ({
+  marginTop: theme.spacing(COLOR_BAR_ITEM_GAP),
+  height: 20,
+  borderWidth: 1,
+  borderStyle: "solid",
+});
 
-export default function ColorBarCanvas({
-  colorBar,
-  opacity,
-  width,
-  height,
-  onClick,
-}: ColorBarCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+const useItemStyles = makeStyles((theme: Theme) => ({
+  colorBarGroupItem: {
+    ...colorBarGroupItemStyle(theme),
+    borderColor: theme.palette.mode === "dark" ? "white" : "black",
+  },
+  colorBarGroupItemSelected: {
+    ...colorBarGroupItemStyle(theme),
+    borderColor: "blue",
+  },
+}));
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas !== null) {
-      renderColorBar(colorBar, opacity, canvas);
-    }
-  }, [colorBar, opacity]);
-
-  const { baseName, imageData } = colorBar;
-  const tooltipTitle = imageData
-    ? baseName
-    : i18n.get("Unknown color bar") + `: ${baseName}`;
-
-  return (
-    <Tooltip title={tooltipTitle}>
-      <canvas
-        ref={canvasRef}
-        width={width || 240}
-        height={height || 24}
-        onClick={onClick}
-        style={!imageData ? { border: "0.5px solid red" } : undefined}
-      />
-    </Tooltip>
-  );
-}
+export default useItemStyles;

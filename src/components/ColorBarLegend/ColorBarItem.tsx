@@ -22,50 +22,54 @@
  * SOFTWARE.
  */
 
-import { useEffect, useRef, MouseEvent } from "react";
-
-import i18n from "@/i18n";
-import { ColorBar, renderColorBar } from "@/model/colorBar";
+import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
-interface ColorBarCanvasProps {
-  colorBar: ColorBar;
-  opacity: number;
-  width: number | string | undefined;
-  height: number | string | undefined;
-  onClick: (event: MouseEvent<HTMLCanvasElement>) => void;
+import useItemStyles from "./useItemStyles";
+
+interface ColorBarItemProps {
+  imageData?: string;
+  selected?: boolean;
+  onSelect?: () => void;
+  width: number | string;
+  title?: string;
 }
 
-export default function ColorBarCanvas({
-  colorBar,
-  opacity,
+export default function ColorBarItem({
+  imageData,
+  selected,
+  onSelect,
   width,
-  height,
-  onClick,
-}: ColorBarCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  title,
+}: ColorBarItemProps) {
+  const classes = useItemStyles();
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas !== null) {
-      renderColorBar(colorBar, opacity, canvas);
-    }
-  }, [colorBar, opacity]);
+  let image = (
+    <img
+      src={imageData ? `data:image/png;base64,${imageData}` : undefined}
+      alt={imageData ? "color bar" : "error"}
+      width={"100%"}
+      height={"100%"}
+      onClick={onSelect}
+    />
+  );
 
-  const { baseName, imageData } = colorBar;
-  const tooltipTitle = imageData
-    ? baseName
-    : i18n.get("Unknown color bar") + `: ${baseName}`;
+  if (title) {
+    image = (
+      <Tooltip arrow title={title} placement="left">
+        {image}
+      </Tooltip>
+    );
+  }
 
   return (
-    <Tooltip title={tooltipTitle}>
-      <canvas
-        ref={canvasRef}
-        width={width || 240}
-        height={height || 24}
-        onClick={onClick}
-        style={!imageData ? { border: "0.5px solid red" } : undefined}
-      />
-    </Tooltip>
+    <Box
+      width={width}
+      className={
+        selected ? classes.colorBarGroupItemSelected : classes.colorBarGroupItem
+      }
+    >
+      {image}
+    </Box>
   );
 }

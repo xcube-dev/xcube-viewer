@@ -1,5 +1,8 @@
 ## Changes in version 1.2.0 (in development)
 
+* Users can now define their own color bars.
+  This feature requires xcube server >= 1.6.
+
 * Introduced overlay layers that can be selected in the settings.
 
 * Users can now define their own base maps and overlay layers.
@@ -22,7 +25,10 @@
   same dataset, if switched on. Layer opacity only affects the variable
   layer, not the RGB layer.
 
-* Numerous changes regard development environment renewal and 
+* Fixed problem with color bar selector that occurred if a variable
+  used an unknown color bar name.
+
+* Numerous changes regarding development environment renewal and 
   code quality improvements:
 
   - Changed the development environment from [create-react-app](https://create-react-app.dev/) 
@@ -36,9 +42,22 @@
   - Applied new MUI v5 styling defaults. 
 
 
-
-
 TODO:
+
+* User color bars:
+  - Harmonize styling see useItemStyles.ts, search for COLOR_BAR_ITEM_GAP
+  - Support categorical user color bars
+  - ~Implement user color bars in xcube server and adjust tile API calls
+    in viewer~
+  - ~Use RGBA instead of just RGB~
+  - ~Fix code duplication, search for COLOR_BAR_ITEM_BOX_MARGIN~
+  - ~Fix popover toolbar for editing and removing a color bar~
+  - ~Use image data and "img" for rendering instead of "canvas"~
+  - ~No longer display code parsing error messages in image,
+    display as tooltip instead and use error border in text field~
+  - ~Fix generation of base64 image data~
+  - ~Fix selecting a user color bar~
+  - ~Allow for same values in color bars code~
 
 * Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
 

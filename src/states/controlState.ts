@@ -27,16 +27,17 @@ import { Geometry as OlGeometry } from "ol/geom";
 import { default as OlBaseObject } from "ol/Object";
 
 import { Config } from "@/config";
-import { Time, TimeRange } from "@/model/timeSeries";
+import { UserColorBar } from "@/model/userColorBar";
 import { defaultBaseMapId, LayerDefinition } from "@/model/layerDefinition";
-import { loadUserSettings } from "./userSettings";
 import { DEFAULT_MAP_CRS } from "@/model/proj";
+import { Time, TimeRange } from "@/model/timeSeries";
 import { CsvOptions, defaultCsvOptions } from "@/model/user-place/csv";
 import {
   defaultGeoJsonOptions,
   GeoJsonOptions,
 } from "@/model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
+import { loadUserSettings } from "./userSettings";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -133,6 +134,7 @@ export interface ControlState {
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
   userOverlays: LayerDefinition[];
+  userColorBars: UserColorBar[];
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
   exportTimeSeries: boolean;
@@ -202,6 +204,7 @@ export function newControlState(): ControlState {
     selectedOverlayId: null,
     userBaseMaps: [],
     userOverlays: [],
+    userColorBars: [],
     exportTimeSeries: true,
     exportTimeSeriesSeparator: "TAB",
     exportPlaces: true,

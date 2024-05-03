@@ -22,37 +22,10 @@
  * SOFTWARE.
  */
 
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "@mui/material";
-import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
-
 import { ColorBar, ColorBars, formatColorBar } from "@/model/colorBar";
-
-const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  colorBarGroupTitle: {
-    marginTop: theme.spacing(2 * COLOR_BAR_ITEM_BOX_MARGIN),
-    color: theme.palette.grey[400],
-  },
-  colorBarGroupItem: {
-    marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
-    width: 240,
-    height: 20,
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: theme.palette.mode === "dark" ? "white" : "black",
-  },
-  colorBarGroupItemSelected: {
-    marginTop: theme.spacing(COLOR_BAR_ITEM_BOX_MARGIN),
-    width: 240,
-    height: 20,
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "orange",
-  },
-}));
+import { USER_COLOR_BAR_GROUP_TITLE, UserColorBar } from "@/model/userColorBar";
+import ColorBarGroupComponent from "./ColorBarGroupComponent";
+import UserColorBarGroup from "./UserColorBarGroup";
 
 interface ColorBarSelectProps {
   variableColorBarMinMax: [number, number];
@@ -65,6 +38,11 @@ interface ColorBarSelectProps {
     opacity: number,
   ) => void;
   colorBars: ColorBars;
+  userColorBars: UserColorBar[];
+  addUserColorBar: (userColorBarId: string) => void;
+  removeUserColorBar: (userColorBarId: string) => void;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
+  updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
 
 export default function ColorBarSelect({
@@ -74,10 +52,13 @@ export default function ColorBarSelect({
   variableOpacity,
   updateVariableColorBar,
   colorBars,
+  userColorBars,
+  addUserColorBar,
+  removeUserColorBar,
+  updateUserColorBar,
+  updateUserColorBars,
 }: ColorBarSelectProps) {
-  const classes = useStyles();
-
-  const handleColorBarNameChange = (baseName: string) => {
+  const handleSelectColorBar = (baseName: string) => {
     variableColorBarName = formatColorBar({ ...variableColorBar, baseName });
     updateVariableColorBar(
       variableColorBarMinMax,
@@ -86,42 +67,31 @@ export default function ColorBarSelect({
     );
   };
 
-  let key = 0;
-  const entries = [];
-  for (const cbg of colorBars.groups) {
-    if (!cbg.names || cbg.names.length === 0) {
-      continue;
-    }
-    entries.push(
-      <Tooltip arrow key={key++} title={cbg.description} placement="left">
-        <Box className={classes.colorBarGroupTitle}>{cbg.title}</Box>
-      </Tooltip>,
-    );
-    for (const name of cbg.names) {
-      entries.push(
-        <Box
-          key={key++}
-          className={
-            name === variableColorBar.baseName
-              ? classes.colorBarGroupItemSelected
-              : classes.colorBarGroupItem
-          }
-        >
-          <Tooltip arrow title={name} placement="left">
-            <img
-              src={`data:image/png;base64,${colorBars.images[name]}`}
-              alt={"Color Bar"}
-              width={"100%"}
-              height={"100%"}
-              onClick={() => {
-                handleColorBarNameChange(name);
-              }}
-            />
-          </Tooltip>
-        </Box>,
-      );
-    }
-  }
-
-  return <>{entries}</>;
+  return (
+    <>
+      {colorBars.groups.map((colorBarGroup) =>
+        colorBarGroup.title === USER_COLOR_BAR_GROUP_TITLE ? (
+          <UserColorBarGroup
+            key={colorBarGroup.title}
+            colorBarGroup={colorBarGroup}
+            selectedColorBarName={variableColorBar.baseName}
+            onSelectColorBar={handleSelectColorBar}
+            userColorBars={userColorBars}
+            addUserColorBar={addUserColorBar}
+            removeUserColorBar={removeUserColorBar}
+            updateUserColorBar={updateUserColorBar}
+            updateUserColorBars={updateUserColorBars}
+          />
+        ) : (
+          <ColorBarGroupComponent
+            key={colorBarGroup.title}
+            colorBarGroup={colorBarGroup}
+            selectedColorBarName={variableColorBar.baseName}
+            onSelectColorBar={handleSelectColorBar}
+            images={colorBars.images}
+          />
+        ),
+      )}
+    </>
+  );
 }

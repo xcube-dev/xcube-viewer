@@ -27,13 +27,11 @@ import Box from "@mui/material/Box";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import CancelIcon from "@mui/icons-material/Cancel";
-import DoneIcon from "@mui/icons-material/Done";
-import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms";
+import DoneCancel from "@/components/DoneCancel";
 
 interface UserLayerEditorWmsProps {
   userLayer: LayerDefinition;
@@ -128,18 +126,11 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
           </MenuItem>
         ))}
       </Select>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <IconButton
-          onClick={handleUserLayerChange}
-          color="primary"
-          disabled={!canCommit()}
-        >
-          <DoneIcon />
-        </IconButton>
-        <IconButton onClick={onCancel} color="primary">
-          <CancelIcon />
-        </IconButton>
-      </Box>
+      <DoneCancel
+        onDone={handleUserLayerChange}
+        onCancel={onCancel}
+        doneDisabled={!canCommit()}
+      />
     </Box>
   );
 };

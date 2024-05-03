@@ -32,8 +32,16 @@ import {
   selectedVariableColorBarMinMaxSelector,
   selectedVariableOpacitySelector,
   selectedVariableColorBarSelector,
+  colorBarsSelector,
+  userColorBarsSelector,
 } from "@/selectors/controlSelectors";
 import { updateVariableColorBar } from "@/actions/dataActions";
+import {
+  addUserColorBar,
+  removeUserColorBar,
+  updateUserColorBar,
+  updateUserColorBars,
+} from "@/actions/controlActions";
 import _ColorBarLegend from "@/components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
@@ -44,12 +52,17 @@ const mapStateToProps = (state: AppState) => {
     variableColorBarName: selectedVariableColorBarNameSelector(state),
     variableColorBar: selectedVariableColorBarSelector(state),
     variableOpacity: selectedVariableOpacitySelector(state),
-    colorBars: state.dataState.colorBars,
+    userColorBars: userColorBarsSelector(state),
+    colorBars: colorBarsSelector(state),
   };
 };
 
 const mapDispatchToProps = {
   updateVariableColorBar,
+  addUserColorBar,
+  removeUserColorBar,
+  updateUserColorBar,
+  updateUserColorBars,
 };
 
 const ColorBarLegend = connect(

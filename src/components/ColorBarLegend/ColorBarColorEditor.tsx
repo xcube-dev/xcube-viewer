@@ -27,17 +27,16 @@ import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 
 import { ColorBar, ColorBars } from "@/model/colorBar";
-import ColorBarStyleEditor from "@/components/ColorBarLegend/ColorBarStyleEditor";
-import ColorBarSelect from "@/components/ColorBarLegend/ColorBarSelect";
+import { UserColorBar } from "@/model/userColorBar";
+import ColorBarStyleEditor from "./ColorBarStyleEditor";
+import ColorBarSelect from "./ColorBarSelect";
+import { COLOR_BAR_ITEM_GAP } from "./useItemStyles";
 
 const COLOR_BAR_BOX_MARGIN = 1;
-const COLOR_BAR_ITEM_BOX_MARGIN = 0.2;
 
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarBox: {
-    marginTop: theme.spacing(
-      COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_BOX_MARGIN,
-    ),
+    marginTop: theme.spacing(COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_GAP),
     marginLeft: theme.spacing(COLOR_BAR_BOX_MARGIN),
     marginRight: theme.spacing(COLOR_BAR_BOX_MARGIN),
     marginBottom: theme.spacing(COLOR_BAR_BOX_MARGIN),
@@ -55,15 +54,36 @@ interface ColorBarColorEditorProps {
     opacity: number,
   ) => void;
   colorBars: ColorBars;
+  userColorBars: UserColorBar[];
+  addUserColorBar: (userColorBarId: string) => void;
+  removeUserColorBar: (userColorBarId: string) => void;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
+  updateUserColorBars: (userColorBars: UserColorBar[]) => void;
 }
 
 export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
   const classes = useStyles();
-  const { colorBars, ...baseProps } = props;
+  const {
+    colorBars,
+    userColorBars,
+    addUserColorBar,
+    removeUserColorBar,
+    updateUserColorBar,
+    updateUserColorBars,
+    ...baseProps
+  } = props;
   return (
     <Box className={classes.colorBarBox}>
       <ColorBarStyleEditor {...baseProps} />
-      <ColorBarSelect {...baseProps} colorBars={colorBars} />
+      <ColorBarSelect
+        {...baseProps}
+        colorBars={colorBars}
+        userColorBars={userColorBars}
+        addUserColorBar={addUserColorBar}
+        removeUserColorBar={removeUserColorBar}
+        updateUserColorBar={updateUserColorBar}
+        updateUserColorBars={updateUserColorBars}
+      />
     </Box>
   );
 }

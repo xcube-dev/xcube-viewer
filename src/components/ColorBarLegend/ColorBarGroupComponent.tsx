@@ -22,50 +22,39 @@
  * SOFTWARE.
  */
 
-import { useEffect, useRef, MouseEvent } from "react";
+import { ColorBarGroup } from "@/model/colorBar";
+import ColorBarGroupHeader from "./ColorBarGroupHeader";
+import ColorBarItem from "./ColorBarItem";
 
-import i18n from "@/i18n";
-import { ColorBar, renderColorBar } from "@/model/colorBar";
-import Tooltip from "@mui/material/Tooltip";
-
-interface ColorBarCanvasProps {
-  colorBar: ColorBar;
-  opacity: number;
-  width: number | string | undefined;
-  height: number | string | undefined;
-  onClick: (event: MouseEvent<HTMLCanvasElement>) => void;
+interface ColorBarGroupComponentProps {
+  colorBarGroup: ColorBarGroup;
+  selectedColorBarName: string | null;
+  onSelectColorBar: (colorBarName: string) => void;
+  images: Record<string, string>;
 }
 
-export default function ColorBarCanvas({
-  colorBar,
-  opacity,
-  width,
-  height,
-  onClick,
-}: ColorBarCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas !== null) {
-      renderColorBar(colorBar, opacity, canvas);
-    }
-  }, [colorBar, opacity]);
-
-  const { baseName, imageData } = colorBar;
-  const tooltipTitle = imageData
-    ? baseName
-    : i18n.get("Unknown color bar") + `: ${baseName}`;
-
+export default function ColorBarGroupComponent({
+  colorBarGroup,
+  selectedColorBarName,
+  onSelectColorBar,
+  images,
+}: ColorBarGroupComponentProps) {
   return (
-    <Tooltip title={tooltipTitle}>
-      <canvas
-        ref={canvasRef}
-        width={width || 240}
-        height={height || 24}
-        onClick={onClick}
-        style={!imageData ? { border: "0.5px solid red" } : undefined}
+    <>
+      <ColorBarGroupHeader
+        title={colorBarGroup.title}
+        description={colorBarGroup.description}
       />
-    </Tooltip>
+      {colorBarGroup.names.map((name) => (
+        <ColorBarItem
+          key={name}
+          title={name}
+          imageData={images[name]}
+          selected={name === selectedColorBarName}
+          onSelect={() => onSelectColorBar(name)}
+          width={240}
+        />
+      ))}
+    </>
   );
 }
