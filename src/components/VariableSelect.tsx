@@ -33,6 +33,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Tooltip from "@mui/material/Tooltip";
+import CompareIcon from "@mui/icons-material/Compare";
 import TimelineIcon from "@mui/icons-material/Timeline";
 
 import i18n from "@/i18n";
@@ -59,6 +60,8 @@ interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
   variables: Variable[];
   selectVariable: (variableName: string | null) => void;
   addTimeSeries: () => void;
+  variableCompareMode: boolean;
+  toggleVariableCompareMode: () => void;
 }
 
 const _VariableSelect: React.FC<VariableSelectProps> = ({
@@ -68,6 +71,8 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
   variables,
   selectVariable,
   addTimeSeries,
+  variableCompareMode,
+  toggleVariableCompareMode,
 }) => {
   const handleVariableChange = (event: SelectChangeEvent) => {
     selectVariable(event.target.value || null);
@@ -112,10 +117,21 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       className={classes.button}
       disabled={!canAddTimeSeries}
       onClick={handleAddTimeSeriesButtonClick}
-      size="large"
     >
       <Tooltip arrow title={i18n.get("Show time-series diagram")}>
         {<TimelineIcon />}
+      </Tooltip>
+    </IconButton>
+  );
+  const compareButton = (
+    <IconButton
+      className={classes.button}
+      //disabled={!canAddTimeSeries}
+      color={variableCompareMode ? "success" : "default"}
+      onClick={toggleVariableCompareMode}
+    >
+      <Tooltip arrow title={i18n.get("Compare variables")}>
+        {<CompareIcon />}
       </Tooltip>
     </IconButton>
   );
@@ -124,7 +140,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
     <ControlBarItem
       label={variableSelectLabel}
       control={variableSelect}
-      actions={timeSeriesButton}
+      actions={[timeSeriesButton, compareButton]}
     />
   );
 };

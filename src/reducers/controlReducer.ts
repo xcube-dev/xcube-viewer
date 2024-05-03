@@ -47,6 +47,7 @@ import {
   SET_VOLUME_RENDER_MODE,
   SHOW_INFO_CARD,
   SHOW_VOLUME_CARD,
+  TOGGLE_VARIABLE_COMPARE_MODE,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
@@ -496,6 +497,9 @@ export function controlReducer(
         ...state,
         dialogOpen: { ...state.dialogOpen, [dialogId]: false },
       };
+    }
+    case TOGGLE_VARIABLE_COMPARE_MODE: {
+      return { ...state, variableCompareMode: !state.variableCompareMode };
     }
     case CONFIGURE_SERVERS: {
       if (state.selectedServerId !== action.selectedServerId) {

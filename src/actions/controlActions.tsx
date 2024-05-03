@@ -357,6 +357,18 @@ export function selectVariable(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const TOGGLE_VARIABLE_COMPARE_MODE = "TOGGLE_VARIABLE_COMPARE_MODE";
+
+export interface ToggleVariableCompareMode {
+  type: typeof TOGGLE_VARIABLE_COMPARE_MODE;
+}
+
+export function toggleVariableCompareMode(): ToggleVariableCompareMode {
+  return { type: TOGGLE_VARIABLE_COMPARE_MODE };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_TIME = "SELECT_TIME";
 
 export interface SelectTime {
@@ -751,4 +763,5 @@ export type ControlAction =
   | ShowInfoCard
   | SetVisibleInfoCardElements
   | UpdateInfoCardElementCodeMode
+  | ToggleVariableCompareMode
   | FlyTo;

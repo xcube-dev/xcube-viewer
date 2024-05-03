@@ -108,6 +108,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   datasetBoundaryLayer?: MapElement;
   placeGroupLayers?: MapElement;
   colorBarLegend?: MapElement;
+  mapSplitter?: MapElement;
   userDrawnPlaceGroupName: string;
   addDrawnUserPlace?: (
     placeGroupTitle: string,
@@ -143,6 +144,7 @@ const _Viewer: React.FC<ViewerProps> = ({
   datasetBoundaryLayer,
   placeGroupLayers,
   colorBarLegend,
+  mapSplitter,
   userDrawnPlaceGroupName,
   addDrawnUserPlace,
   importUserPlacesFromText,
@@ -374,6 +376,7 @@ const _Viewer: React.FC<ViewerProps> = ({
           onDrawEnd={handleDrawEnd}
         />
         {colorBarControl}
+        {mapSplitter}
         <ScaleLine bar={false} />
       </Map>
     </ErrorBoundary>

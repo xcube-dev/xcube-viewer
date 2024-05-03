@@ -47,6 +47,7 @@ import _Viewer from "@/components/Viewer";
 import { userPlaceGroupsSelector } from "@/selectors/dataSelectors";
 import { selectPlace } from "@/actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
+import MapSplitter from "@/connected/MapSplitter";
 
 interface OwnProps {
   onMapRef?: (map: OlMap | null) => void;
@@ -60,6 +61,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
     placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
     colorBarLegend: <ColorBarLegend />,
+    mapSplitter: <MapSplitter />,
     userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
     userPlaceGroups: userPlaceGroupsSelector(state),
     userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),

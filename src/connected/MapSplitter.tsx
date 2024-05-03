@@ -24,36 +24,16 @@
 
 import { connect } from "react-redux";
 
-import _VariableSelect from "@/components/VariableSelect";
 import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import {
-  selectVariable,
-  toggleVariableCompareMode,
-} from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  selectedDatasetVariablesSelector,
-} from "@/selectors/controlSelectors";
+import _MapSplitter from "@/components/MapSplitter";
 
 const mapStateToProps = (state: AppState) => {
   return {
-    locale: state.controlState.locale,
-    selectedVariableName: state.controlState.selectedVariableName,
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedDatasetVariablesSelector(state),
-    variableCompareMode: state.controlState.variableCompareMode,
+    hidden: !state.controlState.variableCompareMode,
   };
 };
 
-const mapDispatchToProps = {
-  selectVariable,
-  addTimeSeries,
-  toggleVariableCompareMode,
-};
+const mapDispatchToProps = {};
 
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+const MapSplitter = connect(mapStateToProps, mapDispatchToProps)(_MapSplitter);
+export default MapSplitter;

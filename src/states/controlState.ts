@@ -143,6 +143,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
+  variableCompareMode: boolean;
 }
 
 export function newControlState(): ControlState {
@@ -211,6 +212,7 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
+    variableCompareMode: false,
   };
   return loadUserSettings(state);
 }
