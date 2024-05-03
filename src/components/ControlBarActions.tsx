@@ -70,6 +70,8 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
+  variableLayerSwipeMode: boolean;
+  setVariableLayerSwipeMode: (selected: boolean) => void;
 }
 
 const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
@@ -86,6 +88,8 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   compact,
   layerVisibilities,
   setLayerVisibility,
+  variableLayerSwipeMode,
+  setVariableLayerSwipeMode,
 }) => {
   if (!visible) {
     return null;
@@ -95,9 +99,11 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
 
   const layerSelect = (
     <LayerSelect
+      openDialog={openDialog}
       layerVisibilities={layerVisibilities}
       setLayerVisibility={setLayerVisibility}
-      openDialog={openDialog}
+      variableLayerSwipeMode={variableLayerSwipeMode}
+      setVariableLayerSwipeMode={setVariableLayerSwipeMode}
     />
   );
 

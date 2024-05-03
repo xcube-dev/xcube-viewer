@@ -342,6 +342,21 @@ export function setLayerVisibility(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SET_VARIABLE_LAYER_SWIPE_MODE = "SET_VARIABLE_LAYER_SWIPE_MODE";
+
+export interface SetVariableLayerSwipeMode {
+  type: typeof SET_VARIABLE_LAYER_SWIPE_MODE;
+  variableLayerSwipeMode: boolean;
+}
+
+export function setVariableLayerSwipeMode(
+  variableLayerSwipeMode: boolean,
+): SetVariableLayerSwipeMode {
+  return { type: SET_VARIABLE_LAYER_SWIPE_MODE, variableLayerSwipeMode };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_VARIABLE = "SELECT_VARIABLE";
 
 export interface SelectVariable {
@@ -764,4 +779,5 @@ export type ControlAction =
   | SetVisibleInfoCardElements
   | UpdateInfoCardElementCodeMode
   | ToggleVariableCompareMode
+  | SetVariableLayerSwipeMode
   | FlyTo;

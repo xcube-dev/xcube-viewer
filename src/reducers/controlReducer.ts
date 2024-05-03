@@ -43,6 +43,7 @@ import {
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
   SET_RGB_LAYER_VISIBILITY,
+  SET_VARIABLE_LAYER_SWIPE_MODE,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
   SHOW_INFO_CARD,
@@ -216,6 +217,10 @@ export function controlReducer(
           [action.layerId]: action.visible,
         },
       };
+    }
+    case SET_VARIABLE_LAYER_SWIPE_MODE: {
+      const { variableLayerSwipeMode } = action;
+      return { ...state, variableLayerSwipeMode };
     }
     case SELECT_TIME: {
       let { selectedTime } = action;

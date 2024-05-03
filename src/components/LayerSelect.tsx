@@ -38,6 +38,7 @@ import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { LayerVisibilities } from "@/states/controlState";
 import LayerSelectItem from "./LayerSelectItem";
+import SelectableMenuItem from "@/components/SelectableMenuItem";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (_theme: Theme) => createStyles({});
@@ -49,10 +50,17 @@ interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
+  variableLayerSwipeMode: boolean;
+  setVariableLayerSwipeMode: (selected: boolean) => void;
 }
 
 const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
-  const { openDialog, ...otherProps } = props;
+  const {
+    openDialog,
+    variableLayerSwipeMode,
+    setVariableLayerSwipeMode,
+    ...layerSelectProps
+  } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<Element | null>(null);
 
   const handleUserOverlays = () => {
@@ -74,17 +82,23 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
       </IconButton>
       <Menu
         anchorEl={menuAnchor}
-        keepMounted
         open={Boolean(menuAnchor)}
         onClose={() => setMenuAnchor(null)}
       >
-        <LayerSelectItem layerId="baseMap" {...otherProps} />
-        <LayerSelectItem layerId="datasetRgb" {...otherProps} />
-        <LayerSelectItem layerId="datasetVariable" {...otherProps} />
-        <LayerSelectItem layerId="datasetBoundary" {...otherProps} />
-        <LayerSelectItem layerId="datasetPlaces" {...otherProps} />
-        <LayerSelectItem layerId="userPlaces" {...otherProps} />
-        <LayerSelectItem layerId="overlay" {...otherProps} />
+        <LayerSelectItem layerId="baseMap" {...layerSelectProps} />
+        <LayerSelectItem layerId="datasetRgb" {...layerSelectProps} />
+        <LayerSelectItem layerId="datasetVariable2" {...layerSelectProps} />
+        <LayerSelectItem layerId="datasetVariable" {...layerSelectProps} />
+        <LayerSelectItem layerId="datasetBoundary" {...layerSelectProps} />
+        <LayerSelectItem layerId="datasetPlaces" {...layerSelectProps} />
+        <LayerSelectItem layerId="userPlaces" {...layerSelectProps} />
+        <LayerSelectItem layerId="overlay" {...layerSelectProps} />
+        <Divider />
+        <SelectableMenuItem
+          label={i18n.get("Swipe Mode")}
+          selected={variableLayerSwipeMode}
+          onClick={() => setVariableLayerSwipeMode(!variableLayerSwipeMode)}
+        />
         <Divider />
         <MenuItem onClick={handleUserBaseMaps}>
           {i18n.get("User Base Maps") + "..."}

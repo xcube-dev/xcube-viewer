@@ -22,41 +22,32 @@
  * SOFTWARE.
  */
 
-import i18n from "@/i18n";
-import { LayerVisibilities } from "@/states/controlState";
-import SelectableMenuItem from "@/components/SelectableMenuItem";
+import Check from "@mui/icons-material/Check";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
 
-const layerLabels: Record<keyof LayerVisibilities, string> = {
-  baseMap: "Base Map",
-  datasetRgb: "Dataset RGB",
-  datasetVariable2: "Dataset Variable 2",
-  datasetVariable: "Dataset Variable",
-  datasetBoundary: "Dataset Boundary",
-  datasetPlaces: "Dataset Places",
-  userPlaces: "User Places",
-  overlay: "Overlay",
-};
-
-interface LayerSelectItemProps {
-  layerId: keyof LayerVisibilities;
-  layerVisibilities: LayerVisibilities;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
+interface SelectableMenuItemProps {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
 }
 
-export default function LayerSelectItem({
-  layerId,
-  layerVisibilities,
-  setLayerVisibility,
-}: LayerSelectItemProps) {
-  const visible = !!layerVisibilities[layerId];
-  return (
-    <SelectableMenuItem
-      label={i18n.get(layerLabels[layerId])}
-      selected={visible}
-      onClick={() => setLayerVisibility(layerId, !visible)}
-    />
+export default function SelectableMenuItem({
+  label,
+  selected,
+  onClick,
+}: SelectableMenuItemProps) {
+  return selected ? (
+    <MenuItem onClick={onClick}>
+      <ListItemIcon>
+        <Check />
+      </ListItemIcon>
+      {label}
+    </MenuItem>
+  ) : (
+    <MenuItem onClick={onClick}>
+      <ListItemText inset>{label}</ListItemText>
+    </MenuItem>
   );
 }

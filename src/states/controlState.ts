@@ -76,6 +76,7 @@ export interface LayerVisibilities {
   baseMap?: boolean;
   datasetRgb?: boolean;
   datasetVariable?: boolean;
+  datasetVariable2?: boolean;
   datasetBoundary?: boolean;
   datasetPlaces?: boolean;
   userPlaces?: boolean;
@@ -130,6 +131,7 @@ export interface ControlState {
   mapProjection: string;
   imageSmoothingEnabled: boolean;
   layerVisibilities: LayerVisibilities;
+  variableLayerSwipeMode: boolean;
   selectedBaseMapId: string | null;
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
@@ -183,11 +185,13 @@ export function newControlState(): ControlState {
       baseMap: true,
       datasetRgb: false,
       datasetVariable: true,
+      datasetVariable2: true,
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
       overlay: true,
     },
+    variableLayerSwipeMode: false,
     datasetLocateMode: "pan",
     placeLocateMode: "panAndZoom",
     volumeCardOpen: false,
