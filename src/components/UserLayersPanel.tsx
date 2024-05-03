@@ -232,18 +232,10 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
           <ListItem sx={{ minHeight: "3em" }}>
             <ListItemSecondaryAction>
               <Box sx={{ display: "flex", gap: 2, paddingTop: 2 }}>
-                <Button
-                  onClick={handleAddUserLayerWms}
-                  startIcon={<AddIcon />}
-                  color="primary"
-                >
+                <Button onClick={handleAddUserLayerWms} startIcon={<AddIcon />}>
                   {i18n.get("WMS")}
                 </Button>
-                <Button
-                  onClick={handleAddUserLayerXyz}
-                  startIcon={<AddIcon />}
-                  color="primary"
-                >
+                <Button onClick={handleAddUserLayerXyz} startIcon={<AddIcon />}>
                   {i18n.get("XYZ")}
                 </Button>
               </Box>

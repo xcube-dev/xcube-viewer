@@ -326,7 +326,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
       {dialogContent}
       <DialogActions>
         <Button onClick={handleCancel}>{i18n.get("Cancel")}</Button>
-        <Button onClick={handleConfirm} autoFocus color="primary">
+        <Button onClick={handleConfirm} autoFocus>
           {okButtonName}
         </Button>
       </DialogActions>

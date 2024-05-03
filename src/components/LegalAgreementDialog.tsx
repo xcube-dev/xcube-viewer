@@ -113,7 +113,7 @@ export default function LegalAgreementDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleConfirm} color="primary">
+        <Button onClick={handleConfirm}>
           <CheckIcon className={classes.icon} />
           {i18n.get("Accept and continue")}
         </Button>

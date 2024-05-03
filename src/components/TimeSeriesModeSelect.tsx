@@ -59,7 +59,6 @@ const _TimeSeriesModeSelect: React.FC<TimeSeriesModeSelectProps> = ({
       label={i18n.get("Multi")}
       control={
         <Switch
-          color={"primary"}
           checked={timeSeriesUpdateMode === "add"}
           onChange={handleTimeSeriesUpdateModeChange}
         />
