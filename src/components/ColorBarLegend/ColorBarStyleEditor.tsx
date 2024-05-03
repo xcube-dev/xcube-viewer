@@ -83,7 +83,6 @@ export default function ColorBarStyleEditor({
     <>
       <Box component="span">
         <Checkbox
-          color="primary"
           checked={variableColorBar.isAlpha}
           onChange={handleColorBarAlpha}
           size="small"
@@ -96,7 +95,6 @@ export default function ColorBarStyleEditor({
         />
         <Box component="span">{i18n.get("Hide small values")}</Box>
         <Checkbox
-          color="primary"
           checked={variableColorBar.isReversed}
           onChange={handleColorBarReversed}
           size="small"
@@ -109,7 +107,7 @@ export default function ColorBarStyleEditor({
         />
         <Box component="span">{i18n.get("Reverse")}</Box>
       </Box>
-      <Box component="div" style={{ display: "flex", alignItems: "center" }}>
+      <Box component="div" sx={{ display: "flex", alignItems: "center" }}>
         <span>{i18n.get("Opacity")}</span>
         <Slider
           min={0}
