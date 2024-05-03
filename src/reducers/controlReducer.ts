@@ -43,12 +43,12 @@ import {
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
   SET_RGB_LAYER_VISIBILITY,
-  SET_VARIABLE_LAYER_SWIPE_MODE,
+  SET_VARIABLE_COMPARE_MODE,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
   SHOW_INFO_CARD,
   SHOW_VOLUME_CARD,
-  TOGGLE_VARIABLE_COMPARE_MODE,
+  SELECT_VARIABLE_2,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
@@ -218,9 +218,9 @@ export function controlReducer(
         },
       };
     }
-    case SET_VARIABLE_LAYER_SWIPE_MODE: {
-      const { variableLayerSwipeMode } = action;
-      return { ...state, variableLayerSwipeMode };
+    case SET_VARIABLE_COMPARE_MODE: {
+      const { variableCompareMode } = action;
+      return { ...state, variableCompareMode };
     }
     case SELECT_TIME: {
       let { selectedTime } = action;
@@ -503,8 +503,19 @@ export function controlReducer(
         dialogOpen: { ...state.dialogOpen, [dialogId]: false },
       };
     }
-    case TOGGLE_VARIABLE_COMPARE_MODE: {
-      return { ...state, variableCompareMode: !state.variableCompareMode };
+    case SELECT_VARIABLE_2: {
+      const { selectedDataset2Id, selectedVariable2Name } = action;
+      if (
+        selectedDataset2Id === state.selectedDataset2Id &&
+        selectedVariable2Name === state.selectedVariable2Name
+      ) {
+        return {
+          ...state,
+          selectedDataset2Id: null,
+          selectedVariable2Name: null,
+        };
+      }
+      return { ...state, selectedDataset2Id, selectedVariable2Name };
     }
     case CONFIGURE_SERVERS: {
       if (state.selectedServerId !== action.selectedServerId) {

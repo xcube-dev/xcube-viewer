@@ -342,17 +342,20 @@ export function setLayerVisibility(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_VARIABLE_LAYER_SWIPE_MODE = "SET_VARIABLE_LAYER_SWIPE_MODE";
+export const SET_VARIABLE_COMPARE_MODE = "SET_VARIABLE_LAYER_SWIPE_MODE";
 
 export interface SetVariableLayerSwipeMode {
-  type: typeof SET_VARIABLE_LAYER_SWIPE_MODE;
-  variableLayerSwipeMode: boolean;
+  type: typeof SET_VARIABLE_COMPARE_MODE;
+  variableCompareMode: boolean;
 }
 
-export function setVariableLayerSwipeMode(
+export function setVariableCompareMode(
   variableLayerSwipeMode: boolean,
 ): SetVariableLayerSwipeMode {
-  return { type: SET_VARIABLE_LAYER_SWIPE_MODE, variableLayerSwipeMode };
+  return {
+    type: SET_VARIABLE_COMPARE_MODE,
+    variableCompareMode: variableLayerSwipeMode,
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -372,14 +375,23 @@ export function selectVariable(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const TOGGLE_VARIABLE_COMPARE_MODE = "TOGGLE_VARIABLE_COMPARE_MODE";
+export const SELECT_VARIABLE_2 = "SELECT_VARIABLE_2";
 
-export interface ToggleVariableCompareMode {
-  type: typeof TOGGLE_VARIABLE_COMPARE_MODE;
+export interface SelectVariable2 {
+  type: typeof SELECT_VARIABLE_2;
+  selectedDataset2Id: string | null;
+  selectedVariable2Name: string | null;
 }
 
-export function toggleVariableCompareMode(): ToggleVariableCompareMode {
-  return { type: TOGGLE_VARIABLE_COMPARE_MODE };
+export function selectVariable2(
+  selectedDataset2Id: string | null,
+  selectedVariable2Name: string | null,
+): SelectVariable2 {
+  return {
+    type: SELECT_VARIABLE_2,
+    selectedDataset2Id,
+    selectedVariable2Name,
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -778,6 +790,6 @@ export type ControlAction =
   | ShowInfoCard
   | SetVisibleInfoCardElements
   | UpdateInfoCardElementCodeMode
-  | ToggleVariableCompareMode
+  | SelectVariable2
   | SetVariableLayerSwipeMode
   | FlyTo;

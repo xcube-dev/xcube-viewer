@@ -27,10 +27,7 @@ import { connect } from "react-redux";
 import _VariableSelect from "@/components/VariableSelect";
 import { AppState } from "@/states/appState";
 import { addTimeSeries } from "@/actions/dataActions";
-import {
-  selectVariable,
-  toggleVariableCompareMode,
-} from "@/actions/controlActions";
+import { selectVariable, selectVariable2 } from "@/actions/controlActions";
 import {
   canAddTimeSeriesSelector,
   selectedDatasetVariablesSelector,
@@ -39,17 +36,19 @@ import {
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
+    selectedDatasetId: state.controlState.selectedDatasetId,
     selectedVariableName: state.controlState.selectedVariableName,
+    selectedDataset2Id: state.controlState.selectedDataset2Id,
+    selectedVariable2Name: state.controlState.selectedVariable2Name,
     canAddTimeSeries: canAddTimeSeriesSelector(state),
     variables: selectedDatasetVariablesSelector(state),
-    variableCompareMode: state.controlState.variableCompareMode,
   };
 };
 
 const mapDispatchToProps = {
   selectVariable,
+  selectVariable2,
   addTimeSeries,
-  toggleVariableCompareMode,
 };
 
 const VariableSelect = connect(

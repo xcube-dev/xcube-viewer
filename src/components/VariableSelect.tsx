@@ -55,24 +55,31 @@ const styles = (theme: Theme) =>
   });
 
 interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
+  selectedDatasetId: string | null;
+  selectedDataset2Id: string | null;
   selectedVariableName: string | null;
+  selectedVariable2Name: string | null;
   canAddTimeSeries: boolean;
   variables: Variable[];
   selectVariable: (variableName: string | null) => void;
+  selectVariable2: (
+    dataset2Id: string | null,
+    variable2Name: string | null,
+  ) => void;
   addTimeSeries: () => void;
-  variableCompareMode: boolean;
-  toggleVariableCompareMode: () => void;
 }
 
 const _VariableSelect: React.FC<VariableSelectProps> = ({
   classes,
   canAddTimeSeries,
+  selectedDatasetId,
   selectedVariableName,
+  selectedDataset2Id,
+  selectedVariable2Name,
   variables,
   selectVariable,
+  selectVariable2,
   addTimeSeries,
-  variableCompareMode,
-  toggleVariableCompareMode,
 }) => {
   const handleVariableChange = (event: SelectChangeEvent) => {
     selectVariable(event.target.value || null);
@@ -82,8 +89,9 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
     addTimeSeries();
   };
 
-  selectedVariableName = selectedVariableName || "";
-  variables = variables || [];
+  const isSelectedVariable2 =
+    selectedDatasetId === selectedDataset2Id &&
+    selectedVariableName === selectedVariable2Name;
 
   const variableSelectLabel = (
     <InputLabel shrink htmlFor="variable-select">
@@ -95,13 +103,13 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
     <Select
       variant="standard"
       className={classes.selectEmpty}
-      value={selectedVariableName}
+      value={selectedVariableName || ""}
       onChange={handleVariableChange}
       input={<Input name="variable" id="variable-select" />}
       displayEmpty
       name="variable"
     >
-      {variables.map((variable) => (
+      {(variables || []).map((variable) => (
         <MenuItem
           key={variable.name}
           value={variable.name}
@@ -114,6 +122,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
   );
   const timeSeriesButton = (
     <IconButton
+      key={"timeSeries"}
       className={classes.button}
       disabled={!canAddTimeSeries}
       onClick={handleAddTimeSeriesButtonClick}
@@ -123,14 +132,14 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       </Tooltip>
     </IconButton>
   );
-  const compareButton = (
+  const variable2Button = (
     <IconButton
+      key={"variable2"}
       className={classes.button}
-      //disabled={!canAddTimeSeries}
-      color={variableCompareMode ? "success" : "default"}
-      onClick={toggleVariableCompareMode}
+      color={isSelectedVariable2 ? "success" : "default"}
+      onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
-      <Tooltip arrow title={i18n.get("Compare variables")}>
+      <Tooltip arrow title={i18n.get("Variable 2 (for comparison)")}>
         {<CompareIcon />}
       </Tooltip>
     </IconButton>
@@ -140,7 +149,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
     <ControlBarItem
       label={variableSelectLabel}
       control={variableSelect}
-      actions={[timeSeriesButton, compareButton]}
+      actions={[timeSeriesButton, variable2Button]}
     />
   );
 };

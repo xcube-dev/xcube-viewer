@@ -99,6 +99,8 @@ export type VolumeStates = { [volumeId: string]: VolumeState };
 export interface ControlState {
   selectedDatasetId: string | null;
   selectedVariableName: string | null;
+  selectedDataset2Id: string | null;
+  selectedVariable2Name: string | null;
   selectedPlaceGroupIds: string[] | null;
   selectedPlaceId: string | null;
   selectedUserPlaceId: string | null;
@@ -131,7 +133,7 @@ export interface ControlState {
   mapProjection: string;
   imageSmoothingEnabled: boolean;
   layerVisibilities: LayerVisibilities;
-  variableLayerSwipeMode: boolean;
+  variableCompareMode: boolean;
   selectedBaseMapId: string | null;
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
@@ -145,7 +147,6 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
-  variableCompareMode: boolean;
 }
 
 export function newControlState(): ControlState {
@@ -153,6 +154,8 @@ export function newControlState(): ControlState {
   const state: ControlState = {
     selectedDatasetId: null,
     selectedVariableName: null,
+    selectedDataset2Id: null,
+    selectedVariable2Name: null,
     selectedPlaceGroupIds: [],
     selectedPlaceId: null,
     selectedUserPlaceId: null,
@@ -191,7 +194,7 @@ export function newControlState(): ControlState {
       userPlaces: true,
       overlay: true,
     },
-    variableLayerSwipeMode: false,
+    variableCompareMode: false,
     datasetLocateMode: "pan",
     placeLocateMode: "panAndZoom",
     volumeCardOpen: false,
@@ -216,7 +219,6 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
-    variableCompareMode: false,
   };
   return loadUserSettings(state);
 }

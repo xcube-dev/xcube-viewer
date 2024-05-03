@@ -50,15 +50,15 @@ interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
-  variableLayerSwipeMode: boolean;
-  setVariableLayerSwipeMode: (selected: boolean) => void;
+  variableCompareMode: boolean;
+  setVariableCompareMode: (selected: boolean) => void;
 }
 
 const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
   const {
     openDialog,
-    variableLayerSwipeMode,
-    setVariableLayerSwipeMode,
+    variableCompareMode,
+    setVariableCompareMode,
     ...layerSelectProps
   } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<Element | null>(null);
@@ -95,9 +95,9 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
         <LayerSelectItem layerId="overlay" {...layerSelectProps} />
         <Divider />
         <SelectableMenuItem
-          label={i18n.get("Swipe Mode")}
-          selected={variableLayerSwipeMode}
-          onClick={() => setVariableLayerSwipeMode(!variableLayerSwipeMode)}
+          label={i18n.get("Compare Mode (Swipe)")}
+          selected={variableCompareMode}
+          onClick={() => setVariableCompareMode(!variableCompareMode)}
         />
         <Divider />
         <MenuItem onClick={handleUserBaseMaps}>

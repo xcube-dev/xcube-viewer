@@ -70,8 +70,8 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
-  variableLayerSwipeMode: boolean;
-  setVariableLayerSwipeMode: (selected: boolean) => void;
+  variableCompareMode: boolean;
+  setVariableCompareMode: (selected: boolean) => void;
 }
 
 const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
@@ -88,8 +88,8 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   compact,
   layerVisibilities,
   setLayerVisibility,
-  variableLayerSwipeMode,
-  setVariableLayerSwipeMode,
+  variableCompareMode,
+  setVariableCompareMode,
 }) => {
   if (!visible) {
     return null;
@@ -102,8 +102,8 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
       openDialog={openDialog}
       layerVisibilities={layerVisibilities}
       setLayerVisibility={setLayerVisibility}
-      variableLayerSwipeMode={variableLayerSwipeMode}
-      setVariableLayerSwipeMode={setVariableLayerSwipeMode}
+      variableCompareMode={variableCompareMode}
+      setVariableCompareMode={setVariableCompareMode}
     />
   );
 

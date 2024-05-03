@@ -31,7 +31,7 @@ import {
   showInfoCard,
   showVolumeCard,
   setLayerVisibility,
-  setVariableLayerSwipeMode,
+  setVariableCompareMode,
 } from "@/actions/controlActions";
 import { Config } from "@/config";
 import { updateResources } from "@/actions/dataActions";
@@ -49,7 +49,7 @@ const mapStateToProps = (state: AppState) => {
     compact: Config.instance.branding.compact,
     allowRefresh: Config.instance.branding.allowRefresh,
     layerVisibilities: layerVisibilitiesSelector(state),
-    variableLayerSwipeMode: state.controlState.variableLayerSwipeMode,
+    variableCompareMode: state.controlState.variableCompareMode,
   };
 };
 
@@ -59,7 +59,7 @@ const mapDispatchToProps = {
   openDialog,
   updateResources,
   setLayerVisibility,
-  setVariableLayerSwipeMode,
+  setVariableCompareMode,
 };
 
 const ControlBarActions = connect(
