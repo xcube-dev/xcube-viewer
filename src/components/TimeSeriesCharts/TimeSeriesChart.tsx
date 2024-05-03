@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useState, useRef, MouseEvent } from "react";
+import { useState, useRef, MouseEvent, useMemo } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
@@ -84,6 +84,11 @@ interface TimeRangeSelection {
 
   firstValue?: number;
   secondValue?: number;
+}
+
+interface BrushState {
+  startIndex?: number;
+  endIndex?: number;
 }
 
 interface TimeSeriesChartProps extends WithLocale {
@@ -152,6 +157,40 @@ export default function TimeSeriesChart({
   const chartSize = useRef<[number, number]>();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const legendWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  const brushData = useMemo(() => {
+    const brushAgg = new Map<number, number[]>();
+    timeSeriesGroup.timeSeriesArray.forEach((timeSeries) => {
+      const valueKey = timeSeries.source.valueDataKey;
+      timeSeries.data.forEach((timeSeriesPoint) => {
+        const value = timeSeriesPoint[valueKey];
+        if (isNumber(value)) {
+          const time = timeSeriesPoint.time;
+          const values = brushAgg.get(time);
+          brushAgg.set(time, values ? [...values, value] : [value]);
+        }
+      });
+    });
+
+    const brushData: Array<{ time: number; value: number }> = [];
+    brushAgg.forEach((values, time) => {
+      const sum = values.reduce((prev, curr) => prev + curr, 0);
+      const dataPoint = { time, value: sum / values.length };
+      brushData.push(dataPoint);
+    });
+    brushData.sort((a, b) => a.time - b.time);
+    //console.log(brushData);
+
+    return brushData;
+  }, [timeSeriesGroup]);
+  const [brushState, setBrushState] = useState<BrushState>(
+    brushData
+      ? {
+          startIndex: 0,
+          endIndex: brushData.length - 1,
+        }
+      : {},
+  );
 
   const completed = timeSeriesGroup.timeSeriesArray.map((item) =>
     item.dataProgress ? item.dataProgress : 0,
@@ -405,8 +444,8 @@ export default function TimeSeriesChart({
           onClick={handleClick}
           syncId="anyId"
           style={{ color: labelTextColor, fontSize: "0.8em" }}
-          data={timeSeriesGroup.timeSeriesArray[0].data}
-          dataKey={timeSeriesGroup.timeSeriesArray[0].source.valueDataKey}
+          data={brushData || []}
+          dataKey={"value"}
         >
           <XAxis
             dataKey="time"
@@ -485,8 +524,10 @@ export default function TimeSeriesChart({
           <Brush
             dataKey={"time"}
             tickFormatter={formatTimeTick}
+            startIndex={brushState.startIndex}
+            endIndex={brushState.endIndex}
             onChange={(index) => {
-              console.log(index);
+              setBrushState(index);
             }}
           />
         </LineChart>
