@@ -81,11 +81,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface TimeRangeSelection {
-  firstTime?: number;
-  secondTime?: number;
-
-  firstValue?: number;
-  secondValue?: number;
+  time1?: number;
+  value1?: number;
+  time2?: number;
+  value2?: number;
 }
 
 interface TimeSeriesChartProps extends WithLocale {
@@ -206,12 +205,10 @@ export default function TimeSeriesChart({
     if (!isNumber(chartX) || !isNumber(chartY)) {
       return;
     }
-    const firstTime = chartState.activeLabel;
-    const chartCoords = getChartCoords(chartX, chartY);
-    if (isNumber(firstTime) && chartCoords) {
-      // Actually we should use firstTime=chartCoords[0] but recharts cannot clip
-      // correctly
-      setTimeRangeSelection({ firstTime, firstValue: chartCoords[1] });
+    const point1 = getChartCoords(chartX, chartY);
+    if (point1) {
+      const [time1, value1] = point1;
+      setTimeRangeSelection({ time1, value1 });
     }
   };
 
@@ -219,8 +216,8 @@ export default function TimeSeriesChart({
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
     mouseEvent: MouseEvent<HTMLElement>,
   ) => {
-    const firstTime = timeRangeSelection.firstTime;
-    if (firstTime === undefined) {
+    const { time1, value1 } = timeRangeSelection;
+    if (!isNumber(time1) || !isNumber(value1)) {
       return;
     }
     if (!chartState) {
@@ -230,19 +227,21 @@ export default function TimeSeriesChart({
     if (!isNumber(chartX) || !isNumber(chartY)) {
       return;
     }
-    const secondTime = chartState.activeLabel;
-    const chartCoords = getChartCoords(chartX, chartY);
-    if (isNumber(secondTime) && chartCoords) {
+    const point2 = getChartCoords(chartX, chartY);
+    if (point2) {
+      const [time2, value2] = point2;
       if (mouseEvent.ctrlKey) {
         setTimeRangeSelection({
-          ...timeRangeSelection,
-          secondTime,
-          secondValue: chartCoords[1],
+          time1,
+          value1,
+          time2,
+          value2,
         });
       } else {
         setTimeRangeSelection({
-          ...timeRangeSelection,
-          secondTime,
+          time1,
+          value1,
+          time2,
         });
       }
     }
@@ -265,41 +264,22 @@ export default function TimeSeriesChart({
   };
 
   const zoomIn = () => {
-    const { firstTime, secondTime, firstValue, secondValue } =
-      timeRangeSelection;
-    if (
-      firstTime === secondTime ||
-      firstTime === undefined ||
-      secondTime === undefined
-    ) {
-      clearTimeRangeSelection();
-      return;
-    }
-    let timeRange: [number, number];
-    if (firstTime < secondTime) {
-      timeRange = [firstTime, secondTime];
-    } else {
-      timeRange = [secondTime, firstTime];
-    }
-    let valueRange: [number, number] | undefined = undefined;
-    if (firstValue !== undefined && secondValue !== undefined) {
-      if (firstValue < secondValue) {
-        valueRange = [firstValue, secondValue];
+    const [selectedXRange, selectedYRange] =
+      normalizeTimeRangeSelection(timeRangeSelection);
+    if (selectedXRange && selectedXRange[0] < selectedXRange[1]) {
+      if (selectedYRange) {
+        selectTimeRange(selectedXRange, timeSeriesGroup.id, selectedYRange);
       } else {
-        valueRange = [secondValue, firstValue];
+        selectTimeRange(selectedXRange, timeSeriesGroup.id, null);
       }
-    }
-    clearTimeRangeSelection();
-    if (selectTimeRange) {
-      selectTimeRange(timeRange, timeSeriesGroup.id, valueRange);
+    } else {
+      clearTimeRangeSelection();
     }
   };
 
   const resetZoom = () => {
     clearTimeRangeSelection();
-    if (selectTimeRange) {
-      selectTimeRange(dataTimeRange || null, timeSeriesGroup.id, null);
-    }
+    selectTimeRange(dataTimeRange || null, timeSeriesGroup.id, null);
   };
 
   const handleChartResize = (w: number, h: number) => {
@@ -372,7 +352,8 @@ export default function TimeSeriesChart({
     return [xMin + wx * (xMax - xMin), yMax - wy * (yMax - yMin)];
   };
 
-  const { firstTime, secondTime, firstValue, secondValue } = timeRangeSelection;
+  const [selectedXRange, selectedYRange] =
+    normalizeTimeRangeSelection(timeRangeSelection);
 
   return (
     <div ref={containerRef} className={classes.chartContainer}>
@@ -387,7 +368,7 @@ export default function TimeSeriesChart({
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
-        width="99%"
+        width="98%"
         className={classes.responsiveContainer}
         onResize={handleChartResize}
       >
@@ -420,7 +401,7 @@ export default function TimeSeriesChart({
             allowDataOverflow
           />
           <CartesianGrid strokeDasharray="3 3" />
-          {!timeRangeSelection.firstTime && (
+          {!isNumber(timeRangeSelection.time1) && (
             <Tooltip content={<CustomTooltip />} />
           )}
           <Legend
@@ -446,20 +427,12 @@ export default function TimeSeriesChart({
               paletteMode: theme.palette.mode,
             }),
           )}
-          {isNumber(firstTime) && isNumber(secondTime) && (
+          {selectedXRange && (
             <ReferenceArea
-              x1={firstTime}
-              y1={
-                isNumber(firstValue) && isNumber(secondValue)
-                  ? firstValue
-                  : undefined
-              }
-              x2={secondTime}
-              y2={
-                isNumber(firstValue) && isNumber(secondValue)
-                  ? secondValue
-                  : undefined
-              }
+              x1={selectedXRange[0]}
+              y1={selectedYRange ? selectedYRange[0] : undefined}
+              x2={selectedXRange[1]}
+              y2={selectedYRange ? selectedYRange[1] : undefined}
               strokeOpacity={0.3}
               fill={lightStroke}
               fillOpacity={0.3}
@@ -478,4 +451,17 @@ export default function TimeSeriesChart({
       </ResponsiveContainer>
     </div>
   );
+}
+
+function normalizeTimeRangeSelection(timeRangeSelection: TimeRangeSelection) {
+  const { time1, time2, value1, value2 } = timeRangeSelection;
+  let timeRange: [number, number] | undefined = undefined;
+  let valueRange: [number, number] | undefined = undefined;
+  if (isNumber(time1) && isNumber(time2)) {
+    timeRange = time1 < time2 ? [time1, time2] : [time2, time1];
+    if (isNumber(value1) && isNumber(value2)) {
+      valueRange = value1 < value2 ? [value1, value2] : [value2, value1];
+    }
+  }
+  return [timeRange, valueRange];
 }
