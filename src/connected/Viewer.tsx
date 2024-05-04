@@ -74,6 +74,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     baseMapLayer: baseMapLayerSelector(state),
     overlayLayer: overlayLayerSelector(state),
     imageSmoothing: imageSmoothingSelector(state),
+    variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
   };
 };

@@ -22,22 +22,16 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { default as OlMap } from "ol/Map";
+import { default as OlLayer } from "ol/layer/Layer";
 
-import { AppState } from "@/states/appState";
-import _MapSplitter from "@/components/MapSplitter";
-import { setVariableSplitPos } from "@/actions/controlActions";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    hidden: !state.controlState.variableCompareMode,
-    position: state.controlState.variableSplitPos,
-  };
-};
-
-const mapDispatchToProps = {
-  onPositionChange: setVariableSplitPos,
-};
-
-const MapSplitter = connect(mapStateToProps, mapDispatchToProps)(_MapSplitter);
-export default MapSplitter;
+export function findMapLayer(map: OlMap, layerId: string): OlLayer | null {
+  const layerGroup = map.getLayers();
+  for (let i = 0; i < layerGroup.getLength(); i++) {
+    const layer = layerGroup.item(i);
+    if (layer.get("id") === layerId) {
+      return layer as OlLayer;
+    }
+  }
+  return null;
+}

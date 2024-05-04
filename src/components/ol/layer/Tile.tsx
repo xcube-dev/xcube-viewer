@@ -71,6 +71,7 @@ interface TileProps
 export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
     const layer = new OlTileLayer(this.props);
+    layer.set("id", this.props.id);
     map.getLayers().push(layer);
     return layer;
   }

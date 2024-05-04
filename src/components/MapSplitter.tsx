@@ -1,4 +1,28 @@
-import React, { useState, useRef } from "react";
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019-2024 by the xcube development team and contributors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+import React, { useRef } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { isNumber } from "@/util/types";
 
@@ -60,17 +84,19 @@ function useMouseDrag(onMouseDrag: (delta: Point) => void) {
 interface MapSplitterProps {
   hidden?: boolean;
   position?: number;
+  onPositionChange: (position: number) => void;
 }
 
-export default function MapSplitter({ hidden, position }: MapSplitterProps) {
-  // TODO: move up as prop
-  const [_position, setPosition] = useState(position);
-
+export default function MapSplitter({
+  hidden,
+  position,
+  onPositionChange,
+}: MapSplitterProps) {
   const classes = useStyles();
   const divRef = useRef<HTMLDivElement | null>(null);
   const handleDrag = useRef(([deltaX, _]: Point) => {
     if (divRef.current !== null) {
-      setPosition(divRef.current.offsetLeft + deltaX);
+      onPositionChange(divRef.current.offsetLeft + deltaX);
     }
   });
   const startDrag = useMouseDrag(handleDrag.current);
@@ -84,7 +110,7 @@ export default function MapSplitter({ hidden, position }: MapSplitterProps) {
       id={"MapSplitter"}
       ref={divRef}
       className={classes.splitter}
-      style={{ left: isNumber(_position) ? _position : "50%" }}
+      style={{ left: isNumber(position) ? position : "50%" }}
       onMouseDown={startDrag}
     />
   );

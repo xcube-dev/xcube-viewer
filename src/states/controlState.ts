@@ -134,6 +134,7 @@ export interface ControlState {
   imageSmoothingEnabled: boolean;
   layerVisibilities: LayerVisibilities;
   variableCompareMode: boolean;
+  variableSplitPos?: number;
   selectedBaseMapId: string | null;
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
@@ -182,8 +183,8 @@ export function newControlState(): ControlState {
     locale: "en",
     dialogOpen: {},
     privacyNoticeAccepted: false,
-    mapInteraction: "Point",
-    lastMapInteraction: "Point",
+    mapInteraction: "Select",
+    lastMapInteraction: "Select",
     layerVisibilities: {
       baseMap: true,
       datasetRgb: false,
@@ -195,7 +196,7 @@ export function newControlState(): ControlState {
       overlay: true,
     },
     variableCompareMode: false,
-    datasetLocateMode: "pan",
+    datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
     volumeCardOpen: false,
     volumeRenderMode: "mip",
@@ -223,7 +224,8 @@ export function newControlState(): ControlState {
   return loadUserSettings(state);
 }
 
-// We cannot keep "MAP_OBJECTS" in control state object, because these objects are (1) not serializable
-// and (2) logging actions will cause the browsers to crash
+// We cannot keep "MAP_OBJECTS" in control state object, because these
+// objects are (1) not serializable and (2) logging actions will cause
+// the browsers to crash
 
 export const MAP_OBJECTS: { [id: string]: OlBaseObject } = {};

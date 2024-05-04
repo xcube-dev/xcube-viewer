@@ -342,19 +342,37 @@ export function setLayerVisibility(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_VARIABLE_COMPARE_MODE = "SET_VARIABLE_LAYER_SWIPE_MODE";
+export const SET_VARIABLE_COMPARE_MODE = "SET_VARIABLE_COMPARE_MODE";
 
-export interface SetVariableLayerSwipeMode {
+export interface SetVariableCompareMode {
   type: typeof SET_VARIABLE_COMPARE_MODE;
   variableCompareMode: boolean;
 }
 
 export function setVariableCompareMode(
-  variableLayerSwipeMode: boolean,
-): SetVariableLayerSwipeMode {
+  variableCompareMode: boolean,
+): SetVariableCompareMode {
   return {
     type: SET_VARIABLE_COMPARE_MODE,
-    variableCompareMode: variableLayerSwipeMode,
+    variableCompareMode,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_VARIABLE_SPLIT_POS = "SET_VARIABLE_SPLIT_POS";
+
+export interface SetVariableSplitPos {
+  type: typeof SET_VARIABLE_SPLIT_POS;
+  variableSplitPos: number | undefined;
+}
+
+export function setVariableSplitPos(
+  variableSplitPos: number | undefined,
+): SetVariableSplitPos {
+  return {
+    type: SET_VARIABLE_SPLIT_POS,
+    variableSplitPos,
   };
 }
 
@@ -791,5 +809,6 @@ export type ControlAction =
   | SetVisibleInfoCardElements
   | UpdateInfoCardElementCodeMode
   | SelectVariable2
-  | SetVariableLayerSwipeMode
+  | SetVariableCompareMode
+  | SetVariableSplitPos
   | FlyTo;

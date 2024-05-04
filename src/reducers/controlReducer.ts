@@ -54,6 +54,7 @@ import {
   UPDATE_TIME_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
+  SET_VARIABLE_SPLIT_POS,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -220,7 +221,11 @@ export function controlReducer(
     }
     case SET_VARIABLE_COMPARE_MODE: {
       const { variableCompareMode } = action;
-      return { ...state, variableCompareMode };
+      return { ...state, variableCompareMode, variableSplitPos: undefined };
+    }
+    case SET_VARIABLE_SPLIT_POS: {
+      const { variableSplitPos } = action;
+      return { ...state, variableSplitPos };
     }
     case SELECT_TIME: {
       let { selectedTime } = action;
