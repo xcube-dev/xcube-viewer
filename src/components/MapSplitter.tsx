@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { isNumber } from "@/util/types";
 
@@ -33,10 +33,10 @@ const useStyles = makeStyles({
     left: "50%",
     width: "6px",
     height: "100%",
-    background: "white",
+    backgroundColor: "#ffffff60",
     zIndex: 999,
-    opacity: "50%",
-    border: "1px solid yellow",
+    borderLeft: "0.5px solid #ffffffd0",
+    borderRight: "0.5px solid #ffffffd0",
     cursor: "col-resize",
   },
 });
@@ -100,6 +100,19 @@ export default function MapSplitter({
     }
   });
   const startDrag = useMouseDrag(handleDrag.current);
+
+  useEffect(() => {
+    if (
+      !hidden &&
+      !isNumber(position) &&
+      divRef.current !== null &&
+      divRef.current!.parentElement !== null
+    ) {
+      onPositionChange(
+        Math.round(divRef.current.parentElement.clientWidth / 2),
+      );
+    }
+  }, [hidden, position, onPositionChange]);
 
   if (hidden) {
     return null;
