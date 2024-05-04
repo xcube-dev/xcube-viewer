@@ -35,6 +35,7 @@ import {
   selectedDatasetPlaceGroupLayersSelector,
   selectedDatasetRgbLayerSelector,
   selectedDatasetVariableLayerSelector,
+  selectedDatasetVariable2LayerSelector,
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
   showUserPlacesLayerSelector,
@@ -57,6 +58,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
   return {
     locale: state.controlState.locale,
     variableLayer: selectedDatasetVariableLayerSelector(state),
+    variable2Layer: selectedDatasetVariable2LayerSelector(state),
     rgbLayer: selectedDatasetRgbLayerSelector(state),
     datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
     placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),

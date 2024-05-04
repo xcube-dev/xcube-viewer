@@ -75,7 +75,8 @@ const styles = (_theme: Theme) => createStyles({});
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
-// TODO (forman): move all map styles into dedicated module, so settings will be easier to find & adjust
+// TODO (forman): move all map styles into dedicated module,
+//  so settings will be easier to find & adjust
 
 const COLOR_LEGEND_STYLE: React.CSSProperties = {
   zIndex: 1000,
@@ -106,10 +107,11 @@ interface ViewerProps extends WithStyles<typeof styles> {
   mapInteraction: MapInteraction;
   mapProjection: string;
   baseMapLayer?: MapElement;
-  overlayLayer?: MapElement;
   rgbLayer?: MapElement;
+  variable2Layer?: MapElement;
   variableLayer?: MapElement;
   datasetBoundaryLayer?: MapElement;
+  overlayLayer?: MapElement;
   placeGroupLayers?: MapElement;
   colorBarLegend?: MapElement;
   mapSplitter?: MapElement;
@@ -143,11 +145,12 @@ const _Viewer: React.FC<ViewerProps> = ({
   mapInteraction,
   mapProjection,
   baseMapLayer,
-  overlayLayer,
   rgbLayer,
+  variable2Layer,
   variableLayer,
   datasetBoundaryLayer,
   placeGroupLayers,
+  overlayLayer,
   colorBarLegend,
   mapSplitter,
   userDrawnPlaceGroupName,
@@ -375,6 +378,7 @@ const _Viewer: React.FC<ViewerProps> = ({
         <Layers>
           {baseMapLayer}
           {rgbLayer}
+          {variable2Layer}
           {variableLayer}
           {overlayLayer}
           {datasetBoundaryLayer}

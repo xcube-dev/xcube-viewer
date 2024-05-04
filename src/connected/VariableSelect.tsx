@@ -30,7 +30,7 @@ import { addTimeSeries } from "@/actions/dataActions";
 import { selectVariable, selectVariable2 } from "@/actions/controlActions";
 import {
   canAddTimeSeriesSelector,
-  selectedDatasetVariablesSelector,
+  selectedVariablesSelector,
 } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
@@ -41,7 +41,7 @@ const mapStateToProps = (state: AppState) => {
     selectedDataset2Id: state.controlState.selectedDataset2Id,
     selectedVariable2Name: state.controlState.selectedVariable2Name,
     canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedDatasetVariablesSelector(state),
+    variables: selectedVariablesSelector(state),
   };
 };
 

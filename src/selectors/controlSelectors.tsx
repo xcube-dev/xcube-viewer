@@ -100,6 +100,10 @@ export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
 export const selectedVariableNameSelector = (state: AppState) =>
   state.controlState.selectedVariableName;
+export const selectedDataset2IdSelector = (state: AppState) =>
+  state.controlState.selectedDataset2Id;
+export const selectedVariable2NameSelector = (state: AppState) =>
+  state.controlState.selectedVariable2Name;
 export const selectedPlaceGroupIdsSelector = (state: AppState) =>
   state.controlState.selectedPlaceGroupIds;
 export const selectedPlaceIdSelector = (state: AppState) =>
@@ -126,8 +130,10 @@ export const showBaseMapLayerSelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.baseMap;
 export const showDatasetBoundaryLayerSelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetBoundary;
-export const showDatasetVariableLayerSelector = (state: AppState) =>
+export const selectedVariableVisibilitySelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetVariable;
+export const selectedVariable2VisibilitySelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.datasetVariable2;
 export const showDatasetRgbLayerSelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetRgb;
 export const showDatasetPlacesLayerSelector = (state: AppState) =>
@@ -155,28 +161,50 @@ export const userPlacesFormatOptionsWktSelector = (state: AppState) =>
 export const userColorBarsSelector = (state: AppState) =>
   state.controlState.userColorBars;
 
+const variableLayerId = () => "variable";
+const variable2LayerId = () => "variable2";
+const variableZIndexSelector = () => 12;
+const variable2ZIndexSelector = () => 11;
+
 export const selectedDatasetSelector = createSelector(
   datasetsSelector,
   selectedDatasetIdSelector,
   findDataset,
 );
 
-export const selectedDatasetVariablesSelector = createSelector(
+export const selectedDataset2Selector = createSelector(
+  datasetsSelector,
+  selectedDataset2IdSelector,
+  findDataset,
+);
+
+export const selectedVariablesSelector = createSelector(
   selectedDatasetSelector,
   (dataset: Dataset | null): Variable[] => {
     return (dataset && dataset.variables) || [];
   },
 );
 
+const _findDatasetVariable = (
+  dataset: Dataset | null,
+  varName: string | null,
+): Variable | null => {
+  if (!dataset || !varName) {
+    return null;
+  }
+  return findDatasetVariable(dataset, varName);
+};
+
 export const selectedVariableSelector = createSelector(
   selectedDatasetSelector,
   selectedVariableNameSelector,
-  (dataset: Dataset | null, varName: string | null): Variable | null => {
-    if (!dataset || !varName) {
-      return null;
-    }
-    return dataset.variables.find((v) => v.name === varName) || null;
-  },
+  _findDatasetVariable,
+);
+
+export const selectedVariable2Selector = createSelector(
+  selectedDataset2Selector,
+  selectedVariable2NameSelector,
+  _findDatasetVariable,
 );
 
 export const selectedVariableUnitsSelector = createSelector(
@@ -186,18 +214,34 @@ export const selectedVariableUnitsSelector = createSelector(
   },
 );
 
+const getVariableColorBarMinMax = (
+  variable: Variable | null,
+): [number, number] => {
+  return variable ? [variable.colorBarMin, variable.colorBarMax] : [0, 1];
+};
+
 export const selectedVariableColorBarMinMaxSelector = createSelector(
   selectedVariableSelector,
-  (variable: Variable | null): [number, number] => {
-    return variable ? [variable.colorBarMin, variable.colorBarMax] : [0, 1];
-  },
+  getVariableColorBarMinMax,
 );
+
+export const selectedVariable2ColorBarMinMaxSelector = createSelector(
+  selectedVariable2Selector,
+  getVariableColorBarMinMax,
+);
+
+const getVariableColorBarName = (variable: Variable | null): string => {
+  return (variable && variable.colorBarName) || "viridis";
+};
 
 export const selectedVariableColorBarNameSelector = createSelector(
   selectedVariableSelector,
-  (variable: Variable | null): string => {
-    return (variable && variable.colorBarName) || "viridis";
-  },
+  getVariableColorBarName,
+);
+
+export const selectedVariable2ColorBarNameSelector = createSelector(
+  selectedVariable2Selector,
+  getVariableColorBarName,
 );
 
 export const colorBarsSelector = createSelector(
@@ -227,47 +271,74 @@ export const colorBarsSelector = createSelector(
   },
 );
 
+const getVariableColorBar = (
+  colorBarName: string,
+  colorBars: ColorBars,
+): ColorBar => {
+  const colorBar: ColorBar = parseColorBar(colorBarName);
+  const imageData = colorBars.images[colorBar.baseName];
+  return { ...colorBar, imageData };
+};
+
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
   colorBarsSelector,
-  (colorBarName: string, colorBars: ColorBars): ColorBar => {
-    const colorBar: ColorBar = parseColorBar(colorBarName);
-    const imageData = colorBars.images[colorBar.baseName];
-    return { ...colorBar, imageData };
-  },
+  getVariableColorBar,
 );
+
+export const selectedVariable2ColorBarSelector = createSelector(
+  selectedVariable2ColorBarNameSelector,
+  colorBarsSelector,
+  getVariableColorBar,
+);
+
+const getVariableUserColorBarJson = (
+  colorBar: ColorBar,
+  colorBarName: string,
+  userColorBars: UserColorBar[],
+): string | null => {
+  const { baseName } = colorBar;
+  const userColorBar = userColorBars.find(
+    (userColorBar) => userColorBar.id === baseName,
+  );
+  if (userColorBar) {
+    const colors = getUserColorBarColorArray(userColorBar.code);
+    if (colors) {
+      return JSON.stringify({ name: colorBarName, colors });
+    }
+  }
+  return null;
+};
 
 export const selectedVariableUserColorBarJsonSelector = createSelector(
   selectedVariableColorBarSelector,
   selectedVariableColorBarNameSelector,
   userColorBarsSelector,
-  (
-    colorBar: ColorBar,
-    colorBarName: string,
-    userColorBars: UserColorBar[],
-  ): string | null => {
-    const { baseName } = colorBar;
-    const userColorBar = userColorBars.find(
-      (userColorBar) => userColorBar.id === baseName,
-    );
-    if (userColorBar) {
-      const colors = getUserColorBarColorArray(userColorBar.code);
-      if (colors) {
-        return JSON.stringify({ name: colorBarName, colors });
-      }
-    }
-    return null;
-  },
+  getVariableUserColorBarJson,
 );
+
+export const selectedVariable2UserColorBarJsonSelector = createSelector(
+  selectedVariable2ColorBarSelector,
+  selectedVariable2ColorBarNameSelector,
+  userColorBarsSelector,
+  getVariableUserColorBarJson,
+);
+
+const getVariableOpacity = (variable: Variable | null): number => {
+  if (!variable || typeof variable.opacity != "number") {
+    return 1;
+  }
+  return variable.opacity;
+};
 
 export const selectedVariableOpacitySelector = createSelector(
   selectedVariableSelector,
-  (variable: Variable | null): number => {
-    if (!variable || typeof variable.opacity != "number") {
-      return 1;
-    }
-    return variable.opacity;
-  },
+  getVariableOpacity,
+);
+
+export const selectedVariable2OpacitySelector = createSelector(
+  selectedVariable2Selector,
+  getVariableOpacity,
 );
 
 export const selectedDatasetTimeRangeSelector = createSelector(
@@ -474,16 +545,8 @@ export const selectedPlaceGroupPlaceLabelsSelector = createSelector(
   },
 );
 
-export const selectedDatasetVariableSelector = createSelector(
-  selectedDatasetSelector,
-  selectedVariableNameSelector,
-  (dataset: Dataset | null, variableName: string | null): Variable | null => {
-    return (dataset && findDatasetVariable(dataset, variableName)) || null;
-  },
-);
-
 export const selectedTimeChunkSizeSelector = createSelector(
-  selectedDatasetVariableSelector,
+  selectedVariableSelector,
   timeChunkSizeSelector,
   (variable: Variable | null, minTimeChunkSize): number => {
     if (variable && variable.timeChunkSize) {
@@ -494,18 +557,34 @@ export const selectedTimeChunkSizeSelector = createSelector(
   },
 );
 
+const _getDatasetTimeDimension = (
+  dataset: Dataset | null,
+): TimeDimension | null => {
+  return (dataset && getDatasetTimeDimension(dataset)) || null;
+};
+
 export const selectedDatasetTimeDimensionSelector = createSelector(
   selectedDatasetSelector,
-  (dataset: Dataset | null): TimeDimension | null => {
-    return (dataset && getDatasetTimeDimension(dataset)) || null;
-  },
+  _getDatasetTimeDimension,
 );
+
+export const selectedDataset2TimeDimensionSelector = createSelector(
+  selectedDataset2Selector,
+  _getDatasetTimeDimension,
+);
+
+const _getDatasetAttributions = (dataset: Dataset | null): string[] | null => {
+  return (dataset && dataset.attributions) || null;
+};
 
 export const selectedDatasetAttributionsSelector = createSelector(
   selectedDatasetSelector,
-  (dataset: Dataset | null): string[] | null => {
-    return (dataset && dataset.attributions) || null;
-  },
+  _getDatasetAttributions,
+);
+
+export const selectedDataset2AttributionsSelector = createSelector(
+  selectedDataset2Selector,
+  _getDatasetAttributions,
 );
 
 export const timeCoordinatesSelector = createSelector(
@@ -752,63 +831,89 @@ export const selectedServerSelector = createSelector(
   },
 );
 
+const getVariableTileLayer = (
+  server: ApiServerConfig,
+  datasetId: string | null,
+  datasetTimeDimension: TimeDimension | null,
+  attributions: string[] | null,
+  variable: Variable | null,
+  colorBarMinMax: [number, number],
+  colorBarName: string,
+  colorBarJson: string | null,
+  visibility: boolean,
+  opacity: number,
+  layerId: string,
+  zIndex: number,
+  time: Time | null,
+  timeAnimationActive: boolean,
+  mapProjection: string,
+  imageSmoothing: boolean,
+): MapElement => {
+  if (!visibility || !variable) {
+    return null;
+  }
+  const queryParams: Array<[string, string]> = [
+    ["crs", mapProjection],
+    ["vmin", `${colorBarMinMax[0]}`],
+    ["vmax", `${colorBarMinMax[1]}`],
+    ["cbar", colorBarJson ? colorBarJson : colorBarName],
+    // ['retina', '1'],
+  ];
+  return getTileLayer(
+    layerId,
+    getTileUrl(server.url, datasetId!, variable.name),
+    variable.tileLevelMin,
+    variable.tileLevelMax,
+    queryParams,
+    opacity,
+    datasetTimeDimension,
+    time,
+    timeAnimationActive,
+    mapProjection,
+    attributions,
+    imageSmoothing,
+    zIndex,
+  );
+};
+
 export const selectedDatasetVariableLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetIdSelector,
-  showDatasetVariableLayerSelector,
-  selectedDatasetVariableSelector,
   selectedDatasetTimeDimensionSelector,
-  selectedTimeSelector,
-  timeAnimationActiveSelector,
-  mapProjectionSelector,
+  selectedDatasetAttributionsSelector,
+  selectedVariableSelector,
   selectedVariableColorBarMinMaxSelector,
   selectedVariableColorBarNameSelector,
   selectedVariableUserColorBarJsonSelector,
+  selectedVariableVisibilitySelector,
   selectedVariableOpacitySelector,
-  selectedDatasetAttributionsSelector,
+  variableLayerId,
+  variableZIndexSelector,
+  selectedTimeSelector,
+  timeAnimationActiveSelector,
+  mapProjectionSelector,
   imageSmoothingSelector,
-  (
-    server: ApiServerConfig,
-    datasetId,
-    showDatasetVariable: boolean,
-    variable: Variable | null,
-    timeDimension: TimeDimension | null,
-    time: Time | null,
-    timeAnimationActive: boolean,
-    mapProjection: string,
-    colorBarMinMax: [number, number],
-    colorBarName: string,
-    colorBarJson: string | null,
-    opacity: number,
-    attributions: string[] | null,
-    imageSmoothing: boolean,
-  ): MapElement => {
-    if (!showDatasetVariable || !variable) {
-      return null;
-    }
-    const queryParams: Array<[string, string]> = [
-      ["crs", mapProjection],
-      ["vmin", `${colorBarMinMax[0]}`],
-      ["vmax", `${colorBarMinMax[1]}`],
-      ["cbar", colorBarJson ? colorBarJson : colorBarName],
-      // ['retina', '1'],
-    ];
-    return getTileLayer(
-      "variable",
-      getTileUrl(server.url, datasetId!, variable.name),
-      variable.tileLevelMin,
-      variable.tileLevelMax,
-      queryParams,
-      opacity,
-      timeDimension,
-      time,
-      timeAnimationActive,
-      mapProjection,
-      attributions,
-      imageSmoothing,
-      11,
-    );
-  },
+  getVariableTileLayer,
+);
+
+export const selectedDatasetVariable2LayerSelector = createSelector(
+  selectedServerSelector,
+  selectedDataset2IdSelector,
+  selectedDataset2TimeDimensionSelector,
+  selectedDataset2AttributionsSelector,
+  selectedVariable2Selector,
+  selectedVariable2ColorBarMinMaxSelector,
+  selectedVariable2ColorBarNameSelector,
+  selectedVariable2UserColorBarJsonSelector,
+  selectedVariable2VisibilitySelector,
+  selectedVariable2OpacitySelector,
+  variable2LayerId,
+  variable2ZIndexSelector,
+  selectedTimeSelector,
+  timeAnimationActiveSelector,
+  mapProjectionSelector,
+  imageSmoothingSelector,
+  getVariableTileLayer,
 );
 
 export const selectedDatasetRgbLayerSelector = createSelector(
