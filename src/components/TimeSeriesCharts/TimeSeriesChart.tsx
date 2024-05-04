@@ -49,12 +49,15 @@ import {
   TimeSeriesPoint,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
-import { utcTimeToIsoDateString } from "@/util/time";
 import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "@/components/TimeSeriesCharts/TimeSeriesLine";
 import TimeSeriesChartHeader from "@/components/TimeSeriesCharts/TimeSeriesChartHeader";
 import { isNumber } from "@/util/types";
+import {
+  formatTimeTick,
+  formatValueTick,
+} from "@/components/TimeSeriesCharts/util";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -177,13 +180,6 @@ export default function TimeSeriesChart({
 
   const clearTimeRangeSelection = () => {
     setTimeRangeSelection({});
-  };
-
-  const formatTimeTick = (value: number | string) => {
-    if (!isNumber(value) || !Number.isFinite(value)) {
-      return "";
-    }
-    return utcTimeToIsoDateString(value);
   };
 
   const handleClick = (
@@ -412,17 +408,16 @@ export default function TimeSeriesChart({
             domain={getXDomain}
             tickFormatter={formatTimeTick}
             stroke={labelTextColor}
-            allowDuplicatedCategory={false}
+            allowDataOverflow
           />
           <YAxis
             dataKey={commonValueDataKey || "mean"}
             type="number"
             tickCount={5}
             domain={getYDomain}
-            tickFormatter={(value: number) => {
-              return value.toFixed(2);
-            }}
+            tickFormatter={formatValueTick}
             stroke={labelTextColor}
+            allowDataOverflow
           />
           <CartesianGrid strokeDasharray="3 3" />
           {!timeRangeSelection.firstTime && (
