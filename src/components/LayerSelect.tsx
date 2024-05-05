@@ -29,8 +29,10 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import Paper from "@mui/material/Paper";
+import Popover from "@mui/material/Popover";
 import Tooltip from "@mui/material/Tooltip";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -72,27 +74,31 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
           <VisibilityIcon />
         </Tooltip>
       </IconButton>
-      <Menu
+      <Popover
         anchorEl={menuAnchor}
-        keepMounted
         open={Boolean(menuAnchor)}
         onClose={() => setMenuAnchor(null)}
+        keepMounted
       >
-        <LayerSelectItem layerId="baseMap" {...otherProps} />
-        <LayerSelectItem layerId="datasetRgb" {...otherProps} />
-        <LayerSelectItem layerId="datasetVariable" {...otherProps} />
-        <LayerSelectItem layerId="datasetBoundary" {...otherProps} />
-        <LayerSelectItem layerId="datasetPlaces" {...otherProps} />
-        <LayerSelectItem layerId="userPlaces" {...otherProps} />
-        <LayerSelectItem layerId="overlay" {...otherProps} />
-        <Divider />
-        <MenuItem onClick={handleUserBaseMaps}>
-          {i18n.get("User Base Maps") + "..."}
-        </MenuItem>
-        <MenuItem onClick={handleUserOverlays}>
-          {i18n.get("User Overlays") + "..."}
-        </MenuItem>
-      </Menu>
+        <Paper>
+          <MenuList dense>
+            <LayerSelectItem layerId="baseMap" {...otherProps} />
+            <LayerSelectItem layerId="datasetRgb" {...otherProps} />
+            <LayerSelectItem layerId="datasetVariable" {...otherProps} />
+            <LayerSelectItem layerId="datasetBoundary" {...otherProps} />
+            <LayerSelectItem layerId="datasetPlaces" {...otherProps} />
+            <LayerSelectItem layerId="userPlaces" {...otherProps} />
+            <LayerSelectItem layerId="overlay" {...otherProps} />
+            <Divider />
+            <MenuItem onClick={handleUserBaseMaps}>
+              {i18n.get("User Base Maps") + "..."}
+            </MenuItem>
+            <MenuItem onClick={handleUserOverlays}>
+              {i18n.get("User Overlays") + "..."}
+            </MenuItem>
+          </MenuList>
+        </Paper>
+      </Popover>
     </>
   );
 };
