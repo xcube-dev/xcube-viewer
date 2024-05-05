@@ -417,7 +417,6 @@ export default function TimeSeriesChart({
               timeSeriesGroup,
               timeSeriesIndex,
               selectTimeSeries,
-              selectedTimeRange,
               showPointsOnly,
               showErrorBars,
               places,

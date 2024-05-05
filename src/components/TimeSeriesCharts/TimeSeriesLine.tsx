@@ -28,10 +28,8 @@ import { getUserPlaceColor } from "@/config";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
-  TimeRange,
   TimeSeries,
   TimeSeriesGroup,
-  TimeSeriesPoint,
 } from "@/model/timeSeries";
 import CustomDot from "./CustomDot";
 import { PaletteMode } from "@mui/material";
@@ -41,7 +39,6 @@ interface TimeSeriesLineProps {
   timeSeriesIndex: number;
   showPointsOnly: boolean;
   showErrorBars: boolean;
-  selectedTimeRange: TimeRange | null;
   // Not implemented yet
   selectTimeSeries?: (
     timeSeriesGroupId: string,
@@ -62,7 +59,6 @@ interface TimeSeriesLineProps {
 export default function TimeSeriesLine({
   timeSeriesGroup,
   timeSeriesIndex,
-  selectedTimeRange,
   showErrorBars,
   showPointsOnly,
   selectTimeSeries,
@@ -80,8 +76,6 @@ export default function TimeSeriesLine({
     }
     selectPlace(timeSeries.source.placeId, places, true);
   };
-
-  const [time1, time2] = selectedTimeRange ? selectedTimeRange : [null, null];
 
   const source = timeSeries.source;
   const valueDataKey = source.valueDataKey;
@@ -117,35 +111,7 @@ export default function TimeSeriesLine({
     }
   }
 
-  const data: TimeSeriesPoint[] = [];
-  timeSeries.data.forEach((point) => {
-    if (point[valueDataKey] !== null) {
-      let time1Ok = true;
-      let time2Ok = true;
-      if (time1 !== null) {
-        time1Ok = point.time >= time1;
-      }
-      if (time2 !== null) {
-        time2Ok = point.time <= time2;
-      }
-      if (time1Ok && time2Ok) {
-        data.push(point);
-      }
-    }
-  });
-
   const shadedLineColor = getUserPlaceColor(lineColor, paletteMode);
-  let errorBar;
-  if (valueDataKey && showErrorBars && source.errorDataKey) {
-    errorBar = (
-      <ErrorBar
-        dataKey={source.errorDataKey}
-        width={4}
-        strokeWidth={1}
-        stroke={shadedLineColor}
-      />
-    );
-  }
 
   let strokeOpacity;
   let dotProps: {
@@ -169,22 +135,18 @@ export default function TimeSeriesLine({
     };
   }
 
-  const dot = (
-    <CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />
-  );
-  const activeDot = (
-    <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
-  );
-
   return (
     <Line
+      key={timeSeriesIndex}
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      data={data}
+      data={timeSeries.data}
       dataKey={valueDataKey}
-      dot={dot}
-      activeDot={activeDot}
+      dot={<CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />}
+      activeDot={
+        <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
+      }
       stroke={shadedLineColor}
       strokeOpacity={strokeOpacity}
       // strokeWidth={2 * (ts.dataProgress || 1)}
@@ -193,7 +155,14 @@ export default function TimeSeriesLine({
       isAnimationActive={false}
       onClick={handleClick}
     >
-      {errorBar}
+      {valueDataKey && showErrorBars && source.errorDataKey && (
+        <ErrorBar
+          dataKey={source.errorDataKey}
+          width={4}
+          strokeWidth={1}
+          stroke={shadedLineColor}
+        />
+      )}
     </Line>
   );
 }
