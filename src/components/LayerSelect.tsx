@@ -23,10 +23,6 @@
  */
 
 import * as React from "react";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -39,10 +35,7 @@ import { WithLocale } from "@/util/lang";
 import { LayerVisibilities } from "@/states/controlState";
 import LayerSelectItem from "./LayerSelectItem";
 
-// noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) => createStyles({});
-
-interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
+interface LayerSelectProps extends WithLocale {
   openDialog: (dialogId: string) => void;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
@@ -51,7 +44,7 @@ interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
+const LayerSelect: React.FC<LayerSelectProps> = (props) => {
   const { openDialog, ...otherProps } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<Element | null>(null);
 
@@ -97,5 +90,4 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
   );
 };
 
-const LayerSelect = withStyles(styles)(_LayerSelect);
 export default LayerSelect;

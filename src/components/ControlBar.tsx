@@ -22,35 +22,27 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import { Theme } from "@mui/material/styles";
+import { PropsWithChildren } from "react";
+import { styled, Theme} from "@mui/system";
 
-import { WithStyles } from "@mui/styles";
-import withStyles from "@mui/styles/withStyles";
-import createStyles from "@mui/styles/createStyles";
+const ControlBarForm = styled('form')(({ theme }: { theme: Theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  paddingTop: theme.spacing(1),
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  flexGrow: 0,
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    form: {
-      display: "flex",
-      flexWrap: "wrap",
-      paddingTop: theme.spacing(1),
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-      flexGrow: 0,
-    },
-  });
 
-interface ControlBarProps extends WithStyles<typeof styles> {}
+interface ControlBarProps {}
 
-const _ControlBar: React.FC<ControlBarProps> = ({ classes, children }) => {
+export default function ControlBar({
+  children,
+}: PropsWithChildren<ControlBarProps>) {
   return (
-    <form className={classes.form} autoComplete="off">
+    <ControlBarForm autoComplete="off">
       {children}
-    </form>
+    </ControlBarForm>
   );
-};
-
-const ControlBar = withStyles(styles)(_ControlBar);
-
-export default ControlBar;
+}
