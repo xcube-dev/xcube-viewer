@@ -1,7 +1,7 @@
 ## Changes in version 1.2.0 (in development)
 
 * Users can now define their own color bars.
-  This feature requires xcube server >= 1.6.
+  This feature requires xcube server >= 1.6. (#334)
 
 * Introduced overlay layers that can be selected in the settings.
 
