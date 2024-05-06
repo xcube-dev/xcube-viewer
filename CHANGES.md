@@ -16,6 +16,9 @@
   definition. Existing custom color bars can be edited and deleted.
   This feature requires xcube server >= 1.6. (#334)
 
+* Users can now zoom into arbitrary regions of a time-series chart
+  by pressing the `CTRL` key of the keyboard. (#285)
+
 * Introduced overlay layers that can be selected in the settings.
 
 * Users can now define their own base maps and overlay layers.
