@@ -47,6 +47,8 @@ const styles = (_theme: Theme) => createStyles({});
 
 interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
   openDialog: (dialogId: string) => void;
+  layerTitles: Record<keyof LayerVisibilities, string>;
+  layerSubtitles: Record<keyof LayerVisibilities, string>;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
@@ -100,7 +102,7 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
             <LayerSelectItem layerId="overlay" {...layerSelectProps} />
             <Divider />
             <SelectableMenuItem
-              label={i18n.get("Compare Mode (Swipe)")}
+              title={i18n.get("Compare Mode (Swipe)")}
               selected={variableCompareMode}
               onClick={() => setVariableCompareMode(!variableCompareMode)}
             />

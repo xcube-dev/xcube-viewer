@@ -76,7 +76,11 @@ import {
   userServersSelector,
 } from "./dataSelectors";
 import { makeRequestUrl } from "@/api/callApi";
-import { MAP_OBJECTS, ViewMode } from "@/states/controlState";
+import {
+  LayerVisibilities,
+  MAP_OBJECTS,
+  ViewMode,
+} from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import {
   ColorBar,
@@ -93,6 +97,7 @@ import {
   defaultBaseMapLayers,
   defaultOverlayLayers,
   findLayer,
+  getLayerTitle,
   LayerDefinition,
 } from "@/model/layerDefinition";
 
@@ -1148,4 +1153,63 @@ export const overlayLayerSelector = createSelector(
   showOverlayLayerSelector,
   () => 20,
   getLayerFromLayerDefinition,
+);
+
+const _getLayerTitle = (layers: LayerDefinition[], layerId: string | null) => {
+  const layer = findLayer(layers, layerId);
+  return layer ? getLayerTitle(layer) : null;
+};
+
+export const selectedBaseMapTitleSelector = createSelector(
+  baseMapsSelector,
+  selectedBaseMapIdSelector,
+  _getLayerTitle,
+);
+
+export const selectedOverlayTitleSelector = createSelector(
+  overlaysSelector,
+  selectedOverlayIdSelector,
+  _getLayerTitle,
+);
+
+export const layerTitlesSelector = (
+  _state: AppState,
+): Record<keyof LayerVisibilities, string> => ({
+  baseMap: "Base Map",
+  datasetRgb: "Dataset RGB",
+  datasetVariable2: "Dataset Variable 2",
+  datasetVariable: "Dataset Variable",
+  datasetBoundary: "Dataset Boundary",
+  datasetPlaces: "Dataset Places",
+  userPlaces: "User Places",
+  overlay: "Overlay",
+});
+
+export const layerSubtitlesSelector = createSelector(
+  selectedBaseMapTitleSelector,
+  selectedOverlayTitleSelector,
+  selectedDatasetIdSelector,
+  selectedVariableNameSelector,
+  selectedDataset2IdSelector,
+  selectedVariable2NameSelector,
+  (
+    baseMapTitle,
+    overlayTitle,
+    datasetId,
+    variableName,
+    dataset2Id,
+    variable2Name,
+  ) =>
+    ({
+      baseMap: baseMapTitle || undefined,
+      overlay: overlayTitle || undefined,
+      datasetVariable:
+        datasetId && variableName
+          ? `${datasetId} / ${variableName}`
+          : undefined,
+      datasetVariable2:
+        dataset2Id && variable2Name
+          ? `${dataset2Id} / ${variable2Name}`
+          : undefined,
+    }) as Record<keyof LayerVisibilities, string>,
 );

@@ -28,13 +28,15 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
 interface SelectableMenuItemProps {
-  label: string;
+  title: string;
+  subtitle?: string;
   selected: boolean;
   onClick: () => void;
 }
 
 export default function SelectableMenuItem({
-  label,
+  title,
+  subtitle,
   selected,
   onClick,
 }: SelectableMenuItemProps) {
@@ -43,11 +45,11 @@ export default function SelectableMenuItem({
       <ListItemIcon>
         <Check />
       </ListItemIcon>
-      {label}
+      <ListItemText primary={title} secondary={subtitle} />
     </MenuItem>
   ) : (
     <MenuItem onClick={onClick}>
-      <ListItemText inset>{label}</ListItemText>
+      <ListItemText inset primary={title} secondary={subtitle} />
     </MenuItem>
   );
 }

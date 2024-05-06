@@ -26,19 +26,10 @@ import i18n from "@/i18n";
 import { LayerVisibilities } from "@/states/controlState";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
 
-const layerLabels: Record<keyof LayerVisibilities, string> = {
-  baseMap: "Base Map",
-  datasetRgb: "Dataset RGB",
-  datasetVariable2: "Dataset Variable 2",
-  datasetVariable: "Dataset Variable",
-  datasetBoundary: "Dataset Boundary",
-  datasetPlaces: "Dataset Places",
-  userPlaces: "User Places",
-  overlay: "Overlay",
-};
-
 interface LayerSelectItemProps {
   layerId: keyof LayerVisibilities;
+  layerTitles: Record<keyof LayerVisibilities, string>;
+  layerSubtitles: Record<keyof LayerVisibilities, string>;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
@@ -48,13 +39,16 @@ interface LayerSelectItemProps {
 
 export default function LayerSelectItem({
   layerId,
+  layerTitles,
+  layerSubtitles,
   layerVisibilities,
   setLayerVisibility,
 }: LayerSelectItemProps) {
   const visible = !!layerVisibilities[layerId];
   return (
     <SelectableMenuItem
-      label={i18n.get(layerLabels[layerId])}
+      title={i18n.get(layerTitles[layerId])}
+      subtitle={layerSubtitles[layerId]}
       selected={visible}
       onClick={() => setLayerVisibility(layerId, !visible)}
     />
