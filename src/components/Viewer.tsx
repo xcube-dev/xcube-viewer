@@ -42,6 +42,7 @@ import { default as OlCircleStyle } from "ol/style/Circle";
 import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
+import { getRenderPixel } from "ol/render";
 
 import i18n from "@/i18n";
 import { Config, getUserPlaceColor, getUserPlaceColorName } from "@/config";
@@ -64,6 +65,9 @@ import { Vector } from "./ol/layer/Vector";
 import { Map, MapElement } from "./ol/Map";
 import { View } from "./ol/View";
 import { setFeatureStyle } from "./ol/style";
+import { findMapLayer } from "./ol/util";
+import RenderEvent from "ol/render/Event";
+import { isNumber } from "@/util/types";
 
 // noinspection JSUnusedLocalSymbols
 const styles = (_theme: Theme) => createStyles({});
@@ -71,7 +75,8 @@ const styles = (_theme: Theme) => createStyles({});
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
-// TODO (forman): move all map styles into dedicated module, so settings will be easier to find & adjust
+// TODO (forman): move all map styles into dedicated module,
+//  so settings will be easier to find & adjust
 
 const COLOR_LEGEND_STYLE: React.CSSProperties = {
   zIndex: 1000,
@@ -102,12 +107,14 @@ interface ViewerProps extends WithStyles<typeof styles> {
   mapInteraction: MapInteraction;
   mapProjection: string;
   baseMapLayer?: MapElement;
-  overlayLayer?: MapElement;
   rgbLayer?: MapElement;
+  variable2Layer?: MapElement;
   variableLayer?: MapElement;
   datasetBoundaryLayer?: MapElement;
+  overlayLayer?: MapElement;
   placeGroupLayers?: MapElement;
   colorBarLegend?: MapElement;
+  mapSplitter?: MapElement;
   userDrawnPlaceGroupName: string;
   addDrawnUserPlace?: (
     placeGroupTitle: string,
@@ -127,6 +134,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   selectedPlaceId?: string | null;
   places: Place[];
   imageSmoothing?: boolean;
+  variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
 }
@@ -137,12 +145,14 @@ const _Viewer: React.FC<ViewerProps> = ({
   mapInteraction,
   mapProjection,
   baseMapLayer,
-  overlayLayer,
   rgbLayer,
+  variable2Layer,
   variableLayer,
   datasetBoundaryLayer,
   placeGroupLayers,
+  overlayLayer,
   colorBarLegend,
+  mapSplitter,
   userDrawnPlaceGroupName,
   addDrawnUserPlace,
   importUserPlacesFromText,
@@ -153,6 +163,7 @@ const _Viewer: React.FC<ViewerProps> = ({
   selectedPlaceId,
   places,
   imageSmoothing,
+  variableSplitPos,
   onMapRef,
 }) => {
   const [map, setMap] = useState<OlMap | null>(null);
@@ -199,6 +210,54 @@ const _Viewer: React.FC<ViewerProps> = ({
       });
     }
   }, [map, imageSmoothing]);
+
+  React.useEffect(() => {
+    if (map === null) {
+      return;
+    }
+    const variableLayer = findMapLayer(map, "variable");
+    if (variableLayer === null) {
+      return;
+    }
+    // https://openlayers.org/en/latest/examples/layer-swipe.html
+    const handlePreRender = (event: RenderEvent) => {
+      if (!isNumber(variableSplitPos)) {
+        return;
+      }
+      const mapSize = map.getSize();
+      if (!mapSize) {
+        return;
+      }
+      const mapWidth = mapSize[0];
+      const mapHeight = mapSize[1];
+      const tl = getRenderPixel(event, [variableSplitPos, 0]);
+      const tr = getRenderPixel(event, [mapWidth, 0]);
+      const bl = getRenderPixel(event, [variableSplitPos, mapHeight]);
+      const br = getRenderPixel(event, [mapWidth, mapHeight]);
+
+      const ctx = event.context as CanvasRenderingContext2D;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(tl[0], tl[1]);
+      ctx.lineTo(bl[0], bl[1]);
+      ctx.lineTo(br[0], br[1]);
+      ctx.lineTo(tr[0], tr[1]);
+      ctx.closePath();
+      ctx.clip();
+    };
+
+    const handlePostRender = (event: RenderEvent) => {
+      const ctx = event.context as CanvasRenderingContext2D;
+      ctx.restore();
+    };
+
+    variableLayer.on("prerender", handlePreRender);
+    variableLayer.on("postrender", handlePostRender);
+    return () => {
+      variableLayer.un("prerender", handlePreRender);
+      variableLayer.un("postrender", handlePostRender);
+    };
+  }, [map, variableSplitPos]);
 
   const handleMapClick = (event: OlMapBrowserEvent<UIEvent>) => {
     if (mapInteraction === "Select") {
@@ -319,6 +378,7 @@ const _Viewer: React.FC<ViewerProps> = ({
         <Layers>
           {baseMapLayer}
           {rgbLayer}
+          {variable2Layer}
           {variableLayer}
           {overlayLayer}
           {datasetBoundaryLayer}
@@ -374,6 +434,7 @@ const _Viewer: React.FC<ViewerProps> = ({
           onDrawEnd={handleDrawEnd}
         />
         {colorBarControl}
+        {mapSplitter}
         <ScaleLine bar={false} />
       </Map>
     </ErrorBoundary>

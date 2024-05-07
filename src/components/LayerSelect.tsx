@@ -25,8 +25,10 @@
 import * as React from "react";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import Paper from "@mui/material/Paper";
+import Popover from "@mui/material/Popover";
 import Tooltip from "@mui/material/Tooltip";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -34,18 +36,28 @@ import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { LayerVisibilities } from "@/states/controlState";
 import LayerSelectItem from "./LayerSelectItem";
+import SelectableMenuItem from "@/components/SelectableMenuItem";
 
 interface LayerSelectProps extends WithLocale {
   openDialog: (dialogId: string) => void;
+  layerTitles: Record<keyof LayerVisibilities, string>;
+  layerSubtitles: Record<keyof LayerVisibilities, string>;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
+  variableCompareMode: boolean;
+  setVariableCompareMode: (selected: boolean) => void;
 }
 
-const LayerSelect: React.FC<LayerSelectProps> = (props) => {
-  const { openDialog, ...otherProps } = props;
+const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
+  const {
+    openDialog,
+    variableCompareMode,
+    setVariableCompareMode,
+    ...layerSelectProps
+  } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<Element | null>(null);
 
   const handleUserOverlays = () => {
@@ -65,29 +77,40 @@ const LayerSelect: React.FC<LayerSelectProps> = (props) => {
           <VisibilityIcon />
         </Tooltip>
       </IconButton>
-      <Menu
+      <Popover
         anchorEl={menuAnchor}
-        keepMounted
         open={Boolean(menuAnchor)}
         onClose={() => setMenuAnchor(null)}
+        keepMounted
       >
-        <LayerSelectItem layerId="baseMap" {...otherProps} />
-        <LayerSelectItem layerId="datasetRgb" {...otherProps} />
-        <LayerSelectItem layerId="datasetVariable" {...otherProps} />
-        <LayerSelectItem layerId="datasetBoundary" {...otherProps} />
-        <LayerSelectItem layerId="datasetPlaces" {...otherProps} />
-        <LayerSelectItem layerId="userPlaces" {...otherProps} />
-        <LayerSelectItem layerId="overlay" {...otherProps} />
-        <Divider />
-        <MenuItem onClick={handleUserBaseMaps}>
-          {i18n.get("User Base Maps") + "..."}
-        </MenuItem>
-        <MenuItem onClick={handleUserOverlays}>
-          {i18n.get("User Overlays") + "..."}
-        </MenuItem>
-      </Menu>
+        <Paper>
+          <MenuList dense>
+            <LayerSelectItem layerId="baseMap" {...layerSelectProps} />
+            <LayerSelectItem layerId="datasetRgb" {...layerSelectProps} />
+            <LayerSelectItem layerId="datasetVariable2" {...layerSelectProps} />
+            <LayerSelectItem layerId="datasetVariable" {...layerSelectProps} />
+            <LayerSelectItem layerId="datasetBoundary" {...layerSelectProps} />
+            <LayerSelectItem layerId="datasetPlaces" {...layerSelectProps} />
+            <LayerSelectItem layerId="userPlaces" {...layerSelectProps} />
+            <LayerSelectItem layerId="overlay" {...layerSelectProps} />
+            <Divider />
+            <SelectableMenuItem
+              title={i18n.get("Compare Mode (Swipe)")}
+              selected={variableCompareMode}
+              onClick={() => setVariableCompareMode(!variableCompareMode)}
+            />
+            <Divider />
+            <MenuItem onClick={handleUserBaseMaps}>
+              {i18n.get("User Base Maps") + "..."}
+            </MenuItem>
+            <MenuItem onClick={handleUserOverlays}>
+              {i18n.get("User Overlays") + "..."}
+            </MenuItem>
+          </MenuList>
+        </Paper>
+      </Popover>
     </>
   );
 };
 
-export default LayerSelect;
+export default _LayerSelect;

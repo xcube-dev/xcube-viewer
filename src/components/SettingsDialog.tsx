@@ -50,7 +50,7 @@ import RadioSetting from "./RadioSetting";
 import LayerMenu from "@/components/LayerMenu";
 import {
   findLayer,
-  getLayerLabel,
+  getLayerTitle,
   LayerDefinition,
 } from "@/model/layerDefinition";
 
@@ -209,7 +209,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   };
 
   const baseMapLayer = findLayer(baseMapLayers, settings.selectedBaseMapId);
-  const baseMapLabel = getLayerLabel(baseMapLayer);
+  const baseMapLabel = getLayerTitle(baseMapLayer);
 
   function handleOverlayMenuOpen(event: React.MouseEvent) {
     setOverlayMenuAnchor(event.currentTarget);
@@ -225,7 +225,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   };
 
   const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
-  const overlayLabel = getLayerLabel(overlayLayer);
+  const overlayLabel = getLayerTitle(overlayLayer);
 
   return (
     <div>

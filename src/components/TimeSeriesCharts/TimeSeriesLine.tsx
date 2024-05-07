@@ -23,25 +23,23 @@
  */
 
 import { ErrorBar, Line } from "recharts";
+import { PaletteMode } from "@mui/material";
 
 import { getUserPlaceColor } from "@/config";
+import { isNumber } from "@/util/types";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
-  TimeRange,
   TimeSeries,
   TimeSeriesGroup,
-  TimeSeriesPoint,
 } from "@/model/timeSeries";
 import CustomDot from "./CustomDot";
-import { PaletteMode } from "@mui/material";
 
 interface TimeSeriesLineProps {
   timeSeriesGroup: TimeSeriesGroup;
   timeSeriesIndex: number;
   showPointsOnly: boolean;
   showErrorBars: boolean;
-  selectedTimeRange: TimeRange | null;
   // Not implemented yet
   selectTimeSeries?: (
     timeSeriesGroupId: string,
@@ -62,7 +60,6 @@ interface TimeSeriesLineProps {
 export default function TimeSeriesLine({
   timeSeriesGroup,
   timeSeriesIndex,
-  selectedTimeRange,
   showErrorBars,
   showPointsOnly,
   selectTimeSeries,
@@ -72,7 +69,19 @@ export default function TimeSeriesLine({
   placeGroupTimeSeries,
   paletteMode,
 }: TimeSeriesLineProps) {
+  // WARNING: we cannot use hooks here, as this is not a normal component!
+  // See usage in TimeSeriesChart component.
+
   const timeSeries = timeSeriesGroup.timeSeriesArray[timeSeriesIndex];
+  const source = timeSeries.source;
+  const valueDataKey = source.valueDataKey;
+  const data = timeSeries.data;
+
+  // TODO: allow switching data filtering on/off
+  const filteredData = data.filter((item) => {
+    const v = item[valueDataKey];
+    return isNumber(v) && isFinite(v);
+  });
 
   const handleClick = () => {
     if (selectTimeSeries) {
@@ -81,10 +90,6 @@ export default function TimeSeriesLine({
     selectPlace(timeSeries.source.placeId, places, true);
   };
 
-  const [time1, time2] = selectedTimeRange ? selectedTimeRange : [null, null];
-
-  const source = timeSeries.source;
-  const valueDataKey = source.valueDataKey;
   let lineName = source.variableName;
   let lineColor = "red";
   if (source.placeId === null) {
@@ -117,35 +122,7 @@ export default function TimeSeriesLine({
     }
   }
 
-  const data: TimeSeriesPoint[] = [];
-  timeSeries.data.forEach((point) => {
-    if (point[valueDataKey] !== null) {
-      let time1Ok = true;
-      let time2Ok = true;
-      if (time1 !== null) {
-        time1Ok = point.time >= time1;
-      }
-      if (time2 !== null) {
-        time2Ok = point.time <= time2;
-      }
-      if (time1Ok && time2Ok) {
-        data.push(point);
-      }
-    }
-  });
-
   const shadedLineColor = getUserPlaceColor(lineColor, paletteMode);
-  let errorBar;
-  if (valueDataKey && showErrorBars && source.errorDataKey) {
-    errorBar = (
-      <ErrorBar
-        dataKey={source.errorDataKey}
-        width={4}
-        strokeWidth={1}
-        stroke={shadedLineColor}
-      />
-    );
-  }
 
   let strokeOpacity;
   let dotProps: {
@@ -169,22 +146,18 @@ export default function TimeSeriesLine({
     };
   }
 
-  const dot = (
-    <CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />
-  );
-  const activeDot = (
-    <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
-  );
-
   return (
     <Line
+      key={timeSeriesIndex}
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      data={data}
+      data={filteredData}
       dataKey={valueDataKey}
-      dot={dot}
-      activeDot={activeDot}
+      dot={<CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />}
+      activeDot={
+        <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
+      }
       stroke={shadedLineColor}
       strokeOpacity={strokeOpacity}
       // strokeWidth={2 * (ts.dataProgress || 1)}
@@ -193,7 +166,14 @@ export default function TimeSeriesLine({
       isAnimationActive={false}
       onClick={handleClick}
     >
-      {errorBar}
+      {valueDataKey && showErrorBars && source.errorDataKey && (
+        <ErrorBar
+          dataKey={source.errorDataKey}
+          width={4}
+          strokeWidth={1}
+          stroke={shadedLineColor}
+        />
+      )}
     </Line>
   );
 }

@@ -45,7 +45,7 @@ import {
   mapProjectionSelector,
   selectedDatasetSelector,
   selectedDatasetTimeDimensionSelector,
-  selectedDatasetVariableSelector,
+  selectedVariableSelector,
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
@@ -438,7 +438,7 @@ export function addTimeSeries() {
     const selectedDataset = selectedDatasetSelector(getState());
     const selectedDatasetTimeDim =
       selectedDatasetTimeDimensionSelector(getState());
-    const selectedVariable = selectedDatasetVariableSelector(getState());
+    const selectedVariable = selectedVariableSelector(getState());
     const selectedPlaceId = selectedPlaceIdSelector(getState());
     const selectedPlace = selectedPlaceSelector(getState())!;
     const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;

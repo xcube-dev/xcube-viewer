@@ -35,6 +35,7 @@ import {
   selectedDatasetPlaceGroupLayersSelector,
   selectedDatasetRgbLayerSelector,
   selectedDatasetVariableLayerSelector,
+  selectedDatasetVariable2LayerSelector,
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
   showUserPlacesLayerSelector,
@@ -47,6 +48,7 @@ import _Viewer from "@/components/Viewer";
 import { userPlaceGroupsSelector } from "@/selectors/dataSelectors";
 import { selectPlace } from "@/actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
+import MapSplitter from "@/connected/MapSplitter";
 
 interface OwnProps {
   onMapRef?: (map: OlMap | null) => void;
@@ -56,10 +58,12 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
   return {
     locale: state.controlState.locale,
     variableLayer: selectedDatasetVariableLayerSelector(state),
+    variable2Layer: selectedDatasetVariable2LayerSelector(state),
     rgbLayer: selectedDatasetRgbLayerSelector(state),
     datasetBoundaryLayer: selectedDatasetBoundaryLayerSelector(state),
     placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
     colorBarLegend: <ColorBarLegend />,
+    mapSplitter: <MapSplitter />,
     userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
     userPlaceGroups: userPlaceGroupsSelector(state),
     userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
@@ -72,6 +76,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     baseMapLayer: baseMapLayerSelector(state),
     overlayLayer: overlayLayerSelector(state),
     imageSmoothing: imageSmoothingSelector(state),
+    variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
   };
 };

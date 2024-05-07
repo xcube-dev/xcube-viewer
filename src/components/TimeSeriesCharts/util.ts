@@ -22,37 +22,16 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { isNumber } from "@/util/types";
+import { utcTimeToIsoDateString } from "@/util/time";
 
-import _VariableSelect from "@/components/VariableSelect";
-import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import { selectVariable, selectVariable2 } from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  selectedVariablesSelector,
-} from "@/selectors/controlSelectors";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
-  };
+export const formatTimeTick = (value: number | string) => {
+  if (!isNumber(value) || !Number.isFinite(value)) {
+    return "";
+  }
+  return utcTimeToIsoDateString(value);
 };
 
-const mapDispatchToProps = {
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
+export const formatValueTick = (value: number) => {
+  return value.toPrecision(3);
 };
-
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;

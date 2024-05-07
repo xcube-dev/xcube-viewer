@@ -342,6 +342,42 @@ export function setLayerVisibility(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SET_VARIABLE_COMPARE_MODE = "SET_VARIABLE_COMPARE_MODE";
+
+export interface SetVariableCompareMode {
+  type: typeof SET_VARIABLE_COMPARE_MODE;
+  variableCompareMode: boolean;
+}
+
+export function setVariableCompareMode(
+  variableCompareMode: boolean,
+): SetVariableCompareMode {
+  return {
+    type: SET_VARIABLE_COMPARE_MODE,
+    variableCompareMode,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_VARIABLE_SPLIT_POS = "SET_VARIABLE_SPLIT_POS";
+
+export interface SetVariableSplitPos {
+  type: typeof SET_VARIABLE_SPLIT_POS;
+  variableSplitPos: number | undefined;
+}
+
+export function setVariableSplitPos(
+  variableSplitPos: number | undefined,
+): SetVariableSplitPos {
+  return {
+    type: SET_VARIABLE_SPLIT_POS,
+    variableSplitPos,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_VARIABLE = "SELECT_VARIABLE";
 
 export interface SelectVariable {
@@ -353,6 +389,27 @@ export function selectVariable(
   selectedVariableName: string | null,
 ): SelectVariable {
   return { type: SELECT_VARIABLE, selectedVariableName };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_VARIABLE_2 = "SELECT_VARIABLE_2";
+
+export interface SelectVariable2 {
+  type: typeof SELECT_VARIABLE_2;
+  selectedDataset2Id: string | null;
+  selectedVariable2Name: string | null;
+}
+
+export function selectVariable2(
+  selectedDataset2Id: string | null,
+  selectedVariable2Name: string | null,
+): SelectVariable2 {
+  return {
+    type: SELECT_VARIABLE_2,
+    selectedDataset2Id,
+    selectedVariable2Name,
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -751,4 +808,7 @@ export type ControlAction =
   | ShowInfoCard
   | SetVisibleInfoCardElements
   | UpdateInfoCardElementCodeMode
+  | SelectVariable2
+  | SetVariableCompareMode
+  | SetVariableSplitPos
   | FlyTo;

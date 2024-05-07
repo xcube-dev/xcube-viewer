@@ -1,7 +1,23 @@
 ## Changes in version 1.2.0 (in development)
 
-* Users can now define their own color bars.
-  This feature requires xcube server >= 1.6.
+* Introduced a variable comparison mode. Users can now go to the layer 
+  visibility dropdown menu (see below) and enable the variable compare mode.
+  This will make the variable layer  fully transparent for initially one 
+  half of the map area. User can swipe a bar to shrink or enlarge the area.
+  By selecting a secondary data variable using a new tool button next to the
+  variable selector, a second variable layer will be rendered below the current
+  variable layer. Using the compare mode the following layers can be inspected 
+  next to the currently selected variable (in this order): Variable 2 layer, 
+  Basemap layer Dataset RGB layer. (#286)
+
+* Users can now define their own color bars. The new feature can be found
+  in the color selector that pops up if clicking the color bar legend.
+  A new category "Users" provides an add-button to add a new color bar
+  definition. Existing custom color bars can be edited and deleted.
+  This feature requires xcube server >= 1.6. (#334)
+
+* Users can now zoom into arbitrary regions of a time-series chart
+  by pressing the `CTRL` key of the keyboard. (#285)
 
 * Introduced overlay layers that can be selected in the settings.
 

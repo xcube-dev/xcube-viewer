@@ -11,7 +11,7 @@ export interface LayerDefinition {
   wms?: { layerName: string; styleName?: string };
 }
 
-export function getLayerLabel(layerDef: LayerDefinition | null): string {
+export function getLayerTitle(layerDef: LayerDefinition | null): string {
   return layerDef ? `${layerDef.group}: ${layerDef.title}` : "-";
 }
 

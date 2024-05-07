@@ -39,13 +39,21 @@ import App from "@/connected/App";
 import { Config } from "@/config";
 import {
   changeLocale,
+  SET_VARIABLE_SPLIT_POS,
   updateUserColorBarsImageData,
 } from "@/actions/controlActions";
 import { syncWithServer } from "@/actions/dataActions";
 import { appReducer } from "@/reducers/appReducer";
+import { AppState } from "@/states/appState";
 
 Config.load().then(() => {
-  const logger = ReduxLogger.createLogger({ collapsed: true, diff: false });
+  const actionFilter = (_getState: () => AppState, action: Action) =>
+    action.type !== SET_VARIABLE_SPLIT_POS;
+  const logger = ReduxLogger.createLogger({
+    collapsed: true,
+    diff: false,
+    predicate: actionFilter,
+  });
   const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
   const store = Redux.createStore(appReducer, middlewares);
 

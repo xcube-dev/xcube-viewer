@@ -43,15 +43,18 @@ import {
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
   SET_RGB_LAYER_VISIBILITY,
+  SET_VARIABLE_COMPARE_MODE,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
   SHOW_INFO_CARD,
   SHOW_VOLUME_CARD,
+  SELECT_VARIABLE_2,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
+  SET_VARIABLE_SPLIT_POS,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -215,6 +218,14 @@ export function controlReducer(
           [action.layerId]: action.visible,
         },
       };
+    }
+    case SET_VARIABLE_COMPARE_MODE: {
+      const { variableCompareMode } = action;
+      return { ...state, variableCompareMode, variableSplitPos: undefined };
+    }
+    case SET_VARIABLE_SPLIT_POS: {
+      const { variableSplitPos } = action;
+      return { ...state, variableSplitPos };
     }
     case SELECT_TIME: {
       let { selectedTime } = action;
@@ -496,6 +507,20 @@ export function controlReducer(
         ...state,
         dialogOpen: { ...state.dialogOpen, [dialogId]: false },
       };
+    }
+    case SELECT_VARIABLE_2: {
+      const { selectedDataset2Id, selectedVariable2Name } = action;
+      if (
+        selectedDataset2Id === state.selectedDataset2Id &&
+        selectedVariable2Name === state.selectedVariable2Name
+      ) {
+        return {
+          ...state,
+          selectedDataset2Id: null,
+          selectedVariable2Name: null,
+        };
+      }
+      return { ...state, selectedDataset2Id, selectedVariable2Name };
     }
     case CONFIGURE_SERVERS: {
       if (state.selectedServerId !== action.selectedServerId) {

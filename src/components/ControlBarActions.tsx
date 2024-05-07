@@ -59,14 +59,19 @@ interface ControlBarActionsProps extends WithLocale {
   allowRefresh?: boolean;
   updateResources: () => void;
   compact: boolean;
+  layerTitles: Record<keyof LayerVisibilities, string>;
+  layerSubtitles: Record<keyof LayerVisibilities, string>;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
+  variableCompareMode: boolean;
+  setVariableCompareMode: (selected: boolean) => void;
 }
 
-const ControlBarActions: React.FC<ControlBarActionsProps> = ({
+const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
+  locale,
   visible,
   volumeCardOpen,
   showVolumeCard,
@@ -77,8 +82,12 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
   allowRefresh,
   updateResources,
   compact,
+  layerTitles,
+  layerSubtitles,
   layerVisibilities,
   setLayerVisibility,
+  variableCompareMode,
+  setVariableCompareMode,
 }) => {
   if (!visible) {
     return null;
@@ -88,9 +97,14 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
 
   const layerSelect = (
     <LayerSelect
+      locale={locale}
+      openDialog={openDialog}
+      layerTitles={layerTitles}
+      layerSubtitles={layerSubtitles}
       layerVisibilities={layerVisibilities}
       setLayerVisibility={setLayerVisibility}
-      openDialog={openDialog}
+      variableCompareMode={variableCompareMode}
+      setVariableCompareMode={setVariableCompareMode}
     />
   );
 
@@ -170,4 +184,4 @@ const ControlBarActions: React.FC<ControlBarActionsProps> = ({
   );
 };
 
-export default ControlBarActions;
+export default _ControlBarActions;

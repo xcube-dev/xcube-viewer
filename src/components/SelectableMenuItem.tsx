@@ -22,37 +22,34 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import Check from "@mui/icons-material/Check";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
 
-import _VariableSelect from "@/components/VariableSelect";
-import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import { selectVariable, selectVariable2 } from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  selectedVariablesSelector,
-} from "@/selectors/controlSelectors";
+interface SelectableMenuItemProps {
+  title: string;
+  subtitle?: string;
+  selected: boolean;
+  onClick: () => void;
+}
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
-  };
-};
-
-const mapDispatchToProps = {
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
-};
-
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+export default function SelectableMenuItem({
+  title,
+  subtitle,
+  selected,
+  onClick,
+}: SelectableMenuItemProps) {
+  return selected ? (
+    <MenuItem onClick={onClick}>
+      <ListItemIcon>
+        <Check />
+      </ListItemIcon>
+      <ListItemText primary={title} secondary={subtitle} />
+    </MenuItem>
+  ) : (
+    <MenuItem onClick={onClick}>
+      <ListItemText inset primary={title} secondary={subtitle} />
+    </MenuItem>
+  );
+}

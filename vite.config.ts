@@ -29,6 +29,12 @@ import { resolve } from "node:path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    // Added this because I got
+    // "Uncaught TypeError: styled_default is not a function", see
+    // https://github.com/mui/material-ui/issues/32727
+    include: ["@emotion/styled"],
+  },
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),

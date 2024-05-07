@@ -67,12 +67,12 @@ const _LoadingDialog: React.FC<LoadingDialogProps> = ({
   return (
     <Dialog open={true} aria-labelledby="loading">
       <DialogTitle id="loading">{i18n.get("Please wait...")}</DialogTitle>
-      <ContentContainer>
-        <DialogProgress />
-        {props.messages.map((message, i) => (
-          <DialogMessage key={i}>
+      <div className={classes.contentContainer}>
+        <CircularProgress className={classes.progress} />
+        {messages.map((message, i) => (
+          <Typography component="div" key={i} className={classes.message}>
             {message}
-          </DialogMessage>
+          </Typography>
         ))}
       </div>
     </Dialog>
