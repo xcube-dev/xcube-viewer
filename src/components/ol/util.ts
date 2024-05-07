@@ -22,37 +22,16 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { default as OlMap } from "ol/Map";
+import { default as OlLayer } from "ol/layer/Layer";
 
-import _VariableSelect from "@/components/VariableSelect";
-import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import { selectVariable, selectVariable2 } from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  selectedVariablesSelector,
-} from "@/selectors/controlSelectors";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
-  };
-};
-
-const mapDispatchToProps = {
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
-};
-
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+export function findMapLayer(map: OlMap, layerId: string): OlLayer | null {
+  const layerGroup = map.getLayers();
+  for (let i = 0; i < layerGroup.getLength(); i++) {
+    const layer = layerGroup.item(i);
+    if (layer.get("id") === layerId) {
+      return layer as OlLayer;
+    }
+  }
+  return null;
+}

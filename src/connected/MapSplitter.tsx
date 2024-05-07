@@ -25,21 +25,19 @@
 import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
-import { openDialog, setLayerVisibility } from "@/actions/controlActions";
-import { layerVisibilitiesSelector } from "@/selectors/controlSelectors";
-import _LayerSelect from "@/components/LayerSelect";
+import _MapSplitter from "@/components/MapSplitter";
+import { setVariableSplitPos } from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
-    locale: state.controlState.locale,
-    layerVisibilities: layerVisibilitiesSelector(state),
+    hidden: !state.controlState.variableCompareMode,
+    position: state.controlState.variableSplitPos,
   };
 };
 
 const mapDispatchToProps = {
-  setLayerVisibility,
-  openDialog,
+  onPositionChange: setVariableSplitPos,
 };
 
-const LayerSelect = connect(mapStateToProps, mapDispatchToProps)(_LayerSelect);
-export default LayerSelect;
+const MapSplitter = connect(mapStateToProps, mapDispatchToProps)(_MapSplitter);
+export default MapSplitter;

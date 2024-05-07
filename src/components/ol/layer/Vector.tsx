@@ -40,6 +40,7 @@ export class Vector extends MapComponent<
 > {
   addMapObject(map: OlMap): OlVectorLayer<OlVectorSource> {
     const layer = new OlVectorLayer<OlVectorSource>(this.props);
+    layer.set("id", this.props.id);
     map.getLayers().push(layer);
     return layer;
   }

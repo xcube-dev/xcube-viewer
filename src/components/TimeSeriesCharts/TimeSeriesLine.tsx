@@ -23,8 +23,10 @@
  */
 
 import { ErrorBar, Line } from "recharts";
+import { PaletteMode } from "@mui/material";
 
 import { getUserPlaceColor } from "@/config";
+import { isNumber } from "@/util/types";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
@@ -32,7 +34,6 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import CustomDot from "./CustomDot";
-import { PaletteMode } from "@mui/material";
 
 interface TimeSeriesLineProps {
   timeSeriesGroup: TimeSeriesGroup;
@@ -68,7 +69,19 @@ export default function TimeSeriesLine({
   placeGroupTimeSeries,
   paletteMode,
 }: TimeSeriesLineProps) {
+  // WARNING: we cannot use hooks here, as this is not a normal component!
+  // See usage in TimeSeriesChart component.
+
   const timeSeries = timeSeriesGroup.timeSeriesArray[timeSeriesIndex];
+  const source = timeSeries.source;
+  const valueDataKey = source.valueDataKey;
+  const data = timeSeries.data;
+
+  // TODO: allow switching data filtering on/off
+  const filteredData = data.filter((item) => {
+    const v = item[valueDataKey];
+    return isNumber(v) && isFinite(v);
+  });
 
   const handleClick = () => {
     if (selectTimeSeries) {
@@ -77,8 +90,6 @@ export default function TimeSeriesLine({
     selectPlace(timeSeries.source.placeId, places, true);
   };
 
-  const source = timeSeries.source;
-  const valueDataKey = source.valueDataKey;
   let lineName = source.variableName;
   let lineColor = "red";
   if (source.placeId === null) {
@@ -141,7 +152,7 @@ export default function TimeSeriesLine({
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      data={timeSeries.data}
+      data={filteredData}
       dataKey={valueDataKey}
       dot={<CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />}
       activeDot={

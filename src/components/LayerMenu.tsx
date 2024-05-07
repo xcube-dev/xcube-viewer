@@ -2,7 +2,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 
-import { getLayerLabel, LayerDefinition } from "@/model/layerDefinition";
+import { getLayerTitle, LayerDefinition } from "@/model/layerDefinition";
 
 interface LayerMenuProps {
   anchorElement: Element | null;
@@ -36,7 +36,7 @@ const LayerMenu = ({
             }
             dense
           >
-            <ListItemText primary={getLayerLabel(layer)} />
+            <ListItemText primary={getLayerTitle(layer)} />
           </MenuItem>
         ))}
     </Menu>

@@ -76,6 +76,7 @@ export interface LayerVisibilities {
   baseMap?: boolean;
   datasetRgb?: boolean;
   datasetVariable?: boolean;
+  datasetVariable2?: boolean;
   datasetBoundary?: boolean;
   datasetPlaces?: boolean;
   userPlaces?: boolean;
@@ -98,6 +99,8 @@ export type VolumeStates = { [volumeId: string]: VolumeState };
 export interface ControlState {
   selectedDatasetId: string | null;
   selectedVariableName: string | null;
+  selectedDataset2Id: string | null;
+  selectedVariable2Name: string | null;
   selectedPlaceGroupIds: string[] | null;
   selectedPlaceId: string | null;
   selectedUserPlaceId: string | null;
@@ -130,6 +133,8 @@ export interface ControlState {
   mapProjection: string;
   imageSmoothingEnabled: boolean;
   layerVisibilities: LayerVisibilities;
+  variableCompareMode: boolean;
+  variableSplitPos?: number;
   selectedBaseMapId: string | null;
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
@@ -150,6 +155,8 @@ export function newControlState(): ControlState {
   const state: ControlState = {
     selectedDatasetId: null,
     selectedVariableName: null,
+    selectedDataset2Id: null,
+    selectedVariable2Name: null,
     selectedPlaceGroupIds: [],
     selectedPlaceId: null,
     selectedUserPlaceId: null,
@@ -176,18 +183,20 @@ export function newControlState(): ControlState {
     locale: "en",
     dialogOpen: {},
     privacyNoticeAccepted: false,
-    mapInteraction: "Point",
-    lastMapInteraction: "Point",
+    mapInteraction: "Select",
+    lastMapInteraction: "Select",
     layerVisibilities: {
       baseMap: true,
       datasetRgb: false,
       datasetVariable: true,
+      datasetVariable2: true,
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
       overlay: true,
     },
-    datasetLocateMode: "pan",
+    variableCompareMode: false,
+    datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
     volumeCardOpen: false,
     volumeRenderMode: "mip",
@@ -215,7 +224,8 @@ export function newControlState(): ControlState {
   return loadUserSettings(state);
 }
 
-// We cannot keep "MAP_OBJECTS" in control state object, because these objects are (1) not serializable
-// and (2) logging actions will cause the browsers to crash
+// We cannot keep "MAP_OBJECTS" in control state object, because these
+// objects are (1) not serializable and (2) logging actions will cause
+// the browsers to crash
 
 export const MAP_OBJECTS: { [id: string]: OlBaseObject } = {};

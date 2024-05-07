@@ -22,27 +22,14 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import Check from "@mui/icons-material/Check";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-
 import i18n from "@/i18n";
 import { LayerVisibilities } from "@/states/controlState";
-
-const layerLabels: Record<keyof LayerVisibilities, string> = {
-  baseMap: "Base Map",
-  datasetRgb: "Dataset RGB",
-  datasetVariable: "Dataset Variable",
-  datasetBoundary: "Dataset Boundary",
-  datasetPlaces: "Dataset Places",
-  userPlaces: "User Places",
-  overlay: "Overlay",
-};
+import SelectableMenuItem from "@/components/SelectableMenuItem";
 
 interface LayerSelectItemProps {
   layerId: keyof LayerVisibilities;
+  layerTitles: Record<keyof LayerVisibilities, string>;
+  layerSubtitles: Record<keyof LayerVisibilities, string>;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
@@ -50,28 +37,20 @@ interface LayerSelectItemProps {
   ) => void;
 }
 
-const LayerSelectItem: React.FC<LayerSelectItemProps> = ({
+export default function LayerSelectItem({
   layerId,
+  layerTitles,
+  layerSubtitles,
   layerVisibilities,
   setLayerVisibility,
-}) => {
-  const visible = layerVisibilities[layerId];
-  const label = i18n.get(layerLabels[layerId]);
-
-  const handleClick = () => setLayerVisibility(layerId, !visible);
-
-  return visible ? (
-    <MenuItem onClick={handleClick}>
-      <ListItemIcon>
-        <Check />
-      </ListItemIcon>
-      {label}
-    </MenuItem>
-  ) : (
-    <MenuItem onClick={handleClick}>
-      <ListItemText inset>{label}</ListItemText>
-    </MenuItem>
+}: LayerSelectItemProps) {
+  const visible = !!layerVisibilities[layerId];
+  return (
+    <SelectableMenuItem
+      title={i18n.get(layerTitles[layerId])}
+      subtitle={layerSubtitles[layerId]}
+      selected={visible}
+      onClick={() => setLayerVisibility(layerId, !visible)}
+    />
   );
-};
-
-export default LayerSelectItem;
+}
