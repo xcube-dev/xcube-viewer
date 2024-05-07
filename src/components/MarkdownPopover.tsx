@@ -22,20 +22,39 @@
  * SOFTWARE.
  */
 
-import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
+import Popover from "@mui/material/Popover";
+import Paper from "@mui/material/Paper";
 
-export default function useFetchText(markdownUrl: string | null | undefined) {
-  const [markdownText, setMarkdownText] = useState<string | undefined>();
+interface MarkdownPopoverProps {
+  anchorEl: HTMLElement | null;
+  open: boolean;
+  onClose?: () => void;
+  markdownText?: string;
+}
 
-  useEffect(() => {
-    if (!markdownUrl) {
-      setMarkdownText(undefined);
-    } else {
-      fetch(markdownUrl)
-        .then((response) => response.text())
-        .then((text) => setMarkdownText(text));
-    }
-  }, [markdownUrl]);
+export default function MarkdownPopover({
+  anchorEl,
+  markdownText,
+  open,
+  onClose,
+}: MarkdownPopoverProps) {
+  if (!markdownText) {
+    return null;
+  }
 
-  return markdownText;
+  return (
+    <Popover anchorEl={anchorEl} open={open} onClose={onClose}>
+      <Paper
+        sx={{
+          width: "32em",
+          overflowY: "auto",
+          fontSize: "smaller",
+          padding: 2,
+        }}
+      >
+        <Markdown children={markdownText} linkTarget="_blank" />
+      </Paper>
+    </Popover>
+  );
 }
