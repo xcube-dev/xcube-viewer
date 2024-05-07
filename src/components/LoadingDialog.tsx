@@ -22,62 +22,49 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import { Theme, styled } from "@mui/system";
 import Typography from "@mui/material/Typography";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    progress: {
-      margin: theme.spacing(2),
-    },
-    message: {
-      margin: theme.spacing(1),
-    },
-    contentContainer: {
-      margin: theme.spacing(1),
-      textAlign: "center",
-      display: "flex",
-      alignItems: "center",
-      flexDirection: "column",
-    },
-  });
+const StyledProgress = styled(CircularProgress)(
+  ({ theme }: { theme: Theme }) => ({
+    margin: theme.spacing(2),
+  }),
+);
+const StyledMessage = styled(Typography)(({ theme }: { theme: Theme }) => ({
+  margin: theme.spacing(1),
+}));
 
-interface LoadingDialogProps extends WithStyles<typeof styles>, WithLocale {
+const StyledContainerDiv = styled("div")(({ theme }: { theme: Theme }) => ({
+  margin: theme.spacing(1),
+  textAlign: "center",
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+}));
+
+interface LoadingDialogProps extends WithLocale {
   messages: string[];
 }
 
-const _LoadingDialog: React.FC<LoadingDialogProps> = ({
-  classes,
-  messages,
-}) => {
+export default function LoadingDialog({ messages }: LoadingDialogProps) {
   if (messages.length === 0) {
     return null;
   }
-
   return (
     <Dialog open={true} aria-labelledby="loading">
       <DialogTitle id="loading">{i18n.get("Please wait...")}</DialogTitle>
-      <div className={classes.contentContainer}>
-        <CircularProgress className={classes.progress} />
+      <StyledContainerDiv>
+        <StyledProgress />
         {messages.map((message, i) => (
-          <Typography component="div" key={i} className={classes.message}>
-            {message}
-          </Typography>
+          <StyledMessage key={i}>{message}</StyledMessage>
         ))}
-      </div>
+      </StyledContainerDiv>
     </Dialog>
   );
-};
-
-const LoadingDialog = withStyles(styles)(_LoadingDialog);
-export default LoadingDialog;
+}

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import { Theme, styled } from "@mui/system";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
@@ -42,11 +41,13 @@ import { LayerVisibilities } from "@/states/controlState";
 import LayerSelect from "./LayerSelect";
 
 // noinspection JSUnusedLocalSymbols
-const StyledForm = styled(FormControl)(({ theme }: { theme: Theme }) => ({
-  marginTop: theme.spacing(2),
-  marginRight: theme.spacing(1),
-  marginLeft: "auto",
-}));
+const StyledFormControl = styled(FormControl)(
+  ({ theme }: { theme: Theme }) => ({
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    marginLeft: "auto",
+  }),
+);
 
 interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
@@ -70,7 +71,7 @@ interface ControlBarActionsProps extends WithLocale {
   setVariableCompareMode: (selected: boolean) => void;
 }
 
-const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
+export default function ControlBarActions({
   locale,
   visible,
   volumeCardOpen,
@@ -88,7 +89,7 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   setLayerVisibility,
   variableCompareMode,
   setVariableCompareMode,
-}) => {
+}: ControlBarActionsProps) {
   if (!visible) {
     return null;
   }
@@ -171,7 +172,7 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   }
 
   return (
-    <StyledForm variant="standard">
+    <StyledFormControl variant="standard">
       <Box>
         {refreshButton}
         {layerSelect}
@@ -180,8 +181,6 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
         {infoButton}
         {settingsButton}
       </Box>
-    </StyledForm>
+    </StyledFormControl>
   );
-};
-
-export default _ControlBarActions;
+}

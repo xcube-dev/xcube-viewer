@@ -22,12 +22,8 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import classNames from "classnames";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import { Theme, styled } from "@mui/system";
+import { SxProps } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import { SnackbarOrigin } from "@mui/material/Snackbar/Snackbar";
 import SnackbarContent from "@mui/material/SnackbarContent";
@@ -48,41 +44,46 @@ const variantIcon = {
   info: InfoIcon,
 };
 
-const styles = (theme: Theme) =>
-  createStyles({
-    close: {
-      padding: theme.spacing(0.5),
-    },
-    success: {
-      color: theme.palette.error.contrastText,
-      backgroundColor: green[600],
-    },
-    error: {
-      color: theme.palette.error.contrastText,
-      backgroundColor: theme.palette.error.dark,
-    },
-    info: {
-      color: theme.palette.error.contrastText,
-      backgroundColor: theme.palette.primary.dark,
-    },
-    warning: {
-      color: theme.palette.error.contrastText,
-      backgroundColor: amber[700],
-    },
-    icon: {
-      fontSize: 20,
-    },
-    iconVariant: {
-      opacity: 0.9,
-      marginRight: theme.spacing(1),
-    },
-    message: {
-      display: "flex",
-      alignItems: "center",
-    },
-  });
+const StyledSpan = styled("span")(() => ({
+  display: "flex",
+  alignItems: "center",
+}));
 
-interface MessageLogProps extends WithStyles<typeof styles> {
+const styles: Record<string, SxProps<Theme>> = {
+  close: {
+    p: 0.5,
+  },
+  success: (theme: Theme) => ({
+    color: theme.palette.error.contrastText,
+    backgroundColor: green[600],
+  }),
+  error: (theme: Theme) => ({
+    color: theme.palette.error.contrastText,
+    backgroundColor: theme.palette.error.dark,
+  }),
+  info: (theme: Theme) => ({
+    color: theme.palette.error.contrastText,
+    backgroundColor: theme.palette.primary.dark,
+  }),
+  warning: (theme: Theme) => ({
+    color: theme.palette.error.contrastText,
+    backgroundColor: amber[700],
+  }),
+  icon: {
+    fontSize: 20,
+  },
+  iconVariant: (theme: Theme) => ({
+    opacity: 0.9,
+    marginRight: theme.spacing(1),
+    fontSize: 20,
+  }),
+  message: {
+    display: "flex",
+    alignItems: "center",
+  },
+};
+
+interface MessageLogProps {
   message: MessageLogEntry | null;
   hideMessage: (messageId: number) => void;
   className?: string;
@@ -93,12 +94,11 @@ const SNACKBAR_ANCHOR_ORIGIN: SnackbarOrigin = {
   horizontal: "center",
 };
 
-const _MessageLog: React.FC<MessageLogProps> = ({
-  classes,
+export default function MessageLog({
   className,
   message,
   hideMessage,
-}) => {
+}: MessageLogProps) {
   const handleClose = () => {
     hideMessage(message!.id);
   };
@@ -118,32 +118,28 @@ const _MessageLog: React.FC<MessageLogProps> = ({
       onClose={handleClose}
     >
       <SnackbarContent
-        className={classNames(classes[message.type], className)}
+        sx={styles[message.type]}
+        className={className}
         aria-describedby="client-snackbar"
         message={
-          <span id="client-snackbar" className={classes.message}>
-            <MessageIcon
-              className={classNames(classes.icon, classes.iconVariant)}
-            />
+          <StyledSpan id="client-snackbar">
+            <MessageIcon sx={styles.iconVariant} />
             {message.text}
-          </span>
+          </StyledSpan>
         }
         action={[
           <IconButton
             key="close"
             aria-label="Close"
             color="inherit"
-            className={classes.close}
+            sx={styles.close}
             onClick={handleClose}
             size="large"
           >
-            <CloseIcon className={classes.icon} />
+            <CloseIcon sx={styles.icon} />
           </IconButton>,
         ]}
       />
     </Snackbar>
   );
-};
-
-const MessageLog = withStyles(styles)(_MessageLog);
-export default MessageLog;
+}

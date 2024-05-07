@@ -39,11 +39,11 @@ interface ControlBarItemProps extends WithLocale {
   actions?: React.ReactNode | null;
 }
 
-const ControlBarItem: React.FC<ControlBarItemProps> = ({
+export default function ControlBarItem({
   label,
   control,
   actions,
-}) => {
+}: ControlBarItemProps) {
   return (
     <StyledForm variant="standard">
       <Box>
@@ -53,6 +53,4 @@ const ControlBarItem: React.FC<ControlBarItemProps> = ({
       </Box>
     </StyledForm>
   );
-};
-
-export default ControlBarItem;
+}
