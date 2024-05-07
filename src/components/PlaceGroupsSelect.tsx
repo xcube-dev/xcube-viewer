@@ -36,7 +36,7 @@ import { WithLocale } from "@/util/lang";
 import { PlaceGroup, USER_ID_PREFIX } from "@/model/place";
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
-import { SxProps, Theme, minWidth } from "@mui/system";
+import { SxProps } from "@mui/system";
 
 // noinspection JSUnusedLocalSymbols
 const styles: Record<string, SxProps> = {
