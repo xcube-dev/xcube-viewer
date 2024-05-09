@@ -33,7 +33,10 @@ export default function useFetchText(markdownUrl: string | null | undefined) {
     } else {
       fetch(markdownUrl)
         .then((response) => response.text())
-        .then((text) => setMarkdownText(text));
+        .then((text) => setMarkdownText(text))
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [markdownUrl]);
 

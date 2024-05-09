@@ -109,6 +109,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
         onDone={handleUserLayerChange}
         onCancel={onCancel}
         doneDisabled={!canCommit()}
+        helpUrl={"docs/add-xyz-layer.en.md"}
       />
     </Box>
   );

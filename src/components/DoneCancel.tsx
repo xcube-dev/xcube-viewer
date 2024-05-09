@@ -71,19 +71,25 @@ export default function DoneCancel({
 
   return (
     <Box sx={styles.container}>
-      {helpText && (
-        <>
-          <IconButton onClick={handleHelpOpen} size={size} ref={helpButtonRef}>
-            <HelpOutlineIcon fontSize="inherit" />
-          </IconButton>
-          <MarkdownPopover
-            anchorEl={helpAnchorEl}
-            open={!!helpAnchorEl}
-            onClose={handleHelpClose}
-            markdownText={helpText}
-          />
-        </>
-      )}
+      <Box>
+        {helpText && (
+          <>
+            <IconButton
+              onClick={handleHelpOpen}
+              size={size}
+              ref={helpButtonRef}
+            >
+              <HelpOutlineIcon fontSize="inherit" />
+            </IconButton>
+            <MarkdownPopover
+              anchorEl={helpAnchorEl}
+              open={!!helpAnchorEl}
+              onClose={handleHelpClose}
+              markdownText={helpText}
+            />
+          </>
+        )}
+      </Box>
 
       <Box sx={styles.doneCancel}>
         <IconButton

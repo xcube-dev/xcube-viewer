@@ -43,6 +43,13 @@ export default function MarkdownPopover({
     return null;
   }
 
+  const components = {
+    code: (props: Record<string, unknown>) => {
+      const { node: _, ...rest } = props;
+      return <code {...rest} style={{ color: "green" }} />;
+    },
+  };
+
   return (
     <Popover anchorEl={anchorEl} open={open} onClose={onClose}>
       <Paper
@@ -53,7 +60,11 @@ export default function MarkdownPopover({
           padding: 2,
         }}
       >
-        <Markdown children={markdownText} linkTarget="_blank" />
+        <Markdown
+          children={markdownText}
+          components={components}
+          linkTarget="_blank"
+        />
       </Paper>
     </Popover>
   );

@@ -180,12 +180,14 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
           if (editedLayer && editedLayer.editId === userLayer.id) {
             return userLayer.wms ? (
               <UserLayerEditorWms
+                key={userLayer.id}
                 userLayer={userLayer}
                 onChange={handleUserLayerChange}
                 onCancel={handleEditorCanceled}
               />
             ) : (
               <UserLayerEditorXyz
+                key={userLayer.id}
                 userLayer={userLayer}
                 onChange={handleUserLayerChange}
                 onCancel={handleEditorCanceled}
