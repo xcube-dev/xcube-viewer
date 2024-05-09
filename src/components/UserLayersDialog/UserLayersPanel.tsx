@@ -46,6 +46,7 @@ import { newId } from "@/util/id";
 import { LayerDefinition } from "@/model/layerDefinition";
 import UserLayerEditorWms from "./UserLayerEditorWms";
 import UserLayerEditorWts from "./UserLayerEditorWts";
+import useUndo from "@/hooks/useUndo";
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -79,6 +80,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   const [editedLayer, setEditedLayer] = React.useState<EditedLayer | null>(
     null,
   );
+  const [undo, setUndo] = useUndo();
 
   const classes = useStyles();
 
@@ -87,6 +89,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   }
 
   const handleUserLayerEdit = (userLayer: LayerDefinition) => {
+    setUndo(() => setUserLayers(userLayers));
     setEditedLayer({
       editId: userLayer.id,
       editMode: "edit",
@@ -94,6 +97,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   };
 
   const handleUserLayerCopy = (userLayer: LayerDefinition) => {
+    setUndo(undefined);
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     setUserLayers([
       ...userLayers.slice(0, index + 1),
@@ -107,6 +111,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   };
 
   const handleUserLayerRemove = (userLayer: LayerDefinition) => {
+    setUndo(undefined);
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     if (userLayer.id === selectedId) {
       setSelectedId(selectedDefaultId);
@@ -121,6 +126,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   };
 
   const addUserLayer = (layerType: "wms" | "wts") => {
+    setUndo(() => setUserLayers(userLayers));
     const id = newId("user-layer-");
     setUserLayers([
       ...userLayers,
@@ -159,6 +165,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   };
 
   const handleEditorCanceled = () => {
+    undo();
     if (editedLayer && editedLayer.editMode === "add") {
       const index = userLayers.findIndex(
         (layer) => layer.id === editedLayer.editId,

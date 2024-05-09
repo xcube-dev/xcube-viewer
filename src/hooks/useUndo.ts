@@ -28,7 +28,7 @@ type Undo = () => void;
 type UndoSetter = (undo: Undo | undefined) => void;
 
 export default function useUndo(): [Undo, UndoSetter] {
-  const undoRef = useRef<() => void>();
+  const undoRef = useRef<Undo>();
   const undo = useRef(() => {
     if (undoRef.current) {
       undoRef.current();
