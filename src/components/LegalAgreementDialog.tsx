@@ -60,7 +60,7 @@ export default function LegalAgreementDialog({
   const [markdownText, setMarkdownText] = useState<string | null>(null);
 
   useEffect(() => {
-    const href = i18n.get("legal/privacy-note.en.md");
+    const href = i18n.get("docs/privacy-note.en.md");
     // fetch(window.location.href + href)
     fetch(href)
       .then((response) => response.text())

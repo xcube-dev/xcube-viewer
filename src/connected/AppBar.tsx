@@ -218,7 +218,7 @@ const _AppBar: React.FC<AppBarProps> = ({
       </Toolbar>
       <MarkdownPage
         title={i18n.get("Imprint")}
-        href="imprint.md"
+        href="docs/imprint.md"
         open={imprintOpen}
         onClose={handleCloseImprint}
       />

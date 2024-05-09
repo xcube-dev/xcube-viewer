@@ -721,9 +721,9 @@
       "se": "Sekretessmeddelande"
     },
     {
-      "en": "legal/privacy-note.en.md",
-      "de": "legal/privacy-note.de.md",
-      "se": "legal/privacy-note.se.md"
+      "en": "docs/privacy-note.en.md",
+      "de": "docs/privacy-note.de.md",
+      "se": "docs/privacy-note.se.md"
     }
   ]
 }
