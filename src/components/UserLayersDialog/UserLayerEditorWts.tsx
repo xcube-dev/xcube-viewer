@@ -29,13 +29,13 @@ import TextField from "@mui/material/TextField";
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import DoneCancel from "@/components/DoneCancel";
 
-interface UserLayerEditorXyzProps {
+interface UserLayerEditorWtsProps {
   userLayer: LayerDefinition;
   onChange: (userLayer: LayerDefinition) => void;
   onCancel: () => void;
 }
 
-const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
+const UserLayerEditorWts: React.FC<UserLayerEditorWtsProps> = ({
   userLayer,
   onChange,
   onCancel,
@@ -79,7 +79,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
     >
       <TextField
         required
-        label="XYZ URL"
+        label="WTS Layer URL"
         variant="standard"
         size="small"
         value={url}
@@ -89,7 +89,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
       <Box sx={{ display: "flex", gap: 1 }}>
         <TextField
           required
-          label="Name"
+          label="Layer Title"
           variant="standard"
           size="small"
           sx={{ flexGrow: 0.3 }}
@@ -97,7 +97,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
           onChange={(e) => setTitle(e.currentTarget.value)}
         />
         <TextField
-          label="Attribution"
+          label="Layer Attribution"
           variant="standard"
           size="small"
           sx={{ flexGrow: 0.7 }}
@@ -109,10 +109,10 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
         onDone={handleUserLayerChange}
         onCancel={onCancel}
         doneDisabled={!canCommit()}
-        helpUrl={"docs/add-xyz-layer.en.md"}
+        helpUrl={"docs/add-layer-wts.en.md"}
       />
     </Box>
   );
 };
 
-export default UserLayerEditorXyz;
+export default UserLayerEditorWts;

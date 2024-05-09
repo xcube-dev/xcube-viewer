@@ -130,7 +130,7 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
         onDone={handleUserLayerChange}
         onCancel={onCancel}
         doneDisabled={!canCommit()}
-        helpUrl={"docs/add-wms-layer.en.md"}
+        helpUrl={"docs/add-layer-wms.en.md"}
       />
     </Box>
   );
