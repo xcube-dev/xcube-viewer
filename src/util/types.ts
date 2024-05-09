@@ -25,3 +25,9 @@
 export function isNumber(value: unknown): value is number {
   return typeof value === "number";
 }
+
+export function isObject(value: unknown): value is object {
+  return (
+    value !== null && typeof value === "object" && value.constructor === Object
+  );
+}
