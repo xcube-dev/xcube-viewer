@@ -289,7 +289,7 @@ const getVariableColorBar = (
     (userColorBar) => userColorBar.id === baseName,
   );
   let categories: HexColorRecord[] | undefined = undefined;
-  if (userColorBar) {
+  if (userColorBar && userColorBar.categorical) {
     categories = getUserColorBarHexRecords(userColorBar.code);
   }
   return { ...colorBar, imageData, categories };
