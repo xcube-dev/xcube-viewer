@@ -48,7 +48,8 @@ import { TimeAnimationInterval } from "@/states/controlState";
 const styles = (theme: Theme) =>
   createStyles({
     formControl: {
-      marginTop: theme.spacing(1.5),
+      marginTop: theme.spacing(2),
+      marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
   });
