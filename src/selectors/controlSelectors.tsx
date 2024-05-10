@@ -86,10 +86,11 @@ import {
   ColorBar,
   ColorBarGroup,
   ColorBars,
+  HexColorRecord,
   parseColorBar,
 } from "@/model/colorBar";
 import {
-  getUserColorBarColorArray,
+  getUserColorBarHexRecords,
   USER_COLOR_BAR_GROUP_TITLE,
   UserColorBar,
 } from "@/model/userColorBar";
@@ -279,21 +280,32 @@ export const colorBarsSelector = createSelector(
 const getVariableColorBar = (
   colorBarName: string,
   colorBars: ColorBars,
+  userColorBars: UserColorBar[],
 ): ColorBar => {
   const colorBar: ColorBar = parseColorBar(colorBarName);
   const imageData = colorBars.images[colorBar.baseName];
-  return { ...colorBar, imageData };
+  const { baseName } = colorBar;
+  const userColorBar = userColorBars.find(
+    (userColorBar) => userColorBar.id === baseName,
+  );
+  let categories: HexColorRecord[] | undefined = undefined;
+  if (userColorBar) {
+    categories = getUserColorBarHexRecords(userColorBar.code);
+  }
+  return { ...colorBar, imageData, categories };
 };
 
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
   colorBarsSelector,
+  userColorBarsSelector,
   getVariableColorBar,
 );
 
 export const selectedVariable2ColorBarSelector = createSelector(
   selectedVariable2ColorBarNameSelector,
   colorBarsSelector,
+  userColorBarsSelector,
   getVariableColorBar,
 );
 
@@ -307,9 +319,12 @@ const getVariableUserColorBarJson = (
     (userColorBar) => userColorBar.id === baseName,
   );
   if (userColorBar) {
-    const colors = getUserColorBarColorArray(userColorBar.code);
+    const colors = getUserColorBarHexRecords(userColorBar.code);
     if (colors) {
-      return JSON.stringify({ name: colorBarName, colors });
+      return JSON.stringify({
+        name: colorBarName,
+        colors: colors.map((c) => [c.value, c.color]),
+      });
     }
   }
   return null;

@@ -23,9 +23,18 @@
  */
 
 import bgImageData from "./bg.png";
+import { RGBA } from "@/util/color";
 
 const BG_IMAGE = new Image();
 BG_IMAGE.src = bgImageData;
+
+export interface ColorRecord {
+  value: number;
+  color: RGBA;
+  label?: string;
+}
+
+export type HexColorRecord = Omit<ColorRecord, "color"> & { color: string };
 
 export interface ColorBars {
   groups: ColorBarGroup[];
@@ -64,6 +73,10 @@ export interface ColorBar {
    * renderUserColorBarAsBase64() from user color bar code.
    */
   imageData?: string;
+  /**
+   * Defined, if this color bar is a user-defined categorical color bar.
+   */
+  categories?: HexColorRecord[];
 }
 
 export function parseColorBar(name: string): ColorBar {

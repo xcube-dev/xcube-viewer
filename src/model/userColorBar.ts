@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 
-import { parseColor, RGBA, rgbToHex } from "@/util/color";
+import { parseColor, rgbToHex } from "@/util/color";
+import { ColorRecord, HexColorRecord } from "@/model/colorBar";
 
 export const USER_COLOR_BAR_GROUP_TITLE = "User";
 export const USER_COLOR_BAR_CODE_EXAMPLE =
   "0.0: #23FF52\n" + // tie point 1
   "0.5: red\n" + // tie point 2
   "1.0: 120,30,255"; // tie point 3
-
-export type ColorRecord = [number, RGBA];
 
 export interface UserColorBar {
   /**
@@ -63,11 +62,14 @@ export interface UserColorBar {
   errorMessage?: string;
 }
 
-export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
+export function getUserColorBarRgbaArray(
+  records: ColorRecord[],
+  size: number,
+): Uint8ClampedArray {
   const n = records.length;
-  const min = records[0][0];
-  const max = records[n - 1][0];
-  const values = records.map((record) => (record[0] - min) / (max - min));
+  const min = records[0].value;
+  const max = records[n - 1].value;
+  const values = records.map((record) => (record.value - min) / (max - min));
   const rgbaArray = new Uint8ClampedArray(4 * size);
   let recordIndex = 0;
   let v1 = values[0];
@@ -80,8 +82,8 @@ export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
       v2 = values[recordIndex + 1];
     }
     const w = (v - v1) / (v2 - v1);
-    const [r1, g1, b1, a1] = records[recordIndex][1];
-    const [r2, g2, b2, a2] = records[recordIndex + 1][1];
+    const [r1, g1, b1, a1] = records[recordIndex].color;
+    const [r2, g2, b2, a2] = records[recordIndex + 1].color;
     rgbaArray[j] = r1 + w * (r2 - r1);
     rgbaArray[j + 1] = g1 + w * (g2 - g1);
     rgbaArray[j + 2] = b1 + w * (b2 - b1);
@@ -122,10 +124,12 @@ export function renderUserColorBarAsBase64(
   });
 }
 
-export function getUserColorBarColorArray(code: string) {
+export function getUserColorBarHexRecords(
+  code: string,
+): HexColorRecord[] | undefined {
   const { colorRecords } = getUserColorBarColorRecords(code);
   if (colorRecords) {
-    return colorRecords.map(([value, rgba]) => [value, rgbToHex(rgba)]);
+    return colorRecords.map((r) => ({ ...r, color: rgbToHex(r.color) }));
   }
 }
 
@@ -160,19 +164,23 @@ export function parseUserColorBarCode(code: string): ColorRecord[] {
         .map((comp) => comp.trim()),
     )
     .forEach((recordParts, index) => {
-      if (recordParts.length == 2) {
+      if (recordParts.length == 2 || recordParts.length == 3) {
         const [valueText, rgbText] = recordParts;
         const value = parseFloat(valueText);
-        const rgba = parseColor(rgbText);
+        const color = parseColor(rgbText);
         if (!Number.isFinite(value)) {
           throw new SyntaxError(
             `Line ${index + 1}: invalid value: ${valueText}`,
           );
         }
-        if (!rgba) {
+        if (!color) {
           throw new SyntaxError(`Line ${index + 1}: invalid color: ${rgbText}`);
         }
-        points.push([value, rgba]);
+        if (recordParts.length == 3) {
+          points.push({ value, color, label: recordParts[2] });
+        } else {
+          points.push({ value, color });
+        }
       } else if (recordParts.length === 1) {
         if (recordParts[0] !== "") {
           throw new SyntaxError(
@@ -185,9 +193,9 @@ export function parseUserColorBarCode(code: string): ColorRecord[] {
   if (n < 2) {
     throw new SyntaxError(`At least two color records must be given`);
   }
-  points.sort((r1: ColorRecord, r2: ColorRecord) => r1[0] - r2[0]);
-  const v1 = points[0][0];
-  const v2 = points[n - 1][0];
+  points.sort((r1: ColorRecord, r2: ColorRecord) => r1.value - r2.value);
+  const v1 = points[0].value;
+  const v2 = points[n - 1].value;
   if (v1 === v2) {
     throw new SyntaxError(`Values must form a range`);
   }
