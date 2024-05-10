@@ -141,7 +141,6 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       value={"comparison"}
       size="small"
       sx={{ padding: 0.3 }}
-      onSelect={() => {}}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Variable 2 (for comparison)")}>
