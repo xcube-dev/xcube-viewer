@@ -27,13 +27,10 @@ import Popover from "@mui/material/Popover";
 
 import ColorBarCanvas from "./ColorBarCanvas";
 import ColorBarColorEditor from "./ColorBarColorEditor";
-import ColorBarRangeEditor from "./ColorBarRangeEditor";
-import ColorBarLabels from "./ColorBarLabels";
 import { useColorBarLegendStyles, ColorBarLegendProps } from "./common";
 
 export default function ColorBarLegendCategorical({
   variableName,
-  variableUnits,
   variableColorBarMinMax,
   variableColorBarName,
   variableColorBar,
@@ -47,12 +44,9 @@ export default function ColorBarLegendCategorical({
   updateUserColorBars,
   width,
   height,
-  numTicks,
 }: ColorBarLegendProps) {
   const classes = useColorBarLegendStyles();
 
-  const [colorBarRangeEditorAnchor, setColorBarRangeEditorAnchor] =
-    useState<HTMLDivElement | null>(null);
   const [colorBarSelectAnchor, setColorBarSelectAnchor] =
     useState<HTMLCanvasElement | null>(null);
 
@@ -61,16 +55,6 @@ export default function ColorBarLegendCategorical({
   if (!variableName) {
     return null;
   }
-
-  const handleOpenColorBarRangeEditor = (
-    event: React.MouseEvent<HTMLDivElement>,
-  ) => {
-    setColorBarRangeEditorAnchor(event.currentTarget);
-  };
-
-  const handleCloseColorBarRangeEditor = () => {
-    setColorBarRangeEditorAnchor(null);
-  };
 
   const handleOpenColorBarSelect = (
     event: React.MouseEvent<HTMLCanvasElement>,
@@ -82,12 +66,10 @@ export default function ColorBarLegendCategorical({
     setColorBarSelectAnchor(null);
   };
 
-  const variableTitle = `${variableName} (${variableUnits || "-"})`;
-
   return (
     <div className={"ol-control " + classes.container}>
       <div className={classes.title}>
-        <span>{variableTitle}</span>
+        <span>{variableName}</span>
       </div>
       <ColorBarCanvas
         colorBar={variableColorBar}
@@ -96,27 +78,6 @@ export default function ColorBarLegendCategorical({
         height={height}
         onClick={handleOpenColorBarSelect}
       />
-      <ColorBarLabels
-        minValue={variableColorBarMinMax[0]}
-        maxValue={variableColorBarMinMax[1]}
-        numTicks={numTicks || 5}
-        onClick={handleOpenColorBarRangeEditor}
-      />
-      <Popover
-        anchorEl={colorBarRangeEditorAnchor}
-        open={Boolean(colorBarRangeEditorAnchor)}
-        onClose={handleCloseColorBarRangeEditor}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <ColorBarRangeEditor
-          variableTitle={variableTitle}
-          variableColorBarMinMax={variableColorBarMinMax}
-          variableColorBarName={variableColorBarName}
-          variableOpacity={variableOpacity}
-          updateVariableColorBar={updateVariableColorBar}
-        />
-      </Popover>
       <Popover
         anchorEl={colorBarSelectAnchor}
         open={Boolean(colorBarSelectAnchor)}
