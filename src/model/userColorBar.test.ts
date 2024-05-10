@@ -29,13 +29,13 @@ import {
   USER_COLOR_BAR_CODE_EXAMPLE,
 } from "./userColorBar";
 
-describe("Assert that colorBar.getUserColorBarData()", () => {
+describe("Assert that colorBar.getUserColorBarRgbaArray()", () => {
   it("works as expected", () => {
     const data = getUserColorBarRgbaArray(
       [
-        [0.0, [35, 255, 82, 255]],
-        [0.5, [255, 0, 0, 255]],
-        [1.0, [120, 30, 255, 255]],
+        { value: 0.0, color: [35, 255, 82, 255] },
+        { value: 0.5, color: [255, 0, 0, 255] },
+        { value: 1.0, color: [120, 30, 255, 255] },
       ],
       10,
     );
@@ -48,26 +48,38 @@ describe("Assert that colorBar.getUserColorBarData()", () => {
   });
 });
 
-describe("Assert that colorBar.parseUserColorCode()", () => {
+describe("Assert that colorBar.getUserColorBarColorRecords()", () => {
   it("parses the example code as expected", () => {
     expect(getUserColorBarColorRecords(USER_COLOR_BAR_CODE_EXAMPLE)).toEqual({
       colorRecords: [
-        [0.0, [35, 255, 82, 255]],
-        [0.5, [255, 0, 0, 255]],
-        [1.0, [120, 30, 255, 255]],
+        { value: 0.0, color: [35, 255, 82, 255] },
+        { value: 0.5, color: [255, 0, 0, 255] },
+        { value: 1.0, color: [120, 30, 255, 255] },
       ],
     });
   });
 
-  it("parses the non-unique values", () => {
+  it("parses non-unique values", () => {
     expect(
       getUserColorBarColorRecords("0:blue\n1:red\n1:green\n2:blue"),
     ).toEqual({
       colorRecords: [
-        [0, [0, 0, 255, 255]],
-        [1, [255, 0, 0, 255]],
-        [1, [0, 128, 0, 255]],
-        [2, [0, 0, 255, 255]],
+        { value: 0, color: [0, 0, 255, 255] },
+        { value: 1, color: [255, 0, 0, 255] },
+        { value: 1, color: [0, 128, 0, 255] },
+        { value: 2, color: [0, 0, 255, 255] },
+      ],
+    });
+  });
+
+  it("parses categories", () => {
+    expect(
+      getUserColorBarColorRecords("0:blue:cat-1\n1:red:cat-2\n2:blue:cat-3"),
+    ).toEqual({
+      colorRecords: [
+        { value: 0, color: [0, 0, 255, 255], label: "cat-1" },
+        { value: 1, color: [255, 0, 0, 255], label: "cat-2" },
+        { value: 2, color: [0, 0, 255, 255], label: "cat-3" },
       ],
     });
   });
