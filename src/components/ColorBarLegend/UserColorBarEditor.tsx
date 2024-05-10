@@ -24,8 +24,10 @@
 
 import { ChangeEvent } from "react";
 import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 
+import i18n from "@/i18n";
 import {
   USER_COLOR_BAR_CODE_EXAMPLE,
   UserColorBar,
@@ -54,6 +56,13 @@ export default function UserColorBarEditor({
     updateUserColorBar({ ...userColorBar, code: event.currentTarget.value });
   };
 
+  const handleCategoricalChange = () => {
+    updateUserColorBar({
+      ...userColorBar,
+      categorical: !userColorBar.categorical,
+    });
+  };
+
   return (
     <Box>
       <ColorBarItem
@@ -74,6 +83,27 @@ export default function UserColorBarEditor({
         onChange={handleCodeChange}
         color={userColorBar.errorMessage ? "error" : "primary"}
       />
+      <Box
+        component="div"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Checkbox
+          size="small"
+          checked={userColorBar.categorical}
+          onChange={handleCategoricalChange}
+          style={{
+            paddingLeft: 0,
+            paddingRight: 2,
+            paddingTop: 4,
+            paddingBottom: 4,
+          }}
+        />
+        <Box component="span">{i18n.get("Categorical")}</Box>
+      </Box>
       <DoneCancel
         onDone={onDone}
         onCancel={onCancel}

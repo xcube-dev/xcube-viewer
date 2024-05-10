@@ -49,6 +49,10 @@ export interface UserColorBar {
    */
   code: string;
   /**
+   * Whether the color bar is categorical.
+   */
+  categorical?: boolean;
+  /**
    * base64-encoded image/png
    * rendered by renderUserColorBarAsBase64() from code.
    */
