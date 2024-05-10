@@ -65,38 +65,51 @@ export interface UserColorBar {
 export function getUserColorBarRgbaArray(
   records: ColorRecord[],
   size: number,
+  categorical?: boolean,
 ): Uint8ClampedArray {
-  const n = records.length;
-  const min = records[0].value;
-  const max = records[n - 1].value;
-  const values = records.map((record) => (record.value - min) / (max - min));
   const rgbaArray = new Uint8ClampedArray(4 * size);
-  let recordIndex = 0;
-  let v1 = values[0];
-  let v2 = values[1];
-  for (let i = 0, j = 0; i < size; i++, j += 4) {
-    const v = i / (size - 1);
-    if (v > v2) {
-      recordIndex++;
-      v1 = values[recordIndex];
-      v2 = values[recordIndex + 1];
+  const n = records.length;
+  if (categorical) {
+    for (let i = 0, j = 0; i < size; i++, j += 4) {
+      const recordIndex = Math.floor((n * i) / size);
+      const [r, g, b, a] = records[recordIndex].color;
+      rgbaArray[j] = r;
+      rgbaArray[j + 1] = g;
+      rgbaArray[j + 2] = b;
+      rgbaArray[j + 3] = a;
     }
-    const w = (v - v1) / (v2 - v1);
-    const [r1, g1, b1, a1] = records[recordIndex].color;
-    const [r2, g2, b2, a2] = records[recordIndex + 1].color;
-    rgbaArray[j] = r1 + w * (r2 - r1);
-    rgbaArray[j + 1] = g1 + w * (g2 - g1);
-    rgbaArray[j + 2] = b1 + w * (b2 - b1);
-    rgbaArray[j + 3] = a1 + w * (a2 - a1);
+  } else {
+    const min = records[0].value;
+    const max = records[n - 1].value;
+    const values = records.map((record) => (record.value - min) / (max - min));
+    let recordIndex = 0;
+    let v1 = values[0];
+    let v2 = values[1];
+    for (let i = 0, j = 0; i < size; i++, j += 4) {
+      const v = i / (size - 1);
+      if (v > v2) {
+        recordIndex++;
+        v1 = values[recordIndex];
+        v2 = values[recordIndex + 1];
+      }
+      const w = categorical ? 0 : (v - v1) / (v2 - v1);
+      const [r1, g1, b1, a1] = records[recordIndex].color;
+      const [r2, g2, b2, a2] = records[recordIndex + 1].color;
+      rgbaArray[j] = r1 + w * (r2 - r1);
+      rgbaArray[j + 1] = g1 + w * (g2 - g1);
+      rgbaArray[j + 2] = b1 + w * (b2 - b1);
+      rgbaArray[j + 3] = a1 + w * (a2 - a1);
+    }
   }
   return rgbaArray;
 }
 
 export function renderUserColorBar(
   records: ColorRecord[],
+  categorical: boolean,
   canvas: HTMLCanvasElement,
 ): Promise<void> {
-  const data = getUserColorBarRgbaArray(records, canvas.width);
+  const data = getUserColorBarRgbaArray(records, canvas.width, categorical);
   const imageData = new ImageData(data, data.length / 4, 1);
   return createImageBitmap(imageData).then((bitMap) => {
     const ctx = canvas.getContext("2d");
@@ -118,10 +131,12 @@ export function renderUserColorBarAsBase64(
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 1;
-  return renderUserColorBar(colorRecords, canvas).then(() => {
-    const dataURL = canvas.toDataURL("image/png");
-    return { imageData: dataURL.split(",")[1] };
-  });
+  return renderUserColorBar(colorRecords, !!colorBar.categorical, canvas).then(
+    () => {
+      const dataURL = canvas.toDataURL("image/png");
+      return { imageData: dataURL.split(",")[1] };
+    },
+  );
 }
 
 export function getUserColorBarHexRecords(
