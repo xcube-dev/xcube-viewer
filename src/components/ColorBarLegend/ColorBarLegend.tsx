@@ -22,18 +22,61 @@
  * SOFTWARE.
  */
 
-import { useRef, useState } from "react";
+import { MouseEvent, useRef, useState } from "react";
 import Popover from "@mui/material/Popover";
 
-import { ColorBarLegendProps, useColorBarLegendStyles } from "./common";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
 import ColorBarLegendContinuous from "./ColorBarLegendContinuous";
 import ColorBarColorEditor from "./ColorBarColorEditor";
+import { ColorBar, ColorBars } from "@/model/colorBar";
+import { UserColorBar } from "@/model/userColorBar";
+import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "@mui/material";
+
+const useStyles = makeStyles((theme: Theme) => ({
+  title: {
+    fontSize: "small",
+    fontWeight: "bold",
+    width: "100%",
+    display: "flex",
+    flexWrap: "nowrap",
+    justifyContent: "center",
+    paddingBottom: theme.spacing(0.5),
+  },
+  container: {
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(1.5),
+    paddingBottom: theme.spacing(0.5),
+    paddingTop: theme.spacing(0.5),
+    color: "black",
+  },
+}));
+
+interface ColorBarLegendProps {
+  variableName: string | null;
+  variableUnits: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarName: string;
+  variableColorBar: ColorBar;
+  variableOpacity: number;
+  updateVariableColorBar: (
+    colorBarMinMax: [number, number],
+    colorBarName: string,
+    opacity: number,
+  ) => void;
+  colorBars: ColorBars;
+  userColorBars: UserColorBar[];
+  addUserColorBar: (userColorBarId: string) => void;
+  removeUserColorBar: (userColorBarId: string) => void;
+  updateUserColorBar: (userColorBar: UserColorBar) => void;
+  updateUserColorBars: (userColorBars: UserColorBar[]) => void;
+  onOpenColorBarEditor: (event: MouseEvent<HTMLCanvasElement>) => void;
+}
 
 export default function ColorBarLegend(
   props: Omit<ColorBarLegendProps, "onOpenColorBarEditor">,
 ) {
-  const classes = useColorBarLegendStyles();
+  const classes = useStyles();
 
   const { variableName, variableUnits, variableColorBar } = props;
 
@@ -51,25 +94,31 @@ export default function ColorBarLegend(
     setColorBarSelectAnchorEl(null);
   };
 
+  if (!variableName) {
+    return null;
+  }
+
+  const variableTitle = variableColorBar.categories
+    ? variableName
+    : `${variableName} (${variableUnits || "-"})`;
+
   return (
     <div
       className={"ol-control " + classes.container}
       ref={colorBarSelectAnchorRef}
     >
       <div className={classes.title}>
-        <span>
-          {variableColorBar.categories
-            ? variableName
-            : `${variableName} (${variableUnits || "-"})`}
-        </span>
+        <span>{variableTitle}</span>
       </div>
       {variableColorBar.categories ? (
         <ColorBarLegendCategorical
+          variableColorBarCategories={variableColorBar.categories}
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />
       ) : (
         <ColorBarLegendContinuous
+          variableTitle={variableName}
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />

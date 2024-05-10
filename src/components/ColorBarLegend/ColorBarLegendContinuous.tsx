@@ -22,39 +22,43 @@
  * SOFTWARE.
  */
 
-import React, { useState } from "react";
+import { MouseEvent, useState } from "react";
 import Popover from "@mui/material/Popover";
 
 import ColorBarCanvas from "./ColorBarCanvas";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";
 import ColorBarLabels from "./ColorBarLabels";
-import { ColorBarLegendProps } from "./common";
+import { ColorBar } from "@/model/colorBar";
+
+export interface ColorBarLegendContinuousProps {
+  variableTitle: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarName: string;
+  variableColorBar: ColorBar;
+  variableOpacity: number;
+  updateVariableColorBar: (
+    colorBarMinMax: [number, number],
+    colorBarName: string,
+    opacity: number,
+  ) => void;
+  onOpenColorBarEditor: () => void;
+}
 
 export default function ColorBarLegendContinuous({
-  variableName,
-  variableUnits,
+  variableTitle,
   variableColorBarMinMax,
   variableColorBarName,
   variableColorBar,
   variableOpacity,
   updateVariableColorBar,
-  width,
-  height,
-  numTicks,
   onOpenColorBarEditor,
-}: ColorBarLegendProps) {
+}: ColorBarLegendContinuousProps) {
   const [colorBarRangeEditorAnchorEl, setColorBarRangeEditorAnchorEl] =
     useState<HTMLDivElement | null>(null);
 
   console.log("ColorBarLegendContinuous", variableColorBar);
 
-  if (!variableName) {
-    return null;
-  }
-
-  const handleOpenColorBarRangeEditor = (
-    event: React.MouseEvent<HTMLDivElement>,
-  ) => {
+  const handleOpenColorBarRangeEditor = (event: MouseEvent<HTMLDivElement>) => {
     setColorBarRangeEditorAnchorEl(event.currentTarget);
   };
 
@@ -62,21 +66,17 @@ export default function ColorBarLegendContinuous({
     setColorBarRangeEditorAnchorEl(null);
   };
 
-  const variableTitle = `${variableName} (${variableUnits || "-"})`;
-
   return (
     <>
       <ColorBarCanvas
         colorBar={variableColorBar}
         opacity={variableOpacity}
-        width={width}
-        height={height}
         onClick={onOpenColorBarEditor}
       />
       <ColorBarLabels
         minValue={variableColorBarMinMax[0]}
         maxValue={variableColorBarMinMax[1]}
-        numTicks={numTicks || 5}
+        numTicks={5}
         onClick={handleOpenColorBarRangeEditor}
       />
       <Popover

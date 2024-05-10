@@ -22,30 +22,45 @@
  * SOFTWARE.
  */
 
-import ColorBarCanvas from "./ColorBarCanvas";
-import { ColorBarLegendProps } from "./common";
+import Box from "@mui/material/Box";
+
+import { HexColorRecord } from "@/model/colorBar";
+import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
+
+export interface ColorBarLegendCategoricalProps {
+  variableColorBarCategories: HexColorRecord[];
+  onOpenColorBarEditor: () => void;
+}
 
 export default function ColorBarLegendCategorical({
-  variableName,
-  variableColorBar,
-  variableOpacity,
-  width,
-  height,
+  variableColorBarCategories,
   onOpenColorBarEditor,
-}: ColorBarLegendProps) {
-  console.log("ColorBarLegendCategorical: ", variableColorBar);
-
-  if (!variableName) {
-    return null;
-  }
-
+}: ColorBarLegendCategoricalProps) {
   return (
-    <ColorBarCanvas
-      colorBar={variableColorBar}
-      opacity={variableOpacity}
-      width={width}
-      height={height}
-      onClick={onOpenColorBarEditor}
-    />
+    <Box sx={{ width: COLOR_BAR_ITEM_WIDTH }}>
+      {variableColorBarCategories.map((category, index) => (
+        <Box
+          key={index}
+          onClick={onOpenColorBarEditor}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Box
+            sx={{
+              width: "48px",
+              height: "16px",
+              backgroundColor: category.color,
+            }}
+          />
+          <Box
+            component="span"
+            sx={{ paddingLeft: 1, fontSize: "small" }}
+          >{`${category.label || `Category ${index + 1}`} (${category.value})`}</Box>
+        </Box>
+      ))}
+    </Box>
   );
 }
