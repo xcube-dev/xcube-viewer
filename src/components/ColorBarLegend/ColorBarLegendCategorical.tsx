@@ -22,83 +22,30 @@
  * SOFTWARE.
  */
 
-import React, { useState } from "react";
-import Popover from "@mui/material/Popover";
-
 import ColorBarCanvas from "./ColorBarCanvas";
-import ColorBarColorEditor from "./ColorBarColorEditor";
-import { useColorBarLegendStyles, ColorBarLegendProps } from "./common";
+import { ColorBarLegendProps } from "./common";
 
 export default function ColorBarLegendCategorical({
   variableName,
-  variableColorBarMinMax,
-  variableColorBarName,
   variableColorBar,
   variableOpacity,
-  updateVariableColorBar,
-  colorBars,
-  userColorBars,
-  addUserColorBar,
-  removeUserColorBar,
-  updateUserColorBar,
-  updateUserColorBars,
   width,
   height,
+  onOpenColorBarEditor,
 }: ColorBarLegendProps) {
-  const classes = useColorBarLegendStyles();
-
-  const [colorBarSelectAnchor, setColorBarSelectAnchor] =
-    useState<HTMLCanvasElement | null>(null);
-
   console.log("ColorBarLegendCategorical: ", variableColorBar);
 
   if (!variableName) {
     return null;
   }
 
-  const handleOpenColorBarSelect = (
-    event: React.MouseEvent<HTMLCanvasElement>,
-  ) => {
-    setColorBarSelectAnchor(event.currentTarget);
-  };
-
-  const handleCloseColorBarSelect = () => {
-    setColorBarSelectAnchor(null);
-  };
-
   return (
-    <div className={"ol-control " + classes.container}>
-      <div className={classes.title}>
-        <span>{variableName}</span>
-      </div>
-      <ColorBarCanvas
-        colorBar={variableColorBar}
-        opacity={variableOpacity}
-        width={width}
-        height={height}
-        onClick={handleOpenColorBarSelect}
-      />
-      <Popover
-        anchorEl={colorBarSelectAnchor}
-        open={Boolean(colorBarSelectAnchor)}
-        onClose={handleCloseColorBarSelect}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
-      >
-        <ColorBarColorEditor
-          variableColorBarMinMax={variableColorBarMinMax}
-          variableColorBarName={variableColorBarName}
-          variableColorBar={variableColorBar}
-          variableOpacity={variableOpacity}
-          updateVariableColorBar={updateVariableColorBar}
-          colorBars={colorBars}
-          userColorBars={userColorBars}
-          addUserColorBar={addUserColorBar}
-          removeUserColorBar={removeUserColorBar}
-          updateUserColorBar={updateUserColorBar}
-          updateUserColorBars={updateUserColorBars}
-        />
-      </Popover>
-    </div>
+    <ColorBarCanvas
+      colorBar={variableColorBar}
+      opacity={variableOpacity}
+      width={width}
+      height={height}
+      onClick={onOpenColorBarEditor}
+    />
   );
 }

@@ -22,14 +22,67 @@
  * SOFTWARE.
  */
 
-import { ColorBarLegendProps } from "./common";
+import { useRef, useState } from "react";
+import Popover from "@mui/material/Popover";
+
+import { ColorBarLegendProps, useColorBarLegendStyles } from "./common";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
 import ColorBarLegendContinuous from "./ColorBarLegendContinuous";
+import ColorBarColorEditor from "./ColorBarColorEditor";
 
-export default function ColorBarLegend(props: ColorBarLegendProps) {
-  return props.variableColorBar.categories ? (
-    <ColorBarLegendCategorical {...props} />
-  ) : (
-    <ColorBarLegendContinuous {...props} />
+export default function ColorBarLegend(
+  props: Omit<ColorBarLegendProps, "onOpenColorBarEditor">,
+) {
+  const classes = useColorBarLegendStyles();
+
+  const { variableName, variableUnits, variableColorBar } = props;
+
+  const colorBarSelectAnchorRef = useRef<HTMLDivElement | null>(null);
+  const [colorBarSelectAnchorEl, setColorBarSelectAnchorEl] =
+    useState<HTMLDivElement | null>(null);
+
+  console.log("ColorBarLegendCategorical: ", variableColorBar);
+
+  const handleOpenColorBarSelect = () => {
+    setColorBarSelectAnchorEl(colorBarSelectAnchorRef.current);
+  };
+
+  const handleCloseColorBarSelect = () => {
+    setColorBarSelectAnchorEl(null);
+  };
+
+  return (
+    <div
+      className={"ol-control " + classes.container}
+      ref={colorBarSelectAnchorRef}
+    >
+      <div className={classes.title}>
+        <span>
+          {variableColorBar.categories
+            ? variableName
+            : `${variableName} (${variableUnits || "-"})`}
+        </span>
+      </div>
+      {variableColorBar.categories ? (
+        <ColorBarLegendCategorical
+          onOpenColorBarEditor={handleOpenColorBarSelect}
+          {...props}
+        />
+      ) : (
+        <ColorBarLegendContinuous
+          onOpenColorBarEditor={handleOpenColorBarSelect}
+          {...props}
+        />
+      )}
+      <Popover
+        anchorEl={colorBarSelectAnchorEl}
+        open={Boolean(colorBarSelectAnchorEl)}
+        onClose={handleCloseColorBarSelect}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <ColorBarColorEditor {...props} />
+      </Popover>
+    </div>
   );
 }

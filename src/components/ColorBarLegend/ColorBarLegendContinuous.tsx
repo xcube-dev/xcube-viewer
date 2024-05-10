@@ -26,10 +26,9 @@ import React, { useState } from "react";
 import Popover from "@mui/material/Popover";
 
 import ColorBarCanvas from "./ColorBarCanvas";
-import ColorBarColorEditor from "./ColorBarColorEditor";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";
 import ColorBarLabels from "./ColorBarLabels";
-import { useColorBarLegendStyles, ColorBarLegendProps } from "./common";
+import { ColorBarLegendProps } from "./common";
 
 export default function ColorBarLegendContinuous({
   variableName,
@@ -39,24 +38,15 @@ export default function ColorBarLegendContinuous({
   variableColorBar,
   variableOpacity,
   updateVariableColorBar,
-  colorBars,
-  userColorBars,
-  addUserColorBar,
-  removeUserColorBar,
-  updateUserColorBar,
-  updateUserColorBars,
   width,
   height,
   numTicks,
+  onOpenColorBarEditor,
 }: ColorBarLegendProps) {
-  const classes = useColorBarLegendStyles();
-
-  const [colorBarRangeEditorAnchor, setColorBarRangeEditorAnchor] =
+  const [colorBarRangeEditorAnchorEl, setColorBarRangeEditorAnchorEl] =
     useState<HTMLDivElement | null>(null);
-  const [colorBarSelectAnchor, setColorBarSelectAnchor] =
-    useState<HTMLCanvasElement | null>(null);
 
-  console.log("ColorBarLegendContinuous: ", variableColorBar);
+  console.log("ColorBarLegendContinuous", variableColorBar);
 
   if (!variableName) {
     return null;
@@ -65,36 +55,23 @@ export default function ColorBarLegendContinuous({
   const handleOpenColorBarRangeEditor = (
     event: React.MouseEvent<HTMLDivElement>,
   ) => {
-    setColorBarRangeEditorAnchor(event.currentTarget);
+    setColorBarRangeEditorAnchorEl(event.currentTarget);
   };
 
   const handleCloseColorBarRangeEditor = () => {
-    setColorBarRangeEditorAnchor(null);
-  };
-
-  const handleOpenColorBarSelect = (
-    event: React.MouseEvent<HTMLCanvasElement>,
-  ) => {
-    setColorBarSelectAnchor(event.currentTarget);
-  };
-
-  const handleCloseColorBarSelect = () => {
-    setColorBarSelectAnchor(null);
+    setColorBarRangeEditorAnchorEl(null);
   };
 
   const variableTitle = `${variableName} (${variableUnits || "-"})`;
 
   return (
-    <div className={"ol-control " + classes.container}>
-      <div className={classes.title}>
-        <span>{variableTitle}</span>
-      </div>
+    <>
       <ColorBarCanvas
         colorBar={variableColorBar}
         opacity={variableOpacity}
         width={width}
         height={height}
-        onClick={handleOpenColorBarSelect}
+        onClick={onOpenColorBarEditor}
       />
       <ColorBarLabels
         minValue={variableColorBarMinMax[0]}
@@ -103,8 +80,8 @@ export default function ColorBarLegendContinuous({
         onClick={handleOpenColorBarRangeEditor}
       />
       <Popover
-        anchorEl={colorBarRangeEditorAnchor}
-        open={Boolean(colorBarRangeEditorAnchor)}
+        anchorEl={colorBarRangeEditorAnchorEl}
+        open={Boolean(colorBarRangeEditorAnchorEl)}
         onClose={handleCloseColorBarRangeEditor}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "center" }}
@@ -117,27 +94,6 @@ export default function ColorBarLegendContinuous({
           updateVariableColorBar={updateVariableColorBar}
         />
       </Popover>
-      <Popover
-        anchorEl={colorBarSelectAnchor}
-        open={Boolean(colorBarSelectAnchor)}
-        onClose={handleCloseColorBarSelect}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
-      >
-        <ColorBarColorEditor
-          variableColorBarMinMax={variableColorBarMinMax}
-          variableColorBarName={variableColorBarName}
-          variableColorBar={variableColorBar}
-          variableOpacity={variableOpacity}
-          updateVariableColorBar={updateVariableColorBar}
-          colorBars={colorBars}
-          userColorBars={userColorBars}
-          addUserColorBar={addUserColorBar}
-          removeUserColorBar={removeUserColorBar}
-          updateUserColorBar={updateUserColorBar}
-          updateUserColorBars={updateUserColorBars}
-        />
-      </Popover>
-    </div>
+    </>
   );
 }

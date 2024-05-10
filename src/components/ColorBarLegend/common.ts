@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { MouseEvent } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 
@@ -68,4 +69,5 @@ export interface ColorBarLegendProps {
   width?: number | string;
   height?: number | string;
   numTicks?: number;
+  onOpenColorBarEditor: (event: MouseEvent<HTMLCanvasElement>) => void;
 }
