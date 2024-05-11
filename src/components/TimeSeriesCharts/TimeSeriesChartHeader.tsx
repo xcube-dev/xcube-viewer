@@ -29,10 +29,10 @@ import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import AllOutIcon from "@mui/icons-material/AllOut";
+import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import CloseIcon from "@mui/icons-material/Close";
-import LiveHelpIcon from "@mui/icons-material/LiveHelp";
-import CropLandscapeIcon from "@mui/icons-material/CropLandscape";
+import CommentIcon from "@mui/icons-material/Comment";
+import FitScreenIcon from "@mui/icons-material/FitScreen";
 
 import i18n from "@/i18n";
 import {
@@ -41,7 +41,7 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
-import AddTimeSeriesButton from "@/components/TimeSeriesCharts/AddTimeSeriesButton";
+import AddTimeSeriesButton from "./AddTimeSeriesButton";
 
 const useStyles = makeStyles({
   headerContainer: {
@@ -120,7 +120,7 @@ export default function TimeSeriesChartHeader({
               onClick={resetZoom}
               size="small"
             >
-              <AllOutIcon fontSize={"inherit"} />
+              <FitScreenIcon fontSize={"inherit"} />
             </IconButton>
           </Tooltip>
         )}
@@ -131,7 +131,7 @@ export default function TimeSeriesChartHeader({
             onClick={() => setZoomMode(!zoomMode)}
             size="small"
           >
-            <CropLandscapeIcon fontSize="inherit" />
+            <AspectRatioIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
         <Tooltip arrow title={i18n.get("Toggle showing time-serie values")}>
@@ -141,7 +141,7 @@ export default function TimeSeriesChartHeader({
             onClick={() => setShowTooltips(!showTooltips)}
             size="small"
           >
-            <LiveHelpIcon fontSize="inherit" />
+            <CommentIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
         <AddTimeSeriesButton
