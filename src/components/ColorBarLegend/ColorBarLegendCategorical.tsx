@@ -49,11 +49,15 @@ export default function ColorBarLegendCategorical({
           }}
         >
           <Box
-            sx={{
+            sx={(theme) => ({
               width: "48px",
               height: "16px",
               backgroundColor: category.color,
-            }}
+              borderStyle: "solid",
+              borderColor:
+                theme.palette.mode === "dark" ? "lightgray" : "darkgray",
+              borderWidth: 1,
+            })}
           />
           <Box
             component="span"
