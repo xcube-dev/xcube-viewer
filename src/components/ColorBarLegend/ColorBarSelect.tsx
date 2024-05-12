@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { ColorBar, ColorBars, formatColorBar } from "@/model/colorBar";
+import { ColorBar, ColorBars, formatColorBarName } from "@/model/colorBar";
 import { USER_COLOR_BAR_GROUP_TITLE, UserColorBar } from "@/model/userColorBar";
 import ColorBarGroupComponent from "./ColorBarGroupComponent";
 import UserColorBarGroup from "./UserColorBarGroup";
@@ -59,7 +59,10 @@ export default function ColorBarSelect({
   updateUserColorBars,
 }: ColorBarSelectProps) {
   const handleSelectColorBar = (baseName: string) => {
-    variableColorBarName = formatColorBar({ ...variableColorBar, baseName });
+    variableColorBarName = formatColorBarName({
+      ...variableColorBar,
+      baseName,
+    });
     updateVariableColorBar(
       variableColorBarMinMax,
       variableColorBarName,

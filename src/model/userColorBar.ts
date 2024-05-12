@@ -37,12 +37,12 @@ export interface UserColorBar {
    */
   id: string;
   /**
-   * Format of the code value:
+   * Format of the `code` value:
    *
    * code   := record {"\n" record}
-   * record := value ":" (rgb | rgba)
-   * rgba   := rgb ["," a]
-   * rgb    := name | "#"hex | (r "," g "," b)
+   * record := value ":" (rgb | rgba) [":" label]
+   * rgb    := name | (r "," g "," b) | "#"hex3 | "#"hex6
+   * rgba   := rgb ["," a] | "#"hex8
    *
    * r, g, b in range 0 to 255, a in range 0 to 1
    */
@@ -52,12 +52,12 @@ export interface UserColorBar {
    */
   categorical?: boolean;
   /**
-   * base64-encoded image/png
-   * rendered by renderUserColorBarAsBase64() from code.
+   * base64-encoded `image/png`
+   * rendered by renderUserColorBarAsBase64() from `code`.
    */
   imageData?: string;
   /**
-   * If imageData is undefined, errorMessage should say why.
+   * If `imageData` is undefined, errorMessage should say why.
    */
   errorMessage?: string;
 }

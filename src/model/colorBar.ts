@@ -79,7 +79,7 @@ export interface ColorBar {
   categories?: HexColorRecord[];
 }
 
-export function parseColorBar(name: string): ColorBar {
+export function parseColorBarName(name: string): ColorBar {
   let baseName = name;
 
   const isAlpha = baseName.endsWith(CB_ALPHA_SUFFIX);
@@ -95,7 +95,7 @@ export function parseColorBar(name: string): ColorBar {
   return { baseName, isAlpha, isReversed };
 }
 
-export function formatColorBar(colorBar: ColorBar): string {
+export function formatColorBarName(colorBar: ColorBar): string {
   let name = colorBar.baseName;
   if (colorBar.isReversed) {
     name += CB_REVERSE_SUFFIX;

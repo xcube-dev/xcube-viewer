@@ -24,7 +24,7 @@
 
 import * as THREE from "three";
 
-import { ColorBar, formatColorBar } from "@/model/colorBar";
+import { ColorBar, formatColorBarName } from "@/model/colorBar";
 
 class ColorBarTextures {
   private readonly textures: { [cmName: string]: THREE.Texture };
@@ -34,7 +34,7 @@ class ColorBarTextures {
   }
 
   get(colorBar: ColorBar, onLoad?: () => void): THREE.Texture {
-    const key = formatColorBar(colorBar);
+    const key = formatColorBarName(colorBar);
     let texture = this.textures[key];
     if (!texture) {
       // const image = new Image();

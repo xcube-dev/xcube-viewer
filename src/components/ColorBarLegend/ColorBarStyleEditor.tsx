@@ -28,7 +28,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Slider from "@mui/material/Slider";
 
 import i18n from "@/i18n";
-import { ColorBar, formatColorBar } from "@/model/colorBar";
+import { ColorBar, formatColorBarName } from "@/model/colorBar";
 
 interface ColorBarSelectProps {
   variableColorBarMinMax: [number, number];
@@ -51,7 +51,7 @@ export default function ColorBarStyleEditor({
 }: ColorBarSelectProps) {
   const handleColorBarAlpha = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isAlpha = event.currentTarget.checked;
-    variableColorBarName = formatColorBar({ ...variableColorBar, isAlpha });
+    variableColorBarName = formatColorBarName({ ...variableColorBar, isAlpha });
     updateVariableColorBar(
       variableColorBarMinMax,
       variableColorBarName,
@@ -63,7 +63,10 @@ export default function ColorBarStyleEditor({
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const isReversed = event.currentTarget.checked;
-    variableColorBarName = formatColorBar({ ...variableColorBar, isReversed });
+    variableColorBarName = formatColorBarName({
+      ...variableColorBar,
+      isReversed,
+    });
     updateVariableColorBar(
       variableColorBarMinMax,
       variableColorBarName,
