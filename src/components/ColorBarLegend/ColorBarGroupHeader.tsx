@@ -32,7 +32,8 @@ import { COLOR_BAR_ITEM_GAP } from "./constants";
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarGroupTitle: {
     marginTop: theme.spacing(2 * COLOR_BAR_ITEM_GAP),
-    color: theme.palette.grey[400],
+    fontSize: "small",
+    color: theme.palette.text.secondary,
   },
 }));
 

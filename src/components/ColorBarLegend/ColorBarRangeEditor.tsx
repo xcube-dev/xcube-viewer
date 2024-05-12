@@ -31,6 +31,7 @@ import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
 
 import { getLabelsFromArray } from "@/util/label";
+import { ColorBarNorm } from "@/model/variable";
 
 const HOR_SLIDER_MARGIN = 5;
 
@@ -62,20 +63,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface ColorBarRangeEditorProps {
   variableTitle: string;
-  variableColorBarMinMax: [number, number];
   variableColorBarName: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarNorm: ColorBarNorm;
   variableOpacity: number;
   updateVariableColorBar: (
-    colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarMinMax: [number, number],
+    colorBarNorm: ColorBarNorm,
     opacity: number,
   ) => void;
 }
 
 export default function ColorBarRangeEditor({
   variableTitle,
-  variableColorBarMinMax,
   variableColorBarName,
+  variableColorBarMinMax,
+  variableColorBarNorm,
   variableOpacity,
   updateVariableColorBar,
 }: ColorBarRangeEditorProps) {
@@ -113,8 +117,9 @@ export default function ColorBarRangeEditor({
   ) => {
     if (Array.isArray(value)) {
       updateVariableColorBar(
-        [value[0], value[1]],
         variableColorBarName,
+        [value[0], value[1]],
+        variableColorBarNorm,
         variableOpacity,
       );
     }
@@ -136,8 +141,9 @@ export default function ColorBarRangeEditor({
         setCurrentColorBarMinMax(newMinMax);
         setOriginalColorBarMinMax(newMinMax);
         updateVariableColorBar(
-          newMinMax,
           variableColorBarName,
+          newMinMax,
+          variableColorBarNorm,
           variableOpacity,
         );
       }
@@ -163,8 +169,9 @@ export default function ColorBarRangeEditor({
         setCurrentColorBarMinMax(newMinMax);
         setOriginalColorBarMinMax(newMinMax);
         updateVariableColorBar(
-          newMinMax,
           variableColorBarName,
+          newMinMax,
+          variableColorBarNorm,
           variableOpacity,
         );
       }

@@ -29,16 +29,19 @@ import ColorBarCanvas from "./ColorBarCanvas";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";
 import ColorBarLabels from "./ColorBarLabels";
 import { ColorBar } from "@/model/colorBar";
+import { ColorBarNorm } from "@/model/variable";
 
 export interface ColorBarLegendContinuousProps {
   variableTitle: string;
-  variableColorBarMinMax: [number, number];
   variableColorBarName: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarNorm: ColorBarNorm;
   variableColorBar: ColorBar;
   variableOpacity: number;
   updateVariableColorBar: (
-    colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarMinMax: [number, number],
+    colorBarNorm: ColorBarNorm,
     opacity: number,
   ) => void;
   onOpenColorBarEditor: () => void;
@@ -46,8 +49,9 @@ export interface ColorBarLegendContinuousProps {
 
 export default function ColorBarLegendContinuous({
   variableTitle,
-  variableColorBarMinMax,
   variableColorBarName,
+  variableColorBarMinMax,
+  variableColorBarNorm,
   variableColorBar,
   variableOpacity,
   updateVariableColorBar,
@@ -55,8 +59,6 @@ export default function ColorBarLegendContinuous({
 }: ColorBarLegendContinuousProps) {
   const [colorBarRangeEditorAnchorEl, setColorBarRangeEditorAnchorEl] =
     useState<HTMLDivElement | null>(null);
-
-  console.log("ColorBarLegendContinuous", variableColorBar);
 
   const handleOpenColorBarRangeEditor = (event: MouseEvent<HTMLDivElement>) => {
     setColorBarRangeEditorAnchorEl(event.currentTarget);
@@ -88,8 +90,9 @@ export default function ColorBarLegendContinuous({
       >
         <ColorBarRangeEditor
           variableTitle={variableTitle}
-          variableColorBarMinMax={variableColorBarMinMax}
           variableColorBarName={variableColorBarName}
+          variableColorBarMinMax={variableColorBarMinMax}
+          variableColorBarNorm={variableColorBarNorm}
           variableOpacity={variableOpacity}
           updateVariableColorBar={updateVariableColorBar}
         />

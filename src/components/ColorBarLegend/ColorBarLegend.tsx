@@ -32,6 +32,7 @@ import { ColorBar, ColorBars } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
+import { ColorBarNorm } from "@/model/variable";
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -55,13 +56,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface ColorBarLegendProps {
   variableName: string | null;
   variableUnits: string;
-  variableColorBarMinMax: [number, number];
   variableColorBarName: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarNorm: ColorBarNorm;
   variableColorBar: ColorBar;
   variableOpacity: number;
   updateVariableColorBar: (
-    colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarMinMax: [number, number],
+    colorBarNorm: ColorBarNorm,
     opacity: number,
   ) => void;
   colorBars: ColorBars;
@@ -83,8 +86,6 @@ export default function ColorBarLegend(
   const colorBarSelectAnchorRef = useRef<HTMLDivElement | null>(null);
   const [colorBarSelectAnchorEl, setColorBarSelectAnchorEl] =
     useState<HTMLDivElement | null>(null);
-
-  console.log("ColorBarLegendCategorical: ", variableColorBar);
 
   const handleOpenColorBarSelect = () => {
     setColorBarSelectAnchorEl(colorBarSelectAnchorRef.current);

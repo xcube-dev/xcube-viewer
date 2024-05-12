@@ -71,18 +71,6 @@ export default function UserColorBarEditor({
         selected={selected}
         onSelect={onSelect}
       />
-      <TextField
-        label="Color mapping"
-        placeholder={USER_COLOR_BAR_CODE_EXAMPLE}
-        multiline
-        fullWidth
-        size="small"
-        minRows={3}
-        sx={{ marginTop: 2, fontFamily: "monospace" }}
-        value={userColorBar.code}
-        onChange={handleCodeChange}
-        color={userColorBar.errorMessage ? "error" : "primary"}
-      />
       <Box
         component="div"
         sx={{
@@ -95,15 +83,36 @@ export default function UserColorBarEditor({
           size="small"
           checked={userColorBar.discrete}
           onChange={handleDiscreteChange}
-          style={{
-            paddingLeft: 0,
-            paddingRight: 2,
-            paddingTop: 4,
-            paddingBottom: 4,
+          sx={{
+            color: "secondary",
+            paddingLeft: "0px",
+            paddingRight: "1px",
+            paddingTop: "2px",
+            paddingBottom: "2px",
           }}
         />
-        <Box component="span">{i18n.get("Discrete")}</Box>
+        <Box
+          component="span"
+          sx={(theme) => ({
+            color: theme.palette.text.secondary,
+            fontSize: "small",
+          })}
+        >
+          {i18n.get("Discrete")}
+        </Box>
       </Box>
+      <TextField
+        label="Color mapping"
+        placeholder={USER_COLOR_BAR_CODE_EXAMPLE}
+        multiline
+        fullWidth
+        size="small"
+        minRows={3}
+        sx={{ marginTop: 1, fontFamily: "monospace" }}
+        value={userColorBar.code}
+        onChange={handleCodeChange}
+        color={userColorBar.errorMessage ? "error" : "primary"}
+      />
       <DoneCancel
         onDone={onDone}
         onCancel={onCancel}
