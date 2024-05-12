@@ -56,10 +56,10 @@ export default function UserColorBarEditor({
     updateUserColorBar({ ...userColorBar, code: event.currentTarget.value });
   };
 
-  const handleCategoricalChange = () => {
+  const handleDiscreteChange = () => {
     updateUserColorBar({
       ...userColorBar,
-      categorical: !userColorBar.categorical,
+      discrete: !userColorBar.discrete,
     });
   };
 
@@ -93,8 +93,8 @@ export default function UserColorBarEditor({
       >
         <Checkbox
           size="small"
-          checked={userColorBar.categorical}
-          onChange={handleCategoricalChange}
+          checked={userColorBar.discrete}
+          onChange={handleDiscreteChange}
           style={{
             paddingLeft: 0,
             paddingRight: 2,
@@ -102,7 +102,7 @@ export default function UserColorBarEditor({
             paddingBottom: 4,
           }}
         />
-        <Box component="span">{i18n.get("Categorical")}</Box>
+        <Box component="span">{i18n.get("Discrete")}</Box>
       </Box>
       <DoneCancel
         onDone={onDone}

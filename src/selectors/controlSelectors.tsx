@@ -293,6 +293,7 @@ export const colorBarsSelector = createSelector(
 
 const getVariableColorBar = (
   colorBarName: string,
+  colorBarNorm: ColorBarNorm,
   colorBars: ColorBars,
   userColorBars: UserColorBar[],
 ): ColorBar => {
@@ -303,7 +304,7 @@ const getVariableColorBar = (
     (userColorBar) => userColorBar.id === baseName,
   );
   let categories: HexColorRecord[] | undefined = undefined;
-  if (userColorBar && userColorBar.categorical) {
+  if (userColorBar && colorBarNorm === "cat") {
     categories = getUserColorBarHexRecords(userColorBar.code);
   }
   return { ...colorBar, imageData, categories };
@@ -311,6 +312,7 @@ const getVariableColorBar = (
 
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
+  selectedVariableColorBarNormSelector,
   colorBarsSelector,
   userColorBarsSelector,
   getVariableColorBar,
@@ -318,6 +320,7 @@ export const selectedVariableColorBarSelector = createSelector(
 
 export const selectedVariable2ColorBarSelector = createSelector(
   selectedVariable2ColorBarNameSelector,
+  selectedVariable2ColorBarNormSelector,
   colorBarsSelector,
   userColorBarsSelector,
   getVariableColorBar,
@@ -335,22 +338,11 @@ const getVariableUserColorBarJson = (
   if (userColorBar) {
     const colors = getUserColorBarHexRecords(userColorBar.code);
     if (colors) {
-      if (userColorBar.categorical) {
-        return JSON.stringify({
-          name: colorBarName,
-          colors: colors.map((c) => [Math.round(c.value), c.color]),
-          norm: "cat",
-        });
-      } else {
-        const vMin = colors[0].value;
-        const vMax = colors[colors.length - 1].value;
-        const vRange = vMax - vMin;
-        return JSON.stringify({
-          name: colorBarName,
-          colors: colors.map((c) => [(c.value - vMin) / vRange, c.color]),
-          norm: "lin", // or later also "log"
-        });
-      }
+      return JSON.stringify({
+        name: colorBarName,
+        colors: colors.map((c) => [c.value, c.color]),
+        ...(userColorBar.discrete ? { discrete: true } : {}),
+      });
     }
   }
   return null;

@@ -48,9 +48,9 @@ export interface UserColorBar {
    */
   code: string;
   /**
-   * Whether the color bar is categorical.
+   * Whether the color mapping is discrete or continuous.
    */
-  categorical?: boolean;
+  discrete?: boolean;
   /**
    * base64-encoded `image/png`
    * rendered by renderUserColorBarAsBase64() from `code`.
@@ -64,12 +64,12 @@ export interface UserColorBar {
 
 export function getUserColorBarRgbaArray(
   records: ColorRecord[],
+  discrete: boolean,
   size: number,
-  categorical?: boolean,
 ): Uint8ClampedArray {
   const rgbaArray = new Uint8ClampedArray(4 * size);
   const n = records.length;
-  if (categorical) {
+  if (discrete) {
     for (let i = 0, j = 0; i < size; i++, j += 4) {
       const recordIndex = Math.floor((n * i) / size);
       const [r, g, b, a] = records[recordIndex].color;
@@ -92,7 +92,7 @@ export function getUserColorBarRgbaArray(
         v1 = values[recordIndex];
         v2 = values[recordIndex + 1];
       }
-      const w = categorical ? 0 : (v - v1) / (v2 - v1);
+      const w = discrete ? 0 : (v - v1) / (v2 - v1);
       const [r1, g1, b1, a1] = records[recordIndex].color;
       const [r2, g2, b2, a2] = records[recordIndex + 1].color;
       rgbaArray[j] = r1 + w * (r2 - r1);
@@ -106,10 +106,10 @@ export function getUserColorBarRgbaArray(
 
 export function renderUserColorBar(
   records: ColorRecord[],
-  categorical: boolean,
+  discrete: boolean,
   canvas: HTMLCanvasElement,
 ): Promise<void> {
-  const data = getUserColorBarRgbaArray(records, canvas.width, categorical);
+  const data = getUserColorBarRgbaArray(records, discrete, canvas.width);
   const imageData = new ImageData(data, data.length / 4, 1);
   return createImageBitmap(imageData).then((bitMap) => {
     const ctx = canvas.getContext("2d");
@@ -131,7 +131,7 @@ export function renderUserColorBarAsBase64(
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 1;
-  return renderUserColorBar(colorRecords, !!colorBar.categorical, canvas).then(
+  return renderUserColorBar(colorRecords, !!colorBar.discrete, canvas).then(
     () => {
       const dataURL = canvas.toDataURL("image/png");
       return { imageData: dataURL.split(",")[1] };

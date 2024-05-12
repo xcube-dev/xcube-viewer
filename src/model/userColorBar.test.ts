@@ -30,13 +30,32 @@ import {
 } from "./userColorBar";
 
 describe("Assert that colorBar.getUserColorBarRgbaArray()", () => {
-  it("works as expected", () => {
+  it("works as expected if continuous", () => {
     const data = getUserColorBarRgbaArray(
       [
         { value: 0.0, color: [35, 255, 82, 255] },
         { value: 0.5, color: [255, 0, 0, 255] },
         { value: 1.0, color: [120, 30, 255, 255] },
       ],
+      false,
+      10,
+    );
+    expect(data).toBeInstanceOf(Uint8ClampedArray);
+    expect([...data]).toEqual([
+      35, 255, 82, 255, 84, 198, 64, 255, 133, 142, 46, 255, 182, 85, 27, 255,
+      231, 28, 9, 255, 240, 3, 28, 255, 210, 10, 85, 255, 180, 17, 142, 255,
+      150, 23, 198, 255, 120, 30, 255, 255,
+    ]);
+  });
+
+  it("works as expected if discrete", () => {
+    const data = getUserColorBarRgbaArray(
+      [
+        { value: 0.0, color: [35, 255, 82, 255] },
+        { value: 0.5, color: [255, 0, 0, 255] },
+        { value: 1.0, color: [120, 30, 255, 255] },
+      ],
+      true,
       10,
     );
     expect(data).toBeInstanceOf(Uint8ClampedArray);
