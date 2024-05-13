@@ -22,16 +22,10 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import { Theme } from "@mui/material";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
-import { WithStyles } from "@mui/styles";
-import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel/InputLabel";
-import { TextFieldProps as MuiTextFieldPropsType } from "@mui/material/TextField/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { SxProps, Theme } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 import i18n from "@/i18n";
@@ -41,27 +35,25 @@ import { localToUtcTime, utcTimeToLocal } from "@/util/time";
 import ControlBarItem from "./ControlBarItem";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) =>
-  createStyles({
-    dateTimePicker: {
-      marginTop: theme.spacing(2),
-    },
-  });
+const styles: Record<string, SxProps<Theme>> = {
+  dateTimePicker: (theme: Theme) => ({
+    marginTop: theme.spacing(2),
+  }),
+};
 
-interface TimeSelectProps extends WithStyles<typeof styles>, WithLocale {
+interface TimeSelectProps extends WithLocale {
   hasTimeDimension?: boolean;
   selectedTime: Time | null;
   selectTime: (time: Time | null) => void;
   selectedTimeRange: TimeRange | null;
 }
 
-const _TimeSelect: React.FC<TimeSelectProps> = ({
-  classes,
+export default function TimeSelect({
   hasTimeDimension,
   selectedTime,
   selectedTimeRange,
   selectTime,
-}) => {
+}: TimeSelectProps) {
   const handleTimeChange = (date: Date | null) => {
     selectTime(date !== null ? localToUtcTime(date!) : null);
   };
@@ -94,23 +86,23 @@ const _TimeSelect: React.FC<TimeSelectProps> = ({
         //         ? i18n.get('Missing time axis')
         //         : undefined
         // }
-        className={classes.dateTimePicker}
-        inputFormat="yyyy-MM-dd hh:mm:ss"
+        sx={styles.dateTimePicker}
+        format="yyyy-MM-dd hh:mm:ss"
         // id="time-select"
         value={timeValue}
         minDateTime={minTimeValue}
         maxDateTime={maxTimeValue}
         onChange={handleTimeChange}
         ampm={false}
-        renderInput={(props: MuiTextFieldPropsType) => (
-          <TextField {...props} variant="standard" size="small" />
-        )}
+        slotProps={{
+          textField: {
+            variant: "standard",
+            size: "small",
+          },
+        }}
       />
     </LocalizationProvider>
   );
 
   return <ControlBarItem label={timeInputLabel} control={timeInput} />;
-};
-
-const TimeSelect = withStyles(styles)(_TimeSelect);
-export default TimeSelect;
+}

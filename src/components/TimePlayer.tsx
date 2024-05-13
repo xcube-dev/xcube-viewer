@@ -22,15 +22,11 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import { useEffect, useRef } from "react";
-import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import { Theme, styled } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -45,15 +41,14 @@ import { Time, TimeRange } from "@/model/timeSeries";
 import { TimeAnimationInterval } from "@/states/controlState";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) =>
-  createStyles({
-    formControl: {
-      marginTop: theme.spacing(1.5),
-      marginRight: theme.spacing(1),
-    },
-  });
+const StyledFormControl = styled(FormControl)(
+  ({ theme }: { theme: Theme }) => ({
+    marginTop: theme.spacing(1.5),
+    marginRight: theme.spacing(1),
+  }),
+);
 
-interface TimePlayerProps extends WithStyles<typeof styles>, WithLocale {
+interface TimePlayerProps extends WithLocale {
   selectedTime: Time | null;
   selectTime: (time: Time | null) => void;
   incSelectedTime: (increment: -1 | 1) => void;
@@ -66,8 +61,7 @@ interface TimePlayerProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const _TimePlayer: React.FC<TimePlayerProps> = ({
-  classes,
+export default function TimePlayer({
   timeAnimationActive,
   timeAnimationInterval,
   updateTimeAnimation,
@@ -75,7 +69,7 @@ const _TimePlayer: React.FC<TimePlayerProps> = ({
   selectedTimeRange,
   selectTime,
   incSelectedTime,
-}) => {
+}: TimePlayerProps) {
   const intervalId = useRef<number | null>(null);
 
   useEffect(() => {
@@ -191,7 +185,7 @@ const _TimePlayer: React.FC<TimePlayerProps> = ({
   );
 
   return (
-    <FormControl variant="standard" className={classes.formControl}>
+    <StyledFormControl variant="standard">
       <Box>
         {firstTimeStepButton}
         {prevTimeStepButton}
@@ -199,9 +193,6 @@ const _TimePlayer: React.FC<TimePlayerProps> = ({
         {nextTimeStepButton}
         {lastTimeStepButton}
       </Box>
-    </FormControl>
+    </StyledFormControl>
   );
-};
-
-const TimePlayer = withStyles(styles)(_TimePlayer);
-export default TimePlayer;
+}
