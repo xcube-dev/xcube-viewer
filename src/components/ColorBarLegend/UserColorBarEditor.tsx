@@ -24,16 +24,16 @@
 
 import { ChangeEvent } from "react";
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 
-import i18n from "@/i18n";
 import {
   USER_COLOR_BAR_CODE_EXAMPLE,
   UserColorBar,
+  ColorMapType,
 } from "@/model/userColorBar";
 import DoneCancel from "@/components/DoneCancel";
 import ColorBarItem from "./ColorBarItem";
+import ColorMapTypeEditor from "./ColorMapTypeEditor";
 
 interface UserColorBarEditorProps {
   userColorBar: UserColorBar;
@@ -56,10 +56,10 @@ export default function UserColorBarEditor({
     updateUserColorBar({ ...userColorBar, code: event.currentTarget.value });
   };
 
-  const handleDiscreteChange = () => {
+  const handleTypeChange = (colorMapType: ColorMapType) => {
     updateUserColorBar({
       ...userColorBar,
-      discrete: !userColorBar.discrete,
+      type: colorMapType,
     });
   };
 
@@ -71,36 +71,10 @@ export default function UserColorBarEditor({
         selected={selected}
         onSelect={onSelect}
       />
-      <Box
-        component="div"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Checkbox
-          size="small"
-          checked={userColorBar.discrete}
-          onChange={handleDiscreteChange}
-          sx={{
-            color: "secondary",
-            paddingLeft: "0px",
-            paddingRight: "1px",
-            paddingTop: "2px",
-            paddingBottom: "2px",
-          }}
-        />
-        <Box
-          component="span"
-          sx={(theme) => ({
-            color: theme.palette.text.secondary,
-            fontSize: "small",
-          })}
-        >
-          {i18n.get("Discrete")}
-        </Box>
-      </Box>
+      <ColorMapTypeEditor
+        colorMapType={userColorBar.type}
+        setColorMapType={handleTypeChange}
+      />
       <TextField
         label="Color mapping"
         placeholder={USER_COLOR_BAR_CODE_EXAMPLE}

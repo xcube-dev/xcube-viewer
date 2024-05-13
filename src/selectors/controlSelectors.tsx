@@ -340,8 +340,8 @@ const getVariableUserColorBarJson = (
     if (colors) {
       return JSON.stringify({
         name: colorBarName,
+        type: userColorBar.type,
         colors: colors.map((c) => [c.value, c.color]),
-        ...(userColorBar.discrete ? { discrete: true } : {}),
       });
     }
   }

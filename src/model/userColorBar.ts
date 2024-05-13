@@ -31,6 +31,8 @@ export const USER_COLOR_BAR_CODE_EXAMPLE =
   "0.5: red\n" + // tie point 2
   "1.0: 120,30,255"; // tie point 3
 
+export type ColorMapType = "index" | "bound" | "node";
+
 export interface UserColorBar {
   /**
    * Unique ID.
@@ -48,9 +50,9 @@ export interface UserColorBar {
    */
   code: string;
   /**
-   * Whether the color mapping is discrete or continuous.
+   * Type of color mapping, discrete (= index or bounds) or continuous (=node).
    */
-  discrete?: boolean;
+  type: ColorMapType;
   /**
    * base64-encoded `image/png`
    * rendered by renderUserColorBarAsBase64() from `code`.
@@ -64,14 +66,15 @@ export interface UserColorBar {
 
 export function getUserColorBarRgbaArray(
   records: ColorRecord[],
-  discrete: boolean,
+  type: ColorMapType,
   size: number,
 ): Uint8ClampedArray {
   const rgbaArray = new Uint8ClampedArray(4 * size);
   const n = records.length;
-  if (discrete) {
+  if (type === "index" || type === "bound") {
+    const m = type === "index" ? n : n - 1;
     for (let i = 0, j = 0; i < size; i++, j += 4) {
-      const recordIndex = Math.floor((n * i) / size);
+      const recordIndex = Math.floor((m * i) / size);
       const [r, g, b, a] = records[recordIndex].color;
       rgbaArray[j] = r;
       rgbaArray[j + 1] = g;
@@ -92,7 +95,7 @@ export function getUserColorBarRgbaArray(
         v1 = values[recordIndex];
         v2 = values[recordIndex + 1];
       }
-      const w = discrete ? 0 : (v - v1) / (v2 - v1);
+      const w = (v - v1) / (v2 - v1);
       const [r1, g1, b1, a1] = records[recordIndex].color;
       const [r2, g2, b2, a2] = records[recordIndex + 1].color;
       rgbaArray[j] = r1 + w * (r2 - r1);
@@ -106,10 +109,10 @@ export function getUserColorBarRgbaArray(
 
 export function renderUserColorBar(
   records: ColorRecord[],
-  discrete: boolean,
+  type: ColorMapType,
   canvas: HTMLCanvasElement,
 ): Promise<void> {
-  const data = getUserColorBarRgbaArray(records, discrete, canvas.width);
+  const data = getUserColorBarRgbaArray(records, type, canvas.width);
   const imageData = new ImageData(data, data.length / 4, 1);
   return createImageBitmap(imageData).then((bitMap) => {
     const ctx = canvas.getContext("2d");
@@ -120,10 +123,10 @@ export function renderUserColorBar(
 }
 
 export function renderUserColorBarAsBase64(
-  colorBar: UserColorBar,
+  userColorBar: UserColorBar,
 ): Promise<{ imageData?: string; errorMessage?: string }> {
   const { colorRecords, errorMessage } = getUserColorBarColorRecords(
-    colorBar.code,
+    userColorBar.code,
   );
   if (!colorRecords) {
     return Promise.resolve({ errorMessage });
@@ -131,7 +134,7 @@ export function renderUserColorBarAsBase64(
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 1;
-  return renderUserColorBar(colorRecords, !!colorBar.discrete, canvas).then(
+  return renderUserColorBar(colorRecords, userColorBar.type, canvas).then(
     () => {
       const dataURL = canvas.toDataURL("image/png");
       return { imageData: dataURL.split(",")[1] };
