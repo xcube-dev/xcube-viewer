@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
