@@ -23,44 +23,34 @@
  */
 
 import * as React from "react";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import withStyles from "@mui/styles/withStyles";
-import createStyles from "@mui/styles/createStyles";
+import { Theme, styled } from "@mui/system";
 import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
 
 import { WithLocale } from "@/util/lang";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    formControl: {
-      marginRight: theme.spacing(1),
-    },
-  });
+const StyledForm = styled(FormControl)(({ theme }: { theme: Theme }) => ({
+  marginRight: theme.spacing(1),
+}));
 
-interface ControlBarItemProps extends WithStyles<typeof styles>, WithLocale {
+interface ControlBarItemProps extends WithLocale {
   label: React.ReactNode;
   control: React.ReactNode;
   actions?: React.ReactNode | null;
 }
 
-const _ControlBarItem: React.FC<ControlBarItemProps> = ({
-  classes,
+export default function ControlBarItem({
   label,
   control,
   actions,
-}) => {
+}: ControlBarItemProps) {
   return (
-    <FormControl variant="standard" className={classes.formControl}>
+    <StyledForm variant="standard">
       <Box>
         {label}
         {control}
         {actions}
       </Box>
-    </FormControl>
+    </StyledForm>
   );
-};
-
-const ControlBarItem = withStyles(styles)(_ControlBarItem);
-export default ControlBarItem;
+}

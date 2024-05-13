@@ -23,15 +23,11 @@
  */
 
 import * as React from "react";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 
 import i18n from "@/i18n";
 import { Dataset } from "@/model/dataset";
@@ -39,17 +35,7 @@ import { WithLocale } from "@/util/lang";
 import ToolButton from "@/components/ToolButton";
 import ControlBarItem from "./ControlBarItem";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    formControl: {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {},
-  });
-
-interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
+interface DatasetSelectProps extends WithLocale {
   selectedDatasetId: string | null;
   datasets: Dataset[];
   selectDataset: (
@@ -60,13 +46,12 @@ interface DatasetSelectProps extends WithStyles<typeof styles>, WithLocale {
   locateSelectedDataset: () => void;
 }
 
-const _DatasetSelect: React.FC<DatasetSelectProps> = ({
-  classes,
+export default function DatasetSelect({
   selectedDatasetId,
   datasets,
   selectDataset,
   locateSelectedDataset,
-}) => {
+}: DatasetSelectProps) {
   const handleDatasetChange = (event: SelectChangeEvent) => {
     const datasetId = event.target.value || null;
     selectDataset(datasetId, datasets, true);
@@ -89,7 +74,6 @@ const _DatasetSelect: React.FC<DatasetSelectProps> = ({
       input={<Input name="dataset" id="dataset-select" />}
       displayEmpty
       name="dataset"
-      className={classes.selectEmpty}
     >
       {datasets.map((dataset) => (
         <MenuItem
@@ -118,7 +102,4 @@ const _DatasetSelect: React.FC<DatasetSelectProps> = ({
       actions={locateDatasetButton}
     />
   );
-};
-
-const DatasetSelect = withStyles(styles)(_DatasetSelect);
-export default DatasetSelect;
+}

@@ -22,14 +22,10 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
+import { Theme, styled } from "@mui/system";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import Tooltip from "@mui/material/Tooltip";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import InfoIcon from "@mui/icons-material/Info";
@@ -45,16 +41,15 @@ import { LayerVisibilities } from "@/states/controlState";
 import LayerSelect from "./LayerSelect";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) =>
-  createStyles({
-    formControl: {
-      marginTop: theme.spacing(2),
-      marginRight: theme.spacing(1),
-      marginLeft: "auto",
-    },
-  });
+const StyledFormControl = styled(FormControl)(
+  ({ theme }: { theme: Theme }) => ({
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    marginLeft: "auto",
+  }),
+);
 
-interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
+interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
   volumeCardOpen: boolean;
   showVolumeCard: (open: boolean) => void;
@@ -76,8 +71,7 @@ interface ControlBarActionsProps extends WithStyles<typeof styles>, WithLocale {
   setVariableCompareMode: (selected: boolean) => void;
 }
 
-const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
-  classes,
+export default function ControlBarActions({
   locale,
   visible,
   volumeCardOpen,
@@ -95,7 +89,7 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   setLayerVisibility,
   variableCompareMode,
   setVariableCompareMode,
-}) => {
+}: ControlBarActionsProps) {
   if (!visible) {
     return null;
   }
@@ -178,7 +172,7 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
   }
 
   return (
-    <FormControl variant="standard" className={classes.formControl}>
+    <StyledFormControl variant="standard">
       <Box>
         {refreshButton}
         {layerSelect}
@@ -187,9 +181,6 @@ const _ControlBarActions: React.FC<ControlBarActionsProps> = ({
         {infoButton}
         {settingsButton}
       </Box>
-    </FormControl>
+    </StyledFormControl>
   );
-};
-
-const ControlBarActions = withStyles(styles)(_ControlBarActions);
-export default ControlBarActions;
+}
