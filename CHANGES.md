@@ -16,6 +16,12 @@
   definition. Existing custom color bars can be edited and deleted.
   This feature requires xcube server >= 1.6. (#334)
 
+* Users can now select the data normalisation function to be applied before
+  the actual color mapping takes place. Three functions are available:
+  - `Lin`: linear mapping of data values between `min` and `max` to colors.
+  - `Log`: logarithmic mapping of data values between `vmin` and `vmax` to colors.
+  - `Cat`: direct mapping of categorical data values into colors.
+
 * Users can now zoom into arbitrary regions of a time-series chart
   by pressing the `CTRL` key of the keyboard. (#285)
 
