@@ -36,9 +36,9 @@ const RADIO_STYLE = { padding: 4 };
 const LABEL_BOX_SX = { fontSize: "small" };
 
 const tooltipTitles: [ColorMapType, string][] = [
-  ["node", "Values are nodes (continuous colors)"],
-  ["bound", "Values are bounds (discrete colors)"],
-  ["index", "Values are indices (discrete colors)"],
+  ["node", "Values are nodes of a continuous color gradient"],
+  ["bound", "Values are bounds identifying individual colors"],
+  ["key", "Values are integer keys identifying individual colors"],
 ];
 
 interface ColorMapTypeEditorProps {

@@ -48,14 +48,14 @@ describe("Assert that colorBar.getUserColorBarRgbaArray()", () => {
     ]);
   });
 
-  it("works as expected if type='index'", () => {
+  it("works as expected if type='key'", () => {
     const data = getUserColorBarRgbaArray(
       [
         { value: 0.0, color: [35, 255, 82, 255] },
         { value: 0.5, color: [255, 0, 0, 255] },
         { value: 1.0, color: [120, 30, 255, 255] },
       ],
-      "index",
+      "key",
       10,
     );
     expect(data).toBeInstanceOf(Uint8ClampedArray);

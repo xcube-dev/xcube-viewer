@@ -75,7 +75,7 @@ export interface ColorBar {
   imageData?: string;
   /**
    * Defined, if this color bar is a user-defined categorical color bar,
-   * that its `userColorBar.type` is "bound" or "index".
+   * that its `userColorBar.type` is "bound" or "key".
    */
   categories?: HexColorRecord[];
 }

@@ -305,7 +305,7 @@ const getVariableColorBar = (
   let categories: HexColorRecord[] | undefined = undefined;
   if (
     userColorBar &&
-    (userColorBar.type == "index" || userColorBar.type == "bound")
+    (userColorBar.type == "key" || userColorBar.type == "bound")
   ) {
     categories = getUserColorBarHexRecords(userColorBar.code);
   }

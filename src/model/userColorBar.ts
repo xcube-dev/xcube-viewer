@@ -31,7 +31,7 @@ export const USER_COLOR_BAR_CODE_EXAMPLE =
   "0.5: red\n" + // tie point 2
   "1.0: 120,30,255"; // tie point 3
 
-export type ColorMapType = "index" | "bound" | "node";
+export type ColorMapType = "key" | "bound" | "node";
 
 export interface UserColorBar {
   /**
@@ -71,8 +71,8 @@ export function getUserColorBarRgbaArray(
 ): Uint8ClampedArray {
   const rgbaArray = new Uint8ClampedArray(4 * size);
   const n = records.length;
-  if (type === "index" || type === "bound") {
-    const m = type === "index" ? n : n - 1;
+  if (type === "key" || type === "bound") {
+    const m = type === "key" ? n : n - 1;
     for (let i = 0, j = 0; i < size; i++, j += 4) {
       const recordIndex = Math.floor((m * i) / size);
       const [r, g, b, a] = records[recordIndex].color;
