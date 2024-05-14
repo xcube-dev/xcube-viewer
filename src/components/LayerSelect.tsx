@@ -23,10 +23,6 @@
  */
 
 import * as React from "react";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -42,10 +38,7 @@ import { LayerVisibilities } from "@/states/controlState";
 import LayerSelectItem from "./LayerSelectItem";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
 
-// noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) => createStyles({});
-
-interface LayerSelectProps extends WithStyles<typeof styles>, WithLocale {
+interface LayerSelectProps extends WithLocale {
   openDialog: (dialogId: string) => void;
   layerTitles: Record<keyof LayerVisibilities, string>;
   layerSubtitles: Record<keyof LayerVisibilities, string>;
@@ -120,5 +113,4 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
   );
 };
 
-const LayerSelect = withStyles(styles)(_LayerSelect);
-export default LayerSelect;
+export default _LayerSelect;
