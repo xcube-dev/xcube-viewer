@@ -702,6 +702,18 @@ export function updateVariableColorBar(
     const selectedDatasetId = getState().controlState.selectedDatasetId;
     const selectedVariableName = getState().controlState.selectedVariableName;
     if (selectedDatasetId && selectedVariableName) {
+      if (colorBarNorm === "log") {
+        // Adjust range in case of log norm: Make sure xcube server can use
+        // matplotlib.colors.LogNorm(vmin, vmax) without errors
+        let [vMin, vMax] = colorBarMinMax;
+        if (vMin <= 0) {
+          vMin = 1e-3;
+        }
+        if (vMax <= vMin) {
+          vMax = 1;
+        }
+        colorBarMinMax = [vMin, vMax];
+      }
       dispatch(
         _updateVariableColorBar(
           selectedDatasetId,
