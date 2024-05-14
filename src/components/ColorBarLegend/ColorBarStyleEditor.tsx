@@ -149,7 +149,11 @@ export default function ColorBarStyleEditor({
           <ToggleButton value="log" style={TOGGLE_BUTTON_GROUP_BUTTON_STYLE}>
             <Box fontSize="small">Log</Box>
           </ToggleButton>
-          <ToggleButton value="cat" style={TOGGLE_BUTTON_GROUP_BUTTON_STYLE}>
+          <ToggleButton
+            value="cat"
+            style={TOGGLE_BUTTON_GROUP_BUTTON_STYLE}
+            disabled={!variableColorBar.categories}
+          >
             <Box fontSize="small">Cat</Box>
           </ToggleButton>
         </ToggleButtonGroup>
