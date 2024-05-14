@@ -81,7 +81,12 @@ export default function ColorBarLegend(
 ) {
   const classes = useStyles();
 
-  const { variableName, variableUnits, variableColorBar } = props;
+  const {
+    variableName,
+    variableUnits,
+    variableColorBar,
+    variableColorBarNorm,
+  } = props;
 
   const colorBarSelectAnchorRef = useRef<HTMLDivElement | null>(null);
   const [colorBarSelectAnchorEl, setColorBarSelectAnchorEl] =
@@ -111,7 +116,7 @@ export default function ColorBarLegend(
       <div className={classes.title}>
         <span>{variableTitle}</span>
       </div>
-      {variableColorBar.categories ? (
+      {variableColorBarNorm === "cat" && variableColorBar.categories ? (
         <ColorBarLegendCategorical
           variableColorBarCategories={variableColorBar.categories}
           onOpenColorBarEditor={handleOpenColorBarSelect}

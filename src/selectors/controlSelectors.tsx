@@ -293,7 +293,6 @@ export const colorBarsSelector = createSelector(
 
 const getVariableColorBar = (
   colorBarName: string,
-  colorBarNorm: ColorBarNorm,
   colorBars: ColorBars,
   userColorBars: UserColorBar[],
 ): ColorBar => {
@@ -304,7 +303,10 @@ const getVariableColorBar = (
     (userColorBar) => userColorBar.id === baseName,
   );
   let categories: HexColorRecord[] | undefined = undefined;
-  if (userColorBar && colorBarNorm === "cat") {
+  if (
+    userColorBar &&
+    (userColorBar.type == "index" || userColorBar.type == "bound")
+  ) {
     categories = getUserColorBarHexRecords(userColorBar.code);
   }
   return { ...colorBar, imageData, categories };
@@ -312,7 +314,6 @@ const getVariableColorBar = (
 
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
-  selectedVariableColorBarNormSelector,
   colorBarsSelector,
   userColorBarsSelector,
   getVariableColorBar,
@@ -320,7 +321,6 @@ export const selectedVariableColorBarSelector = createSelector(
 
 export const selectedVariable2ColorBarSelector = createSelector(
   selectedVariable2ColorBarNameSelector,
-  selectedVariable2ColorBarNormSelector,
   colorBarsSelector,
   userColorBarsSelector,
   getVariableColorBar,
