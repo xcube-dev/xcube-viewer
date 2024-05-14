@@ -28,10 +28,6 @@ import Input from "@mui/material/Input";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
@@ -40,16 +36,16 @@ import { WithLocale } from "@/util/lang";
 import { PlaceGroup, USER_ID_PREFIX } from "@/model/place";
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
+import { SxProps } from "@mui/system";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) =>
-  createStyles({
-    select: {
-      minWidth: "5em",
-    },
-  });
+const styles: Record<string, SxProps> = {
+  select: {
+    minWidth: "5em",
+  },
+};
 
-interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
+interface PlaceGroupSelectProps extends WithLocale {
   selectedPlaceGroupIds: string[] | null;
   placeGroups: PlaceGroup[];
   selectPlaceGroups: (placeGroupIds: string[] | null) => void;
@@ -61,15 +57,14 @@ interface PlaceGroupSelectProps extends WithStyles<typeof styles>, WithLocale {
   language?: string;
 }
 
-const _PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
-  classes,
+export default function PlaceGroupsSelect({
   placeGroups,
   selectPlaceGroups,
   renameUserPlaceGroup,
   removeUserPlaceGroup,
   selectedPlaceGroupIds,
   selectedPlaceGroupsTitle,
-}) => {
+}: PlaceGroupSelectProps) {
   const [editMode, setEditMode] = React.useState(false);
 
   placeGroups = placeGroups || [];
@@ -104,7 +99,7 @@ const _PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
       value={selectedPlaceGroupIds}
       renderValue={renderSelectedPlaceGroupsTitle}
       name="place-groups"
-      className={classes.select}
+      sx={styles.select}
     >
       {placeGroups.map((placeGroup) => (
         <MenuItem key={placeGroup.id} value={placeGroup.id}>
@@ -170,7 +165,4 @@ const _PlaceGroupsSelect: React.FC<PlaceGroupSelectProps> = ({
       actions={actions}
     />
   );
-};
-
-const PlaceGroupsSelect = withStyles(styles)(_PlaceGroupsSelect);
-export default PlaceGroupsSelect;
+}

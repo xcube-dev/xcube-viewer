@@ -519,9 +519,18 @@ export function controlReducer(
           ...state,
           selectedDataset2Id: null,
           selectedVariable2Name: null,
+          variableCompareMode: false,
+          // removes swipe handle
+          variableSplitPos: undefined,
         };
       }
-      return { ...state, selectedDataset2Id, selectedVariable2Name };
+      return {
+        ...state,
+        selectedDataset2Id,
+        selectedVariable2Name,
+        variableCompareMode: true,
+        // swipe handle stays the same
+      };
     }
     case CONFIGURE_SERVERS: {
       if (state.selectedServerId !== action.selectedServerId) {
