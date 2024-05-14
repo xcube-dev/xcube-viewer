@@ -116,7 +116,12 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
           value={variable.name}
           selected={variable.name === selectedVariableName}
         >
-          {variable.title || variable.name}
+          {getVariableLabel(
+            variable,
+            selectedDatasetId,
+            selectedDataset2Id,
+            selectedVariable2Name,
+          )}
         </MenuItem>
       ))}
     </Select>
@@ -143,7 +148,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       sx={{ padding: 0.3 }}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
-      <Tooltip arrow title={i18n.get("Variable 2 (for comparison)")}>
+      <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>
         {<CompareIcon />}
       </Tooltip>
     </ToggleButton>
@@ -160,3 +165,16 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
 
 const VariableSelect = withStyles(styles)(_VariableSelect);
 export default VariableSelect;
+
+function getVariableLabel(
+  variable: Variable,
+  datasetId: string | null,
+  dataset2Id: string | null,
+  variable2Name: string | null,
+) {
+  const label = variable.title || variable.name;
+  if (datasetId === dataset2Id && variable.name === variable2Name) {
+    return `${label} (#2)`;
+  }
+  return label;
+}
