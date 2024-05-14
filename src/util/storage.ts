@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+import { isObject } from "@/util/types";
+
 export interface NativeStorage {
   getItem: (key: string) => string | null;
   setItem: (key: string, value: string) => void;
@@ -201,10 +203,4 @@ export class Storage {
   private makeKey(propertyName: string): string {
     return `xcube.${this.brandingName}.${propertyName}`;
   }
-}
-
-function isObject(value: unknown): value is object {
-  return (
-    value !== null && typeof value === "object" && value.constructor === Object
-  );
 }

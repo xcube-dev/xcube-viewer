@@ -81,7 +81,7 @@ export default function ColorBarStyleEditor({
 
   return (
     <>
-      <Box component="span">
+      <Box component="div" sx={{ display: "flex", alignItems: "center" }}>
         <Checkbox
           checked={variableColorBar.isAlpha}
           onChange={handleColorBarAlpha}

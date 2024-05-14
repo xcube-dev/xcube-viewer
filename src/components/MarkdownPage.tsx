@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Markdown from "react-markdown";
 import { Theme } from "@mui/material/styles";
 import createStyles from "@mui/styles/createStyles";
@@ -36,6 +36,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import DialogContent from "@mui/material/DialogContent";
 import { TransitionProps } from "@mui/material/transitions";
+
+import useFetchText from "@/hooks/useFetchText";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,13 +79,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
   open,
   onClose,
 }) => {
-  const [markdownText, setMarkdownText] = useState("");
-
-  useEffect(() => {
-    fetch(href)
-      .then((response) => response.text())
-      .then((text) => setMarkdownText(text));
-  });
+  const markdownText = useFetchText(href);
 
   const classes = useStyles();
 
@@ -113,7 +109,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
       </AppBar>
       <DialogContent className={classes.dialog}>
         <div className={classes.text}>
-          <Markdown children={markdownText} linkTarget="_blank" />
+          <Markdown children={markdownText || ""} linkTarget="_blank" />
         </div>
       </DialogContent>
     </Dialog>

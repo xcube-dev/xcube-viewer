@@ -22,12 +22,51 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
+import Markdown from "react-markdown";
+import Popover from "@mui/material/Popover";
+import Paper from "@mui/material/Paper";
+
+interface MarkdownPopoverProps {
+  anchorEl: HTMLElement | null;
+  open: boolean;
+  onClose?: () => void;
+  markdownText?: string;
 }
 
-export function isObject(value: unknown): value is object {
+export default function MarkdownPopover({
+  anchorEl,
+  markdownText,
+  open,
+  onClose,
+}: MarkdownPopoverProps) {
+  if (!markdownText) {
+    return null;
+  }
+
+  const components = {
+    code: (props: Record<string, unknown>) => {
+      const { node: _, ...rest } = props;
+      return <code {...rest} style={{ color: "green" }} />;
+    },
+  };
+
   return (
-    value !== null && typeof value === "object" && value.constructor === Object
+    <Popover anchorEl={anchorEl} open={open} onClose={onClose}>
+      <Paper
+        sx={{
+          width: "32em",
+          overflowY: "auto",
+          fontSize: "smaller",
+          paddingLeft: 2,
+          paddingRight: 2,
+        }}
+      >
+        <Markdown
+          children={markdownText}
+          components={components}
+          linkTarget="_blank"
+        />
+      </Paper>
+    </Popover>
   );
 }

@@ -28,6 +28,10 @@ import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // base defaults to "/" which doesn't work for
+  // the viewer build embedded in xcube server and published
+  // via the "/viewer" endpoint
+  base: "",
   plugins: [react()],
   optimizeDeps: {
     // Added this because I got

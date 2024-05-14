@@ -23,19 +23,49 @@
  */
 
 import { expect, it, describe } from "vitest";
-import { isNumber } from "@/util/types";
+import { isNumber, isObject } from "@/util/types";
 
-const VALUES = [undefined, null, true, 1.5, "Hi", [], {}, () => {}];
+class A {}
+
+const TEST_VALUES = [
+  undefined,
+  null,
+  true,
+  1.5,
+  "Hi",
+  () => {},
+  [],
+  {},
+  A,
+  new A(),
+];
 
 describe("Assert", () => {
   it("isNumber() works", () => {
-    expect(VALUES.map(isNumber)).toEqual([
+    expect(TEST_VALUES.map(isNumber)).toEqual([
       false,
       false,
       false,
       true,
       false,
       false,
+      false,
+      false,
+      false,
+      false,
+    ]);
+  });
+
+  it("isObject() works", () => {
+    expect(TEST_VALUES.map(isObject)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
       false,
       false,
     ]);

@@ -146,6 +146,8 @@ export default function TimeSeriesChart({
   const theme = useTheme();
   const classes = useStyles();
 
+  const [zoomMode, setZoomMode] = useState(false);
+  const [showTooltips, setShowTooltips] = useState(true);
   const [timeRangeSelection, setTimeRangeSelection] =
     useState<TimeRangeSelection>({});
   const xDomain = useRef<[number, number]>();
@@ -230,7 +232,7 @@ export default function TimeSeriesChart({
     const point2 = getChartCoords(chartX, chartY);
     if (point2) {
       const [time2, value2] = point2;
-      if (mouseEvent.ctrlKey) {
+      if (mouseEvent.ctrlKey || zoomMode) {
         setTimeRangeSelection({
           time1,
           value1,
@@ -365,6 +367,10 @@ export default function TimeSeriesChart({
         resetZoom={resetZoom}
         loading={loading}
         zoomed={zoomed}
+        zoomMode={zoomMode}
+        setZoomMode={setZoomMode}
+        showTooltips={showTooltips}
+        setShowTooltips={setShowTooltips}
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
@@ -401,7 +407,7 @@ export default function TimeSeriesChart({
             allowDataOverflow
           />
           <CartesianGrid strokeDasharray="3 3" />
-          {!isNumber(timeRangeSelection.time1) && (
+          {showTooltips && !isNumber(timeRangeSelection.time1) && (
             <Tooltip content={<CustomTooltip />} />
           )}
           <Legend

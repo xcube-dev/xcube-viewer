@@ -22,13 +22,21 @@
  * SOFTWARE.
  */
 
+import { useRef, useState } from "react";
 import { SxProps } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DoneIcon from "@mui/icons-material/Done";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
-const SX: SxProps = { display: "flex", justifyContent: "flex-end", gap: 0.2 };
+import useFetchText from "@/hooks/useFetchText";
+import MarkdownPopover from "@/components/MarkdownPopover";
+
+const styles: Record<string, SxProps> = {
+  container: { display: "flex", justifyContent: "space-between", gap: 0.2 },
+  doneCancel: { display: "flex", gap: 0.2 },
+};
 
 interface DoneCancelProps {
   onDone: () => void;
@@ -36,6 +44,7 @@ interface DoneCancelProps {
   doneDisabled?: boolean;
   cancelDisabled?: boolean;
   size?: "small" | "medium" | "large";
+  helpUrl?: string;
 }
 
 export default function DoneCancel({
@@ -44,26 +53,62 @@ export default function DoneCancel({
   doneDisabled,
   cancelDisabled,
   size,
+  helpUrl,
 }: DoneCancelProps) {
-  size = size || "medium";
+  const [helpAnchorEl, setHelpAnchorEl] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const helpButtonRef = useRef<HTMLButtonElement>(null);
+  const helpText = useFetchText(helpUrl);
+
+  const handleHelpOpen = () => {
+    setHelpAnchorEl(helpButtonRef.current);
+  };
+
+  const handleHelpClose = () => {
+    setHelpAnchorEl(null);
+  };
+
   return (
-    <Box sx={SX}>
-      <IconButton
-        onClick={onDone}
-        color="primary"
-        disabled={doneDisabled}
-        size={size}
-      >
-        <DoneIcon fontSize="inherit" />
-      </IconButton>
-      <IconButton
-        onClick={onCancel}
-        color="primary"
-        disabled={cancelDisabled}
-        size={size}
-      >
-        <CancelIcon fontSize="inherit" />
-      </IconButton>
+    <Box sx={styles.container}>
+      <Box>
+        {helpText && (
+          <>
+            <IconButton
+              onClick={handleHelpOpen}
+              size={size}
+              ref={helpButtonRef}
+            >
+              <HelpOutlineIcon fontSize="inherit" />
+            </IconButton>
+            <MarkdownPopover
+              anchorEl={helpAnchorEl}
+              open={!!helpAnchorEl}
+              onClose={handleHelpClose}
+              markdownText={helpText}
+            />
+          </>
+        )}
+      </Box>
+
+      <Box sx={styles.doneCancel}>
+        <IconButton
+          onClick={onDone}
+          color="primary"
+          disabled={doneDisabled}
+          size={size}
+        >
+          <DoneIcon fontSize="inherit" />
+        </IconButton>
+        <IconButton
+          onClick={onCancel}
+          color="primary"
+          disabled={cancelDisabled}
+          size={size}
+        >
+          <CancelIcon fontSize="inherit" />
+        </IconButton>
+      </Box>
     </Box>
   );
 }

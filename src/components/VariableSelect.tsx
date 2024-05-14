@@ -30,6 +30,7 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import ToggleButton from "@mui/material/ToggleButton";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Tooltip from "@mui/material/Tooltip";
@@ -133,16 +134,19 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
     </IconButton>
   );
   const variable2Button = (
-    <IconButton
+    <ToggleButton
       key={"variable2"}
       className={classes.button}
-      color={isSelectedVariable2 ? "success" : "default"}
+      selected={isSelectedVariable2}
+      value={"comparison"}
+      size="small"
+      sx={{ padding: 0.3 }}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Variable 2 (for comparison)")}>
         {<CompareIcon />}
       </Tooltip>
-    </IconButton>
+    </ToggleButton>
   );
 
   return (

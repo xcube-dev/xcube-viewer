@@ -26,9 +26,13 @@ import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
+import ToggleButton from "@mui/material/ToggleButton";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import AllOutIcon from "@mui/icons-material/AllOut";
+import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import CloseIcon from "@mui/icons-material/Close";
+import CommentIcon from "@mui/icons-material/Comment";
+import FitScreenIcon from "@mui/icons-material/FitScreen";
 
 import i18n from "@/i18n";
 import {
@@ -37,7 +41,7 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
-import AddTimeSeriesButton from "@/components/TimeSeriesCharts/AddTimeSeriesButton";
+import AddTimeSeriesButton from "./AddTimeSeriesButton";
 
 const useStyles = makeStyles({
   headerContainer: {
@@ -45,12 +49,14 @@ const useStyles = makeStyles({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingRight: 10,
   },
   actionsContainer: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "nowrap",
     alignItems: "center",
+    gap: 1,
   },
   responsiveContainer: {
     flexGrow: 1,
@@ -76,6 +82,10 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   resetZoom: () => void;
   loading: boolean;
   zoomed: boolean;
+  zoomMode: boolean;
+  setZoomMode: (zoomMode: boolean) => void;
+  showTooltips: boolean;
+  setShowTooltips: (showTooltips: boolean) => void;
 }
 
 export default function TimeSeriesChartHeader({
@@ -86,6 +96,10 @@ export default function TimeSeriesChartHeader({
   resetZoom,
   loading,
   zoomed,
+  zoomMode,
+  setZoomMode,
+  showTooltips,
+  setShowTooltips,
 }: TimeSeriesChartHeaderProps) {
   const classes = useStyles();
 
@@ -98,16 +112,38 @@ export default function TimeSeriesChartHeader({
       <Typography className={classes.chartTitle}>{chartTitle}</Typography>
       <Box className={classes.actionsContainer}>
         {zoomed && (
-          <IconButton
-            key={"zoomOutButton"}
-            className={classes.actionButton}
-            aria-label="Zoom Out"
-            onClick={resetZoom}
+          <Tooltip arrow title={i18n.get("Zoom to full range")}>
+            <IconButton
+              key={"zoomOutButton"}
+              className={classes.actionButton}
+              aria-label="Zoom Out"
+              onClick={resetZoom}
+              size="small"
+            >
+              <FitScreenIcon fontSize={"inherit"} />
+            </IconButton>
+          </Tooltip>
+        )}
+        <Tooltip arrow title={i18n.get("Toggle zoom mode (or press CTRL key)")}>
+          <ToggleButton
+            value={"zoomMode"}
+            selected={zoomMode}
+            onClick={() => setZoomMode(!zoomMode)}
             size="small"
           >
-            <AllOutIcon fontSize={"inherit"} />
-          </IconButton>
-        )}
+            <AspectRatioIcon fontSize="inherit" />
+          </ToggleButton>
+        </Tooltip>
+        <Tooltip arrow title={i18n.get("Toggle showing time-serie values")}>
+          <ToggleButton
+            value={"showTooltips"}
+            selected={showTooltips}
+            onClick={() => setShowTooltips(!showTooltips)}
+            size="small"
+          >
+            <CommentIcon fontSize="inherit" />
+          </ToggleButton>
+        </Tooltip>
         <AddTimeSeriesButton
           className={classes.actionButton}
           timeSeriesGroupId={timeSeriesGroup.id}

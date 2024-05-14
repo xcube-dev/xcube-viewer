@@ -30,10 +30,10 @@ import IconButton from "@mui/material/IconButton";
 import { newId } from "@/util/id";
 import { ColorBarGroup } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
+import useUndo from "@/hooks/useUndo";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarItem from "./UserColorBarItem";
-import useUndo from "./useUndo";
 
 const CONTAINER_STYLE = {
   display: "flex",

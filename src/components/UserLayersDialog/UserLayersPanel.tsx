@@ -33,6 +33,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveIcon from "@mui/icons-material/Close";
@@ -44,7 +45,8 @@ import i18n from "@/i18n";
 import { newId } from "@/util/id";
 import { LayerDefinition } from "@/model/layerDefinition";
 import UserLayerEditorWms from "./UserLayerEditorWms";
-import UserLayerEditorXyz from "./UserLayerEditorXyz";
+import UserLayerEditorWts from "./UserLayerEditorWts";
+import useUndo from "@/hooks/useUndo";
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -78,6 +80,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   const [editedLayer, setEditedLayer] = React.useState<EditedLayer | null>(
     null,
   );
+  const [undo, setUndo] = useUndo();
 
   const classes = useStyles();
 
@@ -86,6 +89,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   }
 
   const handleUserLayerEdit = (userLayer: LayerDefinition) => {
+    setUndo(() => setUserLayers(userLayers));
     setEditedLayer({
       editId: userLayer.id,
       editMode: "edit",
@@ -93,6 +97,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   };
 
   const handleUserLayerCopy = (userLayer: LayerDefinition) => {
+    setUndo(undefined);
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     setUserLayers([
       ...userLayers.slice(0, index + 1),
@@ -106,6 +111,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   };
 
   const handleUserLayerRemove = (userLayer: LayerDefinition) => {
+    setUndo(undefined);
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     if (userLayer.id === selectedId) {
       setSelectedId(selectedDefaultId);
@@ -119,7 +125,8 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     ]);
   };
 
-  const addUserLayer = (layerType: "xyz" | "wms") => {
+  const addUserLayer = (layerType: "wms" | "wts") => {
+    setUndo(() => setUserLayers(userLayers));
     const id = newId("user-layer-");
     setUserLayers([
       ...userLayers,
@@ -140,8 +147,8 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     addUserLayer("wms");
   };
 
-  const handleAddUserLayerXyz = () => {
-    addUserLayer("xyz");
+  const handleAddUserLayerWts = () => {
+    addUserLayer("wts");
   };
 
   const handleUserLayerChange = (userLayer: LayerDefinition) => {
@@ -158,6 +165,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   };
 
   const handleEditorCanceled = () => {
+    undo();
     if (editedLayer && editedLayer.editMode === "add") {
       const index = userLayers.findIndex(
         (layer) => layer.id === editedLayer.editId,
@@ -180,12 +188,14 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
           if (editedLayer && editedLayer.editId === userLayer.id) {
             return userLayer.wms ? (
               <UserLayerEditorWms
+                key={userLayer.id}
                 userLayer={userLayer}
                 onChange={handleUserLayerChange}
                 onCancel={handleEditorCanceled}
               />
             ) : (
-              <UserLayerEditorXyz
+              <UserLayerEditorWts
+                key={userLayer.id}
                 userLayer={userLayer}
                 onChange={handleUserLayerChange}
                 onCancel={handleEditorCanceled}
@@ -232,12 +242,22 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
           <ListItem sx={{ minHeight: "3em" }}>
             <ListItemSecondaryAction>
               <Box sx={{ display: "flex", gap: 2, paddingTop: 2 }}>
-                <Button onClick={handleAddUserLayerWms} startIcon={<AddIcon />}>
-                  {i18n.get("WMS")}
-                </Button>
-                <Button onClick={handleAddUserLayerXyz} startIcon={<AddIcon />}>
-                  {i18n.get("XYZ")}
-                </Button>
+                <Tooltip title={"Add layer from a Web Map Service"}>
+                  <Button
+                    onClick={handleAddUserLayerWms}
+                    startIcon={<AddIcon />}
+                  >
+                    {i18n.get("WMS")}
+                  </Button>
+                </Tooltip>
+                <Tooltip title={"Add layer from a Web Tile Service"}>
+                  <Button
+                    onClick={handleAddUserLayerWts}
+                    startIcon={<AddIcon />}
+                  >
+                    {i18n.get("WTS")}
+                  </Button>
+                </Tooltip>
               </Box>
             </ListItemSecondaryAction>
           </ListItem>

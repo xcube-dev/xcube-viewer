@@ -22,12 +22,22 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
-}
+import { useEffect, useRef } from "react";
 
-export function isObject(value: unknown): value is object {
-  return (
-    value !== null && typeof value === "object" && value.constructor === Object
-  );
+type Undo = () => void;
+type UndoSetter = (undo: Undo | undefined) => void;
+
+export default function useUndo(): [Undo, UndoSetter] {
+  const undoRef = useRef<Undo>();
+  const undo = useRef(() => {
+    if (undoRef.current) {
+      undoRef.current();
+      undoRef.current = undefined;
+    }
+  });
+  const setUndo = useRef((undo: Undo | undefined) => {
+    undoRef.current = undo;
+  });
+  useEffect(() => undo.current, []);
+  return [undo.current, setUndo.current];
 }

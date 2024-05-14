@@ -28,8 +28,10 @@ import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
+import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { PlaceGroupTimeSeries, TimeSeries } from "@/model/timeSeries";
+import Tooltip from "@mui/material/Tooltip";
 
 interface AddTimeSeriesButtonProps extends WithLocale {
   className: string;
@@ -81,18 +83,20 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = ({
 
   return (
     <>
-      <IconButton
-        size="small"
-        className={className}
-        aria-label="Add"
-        aria-controls={isOpen ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={isOpen ? "true" : undefined}
-        onClick={handleButtonClick}
-        disabled={menuItems.length === 0}
-      >
-        <AddCircleOutlineIcon fontSize={"inherit"} />
-      </IconButton>
+      <Tooltip arrow title={i18n.get("Add time-series from places")}>
+        <IconButton
+          size="small"
+          className={className}
+          aria-label="Add"
+          aria-controls={isOpen ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={isOpen ? "true" : undefined}
+          onClick={handleButtonClick}
+          disabled={menuItems.length === 0}
+        >
+          <AddCircleOutlineIcon fontSize={"inherit"} />
+        </IconButton>
+      </Tooltip>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

@@ -152,7 +152,11 @@ const _AppBar: React.FC<AppBarProps> = ({
   };
 
   return (
-    <AppBarComponent position="absolute" className={classNames(classes.appBar)}>
+    <AppBarComponent
+      position="absolute"
+      className={classNames(classes.appBar)}
+      elevation={0}
+    >
       <Toolbar disableGutters className={classes.toolbar} variant="dense">
         <a
           href={Config.instance.branding.organisationUrl || ""}
@@ -218,7 +222,7 @@ const _AppBar: React.FC<AppBarProps> = ({
       </Toolbar>
       <MarkdownPage
         title={i18n.get("Imprint")}
-        href="imprint.md"
+        href="docs/imprint.md"
         open={imprintOpen}
         onClose={handleCloseImprint}
       />

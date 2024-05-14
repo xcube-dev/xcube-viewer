@@ -79,6 +79,7 @@ export default function UserColorBarEditor({
         onCancel={onCancel}
         doneDisabled={!!userColorBar.errorMessage}
         size="small"
+        helpUrl="docs/color-bars.en.md"
       />
     </Box>
   );

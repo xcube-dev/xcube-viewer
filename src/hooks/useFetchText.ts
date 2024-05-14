@@ -22,12 +22,23 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
-}
+import { useEffect, useState } from "react";
 
-export function isObject(value: unknown): value is object {
-  return (
-    value !== null && typeof value === "object" && value.constructor === Object
-  );
+export default function useFetchText(markdownUrl: string | null | undefined) {
+  const [markdownText, setMarkdownText] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (!markdownUrl) {
+      setMarkdownText(undefined);
+    } else {
+      fetch(markdownUrl)
+        .then((response) => response.text())
+        .then((text) => setMarkdownText(text))
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [markdownUrl]);
+
+  return markdownText;
 }
