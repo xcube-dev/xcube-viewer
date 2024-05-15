@@ -22,10 +22,8 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Theme } from "@mui/material";
-import { WithStyles } from "@mui/styles";
+import { SxProps, Theme } from "@mui/system";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -37,8 +35,6 @@ import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import withStyles from "@mui/styles/withStyles";
-import createStyles from "@mui/styles/createStyles";
 import TextField from "@mui/material/TextField";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -50,29 +46,28 @@ import { newId } from "@/util/id";
 import { WithLocale } from "@/util/lang";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) =>
-  createStyles({
-    formControl: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
-    },
-    textField2: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 400,
-    },
-    button: {
-      margin: theme.spacing(0.1),
-    },
-  });
+const styles: Record<string, SxProps<Theme>> = {
+  formControl: (theme: Theme) => ({
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  }),
+  textField: (theme: Theme) => ({
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  }),
+  textField2: (theme: Theme) => ({
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 400,
+  }),
+  button: (theme: Theme) => ({
+    margin: theme.spacing(0.1),
+  }),
+};
 
-interface ServerDialogProps extends WithStyles<typeof styles>, WithLocale {
+interface ServerDialogProps extends WithLocale {
   open: boolean;
   servers: ApiServerConfig[];
   selectedServer: ApiServerConfig;
@@ -83,14 +78,13 @@ interface ServerDialogProps extends WithStyles<typeof styles>, WithLocale {
   closeDialog: (dialogId: string) => void;
 }
 
-const _ServerDialog: React.FC<ServerDialogProps> = ({
-  classes,
+export default function ServerDialog({
   open,
   servers,
   selectedServer,
   closeDialog,
   configureServers,
-}) => {
+}: ServerDialogProps) {
   const ref = useRef(false);
   const [servers_, setServers_] = useState(servers);
   const [selectedServer_, setSelectedServer_] = useState(selectedServer);
@@ -248,7 +242,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
           required
           id="server-name"
           label="Name"
-          className={classes.textField}
+          sx={styles.textField}
           margin="normal"
           value={selectedServer_.name}
           onChange={handleServerNameChange}
@@ -259,7 +253,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
           required
           id="server-url"
           label="URL"
-          className={classes.textField2}
+          sx={styles.textField2}
           margin="normal"
           value={selectedServer_.url}
           onChange={handleServerURLChange}
@@ -270,7 +264,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
     dialogContent = (
       <DialogContent dividers>
         <div>
-          <FormControl variant="standard" className={classes.formControl}>
+          <FormControl variant="standard" sx={styles.formControl}>
             <InputLabel htmlFor="server-name">Name</InputLabel>
             <Select
               variant="standard"
@@ -286,7 +280,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
             <FormHelperText>{selectedServer_.url}</FormHelperText>
           </FormControl>
           <IconButton
-            className={classes.button}
+            sx={styles.button}
             aria-label="Add"
             color="primary"
             onClick={handleAddMode}
@@ -295,7 +289,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
             <AddIcon fontSize="small" />
           </IconButton>
           <IconButton
-            className={classes.button}
+            sx={styles.button}
             aria-label="Edit"
             onClick={handleEditMode}
             size="large"
@@ -303,7 +297,7 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
             <EditIcon fontSize="small" />
           </IconButton>
           <IconButton
-            className={classes.button}
+            sx={styles.button}
             aria-label="Delete"
             disabled={servers_.length < 2}
             onClick={handleRemoveServer}
@@ -332,7 +326,4 @@ const _ServerDialog: React.FC<ServerDialogProps> = ({
       </DialogActions>
     </Dialog>
   );
-};
-
-const ServerDialog = withStyles(styles)(_ServerDialog);
-export default ServerDialog;
+}
