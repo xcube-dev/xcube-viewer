@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 
-import { getLabelsFromRange } from "@/util/label";
+import { getLabelsForRange } from "@/util/label";
 
 const useStyles = makeStyles(() => ({
   label: {
@@ -42,6 +42,7 @@ interface ColorBarLabelsProps {
   minValue: number;
   maxValue: number;
   numTicks: number;
+  logScaled?: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
@@ -49,12 +50,17 @@ export default function ColorBarLabels({
   minValue,
   maxValue,
   numTicks,
+  logScaled,
   onClick,
 }: ColorBarLabelsProps) {
   const classes = useStyles();
+  const labels = useMemo(
+    () => getLabelsForRange(minValue, maxValue, numTicks, logScaled),
+    [minValue, maxValue, numTicks, logScaled],
+  );
   return (
     <div className={classes.label} onClick={onClick}>
-      {getLabelsFromRange(minValue, maxValue, numTicks).map((label, i) => (
+      {labels.map((label, i) => (
         <span key={i}>{label}</span>
       ))}
     </div>

@@ -30,7 +30,7 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
 
-import { getLabelsFromArray } from "@/util/label";
+import { getLabelsForArray } from "@/util/label";
 import { ColorBarNorm } from "@/model/variable";
 
 const HOR_SLIDER_MARGIN = 5;
@@ -212,7 +212,7 @@ export default function ColorBarRangeEditor({
 
   const values = [total1, original1, original2, total2];
 
-  const marks: Mark[] = getLabelsFromArray(values).map((label, i) => {
+  const marks: Mark[] = getLabelsForArray(values).map((label, i) => {
     return { value: values[i], label };
   });
 

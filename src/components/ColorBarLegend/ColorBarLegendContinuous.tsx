@@ -79,6 +79,7 @@ export default function ColorBarLegendContinuous({
         minValue={variableColorBarMinMax[0]}
         maxValue={variableColorBarMinMax[1]}
         numTicks={5}
+        logScaled={variableColorBarNorm === "log"}
         onClick={handleOpenColorBarRangeEditor}
       />
       <Popover
