@@ -23,13 +23,13 @@
  */
 
 import { expect, it, describe } from "vitest";
-import { getLabelsForRange, getLabelsForArray } from "./label";
+import { getLabelsForRange, getLabelsForValues } from "./label";
 
 describe("Assert that label.getLabelsForRange()", () => {
   it("works for linear range", () => {
     expect(getLabelsForRange(0.0, 0.25, 5)).toEqual([
       "0",
-      "0.06",
+      "0.063",
       "0.13",
       "0.19",
       "0.25",
@@ -39,8 +39,8 @@ describe("Assert that label.getLabelsForRange()", () => {
     expect(getLabelsForRange(0.001, 0.25, 5, true, false)).toEqual([
       "0.001",
       "0.004",
-      "0.0158",
-      "0.0629",
+      "0.016",
+      "0.063",
       "0.25",
     ]);
   });
@@ -64,33 +64,33 @@ describe("Assert that label.getLabelsForRange()", () => {
   });
 });
 
-describe("Assert that label.getLabelsForArray()", () => {
+describe("Assert that label.getLabelsForValues()", () => {
   it("works for integers", () => {
-    expect(getLabelsForArray([-1, 0, 1])).toEqual(["-1", "0", "1"]);
+    expect(getLabelsForValues([-1, 0, 1])).toEqual(["-1", "0", "1"]);
   });
   it("works for floats", () => {
-    expect(getLabelsForArray([0.01, 0.02, 0.03])).toEqual([
+    expect(getLabelsForValues([0.01, 0.02, 0.03])).toEqual([
       "0.01",
       "0.02",
       "0.03",
     ]);
   });
   it("works for 1e-2", () => {
-    expect(getLabelsForArray([0.0123, 0.0234, 0.0345])).toEqual([
+    expect(getLabelsForValues([0.0123, 0.0234, 0.0345])).toEqual([
       "0.012",
       "0.023",
       "0.035",
     ]);
   });
   it("works for 1e-4", () => {
-    expect(getLabelsForArray([0.000123, 0.000234, 0.000345])).toEqual([
+    expect(getLabelsForValues([0.000123, 0.000234, 0.000345])).toEqual([
       "0.00012",
       "0.00023",
       "0.00034",
     ]);
   });
   it("works for 1e+2", () => {
-    expect(getLabelsForArray([123.456, 234.567, 345.678])).toEqual([
+    expect(getLabelsForValues([123.456, 234.567, 345.678])).toEqual([
       "123.46",
       "234.57",
       "345.68",
@@ -98,7 +98,7 @@ describe("Assert that label.getLabelsForArray()", () => {
   });
 
   it("works for 1e-4 exponential", () => {
-    expect(getLabelsForArray([0.000123, 0.000234, 0.000345], true)).toEqual([
+    expect(getLabelsForValues([0.000123, 0.000234, 0.000345], true)).toEqual([
       "1.23e-4",
       "2.34e-4",
       "3.45e-4",
@@ -106,7 +106,7 @@ describe("Assert that label.getLabelsForArray()", () => {
   });
 
   it("works for 1e+2 exponential", () => {
-    expect(getLabelsForArray([123.456, 234.567, 345.678], true)).toEqual([
+    expect(getLabelsForValues([123.456, 234.567, 345.678], true)).toEqual([
       "1.23e+2",
       "2.35e+2",
       "3.46e+2",

@@ -29,25 +29,28 @@ export function getLabelsForRange(
   logScaled: boolean = false,
   exponential: boolean = false,
 ): string[] {
-  return getLabelsForArray(
+  return getLabelsForValues(
     getRange(minValue, maxValue, count, logScaled),
     exponential,
   );
 }
 
-export function getLabelsForArray(
+export function getLabelsForValues(
   values: number[],
   exponential: boolean = false,
 ): string[] {
-  const fractionDigits = exponential ? 2 : getFractionDigits(values);
-  return values.map((v) => getLabelForValue(v, fractionDigits, exponential));
+  // const fractionDigits = exponential ? 2 : getFractionDigits(values);
+  return values.map((v) => getLabelForValue(v, undefined, exponential));
 }
 
-function getLabelForValue(
+export function getLabelForValue(
   value: number,
-  fractionDigits: number,
+  fractionDigits?: number,
   exponential?: boolean,
 ): string {
+  if (fractionDigits === undefined) {
+    fractionDigits = exponential ? 2 : getSignificantDigits(value);
+  }
   if (exponential) {
     return value.toExponential(fractionDigits);
   }
@@ -58,7 +61,7 @@ function getLabelForValue(
     let label = value.toFixed(fractionDigits);
     // Strip trailing "0"s
     if (label.includes(".")) {
-      while (label.endsWith("0")) {
+      while (label.endsWith("0") && !label.endsWith(".0")) {
         label = label.substring(0, label.length - 1);
       }
     }
@@ -66,21 +69,12 @@ function getLabelForValue(
   }
 }
 
-export function getFractionDigits(values: number[]): number {
-  const min = values[0];
-  const max = values[values.length - 1];
-  const v1 = getFractionDigitsForScalar(min);
-  const v2 = getFractionDigitsForScalar(max);
-  const n = Math.max(v1, v2);
-  return Math.min(10, Math.max(2, n + 1));
-}
-
-function getFractionDigitsForScalar(x: number): number {
-  if (x === 0) {
+function getSignificantDigits(x: number): number {
+  if (x === 0 || x === Math.floor(x)) {
     return 0;
   }
-  const n = Math.floor(Math.log10(Math.abs(x)));
-  return n < 0 ? -n : 0;
+  const exp = Math.floor(Math.log10(Math.abs(x)));
+  return Math.min(16, Math.max(2, exp < 0 ? 1 - exp : 0));
 }
 
 function getRange(

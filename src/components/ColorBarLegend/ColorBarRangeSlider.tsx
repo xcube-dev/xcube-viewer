@@ -26,7 +26,7 @@ import { useState, SyntheticEvent } from "react";
 import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
 
-import { getLabelsForArray } from "@/util/label";
+import { getLabelsForValues, getLabelForValue } from "@/util/label";
 import { ColorBarNorm } from "@/model/variable";
 
 interface ColorBarRangeSliderProps {
@@ -68,9 +68,15 @@ export default function ColorBarRangeSlider({
     value: number | number[],
   ) => {
     if (Array.isArray(value)) {
+      // Here we convert to the precision of the displayed labels.
+      // Otherwise, we'd get a lot of confusing digits if log-scaled.
+      const minMaxLabels = getLabelsForValues(norm.scaleInv(value));
+      const minMaxValues = minMaxLabels.map((label) =>
+        Number.parseFloat(label),
+      );
       updateVariableColorBar(
         variableColorBarName,
-        norm.scaleInv(value as [number, number]),
+        minMaxValues as [number, number],
         variableColorBarNorm,
         variableOpacity,
       );
@@ -108,9 +114,7 @@ export default function ColorBarRangeSlider({
 
   const values = [total1, original1, original2, total2];
 
-  console.log("values:", values, norm.scaleInv(values));
-
-  const marks: Mark[] = getLabelsForArray(norm.scaleInv(values)).map(
+  const marks: Mark[] = getLabelsForValues(norm.scaleInv(values)).map(
     (label, i) => {
       return { value: values[i], label };
     },
@@ -123,10 +127,10 @@ export default function ColorBarRangeSlider({
       value={currentMinMax}
       marks={marks}
       step={step}
-      valueLabelFormat={(v) => getLabelsForArray([norm.scaleInv(v)])[0]}
+      valueLabelFormat={(v) => getLabelForValue(norm.scaleInv(v))}
       onChange={handleMinMaxChange}
       onChangeCommitted={handleMinMaxChangeCommitted}
-      valueLabelDisplay="on"
+      valueLabelDisplay="auto"
       size="small"
     />
   );
