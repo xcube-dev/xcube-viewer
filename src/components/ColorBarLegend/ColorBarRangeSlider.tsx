@@ -123,7 +123,7 @@ export default function ColorBarRangeSlider({
       value={currentMinMax}
       marks={marks}
       step={step}
-      // scale={(v) => norm.scaleInv(v)}
+      valueLabelFormat={(v) => getLabelsForArray([norm.scaleInv(v)])[0]}
       onChange={handleMinMaxChange}
       onChangeCommitted={handleMinMaxChangeCommitted}
       valueLabelDisplay="on"
