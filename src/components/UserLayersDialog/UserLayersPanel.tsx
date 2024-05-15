@@ -151,7 +151,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     addUserLayer("wts");
   };
 
-  const handleEditComitted = (userLayer: LayerDefinition) => {
+  const handleEditCommitted = (userLayer: LayerDefinition) => {
     setUndo(undefined);
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     if (selectedId === userLayer.id) {
@@ -191,14 +191,14 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
               <UserLayerEditorWms
                 key={userLayer.id}
                 userLayer={userLayer}
-                onChange={handleEditComitted}
+                onChange={handleEditCommitted}
                 onCancel={handleEditCanceled}
               />
             ) : (
               <UserLayerEditorWts
                 key={userLayer.id}
                 userLayer={userLayer}
-                onChange={handleEditComitted}
+                onChange={handleEditCommitted}
                 onCancel={handleEditCanceled}
               />
             );
