@@ -72,7 +72,6 @@ export function getFractionDigits(values: number[]): number {
   const v1 = getFractionDigitsForScalar(min);
   const v2 = getFractionDigitsForScalar(max);
   const n = Math.max(v1, v2);
-  console.info("getFractionDigits", v1, v2, n);
   return Math.min(10, Math.max(2, n + 1));
 }
 
