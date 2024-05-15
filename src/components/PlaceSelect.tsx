@@ -26,10 +26,7 @@ import * as React from "react";
 import Input from "@mui/material/Input";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import { SxProps } from "@mui/system";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -42,14 +39,13 @@ import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
 
 // noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) =>
-  createStyles({
-    select: {
-      minWidth: "5em",
-    },
-  });
+const styles: Record<string, SxProps> = {
+  select: {
+    minWidth: "5em",
+  },
+};
 
-interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
+interface PlaceSelectProps extends WithLocale {
   datasets: Dataset[];
   selectedPlaceGroupIds: string[] | null;
   selectedPlaceId: string | null;
@@ -74,8 +70,7 @@ interface PlaceSelectProps extends WithStyles<typeof styles>, WithLocale {
   locateSelectedPlace: () => void;
 }
 
-const _PlaceSelect: React.FC<PlaceSelectProps> = ({
-  classes,
+export default function PlaceSelect({
   selectPlace,
   placeLabels,
   selectedPlaceId,
@@ -84,7 +79,7 @@ const _PlaceSelect: React.FC<PlaceSelectProps> = ({
   removeUserPlace,
   places,
   locateSelectedPlace,
-}) => {
+}: PlaceSelectProps) {
   const [editMode, setEditMode] = React.useState(false);
 
   places = places || [];
@@ -114,7 +109,7 @@ const _PlaceSelect: React.FC<PlaceSelectProps> = ({
       input={<Input name="place" id="place-select" />}
       displayEmpty
       name="place"
-      className={classes.select}
+      sx={styles.select}
       disabled={places.length === 0}
     >
       {places.map((place, i) => (
@@ -178,7 +173,4 @@ const _PlaceSelect: React.FC<PlaceSelectProps> = ({
       actions={actions}
     />
   );
-};
-
-const PlaceSelect = withStyles(styles)(_PlaceSelect);
-export default PlaceSelect;
+}

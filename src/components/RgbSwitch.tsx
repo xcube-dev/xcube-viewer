@@ -24,10 +24,6 @@
 
 import * as React from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -35,20 +31,17 @@ import i18n from "@/i18n";
 import { RgbSchema } from "@/model/dataset";
 import { WithLocale } from "@/util/lang";
 
-// noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) => createStyles({});
-
-interface RgbSwitchProps extends WithStyles<typeof styles>, WithLocale {
+interface RgbSwitchProps extends WithLocale {
   showRgbLayer: boolean;
   rgbSchema: RgbSchema | null;
   setRgbLayerVisibility: (showRgbLayer: boolean) => void;
 }
 
-const _RgbSwitch: React.FC<RgbSwitchProps> = ({
+export default function RgbSwitch({
   showRgbLayer,
   rgbSchema,
   setRgbLayerVisibility,
-}) => {
+}: RgbSwitchProps) {
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRgbLayerVisibility(event.target.checked);
   };
@@ -67,7 +60,4 @@ const _RgbSwitch: React.FC<RgbSwitchProps> = ({
       />
     </Tooltip>
   );
-};
-
-const RgbSwitch = withStyles(styles)(_RgbSwitch);
-export default RgbSwitch;
+}

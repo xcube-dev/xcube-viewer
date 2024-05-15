@@ -23,6 +23,7 @@
  */
 
 import * as React from "react";
+import { SxProps } from "@mui/system";
 import Checkbox from "@mui/material/Checkbox";
 import Input from "@mui/material/Input";
 import ListItemText from "@mui/material/ListItemText";
@@ -36,7 +37,6 @@ import { WithLocale } from "@/util/lang";
 import { PlaceGroup, USER_ID_PREFIX } from "@/model/place";
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
-import { SxProps } from "@mui/system";
 
 // noinspection JSUnusedLocalSymbols
 const styles: Record<string, SxProps> = {
