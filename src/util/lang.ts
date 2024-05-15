@@ -35,9 +35,6 @@ export interface WithLocale {
   locale?: string;
 }
 
-const PHRASE_STYLE = "color:green;font-weight:bold;";
-const LOCALE_STYLE = "color:blue;font-weight:bold;";
-
 export class LanguageDictionary {
   private readonly _languages: LanguageDictionaryEntry;
   private readonly _content: LanguageDictionaryContent;
@@ -87,12 +84,12 @@ export class LanguageDictionary {
       const baseValue = value.split("-")[0];
       if (locales.findIndex((locale) => locale === baseValue) < 0) {
         console.error(
-          `No translations found for locale "${value}", staying with "${this._locale}".`,
+          `No translation found for locale "${value}", staying with "${this._locale}".`,
         );
         return;
       } else {
         console.warn(
-          `No translations found for locale "${value}", falling back to "${baseValue}".`,
+          `No translation found for locale "${value}", falling back to "${baseValue}".`,
         );
         value = baseValue;
       }
@@ -106,16 +103,13 @@ export class LanguageDictionary {
     const entry = this._content[key];
     let translatedPhrase: string;
     if (!entry) {
-      console.debug(`missing translation for phrase %c${phrase}`, PHRASE_STYLE);
+      console.warn(`missing translation for phrase "${phrase}"`);
       translatedPhrase = phrase;
     } else {
       translatedPhrase = entry[this._locale];
       if (!translatedPhrase) {
-        console.debug(
-          `missing translation of phrase %c${phrase}`,
-          PHRASE_STYLE,
-          ` for locale %c${this._locale}`,
-          LOCALE_STYLE,
+        console.warn(
+          `missing translation of phrase "${phrase}" for locale "${this._locale}"`,
         );
         translatedPhrase = phrase;
       }
