@@ -151,7 +151,8 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     addUserLayer("wts");
   };
 
-  const handleUserLayerChange = (userLayer: LayerDefinition) => {
+  const handleEditCommitted = (userLayer: LayerDefinition) => {
+    setUndo(undefined);
     const index = userLayers.findIndex((layer) => layer.id === userLayer.id);
     if (selectedId === userLayer.id) {
       setSelectedId(selectedDefaultId);
@@ -164,7 +165,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     setEditedLayer(null);
   };
 
-  const handleEditorCanceled = () => {
+  const handleEditCanceled = () => {
     undo();
     if (editedLayer && editedLayer.editMode === "add") {
       const index = userLayers.findIndex(
@@ -190,15 +191,15 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
               <UserLayerEditorWms
                 key={userLayer.id}
                 userLayer={userLayer}
-                onChange={handleUserLayerChange}
-                onCancel={handleEditorCanceled}
+                onChange={handleEditCommitted}
+                onCancel={handleEditCanceled}
               />
             ) : (
               <UserLayerEditorWts
                 key={userLayer.id}
                 userLayer={userLayer}
-                onChange={handleUserLayerChange}
-                onCancel={handleEditorCanceled}
+                onChange={handleEditCommitted}
+                onCancel={handleEditCanceled}
               />
             );
           }

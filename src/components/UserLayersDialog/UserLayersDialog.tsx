@@ -100,6 +100,7 @@ const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
         </Box>
         {tabIndex === 0 && (
           <UserLayersPanel
+            key="baseMaps"
             userLayers={baseMaps}
             setUserLayers={setBaseMaps}
             selectedId={selectedBaseMapId}
@@ -108,6 +109,7 @@ const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
         )}
         {tabIndex === 1 && (
           <UserLayersPanel
+            key="overlays"
             userLayers={overlays}
             setUserLayers={setOverlays}
             selectedId={selectedOverlayId}
