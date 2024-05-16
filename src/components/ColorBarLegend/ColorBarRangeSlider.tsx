@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import { useState, SyntheticEvent } from "react";
+import { useState, SyntheticEvent, useEffect, useMemo } from "react";
 import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
 
 import { getLabelsForValues, getLabelForValue } from "@/util/label";
 import { ColorBarNorm } from "@/model/variable";
-import Scaler from "./scaler";
+import Scaling from "./scaling";
 
 interface ColorBarRangeSliderProps {
   variableColorBarName: string;
@@ -52,11 +52,18 @@ export default function ColorBarRangeSlider({
   updateVariableColorBar,
   originalColorBarMinMax,
 }: ColorBarRangeSliderProps) {
-  const scaler = new Scaler(variableColorBarNorm === "log");
+  const scaling = useMemo(
+    () => new Scaling(variableColorBarNorm === "log"),
+    [variableColorBarNorm],
+  );
 
   const [currentMinMax, setCurrentMinMax] = useState<[number, number]>(() =>
-    scaler.scale(variableColorBarMinMax),
+    scaling.scale(variableColorBarMinMax),
   );
+
+  useEffect(() => {
+    setCurrentMinMax(scaling.scale(variableColorBarMinMax));
+  }, [scaling, variableColorBarMinMax]);
 
   const handleMinMaxChange = (_event: Event, value: number | number[]) => {
     if (Array.isArray(value)) {
@@ -71,7 +78,7 @@ export default function ColorBarRangeSlider({
     if (Array.isArray(value)) {
       // Here we convert to the precision of the displayed labels.
       // Otherwise, we'd get a lot of confusing digits if log-scaled.
-      const minMaxLabels = getLabelsForValues(scaler.scaleInv(value));
+      const minMaxLabels = getLabelsForValues(scaling.scaleInv(value));
       const minMaxValues = minMaxLabels.map((label) =>
         Number.parseFloat(label),
       );
@@ -84,7 +91,7 @@ export default function ColorBarRangeSlider({
     }
   };
 
-  const [original1, original2] = scaler.scale(originalColorBarMinMax);
+  const [original1, original2] = scaling.scale(originalColorBarMinMax);
   const dist = original1 < original2 ? original2 - original1 : 1;
   const distExp = Math.floor(Math.log10(dist));
   const distNorm = dist * Math.pow(10, -distExp);
@@ -113,7 +120,7 @@ export default function ColorBarRangeSlider({
   const total2 = original2 + numStepsOuter * delta;
   const step = (total2 - total1) / numSteps;
   const values = [total1, original1, original2, total2];
-  const marks: Mark[] = getLabelsForValues(scaler.scaleInv(values)).map(
+  const marks: Mark[] = getLabelsForValues(scaling.scaleInv(values)).map(
     (label, i) => {
       return { value: values[i], label };
     },
@@ -126,7 +133,7 @@ export default function ColorBarRangeSlider({
       value={currentMinMax}
       marks={marks}
       step={step}
-      valueLabelFormat={(v) => getLabelForValue(scaler.scaleInv(v))}
+      valueLabelFormat={(v) => getLabelForValue(scaling.scaleInv(v))}
       onChange={handleMinMaxChange}
       onChangeCommitted={handleMinMaxChangeCommitted}
       valueLabelDisplay="auto"

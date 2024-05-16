@@ -22,25 +22,26 @@
  * SOFTWARE.
  */
 
-const ident = (x: number) => x;
-const pow10 = (x: number) => Math.pow(10, x);
+type Value = number;
+type ValueRange = [number, number];
+type Values = number[];
+type Fn = (x: Value) => Value;
+
+const ident = (x: Value) => x;
+const pow10 = (x: Value) => Math.pow(10, x);
 const log10 = Math.log10;
 
-function scale(
-  x: number | [number, number] | number[],
-  fn: (x: number) => number,
-): number | [number, number] | number[] {
-  return typeof x === "number" ? fn(x) : x.map(fn);
-}
+const applyFn = (x: Value | ValueRange | Values, fn: Fn) =>
+  typeof x === "number" ? fn(x) : x.map(fn);
 
 // noinspection JSUnusedGlobalSymbols
 /**
  * A class representing a scaling operation.
  * @class
  */
-export default class Scale {
-  private readonly _fn: (x: number) => number;
-  private readonly _invFn: (x: number) => number;
+export default class Scaling {
+  private readonly _fn: Fn;
+  private readonly _invFn: Fn;
 
   constructor(isLog: boolean) {
     if (isLog) {
@@ -52,21 +53,17 @@ export default class Scale {
     }
   }
 
-  scale(x: number): number;
-  scale(x: [number, number]): [number, number];
-  scale(x: number[]): number[];
-  scale(
-    x: number | [number, number] | number[],
-  ): number | [number, number] | number[] {
-    return scale(x, this._fn);
+  scale(x: Value): Value;
+  scale(x: ValueRange): ValueRange;
+  scale(x: Values): Values;
+  scale(x: Value | ValueRange | Values) {
+    return applyFn(x, this._fn);
   }
 
-  scaleInv(x: number): number;
-  scaleInv(x: [number, number]): [number, number];
-  scaleInv(x: number[]): number[];
-  scaleInv(
-    x: number | [number, number] | number[],
-  ): number | [number, number] | number[] {
-    return scale(x, this._invFn);
+  scaleInv(x: Value): Value;
+  scaleInv(x: ValueRange): ValueRange;
+  scaleInv(x: Values): Values;
+  scaleInv(x: Value | ValueRange | Values) {
+    return applyFn(x, this._invFn);
   }
 }
