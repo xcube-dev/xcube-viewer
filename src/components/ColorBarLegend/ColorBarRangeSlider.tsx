@@ -28,6 +28,7 @@ import { Mark } from "@mui/base/useSlider";
 
 import { getLabelsForValues, getLabelForValue } from "@/util/label";
 import { ColorBarNorm } from "@/model/variable";
+import Scaler from "./scaler";
 
 interface ColorBarRangeSliderProps {
   variableColorBarName: string;
@@ -51,10 +52,10 @@ export default function ColorBarRangeSlider({
   updateVariableColorBar,
   originalColorBarMinMax,
 }: ColorBarRangeSliderProps) {
-  const norm = new Norm(variableColorBarNorm === "log");
+  const scaler = new Scaler(variableColorBarNorm === "log");
 
   const [currentMinMax, setCurrentMinMax] = useState<[number, number]>(() =>
-    norm.scale(variableColorBarMinMax),
+    scaler.scale(variableColorBarMinMax),
   );
 
   const handleMinMaxChange = (_event: Event, value: number | number[]) => {
@@ -70,7 +71,7 @@ export default function ColorBarRangeSlider({
     if (Array.isArray(value)) {
       // Here we convert to the precision of the displayed labels.
       // Otherwise, we'd get a lot of confusing digits if log-scaled.
-      const minMaxLabels = getLabelsForValues(norm.scaleInv(value));
+      const minMaxLabels = getLabelsForValues(scaler.scaleInv(value));
       const minMaxValues = minMaxLabels.map((label) =>
         Number.parseFloat(label),
       );
@@ -83,7 +84,7 @@ export default function ColorBarRangeSlider({
     }
   };
 
-  const [original1, original2] = norm.scale(originalColorBarMinMax);
+  const [original1, original2] = scaler.scale(originalColorBarMinMax);
   const dist = original1 < original2 ? original2 - original1 : 1;
   const distExp = Math.floor(Math.log10(dist));
   const distNorm = dist * Math.pow(10, -distExp);
@@ -111,10 +112,8 @@ export default function ColorBarRangeSlider({
   const total1 = original1 - numStepsOuter * delta;
   const total2 = original2 + numStepsOuter * delta;
   const step = (total2 - total1) / numSteps;
-
   const values = [total1, original1, original2, total2];
-
-  const marks: Mark[] = getLabelsForValues(norm.scaleInv(values)).map(
+  const marks: Mark[] = getLabelsForValues(scaler.scaleInv(values)).map(
     (label, i) => {
       return { value: values[i], label };
     },
@@ -127,46 +126,11 @@ export default function ColorBarRangeSlider({
       value={currentMinMax}
       marks={marks}
       step={step}
-      valueLabelFormat={(v) => getLabelForValue(norm.scaleInv(v))}
+      valueLabelFormat={(v) => getLabelForValue(scaler.scaleInv(v))}
       onChange={handleMinMaxChange}
       onChangeCommitted={handleMinMaxChangeCommitted}
       valueLabelDisplay="auto"
       size="small"
     />
   );
-}
-
-// noinspection JSUnusedGlobalSymbols
-class Norm {
-  readonly isLog: boolean;
-
-  constructor(isLog: boolean) {
-    this.isLog = isLog;
-  }
-
-  scale(x: number): number;
-  scale(x: [number, number]): [number, number];
-  scale(x: number[]): number[];
-  scale(
-    x: number | [number, number] | number[],
-  ): number | [number, number] | number[] {
-    if (!this.isLog) {
-      return x;
-    }
-    return typeof x === "number" ? Math.log10(x) : x.map((v) => Math.log10(v));
-  }
-
-  scaleInv(x: number): number;
-  scaleInv(x: [number, number]): [number, number];
-  scaleInv(x: number[]): number[];
-  scaleInv(
-    x: number | [number, number] | number[],
-  ): number | [number, number] | number[] {
-    if (!this.isLog) {
-      return x;
-    }
-    return typeof x === "number"
-      ? Math.pow(10, x)
-      : x.map((v) => Math.pow(10, v));
-  }
 }
