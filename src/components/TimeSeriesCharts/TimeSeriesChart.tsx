@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useState, useRef, MouseEvent } from "react";
+import { useState, useRef, MouseEvent, useMemo } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
@@ -157,10 +157,45 @@ export default function TimeSeriesChart({
   const chartSize = useRef<[number, number]>();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const legendWrapperRef = useRef<HTMLDivElement | null>(null);
+  const data = useMemo(() => {
+    const dataMap = new Map<number, Record<string, number>>();
+    timeSeriesGroup.timeSeriesArray.forEach((ts, i) => {
+      const newValueDataKey = `v${i}`;
+      const newErrorDataKey = `e${i}`;
+      const valueDataKey = ts.source.valueDataKey;
+      const errorDataKey = ts.source.errorDataKey;
+      ts.data.forEach((tsp) => {
+        const oldP = dataMap.get(tsp.time);
+        let newP: Record<string, number>;
+        if (oldP === undefined) {
+          newP = { time: tsp.time };
+          dataMap.set(tsp.time, newP);
+        } else {
+          newP = oldP;
+        }
+        const v = tsp[valueDataKey];
+        if (isNumber(v)) {
+          newP[newValueDataKey] = v;
+        }
+        if (errorDataKey) {
+          const ev = tsp[errorDataKey];
+          if (isNumber(ev)) {
+            newP[newErrorDataKey] = ev;
+          }
+        }
+      });
+    });
+    return [];
+  }, [timeSeriesGroup]);
 
-  const completed = timeSeriesGroup.timeSeriesArray.map((item) =>
-    item.dataProgress ? item.dataProgress : 0,
+  const completed = useMemo(
+    () =>
+      timeSeriesGroup.timeSeriesArray.map((ts) =>
+        ts.dataProgress ? ts.dataProgress : 0,
+      ),
+    [timeSeriesGroup],
   );
+
   const progress =
     completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
   const loading = progress > 0 && progress < 1;

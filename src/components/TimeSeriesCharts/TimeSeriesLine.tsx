@@ -149,6 +149,15 @@ export default function TimeSeriesLine({
     };
   }
 
+  const errorBar = valueDataKey && showErrorBars && source.errorDataKey && (
+    <ErrorBar
+      dataKey={source.errorDataKey}
+      width={4}
+      strokeWidth={1}
+      stroke={shadedLineColor}
+    />
+  );
+
   return showBarChart ? (
     <Bar
       key={timeSeriesIndex}
@@ -161,7 +170,9 @@ export default function TimeSeriesLine({
       fillOpacity={strokeOpacity}
       isAnimationActive={false}
       onClick={handleClick}
-    ></Bar>
+    >
+      {errorBar}
+    </Bar>
   ) : (
     <Line
       key={timeSeriesIndex}
@@ -182,14 +193,7 @@ export default function TimeSeriesLine({
       isAnimationActive={false}
       onClick={handleClick}
     >
-      {valueDataKey && showErrorBars && source.errorDataKey && (
-        <ErrorBar
-          dataKey={source.errorDataKey}
-          width={4}
-          strokeWidth={1}
-          stroke={shadedLineColor}
-        />
-      )}
+      {errorBar}
     </Line>
   );
 }
