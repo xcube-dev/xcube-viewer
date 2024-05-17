@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { ErrorBar, Line } from "recharts";
+import { ErrorBar, Line, Bar } from "recharts";
 import { PaletteMode } from "@mui/material";
 
 import { getUserPlaceColor } from "@/config";
@@ -34,6 +34,7 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import CustomDot from "./CustomDot";
+import { BarRectangleItem } from "recharts/types/cartesian/Bar";
 
 interface TimeSeriesLineProps {
   timeSeriesGroup: TimeSeriesGroup;
@@ -55,6 +56,7 @@ interface TimeSeriesLineProps {
   placeInfos: { [placeId: string]: PlaceInfo };
   placeGroupTimeSeries: PlaceGroupTimeSeries[];
   paletteMode: PaletteMode;
+  showBarChart: boolean;
 }
 
 export default function TimeSeriesLine({
@@ -68,6 +70,7 @@ export default function TimeSeriesLine({
   placeInfos,
   placeGroupTimeSeries,
   paletteMode,
+  showBarChart,
 }: TimeSeriesLineProps) {
   // WARNING: we cannot use hooks here, as this is not a normal component!
   // See usage in TimeSeriesChart component.
@@ -146,7 +149,20 @@ export default function TimeSeriesLine({
     };
   }
 
-  return (
+  return showBarChart ? (
+    <Bar
+      key={timeSeriesIndex}
+      type="monotone"
+      name={lineName}
+      unit={source.variableUnits}
+      data={filteredData as BarRectangleItem[]}
+      dataKey={valueDataKey}
+      fill={shadedLineColor}
+      fillOpacity={strokeOpacity}
+      isAnimationActive={false}
+      onClick={handleClick}
+    ></Bar>
+  ) : (
     <Line
       key={timeSeriesIndex}
       type="monotone"

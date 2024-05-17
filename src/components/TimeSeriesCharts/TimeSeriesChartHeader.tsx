@@ -30,6 +30,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import CloseIcon from "@mui/icons-material/Close";
 import CommentIcon from "@mui/icons-material/Comment";
 import FitScreenIcon from "@mui/icons-material/FitScreen";
@@ -86,6 +87,8 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setZoomMode: (zoomMode: boolean) => void;
   showTooltips: boolean;
   setShowTooltips: (showTooltips: boolean) => void;
+  showBarChart: boolean;
+  setShowBarChart: (barChart: boolean) => void;
 }
 
 export default function TimeSeriesChartHeader({
@@ -100,6 +103,8 @@ export default function TimeSeriesChartHeader({
   setZoomMode,
   showTooltips,
   setShowTooltips,
+  showBarChart,
+  setShowBarChart,
 }: TimeSeriesChartHeaderProps) {
   const classes = useStyles();
 
@@ -142,6 +147,16 @@ export default function TimeSeriesChartHeader({
             size="small"
           >
             <CommentIcon fontSize="inherit" />
+          </ToggleButton>
+        </Tooltip>
+        <Tooltip arrow title={i18n.get("Toggle using a bar chart")}>
+          <ToggleButton
+            value={"showBarChart"}
+            selected={showBarChart}
+            onClick={() => setShowBarChart(!showBarChart)}
+            size="small"
+          >
+            <BarChartIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
         <AddTimeSeriesButton

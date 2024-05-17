@@ -26,6 +26,7 @@ import { useState, useRef, MouseEvent } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
+  BarChart,
   CartesianGrid,
   Legend,
   LineChart,
@@ -148,6 +149,7 @@ export default function TimeSeriesChart({
 
   const [zoomMode, setZoomMode] = useState(false);
   const [showTooltips, setShowTooltips] = useState(true);
+  const [showBarChart, setShowBarChart] = useState(false);
   const [timeRangeSelection, setTimeRangeSelection] =
     useState<TimeRangeSelection>({});
   const xDomain = useRef<[number, number]>();
@@ -357,6 +359,8 @@ export default function TimeSeriesChart({
   const [selectedXRange, selectedYRange] =
     normalizeTimeRangeSelection(timeRangeSelection);
 
+  const ChartComponent = showBarChart ? BarChart : LineChart;
+
   return (
     <div ref={containerRef} className={classes.chartContainer}>
       <TimeSeriesChartHeader
@@ -371,6 +375,8 @@ export default function TimeSeriesChart({
         setZoomMode={setZoomMode}
         showTooltips={showTooltips}
         setShowTooltips={setShowTooltips}
+        showBarChart={showBarChart}
+        setShowBarChart={setShowBarChart}
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
@@ -378,7 +384,7 @@ export default function TimeSeriesChart({
         className={classes.responsiveContainer}
         onResize={handleChartResize}
       >
-        <LineChart
+        <ChartComponent
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -430,6 +436,7 @@ export default function TimeSeriesChart({
               placeGroupTimeSeries,
               placeInfos,
               paletteMode: theme.palette.mode,
+              showBarChart,
             }),
           )}
           {selectedXRange && (
@@ -452,7 +459,7 @@ export default function TimeSeriesChart({
               strokeOpacity={0.5}
             />
           )}
-        </LineChart>
+        </ChartComponent>
       </ResponsiveContainer>
     </div>
   );
