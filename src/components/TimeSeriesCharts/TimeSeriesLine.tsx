@@ -155,6 +155,7 @@ export default function TimeSeriesLine({
         width={4}
         strokeWidth={1}
         stroke={shadedLineColor}
+        strokeOpacity={0.5}
       />
     );
 
@@ -164,7 +165,6 @@ export default function TimeSeriesLine({
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      // data={filteredData as BarRectangleItem[]}
       dataKey={`v${timeSeriesIndex}`}
       fill={shadedLineColor}
       fillOpacity={strokeOpacity}
@@ -179,7 +179,6 @@ export default function TimeSeriesLine({
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      // data={filteredData}
       dataKey={`v${timeSeriesIndex}`}
       dot={<CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />}
       activeDot={

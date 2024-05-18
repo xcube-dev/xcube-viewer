@@ -354,6 +354,7 @@ export default function TimeSeriesChart({
     } else {
       const paddedMin = dataMin - padding;
       yDomain.current = [
+        // don't include negative axis part if dataMin >= 0
         paddedMin < 0 && dataMin - 1e-6 > 0 ? 0 : paddedMin,
         dataMax + padding,
       ];
@@ -385,7 +386,7 @@ export default function TimeSeriesChart({
     const MARGIN_LEFT = 65;
     const MARGIN_TOP = 5;
     const MARGIN_RIGHT = 5;
-    const MARGIN_BOTTOM = 34;
+    const MARGIN_BOTTOM = 38;
     const cartesianGridWidth = chartWidth - MARGIN_LEFT - MARGIN_RIGHT;
     const cartesianGridHeight =
       chartHeight - MARGIN_TOP - MARGIN_BOTTOM - legendHeight;
