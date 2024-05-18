@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { ErrorBar, Line, Bar } from "recharts";
+import { Bar, ErrorBar, Line } from "recharts";
 import { PaletteMode } from "@mui/material";
 
 import { getUserPlaceColor } from "@/config";
-import { isNumber } from "@/util/types";
+//import { isNumber } from "@/util/types";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
@@ -34,7 +34,6 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import CustomDot from "./CustomDot";
-import { BarRectangleItem } from "recharts/types/cartesian/Bar";
 
 interface TimeSeriesLineProps {
   timeSeriesGroup: TimeSeriesGroup;
@@ -77,14 +76,13 @@ export default function TimeSeriesLine({
 
   const timeSeries = timeSeriesGroup.timeSeriesArray[timeSeriesIndex];
   const source = timeSeries.source;
-  const valueDataKey = source.valueDataKey;
-  const data = timeSeries.data;
+  // const data = timeSeries.data;
 
   // TODO: allow switching data filtering on/off
-  const filteredData = data.filter((item) => {
-    const v = item[valueDataKey];
-    return isNumber(v) && isFinite(v);
-  });
+  // const filteredData = data.filter((item) => {
+  //   const v = item[valueDataKey];
+  //   return isNumber(v) && isFinite(v);
+  // });
 
   const handleClick = () => {
     if (selectTimeSeries) {
@@ -149,14 +147,16 @@ export default function TimeSeriesLine({
     };
   }
 
-  const errorBar = valueDataKey && showErrorBars && source.errorDataKey && (
-    <ErrorBar
-      dataKey={source.errorDataKey}
-      width={4}
-      strokeWidth={1}
-      stroke={shadedLineColor}
-    />
-  );
+  const errorBar = source.valueDataKey &&
+    showErrorBars &&
+    source.errorDataKey && (
+      <ErrorBar
+        dataKey={`ev${timeSeriesIndex}`}
+        width={4}
+        strokeWidth={1}
+        stroke={shadedLineColor}
+      />
+    );
 
   return showBarChart ? (
     <Bar
@@ -164,8 +164,8 @@ export default function TimeSeriesLine({
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      data={filteredData as BarRectangleItem[]}
-      dataKey={valueDataKey}
+      // data={filteredData as BarRectangleItem[]}
+      dataKey={`v${timeSeriesIndex}`}
       fill={shadedLineColor}
       fillOpacity={strokeOpacity}
       isAnimationActive={false}
@@ -179,8 +179,8 @@ export default function TimeSeriesLine({
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      data={filteredData}
-      dataKey={valueDataKey}
+      // data={filteredData}
+      dataKey={`v${timeSeriesIndex}`}
       dot={<CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />}
       activeDot={
         <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />

@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import { useState, useRef, MouseEvent, useMemo } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
   BarChart,
+  Brush,
   CartesianGrid,
   Legend,
   LineChart,
@@ -161,7 +162,7 @@ export default function TimeSeriesChart({
     const dataMap = new Map<number, Record<string, number>>();
     timeSeriesGroup.timeSeriesArray.forEach((ts, i) => {
       const newValueDataKey = `v${i}`;
-      const newErrorDataKey = `e${i}`;
+      const newErrorDataKey = `ev${i}`;
       const valueDataKey = ts.source.valueDataKey;
       const errorDataKey = ts.source.errorDataKey;
       ts.data.forEach((tsp) => {
@@ -174,19 +175,44 @@ export default function TimeSeriesChart({
           newP = oldP;
         }
         const v = tsp[valueDataKey];
-        if (isNumber(v)) {
+        if (isNumber(v) && isFinite(v)) {
           newP[newValueDataKey] = v;
         }
         if (errorDataKey) {
           const ev = tsp[errorDataKey];
-          if (isNumber(ev)) {
+          if (isNumber(ev) && isFinite(ev)) {
             newP[newErrorDataKey] = ev;
           }
         }
       });
     });
-    return [];
+    const data = Array.from(dataMap.values());
+    data.sort((p1, p2) => p1.time - p2.time);
+    return data;
   }, [timeSeriesGroup]);
+  const [brushIndexRange, setBrushIndexRange] = useState([0, data.length - 1]);
+
+  useEffect(() => {
+    let startIndex = 0;
+    let endIndex = data.length - 1;
+    if (xDomain.current) {
+      const [time1, time2] = xDomain.current;
+      for (; startIndex < data.length - 1; startIndex++) {
+        if (time1 > data[startIndex + 1].time) {
+          break;
+        }
+      }
+      for (; endIndex > 0; endIndex--) {
+        if (time2 < data[endIndex - 1].time) {
+          break;
+        }
+      }
+      console.log("aaaaaah", time1, time2, startIndex, endIndex);
+    }
+    if (startIndex !== brushIndexRange[0] || endIndex !== brushIndexRange[1]) {
+      setBrushIndexRange([startIndex, endIndex]);
+    }
+  }, [brushIndexRange, xDomain, data]);
 
   const completed = useMemo(
     () =>
@@ -350,7 +376,11 @@ export default function TimeSeriesChart({
     if (timeSeriesGroup.variableRange) {
       yDomain.current = timeSeriesGroup.variableRange;
     } else {
-      yDomain.current = [dataMin - padding, dataMax + padding];
+      const paddedMin = dataMin - padding;
+      yDomain.current = [
+        paddedMin < 0 && dataMin - 1e-6 > 0 ? 0 : paddedMin,
+        dataMax + padding,
+      ];
     }
     return yDomain.current;
   };
@@ -396,6 +426,8 @@ export default function TimeSeriesChart({
 
   const ChartComponent = showBarChart ? BarChart : LineChart;
 
+  console.log("TS:", brushIndexRange, xDomain.current, timeRangeSelection);
+
   return (
     <div ref={containerRef} className={classes.chartContainer}>
       <TimeSeriesChartHeader
@@ -428,6 +460,7 @@ export default function TimeSeriesChart({
           onClick={handleClick}
           syncId="anyId"
           style={{ color: labelTextColor, fontSize: "0.8em" }}
+          data={data}
         >
           <XAxis
             dataKey="time"
@@ -439,7 +472,6 @@ export default function TimeSeriesChart({
             allowDataOverflow
           />
           <YAxis
-            dataKey={commonValueDataKey || "mean"}
             type="number"
             tickCount={5}
             domain={getYDomain}
@@ -451,6 +483,30 @@ export default function TimeSeriesChart({
           {showTooltips && !isNumber(timeRangeSelection.time1) && (
             <Tooltip content={<CustomTooltip />} />
           )}
+          <Brush
+            dataKey="time"
+            height={20}
+            stroke="#8884d8"
+            startIndex={brushIndexRange[0]}
+            endIndex={brushIndexRange[1]}
+            onChange={({
+              startIndex,
+              endIndex,
+            }: {
+              startIndex?: number;
+              endIndex?: number;
+            }) => {
+              if (isNumber(startIndex) && isNumber(endIndex)) {
+                setBrushIndexRange([startIndex, endIndex]);
+                setTimeRangeSelection({
+                  ...timeRangeSelection,
+                  time1: data[startIndex].time,
+                  time2: data[endIndex].time,
+                });
+              }
+            }}
+            tickFormatter={formatTimeTick}
+          />
           <Legend
             content={
               <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
