@@ -29,9 +29,11 @@ import TextField from "@mui/material/TextField";
 import {
   USER_COLOR_BAR_CODE_EXAMPLE,
   UserColorBar,
+  ColorMapType,
 } from "@/model/userColorBar";
 import DoneCancel from "@/components/DoneCancel";
 import ColorBarItem from "./ColorBarItem";
+import ColorMapTypeEditor from "./ColorMapTypeEditor";
 
 interface UserColorBarEditorProps {
   userColorBar: UserColorBar;
@@ -54,6 +56,13 @@ export default function UserColorBarEditor({
     updateUserColorBar({ ...userColorBar, code: event.currentTarget.value });
   };
 
+  const handleTypeChange = (colorMapType: ColorMapType) => {
+    updateUserColorBar({
+      ...userColorBar,
+      type: colorMapType,
+    });
+  };
+
   return (
     <Box>
       <ColorBarItem
@@ -62,6 +71,10 @@ export default function UserColorBarEditor({
         selected={selected}
         onSelect={onSelect}
       />
+      <ColorMapTypeEditor
+        colorMapType={userColorBar.type}
+        setColorMapType={handleTypeChange}
+      />
       <TextField
         label="Color mapping"
         placeholder={USER_COLOR_BAR_CODE_EXAMPLE}
@@ -69,7 +82,7 @@ export default function UserColorBarEditor({
         fullWidth
         size="small"
         minRows={3}
-        sx={{ marginTop: 2, fontFamily: "monospace" }}
+        sx={{ marginTop: 1, fontFamily: "monospace" }}
         value={userColorBar.code}
         onChange={handleCodeChange}
         color={userColorBar.errorMessage ? "error" : "primary"}

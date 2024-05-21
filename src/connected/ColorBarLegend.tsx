@@ -34,6 +34,7 @@ import {
   selectedVariableColorBarSelector,
   colorBarsSelector,
   userColorBarsSelector,
+  selectedVariableColorBarNormSelector,
 } from "@/selectors/controlSelectors";
 import { updateVariableColorBar } from "@/actions/dataActions";
 import {
@@ -48,8 +49,9 @@ const mapStateToProps = (state: AppState) => {
   return {
     variableName: selectedVariableNameSelector(state),
     variableUnits: selectedVariableUnitsSelector(state),
-    variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),
     variableColorBarName: selectedVariableColorBarNameSelector(state),
+    variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),
+    variableColorBarNorm: selectedVariableColorBarNormSelector(state),
     variableColorBar: selectedVariableColorBarSelector(state),
     variableOpacity: selectedVariableOpacitySelector(state),
     userColorBars: userColorBarsSelector(state),

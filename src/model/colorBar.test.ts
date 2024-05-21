@@ -23,26 +23,26 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { parseColorBar, formatColorBar } from "./colorBar";
+import { parseColorBarName, formatColorBarName } from "./colorBar";
 
-describe("Assert that colorBar.parseColorBar()", () => {
+describe("Assert that colorBar.parseColorBarName()", () => {
   it("works as expected", () => {
-    expect(parseColorBar("magma")).toEqual({
+    expect(parseColorBarName("magma")).toEqual({
       baseName: "magma",
       isAlpha: false,
       isReversed: false,
     });
-    expect(parseColorBar("magma_r")).toEqual({
+    expect(parseColorBarName("magma_r")).toEqual({
       baseName: "magma",
       isAlpha: false,
       isReversed: true,
     });
-    expect(parseColorBar("magma_alpha")).toEqual({
+    expect(parseColorBarName("magma_alpha")).toEqual({
       baseName: "magma",
       isAlpha: true,
       isReversed: false,
     });
-    expect(parseColorBar("magma_r_alpha")).toEqual({
+    expect(parseColorBarName("magma_r_alpha")).toEqual({
       baseName: "magma",
       isAlpha: true,
       isReversed: true,
@@ -50,23 +50,35 @@ describe("Assert that colorBar.parseColorBar()", () => {
   });
 });
 
-describe("Assert that colorBar.formatColorBar()", () => {
+describe("Assert that colorBar.formatColorBarName()", () => {
   it("works as expected", () => {
     expect(
-      formatColorBar({
+      formatColorBarName({
         baseName: "viridis",
         isAlpha: false,
         isReversed: false,
       }),
     ).toEqual("viridis");
     expect(
-      formatColorBar({ baseName: "viridis", isAlpha: false, isReversed: true }),
+      formatColorBarName({
+        baseName: "viridis",
+        isAlpha: false,
+        isReversed: true,
+      }),
     ).toEqual("viridis_r");
     expect(
-      formatColorBar({ baseName: "viridis", isAlpha: true, isReversed: false }),
+      formatColorBarName({
+        baseName: "viridis",
+        isAlpha: true,
+        isReversed: false,
+      }),
     ).toEqual("viridis_alpha");
     expect(
-      formatColorBar({ baseName: "viridis", isAlpha: true, isReversed: true }),
+      formatColorBarName({
+        baseName: "viridis",
+        isAlpha: true,
+        isReversed: true,
+      }),
     ).toEqual("viridis_r_alpha");
   });
 });

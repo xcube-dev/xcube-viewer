@@ -25,6 +25,8 @@
 import { VolumeRenderMode } from "@/states/controlState";
 import { TileSourceOptions } from "./tile";
 
+export type ColorBarNorm = "lin" | "log" | "cat";
+
 export interface Variable {
   id: string;
   name: string;
@@ -44,6 +46,7 @@ export interface Variable {
   colorBarName: string;
   colorBarMin: number;
   colorBarMax: number;
+  colorBarNorm?: ColorBarNorm;
   opacity?: number;
   volumeRenderMode?: VolumeRenderMode;
   volumeIsoThreshold?: number;
