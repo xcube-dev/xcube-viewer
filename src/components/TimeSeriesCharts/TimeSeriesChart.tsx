@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import { MouseEvent, useMemo, useRef, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme, useTheme } from "@mui/material/styles";
 import {
   BarChart,
+  Brush,
   CartesianGrid,
   Legend,
   LineChart,
@@ -190,6 +191,29 @@ export default function TimeSeriesChart({
     data.sort((p1, p2) => p1.time - p2.time);
     return data;
   }, [timeSeriesGroup]);
+  const [brushIndexRange, setBrushIndexRange] = useState([0, data.length - 1]);
+
+  useEffect(() => {
+    let startIndex = 0;
+    let endIndex = data.length - 1;
+    if (xDomain.current) {
+      const [time1, time2] = xDomain.current;
+      for (; startIndex < data.length - 1; startIndex++) {
+        if (time1 > data[startIndex + 1].time) {
+          break;
+        }
+      }
+      for (; endIndex > 0; endIndex--) {
+        if (time2 < data[endIndex - 1].time) {
+          break;
+        }
+      }
+      console.log("aaaaaah", time1, time2, startIndex, endIndex);
+    }
+    if (startIndex !== brushIndexRange[0] || endIndex !== brushIndexRange[1]) {
+      setBrushIndexRange([startIndex, endIndex]);
+    }
+  }, [brushIndexRange, xDomain, data]);
 
   const completed = useMemo(
     () =>
@@ -352,7 +376,6 @@ export default function TimeSeriesChart({
     } else {
       const paddedMin = dataMin - padding;
       yDomain.current = [
-        // don't include negative axis part if dataMin >= 0
         paddedMin < 0 && dataMin - 1e-6 > 0 ? 0 : paddedMin,
         dataMax + padding,
       ];
@@ -384,7 +407,7 @@ export default function TimeSeriesChart({
     const MARGIN_LEFT = 65;
     const MARGIN_TOP = 5;
     const MARGIN_RIGHT = 5;
-    const MARGIN_BOTTOM = 38;
+    const MARGIN_BOTTOM = 34;
     const cartesianGridWidth = chartWidth - MARGIN_LEFT - MARGIN_RIGHT;
     const cartesianGridHeight =
       chartHeight - MARGIN_TOP - MARGIN_BOTTOM - legendHeight;
@@ -400,6 +423,8 @@ export default function TimeSeriesChart({
     normalizeZoomRectangle(zoomRectangle);
 
   const ChartComponent = showBarChart ? BarChart : LineChart;
+
+  console.log("TS:", brushIndexRange, xDomain.current, timeRangeSelection);
 
   return (
     <div ref={containerRef} className={classes.chartContainer}>
@@ -461,6 +486,30 @@ export default function TimeSeriesChart({
           {showTooltips && !isNumber(zoomRectangle.x1) && (
             <Tooltip content={<CustomTooltip />} />
           )}
+          <Brush
+            dataKey="time"
+            height={20}
+            stroke="#8884d8"
+            startIndex={brushIndexRange[0]}
+            endIndex={brushIndexRange[1]}
+            onChange={({
+              startIndex,
+              endIndex,
+            }: {
+              startIndex?: number;
+              endIndex?: number;
+            }) => {
+              if (isNumber(startIndex) && isNumber(endIndex)) {
+                setBrushIndexRange([startIndex, endIndex]);
+                setTimeRangeSelection({
+                  ...timeRangeSelection,
+                  time1: data[startIndex].time,
+                  time2: data[endIndex].time,
+                });
+              }
+            }}
+            tickFormatter={formatTimeTick}
+          />
           <Legend
             content={
               <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
