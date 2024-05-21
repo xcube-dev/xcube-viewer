@@ -22,34 +22,31 @@
  * SOFTWARE.
  */
 
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
-import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
+import { expect, it, describe } from "vitest";
+import Scaling from "./scaling";
 
-import { COLOR_BAR_ITEM_GAP } from "./constants";
+describe("Assert that Scaling", () => {
+  it("works in the log case", () => {
+    const scaling = new Scaling(true);
 
-const useStyles = makeStyles((theme: Theme) => ({
-  colorBarGroupTitle: {
-    marginTop: theme.spacing(2 * COLOR_BAR_ITEM_GAP),
-    fontSize: "small",
-    color: theme.palette.text.secondary,
-  },
-}));
+    expect(scaling.scale(0.01)).toEqual(-2);
+    expect(scaling.scaleInv(2)).toEqual(100);
 
-interface ColorBarGroupHeaderProps {
-  title: string;
-  description: string;
-}
+    expect(scaling.scale([0.001, 0.01, 0.1, 1, 10])).toEqual([
+      -3, -2, -1, 0, 1,
+    ]);
+    expect(scaling.scaleInv([-3, -2, -1, 0, 1])).toEqual([
+      0.001, 0.01, 0.1, 1, 10,
+    ]);
+  });
 
-export default function ColorBarGroupHeader({
-  title,
-  description,
-}: ColorBarGroupHeaderProps) {
-  const classes = useStyles();
-  return (
-    <Tooltip arrow title={description} placement="left">
-      <Box className={classes.colorBarGroupTitle}>{title}</Box>
-    </Tooltip>
-  );
-}
+  it("works in the identity case", () => {
+    const scaling = new Scaling(false);
+
+    expect(scaling.scale(0.01)).toEqual(0.01);
+    expect(scaling.scaleInv(100)).toEqual(100);
+
+    expect(scaling.scale([0.1, 0.2, 0.3])).toEqual([0.1, 0.2, 0.3]);
+    expect(scaling.scaleInv([0.1, 0.2, 0.3])).toEqual([0.1, 0.2, 0.3]);
+  });
+});

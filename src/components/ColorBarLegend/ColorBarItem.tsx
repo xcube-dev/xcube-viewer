@@ -39,7 +39,7 @@ const colorBarItemStyle = (theme: Theme) => ({
 const useItemStyles = makeStyles((theme: Theme) => ({
   colorBarItem: {
     ...colorBarItemStyle(theme),
-    borderColor: theme.palette.mode === "dark" ? "white" : "black",
+    borderColor: theme.palette.mode === "dark" ? "lightgray" : "darkgray",
   },
   colorBarItemSelected: {
     ...colorBarItemStyle(theme),

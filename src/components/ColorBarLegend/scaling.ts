@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2019-2024 by the xcube development team and contributors.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * Permission is hereby granted, free of charge, to any person obtaining x copy of
  * this software and associated documentation files (the "Software"), to deal in
  * the Software without restriction, including without limitation the rights to
  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,32 +22,48 @@
  * SOFTWARE.
  */
 
-import * as THREE from "three";
+type Value = number;
+type ValueRange = [number, number];
+type Values = number[];
+type Fn = (x: Value) => Value;
 
-import { ColorBar, formatColorBarName } from "@/model/colorBar";
+const ident = (x: Value) => x;
+const pow10 = (x: Value) => Math.pow(10, x);
+const log10 = Math.log10;
 
-class ColorBarTextures {
-  private readonly textures: { [cmName: string]: THREE.Texture };
+const applyFn = (x: Value | ValueRange | Values, fn: Fn) =>
+  typeof x === "number" ? fn(x) : x.map(fn);
 
-  constructor() {
-    this.textures = {};
+// noinspection JSUnusedGlobalSymbols
+/**
+ * A class representing a scaling operation.
+ * @class
+ */
+export default class Scaling {
+  private readonly _fn: Fn;
+  private readonly _invFn: Fn;
+
+  constructor(isLog: boolean) {
+    if (isLog) {
+      this._fn = log10;
+      this._invFn = pow10;
+    } else {
+      this._fn = ident;
+      this._invFn = ident;
+    }
   }
 
-  get(colorBar: ColorBar, onLoad?: () => void): THREE.Texture {
-    const key = formatColorBarName(colorBar);
-    let texture = this.textures[key];
-    if (!texture) {
-      // const image = new Image();
-      // loadColorBarImage(colorBar, image).then();
-      // texture = new THREE.Texture(image);
-      texture = new THREE.TextureLoader().load(
-        `data:image/png;base64,${colorBar.imageData}`,
-        onLoad,
-      );
-      this.textures[key] = texture;
-    }
-    return texture;
+  scale(x: Value): Value;
+  scale(x: ValueRange): ValueRange;
+  scale(x: Values): Values;
+  scale(x: Value | ValueRange | Values) {
+    return applyFn(x, this._fn);
+  }
+
+  scaleInv(x: Value): Value;
+  scaleInv(x: ValueRange): ValueRange;
+  scaleInv(x: Values): Values;
+  scaleInv(x: Value | ValueRange | Values) {
+    return applyFn(x, this._invFn);
   }
 }
-
-export const colorBarTextures = new ColorBarTextures();

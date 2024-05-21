@@ -64,7 +64,7 @@ import {
   PlaceInfo,
 } from "@/model/place";
 import { Time, TimeRange, TimeSeriesGroup } from "@/model/timeSeries";
-import { Variable } from "@/model/variable";
+import { ColorBarNorm, Variable } from "@/model/variable";
 
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
@@ -86,10 +86,11 @@ import {
   ColorBar,
   ColorBarGroup,
   ColorBars,
-  parseColorBar,
+  HexColorRecord,
+  parseColorBarName,
 } from "@/model/colorBar";
 import {
-  getUserColorBarColorArray,
+  getUserColorBarHexRecords,
   USER_COLOR_BAR_GROUP_TITLE,
   UserColorBar,
 } from "@/model/userColorBar";
@@ -219,6 +220,20 @@ export const selectedVariableUnitsSelector = createSelector(
   },
 );
 
+const getVariableColorBarName = (variable: Variable | null): string => {
+  return (variable && variable.colorBarName) || "viridis";
+};
+
+export const selectedVariableColorBarNameSelector = createSelector(
+  selectedVariableSelector,
+  getVariableColorBarName,
+);
+
+export const selectedVariable2ColorBarNameSelector = createSelector(
+  selectedVariable2Selector,
+  getVariableColorBarName,
+);
+
 const getVariableColorBarMinMax = (
   variable: Variable | null,
 ): [number, number] => {
@@ -235,18 +250,18 @@ export const selectedVariable2ColorBarMinMaxSelector = createSelector(
   getVariableColorBarMinMax,
 );
 
-const getVariableColorBarName = (variable: Variable | null): string => {
-  return (variable && variable.colorBarName) || "viridis";
+const getVariableColorBarNorm = (variable: Variable | null): ColorBarNorm => {
+  return (variable && variable.colorBarNorm) || "lin";
 };
 
-export const selectedVariableColorBarNameSelector = createSelector(
+export const selectedVariableColorBarNormSelector = createSelector(
   selectedVariableSelector,
-  getVariableColorBarName,
+  getVariableColorBarNorm,
 );
 
-export const selectedVariable2ColorBarNameSelector = createSelector(
+export const selectedVariable2ColorBarNormSelector = createSelector(
   selectedVariable2Selector,
-  getVariableColorBarName,
+  getVariableColorBarNorm,
 );
 
 export const colorBarsSelector = createSelector(
@@ -279,21 +294,35 @@ export const colorBarsSelector = createSelector(
 const getVariableColorBar = (
   colorBarName: string,
   colorBars: ColorBars,
+  userColorBars: UserColorBar[],
 ): ColorBar => {
-  const colorBar: ColorBar = parseColorBar(colorBarName);
+  const colorBar: ColorBar = parseColorBarName(colorBarName);
   const imageData = colorBars.images[colorBar.baseName];
-  return { ...colorBar, imageData };
+  const { baseName } = colorBar;
+  const userColorBar = userColorBars.find(
+    (userColorBar) => userColorBar.id === baseName,
+  );
+  let categories: HexColorRecord[] | undefined = undefined;
+  if (
+    userColorBar &&
+    (userColorBar.type == "key" || userColorBar.type == "bound")
+  ) {
+    categories = getUserColorBarHexRecords(userColorBar.code);
+  }
+  return { ...colorBar, imageData, categories };
 };
 
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
   colorBarsSelector,
+  userColorBarsSelector,
   getVariableColorBar,
 );
 
 export const selectedVariable2ColorBarSelector = createSelector(
   selectedVariable2ColorBarNameSelector,
   colorBarsSelector,
+  userColorBarsSelector,
   getVariableColorBar,
 );
 
@@ -307,9 +336,13 @@ const getVariableUserColorBarJson = (
     (userColorBar) => userColorBar.id === baseName,
   );
   if (userColorBar) {
-    const colors = getUserColorBarColorArray(userColorBar.code);
+    const colors = getUserColorBarHexRecords(userColorBar.code);
     if (colors) {
-      return JSON.stringify({ name: colorBarName, colors });
+      return JSON.stringify({
+        name: colorBarName,
+        type: userColorBar.type,
+        colors: colors.map((c) => [c.value, c.color]),
+      });
     }
   }
   return null;
@@ -842,11 +875,12 @@ const getVariableTileLayer = (
   datasetTimeDimension: TimeDimension | null,
   attributions: string[] | null,
   variable: Variable | null,
-  colorBarMinMax: [number, number],
   colorBarName: string,
+  colorBarMinMax: [number, number],
+  colorBarNorm: ColorBarNorm,
   colorBarJson: string | null,
-  visibility: boolean,
   opacity: number,
+  visibility: boolean,
   layerId: string,
   zIndex: number,
   time: Time | null,
@@ -861,9 +895,12 @@ const getVariableTileLayer = (
     ["crs", mapProjection],
     ["vmin", `${colorBarMinMax[0]}`],
     ["vmax", `${colorBarMinMax[1]}`],
-    ["cbar", colorBarJson ? colorBarJson : colorBarName],
+    ["cmap", colorBarJson ? colorBarJson : colorBarName],
     // ['retina', '1'],
   ];
+  if (colorBarNorm !== "lin") {
+    queryParams.push(["norm", colorBarNorm]);
+  }
   return getTileLayer(
     layerId,
     getTileUrl(server.url, datasetId!, variable.name),
@@ -887,11 +924,12 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   selectedDatasetTimeDimensionSelector,
   selectedDatasetAttributionsSelector,
   selectedVariableSelector,
-  selectedVariableColorBarMinMaxSelector,
   selectedVariableColorBarNameSelector,
+  selectedVariableColorBarMinMaxSelector,
+  selectedVariableColorBarNormSelector,
   selectedVariableUserColorBarJsonSelector,
-  selectedVariableVisibilitySelector,
   selectedVariableOpacitySelector,
+  selectedVariableVisibilitySelector,
   variableLayerId,
   variableZIndexSelector,
   selectedTimeSelector,
@@ -907,11 +945,12 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedDataset2TimeDimensionSelector,
   selectedDataset2AttributionsSelector,
   selectedVariable2Selector,
-  selectedVariable2ColorBarMinMaxSelector,
   selectedVariable2ColorBarNameSelector,
+  selectedVariable2ColorBarMinMaxSelector,
+  selectedVariable2ColorBarNormSelector,
   selectedVariable2UserColorBarJsonSelector,
-  selectedVariable2VisibilitySelector,
   selectedVariable2OpacitySelector,
+  selectedVariable2VisibilitySelector,
   variable2LayerId,
   variable2ZIndexSelector,
   selectedTimeSelector,

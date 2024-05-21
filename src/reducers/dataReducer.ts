@@ -67,12 +67,19 @@ export function dataReducer(
       return { ...state, datasets: action.datasets };
     }
     case UPDATE_VARIABLE_COLOR_BAR: {
-      const { datasetId, variableName, colorBarMinMax, colorBarName, opacity } =
-        action;
+      const {
+        datasetId,
+        variableName,
+        colorBarName,
+        colorBarMinMax,
+        colorBarNorm,
+        opacity,
+      } = action;
       const variableProps = {
+        colorBarName,
         colorBarMin: colorBarMinMax[0],
         colorBarMax: colorBarMinMax[1],
-        colorBarName,
+        colorBarNorm,
         opacity,
       };
       return updateVariableProps(state, datasetId, variableName, variableProps);

@@ -29,14 +29,15 @@ import {
   USER_COLOR_BAR_CODE_EXAMPLE,
 } from "./userColorBar";
 
-describe("Assert that colorBar.getUserColorBarData()", () => {
-  it("works as expected", () => {
+describe("Assert that colorBar.getUserColorBarRgbaArray()", () => {
+  it("works as expected if type='node'", () => {
     const data = getUserColorBarRgbaArray(
       [
-        [0.0, [35, 255, 82, 255]],
-        [0.5, [255, 0, 0, 255]],
-        [1.0, [120, 30, 255, 255]],
+        { value: 0.0, color: [35, 255, 82, 255] },
+        { value: 0.5, color: [255, 0, 0, 255] },
+        { value: 1.0, color: [120, 30, 255, 255] },
       ],
+      "node",
       10,
     );
     expect(data).toBeInstanceOf(Uint8ClampedArray);
@@ -46,28 +47,59 @@ describe("Assert that colorBar.getUserColorBarData()", () => {
       150, 23, 198, 255, 120, 30, 255, 255,
     ]);
   });
+
+  it("works as expected if type='key'", () => {
+    const data = getUserColorBarRgbaArray(
+      [
+        { value: 0.0, color: [35, 255, 82, 255] },
+        { value: 0.5, color: [255, 0, 0, 255] },
+        { value: 1.0, color: [120, 30, 255, 255] },
+      ],
+      "key",
+      10,
+    );
+    expect(data).toBeInstanceOf(Uint8ClampedArray);
+    console.log("data:", data);
+    expect([...data]).toEqual([
+      35, 255, 82, 255, 35, 255, 82, 255, 35, 255, 82, 255, 35, 255, 82, 255,
+      255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 120, 30, 255, 255, 120,
+      30, 255, 255, 120, 30, 255, 255,
+    ]);
+  });
 });
 
-describe("Assert that colorBar.parseUserColorCode()", () => {
+describe("Assert that colorBar.getUserColorBarColorRecords()", () => {
   it("parses the example code as expected", () => {
     expect(getUserColorBarColorRecords(USER_COLOR_BAR_CODE_EXAMPLE)).toEqual({
       colorRecords: [
-        [0.0, [35, 255, 82, 255]],
-        [0.5, [255, 0, 0, 255]],
-        [1.0, [120, 30, 255, 255]],
+        { value: 0.0, color: [35, 255, 82, 255] },
+        { value: 0.5, color: [255, 0, 0, 255] },
+        { value: 1.0, color: [120, 30, 255, 255] },
       ],
     });
   });
 
-  it("parses the non-unique values", () => {
+  it("parses non-unique values", () => {
     expect(
       getUserColorBarColorRecords("0:blue\n1:red\n1:green\n2:blue"),
     ).toEqual({
       colorRecords: [
-        [0, [0, 0, 255, 255]],
-        [1, [255, 0, 0, 255]],
-        [1, [0, 128, 0, 255]],
-        [2, [0, 0, 255, 255]],
+        { value: 0, color: [0, 0, 255, 255] },
+        { value: 1, color: [255, 0, 0, 255] },
+        { value: 1, color: [0, 128, 0, 255] },
+        { value: 2, color: [0, 0, 255, 255] },
+      ],
+    });
+  });
+
+  it("parses categories", () => {
+    expect(
+      getUserColorBarColorRecords("0:blue:cat-1\n1:red:cat-2\n2:blue:cat-3"),
+    ).toEqual({
+      colorRecords: [
+        { value: 0, color: [0, 0, 255, 255], label: "cat-1" },
+        { value: 1, color: [255, 0, 0, 255], label: "cat-2" },
+        { value: 2, color: [0, 0, 255, 255], label: "cat-3" },
       ],
     });
   });
