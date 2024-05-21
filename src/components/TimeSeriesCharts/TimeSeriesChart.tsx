@@ -81,12 +81,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface TimeRangeSelection {
-  time1?: number;
-  value1?: number;
-  time2?: number;
-  value2?: number;
+interface Rectangle {
+  x1?: number;
+  y1?: number;
+  x2?: number;
+  y2?: number;
 }
+
+type ValueRange = [number, number];
 
 interface TimeSeriesChartProps extends WithLocale {
   timeSeriesGroup: TimeSeriesGroup;
@@ -150,8 +152,7 @@ export default function TimeSeriesChart({
   const [zoomMode, setZoomMode] = useState(false);
   const [showTooltips, setShowTooltips] = useState(true);
   const [showBarChart, setShowBarChart] = useState(false);
-  const [timeRangeSelection, setTimeRangeSelection] =
-    useState<TimeRangeSelection>({});
+  const [zoomRectangle, setZoomRectangle] = useState<Rectangle>({});
   const xDomain = useRef<[number, number]>();
   const yDomain = useRef<[number, number]>();
   const chartSize = useRef<[number, number]>();
@@ -218,8 +219,8 @@ export default function TimeSeriesChart({
   const mainStroke = theme.palette.primary.main;
   const labelTextColor = theme.palette.text.primary;
 
-  const clearTimeRangeSelection = () => {
-    setTimeRangeSelection({});
+  const removeZoomRectangle = () => {
+    setZoomRectangle({});
   };
 
   const handleClick = (
@@ -233,7 +234,7 @@ export default function TimeSeriesChart({
     ) {
       selectTime(chartState.activeLabel);
     }
-    clearTimeRangeSelection();
+    removeZoomRectangle();
   };
 
   const handleMouseDown = (
@@ -248,8 +249,8 @@ export default function TimeSeriesChart({
     }
     const point1 = getChartCoords(chartX, chartY);
     if (point1) {
-      const [time1, value1] = point1;
-      setTimeRangeSelection({ time1, value1 });
+      const [x1, y1] = point1;
+      setZoomRectangle({ x1, y1 });
     }
   };
 
@@ -257,8 +258,8 @@ export default function TimeSeriesChart({
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
     mouseEvent: MouseEvent<HTMLElement>,
   ) => {
-    const { time1, value1 } = timeRangeSelection;
-    if (!isNumber(time1) || !isNumber(value1)) {
+    const { x1, y1 } = zoomRectangle;
+    if (!isNumber(x1) || !isNumber(y1)) {
       return;
     }
     if (!chartState) {
@@ -270,20 +271,11 @@ export default function TimeSeriesChart({
     }
     const point2 = getChartCoords(chartX, chartY);
     if (point2) {
-      const [time2, value2] = point2;
+      const [x2, y2] = point2;
       if (mouseEvent.ctrlKey || zoomMode) {
-        setTimeRangeSelection({
-          time1,
-          value1,
-          time2,
-          value2,
-        });
+        setZoomRectangle({ x1, y1, x2, y2 });
       } else {
-        setTimeRangeSelection({
-          time1,
-          value1,
-          time2,
-        });
+        setZoomRectangle({ x1, y1, x2 });
       }
     }
   };
@@ -293,11 +285,11 @@ export default function TimeSeriesChart({
   };
 
   const handleMouseEnter = () => {
-    clearTimeRangeSelection();
+    removeZoomRectangle();
   };
 
   const handleMouseLeave = () => {
-    clearTimeRangeSelection();
+    removeZoomRectangle();
   };
 
   const handleRemoveTimeSeriesClick = (index: number) => {
@@ -306,7 +298,7 @@ export default function TimeSeriesChart({
 
   const zoomIn = () => {
     const [selectedXRange, selectedYRange] =
-      normalizeTimeRangeSelection(timeRangeSelection);
+      normalizeZoomRectangle(zoomRectangle);
     if (selectedXRange && selectedXRange[0] < selectedXRange[1]) {
       if (selectedYRange) {
         selectTimeRange(selectedXRange, timeSeriesGroup.id, selectedYRange);
@@ -314,13 +306,19 @@ export default function TimeSeriesChart({
         selectTimeRange(selectedXRange, timeSeriesGroup.id, null);
       }
     } else {
-      clearTimeRangeSelection();
+      removeZoomRectangle();
     }
   };
 
   const resetZoom = () => {
-    clearTimeRangeSelection();
+    removeZoomRectangle();
     selectTimeRange(dataTimeRange || null, timeSeriesGroup.id, null);
+  };
+
+  const handleEnteredValueRange = (enteredYRange: ValueRange | undefined) => {
+    if (enteredYRange) {
+      selectTimeRange(selectedTimeRange, timeSeriesGroup.id, enteredYRange);
+    }
   };
 
   const handleChartResize = (w: number, h: number) => {
@@ -399,7 +397,7 @@ export default function TimeSeriesChart({
   };
 
   const [selectedXRange, selectedYRange] =
-    normalizeTimeRangeSelection(timeRangeSelection);
+    normalizeZoomRectangle(zoomRectangle);
 
   const ChartComponent = showBarChart ? BarChart : LineChart;
 
@@ -419,6 +417,8 @@ export default function TimeSeriesChart({
         setShowTooltips={setShowTooltips}
         showBarChart={showBarChart}
         setShowBarChart={setShowBarChart}
+        valueRange={yDomain.current}
+        setValueRange={handleEnteredValueRange}
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
@@ -436,6 +436,9 @@ export default function TimeSeriesChart({
           syncId="anyId"
           style={{ color: labelTextColor, fontSize: "0.8em" }}
           data={data}
+          barGap={1}
+          barSize={30}
+          maxBarSize={30}
         >
           <XAxis
             dataKey="time"
@@ -455,7 +458,7 @@ export default function TimeSeriesChart({
             allowDataOverflow
           />
           <CartesianGrid strokeDasharray="3 3" />
-          {showTooltips && !isNumber(timeRangeSelection.time1) && (
+          {showTooltips && !isNumber(zoomRectangle.x1) && (
             <Tooltip content={<CustomTooltip />} />
           )}
           <Legend
@@ -507,15 +510,15 @@ export default function TimeSeriesChart({
   );
 }
 
-function normalizeTimeRangeSelection(timeRangeSelection: TimeRangeSelection) {
-  const { time1, time2, value1, value2 } = timeRangeSelection;
-  let timeRange: [number, number] | undefined = undefined;
-  let valueRange: [number, number] | undefined = undefined;
-  if (isNumber(time1) && isNumber(time2)) {
-    timeRange = time1 < time2 ? [time1, time2] : [time2, time1];
-    if (isNumber(value1) && isNumber(value2)) {
-      valueRange = value1 < value2 ? [value1, value2] : [value2, value1];
+function normalizeZoomRectangle(zoomRectangle: Rectangle) {
+  const { x1, x2, y1, y2 } = zoomRectangle;
+  let xRange: [number, number] | undefined = undefined;
+  let yRange: [number, number] | undefined = undefined;
+  if (isNumber(x1) && isNumber(x2)) {
+    xRange = x1 < x2 ? [x1, x2] : [x2, x1];
+    if (isNumber(y1) && isNumber(y2)) {
+      yRange = y1 < y2 ? [y1, y2] : [y2, y1];
     }
   }
-  return [timeRange, valueRange];
+  return [xRange, yRange];
 }
