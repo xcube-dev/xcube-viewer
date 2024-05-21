@@ -353,6 +353,7 @@ export function controlReducer(
         userColorBars: [
           {
             id: id,
+            type: "node",
             code: USER_COLOR_BAR_CODE_EXAMPLE,
           },
           ...state.userColorBars,

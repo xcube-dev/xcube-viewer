@@ -22,19 +22,22 @@
  * SOFTWARE.
  */
 
-import { ColorBar, ColorBars, formatColorBar } from "@/model/colorBar";
+import { ColorBar, ColorBars, formatColorBarName } from "@/model/colorBar";
 import { USER_COLOR_BAR_GROUP_TITLE, UserColorBar } from "@/model/userColorBar";
 import ColorBarGroupComponent from "./ColorBarGroupComponent";
 import UserColorBarGroup from "./UserColorBarGroup";
+import { ColorBarNorm } from "@/model/variable";
 
 interface ColorBarSelectProps {
-  variableColorBarMinMax: [number, number];
   variableColorBarName: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarNorm: ColorBarNorm;
   variableColorBar: ColorBar;
   variableOpacity: number;
   updateVariableColorBar: (
-    colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarMinMax: [number, number],
+    colorBarNorm: ColorBarNorm,
     opacity: number,
   ) => void;
   colorBars: ColorBars;
@@ -46,8 +49,9 @@ interface ColorBarSelectProps {
 }
 
 export default function ColorBarSelect({
-  variableColorBarMinMax,
   variableColorBarName,
+  variableColorBarMinMax,
+  variableColorBarNorm,
   variableColorBar,
   variableOpacity,
   updateVariableColorBar,
@@ -59,10 +63,14 @@ export default function ColorBarSelect({
   updateUserColorBars,
 }: ColorBarSelectProps) {
   const handleSelectColorBar = (baseName: string) => {
-    variableColorBarName = formatColorBar({ ...variableColorBar, baseName });
+    variableColorBarName = formatColorBarName({
+      ...variableColorBar,
+      baseName,
+    });
     updateVariableColorBar(
-      variableColorBarMinMax,
       variableColorBarName,
+      variableColorBarMinMax,
+      variableColorBarNorm,
       variableOpacity,
     );
   };

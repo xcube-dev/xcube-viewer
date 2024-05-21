@@ -76,6 +76,7 @@ import {
 import { VolumeRenderMode } from "@/states/controlState";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer } from "./mapActions";
+import { ColorBarNorm } from "@/model/variable";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -682,14 +683,16 @@ export interface UpdateVariableColorBar {
   type: typeof UPDATE_VARIABLE_COLOR_BAR;
   datasetId: string;
   variableName: string;
-  colorBarMinMax: [number, number];
   colorBarName: string;
+  colorBarMinMax: [number, number];
+  colorBarNorm: ColorBarNorm;
   opacity: number;
 }
 
 export function updateVariableColorBar(
-  colorBarMinMax: [number, number],
   colorBarName: string,
+  colorBarMinMax: [number, number],
+  colorBarNorm: ColorBarNorm,
   opacity: number,
 ) {
   return (
@@ -699,12 +702,25 @@ export function updateVariableColorBar(
     const selectedDatasetId = getState().controlState.selectedDatasetId;
     const selectedVariableName = getState().controlState.selectedVariableName;
     if (selectedDatasetId && selectedVariableName) {
+      if (colorBarNorm === "log") {
+        // Adjust range in case of log norm: Make sure xcube server can use
+        // matplotlib.colors.LogNorm(vmin, vmax) without errors
+        let [vMin, vMax] = colorBarMinMax;
+        if (vMin <= 0) {
+          vMin = 1e-3;
+        }
+        if (vMax <= vMin) {
+          vMax = 1;
+        }
+        colorBarMinMax = [vMin, vMax];
+      }
       dispatch(
         _updateVariableColorBar(
           selectedDatasetId,
           selectedVariableName,
-          colorBarMinMax,
           colorBarName,
+          colorBarMinMax,
+          colorBarNorm,
           opacity,
         ),
       );
@@ -715,16 +731,18 @@ export function updateVariableColorBar(
 export function _updateVariableColorBar(
   datasetId: string,
   variableName: string,
-  colorBarMinMax: [number, number],
   colorBarName: string,
+  colorBarMinMax: [number, number],
+  colorBarNorm: ColorBarNorm,
   opacity: number,
 ): UpdateVariableColorBar {
   return {
     type: UPDATE_VARIABLE_COLOR_BAR,
     datasetId,
     variableName,
-    colorBarMinMax,
     colorBarName,
+    colorBarMinMax,
+    colorBarNorm,
     opacity,
   };
 }

@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useState, SyntheticEvent } from "react";
+import React, { useEffect, useState } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import { Theme } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
-import { Mark } from "@mui/base/useSlider";
 
-import { getLabelsFromArray } from "@/util/label";
+import { ColorBarNorm } from "@/model/variable";
+import ColorBarRangeSlider from "./ColorBarRangeSlider";
 
 const HOR_SLIDER_MARGIN = 5;
 
@@ -62,167 +61,106 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface ColorBarRangeEditorProps {
   variableTitle: string;
-  variableColorBarMinMax: [number, number];
   variableColorBarName: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarNorm: ColorBarNorm;
   variableOpacity: number;
   updateVariableColorBar: (
-    colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarMinMax: [number, number],
+    colorBarNorm: ColorBarNorm,
     opacity: number,
   ) => void;
 }
 
 export default function ColorBarRangeEditor({
   variableTitle,
-  variableColorBarMinMax,
   variableColorBarName,
+  variableColorBarMinMax,
+  variableColorBarNorm,
   variableOpacity,
   updateVariableColorBar,
 }: ColorBarRangeEditorProps) {
   const classes = useStyles();
 
-  const [currentColorBarMinMax, setCurrentColorBarMinMax] = useState<
-    [number, number]
-  >(variableColorBarMinMax);
-  const [originalColorBarMinMax, setOriginalColorBarMinMax] = useState<
-    [number, number]
-  >(variableColorBarMinMax);
-  const [enteredColorBarMinMax, setEnteredColorBarMinMax] = useState<
-    [string, string]
-  >(minMaxToText(variableColorBarMinMax));
-  const [enteredColorBarMinMaxError, setEnteredColorBarMinMaxError] = useState<
+  const [currentMinMax, setCurrentMinMax] = useState<[number, number]>(
+    variableColorBarMinMax,
+  );
+  const [originalMinMax, setOriginalMinMax] = useState<[number, number]>(
+    variableColorBarMinMax,
+  );
+  const [enteredMinMax, setEnteredMinMax] = useState<[string, string]>(
+    minMaxToText(variableColorBarMinMax),
+  );
+  const [enteredMinMaxError, setEnteredMinMaxError] = useState<
     [boolean, boolean]
   >([false, false]);
 
   useEffect(() => {
-    setEnteredColorBarMinMax(minMaxToText(variableColorBarMinMax));
+    setEnteredMinMax(minMaxToText(variableColorBarMinMax));
   }, [variableColorBarMinMax]);
 
-  const handleColorBarMinMaxChange = (
-    _event: Event,
-    value: number | number[],
-  ) => {
-    if (Array.isArray(value)) {
-      setCurrentColorBarMinMax([value[0], value[1]]);
-    }
-  };
-
-  const handleColorBarMinMaxChangeCommitted = (
-    _event: Event | SyntheticEvent,
-    value: number | number[],
-  ) => {
-    if (Array.isArray(value)) {
-      updateVariableColorBar(
-        [value[0], value[1]],
-        variableColorBarName,
-        variableOpacity,
-      );
-    }
-  };
-
-  const handleEnteredColorBarMinChange = (
+  const handleEnteredMinChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const enteredValue = event.target.value;
-    setEnteredColorBarMinMax([enteredValue, enteredColorBarMinMax[1]]);
+    setEnteredMinMax([enteredValue, enteredMinMax[1]]);
     const minValue = Number.parseFloat(enteredValue);
     let error = false;
-    if (!Number.isNaN(minValue) && minValue < currentColorBarMinMax[1]) {
-      if (minValue !== currentColorBarMinMax[0]) {
-        const newMinMax: [number, number] = [
-          minValue,
-          currentColorBarMinMax[1],
-        ];
-        setCurrentColorBarMinMax(newMinMax);
-        setOriginalColorBarMinMax(newMinMax);
+    if (!Number.isNaN(minValue) && minValue < currentMinMax[1]) {
+      if (minValue !== currentMinMax[0]) {
+        const newMinMax: [number, number] = [minValue, currentMinMax[1]];
+        setCurrentMinMax(newMinMax);
+        setOriginalMinMax(newMinMax);
         updateVariableColorBar(
-          newMinMax,
           variableColorBarName,
+          newMinMax,
+          variableColorBarNorm,
           variableOpacity,
         );
       }
     } else {
       error = true;
     }
-    setEnteredColorBarMinMaxError([error, enteredColorBarMinMaxError[1]]);
+    setEnteredMinMaxError([error, enteredMinMaxError[1]]);
   };
 
-  const handleEnteredColorBarMaxChange = (
+  const handleEnteredMaxChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const enteredValue = event.target.value;
-    setEnteredColorBarMinMax([enteredColorBarMinMax[0], enteredValue]);
+    setEnteredMinMax([enteredMinMax[0], enteredValue]);
     const maxValue = Number.parseFloat(enteredValue);
     let error = false;
-    if (!Number.isNaN(maxValue) && maxValue > currentColorBarMinMax[0]) {
-      if (maxValue !== currentColorBarMinMax[1]) {
-        const newMinMax: [number, number] = [
-          currentColorBarMinMax[0],
-          maxValue,
-        ];
-        setCurrentColorBarMinMax(newMinMax);
-        setOriginalColorBarMinMax(newMinMax);
+    if (!Number.isNaN(maxValue) && maxValue > currentMinMax[0]) {
+      if (maxValue !== currentMinMax[1]) {
+        const newMinMax: [number, number] = [currentMinMax[0], maxValue];
+        setCurrentMinMax(newMinMax);
+        setOriginalMinMax(newMinMax);
         updateVariableColorBar(
-          newMinMax,
           variableColorBarName,
+          newMinMax,
+          variableColorBarNorm,
           variableOpacity,
         );
       }
     } else {
       error = true;
     }
-    setEnteredColorBarMinMaxError([enteredColorBarMinMaxError[0], error]);
+    setEnteredMinMaxError([enteredMinMaxError[0], error]);
   };
-
-  const [original1, original2] = originalColorBarMinMax;
-  const dist = original1 < original2 ? original2 - original1 : 1;
-  const distExp = Math.floor(Math.log10(dist));
-  const distNorm = dist * Math.pow(10, -distExp);
-
-  let numStepsInner = null;
-  for (const delta of [0.25, 0.2, 0.15, 0.125, 0.1]) {
-    const numStepsFloat = distNorm / delta;
-    const numStepsInt = Math.floor(numStepsFloat);
-    if (Math.abs(numStepsInt - numStepsFloat) < 1e-10) {
-      numStepsInner = numStepsInt;
-      break;
-    }
-  }
-
-  let numStepsOuter;
-  if (numStepsInner !== null && numStepsInner >= 2) {
-    numStepsOuter = Math.max(2, Math.round(numStepsInner / 2));
-  } else {
-    numStepsOuter = 4;
-    numStepsInner = 8;
-  }
-
-  const delta = original1 < original2 ? dist / numStepsInner : 0.5;
-  const numSteps = numStepsInner + 2 * numStepsOuter;
-  const total1 = original1 - numStepsOuter * delta;
-  const total2 = original2 + numStepsOuter * delta;
-  const step = (total2 - total1) / numSteps;
-
-  const values = [total1, original1, original2, total2];
-
-  const marks: Mark[] = getLabelsFromArray(values).map((label, i) => {
-    return { value: values[i], label };
-  });
 
   return (
     <div className={classes.colorBarMinMaxEditor}>
       <span style={{ paddingLeft: 14 }}>{variableTitle}</span>
       <Box className={classes.sliderBox}>
-        <Slider
-          min={total1}
-          max={total2}
-          value={currentColorBarMinMax}
-          marks={marks}
-          step={step}
-          onChange={handleColorBarMinMaxChange}
-          onChangeCommitted={handleColorBarMinMaxChangeCommitted}
-          valueLabelDisplay="auto"
-          size="small"
+        <ColorBarRangeSlider
+          variableColorBarName={variableColorBarName}
+          variableColorBarMinMax={variableColorBarMinMax}
+          variableColorBarNorm={variableColorBarNorm}
+          updateVariableColorBar={updateVariableColorBar}
+          originalColorBarMinMax={originalMinMax}
+          variableOpacity={variableOpacity}
         />
       </Box>
       <Box component="form" className={classes.minMaxBox}>
@@ -231,18 +169,18 @@ export default function ColorBarRangeEditor({
           label="Minimum"
           variant="filled"
           size="small"
-          value={enteredColorBarMinMax[0]}
-          error={enteredColorBarMinMaxError[0]}
-          onChange={(evt) => handleEnteredColorBarMinChange(evt)}
+          value={enteredMinMax[0]}
+          error={enteredMinMaxError[0]}
+          onChange={(evt) => handleEnteredMinChange(evt)}
         />
         <TextField
           className={classes.maxTextField}
           label="Maximum"
           variant="filled"
           size="small"
-          value={enteredColorBarMinMax[1]}
-          error={enteredColorBarMinMaxError[1]}
-          onChange={(evt) => handleEnteredColorBarMaxChange(evt)}
+          value={enteredMinMax[1]}
+          error={enteredMinMaxError[1]}
+          onChange={(evt) => handleEnteredMaxChange(evt)}
         />
       </Box>
     </div>

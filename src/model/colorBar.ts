@@ -23,9 +23,18 @@
  */
 
 import bgImageData from "./bg.png";
+import { RGBA } from "@/util/color";
 
 const BG_IMAGE = new Image();
 BG_IMAGE.src = bgImageData;
+
+export interface ColorRecord {
+  value: number;
+  color: RGBA;
+  label?: string;
+}
+
+export type HexColorRecord = Omit<ColorRecord, "color"> & { color: string };
 
 export interface ColorBars {
   groups: ColorBarGroup[];
@@ -64,9 +73,14 @@ export interface ColorBar {
    * renderUserColorBarAsBase64() from user color bar code.
    */
   imageData?: string;
+  /**
+   * Defined, if this color bar is a user-defined categorical color bar,
+   * that its `userColorBar.type` is "bound" or "key".
+   */
+  categories?: HexColorRecord[];
 }
 
-export function parseColorBar(name: string): ColorBar {
+export function parseColorBarName(name: string): ColorBar {
   let baseName = name;
 
   const isAlpha = baseName.endsWith(CB_ALPHA_SUFFIX);
@@ -82,7 +96,7 @@ export function parseColorBar(name: string): ColorBar {
   return { baseName, isAlpha, isReversed };
 }
 
-export function formatColorBar(colorBar: ColorBar): string {
+export function formatColorBarName(colorBar: ColorBar): string {
   let name = colorBar.baseName;
   if (colorBar.isReversed) {
     name += CB_REVERSE_SUFFIX;

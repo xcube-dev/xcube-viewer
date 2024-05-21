@@ -35,8 +35,8 @@ import {
 interface ColorBarCanvasProps {
   colorBar: ColorBar;
   opacity: number;
-  width: number | string | undefined;
-  height: number | string | undefined;
+  width?: number | string | undefined;
+  height?: number | string | undefined;
   onClick: (event: MouseEvent<HTMLCanvasElement>) => void;
 }
 

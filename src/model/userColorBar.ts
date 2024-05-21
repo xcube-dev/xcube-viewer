@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 
-import { parseColor, RGBA, rgbToHex } from "@/util/color";
+import { parseColor, rgbToHex } from "@/util/color";
+import { ColorRecord, HexColorRecord } from "@/model/colorBar";
 
 export const USER_COLOR_BAR_GROUP_TITLE = "User";
 export const USER_COLOR_BAR_CODE_EXAMPLE =
@@ -30,7 +31,7 @@ export const USER_COLOR_BAR_CODE_EXAMPLE =
   "0.5: red\n" + // tie point 2
   "1.0: 120,30,255"; // tie point 3
 
-export type ColorRecord = [number, RGBA];
+export type ColorMapType = "key" | "bound" | "node";
 
 export interface UserColorBar {
   /**
@@ -38,59 +39,80 @@ export interface UserColorBar {
    */
   id: string;
   /**
-   * Format of the code value:
+   * Format of the `code` value:
    *
    * code   := record {"\n" record}
-   * record := value ":" (rgb | rgba)
-   * rgba   := rgb ["," a]
-   * rgb    := name | "#"hex | (r "," g "," b)
+   * record := value ":" (rgb | rgba) [":" label]
+   * rgb    := name | (r "," g "," b) | "#"hex3 | "#"hex6
+   * rgba   := rgb ["," a] | "#"hex8
    *
    * r, g, b in range 0 to 255, a in range 0 to 1
    */
   code: string;
   /**
-   * base64-encoded image/png
-   * rendered by renderUserColorBarAsBase64() from code.
+   * Type of color mapping, discrete (= index or bounds) or continuous (=node).
+   */
+  type: ColorMapType;
+  /**
+   * base64-encoded `image/png`
+   * rendered by renderUserColorBarAsBase64() from `code`.
    */
   imageData?: string;
   /**
-   * If imageData is undefined, errorMessage should say why.
+   * If `imageData` is undefined, errorMessage should say why.
    */
   errorMessage?: string;
 }
 
-export function getUserColorBarRgbaArray(records: ColorRecord[], size: number) {
-  const n = records.length;
-  const min = records[0][0];
-  const max = records[n - 1][0];
-  const values = records.map((record) => (record[0] - min) / (max - min));
+export function getUserColorBarRgbaArray(
+  records: ColorRecord[],
+  type: ColorMapType,
+  size: number,
+): Uint8ClampedArray {
   const rgbaArray = new Uint8ClampedArray(4 * size);
-  let recordIndex = 0;
-  let v1 = values[0];
-  let v2 = values[1];
-  for (let i = 0, j = 0; i < size; i++, j += 4) {
-    const v = i / (size - 1);
-    if (v > v2) {
-      recordIndex++;
-      v1 = values[recordIndex];
-      v2 = values[recordIndex + 1];
+  const n = records.length;
+  if (type === "key" || type === "bound") {
+    const m = type === "key" ? n : n - 1;
+    for (let i = 0, j = 0; i < size; i++, j += 4) {
+      const recordIndex = Math.floor((m * i) / size);
+      const [r, g, b, a] = records[recordIndex].color;
+      rgbaArray[j] = r;
+      rgbaArray[j + 1] = g;
+      rgbaArray[j + 2] = b;
+      rgbaArray[j + 3] = a;
     }
-    const w = (v - v1) / (v2 - v1);
-    const [r1, g1, b1, a1] = records[recordIndex][1];
-    const [r2, g2, b2, a2] = records[recordIndex + 1][1];
-    rgbaArray[j] = r1 + w * (r2 - r1);
-    rgbaArray[j + 1] = g1 + w * (g2 - g1);
-    rgbaArray[j + 2] = b1 + w * (b2 - b1);
-    rgbaArray[j + 3] = a1 + w * (a2 - a1);
+  } else {
+    const min = records[0].value;
+    const max = records[n - 1].value;
+    const values = records.map((record) => (record.value - min) / (max - min));
+    let recordIndex = 0;
+    let v1 = values[0];
+    let v2 = values[1];
+    for (let i = 0, j = 0; i < size; i++, j += 4) {
+      const v = i / (size - 1);
+      if (v > v2) {
+        recordIndex++;
+        v1 = values[recordIndex];
+        v2 = values[recordIndex + 1];
+      }
+      const w = (v - v1) / (v2 - v1);
+      const [r1, g1, b1, a1] = records[recordIndex].color;
+      const [r2, g2, b2, a2] = records[recordIndex + 1].color;
+      rgbaArray[j] = r1 + w * (r2 - r1);
+      rgbaArray[j + 1] = g1 + w * (g2 - g1);
+      rgbaArray[j + 2] = b1 + w * (b2 - b1);
+      rgbaArray[j + 3] = a1 + w * (a2 - a1);
+    }
   }
   return rgbaArray;
 }
 
 export function renderUserColorBar(
   records: ColorRecord[],
+  type: ColorMapType,
   canvas: HTMLCanvasElement,
 ): Promise<void> {
-  const data = getUserColorBarRgbaArray(records, canvas.width);
+  const data = getUserColorBarRgbaArray(records, type, canvas.width);
   const imageData = new ImageData(data, data.length / 4, 1);
   return createImageBitmap(imageData).then((bitMap) => {
     const ctx = canvas.getContext("2d");
@@ -101,10 +123,10 @@ export function renderUserColorBar(
 }
 
 export function renderUserColorBarAsBase64(
-  colorBar: UserColorBar,
+  userColorBar: UserColorBar,
 ): Promise<{ imageData?: string; errorMessage?: string }> {
   const { colorRecords, errorMessage } = getUserColorBarColorRecords(
-    colorBar.code,
+    userColorBar.code,
   );
   if (!colorRecords) {
     return Promise.resolve({ errorMessage });
@@ -112,16 +134,20 @@ export function renderUserColorBarAsBase64(
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 1;
-  return renderUserColorBar(colorRecords, canvas).then(() => {
-    const dataURL = canvas.toDataURL("image/png");
-    return { imageData: dataURL.split(",")[1] };
-  });
+  return renderUserColorBar(colorRecords, userColorBar.type, canvas).then(
+    () => {
+      const dataURL = canvas.toDataURL("image/png");
+      return { imageData: dataURL.split(",")[1] };
+    },
+  );
 }
 
-export function getUserColorBarColorArray(code: string) {
+export function getUserColorBarHexRecords(
+  code: string,
+): HexColorRecord[] | undefined {
   const { colorRecords } = getUserColorBarColorRecords(code);
   if (colorRecords) {
-    return colorRecords.map(([value, rgba]) => [value, rgbToHex(rgba)]);
+    return colorRecords.map((r) => ({ ...r, color: rgbToHex(r.color) }));
   }
 }
 
@@ -156,19 +182,23 @@ export function parseUserColorBarCode(code: string): ColorRecord[] {
         .map((comp) => comp.trim()),
     )
     .forEach((recordParts, index) => {
-      if (recordParts.length == 2) {
+      if (recordParts.length == 2 || recordParts.length == 3) {
         const [valueText, rgbText] = recordParts;
         const value = parseFloat(valueText);
-        const rgba = parseColor(rgbText);
+        const color = parseColor(rgbText);
         if (!Number.isFinite(value)) {
           throw new SyntaxError(
             `Line ${index + 1}: invalid value: ${valueText}`,
           );
         }
-        if (!rgba) {
+        if (!color) {
           throw new SyntaxError(`Line ${index + 1}: invalid color: ${rgbText}`);
         }
-        points.push([value, rgba]);
+        if (recordParts.length == 3) {
+          points.push({ value, color, label: recordParts[2] });
+        } else {
+          points.push({ value, color });
+        }
       } else if (recordParts.length === 1) {
         if (recordParts[0] !== "") {
           throw new SyntaxError(
@@ -181,9 +211,9 @@ export function parseUserColorBarCode(code: string): ColorRecord[] {
   if (n < 2) {
     throw new SyntaxError(`At least two color records must be given`);
   }
-  points.sort((r1: ColorRecord, r2: ColorRecord) => r1[0] - r2[0]);
-  const v1 = points[0][0];
-  const v2 = points[n - 1][0];
+  points.sort((r1: ColorRecord, r2: ColorRecord) => r1.value - r2.value);
+  const v1 = points[0].value;
+  const v2 = points[n - 1].value;
   if (v1 === v2) {
     throw new SyntaxError(`Values must form a range`);
   }

@@ -31,6 +31,7 @@ import { UserColorBar } from "@/model/userColorBar";
 import ColorBarStyleEditor from "./ColorBarStyleEditor";
 import ColorBarSelect from "./ColorBarSelect";
 import { COLOR_BAR_ITEM_GAP, COLOR_BAR_BOX_MARGIN } from "./constants";
+import { ColorBarNorm } from "@/model/variable";
 
 const useStyles = makeStyles((theme: Theme) => ({
   colorBarBox: {
@@ -42,13 +43,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface ColorBarColorEditorProps {
-  variableColorBarMinMax: [number, number];
   variableColorBarName: string;
+  variableColorBarMinMax: [number, number];
+  variableColorBarNorm: ColorBarNorm;
   variableColorBar: ColorBar;
   variableOpacity: number;
   updateVariableColorBar: (
-    colorBarMinMax: [number, number],
     colorBarName: string,
+    colorBarMinMax: [number, number],
+    colorBarNorm: ColorBarNorm,
     opacity: number,
   ) => void;
   colorBars: ColorBars;

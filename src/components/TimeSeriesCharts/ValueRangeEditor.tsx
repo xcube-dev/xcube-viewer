@@ -104,7 +104,19 @@ export default function ValueRangeEditor({
   };
 
   return (
-    <Popover anchorEl={anchorEl} open={true} onClose={handleCancel}>
+    <Popover
+      anchorEl={anchorEl}
+      open={true}
+      onClose={handleCancel}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+    >
       <Box sx={styles.container}>
         <Box component="form" sx={styles.minMaxBox}>
           <TextField
