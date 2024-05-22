@@ -34,13 +34,16 @@ import useUndo from "@/hooks/useUndo";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarItem from "./UserColorBarItem";
+import { makeStyles } from "@/util/styles";
 
-const CONTAINER_STYLE = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: 1,
-};
+const styles = makeStyles({
+  container: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 1,
+  },
+});
 
 interface EditMode {
   action?: "add" | "edit";
@@ -104,7 +107,7 @@ export default function ColorBarSelect({
 
   return (
     <>
-      <Box sx={CONTAINER_STYLE}>
+      <Box sx={styles.container}>
         <ColorBarGroupHeader
           title={colorBarGroup.title}
           description={colorBarGroup.description}

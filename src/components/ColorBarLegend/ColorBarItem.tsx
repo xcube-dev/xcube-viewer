@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "@mui/system";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
+import { makeStyles } from "@/util/styles";
 
 import { COLOR_BAR_ITEM_GAP, COLOR_BAR_ITEM_WIDTH } from "./constants";
 
@@ -36,16 +36,16 @@ const colorBarItemStyle = (theme: Theme) => ({
   borderStyle: "solid",
 });
 
-const useItemStyles = makeStyles((theme: Theme) => ({
-  colorBarItem: {
+const styles = makeStyles({
+  colorBarItem: (theme: Theme) => ({
     ...colorBarItemStyle(theme),
     borderColor: theme.palette.mode === "dark" ? "lightgray" : "darkgray",
-  },
-  colorBarItemSelected: {
+  }),
+  colorBarItemSelected: (theme: Theme) => ({
     ...colorBarItemStyle(theme),
     borderColor: "blue",
-  },
-}));
+  }),
+});
 
 interface ColorBarItemProps {
   imageData?: string;
@@ -62,8 +62,6 @@ export default function ColorBarItem({
   width,
   title,
 }: ColorBarItemProps) {
-  const classes = useItemStyles();
-
   let image = (
     <img
       src={imageData ? `data:image/png;base64,${imageData}` : undefined}
@@ -85,7 +83,7 @@ export default function ColorBarItem({
   return (
     <Box
       width={width || COLOR_BAR_ITEM_WIDTH}
-      className={selected ? classes.colorBarItemSelected : classes.colorBarItem}
+      sx={selected ? styles.colorBarItemSelected : styles.colorBarItem}
     >
       {image}
     </Box>

@@ -34,8 +34,35 @@ import OpacityIcon from "@mui/icons-material/Opacity";
 import i18n from "@/i18n";
 import { ColorBar, formatColorBarName } from "@/model/colorBar";
 import { ColorBarNorm } from "@/model/variable";
+import { SxProps, Theme } from "@mui/system";
 
-const TOGGLE_BUTTON_GROUP_BUTTON_STYLE = { paddingTop: 2, paddingBottom: 2 };
+const styles: Record<string, SxProps<Theme>> = {
+  container: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  settingsBar: {
+    display: "flex",
+    gap: "1px",
+  },
+  toggleButton: {
+    paddingTop: "2px",
+    paddingBottom: "2px",
+  },
+  opacityContainer: {
+    display: "flex",
+    alignItems: "center",
+  },
+  opacityLabel: (theme) => ({
+    color: theme.palette.text.secondary,
+  }),
+  opacitySlider: {
+    flexGrow: "1px",
+    marginLeft: "10px",
+    marginRight: "10px",
+  },
+};
 
 interface ColorBarSelectProps {
   variableColorBarName: string;
@@ -107,15 +134,8 @@ export default function ColorBarStyleEditor({
 
   return (
     <>
-      <Box
-        component="div"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box style={{ display: "flex", gap: 1 }}>
+      <Box sx={styles.container}>
+        <Box sx={styles.settingsBar}>
           <Tooltip arrow title={i18n.get("Hide small values")}>
             <ToggleButton
               value={"alpha"}
@@ -143,27 +163,23 @@ export default function ColorBarStyleEditor({
           onChange={handleColorBarNorm}
           size="small"
         >
-          <ToggleButton value="lin" style={TOGGLE_BUTTON_GROUP_BUTTON_STYLE}>
+          <ToggleButton value="lin" sx={styles.toggleButton}>
             <Box fontSize="small">Lin</Box>
           </ToggleButton>
-          <ToggleButton value="log" style={TOGGLE_BUTTON_GROUP_BUTTON_STYLE}>
+          <ToggleButton value="log" sx={styles.toggleButton}>
             <Box fontSize="small">Log</Box>
           </ToggleButton>
           <ToggleButton
             value="cat"
-            style={TOGGLE_BUTTON_GROUP_BUTTON_STYLE}
+            sx={styles.toggleButton}
             disabled={!variableColorBar.categories}
           >
             <Box fontSize="small">Cat</Box>
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
-      <Box component="div" sx={{ display: "flex", alignItems: "center" }}>
-        <Box
-          component="span"
-          fontSize="small"
-          sx={(theme) => ({ color: theme.palette.text.secondary })}
-        >
+      <Box component="div" sx={styles.opacityContainer}>
+        <Box component="span" fontSize="small" sx={styles.opacityLabel}>
           {i18n.get("Opacity")}
         </Box>
         <Slider
@@ -171,7 +187,7 @@ export default function ColorBarStyleEditor({
           max={1}
           value={variableOpacity}
           step={0.01}
-          style={{ flexGrow: 1, marginLeft: 10, marginRight: 10 }}
+          sx={styles.opacitySlider}
           onChange={handleVariableOpacity}
           size="small"
         />

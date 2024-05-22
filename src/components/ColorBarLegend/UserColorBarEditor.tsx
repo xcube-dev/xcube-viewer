@@ -86,13 +86,14 @@ export default function UserColorBarEditor({
         value={userColorBar.code}
         onChange={handleCodeChange}
         color={userColorBar.errorMessage ? "error" : "primary"}
+        inputProps={{ style: { fontFamily: "monospace", fontSize: 12 } }}
       />
       <DoneCancel
         onDone={onDone}
         onCancel={onCancel}
         doneDisabled={!!userColorBar.errorMessage}
         size="small"
-        helpUrl="docs/color-bars.en.md"
+        helpUrl="docs/color-mappings.en.md"
       />
     </Box>
   );

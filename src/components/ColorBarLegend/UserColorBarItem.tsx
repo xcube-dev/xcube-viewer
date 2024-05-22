@@ -36,15 +36,18 @@ import {
   COLOR_BAR_ITEM_WIDTH,
   COLOR_BAR_ITEM_HEIGHT,
 } from "./constants";
+import { makeStyles } from "@/util/styles";
 
-const CONTAINER_SX = {
-  display: "flex",
-  alignItems: "center",
-  width: COLOR_BAR_ITEM_WIDTH,
-  height: COLOR_BAR_ITEM_HEIGHT,
-  gap: COLOR_BAR_ITEM_GAP,
-  marginTop: COLOR_BAR_ITEM_GAP,
-};
+const styles = makeStyles({
+  container: {
+    display: "flex",
+    alignItems: "center",
+    width: COLOR_BAR_ITEM_WIDTH,
+    height: COLOR_BAR_ITEM_HEIGHT,
+    gap: COLOR_BAR_ITEM_GAP,
+    marginTop: COLOR_BAR_ITEM_GAP,
+  },
+});
 
 interface UserColorBarItemProps {
   imageData?: string;
@@ -89,7 +92,7 @@ export default function UserColorBarItem({
 
   return (
     <>
-      <Box sx={CONTAINER_SX}>
+      <Box sx={styles.container}>
         <ColorBarItem
           imageData={imageData}
           selected={selected}
@@ -97,12 +100,7 @@ export default function UserColorBarItem({
           width={COLOR_BAR_ITEM_WIDTH - 20}
           title={title}
         />
-        <IconButton
-          size="small"
-          //onMouseEnter={handleMoreOpen}
-          //onMouseLeave={handleMoreClose}
-          onClick={handleMoreOpen}
-        >
+        <IconButton size="small" onClick={handleMoreOpen}>
           <MoreHorizIcon fontSize="inherit" />
         </IconButton>
       </Box>

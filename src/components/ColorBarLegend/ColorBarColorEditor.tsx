@@ -22,25 +22,25 @@
  * SOFTWARE.
  */
 
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "@mui/material";
+import { Theme } from "@mui/system";
 import Box from "@mui/material/Box";
 
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
+import { ColorBarNorm } from "@/model/variable";
 import ColorBarStyleEditor from "./ColorBarStyleEditor";
 import ColorBarSelect from "./ColorBarSelect";
 import { COLOR_BAR_ITEM_GAP, COLOR_BAR_BOX_MARGIN } from "./constants";
-import { ColorBarNorm } from "@/model/variable";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  colorBarBox: {
+const styles = makeStyles({
+  colorBarBox: (theme: Theme) => ({
     marginTop: theme.spacing(COLOR_BAR_BOX_MARGIN - 2 * COLOR_BAR_ITEM_GAP),
     marginLeft: theme.spacing(COLOR_BAR_BOX_MARGIN),
     marginRight: theme.spacing(COLOR_BAR_BOX_MARGIN),
     marginBottom: theme.spacing(COLOR_BAR_BOX_MARGIN),
-  },
-}));
+  }),
+});
 
 interface ColorBarColorEditorProps {
   variableColorBarName: string;
@@ -63,7 +63,6 @@ interface ColorBarColorEditorProps {
 }
 
 export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
-  const classes = useStyles();
   const {
     colorBars,
     userColorBars,
@@ -74,7 +73,7 @@ export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {
     ...baseProps
   } = props;
   return (
-    <Box className={classes.colorBarBox}>
+    <Box sx={styles.colorBarBox}>
       <ColorBarStyleEditor {...baseProps} />
       <ColorBarSelect
         {...baseProps}
