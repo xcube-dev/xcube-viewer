@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { ErrorBar, Line } from "recharts";
+import { Bar, ErrorBar, Line } from "recharts";
 import { PaletteMode } from "@mui/material";
 
 import { getUserPlaceColor } from "@/config";
-import { isNumber } from "@/util/types";
+//import { isNumber } from "@/util/types";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
@@ -55,6 +55,7 @@ interface TimeSeriesLineProps {
   placeInfos: { [placeId: string]: PlaceInfo };
   placeGroupTimeSeries: PlaceGroupTimeSeries[];
   paletteMode: PaletteMode;
+  showBarChart: boolean;
 }
 
 export default function TimeSeriesLine({
@@ -68,19 +69,13 @@ export default function TimeSeriesLine({
   placeInfos,
   placeGroupTimeSeries,
   paletteMode,
+  showBarChart,
 }: TimeSeriesLineProps) {
   // WARNING: we cannot use hooks here, as this is not a normal component!
   // See usage in TimeSeriesChart component.
 
   const timeSeries = timeSeriesGroup.timeSeriesArray[timeSeriesIndex];
   const source = timeSeries.source;
-  const valueDataKey = source.valueDataKey;
-  const data = timeSeries.data;
-
-  const filteredData = data.filter((item) => {
-    const v = item[valueDataKey];
-    return isNumber(v) && isFinite(v);
-  });
 
   const handleClick = () => {
     if (selectTimeSeries) {
@@ -145,34 +140,49 @@ export default function TimeSeriesLine({
     };
   }
 
-  return (
+  const errorBar = source.valueDataKey &&
+    showErrorBars &&
+    source.errorDataKey && (
+      <ErrorBar
+        dataKey={`ev${timeSeriesIndex}`}
+        width={4}
+        strokeWidth={1}
+        stroke={shadedLineColor}
+        strokeOpacity={0.5}
+      />
+    );
+
+  return showBarChart ? (
+    <Bar
+      key={timeSeriesIndex}
+      type="monotone"
+      name={lineName}
+      unit={source.variableUnits}
+      dataKey={`v${timeSeriesIndex}`}
+      fill={shadedLineColor}
+      fillOpacity={strokeOpacity}
+      isAnimationActive={false}
+      onClick={handleClick}
+    >
+      {errorBar}
+    </Bar>
+  ) : (
     <Line
       key={timeSeriesIndex}
       type="monotone"
       name={lineName}
       unit={source.variableUnits}
-      data={filteredData}
-      dataKey={valueDataKey}
+      dataKey={`v${timeSeriesIndex}`}
       dot={<CustomDot {...dotProps} stroke={shadedLineColor} fill={"white"} />}
       activeDot={
         <CustomDot {...dotProps} stroke={"white"} fill={shadedLineColor} />
       }
       stroke={shadedLineColor}
       strokeOpacity={strokeOpacity}
-      // strokeWidth={2 * (ts.dataProgress || 1)}
-      // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
-      // isAnimationActive={ts.dataProgress === 1.0}
       isAnimationActive={false}
       onClick={handleClick}
     >
-      {valueDataKey && showErrorBars && source.errorDataKey && (
-        <ErrorBar
-          dataKey={source.errorDataKey}
-          width={4}
-          strokeWidth={1}
-          stroke={shadedLineColor}
-        />
-      )}
+      {errorBar}
     </Line>
   );
 }

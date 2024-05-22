@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { useRef, useState } from "react";
 import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -30,8 +31,10 @@ import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import CloseIcon from "@mui/icons-material/Close";
 import CommentIcon from "@mui/icons-material/Comment";
+import ExpandIcon from "@mui/icons-material/Expand";
 import FitScreenIcon from "@mui/icons-material/FitScreen";
 
 import i18n from "@/i18n";
@@ -42,6 +45,9 @@ import {
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
 import AddTimeSeriesButton from "./AddTimeSeriesButton";
+import ValueRangeEditor from "./ValueRangeEditor";
+
+type ValueRange = [number, number];
 
 const useStyles = makeStyles({
   headerContainer: {
@@ -86,6 +92,10 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setZoomMode: (zoomMode: boolean) => void;
   showTooltips: boolean;
   setShowTooltips: (showTooltips: boolean) => void;
+  showBarChart: boolean;
+  setShowBarChart: (barChart: boolean) => void;
+  valueRange: ValueRange | undefined;
+  setValueRange: (fixedValueRange: ValueRange | undefined) => void;
 }
 
 export default function TimeSeriesChartHeader({
@@ -100,12 +110,29 @@ export default function TimeSeriesChartHeader({
   setZoomMode,
   showTooltips,
   setShowTooltips,
+  showBarChart,
+  setShowBarChart,
+  valueRange,
+  setValueRange,
 }: TimeSeriesChartHeaderProps) {
   const classes = useStyles();
 
+  const valueRangeEl = useRef<HTMLButtonElement | null>(null);
+  const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
   const timeSeriesText = i18n.get("Time-Series");
   const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
   const chartTitle = `${timeSeriesText} (${unitsText})`;
+
+  const handleToggleValueRangeEditor = () => {
+    setValueRangeEditorOpen(!valueRangeEditorOpen);
+  };
+
+  const handleValueRangeChange = (valueRange: ValueRange | undefined) => {
+    setValueRangeEditorOpen(false);
+    if (valueRange) {
+      setValueRange(valueRange);
+    }
+  };
 
   return (
     <Box className={classes.headerContainer}>
@@ -116,7 +143,6 @@ export default function TimeSeriesChartHeader({
             <IconButton
               key={"zoomOutButton"}
               className={classes.actionButton}
-              aria-label="Zoom Out"
               onClick={resetZoom}
               size="small"
             >
@@ -134,6 +160,22 @@ export default function TimeSeriesChartHeader({
             <AspectRatioIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
+        <ValueRangeEditor
+          anchorEl={valueRangeEditorOpen ? valueRangeEl.current : null}
+          valueRange={valueRange}
+          setValueRange={handleValueRangeChange}
+        />
+        <Tooltip arrow title={i18n.get("Enter fixed y-range")}>
+          <ToggleButton
+            ref={valueRangeEl}
+            value={"valueRange"}
+            selected={valueRangeEditorOpen}
+            onClick={handleToggleValueRangeEditor}
+            size="small"
+          >
+            <ExpandIcon fontSize="inherit" />
+          </ToggleButton>
+        </Tooltip>
         <Tooltip arrow title={i18n.get("Toggle showing time-serie values")}>
           <ToggleButton
             value={"showTooltips"}
@@ -142,6 +184,16 @@ export default function TimeSeriesChartHeader({
             size="small"
           >
             <CommentIcon fontSize="inherit" />
+          </ToggleButton>
+        </Tooltip>
+        <Tooltip arrow title={i18n.get("Toggle using a bar chart")}>
+          <ToggleButton
+            value={"showBarChart"}
+            selected={showBarChart}
+            onClick={() => setShowBarChart(!showBarChart)}
+            size="small"
+          >
+            <BarChartIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
         <AddTimeSeriesButton
