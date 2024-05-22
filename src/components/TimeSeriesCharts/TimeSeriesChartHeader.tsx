@@ -176,7 +176,7 @@ export default function TimeSeriesChartHeader({
             <ExpandIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
-        <Tooltip arrow title={i18n.get("Toggle showing time-serie values")}>
+        <Tooltip arrow title={i18n.get("Toggle showing info popup on hover")}>
           <ToggleButton
             value={"showTooltips"}
             selected={showTooltips}
@@ -186,7 +186,10 @@ export default function TimeSeriesChartHeader({
             <CommentIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
-        <Tooltip arrow title={i18n.get("Toggle using a bar chart")}>
+        <Tooltip
+          arrow
+          title={i18n.get("Toggle between showing a bar or line chart")}
+        >
           <ToggleButton
             value={"showBarChart"}
             selected={showBarChart}
