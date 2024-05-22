@@ -42,7 +42,6 @@ import {
   SELECT_VARIABLE,
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
-  SET_RGB_LAYER_VISIBILITY,
   SET_VARIABLE_COMPARE_MODE,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
@@ -199,15 +198,6 @@ export function controlReducer(
       return {
         ...state,
         selectedVariableName: action.selectedVariableName,
-      };
-    }
-    case SET_RGB_LAYER_VISIBILITY: {
-      return {
-        ...state,
-        layerVisibilities: {
-          ...state.layerVisibilities,
-          datasetRgb: action.showRgbLayer,
-        },
       };
     }
     case SET_LAYER_VISIBILITY: {

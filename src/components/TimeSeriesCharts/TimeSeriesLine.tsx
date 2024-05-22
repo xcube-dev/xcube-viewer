@@ -77,7 +77,6 @@ export default function TimeSeriesLine({
   const valueDataKey = source.valueDataKey;
   const data = timeSeries.data;
 
-  // TODO: allow switching data filtering on/off
   const filteredData = data.filter((item) => {
     const v = item[valueDataKey];
     return isNumber(v) && isFinite(v);

@@ -23,7 +23,6 @@
  */
 
 import { VolumeRenderMode } from "@/states/controlState";
-import { TileSourceOptions } from "./tile";
 
 export type ColorBarNorm = "lin" | "log" | "cat";
 
@@ -37,11 +36,8 @@ export interface Variable {
   title: string;
   timeChunkSize: number | null;
   // The following are new since xcube 0.11
-  tileUrl?: string; // no longer used since 0.13
   tileLevelMin?: number;
   tileLevelMax?: number;
-  // tileSourceOptions are no longer used since xcube 0.11
-  tileSourceOptions?: TileSourceOptions;
   // colorBarName may be prefixed by "_alpha" and/or "_r" (reversed)
   colorBarName: string;
   colorBarMin: number;
