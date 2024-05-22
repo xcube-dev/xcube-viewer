@@ -22,14 +22,19 @@
   - `Log`: logarithmic mapping of data values between `vmin` and `vmax` to colors.
   - `Cat`: direct mapping of categorical data values into colors.
 
-* Users can now zoom into arbitrary regions of a time-series chart
-  by pressing the `CTRL` key of the keyboard. (#285)
-
-* Introduced overlay layers that can be selected in the settings.
-
-* Users can now define their own base maps and overlay layers.
+* Improvements of the time-series charts:
+  - Users can now zoom into arbitrary regions of a time-series chart
+    by pressing the `CTRL` key of the keyboard. (#285)
+  - It is now possible to toggle showing the info popup when hovering 
+    over the chart.
+  - It is now possible to toggle between showing bar or line charts.
 
 * Introduced layer visibility dropdown menu in the control bar.
+
+* Introduced user-defined layers:
+  - Users can now define their own base maps and overlay layers from
+    WMS servers or tiled web maps (=XYZ).
+  - Active base maps and overlay layers can be selected in the settings.
 
 * It is now possible to specify the map view behaviour when a new dataset or
   place is selected. In the settings, users can now choose between doing 
