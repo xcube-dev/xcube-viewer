@@ -29,6 +29,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
+import i18n from "@/i18n";
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms";
 import DoneCancel from "@/components/DoneCancel";
@@ -73,7 +74,6 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
     if (wmsLayers && wmsLayerIndex !== -1) {
       onChange({
         ...userLayer,
-        // TODO: I18N
         group: USER_GROUP_NAME,
         title: wmsLayers[wmsLayerIndex].title,
         url: wmsUrl.trim(),
@@ -97,7 +97,7 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
     >
       <TextField
         required
-        label="WMS URL"
+        label={i18n.get("WMS URL")}
         variant="standard"
         size="small"
         value={wmsUrl}
@@ -113,7 +113,7 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
         renderValue={() =>
           wmsLayers && wmsLayers.length && wmsLayerIndex >= 0
             ? wmsLayers[wmsLayerIndex].title
-            : "WMS Layer"
+            : i18n.get("WMS Layer")
         }
       >
         {(wmsLayers || []).map((wmsLayer, index) => (
