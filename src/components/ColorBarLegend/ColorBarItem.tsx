@@ -25,8 +25,8 @@
 import { Theme } from "@mui/system";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-
 import { makeStyles } from "@/util/styles";
+
 import { COLOR_BAR_ITEM_GAP, COLOR_BAR_ITEM_WIDTH } from "./constants";
 
 const colorBarItemStyle = (theme: Theme) => ({
