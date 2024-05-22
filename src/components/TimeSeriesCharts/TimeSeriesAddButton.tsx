@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
+import { SxProps, Theme } from "@mui/system";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { PlaceGroupTimeSeries, TimeSeries } from "@/model/timeSeries";
-import Tooltip from "@mui/material/Tooltip";
+import React from "react";
 
-interface AddTimeSeriesButtonProps extends WithLocale {
-  className: string;
+interface TimeSeriesAddButtonProps extends WithLocale {
+  sx?: SxProps<Theme>;
   timeSeriesGroupId: string;
   placeGroupTimeSeries: PlaceGroupTimeSeries[];
   addPlaceGroupTimeSeries: (
@@ -43,12 +44,12 @@ interface AddTimeSeriesButtonProps extends WithLocale {
   ) => void;
 }
 
-const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = ({
-  className,
+export default function TimeSeriesAddButton({
+  sx,
   timeSeriesGroupId,
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
-}) => {
+}: TimeSeriesAddButtonProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -83,20 +84,20 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = ({
 
   return (
     <>
-      <Tooltip arrow title={i18n.get("Add time-series from places")}>
-        <IconButton
-          size="small"
-          className={className}
-          aria-label="Add"
-          aria-controls={isOpen ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={isOpen ? "true" : undefined}
-          onClick={handleButtonClick}
-          disabled={menuItems.length === 0}
-        >
+      <IconButton
+        size="small"
+        sx={sx}
+        aria-label="Add"
+        aria-controls={isOpen ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={isOpen ? "true" : undefined}
+        onClick={handleButtonClick}
+        disabled={menuItems.length === 0}
+      >
+        <Tooltip arrow title={i18n.get("Add time-series from places")}>
           <AddCircleOutlineIcon fontSize={"inherit"} />
-        </IconButton>
-      </Tooltip>
+        </Tooltip>
+      </IconButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -110,6 +111,4 @@ const AddTimeSeriesButton: React.FC<AddTimeSeriesButtonProps> = ({
       </Menu>
     </>
   );
-};
-
-export default AddTimeSeriesButton;
+}

@@ -22,32 +22,31 @@
  * SOFTWARE.
  */
 
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "@mui/material/styles";
 import { TooltipProps } from "recharts";
 import { Payload as TooltipPayload } from "recharts/types/component/DefaultTooltipContent";
 
 import { utcTimeToIsoDateTimeString } from "@/util/time";
 import { isNumber } from "@/util/types";
+import { makeStyles } from "@/util/styles";
+import Box from "@mui/material/Box";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  toolTipContainer: {
+const styles = makeStyles({
+  toolTipContainer: (theme) => ({
     backgroundColor: "black",
     opacity: 0.8,
     color: "white",
     border: "2px solid black",
     borderRadius: theme.spacing(2),
     padding: theme.spacing(1.5),
-  },
-
+  }),
   toolTipValue: {
     fontWeight: "bold",
   },
-  toolTipLabel: {
+  toolTipLabel: (theme) => ({
     fontWeight: "bold",
     paddingBottom: theme.spacing(1),
-  },
-}));
+  }),
+});
 
 const INVISIBLE_LINE_COLOR = "#00000000";
 const SUBSTITUTE_LABEL_COLOR = "#FAFFDD";
@@ -59,7 +58,6 @@ export default function CustomTooltip({
   label,
   payload,
 }: CustomTooltipProps) {
-  const classes = useStyles();
   if (!active) {
     return null;
   }
@@ -99,9 +97,9 @@ export default function CustomTooltip({
       return (
         <div key={index}>
           <span>{nameText}:&nbsp;</span>
-          <span className={classes.toolTipValue} style={{ color }}>
+          <Box component="span" sx={styles.toolTipValue} style={{ color }}>
             {valueText}
-          </span>
+          </Box>
           <span>&nbsp;{suffixText}</span>
         </div>
       );
@@ -113,11 +111,12 @@ export default function CustomTooltip({
   }
 
   return (
-    <div className={classes.toolTipContainer}>
-      <span
-        className={classes.toolTipLabel}
-      >{`${utcTimeToIsoDateTimeString(label)} UTC`}</span>
+    <Box sx={styles.toolTipContainer}>
+      <Box
+        component="span"
+        sx={styles.toolTipLabel}
+      >{`${utcTimeToIsoDateTimeString(label)} UTC`}</Box>
       {items}
-    </div>
+    </Box>
   );
 }

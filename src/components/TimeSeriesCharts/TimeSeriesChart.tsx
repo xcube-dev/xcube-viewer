@@ -66,6 +66,7 @@ type CategoricalChartState_Fixed = Omit<
   "activeLabel"
 > & { activeLabel?: number };
 
+// TODO: no longer use makeStyles from from "@mui/styles"
 const useStyles = makeStyles((theme: Theme) => ({
   chartContainer: {
     userSelect: "none",
@@ -146,7 +147,9 @@ export default function TimeSeriesChart({
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
 }: TimeSeriesChartProps) {
+  // TODO: check if using MUI useTheme is still ok
   const theme = useTheme();
+  // TODO: replace by sx styling or styled components, but beware of refs!
   const classes = useStyles();
 
   const [zoomMode, setZoomMode] = useState(false);
