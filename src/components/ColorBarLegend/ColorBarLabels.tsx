@@ -23,11 +23,12 @@
  */
 
 import React, { useMemo } from "react";
-import makeStyles from "@mui/styles/makeStyles";
 
 import { getLabelsForRange } from "@/util/label";
+import Box from "@mui/material/Box";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles(() => ({
+const styles = makeStyles({
   label: {
     fontSize: "x-small",
     fontWeight: "bold",
@@ -36,7 +37,7 @@ const useStyles = makeStyles(() => ({
     flexWrap: "nowrap",
     justifyContent: "space-between",
   },
-}));
+});
 
 interface ColorBarLabelsProps {
   minValue: number;
@@ -53,16 +54,15 @@ export default function ColorBarLabels({
   logScaled,
   onClick,
 }: ColorBarLabelsProps) {
-  const classes = useStyles();
   const labels = useMemo(
     () => getLabelsForRange(minValue, maxValue, numTicks, logScaled),
     [minValue, maxValue, numTicks, logScaled],
   );
   return (
-    <div className={classes.label} onClick={onClick}>
+    <Box sx={styles.label} onClick={onClick}>
       {labels.map((label, i) => (
         <span key={i}>{label}</span>
       ))}
-    </div>
+    </Box>
   );
 }

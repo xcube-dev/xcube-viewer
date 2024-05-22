@@ -26,6 +26,29 @@ import Box from "@mui/material/Box";
 
 import { HexColorRecord } from "@/model/colorBar";
 import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
+import { makeStyles } from "@/util/styles";
+
+const styles = makeStyles({
+  container: {
+    width: COLOR_BAR_ITEM_WIDTH,
+  },
+  itemContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  itemLabelBox: {
+    paddingLeft: 1,
+    fontSize: "small",
+  },
+  itemColorBox: (theme) => ({
+    width: "48px",
+    height: "16px",
+    borderStyle: "solid",
+    borderColor: theme.palette.mode === "dark" ? "lightgray" : "darkgray",
+    borderWidth: 1,
+  }),
+});
 
 export interface ColorBarLegendCategoricalProps {
   variableColorBarCategories: HexColorRecord[];
@@ -37,32 +60,19 @@ export default function ColorBarLegendCategorical({
   onOpenColorBarEditor,
 }: ColorBarLegendCategoricalProps) {
   return (
-    <Box sx={{ width: COLOR_BAR_ITEM_WIDTH }}>
+    <Box sx={styles.container}>
       {variableColorBarCategories.map((category, index) => (
         <Box
           key={index}
           onClick={onOpenColorBarEditor}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
+          sx={styles.itemContainer}
         >
           <Box
-            sx={(theme) => ({
-              width: "48px",
-              height: "16px",
-              backgroundColor: category.color,
-              borderStyle: "solid",
-              borderColor:
-                theme.palette.mode === "dark" ? "lightgray" : "darkgray",
-              borderWidth: 1,
-            })}
+            sx={{ ...styles.itemColorBox, backgroundColor: category.color }}
           />
-          <Box
-            component="span"
-            sx={{ paddingLeft: 1, fontSize: "small" }}
-          >{`${category.label || `Category ${index + 1}`} (${category.value})`}</Box>
+          <Box component="span" sx={styles.itemLabelBox}>
+            {`${category.label || `Category ${index + 1}`} (${category.value})`}
+          </Box>
         </Box>
       ))}
     </Box>
