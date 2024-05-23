@@ -80,7 +80,7 @@ const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
 const COLOR_LEGEND_STYLE: React.CSSProperties = {
   zIndex: 1000,
-  right: 272,
+  right: 10,
   top: 10,
 };
 
