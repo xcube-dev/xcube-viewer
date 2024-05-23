@@ -22,16 +22,18 @@
  * SOFTWARE.
  */
 
-import makeStyles from "@mui/styles/makeStyles";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { Payload as LegendPayload } from "recharts/types/component/DefaultLegendContent";
 import { LegendProps } from "recharts";
+import { Payload as LegendPayload } from "recharts/types/component/DefaultLegendContent";
 
-const useStyles = makeStyles({
+import { makeStyles } from "@/util/styles";
+import Box from "@mui/material/Box";
+
+const styles = makeStyles({
   legendContainer: {
     display: "flex",
     justifyContent: "center",
-    columnGap: 12,
+    columnGap: "12px",
     flexWrap: "wrap",
   },
   legendItem: {
@@ -39,7 +41,7 @@ const useStyles = makeStyles({
     alignItems: "center",
   },
   legendCloseIcon: {
-    marginLeft: 4,
+    marginLeft: "4px",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
@@ -54,31 +56,27 @@ export default function CustomLegend({
   payload,
   removeTimeSeries,
 }: CustomLegendProps & LegendProps) {
-  const classes = useStyles();
   if (!payload || payload.length === 0) {
     return null;
   }
   return (
-    <div className={classes.legendContainer}>
+    <Box sx={styles.legendContainer}>
       {payload.map((pl: LegendPayload, index: number) => (
-        <div
-          key={pl.value}
-          className={classes.legendItem}
-          style={{ color: pl.color }}
-        >
+        <Box key={pl.value} sx={{ ...styles.legendItem, color: pl.color }}>
           <span>{pl.value}</span>
           {removeTimeSeries && (
-            <span
-              className={classes.legendCloseIcon}
+            <Box
+              component="span"
+              sx={styles.legendCloseIcon}
               // Note, onClick() does not fire in any subcomponent
               // of <Legend/>!
               onMouseUp={() => removeTimeSeries(index)}
             >
               <RemoveCircleOutlineIcon fontSize={"small"} />
-            </span>
+            </Box>
           )}
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 }

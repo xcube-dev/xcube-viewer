@@ -22,20 +22,20 @@
  * SOFTWARE.
  */
 
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
+import { Theme } from "@mui/system";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 
 import { COLOR_BAR_ITEM_GAP } from "./constants";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  colorBarGroupTitle: {
+const styles = makeStyles({
+  colorBarGroupTitle: (theme: Theme) => ({
     marginTop: theme.spacing(2 * COLOR_BAR_ITEM_GAP),
     fontSize: "small",
     color: theme.palette.text.secondary,
-  },
-}));
+  }),
+});
 
 interface ColorBarGroupHeaderProps {
   title: string;
@@ -46,10 +46,9 @@ export default function ColorBarGroupHeader({
   title,
   description,
 }: ColorBarGroupHeaderProps) {
-  const classes = useStyles();
   return (
     <Tooltip arrow title={description} placement="left">
-      <Box className={classes.colorBarGroupTitle}>{title}</Box>
+      <Box sx={styles.colorBarGroupTitle}>{title}</Box>
     </Tooltip>
   );
 }

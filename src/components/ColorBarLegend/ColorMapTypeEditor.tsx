@@ -30,10 +30,13 @@ import Tooltip from "@mui/material/Tooltip";
 
 import i18n from "@/i18n";
 import { ColorMapType } from "@/model/userColorBar";
+import { makeStyles } from "@/util/styles";
 
-const RADIO_GROUP_SX = { marginLeft: 1 };
-const RADIO_STYLE = { padding: 4 };
-const LABEL_BOX_SX = { fontSize: "small" };
+const styles = makeStyles({
+  radioGroup: { marginLeft: 1 },
+  radio: { padding: "4px" },
+  label: { fontSize: "small" },
+});
 
 const tooltipTitles: [ColorMapType, string][] = [
   ["node", "Values are nodes of a continuous color gradient"],
@@ -57,15 +60,15 @@ export default function ColorMapTypeEditor({
       onChange={(_e, value: string) => {
         setColorMapType(value as ColorMapType);
       }}
-      sx={RADIO_GROUP_SX}
+      sx={styles.radioGroup}
     >
       {tooltipTitles.map(([type, tooltipTitle]) => (
         <Tooltip key={type} arrow title={i18n.get(tooltipTitle)}>
           <FormControlLabel
             value={type}
-            control={<Radio size="small" style={RADIO_STYLE} />}
+            control={<Radio size="small" sx={styles.radio} />}
             label={
-              <Box component="span" sx={LABEL_BOX_SX}>
+              <Box component="span" sx={styles.label}>
                 {i18n.get(toLabel(type))}
               </Box>
             }

@@ -26,16 +26,17 @@ import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
+import i18n from "@/i18n";
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import DoneCancel from "@/components/DoneCancel";
 
-interface UserLayerEditorWtsProps {
+interface UserLayerEditorXyzProps {
   userLayer: LayerDefinition;
   onChange: (userLayer: LayerDefinition) => void;
   onCancel: () => void;
 }
 
-const UserLayerEditorWts: React.FC<UserLayerEditorWtsProps> = ({
+const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
   userLayer,
   onChange,
   onCancel,
@@ -61,7 +62,6 @@ const UserLayerEditorWts: React.FC<UserLayerEditorWtsProps> = ({
   const handleUserLayerChange = () =>
     onChange({
       ...userLayer,
-      // TODO: I18N
       group: USER_GROUP_NAME,
       title: title.trim(),
       url: url.trim(),
@@ -79,7 +79,7 @@ const UserLayerEditorWts: React.FC<UserLayerEditorWtsProps> = ({
     >
       <TextField
         required
-        label="WTS Layer URL"
+        label={i18n.get("XYZ Layer URL")}
         variant="standard"
         size="small"
         value={url}
@@ -89,7 +89,7 @@ const UserLayerEditorWts: React.FC<UserLayerEditorWtsProps> = ({
       <Box sx={{ display: "flex", gap: 1 }}>
         <TextField
           required
-          label="Layer Title"
+          label={i18n.get("Layer Title")}
           variant="standard"
           size="small"
           sx={{ flexGrow: 0.3 }}
@@ -97,7 +97,7 @@ const UserLayerEditorWts: React.FC<UserLayerEditorWtsProps> = ({
           onChange={(e) => setTitle(e.currentTarget.value)}
         />
         <TextField
-          label="Layer Attribution"
+          label={i18n.get("Layer Attribution")}
           variant="standard"
           size="small"
           sx={{ flexGrow: 0.7 }}
@@ -109,10 +109,10 @@ const UserLayerEditorWts: React.FC<UserLayerEditorWtsProps> = ({
         onDone={handleUserLayerChange}
         onCancel={onCancel}
         doneDisabled={!canCommit()}
-        helpUrl={"docs/add-layer-wts.en.md"}
+        helpUrl={"docs/add-layer-xyz.en.md"}
       />
     </Box>
   );
 };
 
-export default UserLayerEditorWts;
+export default UserLayerEditorXyz;

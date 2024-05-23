@@ -43,9 +43,9 @@ import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 
 import i18n from "@/i18n";
 import { newId } from "@/util/id";
-import { LayerDefinition } from "@/model/layerDefinition";
+import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import UserLayerEditorWms from "./UserLayerEditorWms";
-import UserLayerEditorWts from "./UserLayerEditorWts";
+import UserLayerEditorXyz from "./UserLayerEditorXyz";
 import useUndo from "@/hooks/useUndo";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -125,7 +125,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     ]);
   };
 
-  const addUserLayer = (layerType: "wms" | "wts") => {
+  const addUserLayer = (layerType: "wms" | "xyz") => {
     setUndo(() => setUserLayers(userLayers));
     const id = newId("user-layer-");
     setUserLayers([
@@ -133,7 +133,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
       // TODO: I18N
       {
         id,
-        group: "User",
+        group: USER_GROUP_NAME,
         title: "",
         url: "",
         attribution: "",
@@ -147,8 +147,8 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     addUserLayer("wms");
   };
 
-  const handleAddUserLayerWts = () => {
-    addUserLayer("wts");
+  const handleAddUserLayerXyz = () => {
+    addUserLayer("xyz");
   };
 
   const handleEditCommitted = (userLayer: LayerDefinition) => {
@@ -195,7 +195,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
                 onCancel={handleEditCanceled}
               />
             ) : (
-              <UserLayerEditorWts
+              <UserLayerEditorXyz
                 key={userLayer.id}
                 userLayer={userLayer}
                 onChange={handleEditCommitted}
@@ -243,20 +243,20 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
           <ListItem sx={{ minHeight: "3em" }}>
             <ListItemSecondaryAction>
               <Box sx={{ display: "flex", gap: 2, paddingTop: 2 }}>
-                <Tooltip title={"Add layer from a Web Map Service"}>
+                <Tooltip title={i18n.get("Add layer from a Web Map Service")}>
                   <Button
                     onClick={handleAddUserLayerWms}
                     startIcon={<AddIcon />}
                   >
-                    {i18n.get("WMS")}
+                    {"WMS"}
                   </Button>
                 </Tooltip>
-                <Tooltip title={"Add layer from a Web Tile Service"}>
+                <Tooltip title={i18n.get("Add layer from a Tiled Web Map")}>
                   <Button
-                    onClick={handleAddUserLayerWts}
+                    onClick={handleAddUserLayerXyz}
                     startIcon={<AddIcon />}
                   >
-                    {i18n.get("WTS")}
+                    {"XYZ"}
                   </Button>
                 </Tooltip>
               </Box>

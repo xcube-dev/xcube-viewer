@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-// No longer used since xcube 0.11
-export interface TileGrid {
-  minZoom?: number;
-  extent: [number, number, number, number];
-  origin?: [number, number];
-  tileSize: [number, number];
-  resolutions: number[];
-  sizes: Array<[number, number]>;
-}
+import { SxProps, Theme } from "@mui/system";
 
-// No longer used since xcube 0.11
-export interface TileSourceOptions {
-  url: string;
-  projection: string;
-  minZoom?: number;
-  maxZoom?: number;
-  tileGrid: TileGrid;
+type RawStyles<S, T extends Theme = Theme> = Record<keyof S, SxProps<T>>;
+type Styles<S extends object, T extends Theme = Theme> = {
+  [P in keyof S]: SxProps<T>;
+};
+
+/**
+ * Convert given styles object into its type-safe version
+ * where `S` the type of the "raw" styles
+ * and `T` is the MUI theme type.
+ * @param rawStyles Object that maps a property key into an `SxProps` value.
+ */
+export function makeStyles<S extends object, T extends Theme = Theme>(
+  rawStyles: RawStyles<S, T>,
+): Styles<S, T> {
+  return rawStyles;
 }

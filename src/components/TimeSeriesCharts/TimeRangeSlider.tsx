@@ -24,49 +24,44 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
-import { Theme } from "@mui/material";
+import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
-import Box from "@mui/material/Box";
 
 import { TimeRange, UNIT } from "@/model/timeSeries";
 import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
 } from "@/util/time";
+import { makeStyles } from "@/util/styles";
 
 const HOR_MARGIN = 5;
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) =>
-  createStyles({
-    box: {
-      marginTop: theme.spacing(1),
-      marginLeft: theme.spacing(HOR_MARGIN),
-      marginRight: theme.spacing(HOR_MARGIN),
-      width: `calc(100% - ${theme.spacing(3 * (HOR_MARGIN + 1))})`,
-      height: "5em",
-      display: "flex",
-      alignItems: "flex-end",
-    },
-  });
+const styles = makeStyles({
+  container: (theme) => ({
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(HOR_MARGIN),
+    marginRight: theme.spacing(HOR_MARGIN),
+    width: `calc(100% - ${theme.spacing(3 * (HOR_MARGIN + 1))})`,
+    height: "5em",
+    display: "flex",
+    alignItems: "flex-end",
+  }),
+});
 
-interface TimeRangeSliderProps extends WithStyles<typeof styles> {
+interface TimeRangeSliderProps {
   dataTimeRange?: TimeRange | null;
   selectedTimeRange?: TimeRange | null;
   selectTimeRange?: (timeRange: TimeRange | null) => void;
   updateVisibleTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
-const _TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
-  classes,
+export default function TimeRangeSlider({
   dataTimeRange,
   selectedTimeRange,
   selectTimeRange,
-}) => {
+}: TimeRangeSliderProps) {
   const [selectedTimeRange_, setSelectedTimeRange_] =
     useState(selectedTimeRange);
 
@@ -110,7 +105,7 @@ const _TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
   ];
 
   return (
-    <Box className={classes.box}>
+    <Box sx={styles.container}>
       <Slider
         disabled={!dataTimeRangeValid}
         min={dataTimeRange![0]}
@@ -125,7 +120,4 @@ const _TimeRangeSlider: React.FC<TimeRangeSliderProps> = ({
       />
     </Box>
   );
-};
-
-const TimeRangeSlider = withStyles(styles)(_TimeRangeSlider);
-export default TimeRangeSlider;
+}

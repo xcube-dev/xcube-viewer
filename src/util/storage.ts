@@ -36,12 +36,6 @@ export function getLocalStorage(brandingName: string): Storage | null {
   return _getStorage("localStorage", brandingName);
 }
 
-// Not used:
-//
-// export function getSessionStorage(brandingName: string): Storage | null {
-//   return _getStorage("sessionStorage", brandingName);
-// }
-
 function _getStorage(
   type: "localStorage" | "sessionStorage",
   brandingName: string,

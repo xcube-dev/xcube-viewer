@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-import { Bar, ErrorBar, Line } from "recharts";
 import { PaletteMode } from "@mui/material";
+import { Bar, ErrorBar, Line } from "recharts";
 
 import { getUserPlaceColor } from "@/config";
-//import { isNumber } from "@/util/types";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
@@ -76,13 +75,6 @@ export default function TimeSeriesLine({
 
   const timeSeries = timeSeriesGroup.timeSeriesArray[timeSeriesIndex];
   const source = timeSeries.source;
-  // const data = timeSeries.data;
-
-  // TODO: allow switching data filtering on/off
-  // const filteredData = data.filter((item) => {
-  //   const v = item[valueDataKey];
-  //   return isNumber(v) && isFinite(v);
-  // });
 
   const handleClick = () => {
     if (selectTimeSeries) {
@@ -186,9 +178,6 @@ export default function TimeSeriesLine({
       }
       stroke={shadedLineColor}
       strokeOpacity={strokeOpacity}
-      // strokeWidth={2 * (ts.dataProgress || 1)}
-      // See https://github.com/recharts/recharts/issues/1624#issuecomment-474119055
-      // isAnimationActive={ts.dataProgress === 1.0}
       isAnimationActive={false}
       onClick={handleClick}
     >

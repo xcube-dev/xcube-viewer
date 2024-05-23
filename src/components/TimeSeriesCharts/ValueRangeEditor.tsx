@@ -23,23 +23,23 @@
  */
 
 import { useState } from "react";
-import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 import TextField from "@mui/material/TextField";
 
 import DoneCancel from "@/components/DoneCancel";
+import { makeStyles } from "@/util/styles";
 
 type ValueRange = [number, number];
 
-const styles = {
-  container: (theme: Theme) => ({
+const styles = makeStyles({
+  container: (theme) => ({
     padding: theme.spacing(1),
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(1),
   }),
-  minMaxBox: (theme: Theme) => ({
+  minMaxBox: (theme) => ({
     display: "flex",
     justifyContent: "center",
     gap: theme.spacing(1),
@@ -50,7 +50,7 @@ const styles = {
   maxTextField: {
     maxWidth: "8em",
   },
-};
+});
 
 interface ValueRangeEditorProps {
   anchorEl: HTMLElement | null;

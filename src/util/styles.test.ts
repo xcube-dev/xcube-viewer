@@ -22,27 +22,12 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { expect, it, describe } from "vitest";
+import { makeStyles } from "./styles";
 
-import { AppState } from "@/states/appState";
-import { setRgbLayerVisibility } from "@/actions/controlActions";
-import {
-  selectedDatasetRgbSchemaSelector,
-  showDatasetRgbLayerSelector,
-} from "@/selectors/controlSelectors";
-import _RgbSwitch from "@/components/RgbSwitch";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    rgbSchema: selectedDatasetRgbSchemaSelector(state),
-    showRgbLayer: showDatasetRgbLayerSelector(state),
-  };
-};
-
-const mapDispatchToProps = {
-  setRgbLayerVisibility,
-};
-
-const RgbSwitch = connect(mapStateToProps, mapDispatchToProps)(_RgbSwitch);
-export default RgbSwitch;
+describe("makeStyles", () => {
+  it("just converts the type and not the value", () => {
+    const rawStyles = {};
+    expect(makeStyles(rawStyles)).toBe(rawStyles);
+  });
+});

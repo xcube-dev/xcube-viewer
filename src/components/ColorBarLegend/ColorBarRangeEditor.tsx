@@ -23,28 +23,27 @@
  */
 
 import React, { useEffect, useState } from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
 import { ColorBarNorm } from "@/model/variable";
 import ColorBarRangeSlider from "./ColorBarRangeSlider";
+import { makeStyles } from "@/util/styles";
 
 const HOR_SLIDER_MARGIN = 5;
 
-const useStyles = makeStyles((theme: Theme) => ({
-  colorBarMinMaxEditor: {
+const styles = makeStyles({
+  colorBarMinMaxEditor: (theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  },
-  sliderBox: {
+  }),
+  sliderBox: (theme) => ({
     marginTop: theme.spacing(1),
     marginLeft: theme.spacing(HOR_SLIDER_MARGIN),
     marginRight: theme.spacing(HOR_SLIDER_MARGIN),
     minWidth: 320,
     width: `calc(100% - ${theme.spacing(2 * (HOR_SLIDER_MARGIN + 1))}px)`,
-  },
+  }),
   minMaxBox: {
     display: "flex",
     justifyContent: "center",
@@ -57,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: "8em",
     paddingLeft: 2,
   },
-}));
+});
 
 interface ColorBarRangeEditorProps {
   variableTitle: string;
@@ -81,8 +80,6 @@ export default function ColorBarRangeEditor({
   variableOpacity,
   updateVariableColorBar,
 }: ColorBarRangeEditorProps) {
-  const classes = useStyles();
-
   const [currentMinMax, setCurrentMinMax] = useState<[number, number]>(
     variableColorBarMinMax,
   );
@@ -151,9 +148,9 @@ export default function ColorBarRangeEditor({
   };
 
   return (
-    <div className={classes.colorBarMinMaxEditor}>
+    <Box sx={styles.colorBarMinMaxEditor}>
       <span style={{ paddingLeft: 14 }}>{variableTitle}</span>
-      <Box className={classes.sliderBox}>
+      <Box sx={styles.sliderBox}>
         <ColorBarRangeSlider
           variableColorBarName={variableColorBarName}
           variableColorBarMinMax={variableColorBarMinMax}
@@ -163,9 +160,9 @@ export default function ColorBarRangeEditor({
           variableOpacity={variableOpacity}
         />
       </Box>
-      <Box component="form" className={classes.minMaxBox}>
+      <Box component="form" sx={styles.minMaxBox}>
         <TextField
-          className={classes.minTextField}
+          sx={styles.minTextField}
           label="Minimum"
           variant="filled"
           size="small"
@@ -174,7 +171,7 @@ export default function ColorBarRangeEditor({
           onChange={(evt) => handleEnteredMinChange(evt)}
         />
         <TextField
-          className={classes.maxTextField}
+          sx={styles.maxTextField}
           label="Maximum"
           variant="filled"
           size="small"
@@ -183,7 +180,7 @@ export default function ColorBarRangeEditor({
           onChange={(evt) => handleEnteredMaxChange(evt)}
         />
       </Box>
-    </div>
+    </Box>
   );
 }
 

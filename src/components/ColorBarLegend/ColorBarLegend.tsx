@@ -23,19 +23,26 @@
  */
 
 import { MouseEvent, useRef, useState } from "react";
+import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 
+import { ColorBar, ColorBars } from "@/model/colorBar";
+import { UserColorBar } from "@/model/userColorBar";
+import { ColorBarNorm } from "@/model/variable";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
 import ColorBarLegendContinuous from "./ColorBarLegendContinuous";
 import ColorBarColorEditor from "./ColorBarColorEditor";
-import { ColorBar, ColorBars } from "@/model/colorBar";
-import { UserColorBar } from "@/model/userColorBar";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme } from "@mui/material";
-import { ColorBarNorm } from "@/model/variable";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  title: {
+const styles = makeStyles({
+  container: (theme) => ({
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(1.5),
+    paddingBottom: theme.spacing(0.5),
+    paddingTop: theme.spacing(0.5),
+    color: "black",
+  }),
+  title: (theme) => ({
     fontSize: "small",
     fontWeight: "bold",
     width: "100%",
@@ -43,15 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: "nowrap",
     justifyContent: "center",
     paddingBottom: theme.spacing(0.5),
-  },
-  container: {
-    paddingLeft: theme.spacing(1.5),
-    paddingRight: theme.spacing(1.5),
-    paddingBottom: theme.spacing(0.5),
-    paddingTop: theme.spacing(0.5),
-    color: "black",
-  },
-}));
+  }),
+});
 
 interface ColorBarLegendProps {
   variableName: string | null;
@@ -79,8 +79,6 @@ interface ColorBarLegendProps {
 export default function ColorBarLegend(
   props: Omit<ColorBarLegendProps, "onOpenColorBarEditor">,
 ) {
-  const classes = useStyles();
-
   const {
     variableName,
     variableUnits,
@@ -109,13 +107,10 @@ export default function ColorBarLegend(
     : `${variableName} (${variableUnits || "-"})`;
 
   return (
-    <div
-      className={"ol-control " + classes.container}
-      ref={colorBarSelectAnchorRef}
-    >
-      <div className={classes.title}>
+    <Box sx={styles.container} ref={colorBarSelectAnchorRef}>
+      <Box sx={styles.title}>
         <span>{variableTitle}</span>
-      </div>
+      </Box>
       {variableColorBarNorm === "cat" && variableColorBar.categories ? (
         <ColorBarLegendCategorical
           variableColorBarCategories={variableColorBar.categories}
@@ -138,6 +133,6 @@ export default function ColorBarLegend(
       >
         <ColorBarColorEditor {...props} />
       </Popover>
-    </div>
+    </Box>
   );
 }

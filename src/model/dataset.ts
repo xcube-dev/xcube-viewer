@@ -24,7 +24,6 @@
 
 import { assertArrayNotEmpty, assertDefinedAndNotNull } from "@/util/assert";
 import { PlaceGroup } from "./place";
-import { TileSourceOptions } from "./tile";
 import { TimeRange } from "./timeSeries";
 import { Variable } from "./variable";
 
@@ -52,11 +51,8 @@ export type NormRange = [number, number];
 
 export interface RgbSchema {
   // The following are new since xcube 0.11
-  tileUrl: string; // no longer used since 0.13
   tileLevelMin?: number;
   tileLevelMax?: number;
-  // tileSourceOptions are no longer used since xcube 0.11
-  tileSourceOptions?: TileSourceOptions;
   varNames: [string, string, string];
   normRanges: [NormRange, NormRange, NormRange];
 }

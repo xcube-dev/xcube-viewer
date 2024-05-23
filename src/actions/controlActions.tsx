@@ -310,21 +310,6 @@ function _selectPlace(placeId: string | null, places: Place[]): SelectPlace {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_RGB_LAYER_VISIBILITY = "SET_RGB_LAYER_VISIBILITY";
-
-export interface SetRgbLayerVisibility {
-  type: typeof SET_RGB_LAYER_VISIBILITY;
-  showRgbLayer: boolean;
-}
-
-export function setRgbLayerVisibility(
-  showRgbLayer: boolean,
-): SetRgbLayerVisibility {
-  return { type: SET_RGB_LAYER_VISIBILITY, showRgbLayer };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 export const SET_LAYER_VISIBILITY = "SET_LAYER_VISIBILITY";
 
 export interface SetLayerVisibility {
@@ -786,7 +771,6 @@ export type ControlAction =
   | SelectPlaceGroups
   | SelectPlace
   | SelectTime
-  | SetRgbLayerVisibility
   | SetLayerVisibility
   | IncSelectedTime
   | SelectTimeRange
