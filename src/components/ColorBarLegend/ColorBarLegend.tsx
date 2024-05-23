@@ -35,6 +35,13 @@ import ColorBarColorEditor from "./ColorBarColorEditor";
 import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
+  container: (theme) => ({
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(1.5),
+    paddingBottom: theme.spacing(0.5),
+    paddingTop: theme.spacing(0.5),
+    color: "black",
+  }),
   title: (theme) => ({
     fontSize: "small",
     fontWeight: "bold",
@@ -43,13 +50,6 @@ const styles = makeStyles({
     flexWrap: "nowrap",
     justifyContent: "center",
     paddingBottom: theme.spacing(0.5),
-  }),
-  container: (theme) => ({
-    paddingLeft: theme.spacing(1.5),
-    paddingRight: theme.spacing(1.5),
-    paddingBottom: theme.spacing(0.5),
-    paddingTop: theme.spacing(0.5),
-    color: "black",
   }),
 });
 
@@ -107,11 +107,7 @@ export default function ColorBarLegend(
     : `${variableName} (${variableUnits || "-"})`;
 
   return (
-    <Box
-      className={"ol-control"}
-      sx={styles.container}
-      ref={colorBarSelectAnchorRef}
-    >
+    <Box sx={styles.container} ref={colorBarSelectAnchorRef}>
       <Box sx={styles.title}>
         <span>{variableTitle}</span>
       </Box>
