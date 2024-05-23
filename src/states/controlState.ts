@@ -63,6 +63,7 @@ export interface InfoCardElementStates {
 }
 
 export type LocateMode = "doNothing" | "pan" | "panAndZoom";
+export type TimeSeriesChartType = "point" | "line" | "bar";
 
 export type UserPlacesFormatName = "geojson" | "csv" | "wkt";
 
@@ -112,7 +113,7 @@ export interface ControlState {
   timeAnimationInterval: TimeAnimationInterval;
   timeChunkSize: number;
   autoShowTimeSeries: boolean;
-  showTimeSeriesPointsOnly: boolean;
+  timeSeriesChartTypeDefault: TimeSeriesChartType;
   showTimeSeriesErrorBars: boolean;
   showTimeSeriesMedian: boolean;
   userDrawnPlaceGroupName: string;
@@ -168,7 +169,7 @@ export function newControlState(): ControlState {
     timeAnimationInterval: 1000,
     timeChunkSize: 20,
     autoShowTimeSeries: true,
-    showTimeSeriesPointsOnly: false,
+    timeSeriesChartTypeDefault: "line",
     showTimeSeriesErrorBars: true,
     showTimeSeriesMedian: branding.defaultAgg === "median",
     userDrawnPlaceGroupName: "",

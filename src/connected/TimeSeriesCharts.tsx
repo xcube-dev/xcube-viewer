@@ -50,7 +50,7 @@ const mapStateToProps = (state: AppState) => {
     selectedTime: state.controlState.selectedTime,
     selectedTimeRange: state.controlState.selectedTimeRange,
     dataTimeRange: selectedDatasetTimeRangeSelector(state),
-    showPointsOnly: state.controlState.showTimeSeriesPointsOnly,
+    chartTypeDefault: state.controlState.timeSeriesChartTypeDefault,
     showErrorBars: state.controlState.showTimeSeriesErrorBars,
     placeInfos: timeSeriesPlaceInfosSelector(state),
     places: selectedPlaceGroupPlacesSelector(state),

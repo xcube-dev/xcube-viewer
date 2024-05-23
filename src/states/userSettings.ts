@@ -58,7 +58,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("privacyNoticeAccepted", settings);
       storage.setPrimitiveProperty("autoShowTimeSeries", settings);
       storage.setPrimitiveProperty("showTimeSeriesErrorBars", settings);
-      storage.setPrimitiveProperty("showTimeSeriesPointsOnly", settings);
+      storage.setPrimitiveProperty("timeSeriesChartTypeDefault", settings);
       storage.setPrimitiveProperty("showTimeSeriesMedian", settings);
       storage.setPrimitiveProperty("timeAnimationInterval", settings);
       storage.setPrimitiveProperty("timeChunkSize", settings);
@@ -114,8 +114,8 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         settings,
         defaultSettings,
       );
-      storage.getBooleanProperty(
-        "showTimeSeriesPointsOnly",
+      storage.getStringProperty(
+        "timeSeriesChartTypeDefault",
         settings,
         defaultSettings,
       );

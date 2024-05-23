@@ -27,6 +27,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
@@ -35,6 +36,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import CommentIcon from "@mui/icons-material/Comment";
 import ExpandIcon from "@mui/icons-material/Expand";
 import FitScreenIcon from "@mui/icons-material/FitScreen";
+import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
 
 import i18n from "@/i18n";
 import {
@@ -43,9 +46,10 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
+import { makeStyles } from "@/util/styles";
+import { TimeSeriesChartType } from "@/states/controlState";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
-import { makeStyles } from "@/util/styles";
 
 type ValueRange = [number, number];
 
@@ -75,6 +79,10 @@ const styles = makeStyles({
     fontSize: "inherit",
     fontWeight: "normal",
   },
+  chartTypes: (theme) => ({
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  }),
 });
 
 interface TimeSeriesChartHeaderProps extends WithLocale {
@@ -92,8 +100,8 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setZoomMode: (zoomMode: boolean) => void;
   showTooltips: boolean;
   setShowTooltips: (showTooltips: boolean) => void;
-  showBarChart: boolean;
-  setShowBarChart: (barChart: boolean) => void;
+  chartType: TimeSeriesChartType;
+  setChartType: (chartType: TimeSeriesChartType) => void;
   valueRange: ValueRange | undefined;
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
 }
@@ -110,8 +118,8 @@ export default function TimeSeriesChartHeader({
   setZoomMode,
   showTooltips,
   setShowTooltips,
-  showBarChart,
-  setShowBarChart,
+  chartType,
+  setChartType,
   valueRange,
   setValueRange,
 }: TimeSeriesChartHeaderProps) {
@@ -130,6 +138,13 @@ export default function TimeSeriesChartHeader({
     if (valueRange) {
       setValueRange(valueRange);
     }
+  };
+
+  const handleChartTypeChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    value: string,
+  ) => {
+    setChartType(value as TimeSeriesChartType);
   };
 
   return (
@@ -184,19 +199,26 @@ export default function TimeSeriesChartHeader({
             <CommentIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
-        <Tooltip
-          arrow
-          title={i18n.get("Toggle between showing a bar or line chart")}
-        >
-          <ToggleButton
-            value={"showBarChart"}
-            selected={showBarChart}
-            onClick={() => setShowBarChart(!showBarChart)}
+
+        <Tooltip arrow title={i18n.get("Select chart type")}>
+          <ToggleButtonGroup
+            value={chartType}
+            onChange={handleChartTypeChange}
             size="small"
+            sx={styles.chartTypes}
           >
-            <BarChartIcon fontSize="inherit" />
-          </ToggleButton>
+            <ToggleButton value="point" size="small">
+              <ScatterPlotIcon fontSize="inherit" />
+            </ToggleButton>
+            <ToggleButton value="line" size="small">
+              <ShowChartIcon fontSize="inherit" />
+            </ToggleButton>
+            <ToggleButton value="bar" size="small">
+              <BarChartIcon fontSize="inherit" />
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Tooltip>
+
         <TimeSeriesAddButton
           sx={styles.actionButton}
           timeSeriesGroupId={timeSeriesGroup.id}
