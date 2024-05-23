@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
+
 import { WithLocale } from "@/util/lang";
+import { makeStyles } from "@/util/styles";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
@@ -36,7 +38,7 @@ import TimeRangeSlider from "./TimeRangeSlider";
 import TimeSeriesChart from "./TimeSeriesChart";
 
 // noinspection JSUnusedLocalSymbols
-const useStyles = makeStyles(() => ({
+const styles = makeStyles({
   chartContainer: {
     display: "flex",
     flexDirection: "column",
@@ -44,7 +46,7 @@ const useStyles = makeStyles(() => ({
     flexFlow: "flex-start",
     alignItems: "center",
   },
-}));
+});
 
 interface TimeSeriesChartsProps extends WithLocale {
   timeSeriesGroups: TimeSeriesGroup[];
@@ -82,7 +84,6 @@ interface TimeSeriesChartsProps extends WithLocale {
 }
 
 export default function TimeSeriesCharts(props: TimeSeriesChartsProps) {
-  const classes = useStyles();
   const {
     timeSeriesGroups,
     dataTimeRange,
@@ -96,7 +97,7 @@ export default function TimeSeriesCharts(props: TimeSeriesChartsProps) {
   }
 
   return (
-    <div className={classes.chartContainer}>
+    <Box sx={styles.chartContainer}>
       <TimeRangeSlider
         dataTimeRange={dataTimeRange}
         selectedTimeRange={selectedTimeRange}
@@ -114,6 +115,6 @@ export default function TimeSeriesCharts(props: TimeSeriesChartsProps) {
           />
         );
       })}
-    </div>
+    </Box>
   );
 }

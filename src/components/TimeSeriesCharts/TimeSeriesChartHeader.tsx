@@ -23,7 +23,6 @@
  */
 
 import { useRef, useState } from "react";
-import makeStyles from "@mui/styles/makeStyles";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -44,28 +43,29 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
-import AddTimeSeriesButton from "./AddTimeSeriesButton";
+import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
+import { makeStyles } from "@/util/styles";
 
 type ValueRange = [number, number];
 
-const useStyles = makeStyles({
+const styles = makeStyles({
   headerContainer: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingRight: 10,
+    paddingRight: "10px",
   },
   actionsContainer: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "nowrap",
     alignItems: "center",
-    gap: 1,
+    gap: "1px",
   },
   responsiveContainer: {
-    flexGrow: 1,
+    flexGrow: "1px",
   },
   actionButton: {
     zIndex: 1000,
@@ -115,8 +115,6 @@ export default function TimeSeriesChartHeader({
   valueRange,
   setValueRange,
 }: TimeSeriesChartHeaderProps) {
-  const classes = useStyles();
-
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
   const timeSeriesText = i18n.get("Time-Series");
@@ -135,14 +133,14 @@ export default function TimeSeriesChartHeader({
   };
 
   return (
-    <Box className={classes.headerContainer}>
-      <Typography className={classes.chartTitle}>{chartTitle}</Typography>
-      <Box className={classes.actionsContainer}>
+    <Box sx={styles.headerContainer}>
+      <Typography sx={styles.chartTitle}>{chartTitle}</Typography>
+      <Box sx={styles.actionsContainer}>
         {zoomed && (
           <Tooltip arrow title={i18n.get("Zoom to full range")}>
             <IconButton
               key={"zoomOutButton"}
-              className={classes.actionButton}
+              sx={styles.actionButton}
               onClick={resetZoom}
               size="small"
             >
@@ -199,8 +197,8 @@ export default function TimeSeriesChartHeader({
             <BarChartIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
-        <AddTimeSeriesButton
-          className={classes.actionButton}
+        <TimeSeriesAddButton
+          sx={styles.actionButton}
           timeSeriesGroupId={timeSeriesGroup.id}
           placeGroupTimeSeries={placeGroupTimeSeries}
           addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
@@ -210,12 +208,12 @@ export default function TimeSeriesChartHeader({
           // because we can not yet cancel loading time series.
           <CircularProgress
             size={24}
-            className={classes.actionButton}
+            sx={styles.actionButton}
             color={"secondary"}
           />
         ) : (
           <IconButton
-            className={classes.actionButton}
+            sx={styles.actionButton}
             aria-label="Close"
             onClick={() => removeTimeSeriesGroup(timeSeriesGroup.id)}
             size="small"

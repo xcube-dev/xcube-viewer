@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-import { Bar, ErrorBar, Line } from "recharts";
 import { PaletteMode } from "@mui/material";
+import { Bar, ErrorBar, Line } from "recharts";
 
 import { getUserPlaceColor } from "@/config";
-//import { isNumber } from "@/util/types";
 import { Place, PlaceInfo } from "@/model/place";
 import {
   PlaceGroupTimeSeries,
