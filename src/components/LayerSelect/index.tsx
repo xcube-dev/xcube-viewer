@@ -22,6 +22,6 @@
  * SOFTWARE.
  */
 
-import ColorBarLegend from "./ColorBarLegend";
+import LayerSelect from "./LayerSelect";
 
-export default ColorBarLegend;
+export default LayerSelect;
