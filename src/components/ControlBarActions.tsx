@@ -38,7 +38,7 @@ import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { TimeSeriesGroup } from "@/model/timeSeries";
 import { LayerVisibilities } from "@/states/controlState";
-import LayerSelect from "./LayerSelect";
+import LayerSelect from "@/components/LayerSelect";
 
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(

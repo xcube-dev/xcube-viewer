@@ -32,7 +32,9 @@
     showing standard deviation directly from the time-series chart's action 
     bar.
 
-* Introduced layer visibility dropdown menu in the control bar.
+* Introduced draggable layer visibility menu that can be opened from the 
+  control bar. It also includes a new RGB layer from a secondary dataset
+  so that now two different RGB layers can be compared.
 
 * Introduced user-defined layers:
   - Users can now define their own base maps and overlay layers from
