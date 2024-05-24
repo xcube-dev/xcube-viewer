@@ -34,6 +34,7 @@ import {
   TimeSeries,
   TimeSeriesGroup,
 } from "@/model/timeSeries";
+import { TimeSeriesChartType } from "@/states/controlState";
 import TimeRangeSlider from "./TimeRangeSlider";
 import TimeSeriesChart from "./TimeSeriesChart";
 
@@ -52,8 +53,8 @@ interface TimeSeriesChartsProps extends WithLocale {
   timeSeriesGroups: TimeSeriesGroup[];
   selectedTime: Time | null;
   selectTime: (time: Time | null) => void;
-  showPointsOnly: boolean;
-  showErrorBars: boolean;
+  chartTypeDefault: TimeSeriesChartType;
+  includeStdev: boolean;
   dataTimeRange: TimeRange | null;
   selectedTimeRange: TimeRange | null;
   selectTimeRange: (

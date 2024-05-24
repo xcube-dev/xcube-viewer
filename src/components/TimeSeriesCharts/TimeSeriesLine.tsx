@@ -32,13 +32,12 @@ import {
   TimeSeries,
   TimeSeriesGroup,
 } from "@/model/timeSeries";
+import { TimeSeriesChartType } from "@/states/controlState";
 import CustomDot from "./CustomDot";
 
 interface TimeSeriesLineProps {
   timeSeriesGroup: TimeSeriesGroup;
   timeSeriesIndex: number;
-  showPointsOnly: boolean;
-  showErrorBars: boolean;
   // Not implemented yet
   selectTimeSeries?: (
     timeSeriesGroupId: string,
@@ -54,21 +53,21 @@ interface TimeSeriesLineProps {
   placeInfos: { [placeId: string]: PlaceInfo };
   placeGroupTimeSeries: PlaceGroupTimeSeries[];
   paletteMode: PaletteMode;
-  showBarChart: boolean;
+  chartType: TimeSeriesChartType;
+  stdevBars: boolean;
 }
 
 export default function TimeSeriesLine({
   timeSeriesGroup,
   timeSeriesIndex,
-  showErrorBars,
-  showPointsOnly,
   selectTimeSeries,
   places,
   selectPlace,
   placeInfos,
   placeGroupTimeSeries,
   paletteMode,
-  showBarChart,
+  chartType,
+  stdevBars,
 }: TimeSeriesLineProps) {
   // WARNING: we cannot use hooks here, as this is not a normal component!
   // See usage in TimeSeriesChart component.
@@ -131,7 +130,7 @@ export default function TimeSeriesLine({
       symbol: "diamond",
     };
   } else {
-    strokeOpacity = showPointsOnly ? 0 : timeSeries.dataProgress;
+    strokeOpacity = chartType === "point" ? 0 : timeSeries.dataProgress;
     dotProps = {
       radius: 3,
       strokeWidth: 2,
@@ -139,19 +138,17 @@ export default function TimeSeriesLine({
     };
   }
 
-  const errorBar = source.valueDataKey &&
-    showErrorBars &&
-    source.errorDataKey && (
-      <ErrorBar
-        dataKey={`ev${timeSeriesIndex}`}
-        width={4}
-        strokeWidth={1}
-        stroke={shadedLineColor}
-        strokeOpacity={0.5}
-      />
-    );
+  const errorBar = stdevBars && source.valueDataKey && source.errorDataKey && (
+    <ErrorBar
+      dataKey={`ev${timeSeriesIndex}`}
+      width={4}
+      strokeWidth={1}
+      stroke={shadedLineColor}
+      strokeOpacity={0.5}
+    />
+  );
 
-  return showBarChart ? (
+  return chartType === "bar" ? (
     <Bar
       key={timeSeriesIndex}
       type="monotone"
