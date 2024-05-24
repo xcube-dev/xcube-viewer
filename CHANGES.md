@@ -74,15 +74,6 @@
   - Applied new MUI v5 styling defaults. 
 
 
-TODO:
-
-* Add translations for many new UI texts
-* Support categorical user color bars
-* User color bars:
-  - Select the next color bar after removing a selected color bar
-
-* Allow running `run: npm run coverage` in `.github/workflows/ci.yaml`:
-
 ## Changes in version 1.1.1
 
 ### Fixes
