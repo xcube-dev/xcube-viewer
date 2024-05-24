@@ -40,6 +40,7 @@ import {
   TIME_ANIMATION_INTERVALS,
   ControlState,
   LocateMode,
+  TimeSeriesChartType,
   TimeAnimationInterval,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
@@ -72,9 +73,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const LOCATE_MODE_LABELS: [LocateMode, string][] = [
-  ["doNothing", "do nothing"],
-  ["pan", "pan"],
-  ["panAndZoom", "pan and zoom"],
+  ["doNothing", "Do nothing"],
+  ["pan", "Pan"],
+  ["panAndZoom", "Pan and zoom"],
+];
+
+const TS_CHART_TYPE_LABELS: [TimeSeriesChartType, string][] = [
+  ["point", "Points"],
+  ["line", "Lines"],
+  ["bar", "Bars"],
 ];
 
 interface SettingsDialogProps {
@@ -144,6 +151,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       timeAnimationInterval: parseInt(
         event.target.value,
       ) as TimeAnimationInterval,
+    });
+  }
+
+  function handleTimeSeriesChartTypeDefaultChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      timeSeriesChartTypeDefault: event.target.value as TimeSeriesChartType,
     });
   }
 
@@ -269,7 +284,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
           <SettingsPanel title={i18n.get("Time-Series")}>
             <SettingsSubPanel
-              label={i18n.get("Show graph after adding a place")}
+              label={i18n.get("Show chart after adding a place")}
               value={getOnOff(settings.autoShowTimeSeries)}
             >
               <ToggleSetting
@@ -278,34 +293,40 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 updateSettings={updateSettings}
               />
             </SettingsSubPanel>
-            <SettingsSubPanel
-              label={i18n.get("Show dots only, hide lines")}
-              value={getOnOff(settings.showTimeSeriesPointsOnly)}
-            >
-              <ToggleSetting
-                propertyName={"showTimeSeriesPointsOnly"}
-                settings={settings}
-                updateSettings={updateSettings}
-              />
+            <SettingsSubPanel label={i18n.get("Default chart type")}>
+              <TextField
+                variant="standard"
+                select
+                className={classes.textField}
+                value={settings.timeSeriesChartTypeDefault}
+                onChange={handleTimeSeriesChartTypeDefaultChange}
+                margin="normal"
+              >
+                {TS_CHART_TYPE_LABELS.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {i18n.get(label)}
+                  </MenuItem>
+                ))}
+              </TextField>
             </SettingsSubPanel>
             <SettingsSubPanel
-              label={i18n.get("Show error bars")}
-              value={getOnOff(settings.showTimeSeriesErrorBars)}
+              label={i18n.get("Calculate standard deviation")}
+              value={getOnOff(settings.timeSeriesIncludeStdev)}
             >
               <ToggleSetting
-                propertyName={"showTimeSeriesErrorBars"}
+                propertyName={"timeSeriesIncludeStdev"}
                 settings={settings}
                 updateSettings={updateSettings}
               />
             </SettingsSubPanel>
             <SettingsSubPanel
               label={i18n.get(
-                "Show median instead of mean (disables error bars)",
+                "Calculate median instead of mean (disables standard deviation)",
               )}
-              value={getOnOff(settings.showTimeSeriesMedian)}
+              value={getOnOff(settings.timeSeriesUseMedian)}
             >
               <ToggleSetting
-                propertyName={"showTimeSeriesMedian"}
+                propertyName={"timeSeriesUseMedian"}
                 settings={settings}
                 updateSettings={updateSettings}
               />
@@ -377,7 +398,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               >
                 {LOCATE_MODE_LABELS.map(([value, label]) => (
                   <MenuItem key={value} value={value}>
-                    {label}
+                    {i18n.get(label)}
                   </MenuItem>
                 ))}
               </TextField>
@@ -393,7 +414,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               >
                 {LOCATE_MODE_LABELS.map(([value, label]) => (
                   <MenuItem key={value} value={value}>
-                    {label}
+                    {i18n.get(label)}
                   </MenuItem>
                 ))}
               </TextField>

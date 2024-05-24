@@ -50,15 +50,13 @@ import {
   TimeSeriesPoint,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
+import { TimeSeriesChartType } from "@/states/controlState";
+import { isNumber } from "@/util/types";
+import { formatTimeTick, formatValueTick } from "./util";
 import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
-import TimeSeriesLine from "@/components/TimeSeriesCharts/TimeSeriesLine";
-import TimeSeriesChartHeader from "@/components/TimeSeriesCharts/TimeSeriesChartHeader";
-import { isNumber } from "@/util/types";
-import {
-  formatTimeTick,
-  formatValueTick,
-} from "@/components/TimeSeriesCharts/util";
+import TimeSeriesLine from "./TimeSeriesLine";
+import TimeSeriesChartHeader from "./TimeSeriesChartHeader";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -102,8 +100,8 @@ interface TimeSeriesChartProps extends WithLocale {
     groupId?: string,
     valueRange?: [number, number] | null,
   ) => void;
-  showPointsOnly: boolean;
-  showErrorBars: boolean;
+  chartTypeDefault: TimeSeriesChartType;
+  includeStdev: boolean;
   // Not implemented yet
   selectTimeSeries?: (
     timeSeriesGroupId: string,
@@ -140,8 +138,8 @@ export default function TimeSeriesChart({
   selectPlace,
   placeInfos,
   dataTimeRange,
-  showErrorBars,
-  showPointsOnly,
+  chartTypeDefault,
+  includeStdev,
   removeTimeSeries,
   removeTimeSeriesGroup,
   placeGroupTimeSeries,
@@ -154,7 +152,8 @@ export default function TimeSeriesChart({
 
   const [zoomMode, setZoomMode] = useState(false);
   const [showTooltips, setShowTooltips] = useState(true);
-  const [showBarChart, setShowBarChart] = useState(false);
+  const [chartType, setChartType] = useState(chartTypeDefault);
+  const [stdevBars, setStdevBars] = useState(includeStdev);
   const [zoomRectangle, setZoomRectangle] = useState<Rectangle>({});
   const xDomain = useRef<[number, number]>();
   const yDomain = useRef<[number, number]>();
@@ -402,7 +401,7 @@ export default function TimeSeriesChart({
   const [selectedXRange, selectedYRange] =
     normalizeZoomRectangle(zoomRectangle);
 
-  const ChartComponent = showBarChart ? BarChart : LineChart;
+  const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
   return (
     <div ref={containerRef} className={classes.chartContainer}>
@@ -418,8 +417,11 @@ export default function TimeSeriesChart({
         setZoomMode={setZoomMode}
         showTooltips={showTooltips}
         setShowTooltips={setShowTooltips}
-        showBarChart={showBarChart}
-        setShowBarChart={setShowBarChart}
+        chartType={chartType}
+        setChartType={setChartType}
+        stdevBarsDisabled={!includeStdev}
+        stdevBars={stdevBars}
+        setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
       />
@@ -477,14 +479,13 @@ export default function TimeSeriesChart({
               timeSeriesGroup,
               timeSeriesIndex,
               selectTimeSeries,
-              showPointsOnly,
-              showErrorBars,
               places,
               selectPlace,
               placeGroupTimeSeries,
               placeInfos,
+              chartType,
+              stdevBars,
               paletteMode: theme.palette.mode,
-              showBarChart,
             }),
           )}
           {selectedXRange && (

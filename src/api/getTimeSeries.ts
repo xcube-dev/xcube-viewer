@@ -49,7 +49,7 @@ export function getTimeSeriesForGeometry(
   startDate: string | null,
   endDate: string | null,
   useMedian: boolean,
-  inclStDev: boolean,
+  includeStdev: boolean,
   accessToken: string | null,
 ): Promise<TimeSeries | null> {
   let valueDataKey: keyof TimeSeriesPoint;
@@ -58,7 +58,7 @@ export function getTimeSeriesForGeometry(
   if (useMedian) {
     query.push(["aggMethods", "median"]);
     valueDataKey = "median";
-  } else if (inclStDev) {
+  } else if (includeStdev) {
     query.push(["aggMethods", "mean,std"]);
     valueDataKey = "mean";
     errorDataKey = "std";
