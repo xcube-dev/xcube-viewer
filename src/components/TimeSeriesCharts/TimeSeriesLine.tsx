@@ -38,7 +38,6 @@ import CustomDot from "./CustomDot";
 interface TimeSeriesLineProps {
   timeSeriesGroup: TimeSeriesGroup;
   timeSeriesIndex: number;
-  showErrorBars: boolean;
   // Not implemented yet
   selectTimeSeries?: (
     timeSeriesGroupId: string,
@@ -55,12 +54,12 @@ interface TimeSeriesLineProps {
   placeGroupTimeSeries: PlaceGroupTimeSeries[];
   paletteMode: PaletteMode;
   chartType: TimeSeriesChartType;
+  stdevBars: boolean;
 }
 
 export default function TimeSeriesLine({
   timeSeriesGroup,
   timeSeriesIndex,
-  showErrorBars,
   selectTimeSeries,
   places,
   selectPlace,
@@ -68,6 +67,7 @@ export default function TimeSeriesLine({
   placeGroupTimeSeries,
   paletteMode,
   chartType,
+  stdevBars,
 }: TimeSeriesLineProps) {
   // WARNING: we cannot use hooks here, as this is not a normal component!
   // See usage in TimeSeriesChart component.
@@ -138,17 +138,15 @@ export default function TimeSeriesLine({
     };
   }
 
-  const errorBar = source.valueDataKey &&
-    showErrorBars &&
-    source.errorDataKey && (
-      <ErrorBar
-        dataKey={`ev${timeSeriesIndex}`}
-        width={4}
-        strokeWidth={1}
-        stroke={shadedLineColor}
-        strokeOpacity={0.5}
-      />
-    );
+  const errorBar = stdevBars && source.valueDataKey && source.errorDataKey && (
+    <ErrorBar
+      dataKey={`ev${timeSeriesIndex}`}
+      width={4}
+      strokeWidth={1}
+      stroke={shadedLineColor}
+      strokeOpacity={0.5}
+    />
+  );
 
   return chartType === "bar" ? (
     <Bar

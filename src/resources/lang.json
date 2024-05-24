@@ -216,19 +216,19 @@
       "se": "Spelarens tidsintervall"
     },
     {
-      "en": "Show graph after adding a place",
-      "de": "Graph anzeigen, nachdem ein Ort hinzugefügt wurde",
+      "en": "Show chart after adding a place",
+      "de": "Diagram anzeigen, nachdem ein Ort hinzugefügt wurde",
       "se": "Visa diagram efter att du har lagt till en plats"
     },
     {
-      "en": "Show error bars",
-      "de": "Fehlerbalken anzeigen",
-      "se": "Visa felstaplar"
+      "en": "Calculate standard deviation",
+      "de": "Berechne Standardabweichung",
+      "se": "Beräkna standardavvikelsen"
     },
     {
-      "en": "Show median instead of mean (disables error bars)",
-      "de": "Median statt Mittelwert anzeigen (deaktiviert Fehlerbalken)",
-      "se": "Visa median i stället för medelvärde (inaktiverar felfält)"
+      "en": "Calculate median instead of mean (disables standard deviation)",
+      "de": "Median statt Mittelwert berechnen (deaktiviert Standardabweichung)",
+      "se": "Beräkna median istället för medelvärde (inaktiverar standardavvikelse)"
     },
     {
       "en": "Minimal number of data points in a time series update",

@@ -284,7 +284,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
           <SettingsPanel title={i18n.get("Time-Series")}>
             <SettingsSubPanel
-              label={i18n.get("Show graph after adding a place")}
+              label={i18n.get("Show chart after adding a place")}
               value={getOnOff(settings.autoShowTimeSeries)}
             >
               <ToggleSetting
@@ -310,23 +310,23 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               </TextField>
             </SettingsSubPanel>
             <SettingsSubPanel
-              label={i18n.get("Show error bars")}
-              value={getOnOff(settings.showTimeSeriesErrorBars)}
+              label={i18n.get("Calculate standard deviation")}
+              value={getOnOff(settings.timeSeriesIncludeStdev)}
             >
               <ToggleSetting
-                propertyName={"showTimeSeriesErrorBars"}
+                propertyName={"timeSeriesIncludeStdev"}
                 settings={settings}
                 updateSettings={updateSettings}
               />
             </SettingsSubPanel>
             <SettingsSubPanel
               label={i18n.get(
-                "Show median instead of mean (disables error bars)",
+                "Calculate median instead of mean (disables standard deviation)",
               )}
-              value={getOnOff(settings.showTimeSeriesMedian)}
+              value={getOnOff(settings.timeSeriesUseMedian)}
             >
               <ToggleSetting
-                propertyName={"showTimeSeriesMedian"}
+                propertyName={"timeSeriesUseMedian"}
                 settings={settings}
                 updateSettings={updateSettings}
               />

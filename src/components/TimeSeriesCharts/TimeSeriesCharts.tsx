@@ -54,7 +54,7 @@ interface TimeSeriesChartsProps extends WithLocale {
   selectedTime: Time | null;
   selectTime: (time: Time | null) => void;
   chartTypeDefault: TimeSeriesChartType;
-  showErrorBars: boolean;
+  includeStdev: boolean;
   dataTimeRange: TimeRange | null;
   selectedTimeRange: TimeRange | null;
   selectTimeRange: (

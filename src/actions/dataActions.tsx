@@ -443,8 +443,8 @@ export function addTimeSeries() {
     const selectedPlaceId = selectedPlaceIdSelector(getState());
     const selectedPlace = selectedPlaceSelector(getState())!;
     const timeSeriesUpdateMode = getState().controlState.timeSeriesUpdateMode;
-    const useMedian = getState().controlState.showTimeSeriesMedian;
-    const inclStDev = getState().controlState.showTimeSeriesErrorBars;
+    const useMedian = getState().controlState.timeSeriesUseMedian;
+    const includeStdev = getState().controlState.timeSeriesIncludeStdev;
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
 
     const placeGroups = placeGroupsSelector(getState());
@@ -476,7 +476,7 @@ export function addTimeSeries() {
           startDateLabel,
           endDateLabel,
           useMedian,
-          inclStDev,
+          includeStdev,
           getState().userAuthState.accessToken,
         );
       };

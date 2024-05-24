@@ -57,9 +57,9 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("locale", settings);
       storage.setPrimitiveProperty("privacyNoticeAccepted", settings);
       storage.setPrimitiveProperty("autoShowTimeSeries", settings);
-      storage.setPrimitiveProperty("showTimeSeriesErrorBars", settings);
+      storage.setPrimitiveProperty("timeSeriesIncludeStdev", settings);
       storage.setPrimitiveProperty("timeSeriesChartTypeDefault", settings);
-      storage.setPrimitiveProperty("showTimeSeriesMedian", settings);
+      storage.setPrimitiveProperty("timeSeriesUseMedian", settings);
       storage.setPrimitiveProperty("timeAnimationInterval", settings);
       storage.setPrimitiveProperty("timeChunkSize", settings);
       storage.setPrimitiveProperty("volumeCardOpen", settings);
@@ -110,7 +110,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getBooleanProperty(
-        "showTimeSeriesErrorBars",
+        "timeSeriesIncludeStdev",
         settings,
         defaultSettings,
       );
@@ -120,7 +120,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getBooleanProperty(
-        "showTimeSeriesMedian",
+        "timeSeriesUseMedian",
         settings,
         defaultSettings,
       );

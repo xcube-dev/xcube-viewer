@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -36,6 +36,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CommentIcon from "@mui/icons-material/Comment";
 import ExpandIcon from "@mui/icons-material/Expand";
 import FitScreenIcon from "@mui/icons-material/FitScreen";
+import IsoIcon from "@mui/icons-material/Iso";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 
@@ -52,6 +53,7 @@ import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
 
 type ValueRange = [number, number];
+const SHOW_DEV_VALUE = "stddev";
 
 const styles = makeStyles({
   headerContainer: {
@@ -102,6 +104,9 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setShowTooltips: (showTooltips: boolean) => void;
   chartType: TimeSeriesChartType;
   setChartType: (chartType: TimeSeriesChartType) => void;
+  stdevBarsDisabled: boolean;
+  stdevBars: boolean;
+  setStdevBars: (showStdDev: boolean) => void;
   valueRange: ValueRange | undefined;
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
 }
@@ -120,6 +125,9 @@ export default function TimeSeriesChartHeader({
   setShowTooltips,
   chartType,
   setChartType,
+  stdevBarsDisabled,
+  stdevBars,
+  setStdevBars,
   valueRange,
   setValueRange,
 }: TimeSeriesChartHeaderProps) {
@@ -142,9 +150,17 @@ export default function TimeSeriesChartHeader({
 
   const handleChartTypeChange = (
     _event: React.MouseEvent<HTMLElement>,
-    value: string,
+    values: string[],
   ) => {
-    setChartType(value as TimeSeriesChartType);
+    const valueSet = new Set(values);
+    const showStdDevNew = valueSet.has(SHOW_DEV_VALUE);
+    valueSet.delete(SHOW_DEV_VALUE);
+    valueSet.delete(chartType);
+    values = Array.from(valueSet);
+    setChartType(
+      values.length === 1 ? (values[0] as TimeSeriesChartType) : chartType,
+    );
+    setStdevBars(showStdDevNew);
   };
 
   return (
@@ -163,6 +179,7 @@ export default function TimeSeriesChartHeader({
             </IconButton>
           </Tooltip>
         )}
+
         <Tooltip arrow title={i18n.get("Toggle zoom mode (or press CTRL key)")}>
           <ToggleButton
             value={"zoomMode"}
@@ -173,12 +190,19 @@ export default function TimeSeriesChartHeader({
             <AspectRatioIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
+
         <ValueRangeEditor
           anchorEl={valueRangeEditorOpen ? valueRangeEl.current : null}
           valueRange={valueRange}
           setValueRange={handleValueRangeChange}
         />
+
         <Tooltip arrow title={i18n.get("Enter fixed y-range")}>
+          {/*
+            Note, it is actually not ok to use toggle button here as it
+            just opens a popup. However, we should use the toggle button
+            to indicate that a fixed y-range is active.
+          */}
           <ToggleButton
             ref={valueRangeEl}
             value={"valueRange"}
@@ -189,6 +213,7 @@ export default function TimeSeriesChartHeader({
             <ExpandIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
+
         <Tooltip arrow title={i18n.get("Toggle showing info popup on hover")}>
           <ToggleButton
             value={"showTooltips"}
@@ -200,24 +225,37 @@ export default function TimeSeriesChartHeader({
           </ToggleButton>
         </Tooltip>
 
-        <Tooltip arrow title={i18n.get("Select chart type")}>
-          <ToggleButtonGroup
-            value={chartType}
-            onChange={handleChartTypeChange}
-            size="small"
-            sx={styles.chartTypes}
-          >
+        <ToggleButtonGroup
+          value={stdevBars ? [chartType, SHOW_DEV_VALUE] : [chartType]}
+          onChange={handleChartTypeChange}
+          size="small"
+          sx={styles.chartTypes}
+        >
+          <Tooltip arrow title={i18n.get("Show points")}>
             <ToggleButton value="point" size="small">
               <ScatterPlotIcon fontSize="inherit" />
             </ToggleButton>
+          </Tooltip>
+          <Tooltip arrow title={i18n.get("Show lines")}>
             <ToggleButton value="line" size="small">
               <ShowChartIcon fontSize="inherit" />
             </ToggleButton>
+          </Tooltip>
+          <Tooltip arrow title={i18n.get("Show bars")}>
             <ToggleButton value="bar" size="small">
               <BarChartIcon fontSize="inherit" />
             </ToggleButton>
-          </ToggleButtonGroup>
-        </Tooltip>
+          </Tooltip>
+          <Tooltip arrow title={i18n.get("Show standard deviation (if any)")}>
+            <ToggleButton
+              value={SHOW_DEV_VALUE}
+              size="small"
+              disabled={stdevBarsDisabled}
+            >
+              <IsoIcon fontSize="inherit" />
+            </ToggleButton>
+          </Tooltip>
+        </ToggleButtonGroup>
 
         <TimeSeriesAddButton
           sx={styles.actionButton}
@@ -225,6 +263,7 @@ export default function TimeSeriesChartHeader({
           placeGroupTimeSeries={placeGroupTimeSeries}
           addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
         />
+
         {loading ? (
           // Note, we show progress instead of the close button,
           // because we can not yet cancel loading time series.

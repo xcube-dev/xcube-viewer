@@ -101,7 +101,7 @@ interface TimeSeriesChartProps extends WithLocale {
     valueRange?: [number, number] | null,
   ) => void;
   chartTypeDefault: TimeSeriesChartType;
-  showErrorBars: boolean;
+  includeStdev: boolean;
   // Not implemented yet
   selectTimeSeries?: (
     timeSeriesGroupId: string,
@@ -138,8 +138,8 @@ export default function TimeSeriesChart({
   selectPlace,
   placeInfos,
   dataTimeRange,
-  showErrorBars,
   chartTypeDefault,
+  includeStdev,
   removeTimeSeries,
   removeTimeSeriesGroup,
   placeGroupTimeSeries,
@@ -153,6 +153,7 @@ export default function TimeSeriesChart({
   const [zoomMode, setZoomMode] = useState(false);
   const [showTooltips, setShowTooltips] = useState(true);
   const [chartType, setChartType] = useState(chartTypeDefault);
+  const [stdevBars, setStdevBars] = useState(includeStdev);
   const [zoomRectangle, setZoomRectangle] = useState<Rectangle>({});
   const xDomain = useRef<[number, number]>();
   const yDomain = useRef<[number, number]>();
@@ -400,7 +401,7 @@ export default function TimeSeriesChart({
   const [selectedXRange, selectedYRange] =
     normalizeZoomRectangle(zoomRectangle);
 
-  const ChartComponent = chartType ? BarChart : LineChart;
+  const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
   return (
     <div ref={containerRef} className={classes.chartContainer}>
@@ -418,6 +419,9 @@ export default function TimeSeriesChart({
         setShowTooltips={setShowTooltips}
         chartType={chartType}
         setChartType={setChartType}
+        stdevBarsDisabled={!includeStdev}
+        stdevBars={stdevBars}
+        setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
       />
@@ -475,12 +479,12 @@ export default function TimeSeriesChart({
               timeSeriesGroup,
               timeSeriesIndex,
               selectTimeSeries,
-              showErrorBars,
               places,
               selectPlace,
               placeGroupTimeSeries,
               placeInfos,
               chartType,
+              stdevBars,
               paletteMode: theme.palette.mode,
             }),
           )}

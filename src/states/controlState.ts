@@ -114,8 +114,8 @@ export interface ControlState {
   timeChunkSize: number;
   autoShowTimeSeries: boolean;
   timeSeriesChartTypeDefault: TimeSeriesChartType;
-  showTimeSeriesErrorBars: boolean;
-  showTimeSeriesMedian: boolean;
+  timeSeriesIncludeStdev: boolean;
+  timeSeriesUseMedian: boolean;
   userDrawnPlaceGroupName: string;
   userPlacesFormatName: UserPlacesFormatName;
   userPlacesFormatOptions: UserPlacesFormatOptions;
@@ -170,8 +170,8 @@ export function newControlState(): ControlState {
     timeChunkSize: 20,
     autoShowTimeSeries: true,
     timeSeriesChartTypeDefault: "line",
-    showTimeSeriesErrorBars: true,
-    showTimeSeriesMedian: branding.defaultAgg === "median",
+    timeSeriesIncludeStdev: true,
+    timeSeriesUseMedian: branding.defaultAgg === "median",
     userDrawnPlaceGroupName: "",
     userPlacesFormatName: "csv",
     userPlacesFormatOptions: {
