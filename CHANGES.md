@@ -27,7 +27,10 @@
     by pressing the `CTRL` key of the keyboard. (#285)
   - It is now possible to toggle showing the info popup when hovering 
     over the chart.
-  - It is now possible to toggle between showing bar or line charts.
+  - User can fix the y-range of the chart by entering min and max values.
+  - Users can now change the chart type (point, line, bars) and toggle 
+    showing standard deviation directly from the time-series chart's action 
+    bar.
 
 * Introduced layer visibility dropdown menu in the control bar.
 
