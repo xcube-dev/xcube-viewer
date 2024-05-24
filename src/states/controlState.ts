@@ -76,6 +76,7 @@ export interface UserPlacesFormatOptions {
 export interface LayerVisibilities {
   baseMap?: boolean;
   datasetRgb?: boolean;
+  datasetRgb2?: boolean;
   datasetVariable?: boolean;
   datasetVariable2?: boolean;
   datasetBoundary?: boolean;

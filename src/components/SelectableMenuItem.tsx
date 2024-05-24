@@ -30,6 +30,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 interface SelectableMenuItemProps {
   title: string;
   subtitle?: string;
+  disabled?: boolean;
   selected: boolean;
   onClick: () => void;
 }
@@ -37,18 +38,19 @@ interface SelectableMenuItemProps {
 export default function SelectableMenuItem({
   title,
   subtitle,
+  disabled,
   selected,
   onClick,
 }: SelectableMenuItemProps) {
   return selected ? (
-    <MenuItem onClick={onClick}>
+    <MenuItem onClick={onClick} disabled={disabled}>
       <ListItemIcon>
         <Check />
       </ListItemIcon>
       <ListItemText primary={title} secondary={subtitle} />
     </MenuItem>
   ) : (
-    <MenuItem onClick={onClick}>
+    <MenuItem onClick={onClick} disabled={disabled}>
       <ListItemText inset primary={title} secondary={subtitle} />
     </MenuItem>
   );

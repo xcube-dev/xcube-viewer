@@ -42,6 +42,7 @@ interface LayerSelectProps extends WithLocale {
   openDialog: (dialogId: string) => void;
   layerTitles: Record<keyof LayerVisibilities, string>;
   layerSubtitles: Record<keyof LayerVisibilities, string>;
+  layerDisablements: Record<keyof LayerVisibilities, boolean>;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
@@ -51,7 +52,7 @@ interface LayerSelectProps extends WithLocale {
   setVariableCompareMode: (selected: boolean) => void;
 }
 
-const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
+export default function LayerSelect(props: LayerSelectProps) {
   const {
     openDialog,
     variableCompareMode,
@@ -86,6 +87,7 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
         <Paper>
           <MenuList dense>
             <LayerSelectItem layerId="baseMap" {...layerSelectProps} />
+            <LayerSelectItem layerId="datasetRgb2" {...layerSelectProps} />
             <LayerSelectItem layerId="datasetRgb" {...layerSelectProps} />
             <LayerSelectItem layerId="datasetVariable2" {...layerSelectProps} />
             <LayerSelectItem layerId="datasetVariable" {...layerSelectProps} />
@@ -111,6 +113,4 @@ const _LayerSelect: React.FC<LayerSelectProps> = (props) => {
       </Popover>
     </>
   );
-};
-
-export default _LayerSelect;
+}

@@ -36,6 +36,7 @@ import {
 import { Config } from "@/config";
 import { updateResources } from "@/actions/dataActions";
 import {
+  layerDisablementsSelector,
   layerSubtitlesSelector,
   layerTitlesSelector,
   layerVisibilitiesSelector,
@@ -54,6 +55,7 @@ const mapStateToProps = (state: AppState) => {
     allowRefresh: Config.instance.branding.allowRefresh,
     layerTitles: layerTitlesSelector(state),
     layerSubtitles: layerSubtitlesSelector(state),
+    layerDisablements: layerDisablementsSelector(state),
     layerVisibilities: layerVisibilitiesSelector(state),
     variableCompareMode: state.controlState.variableCompareMode,
   };

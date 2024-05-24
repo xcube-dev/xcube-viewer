@@ -62,6 +62,7 @@ interface ControlBarActionsProps extends WithLocale {
   compact: boolean;
   layerTitles: Record<keyof LayerVisibilities, string>;
   layerSubtitles: Record<keyof LayerVisibilities, string>;
+  layerDisablements: Record<keyof LayerVisibilities, boolean>;
   layerVisibilities: LayerVisibilities;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
@@ -85,6 +86,7 @@ export default function ControlBarActions({
   compact,
   layerTitles,
   layerSubtitles,
+  layerDisablements,
   layerVisibilities,
   setLayerVisibility,
   variableCompareMode,
@@ -102,6 +104,7 @@ export default function ControlBarActions({
       openDialog={openDialog}
       layerTitles={layerTitles}
       layerSubtitles={layerSubtitles}
+      layerDisablements={layerDisablements}
       layerVisibilities={layerVisibilities}
       setLayerVisibility={setLayerVisibility}
       variableCompareMode={variableCompareMode}

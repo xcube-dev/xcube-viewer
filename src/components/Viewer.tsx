@@ -107,6 +107,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   mapInteraction: MapInteraction;
   mapProjection: string;
   baseMapLayer?: MapElement;
+  rgb2Layer?: MapElement;
   rgbLayer?: MapElement;
   variable2Layer?: MapElement;
   variableLayer?: MapElement;
@@ -145,6 +146,7 @@ const _Viewer: React.FC<ViewerProps> = ({
   mapInteraction,
   mapProjection,
   baseMapLayer,
+  rgb2Layer,
   rgbLayer,
   variable2Layer,
   variableLayer,
@@ -212,18 +214,11 @@ const _Viewer: React.FC<ViewerProps> = ({
   }, [map, imageSmoothing]);
 
   React.useEffect(() => {
-    if (map === null) {
-      return;
-    }
-    const variableLayer = findMapLayer(map, "variable");
-    if (variableLayer === null) {
+    if (map === null || !isNumber(variableSplitPos)) {
       return;
     }
     // https://openlayers.org/en/latest/examples/layer-swipe.html
     const handlePreRender = (event: RenderEvent) => {
-      if (!isNumber(variableSplitPos)) {
-        return;
-      }
       const mapSize = map.getSize();
       if (!mapSize) {
         return;
@@ -251,12 +246,25 @@ const _Viewer: React.FC<ViewerProps> = ({
       ctx.restore();
     };
 
-    variableLayer.on("prerender", handlePreRender);
-    variableLayer.on("postrender", handlePostRender);
-    return () => {
-      variableLayer.un("prerender", handlePreRender);
-      variableLayer.un("postrender", handlePostRender);
-    };
+    const rgbLayer = findMapLayer(map, "rgb");
+    const variableLayer = findMapLayer(map, "variable");
+    if (rgbLayer || variableLayer) {
+      const splitLayers = [rgbLayer, variableLayer];
+      for (const layer of splitLayers) {
+        if (layer) {
+          layer.on("prerender", handlePreRender);
+          layer.on("postrender", handlePostRender);
+        }
+      }
+      return () => {
+        for (const layer of splitLayers) {
+          if (layer) {
+            layer.un("prerender", handlePreRender);
+            layer.un("postrender", handlePostRender);
+          }
+        }
+      };
+    }
   }, [map, variableSplitPos]);
 
   const handleMapClick = (event: OlMapBrowserEvent<UIEvent>) => {
@@ -377,6 +385,7 @@ const _Viewer: React.FC<ViewerProps> = ({
         <View id="view" projection={mapProjection} />
         <Layers>
           {baseMapLayer}
+          {rgb2Layer}
           {rgbLayer}
           {variable2Layer}
           {variableLayer}

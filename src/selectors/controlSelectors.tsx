@@ -140,8 +140,10 @@ export const selectedVariableVisibilitySelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetVariable;
 export const selectedVariable2VisibilitySelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetVariable2;
-export const showDatasetRgbLayerSelector = (state: AppState) =>
+export const datasetRgbVisibilitySelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetRgb;
+export const datasetRgb2VisibilitySelector = (state: AppState) =>
+  !!state.controlState.layerVisibilities.datasetRgb2;
 export const showDatasetPlacesLayerSelector = (state: AppState) =>
   !!state.controlState.layerVisibilities.datasetPlaces;
 export const showUserPlacesLayerSelector = (state: AppState) =>
@@ -167,10 +169,15 @@ export const userPlacesFormatOptionsWktSelector = (state: AppState) =>
 export const userColorBarsSelector = (state: AppState) =>
   state.controlState.userColorBars;
 
-const variableLayerId = () => "variable";
-const variable2LayerId = () => "variable2";
-const variableZIndexSelector = () => 12;
-const variable2ZIndexSelector = () => 11;
+const variableLayerIdSelector = () => "variable";
+const variable2LayerIdSelector = () => "variable2";
+const datasetRgbLayerIdSelector = () => "rgb";
+const datasetRgb2LayerIdSelector = () => "rgb2";
+
+const variableZIndexSelector = () => 13;
+const variable2ZIndexSelector = () => 12;
+const datasetRgbZIndexSelector = () => 11;
+const datasetRgb2ZIndexSelector = () => 10;
 
 export const selectedDatasetSelector = createSelector(
   datasetsSelector,
@@ -388,6 +395,13 @@ export const selectedDatasetTimeRangeSelector = createSelector(
 
 export const selectedDatasetRgbSchemaSelector = createSelector(
   selectedDatasetSelector,
+  (dataset: Dataset | null): RgbSchema | null => {
+    return dataset !== null ? dataset.rgbSchema || null : null;
+  },
+);
+
+export const selectedDataset2RgbSchemaSelector = createSelector(
+  selectedDataset2Selector,
   (dataset: Dataset | null): RgbSchema | null => {
     return dataset !== null ? dataset.rgbSchema || null : null;
   },
@@ -847,7 +861,7 @@ export const selectedDatasetBoundaryLayerSelector = createSelector(
         id={`${dataset.id}.bbox`}
         source={source}
         style={style}
-        zIndex={11}
+        zIndex={16}
         opacity={0.5}
       />
     );
@@ -930,7 +944,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   selectedVariableUserColorBarJsonSelector,
   selectedVariableOpacitySelector,
   selectedVariableVisibilitySelector,
-  variableLayerId,
+  variableLayerIdSelector,
   variableZIndexSelector,
   selectedTimeSelector,
   timeAnimationActiveSelector,
@@ -951,7 +965,7 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedVariable2UserColorBarJsonSelector,
   selectedVariable2OpacitySelector,
   selectedVariable2VisibilitySelector,
-  variable2LayerId,
+  variable2LayerIdSelector,
   variable2ZIndexSelector,
   selectedTimeSelector,
   timeAnimationActiveSelector,
@@ -960,49 +974,71 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   getVariableTileLayer,
 );
 
+const getDatasetRgbTileLayer = (
+  server: ApiServerConfig,
+  datasetId: string | null,
+  rgbSchema: RgbSchema | null,
+  visibility: boolean,
+  layerId: string,
+  zIndex: number,
+  timeDimension: TimeDimension | null,
+  time: Time | null,
+  timeAnimationActive: boolean,
+  mapProjection: string,
+  attributions: string[] | null,
+  imageSmoothing: boolean,
+): MapElement => {
+  if (!visibility || !rgbSchema) {
+    return null;
+  }
+  const queryParams: Array<[string, string]> = [["crs", mapProjection]];
+  return getTileLayer(
+    layerId,
+    getTileUrl(server.url, datasetId!, "rgb"),
+    rgbSchema.tileLevelMin,
+    rgbSchema.tileLevelMax,
+    queryParams,
+    1.0,
+    timeDimension,
+    time,
+    timeAnimationActive,
+    mapProjection,
+    attributions,
+    imageSmoothing,
+    zIndex,
+  );
+};
+
 export const selectedDatasetRgbLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetIdSelector,
-  showDatasetRgbLayerSelector,
   selectedDatasetRgbSchemaSelector,
+  datasetRgbVisibilitySelector,
+  datasetRgbLayerIdSelector,
+  datasetRgbZIndexSelector,
   selectedDatasetTimeDimensionSelector,
   selectedTimeSelector,
   timeAnimationActiveSelector,
   mapProjectionSelector,
   selectedDatasetAttributionsSelector,
   imageSmoothingSelector,
-  (
-    server: ApiServerConfig,
-    datasetId,
-    showRgbLayer: boolean,
-    rgbSchema: RgbSchema | null,
-    timeDimension: TimeDimension | null,
-    time: Time | null,
-    timeAnimationActive: boolean,
-    mapProjection: string,
-    attributions: string[] | null,
-    imageSmoothing: boolean,
-  ): MapElement => {
-    if (!showRgbLayer || !rgbSchema) {
-      return null;
-    }
-    const queryParams: Array<[string, string]> = [["crs", mapProjection]];
-    return getTileLayer(
-      "rgb",
-      getTileUrl(server.url, datasetId!, "rgb"),
-      rgbSchema.tileLevelMin,
-      rgbSchema.tileLevelMax,
-      queryParams,
-      1.0,
-      timeDimension,
-      time,
-      timeAnimationActive,
-      mapProjection,
-      attributions,
-      imageSmoothing,
-      10,
-    );
-  },
+  getDatasetRgbTileLayer,
+);
+
+export const selectedDataset2RgbLayerSelector = createSelector(
+  selectedServerSelector,
+  selectedDataset2IdSelector,
+  selectedDataset2RgbSchemaSelector,
+  datasetRgb2VisibilitySelector,
+  datasetRgb2LayerIdSelector,
+  datasetRgb2ZIndexSelector,
+  selectedDatasetTimeDimensionSelector,
+  selectedTimeSelector,
+  timeAnimationActiveSelector,
+  mapProjectionSelector,
+  selectedDatasetAttributionsSelector,
+  imageSmoothingSelector,
+  getDatasetRgbTileLayer,
 );
 
 function getTileUrl(
@@ -1215,6 +1251,7 @@ export const layerTitlesSelector = (
   _state: AppState,
 ): Record<keyof LayerVisibilities, string> => ({
   baseMap: "Base Map",
+  datasetRgb2: "Dataset RGB 2",
   datasetRgb: "Dataset RGB",
   datasetVariable2: "Dataset Variable 2",
   datasetVariable: "Dataset Variable",
@@ -1242,6 +1279,8 @@ export const layerSubtitlesSelector = createSelector(
     ({
       baseMap: baseMapTitle || undefined,
       overlay: overlayTitle || undefined,
+      datasetRgb: datasetId || undefined,
+      datasetRgb2: dataset2Id || undefined,
       datasetVariable:
         datasetId && variableName
           ? `${datasetId} / ${variableName}`
@@ -1251,4 +1290,24 @@ export const layerSubtitlesSelector = createSelector(
           ? `${dataset2Id} / ${variable2Name}`
           : undefined,
     }) as Record<keyof LayerVisibilities, string>,
+);
+
+export const layerDisablementsSelector = createSelector(
+  selectedBaseMapIdSelector,
+  selectedOverlayIdSelector,
+  selectedDatasetIdSelector,
+  selectedDataset2IdSelector,
+  selectedVariableNameSelector,
+  selectedDataset2IdSelector,
+  selectedVariable2NameSelector,
+  (baseMapId, overlayId, datasetId, dataset2Id, variableName, variable2Name) =>
+    ({
+      baseMap: !baseMapId,
+      overlay: !overlayId,
+      datasetRgb: !datasetId,
+      datasetRgb2: !dataset2Id,
+      datasetVariable: !variableName,
+      datasetVariable2: !variable2Name,
+      datasetBoundary: !datasetId,
+    }) as Record<keyof LayerVisibilities, boolean>,
 );
