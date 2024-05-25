@@ -23,7 +23,7 @@
  */
 
 import { useMemo, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
@@ -118,7 +118,7 @@ export default function ColorBarSelect({
           color="primary"
           disabled={!!editMode.action}
         >
-          <AddIcon fontSize="inherit" />
+          <AddCircleOutlineIcon fontSize="inherit" />
         </IconButton>
       </Box>
       {userColorBars.map((userColorBar) =>

@@ -23,17 +23,17 @@
  */
 
 import { useEffect, useRef } from "react";
-import Box from "@mui/material/Box";
+import { Theme, styled } from "@mui/system";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
-import { Theme, styled } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import PauseCircleOutline from "@mui/icons-material/PauseCircleOutline";
-import PlayCircleOutline from "@mui/icons-material/PlayCircleOutline";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
@@ -43,7 +43,7 @@ import { TimeAnimationInterval } from "@/states/controlState";
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(
   ({ theme }: { theme: Theme }) => ({
-    marginTop: theme.spacing(1.5),
+    marginTop: theme.spacing(2),
     marginRight: theme.spacing(1),
   }),
 );
@@ -128,9 +128,9 @@ export default function TimePlayer({
 
   const playToolTip = i18n.get(timeAnimationActive ? "Stop" : "Start");
   const playIcon = timeAnimationActive ? (
-    <PauseCircleOutline />
+    <PauseCircleOutlineIcon />
   ) : (
-    <PlayCircleOutline />
+    <PlayCircleOutlineIcon />
   );
 
   const playButton = (
@@ -186,13 +186,13 @@ export default function TimePlayer({
 
   return (
     <StyledFormControl variant="standard">
-      <Box>
+      <ButtonGroup variant="outlined">
         {firstTimeStepButton}
         {prevTimeStepButton}
         {playButton}
         {nextTimeStepButton}
         {lastTimeStepButton}
-      </Box>
+      </ButtonGroup>
     </StyledFormControl>
   );
 }

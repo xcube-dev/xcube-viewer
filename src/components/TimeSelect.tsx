@@ -44,7 +44,7 @@ import ControlBarItem from "./ControlBarItem";
 const styles = (theme: Theme) =>
   createStyles({
     dateTimePicker: {
-      marginTop: theme.spacing(2),
+      marginTop: theme.spacing(2.5),
     },
   });
 

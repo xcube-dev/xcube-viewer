@@ -38,10 +38,11 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
+import { commonStyles } from "@/components/common-styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
-    marginTop: theme.spacing(1.5),
+    marginTop: theme.spacing(2),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(2),
   },
@@ -77,27 +78,52 @@ export default function MapInteractionsBar({
         exclusive
         onChange={handleChange}
       >
-        <ToggleButton key={0} value="Select">
+        <ToggleButton
+          key={0}
+          value="Select"
+          size="small"
+          sx={commonStyles.toggleButton}
+        >
           <Tooltip arrow title={i18n.get("Select a place in map")}>
             <CenterFocusStrongIcon />
           </Tooltip>
         </ToggleButton>
-        <ToggleButton key={1} value="Point">
+        <ToggleButton
+          key={1}
+          value="Point"
+          size="small"
+          sx={commonStyles.toggleButton}
+        >
           <Tooltip arrow title={i18n.get("Add a point location in map")}>
             <AddLocationIcon />
           </Tooltip>
         </ToggleButton>
-        <ToggleButton key={2} value="Polygon">
+        <ToggleButton
+          key={2}
+          value="Polygon"
+          size="small"
+          sx={commonStyles.toggleButton}
+        >
           <Tooltip arrow title={i18n.get("Draw a polygon area in map")}>
             <CategoryIcon />
           </Tooltip>
         </ToggleButton>
-        <ToggleButton key={3} value="Circle">
+        <ToggleButton
+          key={3}
+          value="Circle"
+          size="small"
+          sx={commonStyles.toggleButton}
+        >
           <Tooltip arrow title={i18n.get("Draw a circular area in map")}>
             <FiberManualRecordIcon />
           </Tooltip>
         </ToggleButton>
-        <ToggleButton key={4} value="Geometry">
+        <ToggleButton
+          key={4}
+          value="Geometry"
+          size="small"
+          sx={commonStyles.toggleButton}
+        >
           <Tooltip arrow title={i18n.get("Import places")}>
             <FileUploadIcon />
           </Tooltip>
