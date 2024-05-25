@@ -130,7 +130,6 @@ export default function TimePlayer({
 
   const isValid = typeof selectedTime === "number";
 
-  const playToolTip = i18n.get(timeAnimationActive ? "Stop" : "Start");
   const playIcon = timeAnimationActive ? (
     <PauseCircleOutlineIcon />
   ) : (
