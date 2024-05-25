@@ -23,8 +23,7 @@
  */
 
 import { useEffect, useRef } from "react";
-import { Theme, styled } from "@mui/system";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -39,14 +38,19 @@ import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { Time, TimeRange } from "@/model/timeSeries";
 import { TimeAnimationInterval } from "@/states/controlState";
+import { makeStyles } from "@/util/styles";
 
 // noinspection JSUnusedLocalSymbols
-const StyledFormControl = styled(FormControl)(
-  ({ theme }: { theme: Theme }) => ({
+const styles = makeStyles({
+  formControl: (theme) => ({
     marginTop: theme.spacing(2),
+    marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   }),
-);
+  iconButton: {
+    padding: "2px",
+  },
+});
 
 interface TimePlayerProps extends WithLocale {
   selectedTime: Time | null;
@@ -136,9 +140,9 @@ export default function TimePlayer({
   const playButton = (
     <IconButton
       disabled={!isValid}
-      aria-label={playToolTip}
       onClick={handlePlayButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <Tooltip arrow title={i18n.get("Auto-step through times in the dataset")}>
         {playIcon}
@@ -151,6 +155,7 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handleFirstTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <FirstPageIcon />
     </IconButton>
@@ -161,6 +166,7 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handlePrevTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <ChevronLeftIcon />
     </IconButton>
@@ -170,6 +176,7 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handleNextTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <ChevronRightIcon />
     </IconButton>
@@ -179,20 +186,21 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handleLastTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <LastPageIcon />
     </IconButton>
   );
 
   return (
-    <StyledFormControl variant="standard">
-      <ButtonGroup variant="outlined">
+    <FormControl sx={styles.formControl} variant="standard">
+      <Box>
         {firstTimeStepButton}
         {prevTimeStepButton}
         {playButton}
         {nextTimeStepButton}
         {lastTimeStepButton}
-      </ButtonGroup>
-    </StyledFormControl>
+      </Box>
+    </FormControl>
   );
 }
