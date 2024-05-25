@@ -43,7 +43,7 @@ import { makeStyles } from "@/util/styles";
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
   formControl: (theme) => ({
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2.5),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   }),
