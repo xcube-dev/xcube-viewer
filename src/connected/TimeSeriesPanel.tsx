@@ -25,7 +25,7 @@
 import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
-import _TimeSeriesPanel from "src/components/TimeSeriesPanel";
+import _TimeSeriesPanel from "@/components/TimeSeriesPanel";
 import {
   removeTimeSeries,
   removeTimeSeriesGroup,
