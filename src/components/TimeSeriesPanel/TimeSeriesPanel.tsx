@@ -49,7 +49,7 @@ const styles = makeStyles({
   },
 });
 
-interface TimeSeriesChartsProps extends WithLocale {
+interface TimeSeriesPanelProps extends WithLocale {
   timeSeriesGroups: TimeSeriesGroup[];
   selectedTime: Time | null;
   selectTime: (time: Time | null) => void;
@@ -84,7 +84,7 @@ interface TimeSeriesChartsProps extends WithLocale {
   ) => void;
 }
 
-export default function TimeSeriesCharts(props: TimeSeriesChartsProps) {
+export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
   const {
     timeSeriesGroups,
     dataTimeRange,

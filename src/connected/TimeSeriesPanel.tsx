@@ -24,41 +24,51 @@
 
 import { connect } from "react-redux";
 
-import {
-  selectedDatasetSelector,
-  selectedPlaceInfoSelector,
-  selectedServerSelector,
-  selectedVariableColorBarSelector,
-  selectedVariableSelector,
-  selectedVolumeIdSelector,
-} from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
+import _TimeSeriesPanel from "src/components/TimeSeriesPanel";
 import {
-  setVolumeRenderMode,
-  updateVolumeState,
+  removeTimeSeries,
+  removeTimeSeriesGroup,
+  addPlaceGroupTimeSeries,
+} from "@/actions/dataActions";
+import {
+  selectPlace,
+  selectTime,
+  selectTimeRange,
 } from "@/actions/controlActions";
-import { updateVariableVolume } from "@/actions/dataActions";
-import _VolumeCard from "@/components/VolumePanel/VolumePanel";
+import {
+  selectedDatasetTimeRangeSelector,
+  selectedPlaceGroupPlacesSelector,
+  timeSeriesPlaceInfosSelector,
+} from "@/selectors/controlSelectors";
+import { placeGroupTimeSeriesSelector } from "@/selectors/dataSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
-    selectedDataset: selectedDatasetSelector(state),
-    selectedVariable: selectedVariableSelector(state),
-    selectedPlaceInfo: selectedPlaceInfoSelector(state),
-    variableColorBar: selectedVariableColorBarSelector(state),
-    volumeRenderMode: state.controlState.volumeRenderMode,
-    volumeId: selectedVolumeIdSelector(state),
-    volumeStates: state.controlState.volumeStates,
-    serverUrl: selectedServerSelector(state).url,
+    timeSeriesGroups: state.dataState.timeSeriesGroups,
+    selectedTime: state.controlState.selectedTime,
+    selectedTimeRange: state.controlState.selectedTimeRange,
+    dataTimeRange: selectedDatasetTimeRangeSelector(state),
+    chartTypeDefault: state.controlState.timeSeriesChartTypeDefault,
+    includeStdev: state.controlState.timeSeriesIncludeStdev,
+    placeInfos: timeSeriesPlaceInfosSelector(state),
+    places: selectedPlaceGroupPlacesSelector(state),
+    placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
   };
 };
 
 const mapDispatchToProps = {
-  setVolumeRenderMode,
-  updateVolumeState,
-  updateVariableVolume,
+  selectTime,
+  selectTimeRange,
+  removeTimeSeries,
+  removeTimeSeriesGroup,
+  selectPlace,
+  addPlaceGroupTimeSeries,
 };
 
-const VolumeCard = connect(mapStateToProps, mapDispatchToProps)(_VolumeCard);
-export default VolumeCard;
+const TimeSeriesPanel = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_TimeSeriesPanel);
+export default TimeSeriesPanel;

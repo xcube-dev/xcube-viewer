@@ -38,8 +38,8 @@ import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
 import { AppState } from "@/states/appState";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
-import TimeSeriesCharts from "./TimeSeriesCharts";
-import VolumeCard from "./VolumeCard";
+import TimeSeriesPanel from "./TimeSeriesPanel";
+import VolumePanel from "./VolumePanel";
 import InfoPanel from "./InfoPanel";
 import Tabs from "@mui/material/Tabs";
 import Box from "@mui/material/Box";
@@ -211,8 +211,8 @@ const _Workspace: React.FC<WorkspaceProps> = ({
             </Tabs>
           </Box>
           {sidebarPanelId === "info" && <InfoPanel />}
-          {sidebarPanelId === "charts" && <TimeSeriesCharts />}
-          {sidebarPanelId === "volume" && <VolumeCard />}
+          {sidebarPanelId === "charts" && <TimeSeriesPanel />}
+          {sidebarPanelId === "volume" && <VolumePanel />}
         </Box>
       </SplitPane>
     );

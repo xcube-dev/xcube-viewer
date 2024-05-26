@@ -22,5 +22,5 @@
  * SOFTWARE.
  */
 
-import TimeSeriesCharts from "./TimeSeriesCharts";
-export default TimeSeriesCharts;
+import TimeSeriesPanel from "./TimeSeriesPanel";
+export default TimeSeriesPanel;
