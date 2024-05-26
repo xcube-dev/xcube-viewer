@@ -25,16 +25,13 @@
 import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
-import _ControlBarActions from "@/components/ControlBarActions";
+import _MapLayerMenu from "@/components/MapLayerMenu";
 import {
   openDialog,
+  setLayerMenuOpen,
   setLayerVisibility,
   setVariableCompareMode,
-  setSidebarOpen,
-  setLayerMenuOpen,
 } from "@/actions/controlActions";
-import { Config } from "@/config";
-import { updateResources } from "@/actions/dataActions";
 import {
   layerDisablementsSelector,
   layerSubtitlesSelector,
@@ -45,14 +42,6 @@ import {
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
-    visible: !!(
-      state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
-    ),
-    layerMenuOpen: state.controlState.layerMenuOpen,
-    sidebarOpen: state.controlState.sidebarOpen,
-    compact: Config.instance.branding.compact,
-    allowRefresh: Config.instance.branding.allowRefresh,
-    // MapLayerMenu
     layerTitles: layerTitlesSelector(state),
     layerSubtitles: layerSubtitlesSelector(state),
     layerDisablements: layerDisablementsSelector(state),
@@ -62,16 +51,14 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  setLayerMenuOpen,
-  setSidebarOpen,
   openDialog,
-  updateResources,
+  setLayerMenuOpen,
   setLayerVisibility,
   setVariableCompareMode,
 };
 
-const ControlBarActions = connect(
+const MapLayerMenu = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(_ControlBarActions);
-export default ControlBarActions;
+)(_MapLayerMenu);
+export default MapLayerMenu;

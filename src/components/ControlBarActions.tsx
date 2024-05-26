@@ -36,9 +36,8 @@ import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 import i18n from "@/i18n";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
-import { LayerVisibilities } from "@/states/controlState";
-import LayerSelect from "@/components/LayerSelect";
 import { commonStyles } from "@/components/common-styles";
+import LayersIcon from "@mui/icons-material/Layers";
 
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(
@@ -51,59 +50,43 @@ const StyledFormControl = styled(FormControl)(
 
 interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
+  layerMenuOpen: boolean;
+  setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   sidebarOpen: boolean;
   setSidebarOpen: (sideBarOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
   allowRefresh?: boolean;
   updateResources: () => void;
   compact: boolean;
-  // TODO: the following are just for LayerSelect, combine
-  layerTitles: Record<keyof LayerVisibilities, string>;
-  layerSubtitles: Record<keyof LayerVisibilities, string>;
-  layerDisablements: Record<keyof LayerVisibilities, boolean>;
-  layerVisibilities: LayerVisibilities;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
-  variableCompareMode: boolean;
-  setVariableCompareMode: (selected: boolean) => void;
 }
 
 export default function ControlBarActions({
-  locale,
   visible,
+  layerMenuOpen,
+  setLayerMenuOpen,
   sidebarOpen,
   setSidebarOpen,
   openDialog,
   allowRefresh,
   updateResources,
   compact,
-  // LayerSelect props
-  layerTitles,
-  layerSubtitles,
-  layerDisablements,
-  layerVisibilities,
-  setLayerVisibility,
-  variableCompareMode,
-  setVariableCompareMode,
 }: ControlBarActionsProps) {
   if (!visible) {
     return null;
   }
 
-  const layerSelect = (
-    <LayerSelect
-      locale={locale}
-      openDialog={openDialog}
-      layerTitles={layerTitles}
-      layerSubtitles={layerSubtitles}
-      layerDisablements={layerDisablements}
-      layerVisibilities={layerVisibilities}
-      setLayerVisibility={setLayerVisibility}
-      variableCompareMode={variableCompareMode}
-      setVariableCompareMode={setVariableCompareMode}
-    />
+  const layersButton = (
+    <ToggleButton
+      value="open"
+      selected={layerMenuOpen}
+      onClick={() => setLayerMenuOpen(!layerMenuOpen)}
+      size="small"
+      sx={commonStyles.toggleButton}
+    >
+      <Tooltip arrow title={i18n.get("Layer visibilities")}>
+        <LayersIcon />
+      </Tooltip>
+    </ToggleButton>
   );
 
   const sidebarButton = (
@@ -156,7 +139,7 @@ export default function ControlBarActions({
         {refreshButton}
         {downloadButton}
         {settingsButton}
-        {layerSelect}
+        {layersButton}
         {sidebarButton}
       </Box>
     </StyledFormControl>
