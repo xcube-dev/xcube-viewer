@@ -24,13 +24,16 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
-import { Theme } from "@mui/material";
+import { Theme } from "@mui/system";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
+import InfoIcon from "@mui/icons-material/Info";
+import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
+import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
 
 import { AppState } from "@/states/appState";
 import SplitPane from "@/components/SplitPane";
@@ -38,6 +41,25 @@ import Viewer from "./Viewer";
 import TimeSeriesCharts from "./TimeSeriesCharts";
 import VolumeCard from "./VolumeCard";
 import InfoCard from "./InfoCard";
+import Tabs from "@mui/material/Tabs";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import i18n from "@/i18n";
+import { makeStyles } from "@/util/styles";
+import { setSidebarPanelId } from "@/actions/controlActions";
+import { SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
+
+const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
+  info: <InfoIcon fontSize="inherit" />,
+  charts: <StackedLineChartIcon fontSize="inherit" />,
+  volume: <ThreeDRotationIcon fontSize="inherit" />,
+};
+
+const sidebarPanelLabels: Record<SidebarPanelId, string> = {
+  info: "Info",
+  charts: "Charts",
+  volume: "Volume",
+};
 
 // Adjust for debugging split pane style
 const mapExtraStyle: React.CSSProperties = { padding: 0 };
@@ -82,25 +104,33 @@ const styles = (_theme: Theme) =>
     },
   });
 
+const sxes = makeStyles({
+  tabs: { minHeight: "34px" },
+  tab: {
+    padding: "5px 10px",
+    textTransform: "none",
+    fontWeight: "regular",
+    minHeight: "32px",
+  },
+});
+
 interface WorkspaceProps extends WithStyles<typeof styles> {
-  hasInfoCard: boolean;
-  hasVolumeCard: boolean;
-  hasTimeseries: boolean;
+  sidebarOpen: boolean;
+  sidebarPanelId: SidebarPanelId;
+  setSidebarPanelId: (sidebarPanelId: SidebarPanelId) => void;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
-  const hasDatasets =
-    state.controlState.selectedDatasetId !== null &&
-    state.dataState.datasets.length > 0;
   return {
-    hasInfoCard: state.controlState.infoCardOpen && hasDatasets,
-    hasVolumeCard: state.controlState.volumeCardOpen && hasDatasets,
-    hasTimeseries: state.dataState.timeSeriesGroups.length > 0,
+    sidebarOpen: state.controlState.sidebarOpen,
+    sidebarPanelId: state.controlState.sidebarPanelId,
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  setSidebarPanelId,
+};
 
 type Layout = "hor" | "ver";
 const getLayout = (): Layout => {
@@ -109,15 +139,15 @@ const getLayout = (): Layout => {
 
 const _Workspace: React.FC<WorkspaceProps> = ({
   classes,
-  hasInfoCard,
-  hasVolumeCard,
-  hasTimeseries,
+  sidebarOpen,
+  sidebarPanelId,
+  setSidebarPanelId,
 }) => {
-  const [map, setMap] = React.useState<OlMap | null>(null);
-  const [layout, setLayout] = React.useState<Layout>(getLayout());
-  const resizeObserver = React.useRef<ResizeObserver | null>(null);
+  const [map, setMap] = useState<OlMap | null>(null);
+  const [layout, setLayout] = useState<Layout>(getLayout());
+  const resizeObserver = useRef<ResizeObserver | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     updateLayout();
     resizeObserver.current = new ResizeObserver(updateLayout);
     resizeObserver.current.observe(document.documentElement);
@@ -139,7 +169,7 @@ const _Workspace: React.FC<WorkspaceProps> = ({
     }
   }
 
-  if (hasInfoCard || hasVolumeCard || hasTimeseries) {
+  if (sidebarOpen) {
     const splitPaneClassName =
       layout === "hor" ? classes.splitPaneHor : classes.splitPaneVer;
     const mapPaneClassName =
@@ -156,11 +186,34 @@ const _Workspace: React.FC<WorkspaceProps> = ({
         child2ClassName={detailsPaneClassName}
       >
         <Viewer onMapRef={setMap} />
-        <div>
-          <InfoCard />
-          <VolumeCard />
-          <TimeSeriesCharts />
-        </div>
+        {/* TODO: make own Sidebar component */}
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={sidebarPanelId}
+              onChange={(_, value) => {
+                setSidebarPanelId(value as SidebarPanelId);
+              }}
+              variant="scrollable"
+              sx={sxes.tabs}
+            >
+              {sidebarPanelIds.map((panelId) => (
+                <Tab
+                  key={panelId}
+                  icon={sidebarPanelIcons[panelId]}
+                  iconPosition="start"
+                  sx={sxes.tab}
+                  disableRipple
+                  value={panelId}
+                  label={i18n.get(sidebarPanelLabels[panelId])}
+                />
+              ))}
+            </Tabs>
+          </Box>
+          {sidebarPanelId === "info" && <InfoCard />}
+          {sidebarPanelId === "charts" && <TimeSeriesCharts />}
+          {sidebarPanelId === "volume" && <VolumeCard />}
+        </Box>
       </SplitPane>
     );
   } else {

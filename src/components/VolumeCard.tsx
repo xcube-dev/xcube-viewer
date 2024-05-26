@@ -29,9 +29,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import CloseIcon from "@mui/icons-material/Close";
 import VolumeIcon from "@mui/icons-material/ThreeDRotation";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -81,8 +79,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface VolumeCardProps extends WithLocale {
-  volumeCardOpen: boolean;
-  showVolumeCard: (infoCardOpen: boolean) => void;
   selectedDataset: Dataset | null;
   selectedVariable: Variable | null;
   selectedPlaceInfo: PlaceInfo | null;
@@ -103,8 +99,6 @@ interface VolumeCardProps extends WithLocale {
 }
 
 const VolumeCard: React.FC<VolumeCardProps> = ({
-  volumeCardOpen,
-  showVolumeCard,
   selectedDataset,
   selectedVariable,
   selectedPlaceInfo,
@@ -118,10 +112,6 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
   serverUrl,
 }) => {
   const classes = useStyles();
-
-  if (!volumeCardOpen) {
-    return null;
-  }
 
   let volumeIsoThreshold = 0.5;
   if (selectedVariable) {
@@ -163,10 +153,6 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
         );
       }
     }
-  };
-
-  const handleVolumeCardClose = () => {
-    showVolumeCard(false);
   };
 
   return (
@@ -211,13 +197,6 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
             )}
           </>
         )}
-        <IconButton
-          key={1}
-          onClick={handleVolumeCardClose}
-          className={classes.close}
-        >
-          {<CloseIcon />}
-        </IconButton>
       </CardActions>
       <CardContent className={classes.cardContent}>
         <VolumeCanvas

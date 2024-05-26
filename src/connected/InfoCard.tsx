@@ -36,7 +36,6 @@ import {
 import { AppState } from "@/states/appState";
 import {
   setVisibleInfoCardElements,
-  showInfoCard,
   updateInfoCardElementViewMode,
 } from "@/actions/controlActions";
 import _InfoCard from "@/components/InfoCard";
@@ -45,7 +44,6 @@ import { Config } from "@/config";
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
-    infoCardOpen: state.controlState.infoCardOpen,
     visibleInfoCardElements: visibleInfoCardElementsSelector(state),
     infoCardElementViewModes: infoCardElementViewModesSelector(state),
     selectedDataset: selectedDatasetSelector(state),
@@ -58,7 +56,6 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  showInfoCard,
   setVisibleInfoCardElements,
   updateInfoCardElementViewMode,
 };

@@ -48,6 +48,7 @@ import { openDialog } from "@/actions/controlActions";
 import { updateResources } from "@/actions/dataActions";
 import MarkdownPage from "@/components/MarkdownPage";
 import UserControl from "./UserControl";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
   appName: string;
@@ -189,6 +190,17 @@ const _AppBar: React.FC<AppBarProps> = ({
               className={classes.iconButton}
             >
               <RefreshIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        {Config.instance.branding.allowDownloads && (
+          <Tooltip arrow title={i18n.get("Export data")}>
+            <IconButton
+              onClick={() => openDialog("export")}
+              size="small"
+              className={classes.iconButton}
+            >
+              {<CloudDownloadIcon />}
             </IconButton>
           </Tooltip>
         )}

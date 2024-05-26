@@ -29,7 +29,6 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import { Theme } from "@mui/material/styles";
@@ -42,7 +41,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
 import JsonIcon from "@mui/icons-material/DataObject";
 import InfoIcon from "@mui/icons-material/Info";
 import LayersIcon from "@mui/icons-material/Layers";
@@ -106,8 +104,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface InfoCardProps extends WithLocale {
-  infoCardOpen: boolean;
-  showInfoCard: (infoCardOpen: boolean) => void;
   visibleInfoCardElements: string[];
   setVisibleInfoCardElements: (visibleInfoCardElements: string[]) => void;
   infoCardElementViewModes: { [elementType: string]: ViewMode };
@@ -124,8 +120,6 @@ interface InfoCardProps extends WithLocale {
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
-  infoCardOpen,
-  showInfoCard,
   visibleInfoCardElements,
   setVisibleInfoCardElements,
   infoCardElementViewModes,
@@ -139,19 +133,11 @@ const InfoCard: React.FC<InfoCardProps> = ({
 }) => {
   const classes = useStyles();
 
-  if (!infoCardOpen) {
-    return null;
-  }
-
   const handleInfoElementsChanges = (
     _event: React.MouseEvent<HTMLElement>,
     visibleElementTypes: string[],
   ) => {
     setVisibleInfoCardElements(visibleElementTypes);
-  };
-
-  const handleInfoCardClose = () => {
-    showInfoCard(false);
   };
 
   // TODO (forman): fix ugly code duplication below!
@@ -247,14 +233,6 @@ const InfoCard: React.FC<InfoCardProps> = ({
             </Tooltip>
           </ToggleButton>
         </ToggleButtonGroup>
-        <IconButton
-          key={1}
-          onClick={handleInfoCardClose}
-          className={classes.close}
-          size="large"
-        >
-          {<CloseIcon />}
-        </IconButton>
       </CardActions>
       {datasetInfoContent}
       {variableInfoContent}

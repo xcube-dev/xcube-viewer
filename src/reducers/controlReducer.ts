@@ -40,20 +40,20 @@ import {
   SELECT_TIME_RANGE,
   SELECT_TIME_SERIES_UPDATE_MODE,
   SELECT_VARIABLE,
+  SELECT_VARIABLE_2,
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
+  SET_SIDEBAR_OPEN,
+  SET_SIDEBAR_PANEL_ID,
   SET_VARIABLE_COMPARE_MODE,
+  SET_VARIABLE_SPLIT_POS,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
-  SHOW_INFO_CARD,
-  SHOW_VOLUME_CARD,
-  SELECT_VARIABLE_2,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
-  SET_VARIABLE_SPLIT_POS,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -400,11 +400,15 @@ export function controlReducer(
       }
       return newState;
     }
-    case SHOW_VOLUME_CARD: {
-      state = {
-        ...state,
-        volumeCardOpen: action.volumeCardOpen,
-      };
+    case SET_SIDEBAR_OPEN: {
+      const { sidebarOpen } = action;
+      state = { ...state, sidebarOpen };
+      storeUserSettings(state);
+      return state;
+    }
+    case SET_SIDEBAR_PANEL_ID: {
+      const { sidebarPanelId } = action;
+      state = { ...state, sidebarPanelId };
       storeUserSettings(state);
       return state;
     }
@@ -422,14 +426,6 @@ export function controlReducer(
         ...state,
         volumeStates: { ...state.volumeStates, [volumeId]: volumeState },
       };
-      return state;
-    }
-    case SHOW_INFO_CARD: {
-      state = {
-        ...state,
-        infoCardOpen: action.infoCardOpen,
-      };
-      storeUserSettings(state);
       return state;
     }
     case SET_VISIBLE_INFO_CARD_ELEMENTS: {
