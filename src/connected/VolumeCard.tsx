@@ -38,7 +38,7 @@ import {
   updateVolumeState,
 } from "@/actions/controlActions";
 import { updateVariableVolume } from "@/actions/dataActions";
-import _VolumeCard from "@/components/VolumeCard";
+import _VolumeCard from "@/components/VolumePanel/VolumePanel";
 
 const mapStateToProps = (state: AppState) => {
   return {

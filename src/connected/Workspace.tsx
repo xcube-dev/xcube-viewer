@@ -40,7 +40,7 @@ import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import TimeSeriesCharts from "./TimeSeriesCharts";
 import VolumeCard from "./VolumeCard";
-import InfoCard from "./InfoCard";
+import InfoPanel from "./InfoPanel";
 import Tabs from "@mui/material/Tabs";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -210,7 +210,7 @@ const _Workspace: React.FC<WorkspaceProps> = ({
               ))}
             </Tabs>
           </Box>
-          {sidebarPanelId === "info" && <InfoCard />}
+          {sidebarPanelId === "info" && <InfoPanel />}
           {sidebarPanelId === "charts" && <TimeSeriesCharts />}
           {sidebarPanelId === "volume" && <VolumeCard />}
         </Box>

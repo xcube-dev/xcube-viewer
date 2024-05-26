@@ -38,7 +38,7 @@ import {
   setVisibleInfoCardElements,
   updateInfoCardElementViewMode,
 } from "@/actions/controlActions";
-import _InfoCard from "@/components/InfoCard";
+import _InfoPanel from "@/components/InfoPanel";
 import { Config } from "@/config";
 
 const mapStateToProps = (state: AppState) => {
@@ -60,5 +60,5 @@ const mapDispatchToProps = {
   updateInfoCardElementViewMode,
 };
 
-const InfoCard = connect(mapStateToProps, mapDispatchToProps)(_InfoCard);
-export default InfoCard;
+const InfoPanel = connect(mapStateToProps, mapDispatchToProps)(_InfoPanel);
+export default InfoPanel;

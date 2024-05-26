@@ -42,7 +42,6 @@ import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import JsonIcon from "@mui/icons-material/DataObject";
-import InfoIcon from "@mui/icons-material/Info";
 import LayersIcon from "@mui/icons-material/Layers";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PlaceIcon from "@mui/icons-material/Place";
@@ -65,6 +64,7 @@ import { Time } from "@/model/timeSeries";
 import { Variable } from "@/model/variable";
 import pythonLogo from "@/resources/python-bw.png";
 import { ApiServerConfig } from "@/model/apiServer";
+import { commonStyles } from "@/components/common-styles";
 
 type ViewMode = "text" | "list" | "code" | "python";
 
@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface InfoCardProps extends WithLocale {
+interface InfoPanelProps extends WithLocale {
   visibleInfoCardElements: string[];
   setVisibleInfoCardElements: (visibleInfoCardElements: string[]) => void;
   infoCardElementViewModes: { [elementType: string]: ViewMode };
@@ -119,7 +119,7 @@ interface InfoCardProps extends WithLocale {
   allowViewModePython: boolean;
 }
 
-const InfoCard: React.FC<InfoCardProps> = ({
+const InfoPanel: React.FC<InfoPanelProps> = ({
   visibleInfoCardElements,
   setVisibleInfoCardElements,
   infoCardElementViewModes,
@@ -198,7 +198,6 @@ const InfoCard: React.FC<InfoCardProps> = ({
   return (
     <Card className={classes.card}>
       <CardActions disableSpacing>
-        <InfoIcon fontSize={"large"} className={classes.info} />
         <ToggleButtonGroup
           key={0}
           size="small"
@@ -209,6 +208,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
             key={0}
             value="dataset"
             disabled={selectedDataset === null}
+            size="small"
+            sx={commonStyles.toggleButton}
           >
             <Tooltip arrow title={i18n.get("Dataset information")}>
               <WidgetsIcon />
@@ -218,6 +219,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
             key={1}
             value="variable"
             disabled={selectedVariable === null}
+            size="small"
+            sx={commonStyles.toggleButton}
           >
             <Tooltip arrow title={i18n.get("Variable information")}>
               <LayersIcon />
@@ -227,6 +230,8 @@ const InfoCard: React.FC<InfoCardProps> = ({
             key={2}
             value="place"
             disabled={selectedPlaceInfo === null}
+            size="small"
+            sx={commonStyles.toggleButton}
           >
             <Tooltip arrow title={i18n.get("Place information")}>
               <PlaceIcon />
@@ -241,7 +246,7 @@ const InfoCard: React.FC<InfoCardProps> = ({
   );
 };
 
-export default InfoCard;
+export default InfoPanel;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -538,6 +543,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
       <CardHeader
         title={title}
         subheader={subheader}
+        titleTypographyProps={{ fontSize: "1.1em" }}
         action={
           <ToggleButtonGroup
             key={0}
@@ -546,18 +552,38 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
             exclusive={true}
             onChange={handleViewModeChange}
           >
-            <ToggleButton key={0} value="text">
+            <ToggleButton
+              key={0}
+              value="text"
+              size="small"
+              sx={commonStyles.toggleButton}
+            >
               <TextFieldsIcon />
             </ToggleButton>
-            <ToggleButton key={1} value="list">
+            <ToggleButton
+              key={1}
+              value="list"
+              size="small"
+              sx={commonStyles.toggleButton}
+            >
               <ListAltIcon />
             </ToggleButton>
-            <ToggleButton key={2} value="code">
+            <ToggleButton
+              key={2}
+              value="code"
+              size="small"
+              sx={commonStyles.toggleButton}
+            >
               <JsonIcon />
             </ToggleButton>
             {hasPython && (
-              <ToggleButton key={3} value="python">
-                <img src={pythonLogo} width={24} alt="python logo" />
+              <ToggleButton
+                key={3}
+                value="python"
+                size="small"
+                sx={{ ...commonStyles.toggleButton, width: "30px" }}
+              >
+                <img src={pythonLogo} width={16} alt="python logo" />
               </ToggleButton>
             )}
           </ToggleButtonGroup>
@@ -588,6 +614,7 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
           {data.map((kv, index) => {
             const [key, value] = kv;
             let renderedValue = value;
+            // noinspection HttpUrlsUsage
             if (
               typeof value === "string" &&
               (value.startsWith("http://") || value.startsWith("https://"))

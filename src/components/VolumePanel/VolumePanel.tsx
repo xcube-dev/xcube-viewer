@@ -30,7 +30,6 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Tooltip from "@mui/material/Tooltip";
-import VolumeIcon from "@mui/icons-material/ThreeDRotation";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
@@ -78,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface VolumeCardProps extends WithLocale {
+interface VolumePanelProps extends WithLocale {
   selectedDataset: Dataset | null;
   selectedVariable: Variable | null;
   selectedPlaceInfo: PlaceInfo | null;
@@ -98,7 +97,7 @@ interface VolumeCardProps extends WithLocale {
   serverUrl: string;
 }
 
-const VolumeCard: React.FC<VolumeCardProps> = ({
+const VolumePanel: React.FC<VolumePanelProps> = ({
   selectedDataset,
   selectedVariable,
   selectedPlaceInfo,
@@ -158,7 +157,6 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
   return (
     <Card className={classes.card}>
       <CardActions disableSpacing>
-        <VolumeIcon fontSize={"large"} className={classes.info} />
         {selectedVariable && (
           <>
             <ToggleButtonGroup
@@ -168,19 +166,19 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
               value={volumeRenderMode}
               onChange={handleVolumeRenderModeChange}
             >
-              <ToggleButton key="mip" value="mip">
+              <ToggleButton key="mip" value="mip" size="small">
                 {/*TODO: I18N*/}
                 <Tooltip arrow title={"Maximum intensity projection"}>
                   <span>MIP</span>
                 </Tooltip>
               </ToggleButton>
-              <ToggleButton key="aip" value="aip">
+              <ToggleButton key="aip" value="aip" size="small">
                 {/*TODO: I18N*/}
                 <Tooltip arrow title={"Average intensity projection"}>
                   <span>AIP</span>
                 </Tooltip>
               </ToggleButton>
-              <ToggleButton key="iso" value="iso">
+              <ToggleButton key="iso" value="iso" size="small">
                 {/*TODO: I18N*/}
                 <Tooltip arrow title={"Iso-surface extraction"}>
                   <span>ISO</span>
@@ -216,7 +214,7 @@ const VolumeCard: React.FC<VolumeCardProps> = ({
   );
 };
 
-export default VolumeCard;
+export default VolumePanel;
 
 interface IsoThresholdEditorProps {
   value: number;
