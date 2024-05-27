@@ -92,8 +92,13 @@ export interface ExportSettings {
   multiFile: boolean;
   zipArchive: boolean;
 }
-export type SidebarPanelId = "info" | "charts" | "volume";
-export const sidebarPanelIds: SidebarPanelId[] = ["info", "charts", "volume"];
+export type SidebarPanelId = "info" | "stats" | "charts" | "volume";
+export const sidebarPanelIds: SidebarPanelId[] = [
+  "info",
+  "stats",
+  "charts",
+  "volume",
+];
 
 export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
