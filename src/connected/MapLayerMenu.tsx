@@ -42,6 +42,7 @@ import {
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
+    layerMenuOpen: state.controlState.layerMenuOpen,
     layerTitles: layerTitlesSelector(state),
     layerSubtitles: layerSubtitlesSelector(state),
     layerDisablements: layerDisablementsSelector(state),
