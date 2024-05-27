@@ -36,6 +36,7 @@ import { AppState } from "@/states/appState";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import Sidebar from "./Sidebar";
+import { setSidebarPosition } from "@/actions/controlActions";
 
 // Adjust for debugging split pane style
 const mapExtraStyle: CSSProperties = { padding: 0 };
@@ -82,23 +83,34 @@ const styles = (_theme: Theme) =>
 
 interface WorkspaceProps extends WithStyles<typeof styles> {
   sidebarOpen: boolean;
+  sidebarPosition: number;
+  setSidebarPosition: (sidebarPos: number) => void;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
   return {
     sidebarOpen: state.controlState.sidebarOpen,
+    sidebarPosition: state.controlState.sidebarPosition,
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  setSidebarPosition,
+};
 
 type Layout = "hor" | "ver";
 const getLayout = (): Layout => {
   return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
 };
 
-const _Workspace: React.FC<WorkspaceProps> = ({ classes, sidebarOpen }) => {
+const _Workspace: React.FC<WorkspaceProps> = ({
+  classes,
+  sidebarOpen,
+  sidebarPosition,
+  setSidebarPosition,
+}) => {
+  const [currentSplitPos, setCurrentSplitPos] = useState(sidebarPosition);
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
   const resizeObserver = useRef<ResizeObserver | null>(null);
@@ -119,10 +131,15 @@ const _Workspace: React.FC<WorkspaceProps> = ({ classes, sidebarOpen }) => {
     setLayout(getLayout());
   };
 
-  function handleResize(_size: number) {
+  function handleSplitChange(currentSplitPos: number) {
     if (map) {
       map.updateSize();
     }
+    setCurrentSplitPos(currentSplitPos);
+  }
+
+  function handleSplitCommit(newSidebarPosition: number) {
+    setSidebarPosition(newSidebarPosition);
   }
 
   if (sidebarOpen) {
@@ -135,8 +152,9 @@ const _Workspace: React.FC<WorkspaceProps> = ({ classes, sidebarOpen }) => {
     return (
       <SplitPane
         dir={layout}
-        initialSize={Math.max(window.innerWidth, window.innerHeight) / 2}
-        onChange={handleResize}
+        splitPosition={currentSplitPos}
+        onChange={handleSplitChange}
+        onCommit={handleSplitCommit}
         className={splitPaneClassName}
         child1ClassName={mapPaneClassName}
         child2ClassName={detailsPaneClassName}

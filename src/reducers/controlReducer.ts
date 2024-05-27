@@ -46,6 +46,7 @@ import {
   SET_MAP_INTERACTION,
   SET_SIDEBAR_OPEN,
   SET_SIDEBAR_PANEL_ID,
+  SET_SIDEBAR_POSITION,
   SET_VARIABLE_COMPARE_MODE,
   SET_VARIABLE_SPLIT_POS,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
@@ -404,6 +405,12 @@ export function controlReducer(
     case SET_LAYER_MENU_OPEN: {
       const { layerMenuOpen } = action;
       state = { ...state, layerMenuOpen };
+      storeUserSettings(state);
+      return state;
+    }
+    case SET_SIDEBAR_POSITION: {
+      const { sidebarPosition } = action;
+      state = { ...state, sidebarPosition };
       storeUserSettings(state);
       return state;
     }

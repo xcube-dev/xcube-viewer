@@ -510,6 +510,21 @@ export function setLayerMenuOpen(layerMenuOpen: boolean): SetLayerMenuOpen {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SET_SIDEBAR_POSITION = "SET_SIDEBAR_POSITION";
+
+export interface SetSidebarPosition {
+  type: typeof SET_SIDEBAR_POSITION;
+  sidebarPosition: number;
+}
+
+export function setSidebarPosition(
+  sidebarPosition: number,
+): SetSidebarPosition {
+  return { type: SET_SIDEBAR_POSITION, sidebarPosition };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SET_SIDEBAR_OPEN = "SET_SIDEBAR_OPEN";
 
 export interface SetSidebarOpen {
@@ -803,6 +818,7 @@ export type ControlAction =
   | OpenDialog
   | CloseDialog
   | SetLayerMenuOpen
+  | SetSidebarPosition
   | SetSidebarOpen
   | SetSidebarPanelId
   | SetVolumeRenderMode

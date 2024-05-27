@@ -22,52 +22,46 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
-import Splitter, { SplitDir } from "./Splitter";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import React, { PropsWithChildren } from "react";
+import makeStyles from "@mui/styles/makeStyles";
 import classNames from "classnames";
 
-// noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) =>
-  createStyles({
-    hor: {
-      display: "flex",
-      flexFlow: "row nowrap",
-      flex: "auto", // same as "flex: 1 1 auto;"
-    },
-    ver: {
-      // width: "100%",
-      height: "100%",
-      display: "flex",
-      flexFlow: "column nowrap",
-      flex: "auto", // same as "flex: 1 1 auto;"
-    },
-    childHor: {
-      flex: "none",
-    },
-    childVer: {
-      flex: "none",
-    },
-  });
+import Splitter, { SplitDir } from "./Splitter";
 
-export interface ISplitPaneProps extends WithStyles<typeof styles> {
+// noinspection JSUnusedLocalSymbols
+const useStyles = makeStyles({
+  hor: {
+    display: "flex",
+    flexFlow: "row nowrap",
+    flex: "auto", // same as "flex: 1 1 auto;"
+  },
+  ver: {
+    // width: "100%",
+    height: "100%",
+    display: "flex",
+    flexFlow: "column nowrap",
+    flex: "auto", // same as "flex: 1 1 auto;"
+  },
+  childHor: {
+    flex: "none",
+  },
+  childVer: {
+    flex: "none",
+  },
+});
+
+export interface SplitPaneProps {
   dir: SplitDir;
-  initialSize?: number;
-  onChange?: (newSize: number, oldSize: number) => void;
+  splitPosition: number;
+  onCommit?: (splitPosition: number) => void;
+  onChange?: (newSplitPosition: number, oldSplitPosition: number) => void;
   style?: React.CSSProperties;
   child1Style?: React.CSSProperties;
   child2Style?: React.CSSProperties;
   className?: string;
   child1ClassName?: string;
   child2ClassName?: string;
-  children: [React.ReactNode, React.ReactNode];
-}
-
-export interface ISplitPaneState {
-  size: number;
+  children: React.ReactNode[];
 }
 
 /**
@@ -77,77 +71,81 @@ export interface ISplitPaneState {
  * - dir: the split direction, either "hor" or "ver"
  * - initialSize: the initial width ("hor") or height ("ver") of the first child's container
  */
-class _SplitPane extends React.PureComponent<ISplitPaneProps, ISplitPaneState> {
-  constructor(props: ISplitPaneProps) {
-    super(props);
-    this.handleSplitDelta = this.handleSplitDelta.bind(this);
-    this.state = { size: props.initialSize || 50 };
+export default function SplitPane({
+  dir,
+  splitPosition,
+  onCommit,
+  onChange,
+  children,
+  style,
+  child1Style,
+  child2Style,
+  child1ClassName,
+  child2ClassName,
+}: PropsWithChildren<SplitPaneProps>) {
+  const classes = useStyles();
+  if (!children || !Array.isArray(children)) {
+    return null;
+  }
+  if (children.length === 1) {
+    return <>{children[0]}</>;
+  }
+  if (children.length > 2) {
+    throw new Error("SplitPane expects not more than two children");
+  }
+  let className;
+  let childClassName;
+  if (dir === "hor") {
+    const width1 = splitPosition;
+    className = classes.hor;
+    childClassName = classes.childHor;
+    child1Style = { width: width1, ...child1Style };
+  } else {
+    const height1 = splitPosition;
+    className = classes.ver;
+    childClassName = classes.childVer;
+    child1Style = { height: height1, ...child1Style };
   }
 
-  private handleSplitDelta(delta: number) {
-    this.setState((state: ISplitPaneState) => {
-      const oldSize = state.size;
-      const newSize = oldSize + delta;
-      if (this.props.onChange) {
-        this.props.onChange(newSize, oldSize);
-      }
-      return { size: newSize };
-    });
-  }
+  const handleSplitChange = (delta: number) => {
+    const oldSplitPosition = splitPosition;
+    const newSplitPosition = oldSplitPosition + delta;
+    if (onChange) {
+      onChange(newSplitPosition, oldSplitPosition);
+    }
+  };
 
-  render() {
-    const children = this.props.children as React.ReactNode;
-    if (!children || !Array.isArray(children)) {
-      return children;
+  const handleSplitCommit = () => {
+    if (onCommit) {
+      onCommit(splitPosition);
     }
-    if (children.length === 1) {
-      return children[0];
-    }
-    if (children.length > 2) {
-      throw new Error("SplitPane expects not more than two children");
-    }
-    let className;
-    let childClassName;
-    let child1Style;
-    let child2Style;
-    if (this.props.dir === "hor") {
-      const width1 = this.state.size;
-      className = this.props.classes.hor;
-      childClassName = this.props.classes.childVer;
-      child1Style = { width: width1, ...this.props.child1Style };
-      child2Style = this.props.child2Style;
-    } else {
-      const height1 = this.state.size;
-      className = this.props.classes.ver;
-      childClassName = this.props.classes.childVer;
-      child1Style = { height: height1, ...this.props.child1Style };
-      child2Style = this.props.child2Style;
-    }
-    return (
+  };
+
+  return (
+    <div
+      id="SplitPane"
+      className={classNames(className, className)}
+      style={style}
+    >
       <div
-        id="SplitPane"
-        className={classNames(className, this.props.className)}
-        style={this.props.style}
+        id="SplitPane-Child-1"
+        className={classNames(childClassName, child1ClassName)}
+        style={child1Style}
       >
-        <div
-          id="SplitPane-Child-1"
-          className={classNames(childClassName, this.props.child1ClassName)}
-          style={child1Style}
-        >
-          {children[0]}
-        </div>
-        <Splitter dir={this.props.dir} onChange={this.handleSplitDelta} />
-        <div
-          id="SplitPane-Child-2"
-          className={classNames(childClassName, this.props.child2ClassName)}
-          style={child2Style}
-        >
-          {children[1]}
-        </div>
+        {children[0]}
       </div>
-    );
-  }
+      <Splitter
+        dir={dir}
+        onChange={handleSplitChange}
+        onCommit={handleSplitCommit}
+      />
+      <div
+        id="SplitPane-Child-2"
+        className={classNames(childClassName, child2ClassName)}
+        style={child2Style}
+      >
+        {children[1]}
+      </div>
+    </div>
+  );
 }
-
-const SplitPane = withStyles(styles)(_SplitPane);
-export default SplitPane;

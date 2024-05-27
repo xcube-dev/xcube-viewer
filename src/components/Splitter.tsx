@@ -28,6 +28,7 @@ import { Theme } from "@mui/material/styles";
 import { WithStyles } from "@mui/styles";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
+import { isNumber } from "@/util/types";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -62,6 +63,7 @@ export type SplitDir = "hor" | "ver";
 interface ISplitterProps extends WithStyles<typeof styles> {
   dir?: SplitDir;
   onChange: (delta: number) => void;
+  onCommit?: (position: number) => void;
 }
 
 interface IButtonEvent {
@@ -145,6 +147,9 @@ class _Splitter extends React.PureComponent<ISplitterProps> {
   //noinspection JSUnusedLocalSymbols
   private onBodyMouseUp(_event: MouseEvent) {
     // console.log("onBodyMouseUp: ", event, this);
+    if (this.props.onCommit && isNumber(this.lastPosition)) {
+      this.props.onCommit(this.lastPosition);
+    }
     this.endDragging();
   }
 
