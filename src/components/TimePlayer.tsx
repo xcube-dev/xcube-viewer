@@ -26,27 +26,31 @@ import { useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
-import { Theme, styled } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import PauseCircleOutline from "@mui/icons-material/PauseCircleOutline";
-import PlayCircleOutline from "@mui/icons-material/PlayCircleOutline";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { Time, TimeRange } from "@/model/timeSeries";
 import { TimeAnimationInterval } from "@/states/controlState";
+import { makeStyles } from "@/util/styles";
 
 // noinspection JSUnusedLocalSymbols
-const StyledFormControl = styled(FormControl)(
-  ({ theme }: { theme: Theme }) => ({
-    marginTop: theme.spacing(1.5),
+const styles = makeStyles({
+  formControl: (theme) => ({
+    marginTop: theme.spacing(2.5),
+    marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   }),
-);
+  iconButton: {
+    padding: "2px",
+  },
+});
 
 interface TimePlayerProps extends WithLocale {
   selectedTime: Time | null;
@@ -126,19 +130,18 @@ export default function TimePlayer({
 
   const isValid = typeof selectedTime === "number";
 
-  const playToolTip = i18n.get(timeAnimationActive ? "Stop" : "Start");
   const playIcon = timeAnimationActive ? (
-    <PauseCircleOutline />
+    <PauseCircleOutlineIcon />
   ) : (
-    <PlayCircleOutline />
+    <PlayCircleOutlineIcon />
   );
 
   const playButton = (
     <IconButton
       disabled={!isValid}
-      aria-label={playToolTip}
       onClick={handlePlayButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <Tooltip arrow title={i18n.get("Auto-step through times in the dataset")}>
         {playIcon}
@@ -151,6 +154,7 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handleFirstTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <FirstPageIcon />
     </IconButton>
@@ -161,6 +165,7 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handlePrevTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <ChevronLeftIcon />
     </IconButton>
@@ -170,6 +175,7 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handleNextTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <ChevronRightIcon />
     </IconButton>
@@ -179,13 +185,14 @@ export default function TimePlayer({
       disabled={!isValid || timeAnimationActive}
       onClick={handleLastTimeStepButtonClick}
       size="small"
+      sx={styles.iconButton}
     >
       <LastPageIcon />
     </IconButton>
   );
 
   return (
-    <StyledFormControl variant="standard">
+    <FormControl sx={styles.formControl} variant="standard">
       <Box>
         {firstTimeStepButton}
         {prevTimeStepButton}
@@ -193,6 +200,6 @@ export default function TimePlayer({
         {nextTimeStepButton}
         {lastTimeStepButton}
       </Box>
-    </StyledFormControl>
+    </FormControl>
   );
 }

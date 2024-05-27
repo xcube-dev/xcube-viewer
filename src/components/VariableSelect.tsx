@@ -41,6 +41,7 @@ import i18n from "@/i18n";
 import { Variable } from "@/model/variable";
 import { WithLocale } from "@/util/lang";
 import ControlBarItem from "./ControlBarItem";
+import { commonStyles } from "@/components/common-styles";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -145,7 +146,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       selected={isSelectedVariable2}
       value={"comparison"}
       size="small"
-      sx={{ padding: 0.3 }}
+      sx={commonStyles.toggleButton}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>

@@ -41,6 +41,7 @@ import LayerSelectItem from "./LayerSelectItem";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
 import ToggleButton from "@mui/material/ToggleButton";
 import { makeStyles } from "@/util/styles";
+import { commonStyles } from "@/components/common-styles";
 
 const styles = makeStyles({
   windowPaper: {
@@ -104,9 +105,10 @@ export default function LayerSelect(props: LayerSelectProps) {
         selected={open}
         onClick={() => setOpen(!open)}
         size="small"
+        sx={commonStyles.toggleButton}
       >
         <Tooltip arrow title={i18n.get("Layer visibilities")}>
-          <VisibilityIcon fontSize={"inherit"} />
+          <VisibilityIcon />
         </Tooltip>
       </ToggleButton>
       {open && (
