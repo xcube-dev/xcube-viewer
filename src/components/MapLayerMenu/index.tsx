@@ -22,38 +22,6 @@
  * SOFTWARE.
  */
 
-import i18n from "@/i18n";
-import { LayerVisibilities } from "@/states/controlState";
-import SelectableMenuItem from "@/components/SelectableMenuItem";
+import MapLayerMenu from "./MapLayerMenu";
 
-interface LayerSelectItemProps {
-  layerId: keyof LayerVisibilities;
-  layerTitles: Record<keyof LayerVisibilities, string>;
-  layerSubtitles: Record<keyof LayerVisibilities, string>;
-  layerDisablements: Record<keyof LayerVisibilities, boolean>;
-  layerVisibilities: LayerVisibilities;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
-}
-
-export default function LayerSelectItem({
-  layerId,
-  layerTitles,
-  layerSubtitles,
-  layerDisablements,
-  layerVisibilities,
-  setLayerVisibility,
-}: LayerSelectItemProps) {
-  const visible = !!layerVisibilities[layerId];
-  return (
-    <SelectableMenuItem
-      title={i18n.get(layerTitles[layerId])}
-      subtitle={layerSubtitles[layerId]}
-      disabled={layerDisablements[layerId]}
-      selected={visible}
-      onClick={() => setLayerVisibility(layerId, !visible)}
-    />
-  );
-}
+export default MapLayerMenu;

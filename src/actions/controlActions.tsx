@@ -497,6 +497,19 @@ export function setMapInteraction(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SET_LAYER_MENU_OPEN = "SET_LAYER_MENU_OPEN";
+
+export interface SetLayerMenuOpen {
+  type: typeof SET_LAYER_MENU_OPEN;
+  layerMenuOpen: boolean;
+}
+
+export function setLayerMenuOpen(layerMenuOpen: boolean): SetLayerMenuOpen {
+  return { type: SET_LAYER_MENU_OPEN, layerMenuOpen };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SET_SIDEBAR_OPEN = "SET_SIDEBAR_OPEN";
 
 export interface SetSidebarOpen {
@@ -789,6 +802,7 @@ export type ControlAction =
   | UpdateSettings
   | OpenDialog
   | CloseDialog
+  | SetLayerMenuOpen
   | SetSidebarOpen
   | SetSidebarPanelId
   | SetVolumeRenderMode

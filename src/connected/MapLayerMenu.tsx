@@ -22,11 +22,43 @@
  * SOFTWARE.
  */
 
-body {
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  font-family: "Roboto", "Segoe UI", "sans-serif";
-}
+import { connect } from "react-redux";
+
+import { AppState } from "@/states/appState";
+import _MapLayerMenu from "@/components/MapLayerMenu";
+import {
+  openDialog,
+  setLayerMenuOpen,
+  setLayerVisibility,
+  setVariableCompareMode,
+} from "@/actions/controlActions";
+import {
+  layerDisablementsSelector,
+  layerSubtitlesSelector,
+  layerTitlesSelector,
+  layerVisibilitiesSelector,
+} from "@/selectors/controlSelectors";
+
+const mapStateToProps = (state: AppState) => {
+  return {
+    locale: state.controlState.locale,
+    layerTitles: layerTitlesSelector(state),
+    layerSubtitles: layerSubtitlesSelector(state),
+    layerDisablements: layerDisablementsSelector(state),
+    layerVisibilities: layerVisibilitiesSelector(state),
+    variableCompareMode: state.controlState.variableCompareMode,
+  };
+};
+
+const mapDispatchToProps = {
+  openDialog,
+  setLayerMenuOpen,
+  setLayerVisibility,
+  setVariableCompareMode,
+};
+
+const MapLayerMenu = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_MapLayerMenu);
+export default MapLayerMenu;

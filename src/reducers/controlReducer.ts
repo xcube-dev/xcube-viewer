@@ -41,6 +41,7 @@ import {
   SELECT_TIME_SERIES_UPDATE_MODE,
   SELECT_VARIABLE,
   SELECT_VARIABLE_2,
+  SET_LAYER_MENU_OPEN,
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
   SET_SIDEBAR_OPEN,
@@ -399,6 +400,12 @@ export function controlReducer(
         };
       }
       return newState;
+    }
+    case SET_LAYER_MENU_OPEN: {
+      const { layerMenuOpen } = action;
+      state = { ...state, layerMenuOpen };
+      storeUserSettings(state);
+      return state;
     }
     case SET_SIDEBAR_OPEN: {
       const { sidebarOpen } = action;
