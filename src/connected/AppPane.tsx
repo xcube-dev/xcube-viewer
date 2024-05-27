@@ -38,7 +38,6 @@ import MapLayerMenu from "./MapLayerMenu";
 interface AppPaneProps extends WithStyles<typeof styles> {
   hasConsent: boolean;
   compact: boolean;
-  layerMenuOpen: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -47,7 +46,6 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     hasConsent: state.controlState.privacyNoticeAccepted,
     compact: Config.instance.branding.compact,
-    layerMenuOpen: state.controlState.layerMenuOpen,
   };
 };
 
@@ -69,12 +67,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-const _AppPane: React.FC<AppPaneProps> = ({
-  classes,
-  hasConsent,
-  compact,
-  layerMenuOpen,
-}) => {
+const _AppPane: React.FC<AppPaneProps> = ({ classes, hasConsent, compact }) => {
   // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
   return (
     <main className={classes.main}>
@@ -83,7 +76,7 @@ const _AppPane: React.FC<AppPaneProps> = ({
         <>
           <ControlBar />
           <Workspace />
-          {layerMenuOpen && <MapLayerMenu />}
+          <MapLayerMenu />
         </>
       )}
     </main>
