@@ -27,39 +27,37 @@ import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import ToggleButton from "@mui/material/ToggleButton";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import InfoIcon from "@mui/icons-material/Info";
-import VolumeIcon from "@mui/icons-material/ThreeDRotation";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
+import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 
 import i18n from "@/i18n";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
-import { TimeSeriesGroup } from "@/model/timeSeries";
 import { LayerVisibilities } from "@/states/controlState";
 import LayerSelect from "@/components/LayerSelect";
+import { commonStyles } from "@/components/common-styles";
 
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(
   ({ theme }: { theme: Theme }) => ({
     marginTop: theme.spacing(2),
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(0.5),
     marginLeft: "auto",
   }),
 );
 
 interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
-  volumeCardOpen: boolean;
-  showVolumeCard: (open: boolean) => void;
-  infoCardOpen: boolean;
-  showInfoCard: (open: boolean) => void;
-  timeSeriesGroups: TimeSeriesGroup[];
+  sidebarOpen: boolean;
+  setSidebarOpen: (sideBarOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
   allowRefresh?: boolean;
   updateResources: () => void;
   compact: boolean;
+  // TODO: the following are just for LayerSelect, combine
   layerTitles: Record<keyof LayerVisibilities, string>;
   layerSubtitles: Record<keyof LayerVisibilities, string>;
   layerDisablements: Record<keyof LayerVisibilities, boolean>;
@@ -75,15 +73,13 @@ interface ControlBarActionsProps extends WithLocale {
 export default function ControlBarActions({
   locale,
   visible,
-  volumeCardOpen,
-  showVolumeCard,
-  infoCardOpen,
-  showInfoCard,
-  timeSeriesGroups,
+  sidebarOpen,
+  setSidebarOpen,
   openDialog,
   allowRefresh,
   updateResources,
   compact,
+  // LayerSelect props
   layerTitles,
   layerSubtitles,
   layerDisablements,
@@ -95,8 +91,6 @@ export default function ControlBarActions({
   if (!visible) {
     return null;
   }
-
-  const canDownload = timeSeriesGroups.length > 0;
 
   const layerSelect = (
     <LayerSelect
@@ -112,59 +106,41 @@ export default function ControlBarActions({
     />
   );
 
+  const sidebarButton = (
+    <ToggleButton
+      value={"sidebar"}
+      selected={sidebarOpen}
+      onClick={() => setSidebarOpen(!sidebarOpen)}
+      size="small"
+      sx={commonStyles.toggleButton}
+    >
+      <Tooltip arrow title={i18n.get("Show or hide sidebar")}>
+        {<ViewSidebarIcon />}
+      </Tooltip>
+    </ToggleButton>
+  );
+
+  let refreshButton;
   let downloadButton;
-  if (Config.instance.branding.allowDownloads) {
-    downloadButton = (
-      <IconButton
-        disabled={!canDownload}
-        onClick={() => openDialog("export")}
-        size="small"
-      >
+  let settingsButton;
+
+  if (compact) {
+    refreshButton = allowRefresh && (
+      <IconButton onClick={updateResources} size="small">
+        <Tooltip arrow title={i18n.get("Refresh")}>
+          <RefreshIcon />
+        </Tooltip>
+      </IconButton>
+    );
+
+    downloadButton = Config.instance.branding.allowDownloads && (
+      <IconButton onClick={() => openDialog("export")} size="small">
         <Tooltip arrow title={i18n.get("Export data")}>
           {<CloudDownloadIcon />}
         </Tooltip>
       </IconButton>
     );
-  }
 
-  /*TODO: I18N*/
-  const volumeButton = Config.instance.branding.allow3D && (
-    <IconButton
-      onClick={() => showVolumeCard(true)}
-      disabled={volumeCardOpen}
-      size="small"
-    >
-      <Tooltip arrow title={"Open volume panel (experimental!)"}>
-        {<VolumeIcon />}
-      </Tooltip>
-    </IconButton>
-  );
-
-  const infoButton = (
-    <IconButton
-      onClick={() => showInfoCard(true)}
-      disabled={infoCardOpen}
-      size="small"
-    >
-      <Tooltip arrow title={i18n.get("Open information panel")}>
-        {<InfoIcon />}
-      </Tooltip>
-    </IconButton>
-  );
-
-  let refreshButton;
-  let settingsButton;
-
-  if (compact) {
-    if (allowRefresh) {
-      refreshButton = (
-        <IconButton onClick={updateResources} size="small">
-          <Tooltip arrow title={i18n.get("Refresh")}>
-            <RefreshIcon />
-          </Tooltip>
-        </IconButton>
-      );
-    }
     settingsButton = (
       <IconButton onClick={() => openDialog("settings")} size="small">
         <Tooltip arrow title={i18n.get("Settings")}>
@@ -178,11 +154,10 @@ export default function ControlBarActions({
     <StyledFormControl variant="standard">
       <Box>
         {refreshButton}
-        {layerSelect}
         {downloadButton}
-        {volumeButton}
-        {infoButton}
         {settingsButton}
+        {layerSelect}
+        {sidebarButton}
       </Box>
     </StyledFormControl>
   );

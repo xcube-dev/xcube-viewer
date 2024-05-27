@@ -52,6 +52,7 @@ import {
   ControlState,
   LayerVisibilities,
   MapInteraction,
+  SidebarPanelId,
   TimeAnimationInterval,
   ViewMode,
   VolumeRenderMode,
@@ -496,15 +497,30 @@ export function setMapInteraction(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SHOW_VOLUME_CARD = "SHOW_VOLUME_CARD";
+export const SET_SIDEBAR_OPEN = "SET_SIDEBAR_OPEN";
 
-export interface ShowVolumeCard {
-  type: typeof SHOW_VOLUME_CARD;
-  volumeCardOpen: boolean;
+export interface SetSidebarOpen {
+  type: typeof SET_SIDEBAR_OPEN;
+  sidebarOpen: boolean;
 }
 
-export function showVolumeCard(volumeCardOpen: boolean): ShowVolumeCard {
-  return { type: SHOW_VOLUME_CARD, volumeCardOpen };
+export function setSidebarOpen(sidebarOpen: boolean): SetSidebarOpen {
+  return { type: SET_SIDEBAR_OPEN, sidebarOpen };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
+
+export interface SetSidebarPanelId {
+  type: typeof SET_SIDEBAR_PANEL_ID;
+  sidebarPanelId: SidebarPanelId;
+}
+
+export function setSidebarPanelId(
+  sidebarPanelId: SidebarPanelId,
+): SetSidebarPanelId {
+  return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -537,19 +553,6 @@ export function updateVolumeState(
   volumeState: VolumeState,
 ): UpdateVolumeState {
   return { type: UPDATE_VOLUME_STATE, volumeId, volumeState };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export const SHOW_INFO_CARD = "SHOW_INFO_CARD";
-
-export interface ShowInfoCard {
-  type: typeof SHOW_INFO_CARD;
-  infoCardOpen: boolean;
-}
-
-export function showInfoCard(infoCardOpen: boolean): ShowInfoCard {
-  return { type: SHOW_INFO_CARD, infoCardOpen };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -786,10 +789,10 @@ export type ControlAction =
   | UpdateSettings
   | OpenDialog
   | CloseDialog
-  | ShowVolumeCard
+  | SetSidebarOpen
+  | SetSidebarPanelId
   | SetVolumeRenderMode
   | UpdateVolumeState
-  | ShowInfoCard
   | SetVisibleInfoCardElements
   | UpdateInfoCardElementCodeMode
   | SelectVariable2

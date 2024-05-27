@@ -92,6 +92,8 @@ export interface ExportSettings {
   multiFile: boolean;
   zipArchive: boolean;
 }
+export type SidebarPanelId = "info" | "charts" | "volume";
+export const sidebarPanelIds: SidebarPanelId[] = ["info", "charts", "volume"];
 
 export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
@@ -127,10 +129,10 @@ export interface ControlState {
   privacyNoticeAccepted: boolean;
   mapInteraction: MapInteraction;
   lastMapInteraction: MapInteraction;
-  volumeCardOpen: boolean;
+  sidebarOpen: boolean;
+  sidebarPanelId: SidebarPanelId;
   volumeRenderMode: VolumeRenderMode;
   volumeStates: VolumeStates;
-  infoCardOpen: boolean;
   infoCardElementStates: InfoCardElementStates;
   mapProjection: string;
   imageSmoothingEnabled: boolean;
@@ -200,10 +202,10 @@ export function newControlState(): ControlState {
     variableCompareMode: false,
     datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
-    volumeCardOpen: false,
+    sidebarOpen: false,
+    sidebarPanelId: "info",
     volumeRenderMode: "mip",
     volumeStates: {},
-    infoCardOpen: false,
     infoCardElementStates: {
       dataset: { visible: true, viewMode: "text" },
       variable: { visible: true, viewMode: "text" },

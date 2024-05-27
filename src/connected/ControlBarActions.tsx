@@ -28,10 +28,9 @@ import { AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
 import {
   openDialog,
-  showInfoCard,
-  showVolumeCard,
   setLayerVisibility,
   setVariableCompareMode,
+  setSidebarOpen,
 } from "@/actions/controlActions";
 import { Config } from "@/config";
 import { updateResources } from "@/actions/dataActions";
@@ -48,11 +47,10 @@ const mapStateToProps = (state: AppState) => {
     visible: !!(
       state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
     ),
-    volumeCardOpen: state.controlState.volumeCardOpen,
-    infoCardOpen: state.controlState.infoCardOpen,
-    timeSeriesGroups: state.dataState.timeSeriesGroups,
+    sidebarOpen: state.controlState.sidebarOpen,
     compact: Config.instance.branding.compact,
     allowRefresh: Config.instance.branding.allowRefresh,
+    // LayerSelect
     layerTitles: layerTitlesSelector(state),
     layerSubtitles: layerSubtitlesSelector(state),
     layerDisablements: layerDisablementsSelector(state),
@@ -62,8 +60,7 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  showVolumeCard,
-  showInfoCard,
+  setSidebarOpen,
   openDialog,
   updateResources,
   setLayerVisibility,

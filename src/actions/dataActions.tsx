@@ -72,6 +72,10 @@ import {
   SelectDataset,
   selectDataset,
   selectPlace,
+  SetSidebarOpen,
+  setSidebarOpen,
+  SetSidebarPanelId,
+  setSidebarPanelId,
 } from "./controlActions";
 import { VolumeRenderMode } from "@/states/controlState";
 import { MessageLogAction, postMessage } from "./messageLogActions";
@@ -431,7 +435,9 @@ export function removeUserPlaceGroup(
 
 export function addTimeSeries() {
   return (
-    dispatch: Dispatch<UpdateTimeSeries | MessageLogAction>,
+    dispatch: Dispatch<
+      SetSidebarOpen | SetSidebarPanelId | UpdateTimeSeries | MessageLogAction
+    >,
     getState: () => AppState,
   ) => {
     const apiServer = selectedServerSelector(getState());
@@ -446,6 +452,8 @@ export function addTimeSeries() {
     const useMedian = getState().controlState.timeSeriesUseMedian;
     const includeStdev = getState().controlState.timeSeriesIncludeStdev;
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
+    const sidebarOpen = getState().controlState.sidebarOpen;
+    const sidebarPanelId = getState().controlState.sidebarPanelId;
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -455,6 +463,13 @@ export function addTimeSeries() {
       selectedPlaceId &&
       selectedDatasetTimeDim
     ) {
+      if (sidebarPanelId !== "charts") {
+        dispatch(setSidebarPanelId("charts"));
+      }
+      if (!sidebarOpen) {
+        dispatch(setSidebarOpen(true));
+      }
+
       const timeLabels = selectedDatasetTimeDim.labels;
       const numTimeLabels = timeLabels.length;
 
