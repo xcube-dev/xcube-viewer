@@ -36,6 +36,10 @@
   control bar. It also includes a new RGB layer from a secondary dataset
   so that now two different RGB layers can be compared.
 
+* The right sidebar has been redesigned. It now uses a tab bar to switch 
+  between info, time-series charts, and 3-D panels. Numerous info panel styles 
+  have been adapted to harmonise with the common style of the UI.
+
 * Introduced user-defined layers:
   - Users can now define their own base maps and overlay layers from
     WMS servers or tiled web maps (=XYZ).
