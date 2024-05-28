@@ -24,64 +24,57 @@
  * SOFTWARE.
  */
 
-import React, { CSSProperties, useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
-import { Theme } from "@mui/system";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 
 import { AppState } from "@/states/appState";
+import { setSidebarPosition } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import Sidebar from "./Sidebar";
-import { setSidebarPosition } from "@/actions/controlActions";
 
 // Adjust for debugging split pane style
-const mapExtraStyle: CSSProperties = { padding: 0 };
+const styles: Record<string, CSSProperties> = {
+  containerHor: {
+    flexGrow: 1,
+    overflow: "hidden",
+  },
+  containerVer: {
+    flexGrow: 1,
+    overflowX: "hidden",
+    overflowY: "auto",
+  },
 
-const styles = (_theme: Theme) =>
-  createStyles({
-    splitPaneHor: {
-      flexGrow: 1,
-      overflow: "hidden",
-    },
-    splitPaneVer: {
-      flexGrow: 1,
-      overflowX: "hidden",
-      overflowY: "auto",
-    },
+  viewerHor: {
+    height: "100%",
+    overflow: "hidden",
+    padding: 0,
+  },
+  viewerVer: {
+    width: "100%",
+    overflow: "hidden",
+    padding: 0,
+  },
 
-    mapPaneHor: {
-      height: "100%",
-      overflow: "hidden",
-      ...mapExtraStyle,
-    },
-    mapPaneVer: {
-      width: "100%",
-      overflow: "hidden",
-      ...mapExtraStyle,
-    },
+  sidebarHor: {
+    flex: "auto",
+    overflowX: "hidden",
+    overflowY: "auto",
+  },
+  sidebarVer: {
+    width: "100%",
+    overflow: "hidden",
+  },
 
-    detailsPaneHor: {
-      flex: "auto",
-      overflowX: "hidden",
-      overflowY: "auto",
-    },
-    detailsPaneVer: {
-      width: "100%",
-      overflow: "hidden",
-    },
+  viewer: {
+    overflow: "hidden",
+    width: "100%",
+    height: "100%",
+  },
+};
 
-    viewerContainer: {
-      overflow: "hidden",
-      width: "100%",
-      height: "100%",
-    },
-  });
-
-interface WorkspaceProps extends WithStyles<typeof styles> {
+interface WorkspaceProps {
   sidebarOpen: boolean;
   sidebarPosition: number;
   setSidebarPosition: (sidebarPos: number) => void;
@@ -104,13 +97,11 @@ const getLayout = (): Layout => {
   return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
 };
 
-const _Workspace: React.FC<WorkspaceProps> = ({
-  classes,
+function _Workspace({
   sidebarOpen,
   sidebarPosition,
   setSidebarPosition,
-}) => {
-  const [currentSplitPos, setCurrentSplitPos] = useState(sidebarPosition);
+}: WorkspaceProps) {
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
   const resizeObserver = useRef<ResizeObserver | null>(null);
@@ -127,37 +118,27 @@ const _Workspace: React.FC<WorkspaceProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (map) {
+      map.updateSize();
+    }
+  }, [map, sidebarPosition]);
+
   const updateLayout = () => {
     setLayout(getLayout());
   };
 
-  function handleSplitChange(currentSplitPos: number) {
-    if (map) {
-      map.updateSize();
-    }
-    setCurrentSplitPos(currentSplitPos);
-  }
-
-  function handleSplitCommit(newSidebarPosition: number) {
-    setSidebarPosition(newSidebarPosition);
-  }
+  const dirSuffix = layout === "hor" ? "Hor" : "Ver";
 
   if (sidebarOpen) {
-    const splitPaneClassName =
-      layout === "hor" ? classes.splitPaneHor : classes.splitPaneVer;
-    const mapPaneClassName =
-      layout === "hor" ? classes.mapPaneHor : classes.mapPaneVer;
-    const detailsPaneClassName =
-      layout === "hor" ? classes.detailsPaneHor : classes.detailsPaneVer;
     return (
       <SplitPane
         dir={layout}
-        splitPosition={currentSplitPos}
-        onChange={handleSplitChange}
-        onCommit={handleSplitCommit}
-        className={splitPaneClassName}
-        child1ClassName={mapPaneClassName}
-        child2ClassName={detailsPaneClassName}
+        splitPosition={sidebarPosition}
+        setSplitPosition={setSidebarPosition}
+        style={styles["container" + dirSuffix]}
+        child1Style={styles["viewer" + dirSuffix]}
+        child2Style={styles["sidebar" + dirSuffix]}
       >
         <Viewer onMapRef={setMap} />
         <Sidebar />
@@ -165,15 +146,12 @@ const _Workspace: React.FC<WorkspaceProps> = ({
     );
   } else {
     return (
-      <div className={classes.viewerContainer}>
+      <div style={styles.viewer}>
         <Viewer onMapRef={setMap} />
       </div>
     );
   }
-};
+}
 
-const Workspace = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(styles)(_Workspace));
+const Workspace = connect(mapStateToProps, mapDispatchToProps)(_Workspace);
 export default Workspace;

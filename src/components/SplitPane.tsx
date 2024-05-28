@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { PropsWithChildren } from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import classNames from "classnames";
+import React, { CSSProperties, PropsWithChildren, useRef } from "react";
 
+import { isNumber } from "@/util/types";
 import Splitter, { SplitDir } from "./Splitter";
 
 // noinspection JSUnusedLocalSymbols
-const useStyles = makeStyles({
+const styles: Record<string, CSSProperties> = {
   hor: {
     display: "flex",
     flexFlow: "row nowrap",
@@ -48,102 +47,61 @@ const useStyles = makeStyles({
   childVer: {
     flex: "none",
   },
-});
+};
 
 export interface SplitPaneProps {
   dir: SplitDir;
   splitPosition: number;
-  onCommit?: (splitPosition: number) => void;
-  onChange?: (newSplitPosition: number, oldSplitPosition: number) => void;
-  style?: React.CSSProperties;
-  child1Style?: React.CSSProperties;
-  child2Style?: React.CSSProperties;
-  className?: string;
-  child1ClassName?: string;
-  child2ClassName?: string;
+  setSplitPosition: (splitPosition: number) => void;
+  style?: CSSProperties;
+  child1Style?: CSSProperties;
+  child2Style?: CSSProperties;
   children: React.ReactNode[];
 }
 
 /**
  * A simple SplitPane component which must have exactly two child elements.
- *
- * Properties:
- * - dir: the split direction, either "hor" or "ver"
- * - initialSize: the initial width ("hor") or height ("ver") of the first child's container
  */
 export default function SplitPane({
   dir,
   splitPosition,
-  onCommit,
-  onChange,
+  setSplitPosition,
   children,
   style,
   child1Style,
   child2Style,
-  child1ClassName,
-  child2ClassName,
 }: PropsWithChildren<SplitPaneProps>) {
-  const classes = useStyles();
-  if (!children || !Array.isArray(children)) {
+  const child1Ref = useRef<HTMLDivElement | null>(null);
+
+  if (!children || !Array.isArray(children) || children.length !== 2) {
     return null;
   }
-  if (children.length === 1) {
-    return <>{children[0]}</>;
-  }
-  if (children.length > 2) {
-    throw new Error("SplitPane expects not more than two children");
-  }
-  let className;
-  let childClassName;
-  if (dir === "hor") {
-    const width1 = splitPosition;
-    className = classes.hor;
-    childClassName = classes.childHor;
-    child1Style = { width: width1, ...child1Style };
-  } else {
-    const height1 = splitPosition;
-    className = classes.ver;
-    childClassName = classes.childVer;
-    child1Style = { height: height1, ...child1Style };
-  }
+
+  const childStyle = dir === "hor" ? styles.childHor : styles.childVer;
+
+  const child1SizeStyle =
+    dir === "hor" ? { width: splitPosition } : { height: splitPosition };
 
   const handleSplitChange = (delta: number) => {
-    const oldSplitPosition = splitPosition;
-    const newSplitPosition = oldSplitPosition + delta;
-    if (onChange) {
-      onChange(newSplitPosition, oldSplitPosition);
-    }
-  };
-
-  const handleSplitCommit = () => {
-    if (onCommit) {
-      onCommit(splitPosition);
+    if (child1Ref.current && isNumber(child1Ref.current.clientWidth)) {
+      setSplitPosition(child1Ref.current.clientWidth + delta);
     }
   };
 
   return (
     <div
       id="SplitPane"
-      className={classNames(className, className)}
-      style={style}
+      style={{ ...style, ...(dir === "hor" ? styles.hor : styles.ver) }}
     >
       <div
+        ref={child1Ref}
         id="SplitPane-Child-1"
-        className={classNames(childClassName, child1ClassName)}
-        style={child1Style}
+        style={{ ...childStyle, ...child1Style, ...child1SizeStyle }}
       >
         {children[0]}
       </div>
-      <Splitter
-        dir={dir}
-        onChange={handleSplitChange}
-        onCommit={handleSplitCommit}
-      />
-      <div
-        id="SplitPane-Child-2"
-        className={classNames(childClassName, child2ClassName)}
-        style={child2Style}
-      >
+      <Splitter dir={dir} onChange={handleSplitChange} />
+      <div id="SplitPane-Child-2" style={{ ...childStyle, ...child2Style }}>
         {children[1]}
       </div>
     </div>

@@ -411,7 +411,6 @@ export function controlReducer(
     case SET_SIDEBAR_POSITION: {
       const { sidebarPosition } = action;
       state = { ...state, sidebarPosition };
-      storeUserSettings(state);
       return state;
     }
     case SET_SIDEBAR_OPEN: {
