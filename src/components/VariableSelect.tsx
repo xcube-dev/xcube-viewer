@@ -61,27 +61,27 @@ interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
   selectedDataset2Id: string | null;
   selectedVariableName: string | null;
   selectedVariable2Name: string | null;
-  canAddTimeSeries: boolean;
   variables: Variable[];
+  canAddTimeSeries: boolean;
+  addTimeSeries: () => void;
   selectVariable: (variableName: string | null) => void;
   selectVariable2: (
     dataset2Id: string | null,
     variable2Name: string | null,
   ) => void;
-  addTimeSeries: () => void;
 }
 
 const _VariableSelect: React.FC<VariableSelectProps> = ({
   classes,
-  canAddTimeSeries,
   selectedDatasetId,
   selectedVariableName,
   selectedDataset2Id,
   selectedVariable2Name,
   variables,
+  canAddTimeSeries,
+  addTimeSeries,
   selectVariable,
   selectVariable2,
-  addTimeSeries,
 }) => {
   const handleVariableChange = (event: SelectChangeEvent) => {
     selectVariable(event.target.value || null);

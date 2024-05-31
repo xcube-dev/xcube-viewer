@@ -30,6 +30,7 @@ import {
   removeTimeSeries,
   removeTimeSeriesGroup,
   addPlaceGroupTimeSeries,
+  addTimeSeries,
 } from "@/actions/dataActions";
 import {
   selectPlace,
@@ -37,6 +38,7 @@ import {
   selectTimeRange,
 } from "@/actions/controlActions";
 import {
+  canAddTimeSeriesSelector,
   selectedDatasetTimeRangeSelector,
   selectedPlaceGroupPlacesSelector,
   timeSeriesPlaceInfosSelector,
@@ -55,6 +57,7 @@ const mapStateToProps = (state: AppState) => {
     placeInfos: timeSeriesPlaceInfosSelector(state),
     places: selectedPlaceGroupPlacesSelector(state),
     placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
+    canAddTimeSeries: canAddTimeSeriesSelector(state),
   };
 };
 
@@ -65,6 +68,7 @@ const mapDispatchToProps = {
   removeTimeSeriesGroup,
   selectPlace,
   addPlaceGroupTimeSeries,
+  addTimeSeries,
 };
 
 const TimeSeriesPanel = connect(
