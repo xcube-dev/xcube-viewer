@@ -1264,30 +1264,30 @@ export const layerTitlesSelector = (
 export const layerSubtitlesSelector = createSelector(
   selectedBaseMapTitleSelector,
   selectedOverlayTitleSelector,
-  selectedDatasetIdSelector,
+  selectedDatasetSelector,
   selectedVariableNameSelector,
-  selectedDataset2IdSelector,
+  selectedDataset2Selector,
   selectedVariable2NameSelector,
   (
     baseMapTitle,
     overlayTitle,
-    datasetId,
+    dataset,
     variableName,
-    dataset2Id,
+    dataset2,
     variable2Name,
   ) =>
     ({
       baseMap: baseMapTitle || undefined,
       overlay: overlayTitle || undefined,
-      datasetRgb: datasetId || undefined,
-      datasetRgb2: dataset2Id || undefined,
+      datasetRgb: dataset ? dataset.title : undefined,
+      datasetRgb2: dataset2 ? dataset2.title : undefined,
       datasetVariable:
-        datasetId && variableName
-          ? `${datasetId} / ${variableName}`
+        dataset && variableName
+          ? `${dataset.title} / ${variableName}`
           : undefined,
       datasetVariable2:
-        dataset2Id && variable2Name
-          ? `${dataset2Id} / ${variable2Name}`
+        dataset2 && variable2Name
+          ? `${dataset2.title} / ${variable2Name}`
           : undefined,
     }) as Record<keyof LayerVisibilities, string>,
 );
