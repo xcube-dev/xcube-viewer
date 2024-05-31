@@ -275,9 +275,13 @@ export default function TimeSeriesChart({
     if (point2) {
       const [x2, y2] = point2;
       if (mouseEvent.ctrlKey || zoomMode) {
-        setZoomRectangle({ x1, y1, x2, y2 });
+        if (x2 !== x1 && y2 !== y1) {
+          setZoomRectangle({ x1, y1, x2, y2 });
+        }
       } else {
-        setZoomRectangle({ x1, y1, x2 });
+        if (x2 !== x1) {
+          setZoomRectangle({ x1, y1, x2 });
+        }
       }
     }
   };
