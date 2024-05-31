@@ -23,73 +23,55 @@
  */
 
 import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableRow from "@mui/material/TableRow";
+import TableRows from "@mui/icons-material/TableRows";
+import TableCell from "@mui/material/TableCell";
+import Typography from "@mui/material/Typography";
 
+import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
+import { WithLocale } from "@/util/lang";
 import { StatisticsRecord } from "@/model/statistics";
-import LastStatisticsRow from "./LastStatisticsRow";
-import StatisticsRow from "@/components/StatisticsPanel/StatisticsRow";
-import { useState } from "react";
 
 const styles = makeStyles({
   container: {
     padding: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
   },
 });
 
-interface StatisticsPanelProps {
-  // statisticsRecords: StatisticsRecord[];
-  // canAddStatistics: boolean;
-  // addStatistics: () => void;
+interface StatisticsRowProps extends WithLocale {
+  statisticsRecord: StatisticsRecord;
 }
 
-export default function StatisticsPanel(
-  // {
-  // statisticsRecords,
-  // canAddStatistics,
-  // addStatistics,
-  // }
-  _props: StatisticsPanelProps,
-) {
-  const [statisticsRecords, setStatisticsRecords] = useState<
-    StatisticsRecord[]
-  >([]);
-
-  const addStatistics = () => {
-    const i = statisticsRecords.length + 1;
-    setStatisticsRecords([
-      ...statisticsRecords,
-      {
-        source: {
-          datasetId: `ds${i}`,
-          datasetTitle: `Dataset ${i}`,
-          variableName: "CHL",
-          placeId: "p029840456",
-          geometry: null,
-        },
-        minimum: i,
-        maximum: i + 1,
-        mean: i + 0.5,
-        standardDev: 0.1 * i,
-        histogram: {
-          bins: [{ x1: 0, x2: 1, xc: 0.5, count: 1000 }],
-        },
-      },
-    ]);
-  };
-
+export default function StatisticsRow({
+  statisticsRecord,
+}: StatisticsRowProps) {
   return (
     <Box sx={styles.container}>
-      {statisticsRecords.map((sr, index) => (
-        <StatisticsRow key={index} statisticsRecord={sr} />
-      ))}
-      <LastStatisticsRow
-        hasStatistics={statisticsRecords.length > 0}
-        canAddStatistics={true}
-        addStatistics={addStatistics}
-      />
+      <Typography fontSize="smaller">
+        {`${statisticsRecord.source.datasetTitle} / ${statisticsRecord.source.variableName}`}
+      </Typography>
+      <Table>
+        <TableRows>
+          <TableRow>
+            <TableCell>{i18n.get("Minimum")}</TableCell>
+            <TableCell>{statisticsRecord.minimum}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>{i18n.get("Maximum")}</TableCell>
+            <TableCell>{statisticsRecord.minimum}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>{i18n.get("Mean")}</TableCell>
+            <TableCell>{statisticsRecord.mean}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>{i18n.get("Deviation")}</TableCell>
+            <TableCell>{statisticsRecord.standardDev}</TableCell>
+          </TableRow>
+        </TableRows>
+      </Table>
     </Box>
   );
 }
