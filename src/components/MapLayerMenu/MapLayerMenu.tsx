@@ -22,7 +22,12 @@
  * SOFTWARE.
  */
 
-import Draggable from "react-draggable";
+import { useState } from "react";
+import Draggable, {
+  ControlPosition,
+  DraggableData,
+  DraggableEvent,
+} from "react-draggable";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -38,11 +43,11 @@ import MapLayerMenuItem from "./MapLayerMenuItem";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
 import { makeStyles } from "@/util/styles";
 
+const initialPos: ControlPosition = { x: 10, y: 180 };
+
 const styles = makeStyles({
   windowPaper: {
     position: "absolute",
-    top: "180px",
-    left: "10px",
     zIndex: 1000,
   },
   windowHeader: {
@@ -60,6 +65,7 @@ const styles = makeStyles({
 });
 
 interface LayerMenuProps extends WithLocale {
+  layerMenuOpen: boolean;
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
   layerTitles: Record<keyof LayerVisibilities, string>;
@@ -75,7 +81,10 @@ interface LayerMenuProps extends WithLocale {
 }
 
 export default function MapLayerMenu(props: LayerMenuProps) {
+  const [position, setPosition] = useState<ControlPosition>(initialPos);
+
   const {
+    layerMenuOpen,
     setLayerMenuOpen,
     openDialog,
     variableCompareMode,
@@ -95,8 +104,20 @@ export default function MapLayerMenu(props: LayerMenuProps) {
     setLayerMenuOpen(false);
   };
 
+  const handleDragStop = (_e: DraggableEvent, data: DraggableData) => {
+    setPosition({ ...data });
+  };
+
+  if (!layerMenuOpen) {
+    return null;
+  }
+
   return (
-    <Draggable handle="#layer-select-header">
+    <Draggable
+      handle="#layer-select-header"
+      position={position}
+      onStop={handleDragStop}
+    >
       <Paper elevation={10} sx={styles.windowPaper}>
         <Box id="layer-select-header" sx={styles.windowHeader}>
           <Box component="span" sx={styles.windowTitle}>

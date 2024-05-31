@@ -22,11 +22,14 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useRef } from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import { isNumber } from "@/util/types";
+import { useEffect, useRef } from "react";
+import Box from "@mui/material/Box";
 
-const useStyles = makeStyles({
+import { isNumber } from "@/util/types";
+import { makeStyles } from "@/util/styles";
+import useMouseDrag from "@/hooks/useMouseDrag";
+
+const styles = makeStyles({
   splitter: {
     position: "absolute",
     top: 0,
@@ -43,44 +46,6 @@ const useStyles = makeStyles({
 
 type Point = [number, number];
 
-function useMouseDrag(onMouseDrag: (delta: Point) => void) {
-  const lastPosition = useRef<Point | null>(null);
-
-  const handleMouseMove = useRef((event: MouseEvent) => {
-    if (event.buttons === 1 && lastPosition.current !== null) {
-      event.preventDefault();
-      const { screenX, screenY } = event;
-      const [lastScreenX, lastScreenY] = lastPosition.current;
-      const delta: Point = [screenX - lastScreenX, screenY - lastScreenY];
-      lastPosition.current = [screenX, screenY];
-      onMouseDrag(delta);
-    }
-  });
-
-  // Return value
-  const startDrag = useRef((event: React.MouseEvent) => {
-    if (event.buttons === 1) {
-      event.preventDefault();
-      document.body.addEventListener("mousemove", handleMouseMove.current);
-      document.body.addEventListener("mouseup", endDrag.current);
-      document.body.addEventListener("onmouseleave", endDrag.current);
-      lastPosition.current = [event.screenX, event.screenY];
-    }
-  });
-
-  const endDrag = useRef((event: Event) => {
-    if (lastPosition.current !== null) {
-      event.preventDefault();
-      lastPosition.current = null;
-      document.body.removeEventListener("mousemove", handleMouseMove.current);
-      document.body.removeEventListener("mouseup", endDrag.current);
-      document.body.removeEventListener("onmouseleave", endDrag.current);
-    }
-  });
-
-  return startDrag.current;
-}
-
 interface MapSplitterProps {
   hidden?: boolean;
   position?: number;
@@ -92,14 +57,13 @@ export default function MapSplitter({
   position,
   onPositionChange,
 }: MapSplitterProps) {
-  const classes = useStyles();
   const divRef = useRef<HTMLDivElement | null>(null);
   const handleDrag = useRef(([deltaX, _]: Point) => {
     if (divRef.current !== null) {
       onPositionChange(divRef.current.offsetLeft + deltaX);
     }
   });
-  const startDrag = useMouseDrag(handleDrag.current);
+  const handleMouseDown = useMouseDrag(handleDrag.current);
 
   useEffect(() => {
     if (
@@ -119,12 +83,12 @@ export default function MapSplitter({
   }
 
   return (
-    <div
+    <Box
       id={"MapSplitter"}
       ref={divRef}
-      className={classes.splitter}
+      sx={styles.splitter}
       style={{ left: isNumber(position) ? position : "50%" }}
-      onMouseDown={startDrag}
+      onMouseDown={handleMouseDown}
     />
   );
 }

@@ -135,6 +135,7 @@ export interface ControlState {
   mapInteraction: MapInteraction;
   lastMapInteraction: MapInteraction;
   layerMenuOpen: boolean;
+  sidebarPosition: number;
   sidebarOpen: boolean;
   sidebarPanelId: SidebarPanelId;
   volumeRenderMode: VolumeRenderMode;
@@ -209,6 +210,7 @@ export function newControlState(): ControlState {
     datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
     layerMenuOpen: false,
+    sidebarPosition: Math.max(window.innerWidth, window.innerHeight) / 2,
     sidebarOpen: false,
     sidebarPanelId: "info",
     volumeRenderMode: "mip",
