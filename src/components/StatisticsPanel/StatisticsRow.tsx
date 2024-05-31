@@ -23,55 +23,67 @@
  */
 
 import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableRows from "@mui/icons-material/TableRows";
-import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
 
-import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { StatisticsRecord } from "@/model/statistics";
+import StatisticsTable from "@/components/StatisticsPanel/StatisticsTable";
+import HistogramChart from "@/components/StatisticsPanel/HistogramChart";
 
 const styles = makeStyles({
   container: {
     padding: 1,
+    width: "100%",
+  },
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  body: {
+    display: "flex",
+  },
+  table: {
+    flexGrow: 0,
+  },
+  chart: {
+    flexGrow: 1,
   },
 });
 
 interface StatisticsRowProps extends WithLocale {
   statisticsRecord: StatisticsRecord;
+  onRemove: () => void;
 }
 
 export default function StatisticsRow({
+  locale,
   statisticsRecord,
+  onRemove,
 }: StatisticsRowProps) {
   return (
     <Box sx={styles.container}>
-      <Typography fontSize="smaller">
-        {`${statisticsRecord.source.datasetTitle} / ${statisticsRecord.source.variableName}`}
-      </Typography>
-      <Table>
-        <TableRows>
-          <TableRow>
-            <TableCell>{i18n.get("Minimum")}</TableCell>
-            <TableCell>{statisticsRecord.minimum}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>{i18n.get("Maximum")}</TableCell>
-            <TableCell>{statisticsRecord.minimum}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>{i18n.get("Mean")}</TableCell>
-            <TableCell>{statisticsRecord.mean}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>{i18n.get("Deviation")}</TableCell>
-            <TableCell>{statisticsRecord.standardDev}</TableCell>
-          </TableRow>
-        </TableRows>
-      </Table>
+      <Box sx={styles.header}>
+        <Typography fontSize="smaller">
+          {`${statisticsRecord.source.datasetTitle} / ${statisticsRecord.source.variableName}`}
+        </Typography>
+        <IconButton size={"small"} onClick={() => onRemove()}>
+          <CloseIcon fontSize={"inherit"} />
+        </IconButton>
+      </Box>
+      <Box sx={styles.body}>
+        <Box sx={styles.chart}>
+          <StatisticsTable
+            locale={locale}
+            statisticsRecord={statisticsRecord}
+          />
+        </Box>
+        <Box sx={styles.chart}>
+          <HistogramChart statisticsRecord={statisticsRecord} />
+        </Box>
+      </Box>
     </Box>
   );
 }

@@ -74,16 +74,32 @@ export default function StatisticsPanel(
         mean: i + 0.5,
         standardDev: 0.1 * i,
         histogram: {
-          bins: [{ x1: 0, x2: 1, xc: 0.5, count: 1000 }],
+          bins: Array.from({ length: 100 }, (_, index) => ({
+            x1: index,
+            xc: index + 0.5,
+            x2: index + 1,
+            count: 1000 * Math.random(),
+          })),
         },
       },
+    ]);
+  };
+
+  const removeStatistics = (index: number) => {
+    setStatisticsRecords([
+      ...statisticsRecords.slice(0, index),
+      ...statisticsRecords.slice(index + 1),
     ]);
   };
 
   return (
     <Box sx={styles.container}>
       {statisticsRecords.map((sr, index) => (
-        <StatisticsRow key={index} statisticsRecord={sr} />
+        <StatisticsRow
+          key={index}
+          statisticsRecord={sr}
+          onRemove={() => removeStatistics(index)}
+        />
       ))}
       <LastStatisticsRow
         hasStatistics={statisticsRecords.length > 0}
