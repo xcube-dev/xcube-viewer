@@ -222,12 +222,15 @@ export default function TimeSeriesChart({
   const labelTextColor = theme.palette.text.primary;
 
   const removeZoomRectangle = () => {
-    setZoomRectangle({});
+    if (isNumber(zoomRectangle.x1)) {
+      setZoomRectangle({});
+    }
   };
 
   const handleClick = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed,
   ) => {
+    removeZoomRectangle();
     if (
       chartState &&
       selectTime &&
@@ -236,7 +239,6 @@ export default function TimeSeriesChart({
     ) {
       selectTime(chartState.activeLabel);
     }
-    removeZoomRectangle();
   };
 
   const handleMouseDown = (
