@@ -37,6 +37,7 @@ import {
 import { TimeSeriesChartType } from "@/states/controlState";
 import TimeRangeSlider from "./TimeRangeSlider";
 import TimeSeriesChart from "./TimeSeriesChart";
+import NoTimeSeriesChart from "@/components/TimeSeriesPanel/NoTimeSeriesChart";
 
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
@@ -82,6 +83,8 @@ interface TimeSeriesPanelProps extends WithLocale {
     timeSeriesGroupId: string,
     timeSeries: TimeSeries,
   ) => void;
+  canAddTimeSeries: boolean;
+  addTimeSeries: () => void;
 }
 
 export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
@@ -90,11 +93,18 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
     dataTimeRange,
     selectedTimeRange,
     selectTimeRange,
+    canAddTimeSeries,
+    addTimeSeries,
     ...chartProps
   } = props;
 
   if (timeSeriesGroups.length === 0) {
-    return null;
+    return (
+      <NoTimeSeriesChart
+        canAddTimeSeries={canAddTimeSeries}
+        addTimeSeries={addTimeSeries}
+      />
+    );
   }
 
   return (
