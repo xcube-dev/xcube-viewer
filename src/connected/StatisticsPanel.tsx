@@ -28,7 +28,7 @@ import { AppState } from "@/states/appState";
 import _StatisticsPanel from "@/components/StatisticsPanel";
 
 const mapStateToProps = (_state: AppState) => {
-  return {};
+  return { testMode: true };
 };
 
 const mapDispatchToProps = {};

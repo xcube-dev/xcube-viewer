@@ -37,11 +37,9 @@ import {
   makeRequestUrl,
   QueryComponent,
 } from "./callApi";
-import i18n from "@/i18n";
 
 interface StatisticsResult {
-  result?: Statistics;
-  error?: { message: string; traceback?: string };
+  result: Statistics;
 }
 
 export function getStatisticsForGeometry(
@@ -76,16 +74,8 @@ export function getStatisticsForGeometry(
     geometry,
   };
 
-  return callJsonApi<StatisticsResult>(url, init).then((result) => {
-    if (result.result) {
-      return { source, ...result.result };
-    }
-    const message = result.error
-      ? result.error.message
-      : i18n.get("Unknown server error");
-    if (result.error) {
-      console.error(result.error);
-    }
-    throw new Error(message);
-  });
+  return callJsonApi(url, init, (r: StatisticsResult) => ({
+    source,
+    ...r.result,
+  }));
 }

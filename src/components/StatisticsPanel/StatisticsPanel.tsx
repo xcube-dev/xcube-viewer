@@ -39,25 +39,31 @@ const styles = makeStyles({
   },
 });
 
+interface FetchResult<T> {
+  loading?: boolean;
+  error?: unknown; // TODO: align with server
+  data?: T;
+}
+
 interface StatisticsPanelProps {
   // statisticsRecords: StatisticsRecord[];
   // canAddStatistics: boolean;
   // addStatistics: () => void;
+  testMode?: boolean;
 }
 
-export default function StatisticsPanel(
-  // {
+export default function StatisticsPanel({
   // statisticsRecords,
   // canAddStatistics,
   // addStatistics,
-  // }
-  _props: StatisticsPanelProps,
-) {
+  testMode,
+}: StatisticsPanelProps) {
   const [statisticsRecords, setStatisticsRecords] = useState<
     StatisticsRecord[]
   >([]);
+  const [];
 
-  const addStatistics = () => {
+  const addStatisticsMock = () => {
     const i = statisticsRecords.length + 1;
     setStatisticsRecords([
       ...statisticsRecords,
@@ -83,6 +89,12 @@ export default function StatisticsPanel(
         },
       },
     ]);
+  };
+
+  const addStatistics = () => {
+    if (testMode) {
+      addStatisticsMock();
+    }
   };
 
   const removeStatistics = (index: number) => {
