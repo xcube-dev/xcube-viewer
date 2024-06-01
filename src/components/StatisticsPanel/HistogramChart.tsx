@@ -31,7 +31,9 @@ import {
   YAxis,
 } from "recharts";
 
-import { StatisticsRecord } from "@/model/statistics";
+import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
+import { useMemo } from "react";
+import { getLabelForValue } from "@/util/label";
 
 interface HistogramChartProps {
   statisticsRecord: StatisticsRecord;
@@ -40,7 +42,20 @@ interface HistogramChartProps {
 export default function HistogramChart({
   statisticsRecord,
 }: HistogramChartProps) {
-  const data = statisticsRecord.histogram.bins;
+  const statistics = statisticsRecord.statistics;
+  const data = useMemo(() => {
+    if (!isAreaStatistics(statistics)) {
+      return null;
+    }
+    const { values, edges } = statistics.histogram;
+    return values.map((v, i) => ({
+      x: getLabelForValue(0.5 * (edges[i] + edges[i + 1]), 2),
+      y: v,
+    }));
+  }, [statistics]);
+  if (data === null) {
+    return <div>No histogram available.</div>;
+  }
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
@@ -53,9 +68,9 @@ export default function HistogramChart({
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="xc" />
+        <XAxis dataKey="x" />
         <YAxis />
-        <Area type="monotone" dataKey="count" stroke="#8884d8" fill="#8884d8" />
+        <Area type="monotone" dataKey="y" stroke="#8884d8" fill="#8884d8" />
       </AreaChart>
     </ResponsiveContainer>
   );

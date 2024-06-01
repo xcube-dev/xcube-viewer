@@ -26,9 +26,11 @@ import Box from "@mui/material/Box";
 
 import { makeStyles } from "@/util/styles";
 import { StatisticsRecord } from "@/model/statistics";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import { Place } from "@/model/place";
+import StatisticsRow from "./StatisticsRow";
 import LastStatisticsRow from "./LastStatisticsRow";
-import StatisticsRow from "@/components/StatisticsPanel/StatisticsRow";
-import { useState } from "react";
 
 const styles = makeStyles({
   container: {
@@ -39,70 +41,38 @@ const styles = makeStyles({
   },
 });
 
-interface FetchResult<T> {
-  loading?: boolean;
-  error?: unknown; // TODO: align with server
-  data?: T;
-}
-
 interface StatisticsPanelProps {
-  // statisticsRecords: StatisticsRecord[];
-  // canAddStatistics: boolean;
-  // addStatistics: () => void;
-  testMode?: boolean;
+  selectedDataset: Dataset | null;
+  selectedVariable: Variable | null;
+  selectedPlace: Place | null;
+  selectedTimeLabel: string | null;
+  statisticsLoading: boolean;
+  statisticsRecords: StatisticsRecord[];
+  addStatistics: () => void;
+  removeStatistics: (index: number) => void;
 }
 
 export default function StatisticsPanel({
-  // statisticsRecords,
-  // canAddStatistics,
-  // addStatistics,
-  testMode,
+  selectedDataset,
+  selectedVariable,
+  selectedPlace,
+  selectedTimeLabel,
+  statisticsLoading,
+  statisticsRecords,
+  addStatistics,
+  removeStatistics,
 }: StatisticsPanelProps) {
-  const [statisticsRecords, setStatisticsRecords] = useState<
-    StatisticsRecord[]
-  >([]);
-  const [];
+  const canAddStatistics =
+    !statisticsLoading &&
+    !!(
+      selectedTimeLabel &&
+      selectedPlace &&
+      selectedPlace.geometry.type !== "Point" &&
+      selectedVariable &&
+      selectedDataset
+    );
 
-  const addStatisticsMock = () => {
-    const i = statisticsRecords.length + 1;
-    setStatisticsRecords([
-      ...statisticsRecords,
-      {
-        source: {
-          datasetId: `ds${i}`,
-          datasetTitle: `Dataset ${i}`,
-          variableName: "CHL",
-          placeId: "p029840456",
-          geometry: null,
-        },
-        minimum: i,
-        maximum: i + 1,
-        mean: i + 0.5,
-        standardDev: 0.1 * i,
-        histogram: {
-          bins: Array.from({ length: 100 }, (_, index) => ({
-            x1: index,
-            xc: index + 0.5,
-            x2: index + 1,
-            count: 1000 * Math.random(),
-          })),
-        },
-      },
-    ]);
-  };
-
-  const addStatistics = () => {
-    if (testMode) {
-      addStatisticsMock();
-    }
-  };
-
-  const removeStatistics = (index: number) => {
-    setStatisticsRecords([
-      ...statisticsRecords.slice(0, index),
-      ...statisticsRecords.slice(index + 1),
-    ]);
-  };
+  console.log("UUUUU:", statisticsLoading, statisticsRecords);
 
   return (
     <Box sx={styles.container}>
@@ -115,7 +85,8 @@ export default function StatisticsPanel({
       ))}
       <LastStatisticsRow
         hasStatistics={statisticsRecords.length > 0}
-        canAddStatistics={true}
+        canAddStatistics={canAddStatistics}
+        isLoading={statisticsLoading}
         addStatistics={addStatistics}
       />
     </Box>

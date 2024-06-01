@@ -24,6 +24,7 @@
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 
 import i18n from "@/i18n";
@@ -38,24 +39,40 @@ const styles = makeStyles({
     paddingTop: 6,
     gap: 2,
   },
+  action: {
+    m: 1,
+    position: "relative",
+  },
+  progress: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: "-12px",
+    marginLeft: "-12px",
+  },
 });
 
 interface LastStatisticsRowProps extends WithLocale {
   hasStatistics: boolean;
   canAddStatistics: boolean;
+  isLoading: boolean;
   addStatistics: () => void;
 }
 
 export default function LastStatisticsRow({
   hasStatistics,
   canAddStatistics,
+  isLoading,
   addStatistics,
 }: LastStatisticsRowProps) {
   return (
     <Box sx={styles.container}>
-      <Button disabled={!canAddStatistics} onClick={addStatistics}>
-        {i18n.get("Add Statistics")}
-      </Button>
+      <Box sx={styles.action}>
+        <Button disabled={!canAddStatistics} onClick={addStatistics}>
+          {i18n.get("Add Statistics")}
+        </Button>
+        {isLoading && <CircularProgress size={24} sx={styles.progress} />}
+      </Box>
       {!hasStatistics && (
         <Typography fontSize="smaller">
           {i18n.get(

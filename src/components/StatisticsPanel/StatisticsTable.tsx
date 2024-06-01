@@ -32,7 +32,11 @@ import TableRow from "@mui/material/TableRow";
 import i18n from "@/i18n";
 // import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
-import { StatisticsRecord } from "@/model/statistics";
+import {
+  isNullStatistics,
+  isPointStatistics,
+  StatisticsRecord,
+} from "@/model/statistics";
 import { getLabelForValue } from "@/util/label";
 
 // const styles = makeStyles({});
@@ -44,26 +48,41 @@ interface StatisticsTableProps extends WithLocale {
 export default function StatisticsTable({
   statisticsRecord,
 }: StatisticsTableProps) {
+  const statistics = statisticsRecord.statistics;
   return (
     <TableContainer component={Paper}>
       <Table size={"small"}>
         <TableBody>
-          <TableRow>
-            <TableCell>{i18n.get("Minimum")}</TableCell>
-            <TableCell>{format(statisticsRecord.minimum)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>{i18n.get("Maximum")}</TableCell>
-            <TableCell>{format(statisticsRecord.maximum)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>{i18n.get("Mean")}</TableCell>
-            <TableCell>{format(statisticsRecord.mean)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>{i18n.get("Deviation")}</TableCell>
-            <TableCell>{format(statisticsRecord.standardDev)}</TableCell>
-          </TableRow>
+          {isNullStatistics(statistics) ? (
+            <TableRow>
+              <TableCell>{i18n.get("Value")}</TableCell>
+              <TableCell>NaN</TableCell>
+            </TableRow>
+          ) : isPointStatistics(statistics) ? (
+            <TableRow>
+              <TableCell>{i18n.get("Value")}</TableCell>
+              <TableCell>{format(statistics.mean)}</TableCell>
+            </TableRow>
+          ) : (
+            <>
+              <TableRow>
+                <TableCell>{i18n.get("Minimum")}</TableCell>
+                <TableCell>{format(statistics.minimum)}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>{i18n.get("Maximum")}</TableCell>
+                <TableCell>{format(statistics.maximum)}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>{i18n.get("Mean")}</TableCell>
+                <TableCell>{format(statistics.mean)}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>{i18n.get("Deviation")}</TableCell>
+                <TableCell>{format(statistics.deviation)}</TableCell>
+              </TableRow>
+            </>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

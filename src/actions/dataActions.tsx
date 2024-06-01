@@ -56,6 +56,7 @@ import {
   userPlacesFormatOptionsCsvSelector,
   userPlacesFormatOptionsGeoJsonSelector,
   userPlacesFormatOptionsWktSelector,
+  selectedDatasetTimeLabelSelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -81,6 +82,8 @@ import { VolumeRenderMode } from "@/states/controlState";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer } from "./mapActions";
 import { ColorBarNorm } from "@/model/variable";
+import { getStatistics } from "@/api/getStatistics";
+import { StatisticsRecord } from "@/model/statistics";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -429,6 +432,111 @@ export function removeUserPlaceGroup(
   placeGroupId: string,
 ): RemoveUserPlaceGroup {
   return { type: REMOVE_USER_PLACE_GROUP, placeGroupId };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function addStatistics() {
+  return (
+    dispatch: Dispatch<
+      SetSidebarOpen | SetSidebarPanelId | AddStatistics | MessageLogAction
+    >,
+    getState: () => AppState,
+  ) => {
+    const apiServer = selectedServerSelector(getState());
+
+    const selectedDataset = selectedDatasetSelector(getState());
+    const selectedVariable = selectedVariableSelector(getState());
+    const selectedPlace = selectedPlaceSelector(getState());
+    const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
+    const sidebarOpen = getState().controlState.sidebarOpen;
+    const sidebarPanelId = getState().controlState.sidebarPanelId;
+
+    if (
+      !(
+        selectedDataset &&
+        selectedVariable &&
+        selectedPlace &&
+        selectedTimeLabel
+      )
+    ) {
+      return;
+    }
+
+    if (sidebarPanelId !== "stats") {
+      dispatch(setSidebarPanelId("stats"));
+    }
+    if (!sidebarOpen) {
+      dispatch(setSidebarOpen(true));
+    }
+    dispatch(_addStatistics(null));
+    getStatistics(
+      apiServer.url,
+      selectedDataset,
+      selectedVariable,
+      selectedPlace,
+      selectedTimeLabel,
+      getState().userAuthState.accessToken,
+    )
+      .then((stats) => dispatch(_addStatistics(stats)))
+      .catch((error: Error) => {
+        dispatch(postMessage("error", error));
+      });
+  };
+}
+
+// const addStatisticsFromMock = () => {
+//   const i = statisticsRecords.length + 1;
+//   setStatisticsRecords([
+//     ...statisticsRecords,
+//     {
+//       source: {
+//         datasetId: `ds${i}`,
+//         datasetTitle: `Dataset ${i}`,
+//         variableName: "CHL",
+//         placeId: "p029840456",
+//         geometry: null,
+//       },
+//       minimum: i,
+//       maximum: i + 1,
+//       mean: i + 0.5,
+//       standardDev: 0.1 * i,
+//       histogram: {
+//         bins: Array.from({ length: 100 }, (_, index) => ({
+//           x1: index,
+//           xc: index + 0.5,
+//           x2: index + 1,
+//           count: 1000 * Math.random(),
+//         })),
+//       },
+//     },
+//   ]);
+// };
+
+export const ADD_STATISTICS = "ADD_STATISTICS";
+
+export interface AddStatistics {
+  type: typeof ADD_STATISTICS;
+  statistics: StatisticsRecord | null;
+}
+
+export function _addStatistics(
+  statistics: StatisticsRecord | null,
+): AddStatistics {
+  return { type: ADD_STATISTICS, statistics };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const REMOVE_STATISTICS = "REMOVE_STATISTICS";
+
+export interface RemoveStatistics {
+  type: typeof REMOVE_STATISTICS;
+  index: number;
+}
+
+export function removeStatistics(index: number): RemoveStatistics {
+  return { type: REMOVE_STATISTICS, index };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1016,6 +1124,8 @@ export type DataAction =
   | RenameUserPlace
   | RemoveUserPlace
   | RemoveUserPlaceGroup
+  | AddStatistics
+  | RemoveStatistics
   | UpdateTimeSeries
   | RemoveTimeSeries
   | RemoveTimeSeriesGroup

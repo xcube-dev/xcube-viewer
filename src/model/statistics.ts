@@ -22,36 +22,54 @@
  * SOFTWARE.
  */
 
-import * as geojson from "geojson";
+import { Place } from "./place";
+import { Variable } from "./variable";
+import { Dataset } from "./dataset";
 
-export interface HistogramBin {
-  x1: number;
-  x2: number;
-  xc: number;
-  count: number;
+export interface StatisticsSource {
+  dataset: Dataset;
+  variable: Variable;
+  time: string;
+  place: Place;
 }
 
 export interface Histogram {
-  logScaled?: boolean;
-  bins: HistogramBin[];
+  values: number[];
+  edges: number[];
 }
 
-export interface StatisticsSource {
-  datasetId: string;
-  datasetTitle: string;
-  variableName: string;
-  placeId: string | null;
-  geometry: geojson.Geometry | null;
+export interface NullStatistics {
+  count: 0;
 }
 
-export interface Statistics {
-  histogram: Histogram;
+export interface AreaStatistics {
+  count: number;
   minimum: number;
   maximum: number;
   mean: number;
-  standardDev: number;
+  deviation: number;
+  histogram: Histogram;
 }
 
-export interface StatisticsRecord extends Statistics {
+export interface PointStatistics extends Omit<AreaStatistics, "histogram"> {
+  count: 1;
+}
+
+export type Statistics = NullStatistics | PointStatistics | AreaStatistics;
+
+export interface StatisticsRecord {
   source: StatisticsSource;
+  statistics: Statistics;
+}
+
+export function isNullStatistics(s: Statistics): s is NullStatistics {
+  return s.count === 0;
+}
+
+export function isPointStatistics(s: Statistics): s is PointStatistics {
+  return s.count === 1;
+}
+
+export function isAreaStatistics(s: Statistics): s is AreaStatistics {
+  return s.count > 1;
 }

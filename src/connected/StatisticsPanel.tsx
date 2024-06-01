@@ -25,13 +25,30 @@
 import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
+import {
+  selectedDatasetSelector,
+  selectedDatasetTimeLabelSelector,
+  selectedPlaceSelector,
+  selectedVariableSelector,
+} from "@/selectors/controlSelectors";
 import _StatisticsPanel from "@/components/StatisticsPanel";
+import { addStatistics, removeStatistics } from "@/actions/dataActions";
 
-const mapStateToProps = (_state: AppState) => {
-  return { testMode: true };
+const mapStateToProps = (state: AppState) => {
+  return {
+    selectedDataset: selectedDatasetSelector(state),
+    selectedVariable: selectedVariableSelector(state),
+    selectedPlace: selectedPlaceSelector(state),
+    selectedTimeLabel: selectedDatasetTimeLabelSelector(state),
+    statisticsLoading: state.dataState.statistics.loading,
+    statisticsRecords: state.dataState.statistics.records,
+  };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  addStatistics,
+  removeStatistics,
+};
 
 const StatisticsPanel = connect(
   mapStateToProps,

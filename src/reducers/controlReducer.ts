@@ -73,8 +73,8 @@ import {
   getDatasetTimeRange,
 } from "@/model/dataset";
 import {
-  selectedTimeIndexSelector,
-  timeCoordinatesSelector,
+  selectedDatasetTimeIndexSelector,
+  selectedDatasetTimeCoordinatesSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
 import { ControlState, newControlState } from "@/states/controlState";
@@ -222,7 +222,8 @@ export function controlReducer(
     case SELECT_TIME: {
       let { selectedTime } = action;
       if (selectedTime !== null && appState) {
-        const timeCoordinates = timeCoordinatesSelector(appState)!;
+        const timeCoordinates =
+          selectedDatasetTimeCoordinatesSelector(appState)!;
         const index = timeCoordinates
           ? findIndexCloseTo(timeCoordinates, selectedTime)
           : -1;
@@ -240,9 +241,10 @@ export function controlReducer(
     }
     case INC_SELECTED_TIME: {
       if (appState) {
-        let index = selectedTimeIndexSelector(appState);
+        let index = selectedDatasetTimeIndexSelector(appState);
         if (index >= 0) {
-          const timeCoordinates = timeCoordinatesSelector(appState)!;
+          const timeCoordinates =
+            selectedDatasetTimeCoordinatesSelector(appState)!;
           index += action.increment;
           if (index < 0) {
             index = timeCoordinates.length - 1;

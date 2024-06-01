@@ -639,25 +639,73 @@ export const selectedDataset2AttributionsSelector = createSelector(
   _getDatasetAttributions,
 );
 
-export const timeCoordinatesSelector = createSelector(
+const _getTimeCoordinates = (
+  timeDimension: TimeDimension | null,
+): Time[] | null => {
+  if (timeDimension === null || timeDimension.coordinates.length === 0) {
+    return null;
+  }
+  return timeDimension.coordinates;
+};
+
+export const selectedDatasetTimeCoordinatesSelector = createSelector(
   selectedDatasetTimeDimensionSelector,
-  (timeDimension: TimeDimension | null): Time[] | null => {
-    if (timeDimension === null || timeDimension.coordinates.length === 0) {
-      return null;
-    }
-    return timeDimension.coordinates;
-  },
+  _getTimeCoordinates,
 );
 
-export const selectedTimeIndexSelector = createSelector(
+export const selectedDataset2TimeCoordinatesSelector = createSelector(
+  selectedDatasetTimeDimensionSelector,
+  _getTimeCoordinates,
+);
+
+const _getTimeIndex = (
+  time: Time | null,
+  timeCoordinates: Time[] | null,
+): number => {
+  if (time === null || timeCoordinates === null) {
+    return -1;
+  }
+  return findIndexCloseTo(timeCoordinates, time);
+};
+
+export const selectedDatasetTimeIndexSelector = createSelector(
   selectedTimeSelector,
-  timeCoordinatesSelector,
-  (time: Time | null, timeCoordinates: Time[] | null): number => {
-    if (time === null || timeCoordinates === null) {
-      return -1;
-    }
-    return findIndexCloseTo(timeCoordinates, time);
-  },
+  selectedDatasetTimeCoordinatesSelector,
+  _getTimeIndex,
+);
+
+export const selectedDataset2TimeIndexSelector = createSelector(
+  selectedTimeSelector,
+  selectedDataset2TimeCoordinatesSelector,
+  _getTimeIndex,
+);
+
+const _getTimeLabel = (
+  time: Time | null,
+  timeIndex: number,
+  timeDimension: TimeDimension | null,
+): string | null => {
+  if (time === null) {
+    return null;
+  }
+  if (timeDimension && timeIndex > -1) {
+    return timeDimension.labels[timeIndex];
+  }
+  return new Date(time).toISOString();
+};
+
+export const selectedDatasetTimeLabelSelector = createSelector(
+  selectedTimeSelector,
+  selectedDatasetTimeIndexSelector,
+  selectedDatasetTimeDimensionSelector,
+  _getTimeLabel,
+);
+
+export const selectedDataset2TimeLabelSelector = createSelector(
+  selectedTimeSelector,
+  selectedDataset2TimeIndexSelector,
+  selectedDataset2TimeDimensionSelector,
+  _getTimeLabel,
 );
 
 function getOlTileGrid(
@@ -757,37 +805,22 @@ function getTileLayer(
   tileLevelMax: number | undefined,
   queryParams: Array<[string, string]>,
   opacity: number,
-  timeDimension: TimeDimension | null,
-  time: number | null,
+  timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
   zIndex: number = 10,
 ) {
-  if (time !== null) {
-    let timeString;
-    if (timeDimension) {
-      const timeIndex = findIndexCloseTo(timeDimension.coordinates, time);
-      if (timeIndex > -1) {
-        timeString = timeDimension.labels[timeIndex];
-        // console.log("adjusted time from", new Date(time).toISOString(), "to", timeString);
-      }
-    }
-    if (!timeString) {
-      timeString = new Date(time).toISOString();
-    }
-    queryParams = [...queryParams, ["time", timeString]];
+  if (timeLabel !== null) {
+    queryParams = [...queryParams, ["time", timeLabel]];
   }
-
   const url = makeRequestUrl(tileUrl, queryParams);
-
   if (typeof tileLevelMax === "number") {
     // It is ok to have some extra zoom levels, so we can magnify pixels.
     // Using more, artifacts will become visible.
     tileLevelMax += 3;
   }
-
   const tileGrid = getOlTileGrid(mapProjection, tileLevelMax);
   const source = getOlXYZSource(
     url,
@@ -800,7 +833,6 @@ function getTileLayer(
     tileLevelMin,
     tileLevelMax,
   );
-
   return (
     <Tile id={layerId} source={source} zIndex={zIndex} opacity={opacity} />
   );
@@ -886,7 +918,7 @@ export const selectedServerSelector = createSelector(
 const getVariableTileLayer = (
   server: ApiServerConfig,
   datasetId: string | null,
-  datasetTimeDimension: TimeDimension | null,
+  timeLabel: string | null,
   attributions: string[] | null,
   variable: Variable | null,
   colorBarName: string,
@@ -897,7 +929,6 @@ const getVariableTileLayer = (
   visibility: boolean,
   layerId: string,
   zIndex: number,
-  time: Time | null,
   timeAnimationActive: boolean,
   mapProjection: string,
   imageSmoothing: boolean,
@@ -922,8 +953,7 @@ const getVariableTileLayer = (
     variable.tileLevelMax,
     queryParams,
     opacity,
-    datasetTimeDimension,
-    time,
+    timeLabel,
     timeAnimationActive,
     mapProjection,
     attributions,
@@ -935,7 +965,7 @@ const getVariableTileLayer = (
 export const selectedDatasetVariableLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetIdSelector,
-  selectedDatasetTimeDimensionSelector,
+  selectedDatasetTimeLabelSelector,
   selectedDatasetAttributionsSelector,
   selectedVariableSelector,
   selectedVariableColorBarNameSelector,
@@ -946,7 +976,6 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   selectedVariableVisibilitySelector,
   variableLayerIdSelector,
   variableZIndexSelector,
-  selectedTimeSelector,
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
@@ -956,7 +985,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
 export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedServerSelector,
   selectedDataset2IdSelector,
-  selectedDataset2TimeDimensionSelector,
+  selectedDataset2TimeLabelSelector,
   selectedDataset2AttributionsSelector,
   selectedVariable2Selector,
   selectedVariable2ColorBarNameSelector,
@@ -967,7 +996,6 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedVariable2VisibilitySelector,
   variable2LayerIdSelector,
   variable2ZIndexSelector,
-  selectedTimeSelector,
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
@@ -981,8 +1009,7 @@ const getDatasetRgbTileLayer = (
   visibility: boolean,
   layerId: string,
   zIndex: number,
-  timeDimension: TimeDimension | null,
-  time: Time | null,
+  timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
   attributions: string[] | null,
@@ -999,8 +1026,7 @@ const getDatasetRgbTileLayer = (
     rgbSchema.tileLevelMax,
     queryParams,
     1.0,
-    timeDimension,
-    time,
+    timeLabel,
     timeAnimationActive,
     mapProjection,
     attributions,
@@ -1016,8 +1042,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
   datasetRgbVisibilitySelector,
   datasetRgbLayerIdSelector,
   datasetRgbZIndexSelector,
-  selectedDatasetTimeDimensionSelector,
-  selectedTimeSelector,
+  selectedDatasetTimeLabelSelector,
   timeAnimationActiveSelector,
   mapProjectionSelector,
   selectedDatasetAttributionsSelector,
@@ -1032,8 +1057,7 @@ export const selectedDataset2RgbLayerSelector = createSelector(
   datasetRgb2VisibilitySelector,
   datasetRgb2LayerIdSelector,
   datasetRgb2ZIndexSelector,
-  selectedDatasetTimeDimensionSelector,
-  selectedTimeSelector,
+  selectedDatasetTimeLabelSelector,
   timeAnimationActiveSelector,
   mapProjectionSelector,
   selectedDatasetAttributionsSelector,

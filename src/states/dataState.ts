@@ -29,11 +29,18 @@ import { Dataset } from "@/model/dataset";
 import { PlaceGroup } from "@/model/place";
 import { TimeSeriesGroup } from "@/model/timeSeries";
 import { loadUserServers } from "./userSettings";
+import { StatisticsRecord } from "@/model/statistics";
+
+interface StatisticsState {
+  loading: boolean;
+  records: StatisticsRecord[];
+}
 
 export interface DataState {
   serverInfo: ApiServerInfo | null;
   datasets: Dataset[];
   colorBars: ColorBars | null;
+  statistics: StatisticsState;
   timeSeriesGroups: TimeSeriesGroup[];
   userPlaceGroups: PlaceGroup[];
   userServers: ApiServerConfig[]; // Will contain at least 1 item
@@ -53,6 +60,7 @@ export function newDataState(): DataState {
     serverInfo: null,
     datasets: [],
     colorBars: null,
+    statistics: { loading: false, records: [] },
     timeSeriesGroups: [],
     userPlaceGroups: [],
     userServers,

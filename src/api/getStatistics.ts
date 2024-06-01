@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-import * as geojson from "geojson";
-
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
+import { Place } from "@/model/place";
 import {
   Statistics,
   StatisticsRecord,
@@ -42,17 +41,15 @@ interface StatisticsResult {
   result: Statistics;
 }
 
-export function getStatisticsForGeometry(
+export function getStatistics(
   apiServerUrl: string,
   dataset: Dataset,
   variable: Variable,
-  placeId: string,
-  geometry: geojson.Geometry,
-  time: string,
+  place: Place,
+  timeLabel: string,
   accessToken: string | null,
 ): Promise<StatisticsRecord> {
-  const query: QueryComponent[] = [["time", time]];
-  query.push(["time", time]);
+  const query: QueryComponent[] = [["time", timeLabel]];
   const dsId = encodeURIComponent(dataset.id);
   const variableName = encodeURIComponent(variable.name);
   const url = makeRequestUrl(
@@ -63,19 +60,18 @@ export function getStatisticsForGeometry(
   const init = {
     ...makeRequestInit(accessToken),
     method: "post",
-    body: JSON.stringify(geometry),
+    body: JSON.stringify(place.geometry),
   };
 
   const source: StatisticsSource = {
-    datasetId: dataset.id,
-    datasetTitle: dataset.title,
-    variableName: variable.name,
-    placeId,
-    geometry,
+    dataset,
+    variable,
+    place,
+    time: timeLabel,
   };
 
   return callJsonApi(url, init, (r: StatisticsResult) => ({
     source,
-    ...r.result,
+    statistics: r.result,
   }));
 }
