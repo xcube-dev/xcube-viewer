@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 import Box from "@mui/material/Box";
+
+import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
+import ToggleButton from "@mui/material/ToggleButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import TransformIcon from "@mui/icons-material/Transform";
@@ -31,10 +33,8 @@ import TransformIcon from "@mui/icons-material/Transform";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
-import StatisticsTable from "@/components/StatisticsPanel/StatisticsTable";
-import HistogramChart from "@/components/StatisticsPanel/HistogramChart";
-import ToggleButton from "@mui/material/ToggleButton";
-import { useState } from "react";
+import StatisticsTable from "./StatisticsTable";
+import HistogramChart from "./HistogramChart";
 
 const styles = makeStyles({
   container: {
