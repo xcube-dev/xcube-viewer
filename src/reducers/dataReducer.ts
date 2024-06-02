@@ -324,7 +324,7 @@ export function dataReducer(
         statistics: {
           ...statistics,
           loading: false,
-          records: [...records, action.statistics],
+          records: [action.statistics, ...records],
         },
       };
     }

@@ -22,63 +22,66 @@
  * SOFTWARE.
  */
 
-import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import { makeStyles } from "@/util/styles";
-import { StatisticsRecord } from "@/model/statistics";
+import { WithLocale } from "@/util/lang";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
-import StatisticsDataRow from "./StatisticsDataRow";
-import StatisticsFirstRow from "./StatisticsFirstRow";
+import StatisticsRow from "./StatisticsRow";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const styles = makeStyles({
-  container: {
-    padding: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
+  progress: {
+    color: "primary",
   },
 });
 
-interface StatisticsPanelProps {
+interface StatisticsFirstRowProps extends WithLocale {
   selectedDataset: Dataset | null;
   selectedVariable: Variable | null;
   selectedTime: string | null;
   selectedPlaceInfo: PlaceInfo | null;
+  onAddStatistics: () => void;
   statisticsLoading: boolean;
-  statisticsRecords: StatisticsRecord[];
-  addStatistics: () => void;
-  removeStatistics: (index: number) => void;
 }
 
-export default function StatisticsPanel({
+export default function StatisticsFirstRow({
   selectedDataset,
   selectedVariable,
   selectedTime,
   selectedPlaceInfo,
+  onAddStatistics,
   statisticsLoading,
-  statisticsRecords,
-  addStatistics,
-  removeStatistics,
-}: StatisticsPanelProps) {
+}: StatisticsFirstRowProps) {
+  const canAdd = !!(
+    selectedDataset &&
+    selectedVariable &&
+    selectedTime &&
+    selectedPlaceInfo
+  );
   return (
-    <Box sx={styles.container}>
-      <StatisticsFirstRow
-        selectedDataset={selectedDataset}
-        selectedVariable={selectedVariable}
-        selectedTime={selectedTime}
-        selectedPlaceInfo={selectedPlaceInfo}
-        onAddStatistics={addStatistics}
-        statisticsLoading={statisticsLoading}
-      />
-      {statisticsRecords.map((sr, index) => (
-        <StatisticsDataRow
-          key={index}
-          statisticsRecord={sr}
-          onRemove={() => removeStatistics(index)}
-        />
-      ))}
-    </Box>
+    <StatisticsRow
+      dataset={selectedDataset}
+      variable={selectedVariable}
+      time={selectedTime}
+      placeInfo={selectedPlaceInfo}
+      actions={
+        statisticsLoading ? (
+          <CircularProgress size={20} sx={styles.progress} />
+        ) : (
+          <IconButton
+            size="small"
+            disabled={!canAdd}
+            onClick={onAddStatistics}
+            color={"primary"}
+          >
+            <AddCircleOutlineIcon fontSize="inherit" />
+          </IconButton>
+        )
+      }
+    />
   );
 }

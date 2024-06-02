@@ -22,21 +22,16 @@
  * SOFTWARE.
  */
 
-import { useState } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import ToggleButton from "@mui/material/ToggleButton";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
-import IsoIcon from "@mui/icons-material/Iso";
-import TransformIcon from "@mui/icons-material/Transform";
 
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
-import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
-import StatisticsTable from "./StatisticsTable";
-import HistogramChart from "./HistogramChart";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import { PlaceInfo } from "@/model/place";
+import i18n from "@/i18n";
 
 const styles = makeStyles({
   container: {
@@ -56,83 +51,40 @@ const styles = makeStyles({
   body: {
     display: "flex",
   },
-  table: {
-    flexGrow: 0,
-  },
-  chart: {
-    flexGrow: 1,
-  },
 });
 
 interface StatisticsRowProps extends WithLocale {
-  statisticsRecord: StatisticsRecord;
-  onRemove: () => void;
+  dataset: Dataset | null;
+  variable: Variable | null;
+  time: string | null;
+  placeInfo: PlaceInfo | null;
+  actions: React.ReactNode;
+  body?: React.ReactNode;
 }
 
 export default function StatisticsRow({
-  locale,
-  statisticsRecord,
-  onRemove,
+  dataset,
+  variable,
+  time,
+  placeInfo,
+  actions,
+  body,
 }: StatisticsRowProps) {
-  const [brush, setBrush] = useState(false);
-  const [details, setDetails] = useState(false);
-  const { dataset, variable, time, placeInfo } = statisticsRecord.source;
-  const hasHistogram = isAreaStatistics(statisticsRecord.statistics);
-  const handleToggleDetails = () => {
-    setDetails(!details);
-  };
-  const handleToggleBrush = () => {
-    setBrush(!brush);
-  };
+  const datasetLabel = dataset ? dataset.title : `<${i18n.get("Dataset")}>`;
+  const variableLabel = variable ? variable.name : `<${i18n.get("Variable")}>`;
+  const timeLabel = time ? time : `<${i18n.get("Time")}>`;
+  const placeLabel = placeInfo ? placeInfo.label : `<${i18n.get("Place")}>`;
   return (
     <Box sx={styles.container}>
       <Box sx={styles.header}>
         <Box>
           <Typography fontSize="smaller">
-            {`${dataset.title} / ${variable.name} for ${placeInfo.label} at ${time}`}
+            {`${datasetLabel} / ${variableLabel}, ${placeLabel}, ${timeLabel}`}
           </Typography>
         </Box>
-        <Box sx={styles.actions}>
-          {hasHistogram && (
-            <ToggleButtonGroup size="small">
-              <ToggleButton
-                selected={brush}
-                onClick={handleToggleBrush}
-                value="brush"
-                size="small"
-              >
-                <TransformIcon fontSize="inherit" />
-              </ToggleButton>
-              <ToggleButton
-                selected={details}
-                onClick={handleToggleDetails}
-                value="details"
-                size="small"
-              >
-                <IsoIcon fontSize="inherit" />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          )}
-          <IconButton size="small" onClick={() => onRemove()}>
-            <CloseIcon fontSize="inherit" />
-          </IconButton>
-        </Box>
+        <Box sx={styles.actions}>{actions}</Box>
       </Box>
-      <Box sx={styles.body}>
-        <Box sx={styles.table}>
-          <StatisticsTable
-            locale={locale}
-            statisticsRecord={statisticsRecord}
-          />
-        </Box>
-        <Box sx={styles.chart}>
-          <HistogramChart
-            showBrush={brush}
-            showDetails={details}
-            statisticsRecord={statisticsRecord}
-          />
-        </Box>
-      </Box>
+      {body && <Box sx={styles.body}>{body}</Box>}
     </Box>
   );
 }

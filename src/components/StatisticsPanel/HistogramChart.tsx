@@ -86,6 +86,19 @@ export default function HistogramChart({
     statistics.maximum,
     xDomain2,
   );
+
+  const handleIndexChange = ({
+    startIndex,
+    endIndex,
+  }: {
+    startIndex?: number;
+    endIndex?: number;
+  }) => {
+    if (isNumber(startIndex) && isNumber(endIndex)) {
+      setIndex([startIndex, endIndex]);
+    }
+  };
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
@@ -139,11 +152,7 @@ export default function HistogramChart({
             startIndex={iDomain1}
             endIndex={iDomain2}
             tickFormatter={(v) => getLabelForValue(data[v].x, 1)}
-            onChange={({ startIndex, endIndex }) => {
-              if (isNumber(startIndex) && isNumber(endIndex)) {
-                setIndex([startIndex, endIndex]);
-              }
-            }}
+            onChange={handleIndexChange}
           />
         )}
       </AreaChart>

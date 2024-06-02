@@ -28,7 +28,7 @@ import { AppState } from "@/states/appState";
 import {
   selectedDatasetSelector,
   selectedDatasetTimeLabelSelector,
-  selectedPlaceSelector,
+  selectedPlaceInfoSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 import _StatisticsPanel from "@/components/StatisticsPanel";
@@ -38,8 +38,8 @@ const mapStateToProps = (state: AppState) => {
   return {
     selectedDataset: selectedDatasetSelector(state),
     selectedVariable: selectedVariableSelector(state),
-    selectedPlace: selectedPlaceSelector(state),
-    selectedTimeLabel: selectedDatasetTimeLabelSelector(state),
+    selectedTime: selectedDatasetTimeLabelSelector(state),
+    selectedPlaceInfo: selectedPlaceInfoSelector(state),
     statisticsLoading: state.dataState.statistics.loading,
     statisticsRecords: state.dataState.statistics.records,
   };
