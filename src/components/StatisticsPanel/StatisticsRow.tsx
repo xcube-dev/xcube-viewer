@@ -28,6 +28,7 @@ import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+import IsoIcon from "@mui/icons-material/Iso";
 import TransformIcon from "@mui/icons-material/Transform";
 
 import { makeStyles } from "@/util/styles";
@@ -35,6 +36,7 @@ import { WithLocale } from "@/util/lang";
 import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
 import StatisticsTable from "./StatisticsTable";
 import HistogramChart from "./HistogramChart";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 const styles = makeStyles({
   container: {
@@ -73,8 +75,15 @@ export default function StatisticsRow({
   onRemove,
 }: StatisticsRowProps) {
   const [brush, setBrush] = useState(false);
+  const [details, setDetails] = useState(false);
   const { dataset, variable, time, placeInfo } = statisticsRecord.source;
   const hasHistogram = isAreaStatistics(statisticsRecord.statistics);
+  const handleToggleDetails = () => {
+    setDetails(!details);
+  };
+  const handleToggleBrush = () => {
+    setBrush(!brush);
+  };
   return (
     <Box sx={styles.container}>
       <Box sx={styles.header}>
@@ -85,14 +94,24 @@ export default function StatisticsRow({
         </Box>
         <Box sx={styles.actions}>
           {hasHistogram && (
-            <ToggleButton
-              selected={brush}
-              onClick={() => setBrush(!brush)}
-              value="brush"
-              size="small"
-            >
-              <TransformIcon fontSize="inherit" />
-            </ToggleButton>
+            <ToggleButtonGroup size="small">
+              <ToggleButton
+                selected={brush}
+                onClick={handleToggleBrush}
+                value="brush"
+                size="small"
+              >
+                <TransformIcon fontSize="inherit" />
+              </ToggleButton>
+              <ToggleButton
+                selected={details}
+                onClick={handleToggleDetails}
+                value="details"
+                size="small"
+              >
+                <IsoIcon fontSize="inherit" />
+              </ToggleButton>
+            </ToggleButtonGroup>
           )}
           <IconButton size="small" onClick={() => onRemove()}>
             <CloseIcon fontSize="inherit" />
@@ -109,6 +128,7 @@ export default function StatisticsRow({
         <Box sx={styles.chart}>
           <HistogramChart
             showBrush={brush}
+            showDetails={details}
             statisticsRecord={statisticsRecord}
           />
         </Box>
