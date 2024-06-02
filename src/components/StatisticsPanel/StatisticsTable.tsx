@@ -56,30 +56,40 @@ export default function StatisticsTable({
           {isNullStatistics(statistics) ? (
             <TableRow>
               <TableCell>{i18n.get("Value")}</TableCell>
-              <TableCell>NaN</TableCell>
+              <TableCell align="right">NaN</TableCell>
             </TableRow>
           ) : isPointStatistics(statistics) ? (
             <TableRow>
               <TableCell>{i18n.get("Value")}</TableCell>
-              <TableCell>{format(statistics.mean)}</TableCell>
+              <TableCell align="right">{format(statistics.mean)}</TableCell>
             </TableRow>
           ) : (
             <>
               <TableRow>
+                <TableCell>{i18n.get("Count")}</TableCell>
+                <TableCell align="right">{statistics.count}</TableCell>
+              </TableRow>
+              <TableRow>
                 <TableCell>{i18n.get("Minimum")}</TableCell>
-                <TableCell>{format(statistics.minimum)}</TableCell>
+                <TableCell align="right">
+                  {format(statistics.minimum)}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{i18n.get("Maximum")}</TableCell>
-                <TableCell>{format(statistics.maximum)}</TableCell>
+                <TableCell align="right">
+                  {format(statistics.maximum)}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{i18n.get("Mean")}</TableCell>
-                <TableCell>{format(statistics.mean)}</TableCell>
+                <TableCell align="right">{format(statistics.mean)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{i18n.get("Deviation")}</TableCell>
-                <TableCell>{format(statistics.deviation)}</TableCell>
+                <TableCell align="right">
+                  {format(statistics.deviation)}
+                </TableCell>
               </TableRow>
             </>
           )}

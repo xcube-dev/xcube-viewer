@@ -24,7 +24,7 @@
 
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
-import { Place } from "@/model/place";
+import { PlaceInfo } from "@/model/place";
 import {
   Statistics,
   StatisticsRecord,
@@ -45,7 +45,7 @@ export function getStatistics(
   apiServerUrl: string,
   dataset: Dataset,
   variable: Variable,
-  place: Place,
+  placeInfo: PlaceInfo,
   timeLabel: string,
   accessToken: string | null,
 ): Promise<StatisticsRecord> {
@@ -60,13 +60,13 @@ export function getStatistics(
   const init = {
     ...makeRequestInit(accessToken),
     method: "post",
-    body: JSON.stringify(place.geometry),
+    body: JSON.stringify(placeInfo.place.geometry),
   };
 
   const source: StatisticsSource = {
     dataset,
     variable,
-    place,
+    placeInfo,
     time: timeLabel,
   };
 

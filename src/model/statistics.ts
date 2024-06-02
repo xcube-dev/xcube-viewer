@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-import { Place } from "./place";
-import { Variable } from "./variable";
 import { Dataset } from "./dataset";
+import { Variable } from "./variable";
+import { PlaceInfo } from "./place";
 
 export interface StatisticsSource {
   dataset: Dataset;
   variable: Variable;
   time: string;
-  place: Place;
+  placeInfo: PlaceInfo;
 }
 
 export interface Histogram {

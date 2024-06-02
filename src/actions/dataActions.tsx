@@ -57,6 +57,7 @@ import {
   userPlacesFormatOptionsGeoJsonSelector,
   userPlacesFormatOptionsWktSelector,
   selectedDatasetTimeLabelSelector,
+  selectedPlaceInfoSelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -447,7 +448,7 @@ export function addStatistics() {
 
     const selectedDataset = selectedDatasetSelector(getState());
     const selectedVariable = selectedVariableSelector(getState());
-    const selectedPlace = selectedPlaceSelector(getState());
+    const selectedPlaceInfo = selectedPlaceInfoSelector(getState());
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidebarOpen = getState().controlState.sidebarOpen;
     const sidebarPanelId = getState().controlState.sidebarPanelId;
@@ -456,7 +457,7 @@ export function addStatistics() {
       !(
         selectedDataset &&
         selectedVariable &&
-        selectedPlace &&
+        selectedPlaceInfo &&
         selectedTimeLabel
       )
     ) {
@@ -474,7 +475,7 @@ export function addStatistics() {
       apiServer.url,
       selectedDataset,
       selectedVariable,
-      selectedPlace,
+      selectedPlaceInfo,
       selectedTimeLabel,
       getState().userAuthState.accessToken,
     )

@@ -54,8 +54,9 @@ export default function HistogramChart({
     }));
   }, [statistics]);
   if (data === null) {
-    return <div>No histogram available.</div>;
+    return null;
   }
+  const { placeInfo } = statisticsRecord.source;
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
@@ -70,7 +71,12 @@ export default function HistogramChart({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="x" />
         <YAxis />
-        <Area type="monotone" dataKey="y" stroke="#8884d8" fill="#8884d8" />
+        <Area
+          type="monotone"
+          dataKey="y"
+          stroke={placeInfo.color}
+          fill={placeInfo.color}
+        />
       </AreaChart>
     </ResponsiveContainer>
   );

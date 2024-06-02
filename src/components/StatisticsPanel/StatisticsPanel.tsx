@@ -67,12 +67,9 @@ export default function StatisticsPanel({
     !!(
       selectedTimeLabel &&
       selectedPlace &&
-      selectedPlace.geometry.type !== "Point" &&
       selectedVariable &&
       selectedDataset
     );
-
-  console.log("UUUUU:", statisticsLoading, statisticsRecords);
 
   return (
     <Box sx={styles.container}>

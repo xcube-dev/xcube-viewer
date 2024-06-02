@@ -63,19 +63,21 @@ export default function StatisticsRow({
   statisticsRecord,
   onRemove,
 }: StatisticsRowProps) {
-  const { dataset, variable, place } = statisticsRecord.source;
+  const { dataset, variable, time, placeInfo } = statisticsRecord.source;
   return (
     <Box sx={styles.container}>
       <Box sx={styles.header}>
-        <Typography fontSize="smaller">
-          {`${dataset.title} / ${variable.name} (${place.name})`}
-        </Typography>
+        <Box>
+          <Typography fontSize="smaller">
+            {`${dataset.title} / ${variable.name} for ${placeInfo.label} at ${time}`}
+          </Typography>
+        </Box>
         <IconButton size={"small"} onClick={() => onRemove()}>
           <CloseIcon fontSize={"inherit"} />
         </IconButton>
       </Box>
       <Box sx={styles.body}>
-        <Box sx={styles.chart}>
+        <Box sx={styles.table}>
           <StatisticsTable
             locale={locale}
             statisticsRecord={statisticsRecord}
