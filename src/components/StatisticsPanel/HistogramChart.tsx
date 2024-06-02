@@ -25,6 +25,7 @@
 import {
   Area,
   AreaChart,
+  Brush,
   CartesianGrid,
   ResponsiveContainer,
   XAxis,
@@ -37,10 +38,12 @@ import { getLabelForValue } from "@/util/label";
 
 interface HistogramChartProps {
   statisticsRecord: StatisticsRecord;
+  showBrush?: boolean;
 }
 
 export default function HistogramChart({
   statisticsRecord,
+  showBrush,
 }: HistogramChartProps) {
   const statistics = statisticsRecord.statistics;
   const data = useMemo(() => {
@@ -64,7 +67,7 @@ export default function HistogramChart({
         margin={{
           top: 0,
           right: 10,
-          left: 0,
+          left: 10,
           bottom: 0,
         }}
       >
@@ -77,6 +80,7 @@ export default function HistogramChart({
           stroke={placeInfo.color}
           fill={placeInfo.color}
         />
+        {showBrush && <Brush dataKey={"x"} height={22} />}
       </AreaChart>
     </ResponsiveContainer>
   );
