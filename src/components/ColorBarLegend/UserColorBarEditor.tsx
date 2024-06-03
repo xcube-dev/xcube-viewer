@@ -34,6 +34,7 @@ import {
 import DoneCancel from "@/components/DoneCancel";
 import ColorBarItem from "./ColorBarItem";
 import ColorMapTypeEditor from "./ColorMapTypeEditor";
+import i18n from "@/i18n";
 
 interface UserColorBarEditorProps {
   userColorBar: UserColorBar;
@@ -93,7 +94,7 @@ export default function UserColorBarEditor({
         onCancel={onCancel}
         doneDisabled={!!userColorBar.errorMessage}
         size="small"
-        helpUrl="docs/color-mappings.en.md"
+        helpUrl={i18n.get("docs/color-mappings.en.md")}
       />
     </Box>
   );

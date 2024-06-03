@@ -42,6 +42,8 @@ import { Volume } from "@/volume/Volume";
 import { NRRDLoader } from "@/volume/NRRDLoader";
 import { ColorBar } from "@/model/colorBar";
 
+import i18n from "@/i18n";
+
 import "./VolumeCanvas.css";
 
 interface VolumeCanvasProps extends WithLocale {
@@ -242,19 +244,18 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         volumeState.status === "error" ||
         !volumeCache[volumeId]
       ) {
-        /*TODO: I18N*/
         loadComp = [
           <Button
             key="load"
-            onClick={this.handleLoadVolume}           
+            onClick={this.handleLoadVolume}
             disabled={!!volumeState && volumeState.status === "loading"}
           >
-            {"Load Volume Data"}
+            {i18n.get("Load Volume Data")}
           </Button>,
           <Typography key="note" variant="body2">
-            {
-              "Please note that the 3D volume rendering is still an experimental feature."
-            }
+            {i18n.get(
+              "Please note that the 3D volume rendering is still an experimental feature.",
+            )}
           </Typography>,
         ];
       }

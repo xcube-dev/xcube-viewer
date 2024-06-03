@@ -26,9 +26,9 @@ import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-import i18n from "@/i18n";
 import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import DoneCancel from "@/components/DoneCancel";
+import i18n from "@/i18n";
 
 interface UserLayerEditorXyzProps {
   userLayer: LayerDefinition;
@@ -109,7 +109,7 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
         onDone={handleUserLayerChange}
         onCancel={onCancel}
         doneDisabled={!canCommit()}
-        helpUrl={"docs/add-layer-xyz.en.md"}
+        helpUrl={i18n.get("docs/add-layer-xyz.en.md")}
       />
     </Box>
   );
