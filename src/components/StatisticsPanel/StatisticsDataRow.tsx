@@ -49,13 +49,15 @@ const styles = makeStyles({
 
 interface StatisticsDataRowProps extends WithLocale {
   statisticsRecord: StatisticsRecord;
-  onRemoveStatistics: () => void;
+  rowIndex: number;
+  removeStatistics: (rowIndex: number) => void;
 }
 
 export default function StatisticsDataRow({
   locale,
   statisticsRecord,
-  onRemoveStatistics,
+  rowIndex,
+  removeStatistics,
 }: StatisticsDataRowProps) {
   const [brush, setBrush] = useState(false);
   const [details, setDetails] = useState(false);
@@ -66,6 +68,9 @@ export default function StatisticsDataRow({
   };
   const handleToggleBrush = () => {
     setBrush(!brush);
+  };
+  const handleRemoveStatistics = () => {
+    removeStatistics(rowIndex);
   };
   return (
     <StatisticsRow
@@ -95,7 +100,7 @@ export default function StatisticsDataRow({
               </ToggleButton>
             </ToggleButtonGroup>
           )}
-          <IconButton size="small" onClick={onRemoveStatistics}>
+          <IconButton size="small" onClick={handleRemoveStatistics}>
             <CloseIcon fontSize="inherit" />
           </IconButton>
         </>

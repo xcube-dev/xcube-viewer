@@ -69,14 +69,15 @@ export default function StatisticsPanel({
         selectedVariable={selectedVariable}
         selectedTime={selectedTime}
         selectedPlaceInfo={selectedPlaceInfo}
-        onAddStatistics={addStatistics}
+        addStatistics={addStatistics}
         statisticsLoading={statisticsLoading}
       />
-      {statisticsRecords.map((sr, index) => (
+      {statisticsRecords.map((sr, rowIndex) => (
         <StatisticsDataRow
-          key={index}
+          key={rowIndex}
           statisticsRecord={sr}
-          onRemove={() => removeStatistics(index)}
+          rowIndex={rowIndex}
+          removeStatistics={removeStatistics}
         />
       ))}
     </Box>

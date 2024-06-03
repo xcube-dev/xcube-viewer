@@ -32,6 +32,7 @@ import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
 import i18n from "@/i18n";
+import { isoDateTimeStringToLabel } from "@/util/time";
 
 const styles = makeStyles({
   container: {
@@ -62,6 +63,10 @@ interface StatisticsRowProps extends WithLocale {
   body?: React.ReactNode;
 }
 
+function Missing({ phrase }: { phrase: string }) {
+  return <span style={{ color: "red" }}>{`<${i18n.get(phrase)}?>`}</span>;
+}
+
 export default function StatisticsRow({
   dataset,
   variable,
@@ -70,18 +75,24 @@ export default function StatisticsRow({
   actions,
   body,
 }: StatisticsRowProps) {
-  const datasetLabel = dataset ? dataset.title : `<${i18n.get("Dataset")}>`;
-  const variableLabel = variable ? variable.name : `<${i18n.get("Variable")}>`;
-  const timeLabel = time ? time : `<${i18n.get("Time")}>`;
-  const placeLabel = placeInfo ? placeInfo.label : `<${i18n.get("Place")}>`;
+  const datasetLabel = dataset ? dataset.title : <Missing phrase="Dataset" />;
+  const variableLabel = variable ? (
+    variable.name
+  ) : (
+    <Missing phrase="Variable" />
+  );
+  const timeLabel = time ? (
+    isoDateTimeStringToLabel(time)
+  ) : (
+    <Missing phrase="Time" />
+  );
+  const placeLabel = placeInfo ? placeInfo.label : <Missing phrase="Place" />;
   return (
     <Box sx={styles.container}>
       <Box sx={styles.header}>
-        <Box>
-          <Typography fontSize="smaller">
-            {`${datasetLabel} / ${variableLabel}, ${placeLabel}, ${timeLabel}`}
-          </Typography>
-        </Box>
+        <Typography fontSize="small">
+          {datasetLabel} / {variableLabel}, {timeLabel}, {placeLabel}
+        </Typography>
         <Box sx={styles.actions}>{actions}</Box>
       </Box>
       {body && <Box sx={styles.body}>{body}</Box>}

@@ -46,15 +46,15 @@ import VolumePanel from "./VolumePanel";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
+  timeSeries: <StackedLineChartIcon fontSize="inherit" />,
   stats: <FunctionsIcon fontSize="inherit" />,
-  charts: <StackedLineChartIcon fontSize="inherit" />,
   volume: <ThreeDRotationIcon fontSize="inherit" />,
 };
 
 const sidebarPanelLabels: Record<SidebarPanelId, string> = {
   info: "Info",
+  timeSeries: "Time-Series",
   stats: "Statistics",
-  charts: "Charts",
   volume: "Volume",
 };
 
@@ -111,7 +111,7 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
       </Box>
       {sidebarPanelId === "info" && <InfoPanel />}
       {sidebarPanelId === "stats" && <StatisticsPanel />}
-      {sidebarPanelId === "charts" && <TimeSeriesPanel />}
+      {sidebarPanelId === "timeSeries" && <TimeSeriesPanel />}
       {sidebarPanelId === "volume" && <VolumePanel />}
     </Box>
   );

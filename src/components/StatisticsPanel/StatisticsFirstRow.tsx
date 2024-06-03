@@ -44,7 +44,7 @@ interface StatisticsFirstRowProps extends WithLocale {
   selectedVariable: Variable | null;
   selectedTime: string | null;
   selectedPlaceInfo: PlaceInfo | null;
-  onAddStatistics: () => void;
+  addStatistics: () => void;
   statisticsLoading: boolean;
 }
 
@@ -53,7 +53,7 @@ export default function StatisticsFirstRow({
   selectedVariable,
   selectedTime,
   selectedPlaceInfo,
-  onAddStatistics,
+  addStatistics,
   statisticsLoading,
 }: StatisticsFirstRowProps) {
   const canAdd = !!(
@@ -75,7 +75,7 @@ export default function StatisticsFirstRow({
           <IconButton
             size="small"
             disabled={!canAdd}
-            onClick={onAddStatistics}
+            onClick={addStatistics}
             color={"primary"}
           >
             <AddCircleOutlineIcon fontSize="inherit" />

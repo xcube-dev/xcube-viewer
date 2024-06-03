@@ -40,5 +40,9 @@ export function utcTimeToIsoDateString(utcTime: number) {
 }
 
 export function utcTimeToIsoDateTimeString(utcTime: number) {
-  return new Date(utcTime).toISOString().substring(0, 19).replace("T", " ");
+  return isoDateTimeStringToLabel(new Date(utcTime).toISOString());
+}
+
+export function isoDateTimeStringToLabel(utcDateTimeString: string) {
+  return utcDateTimeString.substring(0, 19).replace("T", " ");
 }
