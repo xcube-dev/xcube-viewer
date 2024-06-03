@@ -30,9 +30,7 @@ type RawColorBarGroup = [string, string, RawColorBar[]];
 type RawColorBarGroups = RawColorBarGroup[];
 
 export function getColorBars(apiServerUrl: string): Promise<ColorBars> {
-  return callJsonApi<RawColorBarGroups>(`${apiServerUrl}/colorbars`).then(
-    parseColorBars,
-  );
+  return callJsonApi(`${apiServerUrl}/colorbars`, parseColorBars);
 }
 
 function parseColorBars(colorBarGroups: RawColorBarGroups): ColorBars {

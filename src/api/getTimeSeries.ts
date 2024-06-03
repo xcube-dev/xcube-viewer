@@ -108,5 +108,5 @@ export function getTimeSeriesForGeometry(
     return { source, data: points };
   };
 
-  return callJsonApi<RawTimeSeries>(url, init).then(convertTimeSeriesResult);
+  return callJsonApi(url, init, convertTimeSeriesResult);
 }

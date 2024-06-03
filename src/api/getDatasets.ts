@@ -25,21 +25,21 @@
 import { Dataset, Dimension, TimeDimension } from "@/model/dataset";
 import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
 
+interface RawDatasets {
+  datasets?: Dataset[];
+}
+
 export function getDatasets(
   apiServerUrl: string,
   accessToken: string | null,
 ): Promise<Dataset[]> {
   const url = makeRequestUrl(`${apiServerUrl}/datasets`, [["details", "1"]]);
   const init = makeRequestInit(accessToken);
-  return callJsonApi<Dataset[]>(url, init)
-    .then(
-      (result: unknown) => (result as { datasets?: Dataset[] }).datasets || [],
-    )
-    .then(adjustTimeDimensionsForDatasets);
+  return callJsonApi(url, init, adjustTimeDimensionsForDatasets);
 }
 
-function adjustTimeDimensionsForDatasets(datasets: Dataset[]): Dataset[] {
-  return datasets.map(adjustTimeDimensionsForDataset);
+function adjustTimeDimensionsForDatasets(datasets: RawDatasets): Dataset[] {
+  return (datasets.datasets || []).map(adjustTimeDimensionsForDataset);
 }
 
 function adjustTimeDimensionsForDataset(dataset: Dataset): Dataset {

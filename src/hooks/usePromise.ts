@@ -22,18 +22,25 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
+import { useEffect, useState } from "react";
+
+export interface PromiseState<T> {
+  pending?: boolean;
+  error?: unknown;
+  value?: T;
 }
 
-export function isFunction(
-  value: unknown,
-): value is (...args: unknown[]) => unknown {
-  return typeof value === "function";
-}
-
-export function isObject(value: unknown): value is object {
-  return (
-    value !== null && typeof value === "object" && value.constructor === Object
-  );
+export default function usePromise<T>(promise: Promise<T>): PromiseState<T> {
+  const [state, setState] = useState<PromiseState<T>>({});
+  useEffect(() => {
+    setState({ pending: true });
+    promise
+      .then((value) => {
+        setState({ value });
+      })
+      .catch((error) => {
+        setState({ error });
+      });
+  }, [promise]);
+  return state;
 }
