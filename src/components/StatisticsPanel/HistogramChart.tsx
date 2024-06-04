@@ -38,6 +38,7 @@ import {
 import { AreaStatistics, StatisticsRecord } from "@/model/statistics";
 import { getLabelForValue } from "@/util/label";
 import { isNumber } from "@/util/types";
+import { useTheme } from "@mui/material/styles";
 
 interface HistogramChartProps {
   statisticsRecord: StatisticsRecord;
@@ -50,6 +51,7 @@ export default function HistogramChart({
   showBrush,
   showDetails,
 }: HistogramChartProps) {
+  const theme = useTheme();
   const statistics = statisticsRecord.statistics as AreaStatistics;
   const data = useMemo(() => {
     if (!statistics.histogram) {
@@ -87,6 +89,9 @@ export default function HistogramChart({
     xDomain2,
   );
 
+  const mainStroke = theme.palette.text.primary;
+  const labelTextColor = theme.palette.text.primary;
+
   const handleIndexChange = ({
     startIndex,
     endIndex,
@@ -103,12 +108,8 @@ export default function HistogramChart({
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
         data={data}
-        margin={{
-          top: 0,
-          right: 10,
-          left: 10,
-          bottom: 0,
-        }}
+        margin={{ top: 0, right: showBrush ? 30 : 5, bottom: 1, left: 2 }}
+        style={{ color: labelTextColor, fontSize: "0.8em" }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
@@ -130,8 +131,9 @@ export default function HistogramChart({
           <ReferenceLine
             x={statistics.mean}
             isFront={true}
-            stroke={placeInfo.color}
-            strokeWidth={1.5}
+            stroke={mainStroke}
+            strokeWidth={2}
+            strokeOpacity={0.5}
           />
         )}
         {showDetails && (
@@ -139,10 +141,11 @@ export default function HistogramChart({
             x1={xRef1}
             x2={xRef2}
             isFront={false}
-            stroke={placeInfo.color}
-            strokeWidth={1.5}
-            strokeOpacity={0.2}
-            fillOpacity={0.2}
+            stroke={mainStroke}
+            strokeWidth={1}
+            strokeOpacity={0.3}
+            fill={mainStroke}
+            fillOpacity={0.05}
           />
         )}
         {showBrush && (
