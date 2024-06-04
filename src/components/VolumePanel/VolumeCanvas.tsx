@@ -28,6 +28,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { BBox, Position } from "geojson";
 
+import i18n from "@/i18n";
 import { Dataset } from "@/model/dataset";
 import { PlaceInfo } from "@/model/place";
 import { Variable } from "@/model/variable";
@@ -242,19 +243,18 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         volumeState.status === "error" ||
         !volumeCache[volumeId]
       ) {
-        /*TODO: I18N*/
         loadComp = [
           <Button
             key="load"
-            onClick={this.handleLoadVolume}           
+            onClick={this.handleLoadVolume}
             disabled={!!volumeState && volumeState.status === "loading"}
           >
-            {"Load Volume Data"}
+            {i18n.get("Load Volume Data")}
           </Button>,
           <Typography key="note" variant="body2">
-            {
-              "Please note that the 3D volume rendering is still an experimental feature."
-            }
+            {i18n.get(
+              "Please note that the 3D volume rendering is still an experimental feature.",
+            )}
           </Typography>,
         ];
       }

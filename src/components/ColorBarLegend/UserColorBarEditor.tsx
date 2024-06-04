@@ -26,6 +26,7 @@ import { ChangeEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
+import i18n from "@/i18n";
 import {
   USER_COLOR_BAR_CODE_EXAMPLE,
   UserColorBar,
@@ -93,7 +94,7 @@ export default function UserColorBarEditor({
         onCancel={onCancel}
         doneDisabled={!!userColorBar.errorMessage}
         size="small"
-        helpUrl="docs/color-mappings.en.md"
+        helpUrl={i18n.get("docs/color-mappings.en.md")}
       />
     </Box>
   );

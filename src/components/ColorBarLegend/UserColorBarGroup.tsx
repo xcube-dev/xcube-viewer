@@ -27,14 +27,15 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 
+import i18n from "@/i18n";
 import { newId } from "@/util/id";
+import { makeStyles } from "@/util/styles";
 import { ColorBarGroup } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
 import useUndo from "@/hooks/useUndo";
 import ColorBarGroupHeader from "./ColorBarGroupHeader";
 import UserColorBarEditor from "./UserColorBarEditor";
 import UserColorBarItem from "./UserColorBarItem";
-import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
   container: {
@@ -109,8 +110,8 @@ export default function ColorBarSelect({
     <>
       <Box sx={styles.container}>
         <ColorBarGroupHeader
-          title={colorBarGroup.title}
-          description={colorBarGroup.description}
+          title={i18n.get(colorBarGroup.title)}
+          description={i18n.get(colorBarGroup.description)}
         />
         <IconButton
           onClick={handleStartUserColorBarAdd}
