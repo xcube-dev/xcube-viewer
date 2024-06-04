@@ -716,9 +716,254 @@
       "se": "Sekretessmeddelande"
     },
     {
+      "en": "WMS URL",
+      "de": "WMS URL",
+      "se": "WMS URL"
+    },
+    {
+      "en": "WMS Layer",
+      "de": "WMS Layer",
+      "se": "WMS Lager"
+    },
+    {
+      "en": "Add layer from a Web Map Service",
+      "de": "Layer aus einem Web Map Service hinzufügen",
+      "se": "Lägg till lager från en Web Map Service"
+    },
+    {
+      "en": "Add layer from a Tiled Web Map",
+      "de": "Layer aus einer Tiled Web Map hinzufügen",
+      "se": "Lägg till lager från en Tiled Web Map"
+    },
+    {
+      "en": "Layer visibilities",
+      "de": "Layersichtbarkeiten",
+      "se": "Lagrets synlighet"
+    },
+    {
+      "en": "Show or hide sidebar",
+      "de": "Seitenleiste ein- oder ausblenden",
+      "se": "Visa eller dölja sidofält"
+    },
+    {
+      "en": "Unknown color bar",
+      "de": "Unbekannte Farbskala",
+      "se": "Färgskala okänd"
+    },
+    {
+      "en": "Points",
+      "de": "Punkte",
+      "se": "Punkter"
+    },
+    {
+      "en": "Lines",
+      "de": "Linien",
+      "se": "Linjer"
+    },
+    {
+      "en": "Bars",
+      "de": "Balken",
+      "se": "Staplar"
+    },
+    {
+      "en": "Default chart type",
+      "de": "Diagrammtyp (default)",
+      "se": "Diagramtyp (default)"
+    },
+    {
+      "en": "User Base Maps",
+      "de": "Nutzer Basiskarte",
+      "se": "Användare Grundkarta"
+    },
+    {
+      "en": "Overlay",
+      "de": "Overlay (überlagernder Layer)",
+      "se": "Overlay (överliggande lager)"
+    },
+    {
+      "en": "User Overlays",
+      "de": "Nutzer Overlay",
+      "se": "Användare Overlay"
+    },
+    {
+      "en": "On dataset selection",
+      "de": "Bei Auswahl von Datensatz",
+      "se": "Vid val av dataset"
+    },
+    {
+      "en": "On place selection",
+      "de": "Bei Auswahl von Ort",
+      "se": "Vid val av plats"
+    },
+    {
+      "en": "Do nothing",
+      "de": "Nichts tun",
+      "se": "Gör ingenting"
+    },
+    {
+      "en": "Pan",
+      "de": "Verschieben",
+      "se": "Panorera"
+    },
+    {
+      "en": "Pan and zoom",
+      "de": "Verschieben und zoom",
+      "se": "Panorera och zooma"
+    },
+    {
+      "en": "User Layers",
+      "de": "Nutzer Layer",
+      "se": "Användare lager"
+    },
+    {
+      "en": "XYZ Layer URL",
+      "de": "XYZ-Layer URL",
+      "se": "XYZ lager URL"
+    },
+    {
+      "en": "Layer Title",
+      "de": "Layer Titel",
+      "se": "Lagertitel "
+    },
+    {
+      "en": "Layer Attribution",
+      "de": "Layer Attribution",
+      "se": "Lagerattribution"
+    },
+    {
+      "en": "Info",
+      "de": "Info",
+      "se": "Info"
+    },
+    {
+      "en": "Charts",
+      "de": "Diagramme",
+      "se": "Diagrammer"
+    },
+    {
+      "en": "Volume",
+      "de": "Volumen",
+      "se": "Volym"
+    },
+    {
+      "en": "Toggle zoom mode (or press CTRL key)",
+      "de": "Zoom-Modus umschalten (oder drücke CTRL-Taste)",
+      "se": "Skifta zoomläge (eller tryck på CTRL-tangenten)"
+    },
+    {
+      "en": "Enter fixed y-range",
+      "de": "Festen y-Bereich angeben",
+      "se": "Ange fast y-intervall"
+    },
+    {
+      "en": "Toggle showing info popup on hover",
+      "de": "Anzeige des Info-Popups bei Hover umschalten",
+      "se": "Växla visning av popup-info vid hover"
+    },
+    {
+      "en": "Show points",
+      "de": "Punkte anzeigen",
+      "se": "Visa punkter"
+    },
+    {
+      "en": "Show lines",
+      "de": "Linien anzeigen",
+      "se": "Visa linjer"
+    },
+    {
+      "en": "Show bars",
+      "de": "Balken anzeigen",
+      "se": "Visa staplar"
+    },
+    {
+      "en": "Show standard deviation (if any)",
+      "de": "Standardabweichung anzeigen",
+      "se": "Visa standardavvikelsen"
+    },
+    {
+      "en": "Add time-series from places",
+      "de": "Zeitserien hinzufügen von Orten",
+      "se": "Lägg till tidsserier från platser"
+    },
+    {
+      "en": "Zoom to full range",
+      "de": "Zoom auf gesamten x-Bereich",
+      "se": "Zooma till hela x-intervallet"
+    },
+    {
+      "en": "Make it 2nd variable for comparison",
+      "de": "Festlegen als 2. Variable für Vergleich",
+      "se": "Ställ in som 2:a variabel för jämförelse"
+    },
+    {
+      "en": "Load Volume Data",
+      "de": "Lade Volumendaten",
+      "se": "Ladda volymdata"
+    },
+    {
+      "en": "Please note that the 3D volume rendering is still an experimental feature.",
+      "de": "Bitte beachten Sie, dass das 3D-Volumen-Rendering noch eine experimentelle Funktion ist.",
+      "se": "Observera att 3D-volymrendering fortfarande är en experimentell funktion."
+    },
+    {
+      "en": "User-defined color bars.",
+      "de": "Benutzerdefinierte Farbskalen.",
+      "se": "Användardefinierade färgskalor."
+    },
+    {
+      "en": "Node",
+      "de": "Knoten",
+      "se": "Noder"
+    },
+    {
+      "en": "Bound",
+      "de": "Grenzen",
+      "se": "Gränser"
+    },
+    {
+      "en": "Key",
+      "de": "Schlüssel",
+      "se": "Nycklar"
+    },
+    {
+      "en": "Values are nodes of a continuous color gradient",
+      "de": "Werte sind Knoten eines kontinuierlichen Farbverlaufs",
+      "se": "Värden är noder i en kontinuerlig färggradient"
+    },
+    {
+      "en": "Values are bounds identifying individual colors",
+      "de": "Werte sind Grenzen, die einzelne Farben identifizieren",
+      "se": "Värden är gränser som identifierar enskilda färger"
+    },
+    {
+      "en": "Values are integer keys identifying individual colors",
+      "de": "Werte sind ganzzahlige Schlüssel, die einzelne Farben identifizieren",
+      "se": "Värden är heltalsnycklar som identifierar enskilda färger"
+    },
+    {
+      "en": "User",
+      "de": "Nutzer",
+      "se": "Användare"
+    },
+    {
       "en": "docs/privacy-note.en.md",
       "de": "docs/privacy-note.de.md",
       "se": "docs/privacy-note.se.md"
+    },
+    {
+      "en": "docs/add-layer-wms.en.md",
+      "de": "docs/add-layer-wms.de.md",
+      "se": "docs/add-layer-wms.se.md"
+    },
+    {
+      "en": "docs/add-layer-xyz.en.md",
+      "de": "docs/add-layer-xyz.de.md",
+      "se": "docs/add-layer-xyz.se.md"
+    },
+    {
+      "en": "docs/color-mappings.en.md",
+      "de": "docs/color-mappings.de.md",
+      "se": "docs/color-mappings.se.md"
     }
   ]
 }
