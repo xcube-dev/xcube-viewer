@@ -22,27 +22,36 @@
  * SOFTWARE.
  */
 
-function getTimezoneOffset(date: Date): number {
-  return date.getTimezoneOffset() * 60000;
-}
+import { connect } from "react-redux";
 
-export function localToUtcTime(local: Date): number {
-  return local.getTime() - getTimezoneOffset(local);
-}
+import { AppState } from "@/states/appState";
+import {
+  selectedDatasetSelector,
+  selectedDatasetTimeLabelSelector,
+  selectedPlaceInfoSelector,
+  selectedVariableSelector,
+} from "@/selectors/controlSelectors";
+import _StatisticsPanel from "@/components/StatisticsPanel";
+import { addStatistics, removeStatistics } from "@/actions/dataActions";
 
-export function utcTimeToLocal(utcTime: number): Date {
-  const dateTime = new Date(utcTime);
-  return new Date(dateTime.getTime() + getTimezoneOffset(dateTime));
-}
+const mapStateToProps = (state: AppState) => {
+  return {
+    selectedDataset: selectedDatasetSelector(state),
+    selectedVariable: selectedVariableSelector(state),
+    selectedTime: selectedDatasetTimeLabelSelector(state),
+    selectedPlaceInfo: selectedPlaceInfoSelector(state),
+    statisticsLoading: state.dataState.statistics.loading,
+    statisticsRecords: state.dataState.statistics.records,
+  };
+};
 
-export function utcTimeToIsoDateString(utcTime: number) {
-  return new Date(utcTime).toISOString().substring(0, 10);
-}
+const mapDispatchToProps = {
+  addStatistics,
+  removeStatistics,
+};
 
-export function utcTimeToIsoDateTimeString(utcTime: number) {
-  return isoDateTimeStringToLabel(new Date(utcTime).toISOString());
-}
-
-export function isoDateTimeStringToLabel(utcDateTimeString: string) {
-  return utcDateTimeString.substring(0, 19).replace("T", " ");
-}
+const StatisticsPanel = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_StatisticsPanel);
+export default StatisticsPanel;

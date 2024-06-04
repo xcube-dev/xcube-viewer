@@ -22,27 +22,56 @@
  * SOFTWARE.
  */
 
-function getTimezoneOffset(date: Date): number {
-  return date.getTimezoneOffset() * 60000;
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import { PlaceInfo } from "@/model/place";
+import {
+  Statistics,
+  StatisticsRecord,
+  StatisticsSource,
+} from "@/model/statistics";
+import {
+  callJsonApi,
+  makeRequestInit,
+  makeRequestUrl,
+  QueryComponent,
+} from "./callApi";
+
+interface StatisticsResult {
+  result: Statistics;
 }
 
-export function localToUtcTime(local: Date): number {
-  return local.getTime() - getTimezoneOffset(local);
-}
+export function getStatistics(
+  apiServerUrl: string,
+  dataset: Dataset,
+  variable: Variable,
+  placeInfo: PlaceInfo,
+  timeLabel: string,
+  accessToken: string | null,
+): Promise<StatisticsRecord> {
+  const query: QueryComponent[] = [["time", timeLabel]];
+  const dsId = encodeURIComponent(dataset.id);
+  const variableName = encodeURIComponent(variable.name);
+  const url = makeRequestUrl(
+    `${apiServerUrl}/statistics/${dsId}/${variableName}`,
+    query,
+  );
 
-export function utcTimeToLocal(utcTime: number): Date {
-  const dateTime = new Date(utcTime);
-  return new Date(dateTime.getTime() + getTimezoneOffset(dateTime));
-}
+  const init = {
+    ...makeRequestInit(accessToken),
+    method: "post",
+    body: JSON.stringify(placeInfo.place.geometry),
+  };
 
-export function utcTimeToIsoDateString(utcTime: number) {
-  return new Date(utcTime).toISOString().substring(0, 10);
-}
+  const source: StatisticsSource = {
+    dataset,
+    variable,
+    placeInfo,
+    time: timeLabel,
+  };
 
-export function utcTimeToIsoDateTimeString(utcTime: number) {
-  return isoDateTimeStringToLabel(new Date(utcTime).toISOString());
-}
-
-export function isoDateTimeStringToLabel(utcDateTimeString: string) {
-  return utcDateTimeString.substring(0, 19).replace("T", " ");
+  return callJsonApi(url, init, (r: StatisticsResult) => ({
+    source,
+    statistics: r.result,
+  }));
 }

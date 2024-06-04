@@ -30,6 +30,7 @@ import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import InfoIcon from "@mui/icons-material/Info";
+import FunctionsIcon from "@mui/icons-material/Functions";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
 
@@ -38,19 +39,22 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { setSidebarPanelId } from "@/actions/controlActions";
 import { SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
-import TimeSeriesPanel from "./TimeSeriesPanel";
-import VolumePanel from "./VolumePanel";
 import InfoPanel from "./InfoPanel";
+import TimeSeriesPanel from "./TimeSeriesPanel";
+import StatisticsPanel from "./StatisticsPanel";
+import VolumePanel from "./VolumePanel";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
-  charts: <StackedLineChartIcon fontSize="inherit" />,
+  timeSeries: <StackedLineChartIcon fontSize="inherit" />,
+  stats: <FunctionsIcon fontSize="inherit" />,
   volume: <ThreeDRotationIcon fontSize="inherit" />,
 };
 
 const sidebarPanelLabels: Record<SidebarPanelId, string> = {
   info: "Info",
-  charts: "Charts",
+  timeSeries: "Time-Series",
+  stats: "Statistics",
   volume: "Volume",
 };
 
@@ -106,7 +110,8 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
         </Tabs>
       </Box>
       {sidebarPanelId === "info" && <InfoPanel />}
-      {sidebarPanelId === "charts" && <TimeSeriesPanel />}
+      {sidebarPanelId === "stats" && <StatisticsPanel />}
+      {sidebarPanelId === "timeSeries" && <TimeSeriesPanel />}
       {sidebarPanelId === "volume" && <VolumePanel />}
     </Box>
   );

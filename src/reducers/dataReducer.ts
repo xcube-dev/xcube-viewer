@@ -44,6 +44,8 @@ import {
   UPDATE_TIME_SERIES,
   UPDATE_VARIABLE_COLOR_BAR,
   UPDATE_VARIABLE_VOLUME,
+  REMOVE_STATISTICS,
+  ADD_STATISTICS,
 } from "@/actions/dataActions";
 import { SELECT_TIME_RANGE, SelectTimeRange } from "@/actions/controlActions";
 import i18n from "@/i18n";
@@ -308,6 +310,36 @@ export function dataReducer(
       };
       return { ...state, timeSeriesGroups: newTimeSeriesGroups };
     }
+    case ADD_STATISTICS: {
+      const statistics = state.statistics;
+      if (action.statistics === null) {
+        return {
+          ...state,
+          statistics: { ...statistics, loading: true },
+        };
+      }
+      const records = statistics.records;
+      return {
+        ...state,
+        statistics: {
+          ...statistics,
+          loading: false,
+          records: [action.statistics, ...records],
+        },
+      };
+    }
+    case REMOVE_STATISTICS: {
+      const { index } = action;
+      const statistics = state.statistics;
+      const records = statistics.records;
+      return {
+        ...state,
+        statistics: {
+          ...statistics,
+          records: [...records.slice(0, index), ...records.slice(index + 1)],
+        },
+      };
+    }
     case UPDATE_TIME_SERIES: {
       const { timeSeries, updateMode, dataMode } = action;
       const timeSeriesGroups = updateTimeSeriesGroups(
@@ -378,9 +410,9 @@ export function dataReducer(
       }
       return state;
     }
+    default:
+      return state;
   }
-
-  return state!;
 }
 
 function updateVariableProps(

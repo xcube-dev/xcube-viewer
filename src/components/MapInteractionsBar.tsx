@@ -24,16 +24,17 @@
 
 import * as React from "react";
 import { Theme } from "@mui/material";
-import FormControl from "@mui/material/FormControl";
 import makeStyles from "@mui/styles/makeStyles";
-import Tooltip from "@mui/material/Tooltip";
-import AddLocationIcon from "@mui/icons-material/AddLocation";
-import CategoryIcon from "@mui/icons-material/Category";
-import CenterFocusStrongIcon from "@mui/icons-material/CenterFocusStrong";
-import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import FileUploadIcon from "@mui/icons-material/CloudUpload";
+import FormControl from "@mui/material/FormControl";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Tooltip from "@mui/material/Tooltip";
+import AddLocationIcon from "@mui/icons-material/AddLocation";
+import AdsClickIcon from "@mui/icons-material/AdsClick";
+import CategoryIcon from "@mui/icons-material/Category";
+// import CenterFocusStrongIcon from "@mui/icons-material/CenterFocusStrong";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import FileUploadIcon from "@mui/icons-material/CloudUpload";
 
 import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
@@ -85,7 +86,7 @@ export default function MapInteractionsBar({
           sx={commonStyles.toggleButton}
         >
           <Tooltip arrow title={i18n.get("Select a place in map")}>
-            <CenterFocusStrongIcon />
+            <AdsClickIcon />
           </Tooltip>
         </ToggleButton>
         <ToggleButton

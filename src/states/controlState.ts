@@ -92,8 +92,13 @@ export interface ExportSettings {
   multiFile: boolean;
   zipArchive: boolean;
 }
-export type SidebarPanelId = "info" | "charts" | "volume";
-export const sidebarPanelIds: SidebarPanelId[] = ["info", "charts", "volume"];
+export type SidebarPanelId = "info" | "timeSeries" | "stats" | "volume";
+export const sidebarPanelIds: SidebarPanelId[] = [
+  "info",
+  "timeSeries",
+  "stats",
+  "volume",
+];
 
 export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
@@ -205,7 +210,7 @@ export function newControlState(): ControlState {
     datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
     layerMenuOpen: false,
-    sidebarPosition: Math.max(window.innerWidth, window.innerHeight) / 2,
+    sidebarPosition: (2 * Math.max(window.innerWidth, window.innerHeight)) / 3,
     sidebarOpen: false,
     sidebarPanelId: "info",
     volumeRenderMode: "mip",
