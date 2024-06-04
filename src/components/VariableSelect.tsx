@@ -25,7 +25,6 @@
 import * as React from "react";
 import { Theme } from "@mui/material/styles";
 import { WithStyles } from "@mui/styles";
-import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -35,13 +34,16 @@ import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import Tooltip from "@mui/material/Tooltip";
 import CompareIcon from "@mui/icons-material/Compare";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import TimelineIcon from "@mui/icons-material/Timeline";
 
 import i18n from "@/i18n";
 import { Variable } from "@/model/variable";
 import { WithLocale } from "@/util/lang";
-import ControlBarItem from "./ControlBarItem";
 import { commonStyles } from "@/components/common-styles";
+import ToolButton from "@/components/ToolButton";
+import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
+import ControlBarItem from "./ControlBarItem";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -69,6 +71,7 @@ interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
     dataset2Id: string | null,
     variable2Name: string | null,
   ) => void;
+  openDialog: (dialogId: string) => void;
 }
 
 const _VariableSelect: React.FC<VariableSelectProps> = ({
@@ -82,9 +85,14 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
   addTimeSeries,
   selectVariable,
   selectVariable2,
+  openDialog,
 }) => {
   const handleVariableChange = (event: SelectChangeEvent) => {
     selectVariable(event.target.value || null);
+  };
+
+  const handleManageUserVariablesClick = () => {
+    openDialog(USER_VARIABLES_DIALOG_ID);
   };
 
   const handleAddTimeSeriesButtonClick = () => {
@@ -127,17 +135,23 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       ))}
     </Select>
   );
-  const timeSeriesButton = (
-    <IconButton
+  const manageUserVariablesButton = (
+    <ToolButton
+      key={"userVariables"}
+      onClick={handleManageUserVariablesClick}
+      tooltipText={i18n.get("Add/manage user-defined variables")}
+      icon={<PlaylistAddIcon />}
+    />
+  );
+  const addTimeSeriesButton = (
+    <ToolButton
       key={"timeSeries"}
       className={classes.button}
       disabled={!canAddTimeSeries}
       onClick={handleAddTimeSeriesButtonClick}
-    >
-      <Tooltip arrow title={i18n.get("Show time-series diagram")}>
-        {<TimelineIcon />}
-      </Tooltip>
-    </IconButton>
+      tooltipText={i18n.get("Show time-series diagram")}
+      icon={<TimelineIcon />}
+    />
   );
   const variable2Button = (
     <ToggleButton
@@ -154,12 +168,15 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       </Tooltip>
     </ToggleButton>
   );
-
   return (
     <ControlBarItem
       label={variableSelectLabel}
       control={variableSelect}
-      actions={[timeSeriesButton, variable2Button]}
+      actions={[
+        manageUserVariablesButton,
+        addTimeSeriesButton,
+        variable2Button,
+      ]}
     />
   );
 };

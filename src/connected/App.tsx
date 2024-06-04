@@ -44,6 +44,7 @@ import SettingsDialog from "./SettingsDialog";
 import ExportDialog from "./ExportDialog";
 import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
+import UserVariablesDialog from "./UserVariablesDialog";
 
 interface AppProps {
   compact: boolean;
@@ -85,6 +86,7 @@ const _App: React.FC<AppProps> = ({ compact }) => {
             <SettingsDialog />
             <UserLayersDialog key="userOverlays" dialogId="userOverlays" />
             <UserLayersDialog key="userBaseMaps" dialogId="userBaseMaps" />
+            <UserVariablesDialog />
             <UserPlacesDialog />
             <ExportDialog />
             <LegalAgreementDialog />

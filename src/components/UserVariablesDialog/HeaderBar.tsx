@@ -22,42 +22,38 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { ReactNode } from "react";
+import { alpha } from "@mui/system";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
-import _VariableSelect from "@/components/VariableSelect";
-import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-} from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  selectedVariablesSelector,
-} from "@/selectors/controlSelectors";
+interface HeaderBarProps {
+  selected: boolean;
+  title: ReactNode;
+  actions: ReactNode;
+}
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
-  };
-};
-
-const mapDispatchToProps = {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
-};
-
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+export default function HeaderBar({
+  selected,
+  title,
+  actions,
+}: HeaderBarProps) {
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(selected && {
+          background: (theme) =>
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity,
+            ),
+        }),
+      }}
+    >
+      <Typography sx={{ flex: "1 1 100%" }}>{title}</Typography>
+      {actions}
+    </Toolbar>
+  );
+}
