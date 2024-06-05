@@ -23,7 +23,7 @@
  */
 
 import { useState } from "react";
-import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -32,21 +32,21 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Tooltip from "@mui/material/Tooltip";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 import i18n from "@/i18n";
-import { Variable } from "@/model/variable";
 import { Dataset } from "@/model/dataset";
-import HeaderBar from "./HeaderBar";
 import { EditedVariable, newUserVariable } from "./utils";
-import Box from "@mui/material/Box";
+import { UserVariable } from "@/model/userVariable";
+import HeaderBar from "./HeaderBar";
 
 interface UserVariablesTableProps {
   setEditedVariable: (editedVariable: EditedVariable) => void;
-  userVariables: Variable[];
-  setUserVariables: (userVariables: Variable[]) => void;
+  userVariables: UserVariable[];
+  setUserVariables: (userVariables: UserVariable[]) => void;
   contextDataset: Dataset;
 }
 

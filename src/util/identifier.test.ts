@@ -22,35 +22,31 @@
  * SOFTWARE.
  */
 
-import { newId } from "@/util/id";
-import { UserVariable } from "@/model/userVariable";
+import { expect, it, describe } from "vitest";
+import { isIdentifier, getIdentifiers } from "./identifier";
 
-export const USER_VARIABLES_DIALOG_ID = "userVariablesDialog";
+describe("Assert that identifier.isIdentifier()", () => {
+  it("returns true for identifiers", () => {
+    expect(isIdentifier("test9")).toEqual(true);
+    expect(isIdentifier("value")).toEqual(true);
+    expect(isIdentifier("value_min")).toEqual(true);
+  });
 
-export type EditMode = "add" | "edit";
+  it("returns false for non-identifiers", () => {
+    expect(isIdentifier("")).toEqual(false);
+    expect(isIdentifier("2.4")).toEqual(false);
+    expect(isIdentifier("9test")).toEqual(false);
+    expect(isIdentifier("+test")).toEqual(false);
+    expect(isIdentifier("value-min")).toEqual(false);
+  });
+});
 
-export interface EditedVariable {
-  editMode: EditMode;
-  variable: UserVariable;
-}
-
-export function newUserVariable(): UserVariable {
-  return {
-    id: newId("user"),
-    // Editable properties
-    name: "",
-    title: "",
-    units: "",
-    expression: "",
-    // Can be changed in the UI
-    colorBarName: "bone",
-    colorBarMin: 0,
-    colorBarMax: 1,
-    // Never used
-    shape: [],
-    dims: [],
-    dtype: "float64",
-    timeChunkSize: null,
-    attrs: {},
-  };
-}
+describe("Assert that identifier.getIdentifiers()", () => {
+  it("works", () => {
+    expect(getIdentifiers("")).toEqual(new Set());
+    expect(getIdentifiers("B07")).toEqual(new Set(["B07"]));
+    expect(getIdentifiers("(B04 - B05) / (max(B06, B07) + B05)")).toEqual(
+      new Set(["B04", "B05", "B06", "B07", "max"]),
+    );
+  });
+});

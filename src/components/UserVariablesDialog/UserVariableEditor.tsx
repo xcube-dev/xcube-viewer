@@ -33,17 +33,65 @@ import Typography from "@mui/material/Typography";
 import i18n from "@/i18n";
 import { Config } from "@/config";
 import { Dataset } from "@/model/dataset";
-import { Variable } from "@/model/variable";
+import { UserVariable } from "@/model/userVariable";
+import { isIdentifier, getIdentifiers } from "@/util/identifier";
 import DoneCancel from "@/components/DoneCancel";
 import { EditedVariable } from "./utils";
 import HeaderBar from "./HeaderBar";
 
-// TODO: for time being, we do not allow user-defined variables to be
+const expressionParts = [
+  "+",
+  "-",
+  "*",
+  "**",
+  "/",
+  "%",
+  "^",
+  "~",
+  "&",
+  "|",
+  "()",
+  "and",
+  "or",
+  "not",
+  "pi",
+  "sqrt()",
+  "sin()",
+  "cos()",
+  "tan()",
+  "min()",
+  "max()",
+];
+
+const predefinedNames = getIdentifiers(expressionParts.join(" "));
+
+function validateExpression(
+  expression: string,
+  contextDataset: Dataset,
+): string | null {
+  if (expression!.trim() === "") {
+    return i18n.get("Must not be empty");
+  }
+  const datasetVariableNames = new Set(
+    contextDataset.variables.map((v) => v.name),
+  );
+  for (const identifier of getIdentifiers(expression)) {
+    if (
+      !datasetVariableNames.has(identifier) &&
+      !predefinedNames.has(identifier)
+    ) {
+      return `${i18n.get("Unknown identifier")}: ${identifier}`;
+    }
+  }
+  return null;
+}
+
+// Note: for time being, we do not allow user-defined variables to be
 //    part of an expression.
 
 interface UserVariableEditorProps {
-  userVariables: Variable[];
-  setUserVariables: (userVariables: Variable[]) => void;
+  userVariables: UserVariable[];
+  setUserVariables: (userVariables: UserVariable[]) => void;
   editedVariable: EditedVariable;
   setEditedVariable: (editedVariable: EditedVariable | null) => void;
   contextDataset: Dataset;
@@ -60,15 +108,22 @@ export default function UserVariableEditor({
 
   const { id, name, title, units, expression } = editedVariable.variable;
 
-  const nameTaken =
-    allVariables.findIndex((v) => v.id !== id && v.name === name.trim()) >= 0;
+  const isNameUsed =
+    allVariables.findIndex((v) => v.id !== id && v.name === name) >= 0;
+  const isNameInvalid = !isIdentifier(name);
+  const nameProblem = isNameUsed
+    ? i18n.get("Already in use")
+    : isNameInvalid
+      ? i18n.get("Not a valid identifier")
+      : null;
+  const isNameOk = !nameProblem;
 
-  const nameOk = name.trim() !== "" && !nameTaken;
-  const expressionOk = expression!.trim() !== "";
+  const expressionProblem = validateExpression(expression, contextDataset);
+  const isExpressionOk = !expressionProblem;
 
-  const canCommit = nameOk && expressionOk;
+  const canCommit = isNameOk && isExpressionOk;
 
-  const changeVariableKey = (key: keyof Variable, value: string) => {
+  const changeVariableKey = (key: keyof UserVariable, value: string) => {
     setEditedVariable({
       ...editedVariable,
       variable: { ...editedVariable.variable, [key]: value },
@@ -111,26 +166,18 @@ export default function UserVariableEditor({
     changeVariableKey("expression", value);
   };
 
-  const expressionParts = [
-    "+",
-    "-",
-    "*",
-    "/",
-    "%",
-    "~",
-    "&",
-    "|",
-    "and",
-    "or",
-    "not",
-    "()",
-    "sqrt()",
-    "sin()",
-    "cos()",
-    "tan()",
-    "min()",
-    "max()",
-  ];
+  const handleExpressionInsert = (part: string) => {
+    // Here we just append the new part.
+    // It would be nice, if we'd insert at current cursor position.
+    // Or use the current selection to replace it according to
+    // part="sin()" --> "sin(<selection>)".
+    changeVariableKey(
+      "expression",
+      expression.length && !expression.endsWith(" ")
+        ? `${expression} ${part}`
+        : expression + part,
+    );
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -162,8 +209,8 @@ export default function UserVariableEditor({
         <Box sx={{ display: "flex", gap: 1 }}>
           <TextField
             sx={{ flexGrow: 0.3 }}
-            error={!nameOk} // TODO: !!name nameTaken
-            helperText={null} // TODO: i18n.get("Name taken")
+            error={!isNameOk}
+            helperText={nameProblem}
             size="small"
             variant="standard"
             label={i18n.get("Name")}
@@ -188,16 +235,9 @@ export default function UserVariableEditor({
           />
         </Box>
 
-        <Box
-          sx={{
-            flexGrow: 1,
-          }}
-        >
-          <Typography
-            sx={{ paddingBottom: 1 }}
-            color={!expressionOk ? "error" : undefined}
-          >
-            Expression
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography sx={{ paddingBottom: 1 }}>
+            {i18n.get("Expression")}
           </Typography>
           <CodeMirror
             theme={Config.instance.branding.themeName || "light"}
@@ -207,14 +247,24 @@ export default function UserVariableEditor({
             value={expression}
             onChange={handleExpressionChange}
           />
+          {expressionProblem && (
+            <Typography
+              sx={{ paddingBottom: 1 }}
+              color="error"
+              fontSize="small"
+            >
+              {expressionProblem}
+            </Typography>
+          )}
           <Box sx={{ paddingTop: 1, overflowY: "auto" }}>
-            {expressionParts.map((p) => (
-              <Box key={p} component="span" sx={{ padding: 0.2 }}>
+            {expressionParts.map((part) => (
+              <Box key={part} component="span" sx={{ padding: 0.2 }}>
                 <Chip
-                  label={p}
+                  label={part}
                   sx={{ fontFamily: "monospace" }}
                   size="small"
-                  onClick={() => handleExpressionChange(expression + " " + p)}
+                  color="primary"
+                  onClick={() => handleExpressionInsert(part)}
                 />
               </Box>
             ))}
@@ -226,10 +276,8 @@ export default function UserVariableEditor({
                       label={v.name}
                       sx={{ fontFamily: "monospace" }}
                       size="small"
-                      color={v.expression ? "secondary" : "primary"}
-                      onClick={() =>
-                        handleExpressionChange(expression + " " + v.name)
-                      }
+                      color="secondary"
+                      onClick={() => handleExpressionInsert(v.name)}
                     />
                   </Box>
                 ),

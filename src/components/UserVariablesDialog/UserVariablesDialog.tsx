@@ -34,7 +34,7 @@ import Paper from "@mui/material/Paper";
 import i18n from "@/i18n";
 import { ControlState } from "@/states/controlState";
 import { Dataset } from "@/model/dataset";
-import { Variable } from "@/model/variable";
+import { UserVariable } from "@/model/userVariable";
 import {
   USER_VARIABLES_DIALOG_ID,
   EditedVariable,
@@ -43,13 +43,16 @@ import {
 import UserVariablesTable from "./UserVariablesTable";
 import UserVariableEditor from "./UserVariableEditor";
 
-const MOCK_VARIABLES: Variable[] = Array.from({ length: 16 }, (_, index) => ({
-  ...newUserVariable(),
-  id: `user${index + 1}`,
-  name: `var_${index}`,
-  title: `Variable-${index}`,
-  expression: `var_${index} - var_1`,
-}));
+const MOCK_VARIABLES: UserVariable[] = Array.from(
+  { length: 16 },
+  (_, index) => ({
+    ...newUserVariable(),
+    id: `user${index + 1}`,
+    name: `var_${index}`,
+    title: `Variable-${index}`,
+    expression: `var_${index} - var_1`,
+  }),
+);
 
 interface UserVariablesDialogProps {
   open: boolean;
@@ -67,7 +70,7 @@ export default function UserVariablesDialog({
   // updateSettings,
 }: UserVariablesDialogProps) {
   const [userVariables, setUserVariables] =
-    useState<Variable[]>(MOCK_VARIABLES);
+    useState<UserVariable[]>(MOCK_VARIABLES);
   const [editedVariable, setEditedVariable] = useState<EditedVariable | null>(
     null,
   );

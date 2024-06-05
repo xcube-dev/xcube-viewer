@@ -22,35 +22,8 @@
  * SOFTWARE.
  */
 
-import { newId } from "@/util/id";
-import { UserVariable } from "@/model/userVariable";
+import { Variable } from "./variable";
 
-export const USER_VARIABLES_DIALOG_ID = "userVariablesDialog";
-
-export type EditMode = "add" | "edit";
-
-export interface EditedVariable {
-  editMode: EditMode;
-  variable: UserVariable;
-}
-
-export function newUserVariable(): UserVariable {
-  return {
-    id: newId("user"),
-    // Editable properties
-    name: "",
-    title: "",
-    units: "",
-    expression: "",
-    // Can be changed in the UI
-    colorBarName: "bone",
-    colorBarMin: 0,
-    colorBarMax: 1,
-    // Never used
-    shape: [],
-    dims: [],
-    dtype: "float64",
-    timeChunkSize: null,
-    attrs: {},
-  };
+export interface UserVariable extends Variable {
+  expression: string;
 }

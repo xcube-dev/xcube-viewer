@@ -22,35 +22,16 @@
  * SOFTWARE.
  */
 
-import { newId } from "@/util/id";
-import { UserVariable } from "@/model/userVariable";
+const reIdentifier = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+const reVariables = /[a-zA-Z_$][a-zA-Z0-9_$]*/g;
 
-export const USER_VARIABLES_DIALOG_ID = "userVariablesDialog";
+const emptySet = new Set<string>();
 
-export type EditMode = "add" | "edit";
-
-export interface EditedVariable {
-  editMode: EditMode;
-  variable: UserVariable;
+export function isIdentifier(value: string): boolean {
+  return reIdentifier.test(value);
 }
 
-export function newUserVariable(): UserVariable {
-  return {
-    id: newId("user"),
-    // Editable properties
-    name: "",
-    title: "",
-    units: "",
-    expression: "",
-    // Can be changed in the UI
-    colorBarName: "bone",
-    colorBarMin: 0,
-    colorBarMax: 1,
-    // Never used
-    shape: [],
-    dims: [],
-    dtype: "float64",
-    timeChunkSize: null,
-    attrs: {},
-  };
+export function getIdentifiers(expression: string): Set<string> {
+  const matches = expression.match(reVariables);
+  return matches !== null ? new Set(matches) : emptySet;
 }
