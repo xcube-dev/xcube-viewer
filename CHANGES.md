@@ -1,4 +1,4 @@
-## Changes in version 1.2.0 (in development)
+## Changes in version 1.2.0
 
 * Introduced a variable comparison mode. Users can now go to the layer 
   visibility dropdown menu (see below) and enable the variable compare mode.
