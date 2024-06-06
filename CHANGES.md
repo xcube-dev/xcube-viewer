@@ -13,7 +13,7 @@
 
 * Introduced a statistics panel, where basic statistics for the currently 
   selected variable, selected timestamp, and selected place can be computed
-  and displayed. If the place is an area, statistics include include 
+  and displayed. If the place is an area, statistics include  
   minimum, maximum, mean, standard deviation, and a histogram. For 
   point places the value at the point is displayed. 
 
