@@ -841,6 +841,11 @@
       "se": "Diagrammer"
     },
     {
+      "en": "Statistics",
+      "de": "Statistik",
+      "se": "Statistik"
+    },
+    {
       "en": "Volume",
       "de": "Volumen",
       "se": "Volym"
@@ -848,7 +853,7 @@
     {
       "en": "Toggle zoom mode (or press CTRL key)",
       "de": "Zoom-Modus umschalten (oder drücke CTRL-Taste)",
-      "se": "Skifta zoomläge (eller tryck på CTRL-tangenten)"
+      "se": "Växla zoomläge (eller tryck på CTRL-tangenten)"
     },
     {
       "en": "Enter fixed y-range",
@@ -944,6 +949,46 @@
       "en": "User",
       "de": "Nutzer",
       "se": "Användare"
+    },
+    {
+      "en": "Add Time-Series",
+      "de": "Zeitserien hinzufügen",
+      "se": "Lägg till tidsserier"
+    },
+    {
+      "en": "No time-series have been obtained yet. Select a variable and a place first.",
+      "de": "Es wurden noch keine Zeitreihen abgerufen. Wählen Sie zuerst eine Variable und einen Ort aus.",
+      "se": "Inga tidsserier har hämtats ännu. Välj först en variabel och en plats."
+    },
+    {
+      "en": "Count",
+      "de": "Anzahl",
+      "se": "Antal"
+    },
+    {
+      "en": "Minimum",
+      "de": "Minimum",
+      "se": "Minimum"
+    },
+    {
+      "en": "Maximum",
+      "de": "Maximum",
+      "se": "Maximum"
+    },
+    {
+      "en": "Mean",
+      "de": "Mittelwert",
+      "se": "Medelvärde"
+    },
+    {
+      "en": "Deviation",
+      "de": "Abweichung",
+      "se": "Avvikelse"
+    },
+    {
+      "en": "Toggle adjustable x-range",
+      "de": "Anpassbaren x-Bereich umschalten",
+      "se": "Växla justerbart x-intervall"
     },
     {
       "en": "docs/privacy-note.en.md",
