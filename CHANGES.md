@@ -1,3 +1,7 @@
+## Changes in version 1.2.1 (in development)
+
+* Updated translations for UI text in the statistics panel.
+
 ## Changes in version 1.2.0
 
 ### Enhancements
