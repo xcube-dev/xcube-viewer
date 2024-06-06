@@ -27,10 +27,12 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Tooltip from "@mui/material/Tooltip";
 import CloseIcon from "@mui/icons-material/Close";
 import IsoIcon from "@mui/icons-material/Iso";
 import TransformIcon from "@mui/icons-material/Transform";
 
+import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
@@ -82,22 +84,29 @@ export default function StatisticsDataRow({
         <>
           {hasHistogram && (
             <ToggleButtonGroup size="small">
-              <ToggleButton
-                selected={brush}
-                onClick={handleToggleBrush}
-                value="brush"
-                size="small"
+              <Tooltip arrow title={i18n.get("Toggle adjustable x-range")}>
+                <ToggleButton
+                  selected={brush}
+                  onClick={handleToggleBrush}
+                  value="brush"
+                  size="small"
+                >
+                  <TransformIcon fontSize="inherit" />
+                </ToggleButton>
+              </Tooltip>
+              <Tooltip
+                arrow
+                title={i18n.get("Show standard deviation (if any)")}
               >
-                <TransformIcon fontSize="inherit" />
-              </ToggleButton>
-              <ToggleButton
-                selected={details}
-                onClick={handleToggleDetails}
-                value="details"
-                size="small"
-              >
-                <IsoIcon fontSize="inherit" />
-              </ToggleButton>
+                <ToggleButton
+                  selected={details}
+                  onClick={handleToggleDetails}
+                  value="details"
+                  size="small"
+                >
+                  <IsoIcon fontSize="inherit" />
+                </ToggleButton>
+              </Tooltip>
             </ToggleButtonGroup>
           )}
           <IconButton size="small" onClick={handleRemoveStatistics}>
