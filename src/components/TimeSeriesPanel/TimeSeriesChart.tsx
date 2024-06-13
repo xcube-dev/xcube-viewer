@@ -38,6 +38,8 @@ import {
   YAxis,
 } from "recharts";
 import { CategoricalChartState } from "recharts/types/chart/types";
+import { toPng } from "html-to-image";
+import { saveAs } from "file-saver";
 
 import { Place, PlaceInfo } from "@/model/place";
 import {
@@ -409,6 +411,27 @@ export default function TimeSeriesChart({
 
   const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
+  const exportTimeSeries = async () => {
+    if (containerRef.current) {
+      const chartElement = containerRef.current.getElementsByClassName(
+        "recharts-surface",
+      )[0] as HTMLElement;
+
+      if (chartElement) {
+        const dataUrl = await toPng(chartElement, {
+          backgroundColor: "#ffffff",
+        });
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        saveAs(blob, "chart.png");
+      } else {
+        console.error("Element with class 'recharts-surface' not found");
+      }
+    } else {
+      console.error("Error exporting chart: containerRef.current is null");
+    }
+  };
+
   return (
     <div ref={containerRef} className={classes.chartContainer}>
       <TimeSeriesChartHeader
@@ -430,8 +453,10 @@ export default function TimeSeriesChart({
         setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
+        exportTimeSeries={exportTimeSeries}
       />
       <ResponsiveContainer
+        ref={containerRef}
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
         className={classes.responsiveContainer}

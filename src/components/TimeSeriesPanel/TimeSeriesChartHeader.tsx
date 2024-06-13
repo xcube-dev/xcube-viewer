@@ -39,6 +39,7 @@ import FitScreenIcon from "@mui/icons-material/FitScreen";
 import IsoIcon from "@mui/icons-material/Iso";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 import i18n from "@/i18n";
 import {
@@ -109,6 +110,7 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setStdevBars: (showStdDev: boolean) => void;
   valueRange: ValueRange | undefined;
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
+  exportTimeSeries: () => void;
 }
 
 export default function TimeSeriesChartHeader({
@@ -130,6 +132,7 @@ export default function TimeSeriesChartHeader({
   setStdevBars,
   valueRange,
   setValueRange,
+  exportTimeSeries,
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
@@ -179,6 +182,16 @@ export default function TimeSeriesChartHeader({
             </IconButton>
           </Tooltip>
         )}
+        <Tooltip arrow title={i18n.get("Export Timeseries as image")}>
+          <IconButton
+            key={"exportButton"}
+            sx={styles.actionButton}
+            onClick={exportTimeSeries}
+            size="small"
+          >
+            <CameraAltIcon fontSize={"inherit"}></CameraAltIcon>
+          </IconButton>
+        </Tooltip>
 
         <Tooltip arrow title={i18n.get("Toggle zoom mode (or press CTRL key)")}>
           <ToggleButton
