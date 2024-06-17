@@ -24,10 +24,8 @@
 
 import * as React from "react";
 import { useAuth } from "react-oidc-context";
-import { Theme } from "@mui/material";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import { makeStyles } from "@/util/styles";
+import { Theme, styled } from "@mui/system";
 import { deepOrange } from "@mui/material/colors";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -46,44 +44,43 @@ import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import UserProfile from "@/components/UserProfile";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    imageAvatar: {
-      width: 32,
-      height: 32,
-      color: "#fff",
-      backgroundColor: deepOrange[300],
-    },
-    letterAvatar: {
-      width: 32,
-      height: 32,
-      color: "#fff",
-      backgroundColor: deepOrange[300],
-    },
-    signInWrapper: {
-      margin: theme.spacing(1),
-      position: "relative",
-    },
-    signInProgress: {
-      color: deepOrange[300],
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      zIndex: 1,
-      marginTop: -12,
-      marginLeft: -12,
-    },
-    iconButton: {
-      padding: 0,
-    },
-  });
+const styles = makeStyles({
+  imageAvatar: {
+    width: 32,
+    height: 32,
+    color: "#fff",
+    backgroundColor: deepOrange[300],
+  },
+  letterAvatar: {
+    width: 32,
+    height: 32,
+    color: "#fff",
+    backgroundColor: deepOrange[300],
+  },
+  signInProgress: {
+    color: deepOrange[300],
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    zIndex: 1,
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  iconButton: {
+    padding: 0,
+  },
+});
 
-interface UserControlProps extends WithStyles<typeof styles>, WithLocale {
+const StyledContainerDiv = styled("div")(({ theme }: { theme: Theme }) => ({
+  margin: theme.spacing(1),
+  position: "relative",
+}));
+
+interface UserControlProps extends WithLocale {
   updateAccessToken: (accessToken: string | null) => void;
 }
 
 const UserControlContent: React.FC<UserControlProps> = ({
-  classes,
   updateAccessToken,
 }) => {
   const auth = useAuth();
@@ -155,11 +152,11 @@ const UserControlContent: React.FC<UserControlProps> = ({
     let avatar;
     let avatarContent: React.ReactNode = <PersonIcon />;
     if (!userInfo) {
-      avatar = <Avatar className={classes.letterAvatar}>?</Avatar>;
+      avatar = <Avatar sx={styles.letterAvatar}>?</Avatar>;
     } else if (userInfo.picture) {
       avatar = (
         <Avatar
-          className={classes.imageAvatar}
+          sx={styles.imageAvatar}
           src={userInfo.picture}
           alt={userInfo.name}
         />
@@ -178,9 +175,7 @@ const UserControlContent: React.FC<UserControlProps> = ({
       if (letters !== null) {
         avatarContent = letters.toUpperCase();
       }
-      avatar = (
-        <Avatar className={classes.letterAvatar}>{avatarContent}</Avatar>
-      );
+      avatar = <Avatar sx={styles.letterAvatar}>{avatarContent}</Avatar>;
     }
     return (
       <React.Fragment>
@@ -189,7 +184,7 @@ const UserControlContent: React.FC<UserControlProps> = ({
           aria-controls="user-menu"
           aria-haspopup="true"
           size="small"
-          className={classes.iconButton}
+          sx={styles.iconButton}
         >
           {avatar}
         </IconButton>
@@ -221,9 +216,7 @@ const UserControlContent: React.FC<UserControlProps> = ({
             <UserProfile userInfo={auth.user.profile} />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleUserProfileDialogClose}>
-              OK
-            </Button>
+            <Button onClick={handleUserProfileDialogClose}>OK</Button>
           </DialogActions>
         </Dialog>
       </React.Fragment>
@@ -239,10 +232,10 @@ const UserControlContent: React.FC<UserControlProps> = ({
     );
     if (auth.isLoading) {
       userButton = (
-        <div className={classes.signInWrapper}>
+        <StyledContainerDiv>
           {userButton}
-          <CircularProgress size={24} className={classes.signInProgress} />
-        </div>
+          <CircularProgress size={24} sx={styles.signInProgress} />
+        </StyledContainerDiv>
       );
     }
     return userButton;
@@ -256,5 +249,5 @@ const _UserControl: React.FC<UserControlProps> = (props) => {
   return <UserControlContent {...props} />;
 };
 
-const UserControl = withStyles(styles)(_UserControl);
+const UserControl = _UserControl;
 export default UserControl;

@@ -21,21 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import * as React from "react";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
+import { makeStyles } from "@/util/styles";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ToggleButton from "@mui/material/ToggleButton";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import Tooltip from "@mui/material/Tooltip";
 import CompareIcon from "@mui/icons-material/Compare";
 import TimelineIcon from "@mui/icons-material/Timeline";
+import merge from "lodash.merge";
 
 import i18n from "@/i18n";
 import { Variable } from "@/model/variable";
@@ -43,20 +39,15 @@ import { WithLocale } from "@/util/lang";
 import ControlBarItem from "./ControlBarItem";
 import { commonStyles } from "@/components/common-styles";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    formControl: {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectEmpty: {},
-    button: {
-      margin: theme.spacing(0.1),
-    },
-  });
+const styles = makeStyles({
+  button: (theme) => ({
+    margin: theme.spacing(0.1),
+  }),
+});
 
-interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
+const mergedStyles = merge({}, styles.button, commonStyles.toggleButton);
+
+interface VariableSelectProps extends WithLocale {
   selectedDatasetId: string | null;
   selectedDataset2Id: string | null;
   selectedVariableName: string | null;
@@ -71,8 +62,7 @@ interface VariableSelectProps extends WithStyles<typeof styles>, WithLocale {
   ) => void;
 }
 
-const _VariableSelect: React.FC<VariableSelectProps> = ({
-  classes,
+export default function VariableSelect({
   selectedDatasetId,
   selectedVariableName,
   selectedDataset2Id,
@@ -82,7 +72,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
   addTimeSeries,
   selectVariable,
   selectVariable2,
-}) => {
+}: VariableSelectProps) {
   const handleVariableChange = (event: SelectChangeEvent) => {
     selectVariable(event.target.value || null);
   };
@@ -104,7 +94,6 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
   const variableSelect = (
     <Select
       variant="standard"
-      className={classes.selectEmpty}
       value={selectedVariableName || ""}
       onChange={handleVariableChange}
       input={<Input name="variable" id="variable-select" />}
@@ -130,7 +119,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
   const timeSeriesButton = (
     <IconButton
       key={"timeSeries"}
-      className={classes.button}
+      sx={styles.button}
       disabled={!canAddTimeSeries}
       onClick={handleAddTimeSeriesButtonClick}
     >
@@ -142,11 +131,10 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
   const variable2Button = (
     <ToggleButton
       key={"variable2"}
-      className={classes.button}
       selected={isSelectedVariable2}
       value={"comparison"}
       size="small"
-      sx={commonStyles.toggleButton}
+      sx={mergedStyles}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>
@@ -162,10 +150,7 @@ const _VariableSelect: React.FC<VariableSelectProps> = ({
       actions={[timeSeriesButton, variable2Button]}
     />
   );
-};
-
-const VariableSelect = withStyles(styles)(_VariableSelect);
-export default VariableSelect;
+}
 
 function getVariableLabel(
   variable: Variable,
