@@ -991,6 +991,51 @@
       "se": "Växla justerbart x-intervall"
     },
     {
+      "en": "Compare Mode (Swipe)",
+      "de": "Vergleichsmodus (Swipe)",
+      "se": "Jämförelseläge (Svep)"
+    },
+    {
+      "en": "Dataset RGB",
+      "de": "Datensatz RGB",
+      "se": "Dataset RGB"
+    },
+    {
+      "en": "Dataset RGB 2",
+      "de": "Datensatz RGB 2",
+      "se": "Dataset RGB 2"
+    },
+    {
+      "en": "Dataset Variable",
+      "de": "Datensatz Variable",
+      "se": "Dataset Variabel"
+    },
+    {
+      "en": "Dataset Variable 2",
+      "de": "Datensatz Variable 2",
+      "se": "Dataset Variabel 2"
+    },
+    {
+      "en": "Dataset Boundary",
+      "de": "Datensatz Außengrenze",
+      "se": "Dataset Yttre Gräns"
+    },
+    {
+      "en": "Dataset Places",
+      "de": "Datensatz Orte",
+      "se": "Dataset Platser"
+    },
+    {
+      "en": "User Places",
+      "de": "Nutzer Orte",
+      "se": "Användare Platser"
+    },
+    {
+      "en": "Layers",
+      "de": "Layer",
+      "se": "Lager"
+    },
+    {
       "en": "docs/privacy-note.en.md",
       "de": "docs/privacy-note.de.md",
       "se": "docs/privacy-note.se.md"
