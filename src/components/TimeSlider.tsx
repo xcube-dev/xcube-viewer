@@ -24,10 +24,6 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
-import { Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
@@ -39,25 +35,25 @@ import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
 } from "@/util/time";
+import { makeStyles } from "@/util/styles";
 
 const HOR_MARGIN = 5;
 
 // noinspection JSUnusedLocalSymbols
-const styles = (theme: Theme) =>
-  createStyles({
-    box: {
-      marginTop: theme.spacing(1),
-      marginLeft: theme.spacing(HOR_MARGIN),
-      marginRight: theme.spacing(HOR_MARGIN),
-      minWidth: 200,
-    },
-    label: {
-      color: "grey",
-      fontSize: "1em",
-    },
-  });
+const styles = makeStyles({
+  box: (theme) => ({
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(HOR_MARGIN),
+    marginRight: theme.spacing(HOR_MARGIN),
+    minWidth: 200,
+  }),
+  label: {
+    color: "grey",
+    fontSize: "1em",
+  },
+});
 
-interface TimeSliderProps extends WithStyles<typeof styles> {
+interface TimeSliderProps {
   hasTimeDimension?: boolean;
   selectedTime?: Time | null;
   selectTime?: (time: Time | null) => void;
@@ -65,13 +61,12 @@ interface TimeSliderProps extends WithStyles<typeof styles> {
   selectTimeRange?: (timeRange: TimeRange | null) => void;
 }
 
-const _TimeSlider: React.FC<TimeSliderProps> = ({
-  classes,
+export default function TimeSlider({
   hasTimeDimension,
   selectedTime,
   selectTime,
   selectedTimeRange,
-}) => {
+}: TimeSliderProps) {
   const [selectedTime_, setSelectedTime_] = useState(selectedTime);
 
   useEffect(() => {
@@ -120,7 +115,7 @@ const _TimeSlider: React.FC<TimeSliderProps> = ({
   }
 
   return (
-    <Box className={classes.box}>
+    <Box sx={styles.box}>
       <Tooltip arrow title={i18n.get("Select time in dataset")}>
         <Slider
           disabled={!selectedTimeRangeValid}
@@ -137,7 +132,4 @@ const _TimeSlider: React.FC<TimeSliderProps> = ({
       </Tooltip>
     </Box>
   );
-};
-
-const TimeSlider = withStyles(styles)(_TimeSlider);
-export default TimeSlider;
+}
