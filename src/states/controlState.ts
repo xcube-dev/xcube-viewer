@@ -37,6 +37,7 @@ import {
   GeoJsonOptions,
 } from "@/model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
+import { UserVariable } from "@/model/userVariable";
 import { loadUserSettings } from "./userSettings";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
@@ -151,6 +152,7 @@ export interface ControlState {
   userBaseMaps: LayerDefinition[];
   userOverlays: LayerDefinition[];
   userColorBars: UserColorBar[];
+  userVariables: UserVariable[];
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
   exportTimeSeries: boolean;
@@ -227,6 +229,7 @@ export function newControlState(): ControlState {
     userBaseMaps: [],
     userOverlays: [],
     userColorBars: [],
+    userVariables: [],
     exportTimeSeries: true,
     exportTimeSeriesSeparator: "TAB",
     exportPlaces: true,

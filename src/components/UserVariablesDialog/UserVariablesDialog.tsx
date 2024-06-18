@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -32,54 +32,48 @@ import DialogActions from "@mui/material/DialogActions";
 import Paper from "@mui/material/Paper";
 
 import i18n from "@/i18n";
-import { ControlState } from "@/states/controlState";
 import { Dataset } from "@/model/dataset";
 import { UserVariable } from "@/model/userVariable";
-import {
-  USER_VARIABLES_DIALOG_ID,
-  EditedVariable,
-  newUserVariable,
-} from "./utils";
+import { USER_VARIABLES_DIALOG_ID, EditedVariable } from "./utils";
 import UserVariablesTable from "./UserVariablesTable";
 import UserVariableEditor from "./UserVariableEditor";
-
-const MOCK_VARIABLES: UserVariable[] = Array.from(
-  { length: 16 },
-  (_, index) => ({
-    ...newUserVariable(),
-    id: `user${index + 1}`,
-    name: `var_${index}`,
-    title: `Variable-${index}`,
-    expression: `var_${index} - var_1`,
-  }),
-);
 
 interface UserVariablesDialogProps {
   open: boolean;
   selectedDataset: Dataset | null;
   closeDialog: (dialogId: string) => void;
-  settings: ControlState;
-  updateSettings: (settings: Partial<ControlState>) => void;
+  userVariables: UserVariable[];
+  updateUserVariables: (userVariables: UserVariable[]) => void;
 }
 
 export default function UserVariablesDialog({
   open,
   closeDialog,
   selectedDataset,
-  // settings,
-  // updateSettings,
+  userVariables,
+  updateUserVariables,
 }: UserVariablesDialogProps) {
-  const [userVariables, setUserVariables] =
-    useState<UserVariable[]>(MOCK_VARIABLES);
+  const [localUserVariables, setLocalUserVariables] =
+    useState<UserVariable[]>(userVariables);
   const [editedVariable, setEditedVariable] = useState<EditedVariable | null>(
     null,
   );
+
+  useEffect(() => {
+    setLocalUserVariables(userVariables);
+  }, [userVariables]);
 
   if (!open || !selectedDataset) {
     return null;
   }
 
-  function handleCloseDialog() {
+  function handleConfirmDialog() {
+    updateUserVariables(localUserVariables);
+    closeDialog(USER_VARIABLES_DIALOG_ID);
+  }
+
+  function handleCancelDialog() {
+    setLocalUserVariables(userVariables);
     closeDialog(USER_VARIABLES_DIALOG_ID);
   }
 
@@ -88,7 +82,7 @@ export default function UserVariablesDialog({
       open={open}
       fullWidth
       maxWidth={"md"}
-      onClose={handleCloseDialog}
+      onClose={handleCancelDialog}
       scroll="body"
     >
       <DialogTitle>{i18n.get("User Variables")}</DialogTitle>
@@ -97,15 +91,15 @@ export default function UserVariablesDialog({
           <Paper elevation={1} sx={{ width: "100%", height: "100%" }}>
             {editedVariable === null ? (
               <UserVariablesTable
-                userVariables={userVariables}
-                setUserVariables={setUserVariables}
+                userVariables={localUserVariables}
+                setUserVariables={setLocalUserVariables}
                 contextDataset={selectedDataset}
                 setEditedVariable={setEditedVariable}
               />
             ) : (
               <UserVariableEditor
-                userVariables={userVariables}
-                setUserVariables={setUserVariables}
+                userVariables={localUserVariables}
+                setUserVariables={setLocalUserVariables}
                 editedVariable={editedVariable}
                 setEditedVariable={setEditedVariable}
                 contextDataset={selectedDataset}
@@ -115,10 +109,13 @@ export default function UserVariablesDialog({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseDialog} disabled={editedVariable !== null}>
+        <Button
+          onClick={handleConfirmDialog}
+          disabled={editedVariable !== null}
+        >
           {i18n.get("OK")}
         </Button>
-        <Button onClick={handleCloseDialog} disabled={editedVariable !== null}>
+        <Button onClick={handleCancelDialog} disabled={editedVariable !== null}>
           {i18n.get("Cancel")}
         </Button>
       </DialogActions>

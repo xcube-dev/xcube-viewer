@@ -65,6 +65,8 @@ import {
 } from "./dataActions";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { locateInMap } from "./mapActions";
+import { UserVariable } from "@/model/userVariable";
+import { storeUserSettings } from "@/states/userSettings";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -791,6 +793,15 @@ export function updateUserColorBars(
   userColorBars: UserColorBar[],
 ): UpdateSettings {
   return { type: UPDATE_SETTINGS, settings: { userColorBars } };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateUserVariables(userVariables: UserVariable[]) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    dispatch(updateSettings({ userVariables }));
+    storeUserSettings(getState().controlState);
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

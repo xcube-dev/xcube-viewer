@@ -73,6 +73,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setArrayProperty("userBaseMaps", settings);
       storage.setArrayProperty("userOverlays", settings);
       storage.setArrayProperty("userColorBars", settings);
+      storage.setArrayProperty("userVariables", settings);
       storage.setPrimitiveProperty("userDrawnPlaceGroupName", settings);
       storage.setPrimitiveProperty("datasetLocateMode", settings);
       storage.setPrimitiveProperty("placeLocateMode", settings);
@@ -149,6 +150,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
       storage.getArrayProperty("userBaseMaps", settings, defaultSettings);
       storage.getArrayProperty("userOverlays", settings, defaultSettings);
       storage.getArrayProperty("userColorBars", settings, defaultSettings);
+      storage.getArrayProperty("userVariables", settings, defaultSettings);
       storage.getStringProperty(
         "userDrawnPlaceGroupName",
         settings,
