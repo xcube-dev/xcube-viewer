@@ -24,7 +24,6 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { makeStyles } from "@/util/styles";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { Mark } from "@mui/base/useSlider";
@@ -36,6 +35,7 @@ import {
   utcTimeToIsoDateString,
   utcTimeToIsoDateTimeString,
 } from "@/util/time";
+import { makeStyles } from "@/util/styles";
 
 const HOR_MARGIN = 5;
 
