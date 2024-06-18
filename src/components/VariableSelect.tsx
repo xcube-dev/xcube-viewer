@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { makeStyles } from "@/util/styles";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
@@ -31,13 +30,14 @@ import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import CompareIcon from "@mui/icons-material/Compare";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import merge from "lodash.merge";
+import { SxProps } from "@mui/system";
 
 import i18n from "@/i18n";
 import { Variable } from "@/model/variable";
 import { WithLocale } from "@/util/lang";
 import ControlBarItem from "./ControlBarItem";
 import { commonStyles } from "@/components/common-styles";
+import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
   button: (theme) => ({
@@ -45,7 +45,10 @@ const styles = makeStyles({
   }),
 });
 
-const mergedStyles = merge({}, styles.button, commonStyles.toggleButton);
+const toggleComparisonStyle = {
+  ...styles.button,
+  ...commonStyles.toggleButton,
+} as SxProps;
 
 interface VariableSelectProps extends WithLocale {
   selectedDatasetId: string | null;
@@ -134,7 +137,7 @@ export default function VariableSelect({
       selected={isSelectedVariable2}
       value={"comparison"}
       size="small"
-      sx={mergedStyles}
+      sx={toggleComparisonStyle}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>
