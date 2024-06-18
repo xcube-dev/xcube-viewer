@@ -24,21 +24,18 @@
 
 import * as React from "react";
 import { connect } from "react-redux";
-import { WithStyles } from "@mui/styles";
-import { Theme } from "@mui/material";
+import { SxProps, Theme, styled } from "@mui/material";
 import AppBarComponent from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import PolicyIcon from "@mui/icons-material/Policy";
 import { deepOrange } from "@mui/material/colors";
-import classNames from "classnames";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 import i18n from "@/i18n";
 import { Config } from "@/config";
@@ -48,9 +45,9 @@ import { openDialog } from "@/actions/controlActions";
 import { updateResources } from "@/actions/dataActions";
 import MarkdownPage from "@/components/MarkdownPage";
 import UserControl from "./UserControl";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import { makeStyles } from "@/util/styles";
 
-interface AppBarProps extends WithStyles<typeof styles>, WithLocale {
+interface AppBarProps extends WithLocale {
   appName: string;
   openDialog: (dialogId: string) => unknown;
   allowRefresh?: boolean;
@@ -70,65 +67,69 @@ const mapDispatchToProps = {
   openDialog,
   updateResources,
 };
+const appBarStyle: Record<string, SxProps<Theme>> = {
+  appBar: (theme: Theme) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  }),
+};
 
-const styles = (theme: Theme) =>
-  createStyles({
-    toolbar: {
-      backgroundColor: Config.instance.branding.headerBackgroundColor,
-      paddingRight: theme.spacing(1),
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    logoAnchor: {
-      display: "flex",
-      alignItems: "center",
-    },
-    logo: {
-      marginLeft: theme.spacing(1),
-    },
-    title: {
-      flexGrow: 1,
-      marginLeft: theme.spacing(1),
-      ...Config.instance.branding.headerTitleStyle,
-    },
-    imageAvatar: {
-      width: 24,
-      height: 24,
-      color: "#fff",
-      backgroundColor: deepOrange[300],
-    },
-    letterAvatar: {
-      width: 24,
-      height: 24,
-      color: "#fff",
-      backgroundColor: deepOrange[300],
-    },
-    signInWrapper: {
-      margin: theme.spacing(1),
-      position: "relative",
-    },
-    signInProgress: {
-      color: deepOrange[300],
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      zIndex: 1,
-      marginTop: -12,
-      marginLeft: -12,
-    },
-    iconButton: {
-      marginLeft: theme.spacing(2),
-      ...Config.instance.branding.headerIconStyle,
-    },
-  });
+const StyledAnchorTag = styled("a")(() => ({
+  display: "flex",
+  alignItems: "center",
+}));
+const StyledImg = styled("img")(({ theme }: { theme: Theme }) => ({
+  marginLeft: theme.spacing(1),
+}));
+
+const styles = makeStyles({
+  toolbar: (theme) => ({
+    backgroundColor: Config.instance.branding.headerBackgroundColor,
+    paddingRight: theme.spacing(1),
+  }),
+  logo: (theme) => ({
+    marginLeft: theme.spacing(1),
+  }),
+  title: (theme) => ({
+    flexGrow: 1,
+    marginLeft: theme.spacing(1),
+    ...Config.instance.branding.headerTitleStyle,
+  }),
+  imageAvatar: {
+    width: 24,
+    height: 24,
+    color: "#fff",
+    backgroundColor: deepOrange[300],
+  },
+  letterAvatar: {
+    width: 24,
+    height: 24,
+    color: "#fff",
+    backgroundColor: deepOrange[300],
+  },
+  signInWrapper: (theme) => ({
+    margin: theme.spacing(1),
+    position: "relative",
+  }),
+  signInProgress: {
+    color: deepOrange[300],
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    zIndex: 1,
+    marginTop: "-12px",
+    marginLeft: "-12px",
+  },
+  iconButton: (theme) => ({
+    marginLeft: theme.spacing(2),
+    ...Config.instance.branding.headerIconStyle,
+  }),
+});
 
 const _AppBar: React.FC<AppBarProps> = ({
-  classes,
   appName,
   openDialog,
   allowRefresh,
@@ -153,31 +154,25 @@ const _AppBar: React.FC<AppBarProps> = ({
   };
 
   return (
-    <AppBarComponent
-      position="absolute"
-      className={classNames(classes.appBar)}
-      elevation={0}
-    >
-      <Toolbar disableGutters className={classes.toolbar} variant="dense">
-        <a
+    <AppBarComponent position="absolute" sx={appBarStyle.appBar} elevation={0}>
+      <Toolbar disableGutters sx={styles.toolbar} variant="dense">
+        <StyledAnchorTag
           href={Config.instance.branding.organisationUrl || ""}
           target="_blank"
           rel="noreferrer"
-          className={classes.logoAnchor}
         >
-          <img
+          <StyledImg
             src={Config.instance.branding.logoImage}
             width={Config.instance.branding.logoWidth}
             alt={"xcube logo"}
-            className={classes.logo}
           />
-        </a>
+        </StyledAnchorTag>
         <Typography
           component="h1"
           variant="h6"
           color="inherit"
           noWrap
-          className={classes.title}
+          sx={styles.title}
         >
           {appName}
         </Typography>
@@ -187,7 +182,7 @@ const _AppBar: React.FC<AppBarProps> = ({
             <IconButton
               onClick={updateResources}
               size="small"
-              className={classes.iconButton}
+              sx={styles.iconButton}
             >
               <RefreshIcon />
             </IconButton>
@@ -198,7 +193,7 @@ const _AppBar: React.FC<AppBarProps> = ({
             <IconButton
               onClick={() => openDialog("export")}
               size="small"
-              className={classes.iconButton}
+              sx={styles.iconButton}
             >
               {<CloudDownloadIcon />}
             </IconButton>
@@ -208,7 +203,7 @@ const _AppBar: React.FC<AppBarProps> = ({
           <IconButton
             onClick={handleOpenManual}
             size="small"
-            className={classes.iconButton}
+            sx={styles.iconButton}
           >
             <HelpOutlineIcon />
           </IconButton>
@@ -217,7 +212,7 @@ const _AppBar: React.FC<AppBarProps> = ({
           <IconButton
             onClick={handleOpenImprint}
             size="small"
-            className={classes.iconButton}
+            sx={styles.iconButton}
           >
             <PolicyIcon />
           </IconButton>
@@ -226,7 +221,7 @@ const _AppBar: React.FC<AppBarProps> = ({
           <IconButton
             onClick={handleSettingsButtonClicked}
             size="small"
-            className={classes.iconButton}
+            sx={styles.iconButton}
           >
             <SettingsIcon />
           </IconButton>
@@ -242,8 +237,5 @@ const _AppBar: React.FC<AppBarProps> = ({
   );
 };
 
-const AppBar = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(styles)(_AppBar));
+const AppBar = connect(mapStateToProps, mapDispatchToProps)(_AppBar);
 export default AppBar;
