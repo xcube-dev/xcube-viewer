@@ -31,13 +31,13 @@ import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import CompareIcon from "@mui/icons-material/Compare";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import merge from "lodash.merge";
 
 import i18n from "@/i18n";
 import { Variable } from "@/model/variable";
 import { WithLocale } from "@/util/lang";
 import ControlBarItem from "./ControlBarItem";
 import { commonStyles } from "@/components/common-styles";
+import { SxProps } from "@mui/system";
 
 const styles = makeStyles({
   button: (theme) => ({
@@ -45,7 +45,10 @@ const styles = makeStyles({
   }),
 });
 
-const mergedStyles = merge({}, styles.button, commonStyles.toggleButton);
+const toggleComparisonStyle = {
+  ...styles.button,
+  ...commonStyles.toggleButton,
+} as SxProps;
 
 interface VariableSelectProps extends WithLocale {
   selectedDatasetId: string | null;
@@ -134,7 +137,7 @@ export default function VariableSelect({
       selected={isSelectedVariable2}
       value={"comparison"}
       size="small"
-      sx={mergedStyles}
+      sx={toggleComparisonStyle}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>
