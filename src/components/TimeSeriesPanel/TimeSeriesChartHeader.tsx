@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -40,6 +40,7 @@ import IsoIcon from "@mui/icons-material/Iso";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import Alert from "@mui/material/Alert";
 
 import i18n from "@/i18n";
 import {
@@ -52,6 +53,7 @@ import { makeStyles } from "@/util/styles";
 import { TimeSeriesChartType } from "@/states/controlState";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
+import { exportPNG } from "@/util/export";
 
 type ValueRange = [number, number];
 const SHOW_DEV_VALUE = "stddev";
@@ -110,7 +112,8 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setStdevBars: (showStdDev: boolean) => void;
   valueRange: ValueRange | undefined;
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
-  exportTimeSeries: () => void;
+  exportSize: number;
+  chartElementRef: RefObject<HTMLDivElement | null>;
 }
 
 export default function TimeSeriesChartHeader({
@@ -132,14 +135,15 @@ export default function TimeSeriesChartHeader({
   setStdevBars,
   valueRange,
   setValueRange,
-  exportTimeSeries,
+  exportSize,
+  chartElementRef,
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
   const timeSeriesText = i18n.get("Time-Series");
   const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
   const chartTitle = `${timeSeriesText} (${unitsText})`;
-
+  const [alertVisible, setAlertVisible] = useState(false);
   const handleToggleValueRangeEditor = () => {
     setValueRangeEditorOpen(!valueRangeEditorOpen);
   };
@@ -166,6 +170,11 @@ export default function TimeSeriesChartHeader({
     setStdevBars(showStdDevNew);
   };
 
+  const showSuccessAlert = () => {
+    setAlertVisible(true);
+    setTimeout(() => setAlertVisible(false), 6000);
+  };
+
   return (
     <Box sx={styles.headerContainer}>
       <Typography sx={styles.chartTitle}>{chartTitle}</Typography>
@@ -186,7 +195,9 @@ export default function TimeSeriesChartHeader({
           <IconButton
             key={"exportButton"}
             sx={styles.actionButton}
-            onClick={exportTimeSeries}
+            onClick={() =>
+              exportPNG(exportSize, chartElementRef, showSuccessAlert)
+            }
             size="small"
           >
             <CameraAltIcon fontSize={"inherit"}></CameraAltIcon>
@@ -296,6 +307,17 @@ export default function TimeSeriesChartHeader({
           </IconButton>
         )}
       </Box>
+      {alertVisible && (
+        <Alert
+          severity="success"
+          onClose={() => setAlertVisible(false)}
+          style={{ position: "absolute", bottom: 0, right: 0, margin: 20 }}
+        >
+          {i18n.get(
+            "The chart image has been successfully copied to clipboard.",
+          )}
+        </Alert>
+      )}
     </Box>
   );
 }
