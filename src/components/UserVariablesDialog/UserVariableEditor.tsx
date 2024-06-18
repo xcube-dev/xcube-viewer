@@ -38,6 +38,7 @@ import { isIdentifier, getIdentifiers } from "@/util/identifier";
 import DoneCancel from "@/components/DoneCancel";
 import { EditedVariable } from "./utils";
 import HeaderBar from "./HeaderBar";
+import { makeStyles } from "@/util/styles";
 
 const expressionParts = [
   "+",
@@ -85,6 +86,22 @@ function validateExpression(
   }
   return null;
 }
+
+const styles = makeStyles({
+  container: { display: "flex", flexDirection: "column", height: "100%" },
+  content: {
+    flexGrow: 1,
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
+    padding: 1,
+  },
+  propertiesRow: { display: "flex", gap: 1 },
+  expressionRow: { flexGrow: 1 },
+  expressionParts: { paddingTop: 1, overflowY: "auto" },
+  expressionPart: { padding: 0.2 },
+  expressionPartChip: { fontFamily: "monospace" },
+});
 
 // Note: for time being, we do not allow user-defined variables to be
 //    part of an expression.
@@ -180,7 +197,7 @@ export default function UserVariableEditor({
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box sx={styles.container}>
       <HeaderBar
         selected
         title={
@@ -197,16 +214,8 @@ export default function UserVariableEditor({
           />
         }
       />
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          padding: 1,
-        }}
-      >
-        <Box sx={{ display: "flex", gap: 1 }}>
+      <Box sx={styles.content}>
+        <Box sx={styles.propertiesRow}>
           <TextField
             sx={{ flexGrow: 0.3 }}
             error={!isNameOk}
@@ -235,7 +244,7 @@ export default function UserVariableEditor({
           />
         </Box>
 
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={styles.expressionRow}>
           <Typography sx={{ paddingBottom: 1 }}>
             {i18n.get("Expression")}
           </Typography>
@@ -256,12 +265,12 @@ export default function UserVariableEditor({
               {expressionProblem}
             </Typography>
           )}
-          <Box sx={{ paddingTop: 1, overflowY: "auto" }}>
+          <Box sx={styles.expressionParts}>
             {expressionParts.map((part) => (
-              <Box key={part} component="span" sx={{ padding: 0.2 }}>
+              <Box key={part} component="span" sx={styles.expressionPart}>
                 <Chip
                   label={part}
-                  sx={{ fontFamily: "monospace" }}
+                  sx={styles.expressionPartChip}
                   size="small"
                   color="primary"
                   onClick={() => handleExpressionInsert(part)}
@@ -274,7 +283,7 @@ export default function UserVariableEditor({
                   <Box key={v.id} component="span" sx={{ padding: 0.2 }}>
                     <Chip
                       label={v.name}
-                      sx={{ fontFamily: "monospace" }}
+                      sx={styles.expressionPartChip}
                       size="small"
                       color="secondary"
                       onClick={() => handleExpressionInsert(v.name)}

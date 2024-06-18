@@ -42,6 +42,12 @@ import { Dataset } from "@/model/dataset";
 import { EditedVariable, newUserVariable } from "./utils";
 import { UserVariable } from "@/model/userVariable";
 import HeaderBar from "./HeaderBar";
+import { makeStyles } from "@/util/styles";
+
+const styles = makeStyles({
+  container: { display: "flex", flexDirection: "column", height: "100%" },
+  tableContainer: { overflowY: "auto", flexGrow: 1 },
+});
 
 interface UserVariablesTableProps {
   setEditedVariable: (editedVariable: EditedVariable) => void;
@@ -84,7 +90,7 @@ export default function UserVariablesTable({
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box sx={styles.container}>
       <HeaderBar
         selected={selectedIndex !== null}
         title={i18n.get("User-defined Variables")}
@@ -112,7 +118,7 @@ export default function UserVariablesTable({
           </>
         }
       />
-      <TableContainer component={Paper} sx={{ overflowY: "auto", flexGrow: 1 }}>
+      <TableContainer component={Paper} sx={styles.tableContainer}>
         <Table size="small">
           <TableHead>
             <TableRow>

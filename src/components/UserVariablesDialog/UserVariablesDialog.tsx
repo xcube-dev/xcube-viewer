@@ -37,6 +37,12 @@ import { UserVariable } from "@/model/userVariable";
 import { USER_VARIABLES_DIALOG_ID, EditedVariable } from "./utils";
 import UserVariablesTable from "./UserVariablesTable";
 import UserVariableEditor from "./UserVariableEditor";
+import { makeStyles } from "@/util/styles";
+
+const styles = makeStyles({
+  contentContainer: { width: "100%", height: 400, mb: 2 },
+  contentPaper: { width: "100%", height: "100%" },
+});
 
 interface UserVariablesDialogProps {
   open: boolean;
@@ -87,8 +93,8 @@ export default function UserVariablesDialog({
     >
       <DialogTitle>{i18n.get("User Variables")}</DialogTitle>
       <DialogContent>
-        <Box sx={{ width: "100%", height: 400, mb: 2 }}>
-          <Paper elevation={1} sx={{ width: "100%", height: "100%" }}>
+        <Box sx={styles.contentContainer}>
+          <Paper elevation={1} sx={styles.contentPaper}>
             {editedVariable === null ? (
               <UserVariablesTable
                 userVariables={localUserVariables}
