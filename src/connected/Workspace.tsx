@@ -33,6 +33,7 @@ import { setSidebarPosition } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import Sidebar from "./Sidebar";
+import { useTheme } from "@mui/material";
 
 // Adjust for debugging split pane style
 const styles: Record<string, CSSProperties> = {
@@ -105,6 +106,7 @@ function _Workspace({
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
   const resizeObserver = useRef<ResizeObserver | null>(null);
+  const theme = useTheme();
 
   useEffect(() => {
     updateLayout();
@@ -140,14 +142,14 @@ function _Workspace({
         child1Style={styles["viewer" + dirSuffix]}
         child2Style={styles["sidebar" + dirSuffix]}
       >
-        <Viewer onMapRef={setMap} />
+        <Viewer onMapRef={setMap} theme={theme} />
         <Sidebar />
       </SplitPane>
     );
   } else {
     return (
       <div style={styles.viewer}>
-        <Viewer onMapRef={setMap} />
+        <Viewer onMapRef={setMap} theme={theme} />
       </div>
     );
   }
