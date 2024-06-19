@@ -51,6 +51,7 @@ import {
   findDatasetVariable,
   getDatasetTimeDimension,
   getDatasetTimeRange,
+  getDatasetUserVariables,
   RgbSchema,
   TimeDimension,
 } from "@/model/dataset";
@@ -101,6 +102,7 @@ import {
   getLayerTitle,
   LayerDefinition,
 } from "@/model/layerDefinition";
+import { UserVariable } from "@/model/userVariable";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -195,6 +197,13 @@ export const selectedVariablesSelector = createSelector(
   selectedDatasetSelector,
   (dataset: Dataset | null): Variable[] => {
     return (dataset && dataset.variables) || [];
+  },
+);
+
+export const selectedUserVariablesSelector = createSelector(
+  selectedDatasetSelector,
+  (dataset: Dataset | null): UserVariable[] => {
+    return dataset ? getDatasetUserVariables(dataset)[1] : [];
   },
 );
 

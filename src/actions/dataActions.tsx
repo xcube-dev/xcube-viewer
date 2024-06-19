@@ -85,6 +85,7 @@ import { renameUserPlaceInLayer } from "./mapActions";
 import { ColorBarNorm } from "@/model/variable";
 import { getStatistics } from "@/api/getStatistics";
 import { StatisticsRecord } from "@/model/statistics";
+import { UserVariable } from "@/model/userVariable";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -197,6 +198,23 @@ export function updateDatasets() {
 
 export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
   return { type: UPDATE_DATASETS, datasets };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_DATASET_USER_VARIABLES = "UPDATE_DATASET_USER_VARIABLES";
+
+export interface UpdateDatasetUserVariables {
+  type: typeof UPDATE_DATASET_USER_VARIABLES;
+  datasetId: string;
+  userVariables: UserVariable[];
+}
+
+export function updateDatasetUserVariables(
+  datasetId: string,
+  userVariables: UserVariable[],
+): UpdateDatasetUserVariables {
+  return { type: UPDATE_DATASET_USER_VARIABLES, datasetId, userVariables };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1117,6 +1135,7 @@ function _downloadTimeSeriesGeoJSON(timeSeriesGroups: TimeSeriesGroup[],
 export type DataAction =
   | UpdateServerInfo
   | UpdateDatasets
+  | UpdateDatasetUserVariables
   | UpdateDatasetPlaceGroup
   | AddPlaceGroupTimeSeries
   | AddDrawnUserPlace

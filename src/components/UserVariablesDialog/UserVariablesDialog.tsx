@@ -32,12 +32,12 @@ import DialogActions from "@mui/material/DialogActions";
 import Paper from "@mui/material/Paper";
 
 import i18n from "@/i18n";
+import { makeStyles } from "@/util/styles";
 import { Dataset } from "@/model/dataset";
 import { UserVariable } from "@/model/userVariable";
 import { USER_VARIABLES_DIALOG_ID, EditedVariable } from "./utils";
 import UserVariablesTable from "./UserVariablesTable";
 import UserVariableEditor from "./UserVariableEditor";
-import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
   contentContainer: { width: "100%", height: 400, mb: 2 },
@@ -49,7 +49,10 @@ interface UserVariablesDialogProps {
   selectedDataset: Dataset | null;
   closeDialog: (dialogId: string) => void;
   userVariables: UserVariable[];
-  updateUserVariables: (userVariables: UserVariable[]) => void;
+  updateDatasetUserVariables: (
+    datasetId: string,
+    userVariables: UserVariable[],
+  ) => void;
 }
 
 export default function UserVariablesDialog({
@@ -57,7 +60,7 @@ export default function UserVariablesDialog({
   closeDialog,
   selectedDataset,
   userVariables,
-  updateUserVariables,
+  updateDatasetUserVariables,
 }: UserVariablesDialogProps) {
   const [localUserVariables, setLocalUserVariables] =
     useState<UserVariable[]>(userVariables);
@@ -74,7 +77,7 @@ export default function UserVariablesDialog({
   }
 
   function handleConfirmDialog() {
-    updateUserVariables(localUserVariables);
+    updateDatasetUserVariables(selectedDataset!.id, localUserVariables);
     closeDialog(USER_VARIABLES_DIALOG_ID);
   }
 

@@ -24,23 +24,29 @@
 
 import { connect } from "react-redux";
 
-import { closeDialog, updateUserVariables } from "@/actions/controlActions";
+import {
+  closeDialog,
+  updateDatasetUserVariables,
+} from "@/actions/controlActions";
 import { AppState } from "@/states/appState";
 import _UserVariablesDialog from "@/components/UserVariablesDialog";
 import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
-import { selectedDatasetSelector } from "@/selectors/controlSelectors";
+import {
+  selectedDatasetSelector,
+  selectedUserVariablesSelector,
+} from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
     open: state.controlState.dialogOpen[USER_VARIABLES_DIALOG_ID],
     selectedDataset: selectedDatasetSelector(state),
-    userVariables: state.controlState.userVariables,
+    userVariables: selectedUserVariablesSelector(state),
   };
 };
 
 const mapDispatchToProps = {
   closeDialog,
-  updateUserVariables,
+  updateDatasetUserVariables,
 };
 
 const UserVariablesDialog = connect(
