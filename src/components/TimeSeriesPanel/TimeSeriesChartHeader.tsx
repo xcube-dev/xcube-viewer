@@ -40,7 +40,6 @@ import IsoIcon from "@mui/icons-material/Iso";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import Alert from "@mui/material/Alert";
 
 import i18n from "@/i18n";
 import {
@@ -54,6 +53,8 @@ import { TimeSeriesChartType } from "@/states/controlState";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
 import { exportPNG } from "@/util/export";
+import { postMessage } from "@/actions/messageLogActions";
+import { useDispatch } from "react-redux";
 
 type ValueRange = [number, number];
 const SHOW_DEV_VALUE = "stddev";
@@ -143,10 +144,10 @@ export default function TimeSeriesChartHeader({
   const timeSeriesText = i18n.get("Time-Series");
   const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
   const chartTitle = `${timeSeriesText} (${unitsText})`;
-  const [alertVisible, setAlertVisible] = useState(false);
   const handleToggleValueRangeEditor = () => {
     setValueRangeEditorOpen(!valueRangeEditorOpen);
   };
+  const dispatch = useDispatch();
 
   const handleValueRangeChange = (valueRange: ValueRange | undefined) => {
     setValueRangeEditorOpen(false);
@@ -171,8 +172,12 @@ export default function TimeSeriesChartHeader({
   };
 
   const showSuccessAlert = () => {
-    setAlertVisible(true);
-    setTimeout(() => setAlertVisible(false), 6000);
+    dispatch(
+      postMessage(
+        "success",
+        i18n.get("The chart image has been successfully copied to clipboard."),
+      ),
+    );
   };
 
   return (
@@ -307,17 +312,6 @@ export default function TimeSeriesChartHeader({
           </IconButton>
         )}
       </Box>
-      {alertVisible && (
-        <Alert
-          severity="success"
-          onClose={() => setAlertVisible(false)}
-          style={{ position: "absolute", bottom: 0, right: 0, margin: 20 }}
-        >
-          {i18n.get(
-            "The chart image has been successfully copied to clipboard.",
-          )}
-        </Alert>
-      )}
     </Box>
   );
 }
