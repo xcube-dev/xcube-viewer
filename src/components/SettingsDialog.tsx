@@ -23,14 +23,12 @@
  */
 
 import React from "react";
-import { Theme } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import makeStyles from "@mui/styles/makeStyles";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
@@ -54,23 +52,25 @@ import {
   getLayerTitle,
   LayerDefinition,
 } from "@/model/layerDefinition";
+import { SxProps } from "@mui/system";
+import { Theme } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  textField: {
+const styles: Record<string, SxProps<Theme>> = {
+  textField: (theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     fontSize: theme.typography.fontSize / 2,
-  },
-  intTextField: {
+  }),
+  intTextField: (theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     fontSize: theme.typography.fontSize / 2,
     width: theme.spacing(6),
-  },
+  }),
   localeAvatar: {
     margin: 10,
   },
-}));
+};
 
 const LOCATE_MODE_LABELS: [LocateMode, string][] = [
   ["doNothing", "Do nothing"],
@@ -120,7 +120,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
   );
-  const classes = useStyles();
 
   React.useEffect(() => {
     const newTimeChunkSize = parseInt(timeChunkSize);
@@ -268,7 +267,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               <TextField
                 variant="standard"
                 select
-                className={classes.textField}
+                sx={styles.textField}
                 value={settings.timeAnimationInterval}
                 onChange={handleTimeAnimationIntervalChange}
                 margin="normal"
@@ -297,7 +296,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               <TextField
                 variant="standard"
                 select
-                className={classes.textField}
+                sx={styles.textField}
                 value={settings.timeSeriesChartTypeDefault}
                 onChange={handleTimeSeriesChartTypeDefaultChange}
                 margin="normal"
@@ -338,7 +337,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             >
               <TextField
                 variant="standard"
-                className={classes.intTextField}
+                sx={styles.intTextField}
                 value={timeChunkSize}
                 onChange={handleTimeChunkSizeChange}
                 margin="normal"
@@ -391,7 +390,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               <TextField
                 variant="standard"
                 select
-                className={classes.textField}
+                sx={styles.textField}
                 value={settings.datasetLocateMode}
                 onChange={handleDatasetLocateModeChange}
                 margin="normal"
@@ -407,7 +406,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               <TextField
                 variant="standard"
                 select
-                className={classes.textField}
+                sx={styles.textField}
                 value={settings.placeLocateMode}
                 onChange={handlePlaceLocateModeChange}
                 margin="normal"

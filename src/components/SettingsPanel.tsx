@@ -23,30 +23,29 @@
  */
 
 import React from "react";
-import { Theme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { darken, lighten } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  settingsPanelTitle: {
+const styles = makeStyles({
+  settingsPanelTitle: (theme) => ({
     marginBottom: theme.spacing(1),
-  },
-  settingsPanelPaper: {
+  }),
+  settingsPanelPaper: (theme) => ({
     backgroundColor: (theme.palette.mode === "dark" ? lighten : darken)(
       theme.palette.background.paper,
       0.1,
     ),
     marginBottom: theme.spacing(2),
-  },
+  }),
   settingsPanelList: {
     margin: 0,
   },
-}));
+});
 
 interface SettingsPanelProps {
   title?: string;
@@ -56,8 +55,6 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   title,
   children,
 }) => {
-  const classes = useStyles();
-
   const childCount = React.Children.count(children);
 
   const listItems: React.ReactNode[] = [];
@@ -73,16 +70,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   return (
     <Box>
       {title && title !== "" && (
-        <Typography variant="body1" className={classes.settingsPanelTitle}>
+        <Typography variant="body1" sx={styles.settingsPanelTitle}>
           {title}
         </Typography>
       )}
-      <Paper elevation={4} className={classes.settingsPanelPaper}>
-        <List
-          component="nav"
-          dense={true}
-          className={classes.settingsPanelList}
-        >
+      <Paper elevation={4} sx={styles.settingsPanelPaper}>
+        <List component="nav" dense={true} sx={styles.settingsPanelList}>
           {listItems}
         </List>
       </Paper>

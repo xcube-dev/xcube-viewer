@@ -23,8 +23,6 @@
  */
 
 import * as React from "react";
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
@@ -59,6 +57,8 @@ import { csvFormat, CsvOptions } from "@/model/user-place/csv";
 import { geoJsonFormat, GeoJsonOptions } from "@/model/user-place/geojson";
 import { wktFormat, WktOptions } from "@/model/user-place/wkt";
 import { detectFormatName, Format } from "@/model/user-place/common";
+import { makeStyles } from "@/util/styles";
+import { styled } from "@mui/system";
 
 interface FormatWithCodeExt extends Format {
   codeExt: Extension[];
@@ -71,25 +71,27 @@ const formats: { [k: string]: FormatWithCodeExt } = {
 };
 
 // noinspection JSUnusedLocalSymbols
-const useStyles = makeStyles((theme: Theme) => ({
+const styles = makeStyles({
   spacer: {
     flexGrow: 1.0,
   },
-  actionBox: {
-    paddingTop: theme.spacing(0.5),
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  optionsBox: {
-    paddingTop: theme.spacing(2),
-  },
-  actionButton: {
+  actionButton: (theme) => ({
     marginRight: theme.spacing(1),
-  },
+  }),
   error: {
     fontSize: "small",
   },
+});
+
+const StyledActionBox = styled("div")(({ theme }) => ({
+  paddingTop: theme.spacing(0.5),
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+}));
+
+const StyledFileUpload = styled(FileUpload)(({ theme }) => ({
+  marginRight: theme.spacing(1),
 }));
 
 interface UserPlacesDialogProps extends WithLocale {
@@ -122,7 +124,6 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
   const [_userPlacesFormatOptions, setUserPlacesFormatOptions] = React.useState(
     userPlacesFormatOptions,
   );
-  const classes = useStyles();
 
   React.useEffect(() => {
     setUserPlacesFormatName(userPlacesFormatName);
@@ -230,7 +231,6 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
       <CsvOptionsEditor
         options={_userPlacesFormatOptions.csv}
         updateOptions={updateCsvOptions}
-        className={classes.optionsBox}
       />
     );
   } else if (_userPlacesFormatName === "geojson") {
@@ -238,7 +238,6 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
       <GeoJsonOptionsEditor
         options={_userPlacesFormatOptions.geojson}
         updateOptions={updateGeoJsonOptions}
-        className={classes.optionsBox}
       />
     );
   } else {
@@ -246,7 +245,6 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
       <WktOptionsEditor
         options={_userPlacesFormatOptions.wkt}
         updateOptions={updateWktOptions}
-        className={classes.optionsBox}
       />
     );
   }
@@ -299,29 +297,28 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
           onPasteCapture={handleCodePaste}
         />
         {error && (
-          <Typography color="error" className={classes.error}>
+          <Typography color="error" sx={styles.error}>
             {error}
           </Typography>
         )}
-        <div className={classes.actionBox}>
-          <FileUpload
+        <StyledActionBox>
+          <StyledFileUpload
             title={i18n.get("From File") + "..."}
             accept={formats[_userPlacesFormatName].fileExt}
             multiple={false}
             onSelect={handleFileSelect}
             disabled={loading}
-            className={classes.actionButton}
           />
           <Button
             onClick={handleClearText}
             disabled={text.trim() === "" || loading}
-            className={classes.actionButton}
+            sx={styles.actionButton}
             variant="outlined"
             size="small"
           >
             {i18n.get("Clear")}
           </Button>
-          <Box className={classes.spacer} />
+          <Box sx={styles.spacer} />
           <Button
             onClick={() => setExpanded(!expanded)}
             endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -330,7 +327,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
           >
             {i18n.get("Options")}
           </Button>
-        </div>
+        </StyledActionBox>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           {formatOptionsEditor}
         </Collapse>

@@ -23,8 +23,6 @@
  */
 
 import { MouseEvent, useMemo, useRef, useState } from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme, useTheme } from "@mui/material/styles";
 import {
   BarChart,
   CartesianGrid,
@@ -38,6 +36,8 @@ import {
   YAxis,
 } from "recharts";
 import { CategoricalChartState } from "recharts/types/chart/types";
+import { Theme, useTheme } from "@mui/material";
+import { styled } from "@mui/system";
 
 import { Place, PlaceInfo } from "@/model/place";
 import {
@@ -57,6 +57,7 @@ import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "./TimeSeriesLine";
 import TimeSeriesChartHeader from "./TimeSeriesChartHeader";
+import { makeStyles } from "@/util/styles";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -64,21 +65,25 @@ type CategoricalChartState_Fixed = Omit<
   "activeLabel"
 > & { activeLabel?: number };
 
-// TODO: no longer use makeStyles from from "@mui/styles"
-const useStyles = makeStyles((theme: Theme) => ({
-  chartContainer: {
-    userSelect: "none",
-    marginTop: theme.spacing(1),
-    width: "99%",
-    height: "32vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-stretch",
-  },
+const StyledContainerDiv = styled("div")(({ theme }) => ({
+  userSelect: "none",
+  marginTop: theme.spacing(1),
+  width: "99%",
+  height: "32vh",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-stretch",
+}));
+
+const StyledResponsiveContainer = styled(ResponsiveContainer)(() => ({
+  flexGrow: 1,
+}));
+
+const styles = makeStyles({
   responsiveContainer: {
     flexGrow: 1,
   },
-}));
+});
 
 interface Rectangle {
   x1?: number;
@@ -147,8 +152,6 @@ export default function TimeSeriesChart({
 }: TimeSeriesChartProps) {
   // TODO: check if using MUI useTheme is still ok
   const theme = useTheme();
-  // TODO: replace by sx styling or styled components, but beware of refs!
-  const classes = useStyles();
 
   const [zoomMode, setZoomMode] = useState(false);
   const [showTooltips, setShowTooltips] = useState(true);
@@ -410,7 +413,7 @@ export default function TimeSeriesChart({
   const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
   return (
-    <div ref={containerRef} className={classes.chartContainer}>
+    <StyledContainerDiv ref={containerRef}>
       <TimeSeriesChartHeader
         timeSeriesGroup={timeSeriesGroup}
         placeGroupTimeSeries={placeGroupTimeSeries}
@@ -431,10 +434,9 @@ export default function TimeSeriesChart({
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
       />
-      <ResponsiveContainer
+      <StyledResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
-        className={classes.responsiveContainer}
         onResize={handleChartResize}
       >
         <ChartComponent
@@ -515,8 +517,8 @@ export default function TimeSeriesChart({
             />
           )}
         </ChartComponent>
-      </ResponsiveContainer>
-    </div>
+      </StyledResponsiveContainer>
+    </StyledContainerDiv>
   );
 }
 

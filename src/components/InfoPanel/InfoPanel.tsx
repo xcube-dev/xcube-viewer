@@ -31,9 +31,6 @@ import CardMedia from "@mui/material/CardMedia";
 import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
-import { Theme } from "@mui/material/styles";
-import createStyles from "@mui/styles/createStyles";
-import makeStyles from "@mui/styles/makeStyles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -65,43 +62,41 @@ import { Variable } from "@/model/variable";
 import pythonLogo from "@/resources/python-bw.png";
 import { ApiServerConfig } from "@/model/apiServer";
 import { commonStyles } from "@/components/common-styles";
+import { makeStyles } from "@/util/styles";
 
 type ViewMode = "text" | "list" | "code" | "python";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    card: {
-      maxWidth: "100%",
-      marginBottom: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    info: {
-      marginRight: theme.spacing(1),
-    },
-    close: {
-      marginLeft: "auto",
-    },
-    table: {},
-    keyValueTableContainer: {
-      background: theme.palette.divider,
-    },
-    variableHtmlReprContainer: {
-      background: theme.palette.divider,
-      padding: theme.spacing(1),
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-    media: {
-      height: 200,
-    },
-    cardContent: {
-      padding: 8,
-    },
-    code: {
-      fontFamily: "Monospace",
-    },
+const styles = makeStyles({
+  card: (theme) => ({
+    maxWidth: "100%",
+    marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
   }),
-);
+  info: (theme) => ({
+    marginRight: theme.spacing(1),
+  }),
+  close: {
+    marginLeft: "auto",
+  },
+  table: {},
+  keyValueTableContainer: (theme) => ({
+    background: theme.palette.divider,
+  }),
+  variableHtmlReprContainer: (theme) => ({
+    background: theme.palette.divider,
+    padding: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  }),
+  media: {
+    height: 200,
+  },
+  cardContent: {
+    padding: "8px",
+  },
+  code: {
+    fontFamily: "Monospace",
+  },
+});
 
 interface InfoPanelProps extends WithLocale {
   visibleInfoCardElements: string[];
@@ -131,8 +126,6 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
   serverConfig,
   allowViewModePython,
 }) => {
-  const classes = useStyles();
-
   const handleInfoElementsChanges = (
     _event: React.MouseEvent<HTMLElement>,
     visibleElementTypes: string[],
@@ -196,7 +189,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
   }
 
   return (
-    <Card className={classes.card}>
+    <Card sx={styles.card}>
       <CardActions disableSpacing>
         <ToggleButtonGroup
           key={0}
@@ -352,7 +345,6 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   serverConfig,
   hasPython,
 }) => {
-  const classes = useStyles();
   let content;
   let htmlReprPaper;
   if (viewMode === "code") {
@@ -390,10 +382,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       };
       htmlReprPaper = (
         <CardContent2>
-          <Paper
-            ref={handleRef}
-            className={classes.variableHtmlReprContainer}
-          />
+          <Paper ref={handleRef} sx={styles.variableHtmlReprContainer} />
         </CardContent2>
       );
     }
@@ -452,7 +441,6 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
   setViewMode,
   placeInfo,
 }) => {
-  const classes = useStyles();
   const place = placeInfo.place;
   let content;
   let image;
@@ -482,7 +470,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
     if (placeInfo.image && placeInfo.image.startsWith("http")) {
       image = (
         <CardMedia
-          className={classes.media}
+          sx={styles.media}
           image={placeInfo.image}
           title={placeInfo.label}
         />
@@ -603,13 +591,9 @@ interface KeyValueTableProps {
 }
 
 const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
-  const classes = useStyles();
   return (
-    <TableContainer
-      component={Paper}
-      className={classes.keyValueTableContainer}
-    >
-      <Table className={classes.table} size="small">
+    <TableContainer component={Paper} sx={styles.keyValueTableContainer}>
+      <Table sx={styles.table} size="small">
         <TableBody>
           {data.map((kv, index) => {
             const [key, value] = kv;
@@ -643,8 +627,7 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
 ////////////////////////////////////////////////////////////////////////////////
 
 const CardContent2: React.FC = ({ children }) => {
-  const classes = useStyles();
-  return <CardContent className={classes.cardContent}>{children}</CardContent>;
+  return <CardContent sx={styles.cardContent}>{children}</CardContent>;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
