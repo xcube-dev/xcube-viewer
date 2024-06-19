@@ -5,7 +5,8 @@
 ### Enhancements
 
 - Users can now download/export the timeseries chart as PNG by clicking
-  on the camera icon on time-series chart's action bar.
+  on the camera icon on time-series chart's action bar. (#290)
+
 
 ## Changes in version 1.2.0
 
