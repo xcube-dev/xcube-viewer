@@ -31,6 +31,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { SxProps } from "@mui/system";
+import { Theme } from "@mui/material";
 
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
@@ -52,8 +54,6 @@ import {
   getLayerTitle,
   LayerDefinition,
 } from "@/model/layerDefinition";
-import { SxProps } from "@mui/system";
-import { Theme } from "@mui/material";
 
 const styles: Record<string, SxProps<Theme>> = {
   textField: (theme) => ({

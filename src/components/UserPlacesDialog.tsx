@@ -39,6 +39,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import CodeMirror from "@uiw/react-codemirror";
 import { Extension } from "@codemirror/state";
 import { json } from "@codemirror/lang-json";
+import { styled } from "@mui/system";
 
 import i18n from "@/i18n";
 import { Config } from "@/config";
@@ -58,7 +59,6 @@ import { geoJsonFormat, GeoJsonOptions } from "@/model/user-place/geojson";
 import { wktFormat, WktOptions } from "@/model/user-place/wkt";
 import { detectFormatName, Format } from "@/model/user-place/common";
 import { makeStyles } from "@/util/styles";
-import { styled } from "@mui/system";
 
 interface FormatWithCodeExt extends Format {
   codeExt: Extension[];
