@@ -26,6 +26,7 @@ import { ReactNode } from "react";
 import { alpha } from "@mui/system";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import CalculateIcon from "@mui/icons-material/Calculate";
 
 interface HeaderBarProps {
   selected: boolean;
@@ -52,7 +53,8 @@ export default function HeaderBar({
         }),
       }}
     >
-      <Typography sx={{ flex: "1 1 100%" }}>{title}</Typography>
+      <CalculateIcon />
+      <Typography sx={{ flex: "1 1 100%", paddingLeft: 1 }}>{title}</Typography>
       {actions}
     </Toolbar>
   );

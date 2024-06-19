@@ -24,12 +24,14 @@
 
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
+import CalculateIcon from "@mui/icons-material/Calculate";
 import CompareIcon from "@mui/icons-material/Compare";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import TimelineIcon from "@mui/icons-material/Timeline";
 
 import i18n from "@/i18n";
@@ -39,6 +41,7 @@ import { commonStyles } from "@/components/common-styles";
 import ToolButton from "@/components/ToolButton";
 import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
 import ControlBarItem from "./ControlBarItem";
+import { isUserVariable } from "@/model/userVariable";
 
 interface VariableSelectProps extends WithLocale {
   selectedDatasetId: string | null;
@@ -90,6 +93,20 @@ export default function VariableSelect({
     </InputLabel>
   );
 
+  function getVariableLabel(variable: Variable | undefined) {
+    if (!variable) {
+      return "?";
+    }
+    const label = variable.title || variable.name;
+    if (
+      selectedDatasetId === selectedDataset2Id &&
+      variable.name === selectedVariable2Name
+    ) {
+      return `${label} (#2)`;
+    }
+    return label;
+  }
+
   const variableSelect = (
     <Select
       variant="standard"
@@ -98,6 +115,9 @@ export default function VariableSelect({
       input={<Input name="variable" id="variable-select" />}
       displayEmpty
       name="variable"
+      renderValue={() =>
+        getVariableLabel(variables.find((v) => v.name === selectedVariableName))
+      }
     >
       {(variables || []).map((variable) => (
         <MenuItem
@@ -105,12 +125,12 @@ export default function VariableSelect({
           value={variable.name}
           selected={variable.name === selectedVariableName}
         >
-          {getVariableLabel(
-            variable,
-            selectedDatasetId,
-            selectedDataset2Id,
-            selectedVariable2Name,
+          {isUserVariable(variable) && (
+            <ListItemIcon>
+              <CalculateIcon fontSize="small" />
+            </ListItemIcon>
           )}
+          <ListItemText>{getVariableLabel(variable)}</ListItemText>
         </MenuItem>
       ))}
     </Select>
@@ -120,7 +140,7 @@ export default function VariableSelect({
       key={"userVariables"}
       onClick={handleManageUserVariablesClick}
       tooltipText={i18n.get("Add/manage user-defined variables")}
-      icon={<PlaylistAddIcon />}
+      icon={<CalculateIcon />}
     />
   );
   const addTimeSeriesButton = (
@@ -158,17 +178,4 @@ export default function VariableSelect({
       ]}
     />
   );
-}
-
-function getVariableLabel(
-  variable: Variable,
-  datasetId: string | null,
-  dataset2Id: string | null,
-  variable2Name: string | null,
-) {
-  const label = variable.title || variable.name;
-  if (datasetId === dataset2Id && variable.name === variable2Name) {
-    return `${label} (#2)`;
-  }
-  return label;
 }

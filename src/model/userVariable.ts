@@ -23,7 +23,12 @@
  */
 
 import { Variable } from "./variable";
+import { isString } from "@/util/types";
 
 export interface UserVariable extends Variable {
   expression: string;
+}
+
+export function isUserVariable(variable: Variable): variable is UserVariable {
+  return isString(variable.expression);
 }
