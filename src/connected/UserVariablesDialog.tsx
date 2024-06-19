@@ -24,17 +24,15 @@
 
 import { connect } from "react-redux";
 
-import {
-  closeDialog,
-  updateDatasetUserVariables,
-} from "@/actions/controlActions";
 import { AppState } from "@/states/appState";
-import _UserVariablesDialog from "@/components/UserVariablesDialog";
+import { updateDatasetUserVariables } from "@/actions/dataActions";
+import { closeDialog } from "@/actions/controlActions";
 import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
 import {
   selectedDatasetSelector,
   selectedUserVariablesSelector,
 } from "@/selectors/controlSelectors";
+import _UserVariablesDialog from "@/components/UserVariablesDialog";
 
 const mapStateToProps = (state: AppState) => {
   return {

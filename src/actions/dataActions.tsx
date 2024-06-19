@@ -31,7 +31,7 @@ import * as api from "@/api";
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import { ColorBar, ColorBars } from "@/model/colorBar";
-import { Dataset } from "@/model/dataset";
+import { Dataset, getDatasetUserVariables } from "@/model/dataset";
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from "@/model/place";
 import { getUserPlacesFromCsv } from "@/model/user-place/csv";
 import { getUserPlacesFromGeoJson } from "@/model/user-place/geojson";
@@ -86,6 +86,7 @@ import { ColorBarNorm } from "@/model/variable";
 import { getStatistics } from "@/api/getStatistics";
 import { StatisticsRecord } from "@/model/statistics";
 import { UserVariable } from "@/model/userVariable";
+import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -172,7 +173,15 @@ export function updateDatasets() {
     api
       .getDatasets(apiServer.url, getState().userAuthState.accessToken)
       .then((datasets: Dataset[]) => {
+        // Add user variables from local storage
+        const userVariables = loadUserVariables();
+        datasets = datasets.map((ds) => ({
+          ...ds,
+          variables: [...ds.variables, ...(userVariables[ds.id] || [])],
+        }));
+        // Dispatch updated dataset
         dispatch(_updateDatasets(datasets));
+        // Adjust selection state
         if (datasets.length > 0) {
           const selectedDatasetId =
             getState().controlState.selectedDatasetId || datasets[0].id;
@@ -202,6 +211,23 @@ export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export function updateDatasetUserVariables(
+  datasetId: string,
+  variables: UserVariable[],
+) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    dispatch(_updateDatasetUserVariables(datasetId, variables));
+    const userVariables: Record<string, UserVariable[]> = {};
+    getState().dataState.datasets.forEach((dataset) => {
+      const [_, variables] = getDatasetUserVariables(dataset);
+      if (variables.length >= 0) {
+        userVariables[dataset.id] = variables;
+      }
+    });
+    storeUserVariables(userVariables);
+  };
+}
+
 export const UPDATE_DATASET_USER_VARIABLES = "UPDATE_DATASET_USER_VARIABLES";
 
 export interface UpdateDatasetUserVariables {
@@ -210,7 +236,7 @@ export interface UpdateDatasetUserVariables {
   userVariables: UserVariable[];
 }
 
-export function updateDatasetUserVariables(
+export function _updateDatasetUserVariables(
   datasetId: string,
   userVariables: UserVariable[],
 ): UpdateDatasetUserVariables {

@@ -29,7 +29,7 @@ import { Geometry as OlGeometry } from "ol/geom";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
-import { Dataset, findDataset, getDatasetUserVariables } from "@/model/dataset";
+import { Dataset, findDataset } from "@/model/dataset";
 import {
   findPlaceInPlaceGroups,
   isValidPlaceGroup,
@@ -59,15 +59,13 @@ import {
   VolumeState,
 } from "@/states/controlState";
 import {
+  // TODO: strange dependency here, invert!
   UPDATE_DATASET_PLACE_GROUP,
   updateDatasetPlaceGroup,
   UpdateDatasetPlaceGroup,
-  updateDatasetUserVariables as _updateDatasetUserVariables,
 } from "./dataActions";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { locateInMap } from "./mapActions";
-import { UserVariable } from "@/model/userVariable";
-import { storeUserVariables } from "@/states/userSettings";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -794,25 +792,6 @@ export function updateUserColorBars(
   userColorBars: UserColorBar[],
 ): UpdateSettings {
   return { type: UPDATE_SETTINGS, settings: { userColorBars } };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export function updateDatasetUserVariables(
-  datasetId: string,
-  variables: UserVariable[],
-) {
-  return (dispatch: Dispatch, getState: () => AppState) => {
-    dispatch(_updateDatasetUserVariables(datasetId, variables));
-    const userVariables: Record<string, UserVariable[]> = {};
-    getState().dataState.datasets.forEach((dataset) => {
-      const [_, variables] = getDatasetUserVariables(dataset);
-      if (variables.length >= 0) {
-        userVariables[dataset.id] = variables;
-      }
-    });
-    storeUserVariables(userVariables);
-  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
