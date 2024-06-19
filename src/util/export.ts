@@ -28,7 +28,7 @@ import { RefObject } from "react";
 export async function _exportPNG(
   exportSize: number,
   elementRef: RefObject<HTMLDivElement | null>,
-  showAlert: () => void,
+  showSuccessAlert: () => void,
 ): Promise<void> {
   if (elementRef.current) {
     const chartElement = elementRef.current;
@@ -49,12 +49,9 @@ export async function _exportPNG(
               "image/png": blob,
             }),
           ]);
-          showAlert(); // Show success alert after successful clipboard write
+          showSuccessAlert();
         } catch (error) {
           console.error("Clipboard write failed:", error);
-          // Inform user or handle the situation where clipboard write fails
-          // Fallback to download if clipboard write fails
-          //saveAs(blob, 'chart.png');
         }
       } catch (error) {
         console.error("Failed to export:", error);
@@ -66,9 +63,9 @@ export async function _exportPNG(
 export function exportPNG(
   exportSize: number,
   elementRef: RefObject<HTMLDivElement | null>,
-  showAlert: () => void,
+  showSuccessAlert: () => void,
 ): void {
-  _exportPNG(exportSize, elementRef, showAlert).catch((error) => {
+  _exportPNG(exportSize, elementRef, showSuccessAlert).catch((error) => {
     console.error("Failed to export :", error);
   });
 }
