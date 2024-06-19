@@ -32,12 +32,12 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+import LayersIcon from "@mui/icons-material/Layers";
 
 import i18n from "@/i18n";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
-import LayersIcon from "@mui/icons-material/Layers";
 
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(

@@ -24,10 +24,7 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Theme } from "@mui/material/styles";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import { Theme, useTheme } from "@mui/system";
 import * as geojson from "geojson";
 import { default as OlMap } from "ol/Map";
 import { default as OlFeature } from "ol/Feature";
@@ -69,9 +66,6 @@ import { findMapLayer } from "./ol/util";
 import RenderEvent from "ol/render/Event";
 import { isNumber } from "@/util/types";
 
-// noinspection JSUnusedLocalSymbols
-const styles = (_theme: Theme) => createStyles({});
-
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
@@ -101,7 +95,7 @@ const SELECTION_LAYER_STYLE = new OlStyle({
   }),
 });
 
-interface ViewerProps extends WithStyles<typeof styles> {
+interface ViewerProps {
   theme: Theme;
   mapId: string;
   mapInteraction: MapInteraction;
@@ -140,7 +134,7 @@ interface ViewerProps extends WithStyles<typeof styles> {
   importUserPlacesFromText?: (text: string) => void;
 }
 
-const _Viewer: React.FC<ViewerProps> = ({
+export default function Viewer({
   theme,
   mapId,
   mapInteraction,
@@ -167,7 +161,8 @@ const _Viewer: React.FC<ViewerProps> = ({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
-}) => {
+}: ViewerProps) {
+  theme = useTheme();
   const [map, setMap] = useState<OlMap | null>(null);
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
@@ -448,10 +443,7 @@ const _Viewer: React.FC<ViewerProps> = ({
       </Map>
     </ErrorBoundary>
   );
-};
-
-const Viewer = withStyles(styles, { withTheme: true })(_Viewer);
-export default Viewer;
+}
 
 function findFeatureById(
   map: OlMap,

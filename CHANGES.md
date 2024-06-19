@@ -1,4 +1,21 @@
-## Changes in version 1.2.0 (in development)
+## Changes in version 1.2.1 (in development)
+
+* Updated translations for UI text in the statistics panel.
+
+## Changes in version 1.2.0
+
+### Enhancements
+
+* The right sidebar has been redesigned. It now uses a tab bar to switch
+  between info, time-series charts, new statistics, and 3-D panels. 
+  Numerous info panel styles have been adapted to harmonise with the common 
+  style of the UI.
+
+* Introduced a statistics panel, where basic statistics for the currently 
+  selected variable, selected timestamp, and selected place can be computed
+  and displayed. If the place is an area, statistics include  
+  minimum, maximum, mean, standard deviation, and a histogram. For 
+  point places the value at the point is displayed. 
 
 * Introduced a variable comparison mode. Users can now go to the layer 
   visibility dropdown menu (see below) and enable the variable compare mode.
@@ -36,10 +53,6 @@
   control bar. It also includes a new RGB layer from a secondary dataset
   so that now two different RGB layers can be compared.
 
-* The right sidebar has been redesigned. It now uses a tab bar to switch 
-  between info, time-series charts, and 3-D panels. Numerous info panel styles 
-  have been adapted to harmonise with the common style of the UI.
-
 * Introduced user-defined layers:
   - Users can now define their own base maps and overlay layers from
     WMS servers or tiled web maps (=XYZ).
@@ -64,6 +77,8 @@
 * Fixed problem with color bar selector that occurred if a variable
   used an unknown color bar name.
 
+### Other Changes
+ 
 * Numerous changes regarding development environment renewal and 
   code quality improvements:
 

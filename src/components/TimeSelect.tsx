@@ -84,7 +84,7 @@ const _TimeSelect: React.FC<TimeSelectProps> = ({
   // MUI DateTimePicker always uses local time, so we need to adjust.
   // See https://stackoverflow.com/questions/72103096/mui-x-date-pickers-utc-always-please
   // See https://github.com/dcs4cop/xcube-viewer/issues/281
-
+  //TODO: New MUI DateTimePicker is changed and need to discuss about updating.
   const timeInput = (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateTimePicker

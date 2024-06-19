@@ -25,9 +25,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { Theme, Toolbar } from "@mui/material";
-import { WithStyles } from "@mui/styles";
-import createStyles from "@mui/styles/createStyles";
-import withStyles from "@mui/styles/withStyles";
+import { styled } from "@mui/material/styles";
 
 import { AppState } from "@/states/appState";
 import { Config } from "@/config";
@@ -35,7 +33,7 @@ import ControlBar from "./ControlBar";
 import Workspace from "./Workspace";
 import MapLayerMenu from "./MapLayerMenu";
 
-interface AppPaneProps extends WithStyles<typeof styles> {
+interface AppPaneProps {
   hasConsent: boolean;
   compact: boolean;
 }
@@ -51,26 +49,23 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-const styles = (theme: Theme) =>
-  createStyles({
-    main: {
-      padding: 0,
-      width: "100vw",
-      height: "100vh",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "stretch",
-      [theme.breakpoints.up("md")]: {
-        overflow: "hidden",
-      },
-    },
-  });
+const StyledMain = styled("main")(({ theme }: { theme: Theme }) => ({
+  padding: 0,
+  width: "100vw",
+  height: "100vh",
+  overflow: "hidden",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "stretch",
+  [theme.breakpoints.up("md")]: {
+    overflow: "hidden",
+  },
+}));
 
-const _AppPane: React.FC<AppPaneProps> = ({ classes, hasConsent, compact }) => {
+const _AppPane: React.FC<AppPaneProps> = ({ hasConsent, compact }) => {
   // <Toolbar/>: Empty toolbar is a spacer, see docs https://material-ui.com/components/app-bar/
   return (
-    <main className={classes.main}>
+    <StyledMain>
       {!compact && <Toolbar variant="dense" />}
       {hasConsent && (
         <>
@@ -79,12 +74,9 @@ const _AppPane: React.FC<AppPaneProps> = ({ classes, hasConsent, compact }) => {
           <MapLayerMenu />
         </>
       )}
-    </main>
+    </StyledMain>
   );
 };
 
-const AppPane = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(styles)(_AppPane));
+const AppPane = connect(mapStateToProps, mapDispatchToProps)(_AppPane);
 export default AppPane;
