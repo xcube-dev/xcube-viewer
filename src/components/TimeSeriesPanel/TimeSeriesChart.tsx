@@ -36,8 +36,7 @@ import {
   YAxis,
 } from "recharts";
 import { CategoricalChartState } from "recharts/types/chart/types";
-import { Theme, useTheme } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled, useTheme } from "@mui/system";
 
 import { Place, PlaceInfo } from "@/model/place";
 import {
@@ -57,7 +56,6 @@ import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "./TimeSeriesLine";
 import TimeSeriesChartHeader from "./TimeSeriesChartHeader";
-import { makeStyles } from "@/util/styles";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -78,12 +76,6 @@ const StyledContainerDiv = styled("div")(({ theme }) => ({
 const StyledResponsiveContainer = styled(ResponsiveContainer)(() => ({
   flexGrow: 1,
 }));
-
-const styles = makeStyles({
-  responsiveContainer: {
-    flexGrow: 1,
-  },
-});
 
 interface Rectangle {
   x1?: number;
