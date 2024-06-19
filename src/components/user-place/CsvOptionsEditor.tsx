@@ -24,6 +24,7 @@
 
 import * as React from "react";
 import Checkbox from "@mui/material/Checkbox";
+import { styled } from "@mui/system";
 
 import { CsvOptions } from "@/model/user-place/csv";
 import OptionsTextField from "./OptionsTextField";
@@ -33,17 +34,19 @@ const CsvTextField = OptionsTextField<CsvOptions, string>();
 interface CsvOptionsEditorProps {
   options: CsvOptions;
   updateOptions: (options: Partial<CsvOptions>) => unknown;
-  className: string;
 }
+
+const StyledDiv = styled("div")(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+}));
 
 const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = ({
   options,
   updateOptions,
-  className,
 }) => {
   const forceGeometry = options.forceGeometry;
   return (
-    <div className={className}>
+    <StyledDiv>
       <div
         style={{
           display: "grid",
@@ -173,7 +176,7 @@ const CsvOptionsEditor: React.FC<CsvOptionsEditorProps> = ({
           updateOptions={updateOptions}
         />
       </div>
-    </div>
+    </StyledDiv>
   );
 };
 
