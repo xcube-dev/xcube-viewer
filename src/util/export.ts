@@ -25,8 +25,8 @@
 import { toPng } from "html-to-image";
 
 /**
- * Find index into `array` so that `array[index]` is closest to `value`.
- * Uses a bi-section algorithm, so it should perform according to O(log2(N)).
+ * Export image of any html element.
+ * Uses a html-to-image.
  *
  * @param {HTMLElement} element of any component to save as image
  * @param {ExportOptions} options are the different parameter for how
