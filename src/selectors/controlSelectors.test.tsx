@@ -22,55 +22,35 @@
  * SOFTWARE.
  */
 
+import { describe, expect, it } from "vitest";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
-import { PlaceInfo } from "@/model/place";
-import {
-  Statistics,
-  StatisticsRecord,
-  StatisticsSource,
-} from "@/model/statistics";
-import {
-  callJsonApi,
-  makeRequestInit,
-  makeRequestUrl,
-  QueryComponent,
-} from "./callApi";
-import { encodeDatasetId, encodeVariableName } from "@/model/encode";
+import { getTileUrl } from "./controlSelectors";
 
-interface StatisticsResult {
-  result: Statistics;
-}
+describe("Assert that controlSelectors.getTileUrl()", () => {
+  it("works for RGB", () => {
+    const dataset = { id: "demo" } as Dataset;
+    expect(getTileUrl("https://xcube.com/api", dataset, "rgb")).toEqual(
+      "https://xcube.com/api/tiles/demo/rgb/{z}/{y}/{x}",
+    );
+  });
 
-export function getStatistics(
-  apiServerUrl: string,
-  dataset: Dataset,
-  variable: Variable,
-  placeInfo: PlaceInfo,
-  timeLabel: string,
-  accessToken: string | null,
-): Promise<StatisticsRecord> {
-  const query: QueryComponent[] = [["time", timeLabel]];
-  const url = makeRequestUrl(
-    `${apiServerUrl}/statistics/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
-    query,
-  );
+  it("works for normal variables", () => {
+    const dataset = { id: "demo" } as Dataset;
+    const variable = { name: "conc_chl" } as Variable;
+    expect(getTileUrl("https://xcube.com/api", dataset, variable)).toEqual(
+      "https://xcube.com/api/tiles/demo/conc_chl/{z}/{y}/{x}",
+    );
+  });
 
-  const init = {
-    ...makeRequestInit(accessToken),
-    method: "post",
-    body: JSON.stringify(placeInfo.place.geometry),
-  };
-
-  const source: StatisticsSource = {
-    dataset,
-    variable,
-    placeInfo,
-    time: timeLabel,
-  };
-
-  return callJsonApi(url, init, (r: StatisticsResult) => ({
-    source,
-    statistics: r.result,
-  }));
-}
+  it("works for user variables", () => {
+    const dataset = { id: "demo" } as Dataset;
+    const variable = {
+      name: "ndvi",
+      expression: "(B08 - B04) / (B08 + B04)",
+    } as Variable;
+    expect(getTileUrl("https://xcube.com/api", dataset, variable)).toEqual(
+      "https://xcube.com/api/tiles/demo/ndvi%3D(B08%20-%20B04)%20%2F%20(B08%20%2B%20B04)/{z}/{y}/{x}",
+    );
+  });
+});

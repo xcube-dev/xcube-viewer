@@ -103,6 +103,7 @@ import {
   LayerDefinition,
 } from "@/model/layerDefinition";
 import { UserVariable } from "@/model/userVariable";
+import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -926,7 +927,7 @@ export const selectedServerSelector = createSelector(
 
 const getVariableTileLayer = (
   server: ApiServerConfig,
-  datasetId: string | null,
+  dataset: Dataset | null,
   timeLabel: string | null,
   attributions: string[] | null,
   variable: Variable | null,
@@ -942,7 +943,7 @@ const getVariableTileLayer = (
   mapProjection: string,
   imageSmoothing: boolean,
 ): MapElement => {
-  if (!visibility || !variable) {
+  if (!dataset || !variable || !visibility) {
     return null;
   }
   const queryParams: Array<[string, string]> = [
@@ -957,7 +958,7 @@ const getVariableTileLayer = (
   }
   return getTileLayer(
     layerId,
-    getTileUrl(server.url, datasetId!, variable.name),
+    getTileUrl(server.url, dataset, variable),
     variable.tileLevelMin,
     variable.tileLevelMax,
     queryParams,
@@ -973,7 +974,7 @@ const getVariableTileLayer = (
 
 export const selectedDatasetVariableLayerSelector = createSelector(
   selectedServerSelector,
-  selectedDatasetIdSelector,
+  selectedDatasetSelector,
   selectedDatasetTimeLabelSelector,
   selectedDatasetAttributionsSelector,
   selectedVariableSelector,
@@ -993,7 +994,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
 
 export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedServerSelector,
-  selectedDataset2IdSelector,
+  selectedDataset2Selector,
   selectedDataset2TimeLabelSelector,
   selectedDataset2AttributionsSelector,
   selectedVariable2Selector,
@@ -1013,7 +1014,7 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
 
 const getDatasetRgbTileLayer = (
   server: ApiServerConfig,
-  datasetId: string | null,
+  dataset: Dataset | null,
   rgbSchema: RgbSchema | null,
   visibility: boolean,
   layerId: string,
@@ -1024,13 +1025,13 @@ const getDatasetRgbTileLayer = (
   attributions: string[] | null,
   imageSmoothing: boolean,
 ): MapElement => {
-  if (!visibility || !rgbSchema) {
+  if (!dataset || !rgbSchema || !visibility) {
     return null;
   }
   const queryParams: Array<[string, string]> = [["crs", mapProjection]];
   return getTileLayer(
     layerId,
-    getTileUrl(server.url, datasetId!, "rgb"),
+    getTileUrl(server.url, dataset, "rgb"),
     rgbSchema.tileLevelMin,
     rgbSchema.tileLevelMax,
     queryParams,
@@ -1046,7 +1047,7 @@ const getDatasetRgbTileLayer = (
 
 export const selectedDatasetRgbLayerSelector = createSelector(
   selectedServerSelector,
-  selectedDatasetIdSelector,
+  selectedDatasetSelector,
   selectedDatasetRgbSchemaSelector,
   datasetRgbVisibilitySelector,
   datasetRgbLayerIdSelector,
@@ -1061,7 +1062,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
 
 export const selectedDataset2RgbLayerSelector = createSelector(
   selectedServerSelector,
-  selectedDataset2IdSelector,
+  selectedDataset2Selector,
   selectedDataset2RgbSchemaSelector,
   datasetRgb2VisibilitySelector,
   datasetRgb2LayerIdSelector,
@@ -1074,18 +1075,14 @@ export const selectedDataset2RgbLayerSelector = createSelector(
   getDatasetRgbTileLayer,
 );
 
-function getTileUrl(
+export function getTileUrl(
   serverUrl: string,
-  datasetId: string,
-  varName: string,
+  dataset: Dataset,
+  variable: Variable | string,
 ): string {
   return (
-    serverUrl +
-    "/tiles/" +
-    encodeURIComponent(datasetId) +
-    "/" +
-    encodeURIComponent(varName) +
-    "/{z}/{y}/{x}"
+    `${serverUrl}/tiles/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}/` +
+    "{z}/{y}/{x}"
   );
 }
 
