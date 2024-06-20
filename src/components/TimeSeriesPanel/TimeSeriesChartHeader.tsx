@@ -40,6 +40,7 @@ import IsoIcon from "@mui/icons-material/Iso";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { useDispatch } from "react-redux";
 
 import i18n from "@/i18n";
 import {
@@ -52,9 +53,8 @@ import { makeStyles } from "@/util/styles";
 import { TimeSeriesChartType } from "@/states/controlState";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
-import { exportPNG } from "@/util/export";
+import { exportElement, ExportOptions } from "@/util/export";
 import { postMessage } from "@/actions/messageLogActions";
-import { useDispatch } from "react-redux";
 
 type ValueRange = [number, number];
 const SHOW_DEV_VALUE = "stddev";
@@ -113,8 +113,8 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setStdevBars: (showStdDev: boolean) => void;
   valueRange: ValueRange | undefined;
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
-  exportSize: number;
-  chartElementRef: RefObject<HTMLDivElement | null>;
+  exportWidth: number;
+  chartElement: RefObject<HTMLDivElement>;
 }
 
 export default function TimeSeriesChartHeader({
@@ -136,8 +136,8 @@ export default function TimeSeriesChartHeader({
   setStdevBars,
   valueRange,
   setValueRange,
-  exportSize,
-  chartElementRef,
+  exportWidth,
+  chartElement,
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
@@ -171,13 +171,19 @@ export default function TimeSeriesChartHeader({
     setStdevBars(showStdDevNew);
   };
 
-  const showSuccessAlert = () => {
-    dispatch(
-      postMessage(
-        "success",
-        i18n.get("The chart image has been successfully copied to clipboard."),
-      ),
-    );
+  const handleSuccess = (message: string) => {
+    dispatch(postMessage("success", i18n.get(message)));
+  };
+
+  const handleError = (message: string, error: unknown) => {
+    dispatch(postMessage("error", i18n.get(`${message}: ${error}`)));
+  };
+
+  const options: ExportOptions = {
+    format: "png",
+    width: exportWidth,
+    handleSuccess,
+    handleError,
   };
 
   return (
@@ -201,7 +207,8 @@ export default function TimeSeriesChartHeader({
             key={"exportButton"}
             sx={styles.actionButton}
             onClick={() =>
-              exportPNG(exportSize, chartElementRef, showSuccessAlert)
+              chartElement.current &&
+              exportElement(chartElement.current, options)
             }
             size="small"
           >

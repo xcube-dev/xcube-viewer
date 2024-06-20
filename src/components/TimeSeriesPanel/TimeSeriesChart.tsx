@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
   },
 }));
-const EXPORT_SIZE = 2000; // in pixels
+const EXPORT_WIDTH = 2000; // in pixels
 
 interface Rectangle {
   x1?: number;
@@ -432,12 +432,10 @@ export default function TimeSeriesChart({
         setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
-        exportSize={EXPORT_SIZE}
-        chartElementRef={containerRef}
+        exportWidth={EXPORT_WIDTH}
+        chartElement={containerRef}
       />
       <ResponsiveContainer
-        ref={containerRef}
-        id="timeseries-chart"
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
         className={classes.responsiveContainer}

@@ -23,49 +23,87 @@
  */
 
 import { toPng } from "html-to-image";
-import { RefObject } from "react";
 
-export async function _exportPNG(
-  exportSize: number,
-  elementRef: RefObject<HTMLDivElement | null>,
-  showSuccessAlert: () => void,
+/**
+ * Find index into `array` so that `array[index]` is closest to `value`.
+ * Uses a bi-section algorithm, so it should perform according to O(log2(N)).
+ *
+ * @param {HTMLElement} element of any component to save as image
+ * @param {ExportOptions} options are the different parameter for how
+   the image should be
+ * @returns {Blob} return the element image on clipboard
+ */
+export function exportElement(
+  element: HTMLElement,
+  options?: ExportOptions,
+): void {
+  _exportElement(element, options).catch((error) => {
+    console.error("Failed to export:", error);
+    if (options?.handleError) {
+      options.handleError("Failed to export", error);
+    }
+  });
+}
+
+export async function _exportElement(
+  element: HTMLElement,
+  options: ExportOptions = {},
 ): Promise<void> {
-  if (elementRef.current) {
-    const chartElement = elementRef.current;
-    if (chartElement) {
-      try {
-        const dataUrl = await toPng(chartElement, {
-          backgroundColor: "#ffffff",
-          canvasWidth: exportSize,
-          canvasHeight:
-            (exportSize * chartElement.clientHeight) / chartElement.clientWidth,
-        });
-        const response = await fetch(dataUrl);
-        const blob = await response.blob();
+  if (element) {
+    const chartElement = element;
+    try {
+      if (options.format !== "png") {
+        const errorMessage = `Format '${options.format}' is not supported.`;
+        console.error(errorMessage);
+        if (options.handleError) {
+          options.handleError(errorMessage, new Error(errorMessage));
+        }
+        return;
+      }
+      const dataUrl = await toPng(chartElement, {
+        backgroundColor: "#ffffff",
+        canvasWidth: options.width || chartElement.clientWidth,
+        canvasHeight:
+          ((options.width || chartElement.clientWidth) *
+            chartElement.clientHeight) /
+            chartElement.clientWidth || options.height,
+      });
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
 
-        try {
-          await navigator.clipboard.write([
-            new ClipboardItem({
-              "image/png": blob,
-            }),
-          ]);
-          showSuccessAlert();
-        } catch (error) {
-          console.error("Clipboard write failed:", error);
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "image/png": blob,
+          }),
+        ]);
+        console.log("image written");
+        if (options.handleSuccess) {
+          options.handleSuccess(
+            "The chart image has been successfully copied to clipboard.",
+          );
         }
       } catch (error) {
-        console.error("Failed to export:", error);
+        console.error("Clipboard write failed", error);
+        if (options.handleError) {
+          options.handleError("Clipboard write failed", error);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to export:", error);
+      if (options.handleError) {
+        options.handleError("Failed to export", error);
       }
     }
   }
 }
 
-export function exportPNG(
-  exportSize: number,
-  elementRef: RefObject<HTMLDivElement | null>,
-  showSuccessAlert: () => void,
-): void {
-  _exportPNG(exportSize, elementRef, showSuccessAlert).catch((error) => {
-    console.error("Failed to export :", error);
-  });
+export type ExportFormat = "png" | "jpeg" | "svg";
+
+export interface ExportOptions {
+  format?: ExportFormat;
+  width?: number;
+  height?: number;
+  handleSuccess?: (message: string) => void;
+  handleError?: (message: string, error: unknown) => void;
 }
