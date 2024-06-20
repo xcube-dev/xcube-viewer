@@ -79,9 +79,7 @@ export async function _exportElement(
         ]);
         console.log("image written");
         if (options.handleSuccess) {
-          options.handleSuccess(
-            "The chart image has been successfully copied to clipboard.",
-          );
+          options.handleSuccess("Image copied to clipboard.");
         }
       } catch (error) {
         console.error("Clipboard write failed", error);
