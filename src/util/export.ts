@@ -25,13 +25,13 @@
 import { toPng } from "html-to-image";
 
 /**
- * Export image of any html element.
- * Uses a html-to-image.
+ * Exports a HTML element as image.
+ * It uses package `html-to-image` for that purpose.
  *
- * @param {HTMLElement} element of any component to save as image
- * @param {ExportOptions} options are the different parameter for how
-   the image should be
- * @returns {Blob} return the element image on clipboard
+ * @param element The HTML element to export.
+ * @param options Specifies image export options. 
+ *     Default image format is PNG.
+ * @returns The image copied into the clipboard.
  */
 export function exportElement(
   element: HTMLElement,
