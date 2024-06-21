@@ -56,11 +56,7 @@ export async function _exportElement(
     try {
       if (options.format !== "png") {
         const errorMessage = `Format '${options.format}' is not supported.`;
-        console.error(errorMessage);
-        if (options.handleError) {
-          options.handleError(errorMessage, new Error(errorMessage));
-        }
-        return;
+        throw new Error(errorMessage);
       }
       const dataUrl = await toPng(chartElement, {
         backgroundColor: "#ffffff",
