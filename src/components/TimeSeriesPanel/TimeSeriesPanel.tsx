@@ -35,6 +35,7 @@ import {
   TimeSeriesGroup,
 } from "@/model/timeSeries";
 import { TimeSeriesChartType } from "@/states/controlState";
+import { MessageType } from "@/states/messageLogState";
 import TimeRangeSlider from "./TimeRangeSlider";
 import TimeSeriesChart from "./TimeSeriesChart";
 import NoTimeSeriesChart from "@/components/TimeSeriesPanel/NoTimeSeriesChart";
@@ -85,6 +86,7 @@ interface TimeSeriesPanelProps extends WithLocale {
   ) => void;
   canAddTimeSeries: boolean;
   addTimeSeries: () => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
