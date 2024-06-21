@@ -24,25 +24,24 @@
 
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
-import { Theme } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import makeStyles from "@mui/styles/makeStyles";
 import CircularProgress from "@mui/material/CircularProgress";
 import CheckIcon from "@mui/icons-material/Check";
 
 import i18n from "@/i18n";
 import { ControlState } from "@/states/controlState";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  icon: {
+const styles = makeStyles({
+  icon: (theme) => ({
     marginRight: theme.spacing(2),
-  },
-}));
+  }),
+});
 
 interface LegalAgreementDialogProps {
   open: boolean;
@@ -66,8 +65,6 @@ export default function LegalAgreementDialog({
       .then((response) => response.text())
       .then((text) => setMarkdownText(text));
   });
-
-  const classes = useStyles();
 
   if (!open) {
     return null;
@@ -114,7 +111,7 @@ export default function LegalAgreementDialog({
 
       <DialogActions>
         <Button onClick={handleConfirm}>
-          <CheckIcon className={classes.icon} />
+          <CheckIcon sx={styles.icon} />
           {i18n.get("Accept and continue")}
         </Button>
         <Button onClick={handleLeave}>{i18n.get("Leave")}</Button>

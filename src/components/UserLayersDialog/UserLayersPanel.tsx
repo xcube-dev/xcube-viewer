@@ -24,8 +24,6 @@
 
 import React from "react";
 import Paper from "@mui/material/Paper";
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import { darken, lighten } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -47,16 +45,17 @@ import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
 import UserLayerEditorWms from "./UserLayerEditorWms";
 import UserLayerEditorXyz from "./UserLayerEditorXyz";
 import useUndo from "@/hooks/useUndo";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
+const styles = makeStyles({
+  paper: (theme) => ({
     backgroundColor: (theme.palette.mode === "dark" ? lighten : darken)(
       theme.palette.background.paper,
       0.1,
     ),
     marginBottom: theme.spacing(2),
-  },
-}));
+  }),
+});
 
 interface EditedLayer {
   editId: string;
@@ -81,8 +80,6 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
     null,
   );
   const [undo, setUndo] = useUndo();
-
-  const classes = useStyles();
 
   if (!open) {
     return null;
@@ -182,7 +179,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
   const editing = editedLayer !== null;
 
   return (
-    <Paper className={classes.paper}>
+    <Paper sx={styles.paper}>
       <List component="nav" dense>
         {userLayers.map((userLayer) => {
           const selected = selectedId === userLayer.id;

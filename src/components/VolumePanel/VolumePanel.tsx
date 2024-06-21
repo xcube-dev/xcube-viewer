@@ -23,9 +23,6 @@
  */
 
 import React, { SyntheticEvent } from "react";
-import { Theme } from "@mui/material/styles";
-import createStyles from "@mui/styles/createStyles";
-import makeStyles from "@mui/styles/makeStyles";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -46,36 +43,35 @@ import {
 } from "@/states/controlState";
 import { ColorBar } from "@/model/colorBar";
 import VolumeCanvas from "./VolumeCanvas";
+import { makeStyles } from "@/util/styles";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    card: {
-      maxWidth: "100%",
-      marginBottom: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    info: {
-      marginRight: theme.spacing(1),
-    },
-    close: {
-      marginLeft: "auto",
-    },
-    cardContent: {
-      padding: 8,
-    },
-    isoEditor: {
-      display: "flex",
-      flexDirection: "row",
-    },
-    isoTextField: {
-      minWidth: "16em",
-      marginLeft: "1em",
-    },
-    isoSlider: {
-      minWidth: 200,
-    },
+const styles = makeStyles({
+  card: (theme) => ({
+    maxWidth: "100%",
+    marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
   }),
-);
+  info: (theme) => ({
+    marginRight: theme.spacing(1),
+  }),
+  close: {
+    marginLeft: "auto",
+  },
+  cardContent: {
+    padding: 8,
+  },
+  isoEditor: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  isoTextField: {
+    minWidth: "16em",
+    marginLeft: "1em",
+  },
+  isoSlider: {
+    minWidth: 200,
+  },
+});
 
 interface VolumePanelProps extends WithLocale {
   selectedDataset: Dataset | null;
@@ -110,8 +106,6 @@ const VolumePanel: React.FC<VolumePanelProps> = ({
   updateVariableVolume,
   serverUrl,
 }) => {
-  const classes = useStyles();
-
   let volumeIsoThreshold = 0.5;
   if (selectedVariable) {
     // Move in to selector
@@ -155,7 +149,7 @@ const VolumePanel: React.FC<VolumePanelProps> = ({
   };
 
   return (
-    <Card className={classes.card}>
+    <Card sx={styles.card}>
       <CardActions disableSpacing>
         {selectedVariable && (
           <>
@@ -196,7 +190,7 @@ const VolumePanel: React.FC<VolumePanelProps> = ({
           </>
         )}
       </CardActions>
-      <CardContent className={classes.cardContent}>
+      <CardContent sx={styles.cardContent}>
         <VolumeCanvas
           selectedDataset={selectedDataset}
           selectedVariable={selectedVariable}
@@ -231,7 +225,6 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = ({
   setValue,
   disabled,
 }) => {
-  const classes = useStyles();
   const [sliderValue, setSliderValue] = React.useState<number>(value);
   const [textValue, setTextValue] = React.useState<string>("" + value);
   const [error, setError] = React.useState<string | null>(null);
@@ -274,7 +267,7 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = ({
 
   return (
     <TextField
-      className={classes.isoTextField}
+      sx={styles.isoTextField}
       disabled={disabled}
       label="Iso-Threshold"
       variant="filled"
@@ -287,7 +280,7 @@ const IsoThresholdEditor: React.FC<IsoThresholdEditorProps> = ({
         endAdornment: (
           <Slider
             size={"small"}
-            className={classes.isoSlider}
+            sx={styles.isoSlider}
             min={minValue}
             max={maxValue}
             value={sliderValue}

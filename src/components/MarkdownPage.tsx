@@ -24,9 +24,6 @@
 
 import React from "react";
 import Markdown from "react-markdown";
-import { Theme } from "@mui/material/styles";
-import createStyles from "@mui/styles/createStyles";
-import makeStyles from "@mui/styles/makeStyles";
 import Dialog from "@mui/material/Dialog";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -38,26 +35,26 @@ import DialogContent from "@mui/material/DialogContent";
 import { TransitionProps } from "@mui/material/transitions";
 
 import useFetchText from "@/hooks/useFetchText";
+import { makeStyles } from "@/util/styles";
+import { styled } from "@mui/system";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    dialog: {
-      backgroundColor: theme.palette.grey[200],
-    },
-    appBar: {
-      position: "relative",
-    },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
-    },
-    text: {
-      marginTop: theme.spacing(4),
-      marginLeft: theme.spacing(40),
-      marginRight: theme.spacing(40),
-    },
+const styles = makeStyles({
+  dialog: (theme) => ({
+    backgroundColor: theme.palette.grey[200],
   }),
-);
+  appBar: {
+    position: "relative",
+  },
+  title: (theme) => ({
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  }),
+});
+const StyledDiv = styled("div")(({ theme }) => ({
+  marginTop: theme.spacing(4),
+  marginLeft: theme.spacing(40),
+  marginRight: theme.spacing(40),
+}));
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -81,8 +78,6 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
 }) => {
   const markdownText = useFetchText(href);
 
-  const classes = useStyles();
-
   return (
     <Dialog
       fullScreen
@@ -91,7 +86,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
       TransitionComponent={Transition}
       PaperProps={{ tabIndex: -1 }}
     >
-      <AppBar className={classes.appBar}>
+      <AppBar sx={styles.appBar}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -102,15 +97,15 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
           >
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" sx={styles.title}>
             {title}
           </Typography>
         </Toolbar>
       </AppBar>
-      <DialogContent className={classes.dialog}>
-        <div className={classes.text}>
+      <DialogContent sx={styles.dialog}>
+        <StyledDiv>
           <Markdown children={markdownText || ""} linkTarget="_blank" />
-        </div>
+        </StyledDiv>
       </DialogContent>
     </Dialog>
   );
