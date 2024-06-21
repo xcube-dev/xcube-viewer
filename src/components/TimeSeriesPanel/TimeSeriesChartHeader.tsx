@@ -175,7 +175,7 @@ export default function TimeSeriesChartHeader({
     dispatch(postMessage("success", i18n.get(message)));
   };
 
-  const handleError = (message: string, error: unknown) => {
+  const handleExportError = (message: string, error: unknown) => {
     dispatch(postMessage("error", i18n.get(`${message}: ${error}`)));
   };
 
