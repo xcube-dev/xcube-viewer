@@ -41,6 +41,8 @@ export function exportElement(
     console.error("Failed to export:", error);
     if (options?.handleError) {
       options.handleError("Failed to export", error);
+    } else {
+      throw error;
     }
   });
 }
