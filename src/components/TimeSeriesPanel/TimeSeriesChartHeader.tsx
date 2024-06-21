@@ -179,7 +179,7 @@ export default function TimeSeriesChartHeader({
     dispatch(postMessage("error", i18n.get(`${message}: ${error}`)));
   };
 
-  const options: ExportOptions = {
+  const exportOptions: ExportOptions = {
     format: "png",
     width: exportWidth,
     handleSuccess,
