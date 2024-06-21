@@ -346,6 +346,11 @@
       "se": "Enheter"
     },
     {
+      "en": "Expression",
+      "de": "Ausdruck",
+      "se": "Uttryck"
+    },
+    {
       "en": "Data type",
       "de": "Datentyp",
       "se": "Datatyp"

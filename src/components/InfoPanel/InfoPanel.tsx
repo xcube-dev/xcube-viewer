@@ -65,6 +65,7 @@ import { Variable } from "@/model/variable";
 import pythonLogo from "@/resources/python-bw.png";
 import { ApiServerConfig } from "@/model/apiServer";
 import { commonStyles } from "@/components/common-styles";
+import { isUserVariable } from "@/model/userVariable";
 
 type ViewMode = "text" | "list" | "code" | "python";
 
@@ -361,6 +362,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       "name",
       "title",
       "units",
+      "expression",
       "shape",
       "dtype",
       "shape",
@@ -398,18 +400,26 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       );
     }
   } else if (viewMode === "text") {
-    const data: KeyValue[] = [
-      [i18n.get("Title"), variable.title],
+    let data: KeyValue[] = [
       [i18n.get("Name"), variable.name],
+      [i18n.get("Title"), variable.title],
       [i18n.get("Units"), variable.units],
-      [i18n.get("Data type"), variable.dtype],
-      [i18n.get("Dimension names"), variable.dims.join(", ")],
-      [
-        i18n.get("Dimension lengths"),
-        variable.shape.map((s) => s + "").join(", "),
-      ],
-      [i18n.get("Time chunk size"), variable.timeChunkSize],
     ];
+    if (isUserVariable(variable)) {
+      data.push([i18n.get("Expression"), variable.expression]);
+    } else {
+      data = [
+        ...data,
+        [i18n.get("Data type"), variable.dtype],
+        [i18n.get("Dimension names"), variable.dims.join(", ")],
+        [
+          i18n.get("Dimension lengths"),
+          variable.shape.map((s) => s + "").join(", "),
+        ],
+        [i18n.get("Time chunk size"), variable.timeChunkSize],
+      ];
+    }
+
     content = (
       <CardContent2>
         <KeyValueTable data={data} />
@@ -725,12 +735,24 @@ function getVariablePythonCode(
   const cmap = variable.colorBarName;
   let timeSel = "";
   if (time !== null) {
-    timeSel = `.sel(time="${utcTimeToIsoDateTimeString(time)}", method="nearest")`;
+    timeSel = `sel(time="${utcTimeToIsoDateTimeString(time)}", method="nearest")`;
   }
-  return [
-    `var = dataset.${name}${timeSel}`,
-    `var.plot.imshow(vmin=${vmin}, vmax=${vmax}, cmap="${cmap}")`,
-  ].join("\n");
+  const code: string[] = [];
+  if (isUserVariable(variable)) {
+    const expression = variable.expression;
+    code.push(`${name} = eval("${expression}", dict(dataset), None)`);
+    if (timeSel) {
+      code.push(`${name} = ${name}.${timeSel}`);
+    }
+  } else {
+    if (timeSel) {
+      code.push(`${name} = dataset.${name}.${timeSel}`);
+    } else {
+      code.push(`${name} = dataset.${name}`);
+    }
+  }
+  code.push(`${name}.plot.imshow(vmin=${vmin}, vmax=${vmax}, cmap="${cmap}")`);
+  return code.join("\n");
 }
 
 function getS3DataId(originalId: string): string {

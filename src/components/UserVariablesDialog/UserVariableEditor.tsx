@@ -245,7 +245,12 @@ export default function UserVariableEditor({
         </Box>
 
         <Box sx={styles.expressionRow}>
-          <Typography sx={{ paddingBottom: 1 }}>
+          <Typography
+            sx={(theme) => ({
+              paddingBottom: 1,
+              color: theme.palette.text.secondary,
+            })}
+          >
             {i18n.get("Expression")}
           </Typography>
           <CodeMirror
