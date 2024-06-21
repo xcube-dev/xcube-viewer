@@ -40,7 +40,6 @@ import IsoIcon from "@mui/icons-material/Iso";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import { useDispatch } from "react-redux";
 
 import i18n from "@/i18n";
 import {
@@ -51,10 +50,10 @@ import {
 import { WithLocale } from "@/util/lang";
 import { makeStyles } from "@/util/styles";
 import { TimeSeriesChartType } from "@/states/controlState";
+import { MessageType } from "@/states/messageLogState";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
-import { exportElement, ExportOptions } from "@/util/export";
-import { postMessage } from "@/actions/messageLogActions";
+import { ExportOptions, exportElement } from "@/util/export";
 
 type ValueRange = [number, number];
 const SHOW_DEV_VALUE = "stddev";
@@ -90,6 +89,7 @@ const styles = makeStyles({
     paddingRight: theme.spacing(1),
   }),
 });
+const EXPORT_WIDTH = 2000; // in pixels
 
 interface TimeSeriesChartHeaderProps extends WithLocale {
   timeSeriesGroup: TimeSeriesGroup;
@@ -113,8 +113,8 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setStdevBars: (showStdDev: boolean) => void;
   valueRange: ValueRange | undefined;
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
-  exportWidth: number;
   chartElement: RefObject<HTMLDivElement>;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function TimeSeriesChartHeader({
@@ -136,8 +136,8 @@ export default function TimeSeriesChartHeader({
   setStdevBars,
   valueRange,
   setValueRange,
-  exportWidth,
   chartElement,
+  postMessage,
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
@@ -147,7 +147,6 @@ export default function TimeSeriesChartHeader({
   const handleToggleValueRangeEditor = () => {
     setValueRangeEditorOpen(!valueRangeEditorOpen);
   };
-  const dispatch = useDispatch();
 
   const handleValueRangeChange = (valueRange: ValueRange | undefined) => {
     setValueRangeEditorOpen(false);
@@ -172,18 +171,18 @@ export default function TimeSeriesChartHeader({
   };
 
   const handleExportSuccess = (message: string) => {
-    dispatch(postMessage("success", i18n.get(message)));
+    postMessage("success", i18n.get(message));
   };
 
   const handleExportError = (message: string, error: unknown) => {
-    dispatch(postMessage("error", i18n.get(`${message}: ${error}`)));
+    postMessage("error", i18n.get(`${message}: ${error}`));
   };
 
   const exportOptions: ExportOptions = {
     format: "png",
-    width: exportWidth,
-    handleSuccess,
-    handleError,
+    width: EXPORT_WIDTH,
+    handleSuccess: handleExportSuccess,
+    handleError: handleExportError,
   };
 
   return (
@@ -208,7 +207,7 @@ export default function TimeSeriesChartHeader({
             sx={styles.actionButton}
             onClick={() =>
               chartElement.current &&
-              exportElement(chartElement.current, options)
+              exportElement(chartElement.current, exportOptions)
             }
             size="small"
           >

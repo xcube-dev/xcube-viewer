@@ -57,6 +57,7 @@ import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "./TimeSeriesLine";
 import TimeSeriesChartHeader from "./TimeSeriesChartHeader";
+import { MessageType } from "@/states/messageLogState";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -79,7 +80,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
   },
 }));
-const EXPORT_WIDTH = 2000; // in pixels
 
 interface Rectangle {
   x1?: number;
@@ -126,6 +126,7 @@ interface TimeSeriesChartProps extends WithLocale {
     timeSeriesGroupId: string,
     timeSeries: TimeSeries,
   ) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function TimeSeriesChart({
@@ -145,6 +146,7 @@ export default function TimeSeriesChart({
   removeTimeSeriesGroup,
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
+  postMessage,
 }: TimeSeriesChartProps) {
   // TODO: check if using MUI useTheme is still ok
   const theme = useTheme();
@@ -432,8 +434,8 @@ export default function TimeSeriesChart({
         setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
-        exportWidth={EXPORT_WIDTH}
         chartElement={containerRef}
+        postMessage={postMessage}
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172

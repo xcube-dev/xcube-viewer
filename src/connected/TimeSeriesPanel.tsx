@@ -37,6 +37,7 @@ import {
   selectTime,
   selectTimeRange,
 } from "@/actions/controlActions";
+import { postMessage } from "@/actions/messageLogActions";
 import {
   canAddTimeSeriesSelector,
   selectedDatasetTimeRangeSelector,
@@ -69,6 +70,7 @@ const mapDispatchToProps = {
   selectPlace,
   addPlaceGroupTimeSeries,
   addTimeSeries,
+  postMessage,
 };
 
 const TimeSeriesPanel = connect(

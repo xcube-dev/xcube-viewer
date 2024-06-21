@@ -24,76 +24,6 @@
 
 import { toPng } from "html-to-image";
 
-/**
- * Exports a HTML element as image.
- * It uses package `html-to-image` for that purpose.
- *
- * @param element The HTML element to export.
- * @param options Specifies image export options. 
- *     Default image format is PNG.
- * @returns The image copied into the clipboard.
- */
-export function exportElement(
-  element: HTMLElement,
-  options?: ExportOptions,
-): void {
-  _exportElement(element, options).catch((error) => {
-    console.error("Failed to export:", error);
-    if (options?.handleError) {
-      options.handleError("Failed to export", error);
-    } else {
-      throw error;
-    }
-  });
-}
-
-export async function _exportElement(
-  element: HTMLElement,
-  options: ExportOptions = {},
-): Promise<void> {
-  if (element) {
-    const chartElement = element;
-    try {
-      if (options.format !== "png") {
-        const errorMessage = `Format '${options.format}' is not supported.`;
-        throw new Error(errorMessage);
-      }
-      const dataUrl = await toPng(chartElement, {
-        backgroundColor: "#ffffff",
-        canvasWidth: options.width || chartElement.clientWidth,
-        canvasHeight:
-          ((options.width || chartElement.clientWidth) *
-            chartElement.clientHeight) /
-            chartElement.clientWidth || options.height,
-      });
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
-
-      try {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            "image/png": blob,
-          }),
-        ]);
-        console.log("image written");
-        if (options.handleSuccess) {
-          options.handleSuccess("Image copied to clipboard.");
-        }
-      } catch (error) {
-        console.error("Clipboard write failed", error);
-        if (options.handleError) {
-          options.handleError("Clipboard write failed", error);
-        }
-      }
-    } catch (error) {
-      console.error("Failed to export:", error);
-      if (options.handleError) {
-        options.handleError("Failed to export", error);
-      }
-    }
-  }
-}
-
 export type ExportFormat = "png" | "jpeg" | "svg";
 
 export interface ExportOptions {
@@ -102,4 +32,65 @@ export interface ExportOptions {
   height?: number;
   handleSuccess?: (message: string) => void;
   handleError?: (message: string, error: unknown) => void;
+}
+
+/**
+ * Exports a HTML element as image.
+ * It uses package `html-to-image` for that purpose.
+ *
+ * @param element The HTML element to export.
+ * @param options Specifies image export options.
+ *     Default image format is PNG.
+ * @returns The image copied into the clipboard.
+ */
+export function exportElement(
+  element: HTMLElement,
+  options?: ExportOptions,
+): void {
+  _exportElement(element, options)
+    .then(() => {
+      if (options?.handleSuccess) {
+        options.handleSuccess("Image copied to clipboard.");
+      }
+    })
+    .catch((error) => {
+      console.error("Failed to export:", error);
+      if (options?.handleError) {
+        options.handleError("Failed to export", error);
+      } else {
+        throw error;
+      }
+    });
+}
+
+export async function _exportElement(
+  element: HTMLElement,
+  options: ExportOptions = {},
+): Promise<void> {
+  const chartElement = element;
+  if (options.format !== "png") {
+    const errorMessage = `Format '${options.format}' is not supported.`;
+    throw new Error(errorMessage);
+  }
+  const dataUrl = await toPng(chartElement, {
+    backgroundColor: "#ffffff",
+    canvasWidth:
+      options.width ||
+      ((options.height || chartElement.clientHeight) *
+        chartElement.clientWidth) /
+        chartElement.clientHeight,
+    canvasHeight:
+      options.height ||
+      ((options.width || chartElement.clientWidth) *
+        chartElement.clientHeight) /
+        chartElement.clientWidth,
+  });
+  const response = await fetch(dataUrl);
+  const blob = await response.blob();
+
+  await navigator.clipboard.write([
+    new ClipboardItem({
+      "image/png": blob,
+    }),
+  ]);
 }
