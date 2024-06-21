@@ -171,7 +171,7 @@ export default function TimeSeriesChartHeader({
     setStdevBars(showStdDevNew);
   };
 
-  const handleSuccess = (message: string) => {
+  const handleExportSuccess = (message: string) => {
     dispatch(postMessage("success", i18n.get(message)));
   };
 
