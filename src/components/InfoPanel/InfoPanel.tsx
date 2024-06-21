@@ -740,7 +740,11 @@ function getVariablePythonCode(
   const code: string[] = [];
   if (isUserVariable(variable)) {
     const expression = variable.expression;
-    code.push(`${name} = eval("${expression}", dict(dataset), None)`);
+    code.push("from xcube.util.expression import compute_array_expr");
+    code.push("from xcube.util.expression import new_dataset_namespace");
+    code.push("");
+    code.push(`namespace = new_dataset_namespace(dataset)`);
+    code.push(`${name} = compute_array_expr("${expression}", namespace`);
     if (timeSel) {
       code.push(`${name} = ${name}.${timeSel}`);
     }
