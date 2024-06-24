@@ -77,6 +77,8 @@
 * Fixed problem with color bar selector that occurred if a variable
   used an unknown color bar name.
 
+* Made the right sidebar panel's tab bar position sticky. (#373)
+
 ### Other Changes
  
 * Numerous changes regarding development environment renewal and 
