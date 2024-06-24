@@ -1,3 +1,9 @@
+## Changes in version 1.3.0 (in development)
+
+* Users can now define their own variables computed from arbitrary 
+  band-math expressions. The variables are defined for a given
+  dataset and are persisted in the browser's local storage. (#371)
+
 ## Changes in version 1.2.1
 
 * Updated language translations for German and Swedish in the statistics panel.
