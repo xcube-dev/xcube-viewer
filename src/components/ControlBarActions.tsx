@@ -38,6 +38,7 @@ import i18n from "@/i18n";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
+import ToolButton from "./ToolButton";
 
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(
@@ -76,17 +77,12 @@ export default function ControlBarActions({
   }
 
   const layersButton = (
-    <ToggleButton
-      value="open"
-      selected={layerMenuOpen}
+    <ToolButton
       onClick={() => setLayerMenuOpen(!layerMenuOpen)}
-      size="small"
-      sx={commonStyles.toggleButton}
-    >
-      <Tooltip arrow title={i18n.get("Layer visibilities")}>
-        <LayersIcon />
-      </Tooltip>
-    </ToggleButton>
+      tooltipText={i18n.get("Layer visibilities")}
+      toggle
+      icon={<LayersIcon />}
+    />
   );
 
   const sidebarButton = (

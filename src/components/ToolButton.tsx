@@ -23,7 +23,7 @@
  */
 
 import * as React from "react";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -33,6 +33,8 @@ interface ToolButtonProps {
   disabled?: boolean;
   tooltipText?: string;
   className?: string;
+  toggle?: boolean;
+  customSx?: boolean;
 }
 
 const ToolButton: React.FC<ToolButtonProps> = ({
@@ -41,7 +43,16 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   onClick,
   icon,
   tooltipText,
+  toggle = false,
 }) => {
+  const [isToggled, setIsToggled] = useState(false);
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (toggle) {
+      setIsToggled(!isToggled);
+    }
+    onClick(event);
+  };
+
   const iconComp = tooltipText ? (
     <Tooltip arrow title={tooltipText}>
       {icon}
@@ -49,12 +60,22 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   ) : (
     icon
   );
+
   return (
     <IconButton
       className={className}
       disabled={disabled}
-      onClick={onClick}
+      onClick={handleClick}
       size="small"
+      sx={{
+        ...(toggle && {
+          border: "1px solid rgba(0, 0, 0, 0.12)",
+          borderRadius: "4px",
+          padding: "2.4px",
+          color: isToggled ? "rgba(0, 0, 0, 0.87)" : "rgba(0, 0, 0, 0.54)",
+          backgroundColor: isToggled ? "rgba(0, 0, 0, 0.08)" : "transparent",
+        }),
+      }}
     >
       {iconComp}
     </IconButton>
