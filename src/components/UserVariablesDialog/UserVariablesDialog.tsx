@@ -120,7 +120,9 @@ export default function UserVariablesDialog({
       <DialogActions>
         <Button
           onClick={handleConfirmDialog}
-          disabled={editedVariable !== null}
+          disabled={
+            editedVariable !== null || !areUserVariablesOk(localUserVariables)
+          }
         >
           {i18n.get("OK")}
         </Button>
@@ -130,4 +132,10 @@ export default function UserVariablesDialog({
       </DialogActions>
     </Dialog>
   );
+}
+
+function areUserVariablesOk(userVariables: UserVariable[]) {
+  const names = new Set<string>();
+  userVariables.forEach((v) => names.add(v.name));
+  return names.size === userVariables.length;
 }

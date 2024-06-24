@@ -139,7 +139,7 @@ export default function VariableSelect({
     <ToolButton
       key={"userVariables"}
       onClick={handleManageUserVariablesClick}
-      tooltipText={i18n.get("Add/manage user-defined variables")}
+      tooltipText={i18n.get("Manage user variables")}
       icon={<CalculateIcon />}
     />
   );

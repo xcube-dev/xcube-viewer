@@ -1041,6 +1041,46 @@
       "se": "Lager"
     },
     {
+      "en": "User Variables",
+      "de": "Nutzer-Variablen",
+      "se": "Användarvariabler"
+    },
+    {
+      "en": "Manage user variables",
+      "de": "Nutzer-Variablen verwalten",
+      "se": "Hantera användarvariabler"
+    },
+    {
+      "en": "Add user variable",
+      "de": "Nutzer-Variable hinzufügen",
+      "se": "Lägg till användarvariabel"
+    },
+    {
+      "en": "Duplicate user variable",
+      "de": "Nutzer-Variable duplizieren",
+      "se": "Duplicera användarvariabel"
+    },
+    {
+      "en": "Edit user variable",
+      "de": "Nutzer-Variable bearbeiten",
+      "se": "Redigera användarvariabel"
+    },
+    {
+      "en": "Remove user variable",
+      "de": "Nutzer-Variable löschen",
+      "se": "Ta bort användarvariabel"
+    },
+    {
+      "en": "Not a valid identifier",
+      "de": "Kein gültiger Bezeichner",
+      "se": "Inte en giltig identifierare"
+    },
+    {
+      "en": "Must not be empty",
+      "de": "Darf nicht leer sein",
+      "se": "Får inte vara tom"
+    },
+    {
       "en": "docs/privacy-note.en.md",
       "de": "docs/privacy-note.de.md",
       "se": "docs/privacy-note.se.md"

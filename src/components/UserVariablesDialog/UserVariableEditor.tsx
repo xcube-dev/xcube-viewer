@@ -202,8 +202,8 @@ export default function UserVariableEditor({
         selected
         title={
           editedVariable.editMode === "add"
-            ? i18n.get("Add User Variable")
-            : i18n.get("Edit User Variable")
+            ? i18n.get("Add user variable")
+            : i18n.get("Edit user variable")
         }
         actions={
           <DoneCancel

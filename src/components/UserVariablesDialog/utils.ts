@@ -54,3 +54,13 @@ export function newUserVariable(): UserVariable {
     attrs: {},
   };
 }
+
+export function copyUserVariable(variable: UserVariable): UserVariable {
+  return {
+    ...variable,
+    id: newId("user"),
+    // Editable properties
+    name: `${variable.name}_copy`,
+    title: variable.title ? `${variable.title} Copy` : "",
+  };
+}

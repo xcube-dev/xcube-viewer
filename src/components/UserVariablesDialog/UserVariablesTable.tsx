@@ -34,12 +34,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 import i18n from "@/i18n";
 import { Dataset } from "@/model/dataset";
-import { EditedVariable, newUserVariable } from "./utils";
+import { copyUserVariable, EditedVariable, newUserVariable } from "./utils";
 import { UserVariable } from "@/model/userVariable";
 import HeaderBar from "./HeaderBar";
 import { makeStyles } from "@/util/styles";
@@ -75,6 +76,16 @@ export default function UserVariablesTable({
     setEditedVariable({ editMode: "add", variable: newUserVariable() });
   };
 
+  const handleDuplicateVariable = () => {
+    const selectedVariable = userVariables[selectedIndex];
+    setUserVariables([
+      ...userVariables.slice(0, selectedIndex + 1),
+      copyUserVariable(selectedVariable),
+      ...userVariables.slice(selectedIndex + 1),
+    ]);
+    setSelectedIndex(selectedIndex + 1);
+  };
+
   const handleEditVariable = () => {
     setEditedVariable({ editMode: "edit", variable: variable! });
   };
@@ -93,23 +104,30 @@ export default function UserVariablesTable({
     <Box sx={styles.container}>
       <HeaderBar
         selected={selectedIndex !== null}
-        title={i18n.get("User-defined Variables")}
+        title={i18n.get("Manage user variables")}
         actions={
           <>
-            <Tooltip title={i18n.get("Add variable")}>
+            <Tooltip title={i18n.get("Add user variable")}>
               <IconButton color={"primary"} onClick={handleAddVariable}>
                 <AddCircleOutlineIcon />
               </IconButton>
             </Tooltip>
             {isSelected && (
-              <Tooltip title={i18n.get("Edit variable")}>
+              <Tooltip title={i18n.get("Duplicate user variable")}>
+                <IconButton onClick={handleDuplicateVariable}>
+                  <ContentCopyIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            {isSelected && (
+              <Tooltip title={i18n.get("Edit user variable")}>
                 <IconButton onClick={handleEditVariable}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
             )}
             {isSelected && (
-              <Tooltip title={i18n.get("Delete variable")}>
+              <Tooltip title={i18n.get("Remove user variable")}>
                 <IconButton onClick={handleRemoveVariable}>
                   <DeleteIcon />
                 </IconButton>
