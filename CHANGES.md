@@ -77,7 +77,6 @@
 * Fixed problem with color bar selector that occurred if a variable
   used an unknown color bar name.
 
-
 ### Other Changes
  
 * Numerous changes regarding development environment renewal and 
