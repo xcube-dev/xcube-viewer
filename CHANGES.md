@@ -1,6 +1,6 @@
-## Changes in version 1.2.1 (in development)
+## Changes in version 1.2.1
 
-* Updated translations for UI text in the statistics panel.
+* Updated language translations for German and Swedish in the statistics panel.
 
 ## Changes in version 1.2.0
 

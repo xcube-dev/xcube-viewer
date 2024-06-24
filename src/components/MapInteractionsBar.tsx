@@ -23,8 +23,6 @@
  */
 
 import * as React from "react";
-import { Theme } from "@mui/material";
-import makeStyles from "@mui/styles/makeStyles";
 import FormControl from "@mui/material/FormControl";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -35,18 +33,17 @@ import CategoryIcon from "@mui/icons-material/Category";
 // import CenterFocusStrongIcon from "@mui/icons-material/CenterFocusStrong";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import FileUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from "@mui/system";
 
 import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  formControl: {
-    marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(2),
-  },
+const StyledFromControl = styled(FormControl)(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  marginLeft: theme.spacing(1),
+  marginRight: theme.spacing(2),
 }));
 
 interface MapInteractionsBarProps extends WithLocale {
@@ -58,8 +55,6 @@ export default function MapInteractionsBar({
   mapInteraction,
   setMapInteraction,
 }: MapInteractionsBarProps) {
-  const classes = useStyles();
-
   function handleChange(
     _event: React.MouseEvent<HTMLElement>,
     value: MapInteraction | null,
@@ -72,7 +67,7 @@ export default function MapInteractionsBar({
   }
 
   return (
-    <FormControl variant="standard" className={classes.formControl}>
+    <StyledFromControl variant="standard">
       <ToggleButtonGroup
         size="small"
         value={mapInteraction}
@@ -130,6 +125,6 @@ export default function MapInteractionsBar({
           </Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>
-    </FormControl>
+    </StyledFromControl>
   );
 }
