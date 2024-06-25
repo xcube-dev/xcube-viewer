@@ -66,6 +66,14 @@ const styles = makeStyles({
     fontWeight: "regular",
     minHeight: "32px",
   },
+  tabBoxHeader: {
+    borderBottom: 1,
+    borderColor: "divider",
+    position: "sticky",
+    top: 0,
+    zIndex: 1100,
+    backgroundColor: "background.paper",
+  },
 });
 
 interface SidebarProps {
@@ -87,7 +95,7 @@ const mapDispatchToProps = {
 function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={styles.tabBoxHeader}>
         <Tabs
           value={sidebarPanelId}
           onChange={(_, value) => {
