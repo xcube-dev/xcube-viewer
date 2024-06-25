@@ -1,3 +1,7 @@
+## Changes in version 1.2.2 (in development)
+
+* Made the right sidebar panel's tab bar position sticky. (#373)
+
 ## Changes in version 1.2.1
 
 * Updated language translations for German and Swedish in the statistics panel.
@@ -76,8 +80,6 @@
 
 * Fixed problem with color bar selector that occurred if a variable
   used an unknown color bar name.
-
-* Made the right sidebar panel's tab bar position sticky. (#373)
 
 ### Other Changes
  
