@@ -81,6 +81,8 @@ export default function ControlBarActions({
       onClick={() => setLayerMenuOpen(!layerMenuOpen)}
       tooltipText={i18n.get("Layer visibilities")}
       toggle
+      value="open"
+      selected={layerMenuOpen}
       icon={<LayersIcon />}
     />
   );
