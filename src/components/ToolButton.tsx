@@ -42,7 +42,6 @@ interface ToolButtonProps {
   toggle?: boolean;
   value?: string;
   selected?: boolean;
-  key?: number;
 }
 
 const ToolButton: React.FC<ToolButtonProps> = ({
@@ -54,7 +53,6 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   toggle = false,
   value = "",
   selected = false,
-  key,
 }) => {
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     if (onClick) {
@@ -84,7 +82,6 @@ const ToolButton: React.FC<ToolButtonProps> = ({
         value={value}
         selected={selected}
         sx={commonStyles.toggleButton}
-        key={key}
       >
         {iconComp}
       </ToggleButton>
