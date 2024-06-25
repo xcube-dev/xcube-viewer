@@ -4,6 +4,10 @@
   band-math expressions. The variables are defined for a given
   dataset and are persisted in the browser's local storage. (#371)
 
+## Changes in version 1.2.2 (in development)
+
+* Made the right sidebar panel's tab bar position sticky. (#373)
+
 ## Changes in version 1.2.1
 
 * Updated language translations for German and Swedish in the statistics panel.
