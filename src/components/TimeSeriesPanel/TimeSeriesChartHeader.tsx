@@ -51,6 +51,7 @@ import { makeStyles } from "@/util/styles";
 import { TimeSeriesChartType } from "@/states/controlState";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
+import ToolButton from "../ToolButton";
 
 type ValueRange = [number, number];
 const SHOW_DEV_VALUE = "stddev";
@@ -180,16 +181,14 @@ export default function TimeSeriesChartHeader({
           </Tooltip>
         )}
 
-        <Tooltip arrow title={i18n.get("Toggle zoom mode (or press CTRL key)")}>
-          <ToggleButton
-            value={"zoomMode"}
-            selected={zoomMode}
-            onClick={() => setZoomMode(!zoomMode)}
-            size="small"
-          >
-            <AspectRatioIcon fontSize="inherit" />
-          </ToggleButton>
-        </Tooltip>
+        <ToolButton
+          toggle
+          tooltipText={i18n.get("Toggle zoom mode (or press CTRL key)")}
+          value={"zoomMode"}
+          selected={zoomMode}
+          onClick={() => setZoomMode(!zoomMode)}
+          icon={<AspectRatioIcon fontSize="small" />}
+        ></ToolButton>
 
         <ValueRangeEditor
           anchorEl={valueRangeEditorOpen ? valueRangeEl.current : null}
@@ -197,12 +196,12 @@ export default function TimeSeriesChartHeader({
           setValueRange={handleValueRangeChange}
         />
 
-        <Tooltip arrow title={i18n.get("Enter fixed y-range")}>
-          {/*
+        {/*
             Note, it is actually not ok to use toggle button here as it
             just opens a popup. However, we should use the toggle button
             to indicate that a fixed y-range is active.
           */}
+        <Tooltip title={i18n.get("Enter fixed y-range")}>
           <ToggleButton
             ref={valueRangeEl}
             value={"valueRange"}
@@ -213,17 +212,14 @@ export default function TimeSeriesChartHeader({
             <ExpandIcon fontSize="inherit" />
           </ToggleButton>
         </Tooltip>
-
-        <Tooltip arrow title={i18n.get("Toggle showing info popup on hover")}>
-          <ToggleButton
-            value={"showTooltips"}
-            selected={showTooltips}
-            onClick={() => setShowTooltips(!showTooltips)}
-            size="small"
-          >
-            <CommentIcon fontSize="inherit" />
-          </ToggleButton>
-        </Tooltip>
+        <ToolButton
+          toggle
+          tooltipText={i18n.get("Toggle showing info popup on hover")}
+          value={"showTooltips"}
+          selected={showTooltips}
+          onClick={() => setShowTooltips(!showTooltips)}
+          icon={<CommentIcon fontSize="small" />}
+        ></ToolButton>
 
         <ToggleButtonGroup
           value={stdevBars ? [chartType, SHOW_DEV_VALUE] : [chartType]}
@@ -231,30 +227,34 @@ export default function TimeSeriesChartHeader({
           size="small"
           sx={styles.chartTypes}
         >
-          <Tooltip arrow title={i18n.get("Show points")}>
-            <ToggleButton value="point" size="small">
-              <ScatterPlotIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip arrow title={i18n.get("Show lines")}>
-            <ToggleButton value="line" size="small">
-              <ShowChartIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip arrow title={i18n.get("Show bars")}>
-            <ToggleButton value="bar" size="small">
-              <BarChartIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip arrow title={i18n.get("Show standard deviation (if any)")}>
-            <ToggleButton
-              value={SHOW_DEV_VALUE}
-              size="small"
-              disabled={stdevBarsDisabled}
-            >
-              <IsoIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
+          <ToolButton
+            toggle
+            value="point"
+            icon={<ScatterPlotIcon fontSize="small" />}
+            tooltipText={i18n.get("Show points")}
+          ></ToolButton>
+
+          <ToolButton
+            toggle
+            value="line"
+            icon={<ShowChartIcon fontSize="small" />}
+            tooltipText={i18n.get("Show lines")}
+          ></ToolButton>
+
+          <ToolButton
+            toggle
+            value="bar"
+            icon={<BarChartIcon fontSize="small" />}
+            tooltipText={i18n.get("Show bars")}
+          ></ToolButton>
+
+          <ToolButton
+            toggle
+            value={SHOW_DEV_VALUE}
+            tooltipText={i18n.get("Show standard deviation (if any)")}
+            disabled={stdevBarsDisabled}
+            icon={<IsoIcon fontSize="small" />}
+          ></ToolButton>
         </ToggleButtonGroup>
 
         <TimeSeriesAddButton
@@ -279,7 +279,7 @@ export default function TimeSeriesChartHeader({
             onClick={() => removeTimeSeriesGroup(timeSeriesGroup.id)}
             size="small"
           >
-            <CloseIcon fontSize="inherit" />
+            <CloseIcon />
           </IconButton>
         )}
       </Box>

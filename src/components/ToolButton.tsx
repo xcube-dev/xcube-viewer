@@ -36,6 +36,7 @@ interface ToolButtonProps {
     event: MouseEvent<HTMLButtonElement | HTMLElement>,
     value?: string,
   ) => void;
+  onChange?: boolean;
   disabled?: boolean;
   tooltipText?: string;
   className?: string;
@@ -48,6 +49,7 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   className,
   disabled,
   onClick,
+  onChange = false,
   icon,
   tooltipText,
   toggle = false,
@@ -61,6 +63,9 @@ const ToolButton: React.FC<ToolButtonProps> = ({
       } else {
         onClick(event);
       }
+    }
+    if (onChange && onClick) {
+      onClick(event, value);
     }
   };
 
@@ -79,6 +84,7 @@ const ToolButton: React.FC<ToolButtonProps> = ({
         disabled={disabled}
         size="small"
         onClick={handleClick}
+        onChange={onChange ? handleClick : undefined}
         value={value}
         selected={selected}
         sx={commonStyles.toggleButton}

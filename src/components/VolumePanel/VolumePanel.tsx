@@ -26,8 +26,6 @@ import React, { SyntheticEvent } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Tooltip from "@mui/material/Tooltip";
-import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import TextField from "@mui/material/TextField";
 import Slider from "@mui/material/Slider";
@@ -44,6 +42,8 @@ import {
 import { ColorBar } from "@/model/colorBar";
 import VolumeCanvas from "./VolumeCanvas";
 import { makeStyles } from "@/util/styles";
+import ToolButton from "../ToolButton";
+import i18n from "@/i18n";
 
 const styles = makeStyles({
   card: (theme) => ({
@@ -160,24 +160,27 @@ const VolumePanel: React.FC<VolumePanelProps> = ({
               value={volumeRenderMode}
               onChange={handleVolumeRenderModeChange}
             >
-              <ToggleButton key="mip" value="mip" size="small">
-                {/*TODO: I18N*/}
-                <Tooltip arrow title={"Maximum intensity projection"}>
-                  <span>MIP</span>
-                </Tooltip>
-              </ToggleButton>
-              <ToggleButton key="aip" value="aip" size="small">
-                {/*TODO: I18N*/}
-                <Tooltip arrow title={"Average intensity projection"}>
-                  <span>AIP</span>
-                </Tooltip>
-              </ToggleButton>
-              <ToggleButton key="iso" value="iso" size="small">
-                {/*TODO: I18N*/}
-                <Tooltip arrow title={"Iso-surface extraction"}>
-                  <span>ISO</span>
-                </Tooltip>
-              </ToggleButton>
+              <ToolButton
+                toggle
+                key="mip"
+                value="mip"
+                tooltipText={i18n.get("Maximum intensity projection")}
+                icon={<span>MIP</span>}
+              ></ToolButton>
+              <ToolButton
+                toggle
+                key="aip"
+                value="aip"
+                tooltipText={i18n.get("Average intensity projection")}
+                icon={<span>AIP</span>}
+              ></ToolButton>
+              <ToolButton
+                toggle
+                key="iso"
+                value="iso"
+                tooltipText={i18n.get("Iso-surface extraction")}
+                icon={<span>ISO</span>}
+              ></ToolButton>
             </ToggleButtonGroup>
             {volumeRenderMode === "iso" && (
               <IsoThresholdEditor
