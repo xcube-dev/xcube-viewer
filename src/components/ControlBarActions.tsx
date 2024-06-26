@@ -27,7 +27,6 @@ import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import ToggleButton from "@mui/material/ToggleButton";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -37,7 +36,6 @@ import LayersIcon from "@mui/icons-material/Layers";
 import i18n from "@/i18n";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
-import { commonStyles } from "@/components/common-styles";
 import ToolButton from "./ToolButton";
 
 // noinspection JSUnusedLocalSymbols
@@ -88,17 +86,14 @@ export default function ControlBarActions({
   );
 
   const sidebarButton = (
-    <ToggleButton
+    <ToolButton
       value={"sidebar"}
       selected={sidebarOpen}
       onClick={() => setSidebarOpen(!sidebarOpen)}
-      size="small"
-      sx={commonStyles.toggleButton}
-    >
-      <Tooltip arrow title={i18n.get("Show or hide sidebar")}>
-        {<ViewSidebarIcon />}
-      </Tooltip>
-    </ToggleButton>
+      tooltipText={i18n.get("Show or hide sidebar")}
+      toggle
+      icon={<ViewSidebarIcon />}
+    ></ToolButton>
   );
 
   let refreshButton;

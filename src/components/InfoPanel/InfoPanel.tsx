@@ -36,7 +36,6 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import JsonIcon from "@mui/icons-material/DataObject";
 import LayersIcon from "@mui/icons-material/Layers";
@@ -63,6 +62,7 @@ import pythonLogo from "@/resources/python-bw.png";
 import { ApiServerConfig } from "@/model/apiServer";
 import { commonStyles } from "@/components/common-styles";
 import { makeStyles } from "@/util/styles";
+import ToolButton from "../ToolButton";
 
 type ViewMode = "text" | "list" | "code" | "python";
 const styles = makeStyles({
@@ -197,39 +197,30 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
           value={visibleInfoCardElements}
           onChange={handleInfoElementsChanges}
         >
-          <ToggleButton
+          <ToolButton
             key={0}
+            toggle
             value="dataset"
             disabled={selectedDataset === null}
-            size="small"
-            sx={commonStyles.toggleButton}
-          >
-            <Tooltip arrow title={i18n.get("Dataset information")}>
-              <WidgetsIcon />
-            </Tooltip>
-          </ToggleButton>
-          <ToggleButton
+            icon={<WidgetsIcon />}
+            tooltipText={i18n.get("Dataset information")}
+          ></ToolButton>
+          <ToolButton
             key={1}
+            toggle
             value="variable"
             disabled={selectedVariable === null}
-            size="small"
-            sx={commonStyles.toggleButton}
-          >
-            <Tooltip arrow title={i18n.get("Variable information")}>
-              <LayersIcon />
-            </Tooltip>
-          </ToggleButton>
-          <ToggleButton
+            icon={<LayersIcon />}
+            tooltipText={i18n.get("Variable information")}
+          ></ToolButton>
+          <ToolButton
             key={2}
+            toggle
             value="place"
             disabled={selectedPlaceInfo === null}
-            size="small"
-            sx={commonStyles.toggleButton}
-          >
-            <Tooltip arrow title={i18n.get("Place information")}>
-              <PlaceIcon />
-            </Tooltip>
-          </ToggleButton>
+            icon={<PlaceIcon />}
+            tooltipText={i18n.get("Place information")}
+          ></ToolButton>
         </ToggleButtonGroup>
       </CardActions>
       {datasetInfoContent}

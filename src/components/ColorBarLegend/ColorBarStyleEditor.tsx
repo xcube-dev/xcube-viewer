@@ -25,9 +25,7 @@
 import { MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Tooltip from "@mui/material/Tooltip";
 import InvertColorsIcon from "@mui/icons-material/InvertColors";
 import OpacityIcon from "@mui/icons-material/Opacity";
 
@@ -35,6 +33,7 @@ import i18n from "@/i18n";
 import { ColorBar, formatColorBarName } from "@/model/colorBar";
 import { ColorBarNorm } from "@/model/variable";
 import { SxProps, Theme } from "@mui/system";
+import ToolButton from "../ToolButton";
 
 const styles: Record<string, SxProps<Theme>> = {
   container: {
@@ -136,26 +135,25 @@ export default function ColorBarStyleEditor({
     <>
       <Box sx={styles.container}>
         <Box sx={styles.settingsBar}>
-          <Tooltip arrow title={i18n.get("Hide small values")}>
-            <ToggleButton
-              value={"alpha"}
-              selected={variableColorBar.isAlpha}
-              onChange={handleColorBarAlpha}
-              size="small"
-            >
-              <OpacityIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip arrow title={i18n.get("Reverse")}>
-            <ToggleButton
-              value={"reverse"}
-              selected={variableColorBar.isReversed}
-              onChange={handleColorBarReversed}
-              size="small"
-            >
-              <InvertColorsIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
+          <ToolButton
+            tooltipText={i18n.get("Hide small values")}
+            toggle
+            value={"alpha"}
+            selected={variableColorBar.isAlpha}
+            onClick={handleColorBarAlpha}
+            onChange
+            icon={<OpacityIcon fontSize="small" />}
+          ></ToolButton>
+
+          <ToolButton
+            value={"reverse"}
+            toggle
+            selected={variableColorBar.isReversed}
+            onClick={handleColorBarReversed}
+            onChange
+            tooltipText={i18n.get("Reverse")}
+            icon={<InvertColorsIcon fontSize="small" />}
+          ></ToolButton>
         </Box>
         <ToggleButtonGroup
           exclusive
@@ -163,19 +161,25 @@ export default function ColorBarStyleEditor({
           onChange={handleColorBarNorm}
           size="small"
         >
-          <ToggleButton value="lin" sx={styles.toggleButton}>
-            <Box fontSize="small">Lin</Box>
-          </ToggleButton>
-          <ToggleButton value="log" sx={styles.toggleButton}>
-            <Box fontSize="small">Log</Box>
-          </ToggleButton>
-          <ToggleButton
+          <ToolButton
+            value="lin"
+            toggle
+            //sx={styles.toggleButton}
+            icon={<Box fontSize="small">Lin</Box>}
+          ></ToolButton>
+          <ToolButton
+            value="log"
+            toggle
+            //sx={styles.toggleButton}
+            icon={<Box fontSize="small">Log</Box>}
+          ></ToolButton>
+          <ToolButton
             value="cat"
-            sx={styles.toggleButton}
+            toggle
+            //sx={styles.toggleButton}
+            icon={<Box fontSize="small">Cat</Box>}
             disabled={!variableColorBar.categories}
-          >
-            <Box fontSize="small">Cat</Box>
-          </ToggleButton>
+          ></ToolButton>
         </ToggleButtonGroup>
       </Box>
       <Box component="div" sx={styles.opacityContainer}>

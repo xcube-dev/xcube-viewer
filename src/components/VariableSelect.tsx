@@ -26,29 +26,22 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import CompareIcon from "@mui/icons-material/Compare";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import { SxProps } from "@mui/system";
 
 import i18n from "@/i18n";
 import { Variable } from "@/model/variable";
 import { WithLocale } from "@/util/lang";
 import ControlBarItem from "./ControlBarItem";
-import { commonStyles } from "@/components/common-styles";
 import { makeStyles } from "@/util/styles";
+import ToolButton from "./ToolButton";
 
 const styles = makeStyles({
   button: (theme) => ({
     margin: theme.spacing(0.1),
   }),
 });
-
-const toggleComparisonStyle = {
-  ...styles.button,
-  ...commonStyles.toggleButton,
-} as SxProps;
 
 interface VariableSelectProps extends WithLocale {
   selectedDatasetId: string | null;
@@ -132,18 +125,16 @@ export default function VariableSelect({
     </IconButton>
   );
   const variable2Button = (
-    <ToggleButton
+    <ToolButton
       key={"variable2"}
       selected={isSelectedVariable2}
       value={"comparison"}
-      size="small"
-      sx={toggleComparisonStyle}
+      tooltipText={i18n.get("Make it 2nd variable for comparison")}
+      //sx={toggleComparisonStyle}
+      toggle
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
-    >
-      <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>
-        {<CompareIcon />}
-      </Tooltip>
-    </ToggleButton>
+      icon={<CompareIcon />}
+    ></ToolButton>
   );
 
   return (

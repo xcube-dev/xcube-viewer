@@ -24,9 +24,7 @@
 
 import * as React from "react";
 import FormControl from "@mui/material/FormControl";
-import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Tooltip from "@mui/material/Tooltip";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -38,7 +36,7 @@ import { styled } from "@mui/system";
 import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
-import { commonStyles } from "@/components/common-styles";
+import ToolButton from "./ToolButton";
 
 const StyledFromControl = styled(FormControl)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -74,56 +72,41 @@ export default function MapInteractionsBar({
         exclusive
         onChange={handleChange}
       >
-        <ToggleButton
-          key={0}
+        <ToolButton
+          tooltipText={i18n.get("Select a place in map")}
+          toggle
           value="Select"
-          size="small"
-          sx={commonStyles.toggleButton}
-        >
-          <Tooltip arrow title={i18n.get("Select a place in map")}>
-            <AdsClickIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          key={1}
+          key={0}
+          icon={<AdsClickIcon />}
+        />
+        <ToolButton
+          tooltipText={i18n.get("Add a point location in map")}
+          toggle
           value="Point"
-          size="small"
-          sx={commonStyles.toggleButton}
-        >
-          <Tooltip arrow title={i18n.get("Add a point location in map")}>
-            <AddLocationIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          key={2}
+          key={1}
+          icon={<AddLocationIcon />}
+        />
+        <ToolButton
+          tooltipText={i18n.get("Draw a polygon area in map")}
+          toggle
           value="Polygon"
-          size="small"
-          sx={commonStyles.toggleButton}
-        >
-          <Tooltip arrow title={i18n.get("Draw a polygon area in map")}>
-            <CategoryIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          key={3}
+          key={2}
+          icon={<CategoryIcon />}
+        />
+        <ToolButton
+          tooltipText={i18n.get("Draw a circular area in map")}
+          toggle
           value="Circle"
-          size="small"
-          sx={commonStyles.toggleButton}
-        >
-          <Tooltip arrow title={i18n.get("Draw a circular area in map")}>
-            <FiberManualRecordIcon />
-          </Tooltip>
-        </ToggleButton>
-        <ToggleButton
-          key={4}
+          key={3}
+          icon={<FiberManualRecordIcon />}
+        />
+        <ToolButton
+          tooltipText={i18n.get("Import places")}
+          toggle
           value="Geometry"
-          size="small"
-          sx={commonStyles.toggleButton}
-        >
-          <Tooltip arrow title={i18n.get("Import places")}>
-            <FileUploadIcon />
-          </Tooltip>
-        </ToggleButton>
+          key={4}
+          icon={<FileUploadIcon />}
+        />
       </ToggleButtonGroup>
     </StyledFromControl>
   );
