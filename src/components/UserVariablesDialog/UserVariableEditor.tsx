@@ -34,7 +34,7 @@ import i18n from "@/i18n";
 import { Config } from "@/config";
 import { Dataset } from "@/model/dataset";
 import { UserVariable } from "@/model/userVariable";
-import { isIdentifier, getIdentifiers } from "@/util/identifier";
+import { isIdentifier } from "@/util/identifier";
 import DoneCancel from "@/components/DoneCancel";
 import { EditedVariable } from "./utils";
 import HeaderBar from "./HeaderBar";
@@ -47,42 +47,51 @@ const expressionParts = [
   "**",
   "/",
   "%",
-  "^",
   "~",
+  "<<",
+  ">>",
   "&",
+  "^",
   "|",
+  "<",
+  "<=",
+  ">",
+  ">=",
+  "!=",
+  "==",
   "()",
   "and",
   "or",
   "not",
+  "e",
+  "nan",
   "pi",
-  "sqrt()",
-  "sin()",
+  "abs()",
+  "arccos()",
+  "arcsin()",
+  "arctan()",
+  "arctan2()",
+  "ceil()",
   "cos()",
-  "tan()",
-  "min()",
+  "cosh()",
+  "exp()",
+  "floor()",
+  "hypot()",
+  "isnan()",
+  "log()",
   "max()",
+  "min()",
+  "sign()",
+  "sin()",
+  "sqrt()",
+  "square()",
+  "tan()",
+  "where()",
 ];
 
-const predefinedNames = getIdentifiers(expressionParts.join(" "));
-
-function validateExpression(
-  expression: string,
-  contextDataset: Dataset,
-): string | null {
+function validateExpression(expression: string): string | null {
   if (expression!.trim() === "") {
     return i18n.get("Must not be empty");
-  }
-  const datasetVariableNames = new Set(
-    contextDataset.variables.map((v) => v.name),
-  );
-  for (const identifier of getIdentifiers(expression)) {
-    if (
-      !datasetVariableNames.has(identifier) &&
-      !predefinedNames.has(identifier)
-    ) {
-      return `${i18n.get("Unknown identifier")}: ${identifier}`;
-    }
   }
   return null;
 }
@@ -135,7 +144,7 @@ export default function UserVariableEditor({
       : null;
   const isNameOk = !nameProblem;
 
-  const expressionProblem = validateExpression(expression, contextDataset);
+  const expressionProblem = validateExpression(expression);
   const isExpressionOk = !expressionProblem;
 
   const canCommit = isNameOk && isExpressionOk;
