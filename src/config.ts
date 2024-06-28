@@ -82,7 +82,7 @@ export class Config {
     const authClient = this.getAuthConfig(rawConfig);
     const server = this.getServerConfig(rawConfig);
     const compact = parseInt(appParams.get("compact") || "0") !== 0;
-    const branding = parseBranding(
+    let branding = parseBranding(
       {
         ...rawDefaultConfig.branding,
         ...(rawConfig.branding as Record<string, unknown>),
@@ -91,8 +91,8 @@ export class Config {
       },
       configPath,
     );
-    branding.allow3D =
-      !!parseInt(appParams.get("allow3D") || "0") || branding.allow3D;
+    branding = decodeBrandingFlag(branding, "allowUserVariables");
+    branding = decodeBrandingFlag(branding, "allow3D");
     Config._instance = new Config(name, server, branding, authClient);
     if (import.meta.env.DEV) {
       console.debug("Configuration:", Config._instance);
@@ -297,4 +297,15 @@ const tileAccess: { [name: string]: TileAccess } = {
 
 export function getTileAccess(groupName: string) {
   return tileAccess[groupName];
+}
+
+function decodeBrandingFlag(
+  branding: Branding,
+  flagName: keyof Branding,
+): Branding {
+  const _flagValue = appParams.get(flagName);
+  const flagValue: boolean = _flagValue
+    ? !!parseInt(_flagValue)
+    : !!branding[flagName];
+  return { ...branding, [flagName]: flagValue };
 }

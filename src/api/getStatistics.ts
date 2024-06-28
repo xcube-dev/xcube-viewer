@@ -36,6 +36,7 @@ import {
   makeRequestUrl,
   QueryComponent,
 } from "./callApi";
+import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 
 interface StatisticsResult {
   result: Statistics;
@@ -50,10 +51,8 @@ export function getStatistics(
   accessToken: string | null,
 ): Promise<StatisticsRecord> {
   const query: QueryComponent[] = [["time", timeLabel]];
-  const dsId = encodeURIComponent(dataset.id);
-  const variableName = encodeURIComponent(variable.name);
   const url = makeRequestUrl(
-    `${apiServerUrl}/statistics/${dsId}/${variableName}`,
+    `${apiServerUrl}/statistics/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
     query,
   );
 

@@ -46,6 +46,7 @@ import {
   UPDATE_VARIABLE_VOLUME,
   REMOVE_STATISTICS,
   ADD_STATISTICS,
+  UPDATE_DATASET_USER_VARIABLES,
 } from "@/actions/dataActions";
 import { SELECT_TIME_RANGE, SelectTimeRange } from "@/actions/controlActions";
 import i18n from "@/i18n";
@@ -53,6 +54,7 @@ import { newId } from "@/util/id";
 import { Variable } from "@/model/variable";
 import { Place, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 import { TimeSeries, TimeSeriesGroup } from "@/model/timeSeries";
+import { getDatasetUserVariables } from "@/model/dataset";
 
 export function dataReducer(
   state: DataState | undefined,
@@ -67,6 +69,20 @@ export function dataReducer(
     }
     case UPDATE_DATASETS: {
       return { ...state, datasets: action.datasets };
+    }
+    case UPDATE_DATASET_USER_VARIABLES: {
+      const { datasetId, userVariables } = action;
+      const dsIndex = state.datasets.findIndex((ds) => ds.id === datasetId);
+      const dataset = state.datasets[dsIndex];
+      const [variables, _] = getDatasetUserVariables(dataset);
+      return {
+        ...state,
+        datasets: [
+          ...state.datasets.slice(0, dsIndex),
+          { ...dataset, variables: [...variables, ...userVariables] },
+          ...state.datasets.slice(dsIndex + 1),
+        ],
+      };
     }
     case UPDATE_VARIABLE_COLOR_BAR: {
       const {

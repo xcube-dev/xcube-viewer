@@ -33,6 +33,7 @@ import {
   makeRequestUrl,
   QueryComponent,
 } from "./callApi";
+import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 
 type RawTimeSeriesPoint = Omit<TimeSeriesPoint, "time"> & { time: string };
 
@@ -72,10 +73,8 @@ export function getTimeSeriesForGeometry(
   if (endDate) {
     query.push(["endDate", endDate]);
   }
-  const dsId = encodeURIComponent(dataset.id);
-  const variableName = encodeURIComponent(variable.name);
   const url = makeRequestUrl(
-    `${apiServerUrl}/timeseries/${dsId}/${variableName}`,
+    `${apiServerUrl}/timeseries/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
     query,
   );
 

@@ -24,42 +24,31 @@
 
 import { connect } from "react-redux";
 
-import _VariableSelect from "@/components/VariableSelect";
 import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
+import { updateDatasetUserVariables } from "@/actions/dataActions";
+import { closeDialog } from "@/actions/controlActions";
+import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
 import {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-} from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  userVariablesAllowedSelector,
-  selectedVariablesSelector,
+  selectedDatasetSelector,
+  selectedUserVariablesSelector,
 } from "@/selectors/controlSelectors";
+import _UserVariablesDialog from "@/components/UserVariablesDialog";
 
 const mapStateToProps = (state: AppState) => {
   return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    userVariablesAllowed: userVariablesAllowedSelector(state),
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
+    open: state.controlState.dialogOpen[USER_VARIABLES_DIALOG_ID],
+    selectedDataset: selectedDatasetSelector(state),
+    userVariables: selectedUserVariablesSelector(state),
   };
 };
 
 const mapDispatchToProps = {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
+  closeDialog,
+  updateDatasetUserVariables,
 };
 
-const VariableSelect = connect(
+const UserVariablesDialog = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+)(_UserVariablesDialog);
+export default UserVariablesDialog;

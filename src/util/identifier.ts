@@ -22,6 +22,16 @@
  * SOFTWARE.
  */
 
-const version = "1.3.0-dev.0";
+const reIdentifier = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+const reVariables = /[a-zA-Z_$][a-zA-Z0-9_$]*/g;
 
-export default version;
+const emptySet = new Set<string>();
+
+export function isIdentifier(value: string): boolean {
+  return reIdentifier.test(value);
+}
+
+export function getIdentifiers(expression: string): Set<string> {
+  const matches = expression.match(reVariables);
+  return matches !== null ? new Set(matches) : emptySet;
+}

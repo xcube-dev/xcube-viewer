@@ -22,6 +22,21 @@
  * SOFTWARE.
  */
 
-const version = "1.3.0-dev.0";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import { isUserVariable } from "@/model/userVariable";
+import { isString } from "@/util/types";
 
-export default version;
+export function encodeDatasetId(dataset: Dataset | string): string {
+  return encodeURIComponent(isString(dataset) ? dataset : dataset.id);
+}
+
+export function encodeVariableName(variable: Variable | string): string {
+  return encodeURIComponent(
+    isString(variable)
+      ? variable
+      : isUserVariable(variable)
+        ? `${variable.name}=${variable.expression}`
+        : variable.name,
+  );
+}

@@ -22,6 +22,40 @@
  * SOFTWARE.
  */
 
-const version = "1.3.0-dev.0";
+import { ReactNode } from "react";
+import { alpha } from "@mui/system";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import CalculateIcon from "@mui/icons-material/Calculate";
 
-export default version;
+interface HeaderBarProps {
+  selected: boolean;
+  title: ReactNode;
+  actions: ReactNode;
+}
+
+export default function HeaderBar({
+  selected,
+  title,
+  actions,
+}: HeaderBarProps) {
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(selected && {
+          background: (theme) =>
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity,
+            ),
+        }),
+      }}
+    >
+      <CalculateIcon />
+      <Typography sx={{ flex: "1 1 100%", paddingLeft: 1 }}>{title}</Typography>
+      {actions}
+    </Toolbar>
+  );
+}

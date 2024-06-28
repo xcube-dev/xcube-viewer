@@ -22,44 +22,35 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { describe, expect, it } from "vitest";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import { getTileUrl } from "./controlSelectors";
 
-import _VariableSelect from "@/components/VariableSelect";
-import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-} from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  userVariablesAllowedSelector,
-  selectedVariablesSelector,
-} from "@/selectors/controlSelectors";
+describe("Assert that controlSelectors.getTileUrl()", () => {
+  it("works for RGB", () => {
+    const dataset = { id: "demo" } as Dataset;
+    expect(getTileUrl("https://xcube.com/api", dataset, "rgb")).toEqual(
+      "https://xcube.com/api/tiles/demo/rgb/{z}/{y}/{x}",
+    );
+  });
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    userVariablesAllowed: userVariablesAllowedSelector(state),
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
-  };
-};
+  it("works for normal variables", () => {
+    const dataset = { id: "demo" } as Dataset;
+    const variable = { name: "conc_chl" } as Variable;
+    expect(getTileUrl("https://xcube.com/api", dataset, variable)).toEqual(
+      "https://xcube.com/api/tiles/demo/conc_chl/{z}/{y}/{x}",
+    );
+  });
 
-const mapDispatchToProps = {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
-};
-
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+  it("works for user variables", () => {
+    const dataset = { id: "demo" } as Dataset;
+    const variable = {
+      name: "ndvi",
+      expression: "(B08 - B04) / (B08 + B04)",
+    } as Variable;
+    expect(getTileUrl("https://xcube.com/api", dataset, variable)).toEqual(
+      "https://xcube.com/api/tiles/demo/ndvi%3D(B08%20-%20B04)%20%2F%20(B08%20%2B%20B04)/{z}/{y}/{x}",
+    );
+  });
+});

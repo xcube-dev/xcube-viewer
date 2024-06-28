@@ -26,6 +26,7 @@ import { Config } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
 import { getLocalStorage } from "@/util/storage";
 import { ControlState } from "./controlState";
+import { UserVariable } from "@/model/userVariable";
 
 export function storeUserServers(userServers: ApiServerConfig[]) {
   const storage = getLocalStorage(Config.instance.name);
@@ -48,6 +49,31 @@ export function loadUserServers(): ApiServerConfig[] {
     }
   }
   return [];
+}
+
+export function storeUserVariables(
+  userVariables: Record<string, UserVariable[]>,
+) {
+  const storage = getLocalStorage(Config.instance.name);
+  if (storage) {
+    try {
+      storage.setObjectItem("userVariables", userVariables);
+    } catch (e) {
+      console.warn(`failed to store user variables: ${e}`);
+    }
+  }
+}
+
+export function loadUserVariables(): Record<string, UserVariable[]> {
+  const storage = getLocalStorage(Config.instance.name);
+  if (storage) {
+    try {
+      return storage.getObjectItem("userVariables", {});
+    } catch (e) {
+      console.warn(`failed to load user variables: ${e}`);
+    }
+  }
+  return {};
 }
 
 export function storeUserSettings(settings: ControlState) {
