@@ -171,6 +171,8 @@ export const userPlacesFormatOptionsWktSelector = (state: AppState) =>
   state.controlState.userPlacesFormatOptions.wkt;
 export const userColorBarsSelector = (state: AppState) =>
   state.controlState.userColorBars;
+export const userVariablesAllowedSelector = (_state: AppState) =>
+  Config.instance.branding.allowUserVariables;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";

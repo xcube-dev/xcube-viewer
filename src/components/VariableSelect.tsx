@@ -49,6 +49,7 @@ interface VariableSelectProps extends WithLocale {
   selectedVariableName: string | null;
   selectedVariable2Name: string | null;
   variables: Variable[];
+  userVariablesAllowed?: boolean;
   canAddTimeSeries: boolean;
   addTimeSeries: () => void;
   selectVariable: (variableName: string | null) => void;
@@ -65,6 +66,7 @@ export default function VariableSelect({
   selectedDataset2Id,
   selectedVariable2Name,
   variables,
+  userVariablesAllowed,
   canAddTimeSeries,
   addTimeSeries,
   selectVariable,
@@ -135,7 +137,7 @@ export default function VariableSelect({
       ))}
     </Select>
   );
-  const manageUserVariablesButton = (
+  const manageUserVariablesButton = userVariablesAllowed && (
     <ToolButton
       key={"userVariables"}
       onClick={handleManageUserVariablesClick}

@@ -34,6 +34,7 @@ import {
 } from "@/actions/controlActions";
 import {
   canAddTimeSeriesSelector,
+  userVariablesAllowedSelector,
   selectedVariablesSelector,
 } from "@/selectors/controlSelectors";
 
@@ -44,6 +45,7 @@ const mapStateToProps = (state: AppState) => {
     selectedVariableName: state.controlState.selectedVariableName,
     selectedDataset2Id: state.controlState.selectedDataset2Id,
     selectedVariable2Name: state.controlState.selectedVariable2Name,
+    userVariablesAllowed: userVariablesAllowedSelector(state),
     canAddTimeSeries: canAddTimeSeriesSelector(state),
     variables: selectedVariablesSelector(state),
   };
