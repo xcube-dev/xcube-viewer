@@ -38,10 +38,16 @@ import { UserVariable } from "@/model/userVariable";
 import { USER_VARIABLES_DIALOG_ID, EditedVariable } from "./utils";
 import UserVariablesTable from "./UserVariablesTable";
 import UserVariableEditor from "./UserVariableEditor";
+import HelpButton from "@/components/HelpButton";
 
 const styles = makeStyles({
   contentContainer: { width: "100%", height: 400, mb: 2 },
   contentPaper: { width: "100%", height: "100%" },
+  contentActions: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 0.2,
+  },
 });
 
 interface UserVariablesDialogProps {
@@ -117,18 +123,29 @@ export default function UserVariablesDialog({
           </Paper>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button
-          onClick={handleConfirmDialog}
-          disabled={
-            editedVariable !== null || !areUserVariablesOk(localUserVariables)
-          }
-        >
-          {i18n.get("OK")}
-        </Button>
-        <Button onClick={handleCancelDialog} disabled={editedVariable !== null}>
-          {i18n.get("Cancel")}
-        </Button>
+      <DialogActions sx={styles.contentActions}>
+        <Box>
+          <HelpButton
+            size="medium"
+            helpUrl={i18n.get("docs/user-variables.en.md")}
+          />
+        </Box>
+        <Box>
+          <Button
+            onClick={handleConfirmDialog}
+            disabled={
+              editedVariable !== null || !areUserVariablesOk(localUserVariables)
+            }
+          >
+            {i18n.get("OK")}
+          </Button>
+          <Button
+            onClick={handleCancelDialog}
+            disabled={editedVariable !== null}
+          >
+            {i18n.get("Cancel")}
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   );

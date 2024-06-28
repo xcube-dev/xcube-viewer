@@ -22,58 +22,44 @@
  * SOFTWARE.
  */
 
-import { SxProps } from "@mui/material";
-import Box from "@mui/material/Box";
+import { useRef, useState } from "react";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import IconButton from "@mui/material/IconButton";
-import CancelIcon from "@mui/icons-material/Cancel";
-import DoneIcon from "@mui/icons-material/Done";
 
-import HelpButton from "@/components/HelpButton";
+import useFetchText from "@/hooks/useFetchText";
+import MarkdownPopover from "@/components/MarkdownPopover";
 
-const styles: Record<string, SxProps> = {
-  container: { display: "flex", justifyContent: "space-between", gap: 0.2 },
-  doneCancel: { display: "flex", gap: 0.2 },
-};
-
-interface DoneCancelProps {
-  onDone: () => void;
-  onCancel: () => void;
-  doneDisabled?: boolean;
-  cancelDisabled?: boolean;
+interface HelpButtonProps {
   size?: "small" | "medium" | "large";
   helpUrl?: string;
 }
 
-export default function DoneCancel({
-  onDone,
-  onCancel,
-  doneDisabled,
-  cancelDisabled,
-  size,
-  helpUrl,
-}: DoneCancelProps) {
-  return (
-    <Box sx={styles.container}>
-      <Box>{helpUrl && <HelpButton size={size} helpUrl={helpUrl} />}</Box>
+export default function HelpButton({ size, helpUrl }: HelpButtonProps) {
+  const [helpAnchorEl, setHelpAnchorEl] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const helpButtonRef = useRef<HTMLButtonElement>(null);
+  const helpText = useFetchText(helpUrl);
 
-      <Box sx={styles.doneCancel}>
-        <IconButton
-          onClick={onDone}
-          color="primary"
-          disabled={doneDisabled}
-          size={size}
-        >
-          <DoneIcon fontSize="inherit" />
-        </IconButton>
-        <IconButton
-          onClick={onCancel}
-          color="primary"
-          disabled={cancelDisabled}
-          size={size}
-        >
-          <CancelIcon fontSize="inherit" />
-        </IconButton>
-      </Box>
-    </Box>
+  const handleHelpOpen = () => {
+    setHelpAnchorEl(helpButtonRef.current);
+  };
+
+  const handleHelpClose = () => {
+    setHelpAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton onClick={handleHelpOpen} size={size} ref={helpButtonRef}>
+        <HelpOutlineIcon fontSize="inherit" />
+      </IconButton>
+      <MarkdownPopover
+        anchorEl={helpAnchorEl}
+        open={!!helpAnchorEl}
+        onClose={handleHelpClose}
+        markdownText={helpText}
+      />
+    </>
   );
 }
