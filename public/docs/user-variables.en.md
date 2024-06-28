@@ -28,7 +28,7 @@ limited to
 - shift operations `<<`, `>>`
 - bitwise operations `&`, `^`, `|`, `~`
 - comparisons, including `in`, `not in`, `is`, `is not`
-- boolean operations `and`, `or`, `not`
+- boolean operations `and`, `or`, `not` ¹
 - conditional operation `if` – `else`.
 
 The allowed variables are those contained in the selected data product.
@@ -39,7 +39,13 @@ plus the
 [numpy `where()`](https://numpy.org/doc/stable/reference/generated/numpy.where.html#numpy-where) 
 function.
 
----
-Note for Python programmers: Unlike with numpy arrays, the Boolean operations 
-`and`, `or`, and `not` can be used with any arrays as they translate into the
+Expression examples:
+
+- Mask out where a variable `chl` is lower than zero: `where(chl >= 0, chl, nan)`
+- Sentinel-2 vegetation index or NDVI: `(B08 - B04) / (B08 + B04)`
+- Sentinel-2 moisture index: `(B8A - B11) / (B8A + B11)`
+
+
+¹ For Python/numpy programmers: Unlike with numpy arrays, the boolean operations 
+`and`, `or`, and `not` can be used with arrays as they translate into the
 corresponding numpy functions `logical_and()`, `logical_or()`, and `logical_not()`.
