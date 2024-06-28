@@ -132,18 +132,18 @@ export default function UserVariablesDialog({
         </Box>
         <Box>
           <Button
+            onClick={handleCancelDialog}
+            disabled={editedVariable !== null}
+          >
+            {i18n.get("Cancel")}
+          </Button>
+          <Button
             onClick={handleConfirmDialog}
             disabled={
               editedVariable !== null || !areUserVariablesOk(localUserVariables)
             }
           >
             {i18n.get("OK")}
-          </Button>
-          <Button
-            onClick={handleCancelDialog}
-            disabled={editedVariable !== null}
-          >
-            {i18n.get("Cancel")}
           </Button>
         </Box>
       </DialogActions>
