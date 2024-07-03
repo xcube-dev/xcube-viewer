@@ -18,17 +18,19 @@ The expression may reference the following names:
 - the current dataset's data variables;
 - the current dataset's coordinate variables;
 - the numpy constants `e`, `pi`, `nan`, `inf`;
-- the [numpy ufuncs](https://numpy.org/doc/stable/reference/ufuncs.html) 
+- all [numpy ufunc](https://numpy.org/doc/stable/reference/ufuncs.html) 
   functions;
-- the [`where`](https://docs.xarray.dev/en/stable/generated/xarray.where.html) 
-  function.
+- the [`where`](https://docs.xarray.dev/en/stable/generated/xarray.where.html)
+  function;
+- the Python built-in functions `min`, `max`, `round`, `floor`, `ceil`, 
+  `bool`, `int`, `float`, `complex`, `str`, `tuple`, `set`, `list`, `dict`.
 
 In general, all Python numerical and logical operators such as
 `not`, `and`, `or` ¹ are supported.
 However, for dataset variables only the following subset of operators apply:
 - binary comparison operators: `==`, `!=`, `<`, `<=`, `>`, `>=`;
 - binary arithmetic operators: `+`, `-`, `*`, `/`, `//`, `%`,
-    `**`, `<<`, `>>`, `&`, `^`, `|`;
+  `**`, `<<`, `>>`, `&`, `^`, `|`;
 - unary operators: `+`, `-`, `~`.
 
 Expression examples:
