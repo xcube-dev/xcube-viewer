@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -68,6 +68,13 @@ export default function HistogramChart({
     number,
     number,
   ]);
+
+  useEffect(() => {
+    if (data) {
+      setIndex([0, data.length - 1]);
+    }
+  }, [data]);
+
   if (data === null) {
     return null;
   }
@@ -76,8 +83,8 @@ export default function HistogramChart({
   // TODO: this is correct, but requires that we draw bars per bin
   // const { edges } = statistics.histogram;
   // const domain = [edges[i1], edges[i2 + 1]];
-  const xDomain1 = data[iDomain1].x;
-  const xDomain2 = data[iDomain2].x;
+  const xDomain1 = data[iDomain1] ? data[iDomain1].x : NaN;
+  const xDomain2 = data[iDomain2] ? data[iDomain2].x : NaN;
   const xRef1 = Math.max(
     statistics.mean - statistics.deviation,
     statistics.minimum,
