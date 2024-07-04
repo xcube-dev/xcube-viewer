@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-export { getServerInfo } from "./getServerInfo";
 export { getColorBars } from "./getColorBars";
 export { getDatasets } from "./getDatasets";
 export { getDatasetPlaceGroup } from "./getDatasetPlaceGroup";
+export { getExpressionCapabilities } from "./getExpressionCapabilities";
+export { getServerInfo } from "./getServerInfo";
 export { getTimeSeriesForGeometry } from "./getTimeSeries";
 export { updateResources } from "./updateResources";
 export { HTTPError } from "./errors";

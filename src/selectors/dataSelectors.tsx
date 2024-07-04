@@ -42,6 +42,8 @@ export const userPlaceGroupsSelector = (state: AppState) =>
   state.dataState.userPlaceGroups;
 export const userServersSelector = (state: AppState) =>
   state.dataState.userServers || [];
+export const expressionCapabilitiesSelector = (state: AppState) =>
+  state.dataState.expressionCapabilities;
 
 export const placeGroupsSelector = createSelector(
   datasetsSelector,

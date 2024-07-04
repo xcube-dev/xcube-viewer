@@ -30,6 +30,7 @@ import { PlaceGroup } from "@/model/place";
 import { TimeSeriesGroup } from "@/model/timeSeries";
 import { loadUserServers } from "./userSettings";
 import { StatisticsRecord } from "@/model/statistics";
+import { ExpressionCapabilities } from "@/model/userVariable";
 
 interface StatisticsState {
   loading: boolean;
@@ -38,6 +39,7 @@ interface StatisticsState {
 
 export interface DataState {
   serverInfo: ApiServerInfo | null;
+  expressionCapabilities: ExpressionCapabilities | null;
   datasets: Dataset[];
   colorBars: ColorBars | null;
   statistics: StatisticsState;
@@ -58,6 +60,7 @@ export function newDataState(): DataState {
   });
   return {
     serverInfo: null,
+    expressionCapabilities: null,
     datasets: [],
     colorBars: null,
     statistics: { loading: false, records: [] },

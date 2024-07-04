@@ -22,23 +22,11 @@
  * SOFTWARE.
  */
 
-import { Variable } from "./variable";
-import { isString } from "@/util/types";
+import { ExpressionCapabilities } from "@/model/userVariable";
+import { callJsonApi } from "./callApi";
 
-export interface ExpressionCapabilities {
-  namespace: {
-    constants: string[];
-    arrayFunctions: string[];
-    builtinFunctions: string[];
-    arrayOperators: string[];
-    builtinOperators: string[];
-  };
-}
-
-export interface UserVariable extends Variable {
-  expression: string;
-}
-
-export function isUserVariable(variable: Variable): variable is UserVariable {
-  return isString(variable.expression);
+export function getExpressionCapabilities(
+  apiServerUrl: string,
+): Promise<ExpressionCapabilities> {
+  return callJsonApi(`${apiServerUrl}/varexpr/capabilities`);
 }
