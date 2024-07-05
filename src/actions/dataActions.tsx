@@ -815,10 +815,10 @@ export function syncWithServer() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const EXPRESSION_CAPABILITIES = "EXPRESSION_CAPABILITIES";
+export const UPDATE_EXPRESSION_CAPABILITIES = "UPDATE_EXPRESSION_CAPABILITIES";
 
 export interface UpdateExpressionCapabilities {
-  type: typeof EXPRESSION_CAPABILITIES;
+  type: typeof UPDATE_EXPRESSION_CAPABILITIES;
   expressionCapabilities: ExpressionCapabilities;
 }
 
@@ -844,7 +844,7 @@ export function _updateExpressionCapabilities(
   expressionCapabilities: ExpressionCapabilities,
 ): UpdateExpressionCapabilities {
   return {
-    type: EXPRESSION_CAPABILITIES,
+    type: UPDATE_EXPRESSION_CAPABILITIES,
     expressionCapabilities: expressionCapabilities,
   };
 }
