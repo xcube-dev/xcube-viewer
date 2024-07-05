@@ -28,5 +28,5 @@ import { callJsonApi } from "./callApi";
 export function getExpressionCapabilities(
   apiServerUrl: string,
 ): Promise<ExpressionCapabilities> {
-  return callJsonApi(`${apiServerUrl}/varexpr/capabilities`);
+  return callJsonApi(`${apiServerUrl}/expressions/capabilities`);
 }
