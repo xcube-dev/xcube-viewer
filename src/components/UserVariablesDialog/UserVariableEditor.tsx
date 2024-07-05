@@ -22,72 +22,30 @@
  * SOFTWARE.
  */
 
-import { ChangeEvent } from "react";
+import { ChangeEvent, ReactElement, useState } from "react";
 import { python } from "@codemirror/lang-python";
 import CodeMirror from "@uiw/react-codemirror";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 import i18n from "@/i18n";
 import { Config } from "@/config";
 import { Dataset } from "@/model/dataset";
-import { UserVariable } from "@/model/userVariable";
+import {
+  ExpressionCapabilities,
+  isUserVariable,
+  UserVariable,
+} from "@/model/userVariable";
 import { isIdentifier } from "@/util/identifier";
-import DoneCancel from "@/components/DoneCancel";
-import { EditedVariable } from "./utils";
-import HeaderBar from "./HeaderBar";
 import { makeStyles } from "@/util/styles";
-
-const expressionParts = [
-  "+",
-  "-",
-  "*",
-  "**",
-  "/",
-  "%",
-  "~",
-  "<<",
-  ">>",
-  "&",
-  "^",
-  "|",
-  "<",
-  "<=",
-  ">",
-  ">=",
-  "!=",
-  "==",
-  "()",
-  "and",
-  "or",
-  "not",
-  "e",
-  "nan",
-  "pi",
-  "abs()",
-  "arccos()",
-  "arcsin()",
-  "arctan()",
-  "arctan2()",
-  "ceil()",
-  "cos()",
-  "cosh()",
-  "exp()",
-  "floor()",
-  "hypot()",
-  "isnan()",
-  "log()",
-  "maximum()",
-  "minimum()",
-  "sign()",
-  "sin()",
-  "sqrt()",
-  "square()",
-  "tan()",
-  "where()",
-];
+import DoneCancel from "@/components/DoneCancel";
+import ExprPartChip from "@/components/UserVariablesDialog/ExprPartChip";
+import { EditedVariable, exprPartKeys, exprPartTypesDefault } from "./utils";
+import HeaderBar from "./HeaderBar";
+import IconButton from "@mui/material/IconButton";
+import ExprPartFilterMenu from "@/components/UserVariablesDialog/ExprPartFilterMenu";
 
 function validateExpression(expression: string): string | null {
   if (expression!.trim() === "") {
@@ -121,6 +79,7 @@ interface UserVariableEditorProps {
   editedVariable: EditedVariable;
   setEditedVariable: (editedVariable: EditedVariable | null) => void;
   contextDataset: Dataset;
+  expressionCapabilities: ExpressionCapabilities;
 }
 
 export default function UserVariableEditor({
@@ -129,7 +88,12 @@ export default function UserVariableEditor({
   editedVariable,
   setEditedVariable,
   contextDataset,
+  expressionCapabilities,
 }: UserVariableEditorProps) {
+  const [exprPartTypes, setExprPartTypes] = useState(exprPartTypesDefault);
+  const [exprFilterAnchorEl, setExprFilterAnchorEl] =
+    useState<HTMLElement | null>(null);
+
   const allVariables = [...userVariables, ...contextDataset.variables];
 
   const { id, name, title, units, expression } = editedVariable.variable;
@@ -205,8 +169,52 @@ export default function UserVariableEditor({
     );
   };
 
+  const exprPartChips: ReactElement[] = [
+    <>
+      <IconButton
+        size="small"
+        onClick={(ev) => setExprFilterAnchorEl(ev.currentTarget)}
+      >
+        <FilterListIcon />
+      </IconButton>
+      <ExprPartFilterMenu
+        anchorEl={exprFilterAnchorEl}
+        exprPartTypes={exprPartTypes}
+        setExprPartTypes={setExprPartTypes}
+        onClose={() => void setExprFilterAnchorEl(null)}
+      />
+    </>,
+  ];
+  exprPartKeys.forEach((key) => {
+    if (exprPartTypes[key]) {
+      if (key === "variables") {
+        allVariables.forEach((v) => {
+          if (!isUserVariable(v)) {
+            exprPartChips.push(
+              <ExprPartChip
+                key={`${key}-${v.name}`}
+                part={v.name}
+                onPartClicked={handleExpressionInsert}
+              />,
+            );
+          }
+        });
+      } else {
+        expressionCapabilities.namespace[key].forEach((part: string) => {
+          exprPartChips.push(
+            <ExprPartChip
+              key={`${key}-${part}`}
+              part={part}
+              onPartClicked={handleExpressionInsert}
+            />,
+          );
+        });
+      }
+    }
+  });
+
   return (
-    <Box sx={styles.container}>
+    <>
       <HeaderBar
         selected
         title={
@@ -279,35 +287,9 @@ export default function UserVariableEditor({
               {expressionProblem}
             </Typography>
           )}
-          <Box sx={styles.expressionParts}>
-            {expressionParts.map((part) => (
-              <Box key={part} component="span" sx={styles.expressionPart}>
-                <Chip
-                  label={part}
-                  sx={styles.expressionPartChip}
-                  size="small"
-                  color="primary"
-                  onClick={() => handleExpressionInsert(part)}
-                />
-              </Box>
-            ))}
-            {allVariables.map(
-              (v) =>
-                !v.expression && (
-                  <Box key={v.id} component="span" sx={{ padding: 0.2 }}>
-                    <Chip
-                      label={v.name}
-                      sx={styles.expressionPartChip}
-                      size="small"
-                      color="secondary"
-                      onClick={() => handleExpressionInsert(v.name)}
-                    />
-                  </Box>
-                ),
-            )}
-          </Box>
+          <Box sx={styles.expressionParts}>{exprPartChips}</Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }

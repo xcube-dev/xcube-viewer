@@ -29,20 +29,17 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import Paper from "@mui/material/Paper";
 
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { Dataset } from "@/model/dataset";
-import { UserVariable } from "@/model/userVariable";
+import { ExpressionCapabilities, UserVariable } from "@/model/userVariable";
 import { USER_VARIABLES_DIALOG_ID, EditedVariable } from "./utils";
 import UserVariablesTable from "./UserVariablesTable";
 import UserVariableEditor from "./UserVariableEditor";
 import HelpButton from "@/components/HelpButton";
 
 const styles = makeStyles({
-  contentContainer: { width: "100%", height: 400, mb: 2 },
-  contentPaper: { width: "100%", height: "100%" },
   contentActions: {
     display: "flex",
     justifyContent: "space-between",
@@ -59,6 +56,7 @@ interface UserVariablesDialogProps {
     datasetId: string,
     userVariables: UserVariable[],
   ) => void;
+  expressionCapabilities: ExpressionCapabilities | null;
 }
 
 export default function UserVariablesDialog({
@@ -67,6 +65,7 @@ export default function UserVariablesDialog({
   selectedDataset,
   userVariables,
   updateDatasetUserVariables,
+  expressionCapabilities,
 }: UserVariablesDialogProps) {
   const [localUserVariables, setLocalUserVariables] =
     useState<UserVariable[]>(userVariables);
@@ -78,7 +77,7 @@ export default function UserVariablesDialog({
     setLocalUserVariables(userVariables);
   }, [userVariables]);
 
-  if (!open || !selectedDataset) {
+  if (!open || !selectedDataset || !expressionCapabilities) {
     return null;
   }
 
@@ -101,27 +100,24 @@ export default function UserVariablesDialog({
       scroll="body"
     >
       <DialogTitle>{i18n.get("User Variables")}</DialogTitle>
-      <DialogContent>
-        <Box sx={styles.contentContainer}>
-          <Paper elevation={1} sx={styles.contentPaper}>
-            {editedVariable === null ? (
-              <UserVariablesTable
-                userVariables={localUserVariables}
-                setUserVariables={setLocalUserVariables}
-                contextDataset={selectedDataset}
-                setEditedVariable={setEditedVariable}
-              />
-            ) : (
-              <UserVariableEditor
-                userVariables={localUserVariables}
-                setUserVariables={setLocalUserVariables}
-                editedVariable={editedVariable}
-                setEditedVariable={setEditedVariable}
-                contextDataset={selectedDataset}
-              />
-            )}
-          </Paper>
-        </Box>
+      <DialogContent dividers sx={{ height: 400 }}>
+        {editedVariable === null ? (
+          <UserVariablesTable
+            userVariables={localUserVariables}
+            setUserVariables={setLocalUserVariables}
+            contextDataset={selectedDataset}
+            setEditedVariable={setEditedVariable}
+          />
+        ) : (
+          <UserVariableEditor
+            userVariables={localUserVariables}
+            setUserVariables={setLocalUserVariables}
+            editedVariable={editedVariable}
+            setEditedVariable={setEditedVariable}
+            contextDataset={selectedDataset}
+            expressionCapabilities={expressionCapabilities}
+          />
+        )}
       </DialogContent>
       <DialogActions sx={styles.contentActions}>
         <Box>

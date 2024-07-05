@@ -32,6 +32,7 @@ import {
   selectedDatasetSelector,
   selectedUserVariablesSelector,
 } from "@/selectors/controlSelectors";
+import { expressionCapabilitiesSelector } from "@/selectors/dataSelectors";
 import _UserVariablesDialog from "@/components/UserVariablesDialog";
 
 const mapStateToProps = (state: AppState) => {
@@ -39,6 +40,7 @@ const mapStateToProps = (state: AppState) => {
     open: state.controlState.dialogOpen[USER_VARIABLES_DIALOG_ID],
     selectedDataset: selectedDatasetSelector(state),
     userVariables: selectedUserVariablesSelector(state),
+    expressionCapabilities: expressionCapabilitiesSelector(state),
   };
 };
 
