@@ -27,10 +27,10 @@ export default function ExprPartChip({
         size="small"
         variant="outlined"
         color={
-          partType === "variables"
-            ? "primary"
-            : partType === "constants"
-              ? "default"
+          partType === "variables" || partType === "constants"
+            ? "default"
+            : partType.includes("Functions")
+              ? "primary"
               : "secondary"
         }
         onClick={() => onPartClicked(part)}

@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import { ChangeEvent, ReactElement, useState } from "react";
+import { ChangeEvent, MouseEvent, ReactElement, useRef, useState } from "react";
 import { python } from "@codemirror/lang-python";
-import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror, { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -46,6 +46,9 @@ import { EditedVariable, exprPartKeys, exprPartTypesDefault } from "./utils";
 import HeaderBar from "./HeaderBar";
 import IconButton from "@mui/material/IconButton";
 import ExprPartFilterMenu from "@/components/UserVariablesDialog/ExprPartFilterMenu";
+
+// TODO: allow for code auto-completion, see
+//   https://codemirror.net/examples/autocompletion/
 
 function validateExpression(expression: string): string | null {
   if (expression!.trim() === "") {
@@ -93,11 +96,9 @@ export default function UserVariableEditor({
   const [exprPartTypes, setExprPartTypes] = useState(exprPartTypesDefault);
   const [exprFilterAnchorEl, setExprFilterAnchorEl] =
     useState<HTMLElement | null>(null);
-
+  const codeMirrorRef = useRef<ReactCodeMirrorRef | null>(null);
   const allVariables = [...userVariables, ...contextDataset.variables];
-
   const { id, name, title, units, expression } = editedVariable.variable;
-
   const isNameUsed =
     allVariables.findIndex((v) => v.id !== id && v.name === name) >= 0;
   const isNameInvalid = !isIdentifier(name);
@@ -107,10 +108,8 @@ export default function UserVariableEditor({
       ? i18n.get("Not a valid identifier")
       : null;
   const isNameOk = !nameProblem;
-
   const expressionProblem = validateExpression(expression);
   const isExpressionOk = !expressionProblem;
-
   const canCommit = isNameOk && isExpressionOk;
 
   const changeVariableKey = (key: keyof UserVariable, value: string) => {
@@ -157,54 +156,65 @@ export default function UserVariableEditor({
   };
 
   const handleExpressionInsert = (part: string) => {
-    // Here we just append the new part.
-    // It would be nice, if we'd insert at current cursor position.
-    // Or use the current selection to replace it according to
-    // part="sin()" --> "sin(<selection>)".
-    changeVariableKey(
-      "expression",
-      expression.length && !expression.endsWith(" ")
-        ? `${expression} ${part}`
-        : expression + part,
-    );
+    const view = codeMirrorRef.current?.view;
+    if (view) {
+      const selection = view.state.selection.main;
+      const selectedText = view.state
+        .sliceDoc(selection.from, selection.to)
+        .trim();
+      if (selectedText !== "" && part.includes("X")) {
+        part = part.replace("X", selectedText);
+      }
+      const transaction = view.state.replaceSelection(part);
+      if (transaction) {
+        view.dispatch(transaction);
+      }
+    }
+  };
+
+  const handleExprFilterMenuOpen = (ev: MouseEvent<HTMLButtonElement>) => {
+    setExprFilterAnchorEl(ev.currentTarget);
+  };
+
+  const handleExprFilterMenuClose = () => {
+    setExprFilterAnchorEl(null);
   };
 
   const exprPartChips: ReactElement[] = [
     <>
-      <IconButton
-        size="small"
-        onClick={(ev) => setExprFilterAnchorEl(ev.currentTarget)}
-      >
+      <IconButton size="small" onClick={handleExprFilterMenuOpen}>
         <FilterListIcon />
       </IconButton>
       <ExprPartFilterMenu
         anchorEl={exprFilterAnchorEl}
         exprPartTypes={exprPartTypes}
         setExprPartTypes={setExprPartTypes}
-        onClose={() => void setExprFilterAnchorEl(null)}
+        onClose={handleExprFilterMenuClose}
       />
     </>,
   ];
-  exprPartKeys.forEach((key) => {
-    if (exprPartTypes[key]) {
-      if (key === "variables") {
+  exprPartKeys.forEach((partType) => {
+    if (exprPartTypes[partType]) {
+      if (partType === "variables") {
         allVariables.forEach((v) => {
           if (!isUserVariable(v)) {
             exprPartChips.push(
               <ExprPartChip
-                key={`${key}-${v.name}`}
+                key={`${partType}-${v.name}`}
                 part={v.name}
+                partType={partType}
                 onPartClicked={handleExpressionInsert}
               />,
             );
           }
         });
       } else {
-        expressionCapabilities.namespace[key].forEach((part: string) => {
+        expressionCapabilities.namespace[partType].forEach((part: string) => {
           exprPartChips.push(
             <ExprPartChip
-              key={`${key}-${part}`}
+              key={`${partType}-${part}`}
               part={part}
+              partType={partType}
               onPartClicked={handleExpressionInsert}
             />,
           );
@@ -277,6 +287,7 @@ export default function UserVariableEditor({
             extensions={[python()]}
             value={expression}
             onChange={handleExpressionChange}
+            ref={codeMirrorRef}
           />
           {expressionProblem && (
             <Typography
