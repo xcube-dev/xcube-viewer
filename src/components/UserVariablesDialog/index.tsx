@@ -22,6 +22,5 @@
  * SOFTWARE.
  */
 
-const version = "1.3.0-dev.0";
-
-export default version;
+import UserVariablesDialog from "./UserVariablesDialog";
+export default UserVariablesDialog;

@@ -22,44 +22,44 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { useRef, useState } from "react";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import IconButton from "@mui/material/IconButton";
 
-import _VariableSelect from "@/components/VariableSelect";
-import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-} from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  userVariablesAllowedSelector,
-  selectedVariablesSelector,
-} from "@/selectors/controlSelectors";
+import useFetchText from "@/hooks/useFetchText";
+import MarkdownPopover from "@/components/MarkdownPopover";
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    userVariablesAllowed: userVariablesAllowedSelector(state),
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
+interface HelpButtonProps {
+  size?: "small" | "medium" | "large";
+  helpUrl?: string;
+}
+
+export default function HelpButton({ size, helpUrl }: HelpButtonProps) {
+  const [helpAnchorEl, setHelpAnchorEl] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const helpButtonRef = useRef<HTMLButtonElement>(null);
+  const helpText = useFetchText(helpUrl);
+
+  const handleHelpOpen = () => {
+    setHelpAnchorEl(helpButtonRef.current);
   };
-};
 
-const mapDispatchToProps = {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
-};
+  const handleHelpClose = () => {
+    setHelpAnchorEl(null);
+  };
 
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+  return (
+    <>
+      <IconButton onClick={handleHelpOpen} size={size} ref={helpButtonRef}>
+        <HelpOutlineIcon fontSize="inherit" />
+      </IconButton>
+      <MarkdownPopover
+        anchorEl={helpAnchorEl}
+        open={!!helpAnchorEl}
+        onClose={handleHelpClose}
+        markdownText={helpText}
+      />
+    </>
+  );
+}

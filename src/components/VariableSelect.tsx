@@ -21,34 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import IconButton from "@mui/material/IconButton";
+
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
+import CalculateIcon from "@mui/icons-material/Calculate";
 import CompareIcon from "@mui/icons-material/Compare";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import { SxProps } from "@mui/system";
 
 import i18n from "@/i18n";
 import { Variable } from "@/model/variable";
 import { WithLocale } from "@/util/lang";
-import ControlBarItem from "./ControlBarItem";
 import { commonStyles } from "@/components/common-styles";
-import { makeStyles } from "@/util/styles";
-
-const styles = makeStyles({
-  button: (theme) => ({
-    margin: theme.spacing(0.1),
-  }),
-});
-
-const toggleComparisonStyle = {
-  ...styles.button,
-  ...commonStyles.toggleButton,
-} as SxProps;
+import ToolButton from "@/components/ToolButton";
+import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
+import ControlBarItem from "./ControlBarItem";
+import { isUserVariable } from "@/model/userVariable";
 
 interface VariableSelectProps extends WithLocale {
   selectedDatasetId: string | null;
@@ -56,6 +49,7 @@ interface VariableSelectProps extends WithLocale {
   selectedVariableName: string | null;
   selectedVariable2Name: string | null;
   variables: Variable[];
+  userVariablesAllowed?: boolean;
   canAddTimeSeries: boolean;
   addTimeSeries: () => void;
   selectVariable: (variableName: string | null) => void;
@@ -63,6 +57,7 @@ interface VariableSelectProps extends WithLocale {
     dataset2Id: string | null,
     variable2Name: string | null,
   ) => void;
+  openDialog: (dialogId: string) => void;
 }
 
 export default function VariableSelect({
@@ -71,13 +66,19 @@ export default function VariableSelect({
   selectedDataset2Id,
   selectedVariable2Name,
   variables,
+  userVariablesAllowed,
   canAddTimeSeries,
   addTimeSeries,
   selectVariable,
   selectVariable2,
+  openDialog,
 }: VariableSelectProps) {
   const handleVariableChange = (event: SelectChangeEvent) => {
     selectVariable(event.target.value || null);
+  };
+
+  const handleManageUserVariablesClick = () => {
+    openDialog(USER_VARIABLES_DIALOG_ID);
   };
 
   const handleAddTimeSeriesButtonClick = () => {
@@ -94,6 +95,20 @@ export default function VariableSelect({
     </InputLabel>
   );
 
+  function getVariableLabel(variable: Variable | undefined) {
+    if (!variable) {
+      return "?";
+    }
+    const label = variable.title || variable.name;
+    if (
+      selectedDatasetId === selectedDataset2Id &&
+      variable.name === selectedVariable2Name
+    ) {
+      return `${label} (#2)`;
+    }
+    return label;
+  }
+
   const variableSelect = (
     <Select
       variant="standard"
@@ -102,6 +117,9 @@ export default function VariableSelect({
       input={<Input name="variable" id="variable-select" />}
       displayEmpty
       name="variable"
+      renderValue={() =>
+        getVariableLabel(variables.find((v) => v.name === selectedVariableName))
+      }
     >
       {(variables || []).map((variable) => (
         <MenuItem
@@ -109,27 +127,32 @@ export default function VariableSelect({
           value={variable.name}
           selected={variable.name === selectedVariableName}
         >
-          {getVariableLabel(
-            variable,
-            selectedDatasetId,
-            selectedDataset2Id,
-            selectedVariable2Name,
+          {isUserVariable(variable) && (
+            <ListItemIcon>
+              <CalculateIcon fontSize="small" />
+            </ListItemIcon>
           )}
+          <ListItemText>{getVariableLabel(variable)}</ListItemText>
         </MenuItem>
       ))}
     </Select>
   );
-  const timeSeriesButton = (
-    <IconButton
+  const manageUserVariablesButton = userVariablesAllowed && (
+    <ToolButton
+      key={"userVariables"}
+      onClick={handleManageUserVariablesClick}
+      tooltipText={i18n.get("Manage user variables")}
+      icon={<CalculateIcon />}
+    />
+  );
+  const addTimeSeriesButton = (
+    <ToolButton
       key={"timeSeries"}
-      sx={styles.button}
       disabled={!canAddTimeSeries}
       onClick={handleAddTimeSeriesButtonClick}
-    >
-      <Tooltip arrow title={i18n.get("Show time-series diagram")}>
-        {<TimelineIcon />}
-      </Tooltip>
-    </IconButton>
+      tooltipText={i18n.get("Show time-series diagram")}
+      icon={<TimelineIcon />}
+    />
   );
   const variable2Button = (
     <ToggleButton
@@ -137,7 +160,7 @@ export default function VariableSelect({
       selected={isSelectedVariable2}
       value={"comparison"}
       size="small"
-      sx={toggleComparisonStyle}
+      sx={commonStyles.toggleButton}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>
@@ -150,20 +173,11 @@ export default function VariableSelect({
     <ControlBarItem
       label={variableSelectLabel}
       control={variableSelect}
-      actions={[timeSeriesButton, variable2Button]}
+      actions={[
+        manageUserVariablesButton,
+        addTimeSeriesButton,
+        variable2Button,
+      ]}
     />
   );
-}
-
-function getVariableLabel(
-  variable: Variable,
-  datasetId: string | null,
-  dataset2Id: string | null,
-  variable2Name: string | null,
-) {
-  const label = variable.title || variable.name;
-  if (datasetId === dataset2Id && variable.name === variable2Name) {
-    return `${label} (#2)`;
-  }
-  return label;
 }

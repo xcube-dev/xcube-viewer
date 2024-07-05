@@ -22,6 +22,13 @@
  * SOFTWARE.
  */
 
-const version = "1.3.0-dev.0";
+import { Variable } from "./variable";
+import { isString } from "@/util/types";
 
-export default version;
+export interface UserVariable extends Variable {
+  expression: string;
+}
+
+export function isUserVariable(variable: Variable): variable is UserVariable {
+  return isString(variable.expression);
+}

@@ -22,44 +22,45 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { newId } from "@/util/id";
+import { UserVariable } from "@/model/userVariable";
 
-import _VariableSelect from "@/components/VariableSelect";
-import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
-import {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-} from "@/actions/controlActions";
-import {
-  canAddTimeSeriesSelector,
-  userVariablesAllowedSelector,
-  selectedVariablesSelector,
-} from "@/selectors/controlSelectors";
+export const USER_VARIABLES_DIALOG_ID = "userVariablesDialog";
 
-const mapStateToProps = (state: AppState) => {
+export type EditMode = "add" | "edit";
+
+export interface EditedVariable {
+  editMode: EditMode;
+  variable: UserVariable;
+}
+
+export function newUserVariable(): UserVariable {
   return {
-    locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
-    selectedVariableName: state.controlState.selectedVariableName,
-    selectedDataset2Id: state.controlState.selectedDataset2Id,
-    selectedVariable2Name: state.controlState.selectedVariable2Name,
-    userVariablesAllowed: userVariablesAllowedSelector(state),
-    canAddTimeSeries: canAddTimeSeriesSelector(state),
-    variables: selectedVariablesSelector(state),
+    id: newId("user"),
+    // Editable properties
+    name: "",
+    title: "",
+    units: "",
+    expression: "",
+    // Can be changed in the UI
+    colorBarName: "bone",
+    colorBarMin: 0,
+    colorBarMax: 1,
+    // Never used
+    shape: [],
+    dims: [],
+    dtype: "float64",
+    timeChunkSize: null,
+    attrs: {},
   };
-};
+}
 
-const mapDispatchToProps = {
-  openDialog,
-  selectVariable,
-  selectVariable2,
-  addTimeSeries,
-};
-
-const VariableSelect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_VariableSelect);
-export default VariableSelect;
+export function copyUserVariable(variable: UserVariable): UserVariable {
+  return {
+    ...variable,
+    id: newId("user"),
+    // Editable properties
+    name: `${variable.name}_copy`,
+    title: variable.title ? `${variable.title} Copy` : "",
+  };
+}
