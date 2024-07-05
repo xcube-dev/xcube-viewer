@@ -47,7 +47,7 @@ import {
   REMOVE_STATISTICS,
   ADD_STATISTICS,
   UPDATE_DATASET_USER_VARIABLES,
-  EXPRESSION_CAPABILITIES,
+  UPDATE_EXPRESSION_CAPABILITIES,
 } from "@/actions/dataActions";
 import { SELECT_TIME_RANGE, SelectTimeRange } from "@/actions/controlActions";
 import i18n from "@/i18n";
@@ -68,7 +68,7 @@ export function dataReducer(
     case UPDATE_SERVER_INFO: {
       return { ...state, serverInfo: action.serverInfo };
     }
-    case EXPRESSION_CAPABILITIES: {
+    case UPDATE_EXPRESSION_CAPABILITIES: {
       return {
         ...state,
         expressionCapabilities: action.expressionCapabilities,
