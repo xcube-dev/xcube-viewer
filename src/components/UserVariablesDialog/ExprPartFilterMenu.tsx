@@ -49,6 +49,7 @@ export default function ExprPartFilterMenu({
     <Menu open={!!anchorEl} anchorEl={anchorEl} onClose={onClose}>
       {exprPartKeys.map((key) => (
         <SelectableMenuItem
+          key={key}
           selected={exprPartTypes[key]}
           title={i18n.get(exprPartLabels[key])}
           onClick={() => handleExprPartTypeSelected(key)}

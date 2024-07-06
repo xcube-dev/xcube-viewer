@@ -23,15 +23,13 @@
  */
 
 import { ChangeEvent, MouseEvent, ReactElement, useRef, useState } from "react";
-import { python } from "@codemirror/lang-python";
-import CodeMirror, { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
 import i18n from "@/i18n";
-import { Config } from "@/config";
 import { Dataset } from "@/model/dataset";
 import {
   ExpressionCapabilities,
@@ -42,10 +40,10 @@ import { isIdentifier } from "@/util/identifier";
 import { makeStyles } from "@/util/styles";
 import DoneCancel from "@/components/DoneCancel";
 import ExprPartChip from "@/components/UserVariablesDialog/ExprPartChip";
+import ExprPartFilterMenu from "@/components/UserVariablesDialog/ExprPartFilterMenu";
 import { EditedVariable, exprPartKeys, exprPartTypesDefault } from "./utils";
 import HeaderBar from "./HeaderBar";
-import IconButton from "@mui/material/IconButton";
-import ExprPartFilterMenu from "@/components/UserVariablesDialog/ExprPartFilterMenu";
+import ExprEditor from "./ExprEditor";
 
 // TODO: allow for code auto-completion, see
 //   https://codemirror.net/examples/autocompletion/
@@ -96,8 +94,10 @@ export default function UserVariableEditor({
   const [exprPartTypes, setExprPartTypes] = useState(exprPartTypesDefault);
   const [exprFilterAnchorEl, setExprFilterAnchorEl] =
     useState<HTMLElement | null>(null);
-  const codeMirrorRef = useRef<ReactCodeMirrorRef | null>(null);
   const allVariables = [...userVariables, ...contextDataset.variables];
+  const datasetVariableNames = contextDataset.variables
+    .filter((v) => !isUserVariable(v))
+    .map((v) => v.name);
   const { id, name, title, units, expression } = editedVariable.variable;
   const isNameUsed =
     allVariables.findIndex((v) => v.id !== id && v.name === name) >= 0;
@@ -111,6 +111,7 @@ export default function UserVariableEditor({
   const expressionProblem = validateExpression(expression);
   const isExpressionOk = !expressionProblem;
   const canCommit = isNameOk && isExpressionOk;
+  const handleInsertPartRef = useRef<null | ((part: string) => void)>(null);
 
   const changeVariableKey = (key: keyof UserVariable, value: string) => {
     setEditedVariable({
@@ -156,20 +157,7 @@ export default function UserVariableEditor({
   };
 
   const handleExpressionInsert = (part: string) => {
-    const view = codeMirrorRef.current?.view;
-    if (view) {
-      const selection = view.state.selection.main;
-      const selectedText = view.state
-        .sliceDoc(selection.from, selection.to)
-        .trim();
-      if (selectedText !== "" && part.includes("X")) {
-        part = part.replace("X", selectedText);
-      }
-      const transaction = view.state.replaceSelection(part);
-      if (transaction) {
-        view.dispatch(transaction);
-      }
-    }
+    handleInsertPartRef.current!(part);
   };
 
   const handleExprFilterMenuOpen = (ev: MouseEvent<HTMLButtonElement>) => {
@@ -181,32 +169,22 @@ export default function UserVariableEditor({
   };
 
   const exprPartChips: ReactElement[] = [
-    <>
-      <IconButton size="small" onClick={handleExprFilterMenuOpen}>
-        <FilterListIcon />
-      </IconButton>
-      <ExprPartFilterMenu
-        anchorEl={exprFilterAnchorEl}
-        exprPartTypes={exprPartTypes}
-        setExprPartTypes={setExprPartTypes}
-        onClose={handleExprFilterMenuClose}
-      />
-    </>,
+    <IconButton key="filter" size="small" onClick={handleExprFilterMenuOpen}>
+      <FilterListIcon />
+    </IconButton>,
   ];
   exprPartKeys.forEach((partType) => {
     if (exprPartTypes[partType]) {
       if (partType === "variables") {
-        allVariables.forEach((v) => {
-          if (!isUserVariable(v)) {
-            exprPartChips.push(
-              <ExprPartChip
-                key={`${partType}-${v.name}`}
-                part={v.name}
-                partType={partType}
-                onPartClicked={handleExpressionInsert}
-              />,
-            );
-          }
+        datasetVariableNames.forEach((part) => {
+          exprPartChips.push(
+            <ExprPartChip
+              key={`${partType}-${part}`}
+              part={part}
+              partType={partType}
+              onPartClicked={handleExpressionInsert}
+            />,
+          );
         });
       } else {
         expressionCapabilities.namespace[partType].forEach((part: string) => {
@@ -225,6 +203,13 @@ export default function UserVariableEditor({
 
   return (
     <>
+      <ExprPartFilterMenu
+        anchorEl={exprFilterAnchorEl}
+        exprPartTypes={exprPartTypes}
+        setExprPartTypes={setExprPartTypes}
+        onClose={handleExprFilterMenuClose}
+      />
+
       <HeaderBar
         selected
         title={
@@ -280,14 +265,12 @@ export default function UserVariableEditor({
           >
             {i18n.get("Expression")}
           </Typography>
-          <CodeMirror
-            theme={Config.instance.branding.themeName || "light"}
-            width="100%"
-            height="100px"
-            extensions={[python()]}
-            value={expression}
-            onChange={handleExpressionChange}
-            ref={codeMirrorRef}
+          <ExprEditor
+            expression={expression}
+            onExpressionChange={handleExpressionChange}
+            variableNames={datasetVariableNames}
+            expressionCapabilities={expressionCapabilities}
+            handleInsertPartRef={handleInsertPartRef}
           />
           {expressionProblem && (
             <Typography

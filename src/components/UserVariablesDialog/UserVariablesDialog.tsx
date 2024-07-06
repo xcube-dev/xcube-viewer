@@ -40,7 +40,8 @@ import UserVariableEditor from "./UserVariableEditor";
 import HelpButton from "@/components/HelpButton";
 
 const styles = makeStyles({
-  contentActions: {
+  dialogContent: { height: 420 },
+  dialogActions: {
     display: "flex",
     justifyContent: "space-between",
     gap: 0.2,
@@ -100,7 +101,7 @@ export default function UserVariablesDialog({
       scroll="body"
     >
       <DialogTitle>{i18n.get("User Variables")}</DialogTitle>
-      <DialogContent dividers sx={{ height: 400 }}>
+      <DialogContent dividers sx={styles.dialogContent}>
         {editedVariable === null ? (
           <UserVariablesTable
             userVariables={localUserVariables}
@@ -119,7 +120,7 @@ export default function UserVariablesDialog({
           />
         )}
       </DialogContent>
-      <DialogActions sx={styles.contentActions}>
+      <DialogActions sx={styles.dialogActions}>
         <Box>
           <HelpButton
             size="medium"
@@ -127,12 +128,7 @@ export default function UserVariablesDialog({
           />
         </Box>
         <Box>
-          <Button
-            onClick={handleCancelDialog}
-            disabled={editedVariable !== null}
-          >
-            {i18n.get("Cancel")}
-          </Button>
+          <Button onClick={handleCancelDialog}>{i18n.get("Cancel")}</Button>
           <Button
             onClick={handleConfirmDialog}
             disabled={

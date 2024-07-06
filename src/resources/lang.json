@@ -1071,6 +1071,41 @@
       "se": "Ta bort användarvariabel"
     },
     {
+      "en": "Use keys CTRL+SPACE to show autocompletions",
+      "de": "Tasten STRG+LEER benutzen, um Autovervollständigungen zu zeigen",
+      "se": "Använd tangenterna CTRL+MELLANSLAG för att visa autoslutföranden"
+    },
+    {
+      "en": "Variables",
+      "de": "Variablen",
+      "se": "Variabler"
+    },
+    {
+      "en": "Constants",
+      "de": "Konstanten",
+      "se": "Konstanter"
+    },
+    {
+      "en": "Array operators",
+      "de": "Array-Operatoren",
+      "se": "Arrayoperatorer"
+    },
+    {
+      "en": "Other operators",
+      "de": "Andere Operatoren",
+      "se": "Andra Operatorer"
+    },
+    {
+      "en": "Array functions",
+      "de": "Array-Funktionen",
+      "se": "Arrayfunktioner"
+    },
+    {
+      "en": "Other functions",
+      "de": "Andere Funktionen",
+      "se": "Andra funktioner"
+    },
+    {
       "en": "Not a valid identifier",
       "de": "Kein gültiger Bezeichner",
       "se": "Inte en giltig identifierare"
