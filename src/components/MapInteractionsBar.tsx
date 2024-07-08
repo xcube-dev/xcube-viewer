@@ -34,11 +34,13 @@ import CategoryIcon from "@mui/icons-material/Category";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import FileUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/system";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
+import { exportMap } from "@/actions/mapActions";
 
 const StyledFromControl = styled(FormControl)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -122,6 +124,17 @@ export default function MapInteractionsBar({
         >
           <Tooltip arrow title={i18n.get("Import places")}>
             <FileUploadIcon />
+          </Tooltip>
+        </ToggleButton>
+        <ToggleButton
+          key={5}
+          value="Export"
+          size="small"
+          sx={commonStyles.toggleButton}
+          onClick={() => exportMap("map")}
+        >
+          <Tooltip arrow title={i18n.get("Export map")}>
+            <CameraAltIcon />
           </Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>

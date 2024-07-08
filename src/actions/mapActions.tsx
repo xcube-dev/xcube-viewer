@@ -31,6 +31,7 @@ import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
 
 import { GEOGRAPHIC_CRS } from "@/model/proj";
 import { MAP_OBJECTS } from "@/states/controlState";
+import { exportMapAsImage } from "@/components/ol/ExportMap";
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(
@@ -69,5 +70,12 @@ export function locateInMap(
     } else {
       map.getView().fit(geometry, { size: map.getSize() });
     }
+  }
+}
+
+export function exportMap(mapId: string) {
+  if (MAP_OBJECTS[mapId]) {
+    const map = MAP_OBJECTS[mapId] as OlMap;
+    exportMapAsImage(map);
   }
 }

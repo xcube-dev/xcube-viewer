@@ -170,6 +170,7 @@ const NATURAL_EARTH_2_SOURCE = new OlXYZSource({
     "&copy; <a href=&quot;https://www.naturalearthdata.com/&quot;>MapBox</a>",
     "&copy; <a href=&quot;https://www.mapbox.com/&quot;>MapBox</a> and contributors",
   ],
+  crossOrigin: "anonymous",
 });
 
 const BATHYMETRY_SOURCE = new OlXYZSource({
@@ -178,6 +179,7 @@ const BATHYMETRY_SOURCE = new OlXYZSource({
     "&copy; <a href=&quot;https://www.gebco.net/data_and_products/gridded_bathymetry_data/&quot;>GEBCO</a>",
     "&copy; <a href=&quot;https://maps.ngdc.noaa.gov/&quot;>NOAHH</a> and contributors",
   ],
+  crossOrigin: "anonymous",
 });
 
 const OSM_SOURCE = new OlOSMSource();
@@ -187,6 +189,7 @@ const OSM_BW_SOURCE = new OlXYZSource({
   attributions: [
     "&copy; <a href=&quot;https://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors",
   ],
+  crossOrigin: "anonymous",
 });
 
 function equalTileGrids(

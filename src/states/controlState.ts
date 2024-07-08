@@ -49,7 +49,8 @@ export type MapInteraction =
   | "Point"
   | "Polygon"
   | "Circle"
-  | "Geometry";
+  | "Geometry"
+  | "Export";
 
 export type ViewMode = "text" | "list" | "code" | "python";
 
