@@ -102,6 +102,9 @@
   - No longer using deprecated `adaptV4Theme()` function from `@mui/material`.
   - Applied new MUI v5 styling defaults. 
 
+### Fixes
+
+* Fixed a crash when loading statistics for polygon after loading point statistics. (#376)
 
 ## Changes in version 1.1.1
 
