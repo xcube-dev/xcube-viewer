@@ -85,7 +85,7 @@ import { renameUserPlaceInLayer } from "./mapActions";
 import { ColorBarNorm } from "@/model/variable";
 import { getStatistics } from "@/api/getStatistics";
 import { StatisticsRecord } from "@/model/statistics";
-import { UserVariable } from "@/model/userVariable";
+import { UserVariable, ExpressionCapabilities } from "@/model/userVariable";
 import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -808,7 +808,44 @@ export function syncWithServer() {
   return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
+    dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_EXPRESSION_CAPABILITIES = "UPDATE_EXPRESSION_CAPABILITIES";
+
+export interface UpdateExpressionCapabilities {
+  type: typeof UPDATE_EXPRESSION_CAPABILITIES;
+  expressionCapabilities: ExpressionCapabilities;
+}
+
+export function updateExpressionCapabilities() {
+  return (
+    dispatch: Dispatch<UpdateExpressionCapabilities | MessageLogAction>,
+    getState: () => AppState,
+  ) => {
+    const apiServer = selectedServerSelector(getState());
+
+    api
+      .getExpressionCapabilities(apiServer.url)
+      .then((expressionCapabilities: ExpressionCapabilities) => {
+        dispatch(_updateExpressionCapabilities(expressionCapabilities));
+      })
+      .catch((error: Error) => {
+        dispatch(postMessage("error", error));
+      });
+  };
+}
+
+export function _updateExpressionCapabilities(
+  expressionCapabilities: ExpressionCapabilities,
+): UpdateExpressionCapabilities {
+  return {
+    type: UPDATE_EXPRESSION_CAPABILITIES,
+    expressionCapabilities: expressionCapabilities,
   };
 }
 
@@ -1160,6 +1197,7 @@ function _downloadTimeSeriesGeoJSON(timeSeriesGroups: TimeSeriesGroup[],
 
 export type DataAction =
   | UpdateServerInfo
+  | UpdateExpressionCapabilities
   | UpdateDatasets
   | UpdateDatasetUserVariables
   | UpdateDatasetPlaceGroup

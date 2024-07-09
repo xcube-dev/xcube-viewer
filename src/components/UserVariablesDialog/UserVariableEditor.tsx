@@ -22,79 +22,36 @@
  * SOFTWARE.
  */
 
-import { ChangeEvent } from "react";
-import { python } from "@codemirror/lang-python";
-import CodeMirror from "@uiw/react-codemirror";
+import {
+  ChangeEvent,
+  MouseEvent,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 import i18n from "@/i18n";
-import { Config } from "@/config";
 import { Dataset } from "@/model/dataset";
-import { UserVariable } from "@/model/userVariable";
+import {
+  ExpressionCapabilities,
+  isUserVariable,
+  UserVariable,
+} from "@/model/userVariable";
 import { isIdentifier } from "@/util/identifier";
-import DoneCancel from "@/components/DoneCancel";
-import { EditedVariable } from "./utils";
-import HeaderBar from "./HeaderBar";
 import { makeStyles } from "@/util/styles";
-
-const expressionParts = [
-  "+",
-  "-",
-  "*",
-  "**",
-  "/",
-  "%",
-  "~",
-  "<<",
-  ">>",
-  "&",
-  "^",
-  "|",
-  "<",
-  "<=",
-  ">",
-  ">=",
-  "!=",
-  "==",
-  "()",
-  "and",
-  "or",
-  "not",
-  "e",
-  "nan",
-  "pi",
-  "abs()",
-  "arccos()",
-  "arcsin()",
-  "arctan()",
-  "arctan2()",
-  "ceil()",
-  "cos()",
-  "cosh()",
-  "exp()",
-  "floor()",
-  "hypot()",
-  "isnan()",
-  "log()",
-  "maximum()",
-  "minimum()",
-  "sign()",
-  "sin()",
-  "sqrt()",
-  "square()",
-  "tan()",
-  "where()",
-];
-
-function validateExpression(expression: string): string | null {
-  if (expression!.trim() === "") {
-    return i18n.get("Must not be empty");
-  }
-  return null;
-}
+import DoneCancel from "@/components/DoneCancel";
+import ExprPartChip from "@/components/UserVariablesDialog/ExprPartChip";
+import ExprPartFilterMenu from "@/components/UserVariablesDialog/ExprPartFilterMenu";
+import { EditedVariable, exprPartKeys, exprPartTypesDefault } from "./utils";
+import HeaderBar from "./HeaderBar";
+import ExprEditor from "./ExprEditor";
+import { validateExpression } from "@/api/validateExpression";
 
 const styles = makeStyles({
   container: { display: "flex", flexDirection: "column", height: "100%" },
@@ -121,6 +78,8 @@ interface UserVariableEditorProps {
   editedVariable: EditedVariable;
   setEditedVariable: (editedVariable: EditedVariable | null) => void;
   contextDataset: Dataset;
+  expressionCapabilities: ExpressionCapabilities;
+  serverUrl: string;
 }
 
 export default function UserVariableEditor({
@@ -129,11 +88,17 @@ export default function UserVariableEditor({
   editedVariable,
   setEditedVariable,
   contextDataset,
+  expressionCapabilities,
+  serverUrl,
 }: UserVariableEditorProps) {
+  const [exprPartTypes, setExprPartTypes] = useState(exprPartTypesDefault);
+  const [exprFilterAnchorEl, setExprFilterAnchorEl] =
+    useState<HTMLElement | null>(null);
   const allVariables = [...userVariables, ...contextDataset.variables];
-
+  const datasetVariableNames = contextDataset.variables
+    .filter((v) => !isUserVariable(v))
+    .map((v) => v.name);
   const { id, name, title, units, expression } = editedVariable.variable;
-
   const isNameUsed =
     allVariables.findIndex((v) => v.id !== id && v.name === name) >= 0;
   const isNameInvalid = !isIdentifier(name);
@@ -143,11 +108,25 @@ export default function UserVariableEditor({
       ? i18n.get("Not a valid identifier")
       : null;
   const isNameOk = !nameProblem;
-
-  const expressionProblem = validateExpression(expression);
+  const [expressionProblem, setExpressionProblem] = useState<string | null>(
+    null,
+  );
   const isExpressionOk = !expressionProblem;
-
   const canCommit = isNameOk && isExpressionOk;
+  const handleInsertPartRef = useRef<null | ((part: string) => void)>(null);
+  useEffect(() => {
+    // Debounce expression changes
+    const timerId = setTimeout(() => {
+      validateExpression(
+        serverUrl,
+        contextDataset.id,
+        editedVariable.variable.expression,
+      ).then(setExpressionProblem);
+    }, 500); // 500ms delay
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [serverUrl, contextDataset.id, editedVariable.variable.expression]);
 
   const changeVariableKey = (key: keyof UserVariable, value: string) => {
     setEditedVariable({
@@ -193,20 +172,59 @@ export default function UserVariableEditor({
   };
 
   const handleExpressionInsert = (part: string) => {
-    // Here we just append the new part.
-    // It would be nice, if we'd insert at current cursor position.
-    // Or use the current selection to replace it according to
-    // part="sin()" --> "sin(<selection>)".
-    changeVariableKey(
-      "expression",
-      expression.length && !expression.endsWith(" ")
-        ? `${expression} ${part}`
-        : expression + part,
-    );
+    handleInsertPartRef.current!(part);
   };
 
+  const handleExprFilterMenuOpen = (ev: MouseEvent<HTMLButtonElement>) => {
+    setExprFilterAnchorEl(ev.currentTarget);
+  };
+
+  const handleExprFilterMenuClose = () => {
+    setExprFilterAnchorEl(null);
+  };
+
+  const exprPartChips: ReactElement[] = [
+    <IconButton key="filter" size="small" onClick={handleExprFilterMenuOpen}>
+      <FilterListIcon />
+    </IconButton>,
+  ];
+  exprPartKeys.forEach((partType) => {
+    if (exprPartTypes[partType]) {
+      if (partType === "variables") {
+        datasetVariableNames.forEach((part) => {
+          exprPartChips.push(
+            <ExprPartChip
+              key={`${partType}-${part}`}
+              part={part}
+              partType={partType}
+              onPartClicked={handleExpressionInsert}
+            />,
+          );
+        });
+      } else {
+        expressionCapabilities.namespace[partType].forEach((part: string) => {
+          exprPartChips.push(
+            <ExprPartChip
+              key={`${partType}-${part}`}
+              part={part}
+              partType={partType}
+              onPartClicked={handleExpressionInsert}
+            />,
+          );
+        });
+      }
+    }
+  });
+
   return (
-    <Box sx={styles.container}>
+    <>
+      <ExprPartFilterMenu
+        anchorEl={exprFilterAnchorEl}
+        exprPartTypes={exprPartTypes}
+        setExprPartTypes={setExprPartTypes}
+        onClose={handleExprFilterMenuClose}
+      />
+
       <HeaderBar
         selected
         title={
@@ -262,13 +280,12 @@ export default function UserVariableEditor({
           >
             {i18n.get("Expression")}
           </Typography>
-          <CodeMirror
-            theme={Config.instance.branding.themeName || "light"}
-            width="100%"
-            height="100px"
-            extensions={[python()]}
-            value={expression}
-            onChange={handleExpressionChange}
+          <ExprEditor
+            expression={expression}
+            onExpressionChange={handleExpressionChange}
+            variableNames={datasetVariableNames}
+            expressionCapabilities={expressionCapabilities}
+            handleInsertPartRef={handleInsertPartRef}
           />
           {expressionProblem && (
             <Typography
@@ -279,35 +296,9 @@ export default function UserVariableEditor({
               {expressionProblem}
             </Typography>
           )}
-          <Box sx={styles.expressionParts}>
-            {expressionParts.map((part) => (
-              <Box key={part} component="span" sx={styles.expressionPart}>
-                <Chip
-                  label={part}
-                  sx={styles.expressionPartChip}
-                  size="small"
-                  color="primary"
-                  onClick={() => handleExpressionInsert(part)}
-                />
-              </Box>
-            ))}
-            {allVariables.map(
-              (v) =>
-                !v.expression && (
-                  <Box key={v.id} component="span" sx={{ padding: 0.2 }}>
-                    <Chip
-                      label={v.name}
-                      sx={styles.expressionPartChip}
-                      size="small"
-                      color="secondary"
-                      onClick={() => handleExpressionInsert(v.name)}
-                    />
-                  </Box>
-                ),
-            )}
-          </Box>
+          <Box sx={styles.expressionParts}>{exprPartChips}</Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }

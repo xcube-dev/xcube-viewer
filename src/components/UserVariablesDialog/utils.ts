@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import { newId } from "@/util/id";
 import { UserVariable } from "@/model/userVariable";
+import { newId } from "@/util/id";
 
 export const USER_VARIABLES_DIALOG_ID = "userVariablesDialog";
 
@@ -64,3 +64,32 @@ export function copyUserVariable(variable: UserVariable): UserVariable {
     title: variable.title ? `${variable.title} Copy` : "",
   };
 }
+
+export const exprPartTypesDefault = {
+  variables: true,
+  constants: false,
+  arrayOperators: false,
+  otherOperators: false,
+  arrayFunctions: false,
+  otherFunctions: false,
+};
+
+export type ExprPartType = keyof typeof exprPartTypesDefault;
+
+export const exprPartKeys: ExprPartType[] = [
+  "variables",
+  "constants",
+  "arrayOperators",
+  "otherOperators",
+  "arrayFunctions",
+  "otherFunctions",
+];
+
+export const exprPartLabels: Record<ExprPartType, string> = {
+  variables: "Variables",
+  constants: "Constants",
+  arrayOperators: "Array operators",
+  otherOperators: "Other operators",
+  arrayFunctions: "Array functions",
+  otherFunctions: "Other functions",
+};

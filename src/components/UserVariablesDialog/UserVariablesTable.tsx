@@ -23,9 +23,7 @@
  */
 
 import { useState } from "react";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -101,7 +99,7 @@ export default function UserVariablesTable({
   };
 
   return (
-    <Box sx={styles.container}>
+    <>
       <HeaderBar
         selected={selectedIndex !== null}
         title={i18n.get("Manage user variables")}
@@ -136,7 +134,7 @@ export default function UserVariablesTable({
           </>
         }
       />
-      <TableContainer component={Paper} sx={styles.tableContainer}>
+      <TableContainer sx={styles.tableContainer}>
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -166,6 +164,6 @@ export default function UserVariablesTable({
           </TableBody>
         </Table>
       </TableContainer>
-    </Box>
+    </>
   );
 }

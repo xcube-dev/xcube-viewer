@@ -31,6 +31,7 @@ interface SelectableMenuItemProps {
   title: string;
   subtitle?: string;
   disabled?: boolean;
+  dense?: boolean;
   selected: boolean;
   onClick: () => void;
 }
@@ -39,18 +40,19 @@ export default function SelectableMenuItem({
   title,
   subtitle,
   disabled,
+  dense,
   selected,
   onClick,
 }: SelectableMenuItemProps) {
   return selected ? (
-    <MenuItem onClick={onClick} disabled={disabled}>
+    <MenuItem onClick={onClick} disabled={disabled} dense={dense}>
       <ListItemIcon>
         <Check />
       </ListItemIcon>
       <ListItemText primary={title} secondary={subtitle} />
     </MenuItem>
   ) : (
-    <MenuItem onClick={onClick} disabled={disabled}>
+    <MenuItem onClick={onClick} disabled={disabled} dense={dense}>
       <ListItemText inset primary={title} secondary={subtitle} />
     </MenuItem>
   );
