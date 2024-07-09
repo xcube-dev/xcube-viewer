@@ -22,7 +22,14 @@
  * SOFTWARE.
  */
 
-import { ChangeEvent, MouseEvent, ReactElement, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  MouseEvent,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
@@ -44,16 +51,7 @@ import ExprPartFilterMenu from "@/components/UserVariablesDialog/ExprPartFilterM
 import { EditedVariable, exprPartKeys, exprPartTypesDefault } from "./utils";
 import HeaderBar from "./HeaderBar";
 import ExprEditor from "./ExprEditor";
-
-// TODO: allow for code auto-completion, see
-//   https://codemirror.net/examples/autocompletion/
-
-function validateExpression(expression: string): string | null {
-  if (expression!.trim() === "") {
-    return i18n.get("Must not be empty");
-  }
-  return null;
-}
+import { validateExpression } from "@/api/validateExpression";
 
 const styles = makeStyles({
   container: { display: "flex", flexDirection: "column", height: "100%" },
@@ -81,6 +79,7 @@ interface UserVariableEditorProps {
   setEditedVariable: (editedVariable: EditedVariable | null) => void;
   contextDataset: Dataset;
   expressionCapabilities: ExpressionCapabilities;
+  serverUrl: string;
 }
 
 export default function UserVariableEditor({
@@ -90,6 +89,7 @@ export default function UserVariableEditor({
   setEditedVariable,
   contextDataset,
   expressionCapabilities,
+  serverUrl,
 }: UserVariableEditorProps) {
   const [exprPartTypes, setExprPartTypes] = useState(exprPartTypesDefault);
   const [exprFilterAnchorEl, setExprFilterAnchorEl] =
@@ -108,10 +108,25 @@ export default function UserVariableEditor({
       ? i18n.get("Not a valid identifier")
       : null;
   const isNameOk = !nameProblem;
-  const expressionProblem = validateExpression(expression);
+  const [expressionProblem, setExpressionProblem] = useState<string | null>(
+    null,
+  );
   const isExpressionOk = !expressionProblem;
   const canCommit = isNameOk && isExpressionOk;
   const handleInsertPartRef = useRef<null | ((part: string) => void)>(null);
+  useEffect(() => {
+    // Debounce expression changes
+    const timerId = setTimeout(() => {
+      validateExpression(
+        serverUrl,
+        contextDataset.id,
+        editedVariable.variable.expression,
+      ).then(setExpressionProblem);
+    }, 500); // 500ms delay
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [serverUrl, contextDataset.id, editedVariable.variable.expression]);
 
   const changeVariableKey = (key: keyof UserVariable, value: string) => {
     setEditedVariable({

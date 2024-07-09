@@ -22,37 +22,29 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { callApi } from "./callApi";
+import { encodeDatasetId } from "@/model/encode";
+import i18n from "@/i18n";
 
-import { AppState } from "@/states/appState";
-import { updateDatasetUserVariables } from "@/actions/dataActions";
-import { closeDialog } from "@/actions/controlActions";
-import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
-import {
-  selectedDatasetSelector,
-  selectedServerSelector,
-  selectedUserVariablesSelector,
-} from "@/selectors/controlSelectors";
-import { expressionCapabilitiesSelector } from "@/selectors/dataSelectors";
-import _UserVariablesDialog from "@/components/UserVariablesDialog";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    open: state.controlState.dialogOpen[USER_VARIABLES_DIALOG_ID],
-    selectedDataset: selectedDatasetSelector(state),
-    userVariables: selectedUserVariablesSelector(state),
-    expressionCapabilities: expressionCapabilitiesSelector(state),
-    serverUrl: selectedServerSelector(state).url,
-  };
-};
-
-const mapDispatchToProps = {
-  closeDialog,
-  updateDatasetUserVariables,
-};
-
-const UserVariablesDialog = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_UserVariablesDialog);
-export default UserVariablesDialog;
+export async function validateExpression(
+  apiServerUrl: string,
+  datasetId: string,
+  expression: string,
+): Promise<string | null> {
+  if (expression!.trim() === "") {
+    return i18n.get("Must not be empty");
+  }
+  const url = `${apiServerUrl}/expressions/validate/${encodeDatasetId(datasetId)}/${encodeURIComponent(expression)}`;
+  try {
+    await callApi(url);
+    return null;
+  } catch (e) {
+    const message = (e as Error).message;
+    if (message) {
+      const i1 = message.indexOf("(");
+      const i2 = message.lastIndexOf(")");
+      return message.slice(i1 >= 0 ? i1 + 1 : 0, i2 >= 0 ? i2 : message.length);
+    }
+    return i18n.get("Invalid expression");
+  }
+}

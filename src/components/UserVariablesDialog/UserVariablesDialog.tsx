@@ -58,6 +58,7 @@ interface UserVariablesDialogProps {
     userVariables: UserVariable[],
   ) => void;
   expressionCapabilities: ExpressionCapabilities | null;
+  serverUrl: string;
 }
 
 export default function UserVariablesDialog({
@@ -67,6 +68,7 @@ export default function UserVariablesDialog({
   userVariables,
   updateDatasetUserVariables,
   expressionCapabilities,
+  serverUrl,
 }: UserVariablesDialogProps) {
   const [localUserVariables, setLocalUserVariables] =
     useState<UserVariable[]>(userVariables);
@@ -117,6 +119,7 @@ export default function UserVariablesDialog({
             setEditedVariable={setEditedVariable}
             contextDataset={selectedDataset}
             expressionCapabilities={expressionCapabilities}
+            serverUrl={serverUrl}
           />
         )}
       </DialogContent>
