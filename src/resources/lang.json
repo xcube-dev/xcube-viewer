@@ -912,7 +912,7 @@
     },
     {
       "en": "Please note that the 3D volume rendering is still an experimental feature.",
-      "de": "Bitte beachten Sie, dass das 3D-Volumen-Rendering noch eine experimentelle Funktion ist.",
+      "de": "Bitte beachte, dass das 3D-Volumen-Rendering noch eine experimentelle Funktion ist.",
       "se": "Observera att 3D-volymrendering fortfarande är en experimentell funktion."
     },
     {
@@ -962,7 +962,7 @@
     },
     {
       "en": "No time-series have been obtained yet. Select a variable and a place first.",
-      "de": "Es wurden noch keine Zeitreihen abgerufen. Wählen Sie zuerst eine Variable und einen Ort aus.",
+      "de": "Es wurden noch keine Zeitreihen abgerufen. Wähle zuerst eine Variable und einen Ort aus.",
       "se": "Inga tidsserier har hämtats ännu. Välj först en variabel och en plats."
     },
     {

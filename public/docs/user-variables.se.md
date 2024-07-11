@@ -21,9 +21,10 @@ Uttrycket kan referera till följande namn:
 
 De flesta av Pythons numeriska och logiska operatorer stöds, men de logiska 
 operatorerna `and`, `or` och `not` kan inte användas med arrayvariabler eftersom 
-de kräver booleska värden som operander. Använd istället bitvisa operatorer `&`, `|`, `~` eller motsvarande funktioner `logical_and()`, `logical_or()` och 
-`logical_not()`. Python inbyggda funktioner som `min()` och `max()` stöds 
-inte, använd istället `fmin()` och `fmax()`.
+de kräver booleska värden som operander. Använd istället bitvisa operatorer `&`, `|`, `~` 
+eller motsvarande funktioner `logical_and()`, `logical_or()` och `logical_not()`. 
+Python inbyggda funktioner som `min()` och `max()` stöds inte, använd istället `fmin()` 
+och `fmax()`.
 
 Exempel på uttryck:
 
