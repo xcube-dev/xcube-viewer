@@ -1,6 +1,6 @@
 A _user variable_ is a variable that is defined by a _name_, _title_, _units_, 
 and by an algebraic _expression_ that is used to compute the variable's array 
-data. User variables are added the currently selected dataset and their
+data. User variables are added to the currently selected dataset and their
 expressions are evaluated in the context of the selected dataset.
 
 **Name**: A name that is unique within the selected dataset's variables.
@@ -34,4 +34,7 @@ Expression examples:
 - Sentinel-2 vegetation index or NDVI: `(B08 - B04) / (B08 + B04)`
 - Sentinel-2 moisture index: `(B8A - B11) / (B8A + B11)`
 
-¹
+Invalid expressions return an error message.
+
+CTRL+SPACE: activates the autocomplete feature, which lists 
+available Python functions and constants

@@ -1046,6 +1046,11 @@
       "se": "Användarvariabler"
     },
     {
+      "en": "Create and manage user variables",
+      "de": "Nutzer-Variablen erstellen und verwalten",
+      "se": "Skapa och hantera användarvariabler"
+    },
+    {
       "en": "Manage user variables",
       "de": "Nutzer-Variablen verwalten",
       "se": "Hantera användarvariabler"
@@ -1074,6 +1079,11 @@
       "en": "Use keys CTRL+SPACE to show autocompletions",
       "de": "Tasten STRG+LEER benutzen, um Autovervollständigungen zu zeigen",
       "se": "Använd tangenterna CTRL+MELLANSLAG för att visa autoslutföranden"
+    },
+    {
+      "en": "Display further elements to be used in expressions",
+      "de": "Weitere Elemente anzeigen, die in Ausdrücken verwendet werden können",
+      "se": "Visa fler element som kan användas i uttryck"
     },
     {
       "en": "Variables",
@@ -1134,6 +1144,11 @@
       "en": "docs/color-mappings.en.md",
       "de": "docs/color-mappings.de.md",
       "se": "docs/color-mappings.se.md"
+    },
+    {
+      "en": "docs/user-variables.en.md",
+      "de": "docs/user-variables.de.md",
+      "se": "docs/user-variables.se.md"
     }
   ]
 }

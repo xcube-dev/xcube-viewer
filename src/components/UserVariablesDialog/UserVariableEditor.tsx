@@ -52,6 +52,7 @@ import { EditedVariable, exprPartKeys, exprPartTypesDefault } from "./utils";
 import HeaderBar from "./HeaderBar";
 import ExprEditor from "./ExprEditor";
 import { validateExpression } from "@/api/validateExpression";
+import { Tooltip } from "@mui/material";
 
 const styles = makeStyles({
   container: { display: "flex", flexDirection: "column", height: "100%" },
@@ -185,7 +186,12 @@ export default function UserVariableEditor({
 
   const exprPartChips: ReactElement[] = [
     <IconButton key="filter" size="small" onClick={handleExprFilterMenuOpen}>
-      <FilterListIcon />
+      <Tooltip
+        arrow
+        title={i18n.get("Display further elements to be used in expressions")}
+      >
+        <FilterListIcon />
+      </Tooltip>
     </IconButton>,
   ];
   exprPartKeys.forEach((partType) => {
