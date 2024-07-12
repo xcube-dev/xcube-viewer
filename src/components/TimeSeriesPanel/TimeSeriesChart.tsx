@@ -142,7 +142,6 @@ export default function TimeSeriesChart({
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
 }: TimeSeriesChartProps) {
-  // TODO: check if using MUI useTheme is still ok
   const theme = useTheme();
 
   const [zoomMode, setZoomMode] = useState(false);
@@ -222,19 +221,20 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleClick = (
-    chartState: CategoricalChartState | CategoricalChartState_Fixed,
-  ) => {
-    removeZoomRectangle();
-    if (
-      chartState &&
-      selectTime &&
-      isNumber(chartState.activeLabel) &&
-      Number.isFinite(chartState.activeLabel)
-    ) {
-      selectTime(chartState.activeLabel);
-    }
-  };
+  // const handleClick = (
+  //   chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  // ) => {
+  //   console.log("Click!", chartState);
+  //   removeZoomRectangle();
+  //   if (
+  //     chartState &&
+  //     selectTime &&
+  //     isNumber(chartState.activeLabel) &&
+  //     Number.isFinite(chartState.activeLabel)
+  //   ) {
+  //     selectTime(chartState.activeLabel);
+  //   }
+  // };
 
   const handleMouseDown = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
@@ -283,8 +283,27 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleMouseUp = () => {
-    zoomIn();
+  const handleMouseUp = (
+    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  ) => {
+    const [selectedXRange1, selectedYRange1] =
+      normalizeZoomRectangle(zoomRectangle);
+
+    removeZoomRectangle();
+
+    if (selectedXRange1 && selectedXRange1[0] < selectedXRange1[1]) {
+      if (selectedYRange1) {
+        selectTimeRange(selectedXRange1, timeSeriesGroup.id, selectedYRange1);
+      } else {
+        selectTimeRange(selectedXRange1, timeSeriesGroup.id, null);
+      }
+    } else if (
+      chartState &&
+      isNumber(chartState.activeLabel) &&
+      Number.isFinite(chartState.activeLabel)
+    ) {
+      selectTime(chartState.activeLabel);
+    }
   };
 
   const handleMouseEnter = () => {
@@ -297,20 +316,6 @@ export default function TimeSeriesChart({
 
   const handleRemoveTimeSeriesClick = (index: number) => {
     removeTimeSeries!(timeSeriesGroup.id, index);
-  };
-
-  const zoomIn = () => {
-    const [selectedXRange, selectedYRange] =
-      normalizeZoomRectangle(zoomRectangle);
-    if (selectedXRange && selectedXRange[0] < selectedXRange[1]) {
-      if (selectedYRange) {
-        selectTimeRange(selectedXRange, timeSeriesGroup.id, selectedYRange);
-      } else {
-        selectTimeRange(selectedXRange, timeSeriesGroup.id, null);
-      }
-    } else {
-      removeZoomRectangle();
-    }
   };
 
   const resetZoom = () => {
@@ -437,7 +442,7 @@ export default function TimeSeriesChart({
           onMouseUp={handleMouseUp}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
+          // onClick={handleClick}
           syncId="anyId"
           style={{ color: labelTextColor, fontSize: "0.8em" }}
           data={data}

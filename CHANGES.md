@@ -10,6 +10,9 @@
 
 ### Fixes
 
+* Fixed a problem where a date in the time-series chart could not be selected
+  if clicked next to a data point. (#381)
+
 * Fixed a problem with the setting that determines panning/zooming behaviour 
   after selecting a dataset or a place. The setting value "Do nothing" 
   still panned to the dataset center. (#379)
