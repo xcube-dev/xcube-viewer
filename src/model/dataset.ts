@@ -62,6 +62,8 @@ export interface RgbSchema {
 export interface Dataset {
   id: string;
   title: string;
+  groupTitle?: string;
+  tags?: string[];
   bbox: [number, number, number, number];
   geometry: {
     type: "Polygon";

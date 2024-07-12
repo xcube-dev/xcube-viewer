@@ -6,6 +6,9 @@
   band-math expressions. The variables are defined for a given
   dataset and are persisted in the browser's local storage. (#371)
 
+* The datasets in the dataset selector are now sorted by name and may
+  also be grouped if configured so in xcube server. (#385)
+
 * Made the right sidebar panel's tab bar position sticky. (#373)
 
 ### Fixes
