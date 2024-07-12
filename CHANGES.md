@@ -6,6 +6,10 @@
 
 ## Changes in version 1.2.2 (in development)
 
+* Fixed a bug in the statistics panel which caused the app to crashed 
+  (screen turned white). It reproducibly occurred when first computing 
+  statistics for a point and then for a polygon. (#376)
+
 * Made the right sidebar panel's tab bar position sticky. (#373)
 
 ## Changes in version 1.2.1
