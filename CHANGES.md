@@ -1,14 +1,22 @@
 ## Changes in version 1.3.0 (in development)
 
+### Enhancements
+
 * Users can now define their own variables computed from arbitrary
   band-math expressions. The variables are defined for a given
   dataset and are persisted in the browser's local storage. (#371)
 
+* Made the right sidebar panel's tab bar position sticky. (#373)
+
+### Fixes
+
+* Fixed a problem with the setting that determines panning/zooming behaviour 
+  after selecting a dataset or a place. The setting value "Do nothing" 
+  still panned to the dataset center. (#379)
+
 * Fixed a bug in the statistics panel which caused the app to crashed 
   (screen turned white). It reproducibly occurred when first computing 
   statistics for a point and then for a polygon. (#376)
-
-* Made the right sidebar panel's tab bar position sticky. (#373)
 
 ## Changes in version 1.2.1
 
