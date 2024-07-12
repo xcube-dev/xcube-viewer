@@ -33,6 +33,7 @@ import {
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
+import { Tooltip } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
@@ -185,7 +186,12 @@ export default function UserVariableEditor({
 
   const exprPartChips: ReactElement[] = [
     <IconButton key="filter" size="small" onClick={handleExprFilterMenuOpen}>
-      <FilterListIcon />
+      <Tooltip
+        arrow
+        title={i18n.get("Display further elements to be used in expressions")}
+      >
+        <FilterListIcon />
+      </Tooltip>
     </IconButton>,
   ];
   exprPartKeys.forEach((partType) => {
