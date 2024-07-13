@@ -68,7 +68,8 @@ export default function ColorBarLegendCategorical({
           sx={styles.itemContainer}
         >
           <Box
-            sx={{ ...styles.itemColorBox, backgroundColor: category.color }}
+            sx={styles.itemColorBox}
+            style={{ backgroundColor: category.color }}
           />
           <Box component="span" sx={styles.itemLabelBox}>
             {`${category.label || `Category ${index + 1}`} (${category.value})`}

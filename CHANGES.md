@@ -10,6 +10,9 @@
 
 ### Fixes
 
+* Fixed a problem that caused categorical map legends to list the categories
+  without their associated colors. (#387)
+
 * Fixed a problem where a date in the time-series chart could not be selected
   if clicked next to a data point. (#381)
 
