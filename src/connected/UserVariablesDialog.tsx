@@ -26,12 +26,13 @@ import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
 import { updateDatasetUserVariables } from "@/actions/dataActions";
-import { closeDialog } from "@/actions/controlActions";
+import { closeDialog, selectVariable } from "@/actions/controlActions";
 import { USER_VARIABLES_DIALOG_ID } from "@/components/UserVariablesDialog/utils";
 import {
   selectedDatasetSelector,
   selectedServerSelector,
   selectedUserVariablesSelector,
+  selectedVariableNameSelector,
 } from "@/selectors/controlSelectors";
 import { expressionCapabilitiesSelector } from "@/selectors/dataSelectors";
 import _UserVariablesDialog from "@/components/UserVariablesDialog";
@@ -40,6 +41,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     open: state.controlState.dialogOpen[USER_VARIABLES_DIALOG_ID],
     selectedDataset: selectedDatasetSelector(state),
+    selectedVariableName: selectedVariableNameSelector(state),
     userVariables: selectedUserVariablesSelector(state),
     expressionCapabilities: expressionCapabilitiesSelector(state),
     serverUrl: selectedServerSelector(state).url,
@@ -48,6 +50,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {
   closeDialog,
+  selectVariable,
   updateDatasetUserVariables,
 };
 

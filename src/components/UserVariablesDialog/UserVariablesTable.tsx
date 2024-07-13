@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -37,7 +36,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 import i18n from "@/i18n";
-import { Dataset } from "@/model/dataset";
 import { copyUserVariable, EditedVariable, newUserVariable } from "./utils";
 import { UserVariable } from "@/model/userVariable";
 import HeaderBar from "./HeaderBar";
@@ -49,25 +47,25 @@ const styles = makeStyles({
 });
 
 interface UserVariablesTableProps {
-  setEditedVariable: (editedVariable: EditedVariable) => void;
   userVariables: UserVariable[];
   setUserVariables: (userVariables: UserVariable[]) => void;
-  contextDataset: Dataset;
+  selectedIndex: number;
+  setSelectedIndex: (selectedIndex: number) => void;
+  setEditedVariable: (editedVariable: EditedVariable) => void;
 }
 
 export default function UserVariablesTable({
-  setEditedVariable,
   userVariables,
   setUserVariables,
-  // contextDataset,
+  selectedIndex,
+  setSelectedIndex,
+  setEditedVariable,
 }: UserVariablesTableProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-
   const variable = selectedIndex >= 0 ? userVariables[selectedIndex] : null;
   const isSelected = selectedIndex >= 0;
 
   const handleSelectRow = (index: number) => {
-    setSelectedIndex(index);
+    setSelectedIndex(selectedIndex !== index ? index : -1);
   };
 
   const handleAddVariable = () => {

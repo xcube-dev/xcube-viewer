@@ -51,6 +51,8 @@ const styles = makeStyles({
 interface UserVariablesDialogProps {
   open: boolean;
   selectedDataset: Dataset | null;
+  selectedVariableName: string | null;
+  selectVariable: (variableName: string | null) => void;
   closeDialog: (dialogId: string) => void;
   userVariables: UserVariable[];
   updateDatasetUserVariables: (
@@ -65,6 +67,8 @@ export default function UserVariablesDialog({
   open,
   closeDialog,
   selectedDataset,
+  selectedVariableName,
+  selectVariable,
   userVariables,
   updateDatasetUserVariables,
   expressionCapabilities,
@@ -72,6 +76,9 @@ export default function UserVariablesDialog({
 }: UserVariablesDialogProps) {
   const [localUserVariables, setLocalUserVariables] =
     useState<UserVariable[]>(userVariables);
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    localUserVariables.findIndex((v) => v.name === selectedVariableName),
+  );
   const [editedVariable, setEditedVariable] = useState<EditedVariable | null>(
     null,
   );
@@ -87,6 +94,9 @@ export default function UserVariablesDialog({
   function handleConfirmDialog() {
     updateDatasetUserVariables(selectedDataset!.id, localUserVariables);
     closeDialog(USER_VARIABLES_DIALOG_ID);
+    if (selectedIndex >= 0) {
+      selectVariable(localUserVariables[selectedIndex].name);
+    }
   }
 
   function handleCancelDialog() {
@@ -108,7 +118,8 @@ export default function UserVariablesDialog({
           <UserVariablesTable
             userVariables={localUserVariables}
             setUserVariables={setLocalUserVariables}
-            contextDataset={selectedDataset}
+            selectedIndex={selectedIndex}
+            setSelectedIndex={setSelectedIndex}
             setEditedVariable={setEditedVariable}
           />
         ) : (
