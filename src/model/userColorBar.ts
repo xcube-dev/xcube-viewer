@@ -50,7 +50,8 @@ export interface UserColorBar {
    */
   code: string;
   /**
-   * Type of color mapping, discrete (= index or bounds) or continuous (=node).
+   * Type of color mapping, discrete (= "key" or "bounds") or
+   * continuous (= "node").
    */
   type: ColorMapType;
   /**
