@@ -38,10 +38,12 @@ const styles = makeStyles({
   label: { fontSize: "small" },
 });
 
-const tooltipTitles: [ColorMapType, string][] = [
-  ["node", "Values are nodes of a continuous color gradient"],
-  ["bound", "Values are bounds identifying individual colors"],
-  ["key", "Values are integer keys identifying individual colors"],
+// TODO: i18n for titles
+// TODO: adjust tooltips
+const typeLabels: [ColorMapType, string, string][] = [
+  ["node", "Contin.", "Values are nodes of a continuous color gradient"],
+  ["bound", "Stepwise", "Values are bounds identifying individual colors"],
+  ["key", "Categ.", "Values are integer keys identifying individual colors"],
 ];
 
 interface ColorMapTypeEditorProps {
@@ -62,14 +64,14 @@ export default function ColorMapTypeEditor({
       }}
       sx={styles.radioGroup}
     >
-      {tooltipTitles.map(([type, tooltipTitle]) => (
+      {typeLabels.map(([type, title, tooltipTitle]) => (
         <Tooltip key={type} arrow title={i18n.get(tooltipTitle)}>
           <FormControlLabel
             value={type}
             control={<Radio size="small" sx={styles.radio} />}
             label={
               <Box component="span" sx={styles.label}>
-                {i18n.get(toLabel(type))}
+                {i18n.get(title)}
               </Box>
             }
           />
@@ -77,8 +79,4 @@ export default function ColorMapTypeEditor({
       ))}
     </RadioGroup>
   );
-}
-
-function toLabel(type: string) {
-  return type[0].toUpperCase() + type.substring(1);
 }

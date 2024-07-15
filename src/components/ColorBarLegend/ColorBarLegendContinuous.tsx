@@ -32,7 +32,6 @@ import { ColorBar } from "@/model/colorBar";
 import { ColorBarNorm } from "@/model/variable";
 
 export interface ColorBarLegendContinuousProps {
-  variableTitle: string;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
   variableColorBarNorm: ColorBarNorm;
@@ -48,7 +47,6 @@ export interface ColorBarLegendContinuousProps {
 }
 
 export default function ColorBarLegendContinuous({
-  variableTitle,
   variableColorBarName,
   variableColorBarMinMax,
   variableColorBarNorm,
@@ -90,7 +88,6 @@ export default function ColorBarLegendContinuous({
         transformOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <ColorBarRangeEditor
-          variableTitle={variableTitle}
           variableColorBarName={variableColorBarName}
           variableColorBarMinMax={variableColorBarMinMax}
           variableColorBarNorm={variableColorBarNorm}

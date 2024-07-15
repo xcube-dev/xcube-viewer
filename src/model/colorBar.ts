@@ -24,6 +24,7 @@
 
 import bgImageData from "./bg.png";
 import { RGBA } from "@/util/color";
+import { ColorMapType } from "@/model/userColorBar";
 
 const BG_IMAGE = new Image();
 BG_IMAGE.src = bgImageData;
@@ -74,8 +75,13 @@ export interface ColorBar {
    */
   imageData?: string;
   /**
-   * Defined, if this color bar is a user-defined categorical color bar,
-   * that its `userColorBar.type` is "bound" or "key".
+   * Color map type. Defined, if this color bar is a
+   * custom color bar
+   */
+  type?: ColorMapType;
+  /**
+   * Color records. Defined, if this color bar is a
+   * custom color bar.
    */
   categories?: HexColorRecord[];
 }

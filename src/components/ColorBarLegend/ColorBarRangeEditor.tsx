@@ -22,13 +22,18 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Switch from "@mui/material/Switch";
 
+import i18n from "@/i18n";
 import { ColorBarNorm } from "@/model/variable";
-import ColorBarRangeSlider from "./ColorBarRangeSlider";
 import { makeStyles } from "@/util/styles";
+import ColorBarRangeSlider from "./ColorBarRangeSlider";
+import { FormControlLabel } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 
 const HOR_SLIDER_MARGIN = 5;
 
@@ -37,6 +42,10 @@ const styles = makeStyles({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   }),
+  header: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
   sliderBox: (theme) => ({
     marginTop: theme.spacing(1),
     marginLeft: theme.spacing(HOR_SLIDER_MARGIN),
@@ -59,7 +68,6 @@ const styles = makeStyles({
 });
 
 interface ColorBarRangeEditorProps {
-  variableTitle: string;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
   variableColorBarNorm: ColorBarNorm;
@@ -73,7 +81,6 @@ interface ColorBarRangeEditorProps {
 }
 
 export default function ColorBarRangeEditor({
-  variableTitle,
   variableColorBarName,
   variableColorBarMinMax,
   variableColorBarNorm,
@@ -147,9 +154,40 @@ export default function ColorBarRangeEditor({
     setEnteredMinMaxError([enteredMinMaxError[0], error]);
   };
 
+  const handleColorBarNorm = (
+    _event: ChangeEvent<HTMLInputElement>,
+    value: boolean,
+  ) => {
+    updateVariableColorBar(
+      variableColorBarName,
+      variableColorBarMinMax,
+      value ? "log" : "lin",
+      variableOpacity,
+    );
+  };
+
   return (
     <Box sx={styles.colorBarMinMaxEditor}>
-      <span style={{ paddingLeft: 14 }}>{variableTitle}</span>
+      <Box sx={styles.header}>
+        <Typography style={{ paddingLeft: 14, fontWeight: "bold" }}>
+          {i18n.get("Scale value-range")}
+        </Typography>
+        <span style={{ flexGrow: 1 }} />
+        <FormControlLabel
+          sx={{ margin: 0 }}
+          control={
+            <Tooltip title={i18n.get("Logarithmic scaling")}>
+              <Switch
+                value={variableColorBarNorm === "log"}
+                onChange={handleColorBarNorm}
+                size="small"
+              />
+            </Tooltip>
+          }
+          label={i18n.get("Log")}
+          labelPlacement="start"
+        />
+      </Box>
       <Box sx={styles.sliderBox}>
         <ColorBarRangeSlider
           variableColorBarName={variableColorBarName}

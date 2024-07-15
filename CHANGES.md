@@ -6,6 +6,15 @@
   band-math expressions. The variables are defined for a given
   dataset and are persisted in the browser's local storage. (#371)
 
+* Revised map color mapping for simplicity and clarity:
+  - Removed the color mapping normalisation modes. Instead introduced
+    a "Log" switch in the value-range popup. The normalisation mode
+    "CAT" (categorical) is no longer required.
+  - Renamed the user color mapping types "Node", "Bound", "Key" into
+    "Cont." (continuous), "Stepwise", and "Categ." (categorical).
+  - The color legend is now showing the variable's UI title instead of the
+    variable identifier name.
+
 * Made the right sidebar panel's tab bar position sticky. (#373)
 
 ### Fixes
