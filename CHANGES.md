@@ -16,6 +16,10 @@
   - The color legend is now showing the variable's UI title instead of the
     variable identifier name. 
 
+* The datasets in the dataset selector are now sorted by name and may
+  also be grouped if configured so in xcube server. (#385)
+
+
 * Made the right sidebar panel's tab bar position sticky. (#373)
 
 ### Fixes
