@@ -6,9 +6,6 @@
   band-math expressions. The variables are defined for a given
   dataset and are persisted in the browser's local storage. (#371)
 
-* The datasets in the dataset selector are now sorted by name and may
-  also be grouped if configured so in xcube server. (#385)
-
 * Revised map color mapping for simplicity and clarity. (#390)
   This comprises the following changes:
   - Removed the color mapping normalisation modes. Instead introduced
@@ -18,6 +15,10 @@
     "Cont." (continuous), "Stepwise", and "Categ." (categorical).
   - The color legend is now showing the variable's UI title instead of the
     variable identifier name. 
+
+* The datasets in the dataset selector are now sorted by name and may
+  also be grouped if configured so in xcube server. (#385)
+
 
 * Made the right sidebar panel's tab bar position sticky. (#373)
 
