@@ -329,8 +329,8 @@ const getVariableColorBar = (
   );
   if (userColorBar) {
     const type = userColorBar.type;
-    const categories = getUserColorBarHexRecords(userColorBar.code);
-    return { ...colorBar, imageData, type, categories };
+    const colorRecords = getUserColorBarHexRecords(userColorBar.code);
+    return { ...colorBar, imageData, type, colorRecords };
   }
   return { ...colorBar, imageData };
 };

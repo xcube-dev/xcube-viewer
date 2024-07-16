@@ -38,12 +38,14 @@ const styles = makeStyles({
   label: { fontSize: "small" },
 });
 
-// TODO: i18n for titles
-// TODO: adjust tooltips
 const typeLabels: [ColorMapType, string, string][] = [
-  ["node", "Contin.", "Values are nodes of a continuous color gradient"],
-  ["bound", "Stepwise", "Values are bounds identifying individual colors"],
-  ["key", "Categ.", "Values are integer keys identifying individual colors"],
+  ["node", "Contin.", "Continuous color mapping where values are nodes"],
+  [
+    "bound",
+    "Stepwise",
+    "Stepwise color mapping where values are bounds of ranges",
+  ],
+  ["key", "Categ.", "Values and their colors represent categories/classes"],
 ];
 
 interface ColorMapTypeEditorProps {

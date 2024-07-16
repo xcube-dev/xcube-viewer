@@ -25,16 +25,16 @@
 import { MouseEvent, useState } from "react";
 import Popover from "@mui/material/Popover";
 
-import ColorBarCanvas from "./ColorBarCanvas";
-import ColorBarRangeEditor from "./ColorBarRangeEditor";
-import ColorBarLabels from "./ColorBarLabels";
 import { ColorBar } from "@/model/colorBar";
 import { ColorBarNorm } from "@/model/variable";
+import ColorBarCanvas from "./ColorBarCanvas";
+import ColorBarLabels from "./ColorBarLabels";
+import ColorBarRangeEditor from "./ColorBarRangeEditor";
 
-export interface ColorBarLegendContinuousProps {
+export interface ColorBarLegendScalableProps {
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
-  variableColorBarNorm: ColorBarNorm;
+  variableColorBarNorm: ColorBarNorm; // will be "lin" or "log"
   variableColorBar: ColorBar;
   variableOpacity: number;
   updateVariableColorBar: (
@@ -46,7 +46,7 @@ export interface ColorBarLegendContinuousProps {
   onOpenColorBarEditor: () => void;
 }
 
-export default function ColorBarLegendContinuous({
+export default function ColorBarLegendScalable({
   variableColorBarName,
   variableColorBarMinMax,
   variableColorBarNorm,
@@ -54,7 +54,7 @@ export default function ColorBarLegendContinuous({
   variableOpacity,
   updateVariableColorBar,
   onOpenColorBarEditor,
-}: ColorBarLegendContinuousProps) {
+}: ColorBarLegendScalableProps) {
   const [colorBarRangeEditorAnchorEl, setColorBarRangeEditorAnchorEl] =
     useState<HTMLDivElement | null>(null);
 

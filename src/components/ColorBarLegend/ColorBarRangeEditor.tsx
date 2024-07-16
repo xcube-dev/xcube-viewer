@@ -23,29 +23,33 @@
  */
 
 import React, { ChangeEvent, useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 
 import i18n from "@/i18n";
 import { ColorBarNorm } from "@/model/variable";
 import { makeStyles } from "@/util/styles";
 import ColorBarRangeSlider from "./ColorBarRangeSlider";
-import { FormControlLabel } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
 
 const HOR_SLIDER_MARGIN = 5;
 
 const styles = makeStyles({
-  colorBarMinMaxEditor: (theme) => ({
+  container: (theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    gap: 1,
   }),
   header: {
     display: "flex",
     justifyContent: "space-between",
   },
+  title: { paddingLeft: 2, fontWeight: "bold" },
   sliderBox: (theme) => ({
     marginTop: theme.spacing(1),
     marginLeft: theme.spacing(HOR_SLIDER_MARGIN),
@@ -53,17 +57,18 @@ const styles = makeStyles({
     minWidth: 320,
     width: `calc(100% - ${theme.spacing(2 * (HOR_SLIDER_MARGIN + 1))}px)`,
   }),
+  logLabel: { margin: 0, paddingRight: 2, fontWeight: "bold" },
   minMaxBox: {
     display: "flex",
     justifyContent: "center",
   },
   minTextField: {
     maxWidth: "8em",
-    paddingRight: 2,
+    marginRight: 2,
   },
   maxTextField: {
     maxWidth: "8em",
-    paddingLeft: 2,
+    marginLeft: 2,
   },
 });
 
@@ -167,24 +172,24 @@ export default function ColorBarRangeEditor({
   };
 
   return (
-    <Box sx={styles.colorBarMinMaxEditor}>
+    <Box sx={styles.container}>
       <Box sx={styles.header}>
-        <Typography style={{ paddingLeft: 14, fontWeight: "bold" }}>
-          {i18n.get("Scale value-range")}
-        </Typography>
+        <Typography sx={styles.title}>{i18n.get("Value Range")}</Typography>
         <span style={{ flexGrow: 1 }} />
         <FormControlLabel
-          sx={{ margin: 0 }}
+          sx={styles.logLabel}
           control={
             <Tooltip title={i18n.get("Logarithmic scaling")}>
               <Switch
-                value={variableColorBarNorm === "log"}
+                checked={variableColorBarNorm === "log"}
                 onChange={handleColorBarNorm}
                 size="small"
               />
             </Tooltip>
           }
-          label={i18n.get("Log")}
+          label={
+            <Typography variant="body2">{i18n.get("Log-scaled")}</Typography>
+          }
           labelPlacement="start"
         />
       </Box>

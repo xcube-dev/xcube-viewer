@@ -83,7 +83,7 @@ export interface ColorBar {
    * Color records. Defined, if this color bar is a
    * custom color bar.
    */
-  categories?: HexColorRecord[];
+  colorRecords?: HexColorRecord[];
 }
 
 export function parseColorBarName(name: string): ColorBar {

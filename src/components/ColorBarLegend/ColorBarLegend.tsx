@@ -31,7 +31,7 @@ import { ColorBar, ColorBars } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
 import { ColorBarNorm } from "@/model/variable";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
-import ColorBarLegendContinuous from "./ColorBarLegendContinuous";
+import ColorBarLegendScalable from "./ColorBarLegendScalable";
 import ColorBarColorEditor from "./ColorBarColorEditor";
 
 const styles = makeStyles({
@@ -109,14 +109,14 @@ export default function ColorBarLegend(
       <Box sx={styles.title}>
         <span>{variableTitleWithUnits}</span>
       </Box>
-      {variableColorBar.type === "key" && variableColorBar.categories ? (
+      {variableColorBar.type === "key" ? (
         <ColorBarLegendCategorical
-          variableColorBarCategories={variableColorBar.categories}
+          categories={variableColorBar.colorRecords!}
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />
       ) : (
-        <ColorBarLegendContinuous
+        <ColorBarLegendScalable
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />
