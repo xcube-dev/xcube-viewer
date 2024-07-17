@@ -22,21 +22,23 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
+import { useState, MouseEvent } from "react";
+import { SxProps } from "@mui/system";
 import Input from "@mui/material/Input";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { SxProps } from "@mui/system";
 import EditIcon from "@mui/icons-material/Edit";
+import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 import i18n from "@/i18n";
 import { Dataset } from "@/model/dataset";
-import { Place, USER_ID_PREFIX } from "@/model/place";
+import { Place, PlaceInfo, PlaceStyle, USER_ID_PREFIX } from "@/model/place";
 import { WithLocale } from "@/util/lang";
 import EditableSelect from "./EditableSelect";
 import ToolButton from "./ToolButton";
+import PlaceStyleEditor from "@/components/PlaceStyleEditor";
 
 // noinspection JSUnusedLocalSymbols
 const styles: Record<string, SxProps> = {
@@ -49,6 +51,7 @@ interface PlaceSelectProps extends WithLocale {
   datasets: Dataset[];
   selectedPlaceGroupIds: string[] | null;
   selectedPlaceId: string | null;
+  selectedPlaceInfo: PlaceInfo | null;
   places: Place[];
   placeLabels: string[];
   selectPlace: (
@@ -60,6 +63,11 @@ interface PlaceSelectProps extends WithLocale {
     placeGroupId: string,
     placeId: string,
     placeName: string,
+  ) => void;
+  restyleUserPlace: (
+    placeGroupId: string,
+    placeId: string,
+    placeStyle: PlaceStyle,
   ) => void;
   removeUserPlace: (
     placeGroupId: string,
@@ -75,17 +83,22 @@ export default function PlaceSelect({
   placeLabels,
   selectedPlaceId,
   selectedPlaceGroupIds,
+  selectedPlaceInfo,
   renameUserPlace,
+  restyleUserPlace,
   removeUserPlace,
   places,
   locateSelectedPlace,
 }: PlaceSelectProps) {
-  const [editMode, setEditMode] = React.useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [styleAnchorEl, setStyleAnchorEl] = useState<HTMLElement | null>(null);
 
   places = places || [];
   placeLabels = placeLabels || [];
   selectedPlaceId = selectedPlaceId || "";
   selectedPlaceGroupIds = selectedPlaceGroupIds || [];
+
+  console.log("selectedPlaceInfo:", selectedPlaceInfo);
 
   const selectedPlaceGroupId =
     selectedPlaceGroupIds!.length === 1 ? selectedPlaceGroupIds![0] : null;
@@ -95,6 +108,10 @@ export default function PlaceSelect({
 
   const setPlaceName = (placeName: string) => {
     renameUserPlace(selectedPlaceGroupId!, selectedPlaceId!, placeName);
+  };
+
+  const updatePlaceStyle = (placeStyle: PlaceStyle) => {
+    restyleUserPlace(selectedPlaceGroupId!, selectedPlaceId!, placeStyle);
   };
 
   const handlePlaceChange = (event: SelectChangeEvent) => {
@@ -135,6 +152,10 @@ export default function PlaceSelect({
       setEditMode(true);
     };
 
+    const handleStyleButtonClick = (event: MouseEvent<HTMLElement>) => {
+      setStyleAnchorEl(event.currentTarget);
+    };
+
     const handleRemoveButtonClick = () => {
       removeUserPlace(selectedPlaceGroupId!, selectedPlaceId!, places);
     };
@@ -145,6 +166,12 @@ export default function PlaceSelect({
         onClick={handleEditButtonClick}
         tooltipText={i18n.get("Rename place")}
         icon={<EditIcon />}
+      />,
+      <ToolButton
+        key="styleButton"
+        onClick={handleStyleButtonClick}
+        tooltipText={i18n.get("Style place")}
+        icon={<FormatColorFillIcon />}
       />,
       <ToolButton
         key="removeButton"
@@ -162,15 +189,25 @@ export default function PlaceSelect({
   }
 
   return (
-    <EditableSelect
-      itemValue={placeName}
-      setItemValue={setPlaceName}
-      validateItemValue={(v) => v.trim().length > 0}
-      editMode={editMode}
-      setEditMode={setEditMode}
-      labelText={i18n.get("Place")}
-      select={select}
-      actions={actions}
-    />
+    <>
+      <EditableSelect
+        itemValue={placeName}
+        setItemValue={setPlaceName}
+        validateItemValue={(v) => v.trim().length > 0}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        labelText={i18n.get("Place")}
+        select={select}
+        actions={actions}
+      />
+      {selectedPlaceInfo && (
+        <PlaceStyleEditor
+          anchorEl={styleAnchorEl}
+          setAnchorEl={setStyleAnchorEl}
+          placeStyle={selectedPlaceInfo}
+          updatePlaceStyle={updatePlaceStyle}
+        />
+      )}
+    </>
   );
 }

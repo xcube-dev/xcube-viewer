@@ -30,6 +30,7 @@ import { Config } from "@/config";
 import { PlaceGroup, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 import { Vector } from "./ol/layer/Vector";
 import { setFeatureStyle } from "./ol/style";
+import { isNumber } from "@/util/types";
 
 interface UserVectorLayerProps {
   placeGroup: PlaceGroup;
@@ -69,13 +70,16 @@ const UserVectorLayer: React.FC<UserVectorLayerProps> = ({
           feature.setId(place.id);
         }
         const color = (place.properties || {}).color || "red";
+        const opacity = (place.properties || {}).opacity;
         const pointSymbol = (place.properties || {}).source
           ? "diamond"
           : "circle";
         setFeatureStyle(
           feature,
           color,
-          Config.instance.branding.polygonFillOpacity,
+          isNumber(opacity)
+            ? opacity
+            : Config.instance.branding.polygonFillOpacity,
           pointSymbol,
         );
         source.addFeature(feature);

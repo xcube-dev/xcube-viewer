@@ -1089,7 +1089,7 @@ export function getTileUrl(
 }
 
 export function getDefaultFillOpacity() {
-  return Config.instance.branding.polygonFillOpacity || 0.25;
+  return Config.instance.branding.polygonFillOpacity || 0.2;
 }
 
 export function getDefaultStyleImage() {

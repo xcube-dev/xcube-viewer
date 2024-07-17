@@ -48,12 +48,13 @@ import {
   ADD_STATISTICS,
   UPDATE_DATASET_USER_VARIABLES,
   UPDATE_EXPRESSION_CAPABILITIES,
+  RESTYLE_USER_PLACE,
 } from "@/actions/dataActions";
 import { SELECT_TIME_RANGE, SelectTimeRange } from "@/actions/controlActions";
 import i18n from "@/i18n";
 import { newId } from "@/util/id";
 import { Variable } from "@/model/variable";
-import { Place, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
+import { Place, PlaceGroup, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 import { TimeSeries, TimeSeriesGroup } from "@/model/timeSeries";
 import { getDatasetUserVariables } from "@/model/dataset";
 
@@ -211,35 +212,30 @@ export function dataReducer(
     case RENAME_USER_PLACE: {
       const { placeGroupId, placeId, newName } = action;
       const userPlaceGroups = state.userPlaceGroups;
-      const pgIndex = userPlaceGroups.findIndex((pg) => pg.id === placeGroupId);
-      if (pgIndex >= 0) {
-        const pg = userPlaceGroups[pgIndex];
-        const features = pg.features;
-        const pIndex = features.findIndex((p) => p.id === placeId);
-        if (pIndex >= 0) {
-          const p = features[pIndex];
-          return {
-            ...state,
-            userPlaceGroups: [
-              ...userPlaceGroups.slice(0, pgIndex),
-              {
-                ...pg,
-                features: [
-                  ...features.slice(0, pIndex),
-                  {
-                    ...p,
-                    properties: {
-                      ...p.properties,
-                      label: newName,
-                    },
-                  },
-                  ...features.slice(pIndex + 1),
-                ],
-              },
-              ...userPlaceGroups.slice(pgIndex + 1),
-            ],
-          };
-        }
+      const newUserPlaceGroups = updateUserPlaceGroup(
+        userPlaceGroups,
+        placeGroupId,
+        placeId,
+        {
+          label: newName,
+        },
+      );
+      if (newUserPlaceGroups) {
+        return { ...state, userPlaceGroups: newUserPlaceGroups };
+      }
+      return state;
+    }
+    case RESTYLE_USER_PLACE: {
+      const { placeGroupId, placeId, placeStyle } = action;
+      const userPlaceGroups = state.userPlaceGroups;
+      const newUserPlaceGroups = updateUserPlaceGroup(
+        userPlaceGroups,
+        placeGroupId,
+        placeId,
+        placeStyle,
+      );
+      if (newUserPlaceGroups) {
+        return { ...state, userPlaceGroups: newUserPlaceGroups };
       }
       return state;
     }
@@ -572,4 +568,39 @@ function getTimeSeriesArray(
     });
   });
   return timeSeriesArray;
+}
+
+function updateUserPlaceGroup(
+  userPlaceGroups: PlaceGroup[],
+  placeGroupId: string,
+  placeId: string,
+  placeProperties: Record<string, unknown>,
+) {
+  const pgIndex = userPlaceGroups.findIndex((pg) => pg.id === placeGroupId);
+  if (pgIndex >= 0) {
+    const pg = userPlaceGroups[pgIndex];
+    const features = pg.features;
+    const pIndex = features.findIndex((p) => p.id === placeId);
+    if (pIndex >= 0) {
+      const p = features[pIndex];
+      return [
+        ...userPlaceGroups.slice(0, pgIndex),
+        {
+          ...pg,
+          features: [
+            ...features.slice(0, pIndex),
+            {
+              ...p,
+              properties: {
+                ...p.properties,
+                ...placeProperties,
+              },
+            },
+            ...features.slice(pIndex + 1),
+          ],
+        },
+        ...userPlaceGroups.slice(pgIndex + 1),
+      ];
+    }
+  }
 }

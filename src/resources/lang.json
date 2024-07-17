@@ -281,6 +281,11 @@
       "se": "Omvänt"
     },
     {
+      "en": "Color",
+      "de": "Farbe",
+      "se": "Färg"
+    },
+    {
       "en": "Opacity",
       "de": "Opazität",
       "se": "Opacitet"

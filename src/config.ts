@@ -24,6 +24,7 @@
 
 import { Color, PaletteMode } from "@mui/material";
 import {
+  blue,
   brown,
   cyan,
   green,
@@ -34,6 +35,7 @@ import {
   pink,
   purple,
   red,
+  teal,
   yellow,
 } from "@mui/material/colors";
 
@@ -244,9 +246,10 @@ interface TileAccess {
 }
 
 // Array of user place colors in stable order (see #153)
-const userPlaceColorsArray: [string, Color][] = [
+export const userPlaceColorsArray: [string, Color][] = [
   ["red", red],
   ["yellow", yellow],
+  ["blue", blue],
   ["pink", pink],
   ["lightBlue", lightBlue],
   ["green", green],
@@ -256,6 +259,7 @@ const userPlaceColorsArray: [string, Color][] = [
   ["indigo", indigo],
   ["cyan", cyan],
   ["brown", brown],
+  ["teal", teal],
 ];
 
 const userPlaceColors: { [name: string]: Color } = (() => {

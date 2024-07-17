@@ -56,13 +56,20 @@ export interface PlaceGroup extends GeoJSON.FeatureCollection {
 }
 
 /**
+ * Style part of PlaceInfo
+ */
+export interface PlaceStyle {
+  color: string;
+  opacity: number;
+}
+
+/**
  * Computed place information.
  */
-export interface PlaceInfo {
+export interface PlaceInfo extends PlaceStyle {
   placeGroup: PlaceGroup;
   place: Place;
   label: string;
-  color: string;
   image: string | null;
   description: string | null;
 }
@@ -101,6 +108,7 @@ export const DEFAULT_DESCRIPTION_PROPERTY_NAMES = mkCases([
   "comment",
 ]);
 export const DEFAULT_COLOR_PROPERTY_NAMES = mkCases(["color"]);
+export const DEFAULT_OPACITY_PROPERTY_NAMES = mkCases(["opacity"]);
 export const DEFAULT_IMAGE_PROPERTY_NAMES = mkCases([
   "image",
   "img",
@@ -128,6 +136,14 @@ export function computePlaceInfo(
     "color",
     getUserPlaceColorName(getPlaceHash(place)),
     DEFAULT_COLOR_PROPERTY_NAMES,
+  );
+  updatePlaceInfo(
+    infoObj,
+    placeGroup,
+    place,
+    "opacity",
+    0.2,
+    DEFAULT_OPACITY_PROPERTY_NAMES,
   );
   updatePlaceInfo(
     infoObj,
