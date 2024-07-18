@@ -14,6 +14,8 @@
 * It is now possible to change the color and opacity of user places
   and hence associated timeseries and statistic charts. (#216, #97)
 
+* Improved visual style of selected places in the map.
+
 ### Fixes
 
 * Fixed a problem that caused categorical map legends to list the categories
