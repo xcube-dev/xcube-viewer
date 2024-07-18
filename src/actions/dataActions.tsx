@@ -58,6 +58,8 @@ import {
   userPlacesFormatOptionsWktSelector,
   selectedDatasetTimeLabelSelector,
   selectedPlaceInfoSelector,
+  selectedVariableColorBarSelector,
+  selectedVariableUserColorBarSelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -906,30 +908,46 @@ export function updateVariableColorBar(
   ) => {
     const selectedDatasetId = getState().controlState.selectedDatasetId;
     const selectedVariableName = getState().controlState.selectedVariableName;
-    if (selectedDatasetId && selectedVariableName) {
-      if (colorBarNorm === "log") {
-        // Adjust range in case of log norm: Make sure xcube server can use
-        // matplotlib.colors.LogNorm(vmin, vmax) without errors
-        let [vMin, vMax] = colorBarMinMax;
-        if (vMin <= 0) {
-          vMin = 1e-3;
-        }
-        if (vMax <= vMin) {
-          vMax = 1;
-        }
-        colorBarMinMax = [vMin, vMax];
-      }
-      dispatch(
-        _updateVariableColorBar(
-          selectedDatasetId,
-          selectedVariableName,
-          colorBarName,
-          colorBarMinMax,
-          colorBarNorm,
-          opacity,
-        ),
-      );
+    if (!selectedDatasetId || !selectedVariableName) {
+      return;
     }
+
+    let [vMin, vMax] = colorBarMinMax;
+
+    const userColorBar = selectedVariableUserColorBarSelector(getState());
+    if (userColorBar && userColorBar.fixesValueRange) {
+      const colorBar = selectedVariableColorBarSelector(getState());
+      if (colorBar.colorRecords && colorBar.colorRecords.length >= 2) {
+        const n = colorBar.colorRecords.length;
+        vMin = colorBar.colorRecords[0].value;
+        vMax = colorBar.colorRecords[n - 1].value;
+      }
+    }
+
+    const isCategorical = userColorBar && userColorBar.type === "key";
+    if (colorBarNorm === "log" && !isCategorical) {
+      // Adjust range in case of log norm: Make sure xcube server can use
+      // matplotlib.colors.LogNorm(vmin, vmax) without errors
+      if (vMin <= 0) {
+        vMin = 1e-3;
+      }
+      if (vMax <= vMin) {
+        vMax = 1;
+      }
+    }
+
+    colorBarMinMax = [vMin, vMax];
+
+    dispatch(
+      _updateVariableColorBar(
+        selectedDatasetId,
+        selectedVariableName,
+        colorBarName,
+        colorBarMinMax,
+        colorBarNorm,
+        opacity,
+      ),
+    );
   };
 }
 

@@ -35,6 +35,7 @@ import {
 import DoneCancel from "@/components/DoneCancel";
 import ColorBarItem from "./ColorBarItem";
 import ColorMapTypeEditor from "./ColorMapTypeEditor";
+import ColorBarFixedValueRangeToggle from "@/components/ColorBarLegend/ColorBarFixedValueRangeToggle";
 
 interface UserColorBarEditorProps {
   userColorBar: UserColorBar;
@@ -57,11 +58,15 @@ export default function UserColorBarEditor({
     updateUserColorBar({ ...userColorBar, code: event.currentTarget.value });
   };
 
-  const handleTypeChange = (colorMapType: ColorMapType) => {
+  const setColorMapType = (colorMapType: ColorMapType) => {
     updateUserColorBar({
       ...userColorBar,
       type: colorMapType,
     });
+  };
+
+  const setFixesValueRange = (fixesValueRange: boolean) => {
+    updateUserColorBar({ ...userColorBar, fixesValueRange });
   };
 
   return (
@@ -74,7 +79,11 @@ export default function UserColorBarEditor({
       />
       <ColorMapTypeEditor
         colorMapType={userColorBar.type}
-        setColorMapType={handleTypeChange}
+        setColorMapType={setColorMapType}
+      />
+      <ColorBarFixedValueRangeToggle
+        fixesValueRange={userColorBar.fixesValueRange}
+        setFixesValueRange={setFixesValueRange}
       />
       <TextField
         label="Color mapping"

@@ -316,17 +316,37 @@ export const colorBarsSelector = createSelector(
   },
 );
 
-const getVariableColorBar = (
+const getUserColorBar = (
   colorBarName: string,
-  colorBars: ColorBars,
   userColorBars: UserColorBar[],
-): ColorBar => {
+): UserColorBar | null => {
   const colorBar: ColorBar = parseColorBarName(colorBarName);
-  const imageData = colorBars.images[colorBar.baseName];
   const { baseName } = colorBar;
   const userColorBar = userColorBars.find(
     (userColorBar) => userColorBar.id === baseName,
   );
+  return userColorBar || null;
+};
+
+export const selectedVariableUserColorBarSelector = createSelector(
+  selectedVariableColorBarNameSelector,
+  userColorBarsSelector,
+  getUserColorBar,
+);
+
+export const selectedVariable2UserColorBarSelector = createSelector(
+  selectedVariable2ColorBarNameSelector,
+  userColorBarsSelector,
+  getUserColorBar,
+);
+
+const getVariableColorBar = (
+  colorBarName: string,
+  colorBars: ColorBars,
+  userColorBar: UserColorBar | null,
+): ColorBar => {
+  const colorBar: ColorBar = parseColorBarName(colorBarName);
+  const imageData = colorBars.images[colorBar.baseName];
   if (userColorBar) {
     const type = userColorBar.type;
     const colorRecords = getUserColorBarHexRecords(userColorBar.code);
@@ -338,14 +358,14 @@ const getVariableColorBar = (
 export const selectedVariableColorBarSelector = createSelector(
   selectedVariableColorBarNameSelector,
   colorBarsSelector,
-  userColorBarsSelector,
+  selectedVariableUserColorBarSelector,
   getVariableColorBar,
 );
 
 export const selectedVariable2ColorBarSelector = createSelector(
   selectedVariable2ColorBarNameSelector,
   colorBarsSelector,
-  userColorBarsSelector,
+  selectedVariable2UserColorBarSelector,
   getVariableColorBar,
 );
 

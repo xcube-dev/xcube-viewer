@@ -55,6 +55,11 @@ export interface UserColorBar {
    */
   type: ColorMapType;
   /**
+   * Whether the min/max values in `code` determine the value range
+   * used for mapping the colors to values.
+   */
+  fixesValueRange?: boolean;
+  /**
    * base64-encoded `image/png`
    * rendered by renderUserColorBarAsBase64() from `code`.
    */

@@ -111,7 +111,7 @@ export default function ColorBarLegend(
       </Box>
       {variableColorBar.type === "key" ? (
         <ColorBarLegendCategorical
-          categories={variableColorBar.colorRecords!}
+          categories={variableColorBar.colorRecords}
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />
