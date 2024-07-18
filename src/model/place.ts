@@ -29,6 +29,7 @@ import { default as OlGeometry } from "ol/geom/Geometry";
 
 import { getUserPlaceColorName } from "@/config";
 import { newId } from "@/util/id";
+import { isString } from "@/util/types";
 
 export const USER_ID_PREFIX = "user-";
 
@@ -261,8 +262,21 @@ export function forEachPlace(
 
 export function findPlaceInfo(
   placeGroups: PlaceGroup[],
+  placeId: string,
+): PlaceInfo | null;
+export function findPlaceInfo(
+  placeGroups: PlaceGroup[],
   predicate: (placeGroup: PlaceGroup, place: Place) => boolean,
+): PlaceInfo | null;
+export function findPlaceInfo(
+  placeGroups: PlaceGroup[],
+  placeIdOrPredicate:
+    | string
+    | ((placeGroup: PlaceGroup, place: Place) => boolean),
 ): PlaceInfo | null {
+  const predicate = isString(placeIdOrPredicate)
+    ? (_placeGroup: PlaceGroup, place: Place) => place.id === placeIdOrPredicate
+    : placeIdOrPredicate;
   for (const placeGroup of placeGroups) {
     if (isValidPlaceGroup(placeGroup)) {
       const place = placeGroup.features.find((place: Place) =>

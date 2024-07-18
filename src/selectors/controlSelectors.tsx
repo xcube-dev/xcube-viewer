@@ -72,6 +72,7 @@ import { findIndexCloseTo } from "@/util/find";
 import {
   predefinedColorBarsSelector,
   datasetsSelector,
+  statisticsRecordsSelector,
   timeSeriesGroupsSelector,
   userPlaceGroupsSelector,
   userServersSelector,
@@ -104,6 +105,7 @@ import {
 } from "@/model/layerDefinition";
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
+import { StatisticsRecord } from "@/model/statistics";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -513,10 +515,7 @@ export const selectedPlaceInfoSelector = createSelector(
     if (placeGroups.length === 0 || placeId === null) {
       return null;
     }
-    return findPlaceInfo(
-      placeGroups,
-      (_placeGroup, place) => place.id === placeId,
-    );
+    return findPlaceInfo(placeGroups, placeId);
   },
 );
 
@@ -595,6 +594,33 @@ export const timeSeriesPlaceInfosSelector = createSelector(
       }
     });
     return placeInfos;
+  },
+);
+
+export const resolvedStatisticsRecordsSelector = createSelector(
+  statisticsRecordsSelector,
+  selectedDatasetAndUserPlaceGroupsSelector,
+  (
+    statisticsRecords: StatisticsRecord[],
+    placeGroups: PlaceGroup[],
+  ): StatisticsRecord[] => {
+    const resolvedStatisticsRecords: StatisticsRecord[] = [];
+    statisticsRecords.forEach((statisticsRecord) => {
+      const placeId = statisticsRecord.source.placeInfo.place.id;
+      forEachPlace(placeGroups, (placeGroup, place) => {
+        if (place.id === placeId) {
+          const placeInfo = getPlaceInfo(placeGroup, place);
+          resolvedStatisticsRecords.push({
+            ...statisticsRecord,
+            source: {
+              ...statisticsRecord.source,
+              placeInfo,
+            },
+          });
+        }
+      });
+    });
+    return resolvedStatisticsRecords;
   },
 );
 

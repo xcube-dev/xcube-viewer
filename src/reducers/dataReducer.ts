@@ -54,7 +54,12 @@ import { SELECT_TIME_RANGE, SelectTimeRange } from "@/actions/controlActions";
 import i18n from "@/i18n";
 import { newId } from "@/util/id";
 import { Variable } from "@/model/variable";
-import { Place, PlaceGroup, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
+import {
+  Place,
+  PlaceGroup,
+  PlaceStyle,
+  USER_DRAWN_PLACE_GROUP_ID,
+} from "@/model/place";
 import { TimeSeries, TimeSeriesGroup } from "@/model/timeSeries";
 import { getDatasetUserVariables } from "@/model/dataset";
 
@@ -574,7 +579,7 @@ function updateUserPlaceGroup(
   userPlaceGroups: PlaceGroup[],
   placeGroupId: string,
   placeId: string,
-  placeProperties: Record<string, unknown>,
+  placeProperties: PlaceStyle | Record<string, unknown>,
 ) {
   const pgIndex = userPlaceGroups.findIndex((pg) => pg.id === placeGroupId);
   if (pgIndex >= 0) {
