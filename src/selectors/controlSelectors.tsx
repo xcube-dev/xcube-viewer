@@ -38,7 +38,7 @@ import { default as OlStyle } from "ol/style/Style";
 import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
 
-import { Config, getTileAccess } from "@/config";
+import { Config, getTileAccess, getUserPlaceFillOpacity } from "@/config";
 import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
 import { Vector } from "@/components/ol/layer/Vector";
@@ -1089,7 +1089,7 @@ export function getTileUrl(
 }
 
 export function getDefaultFillOpacity() {
-  return Config.instance.branding.polygonFillOpacity || 0.2;
+  return getUserPlaceFillOpacity();
 }
 
 export function getDefaultStyleImage() {

@@ -45,6 +45,7 @@ import { AuthClientConfig } from "@/util/auth";
 import { Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
+import { isNumber } from "./util/types";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -288,6 +289,13 @@ export function getUserPlaceColor(
 ): string {
   const shade = getStrokeShade(paletteMode);
   return userPlaceColors[colorName][shade];
+}
+
+export function getUserPlaceFillOpacity(opacity?: number): number {
+  if (!isNumber(opacity)) {
+    opacity = Config.instance.branding.polygonFillOpacity;
+  }
+  return isNumber(opacity) ? opacity : 0.25;
 }
 
 // See resources/maps.json
