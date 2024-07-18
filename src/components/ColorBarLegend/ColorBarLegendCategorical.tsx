@@ -51,7 +51,7 @@ const styles = makeStyles({
 });
 
 export interface ColorBarLegendCategoricalProps {
-  categories: HexColorRecord[];
+  categories?: HexColorRecord[];
   onOpenColorBarEditor: () => void;
 }
 
@@ -59,6 +59,9 @@ export default function ColorBarLegendCategorical({
   categories,
   onOpenColorBarEditor,
 }: ColorBarLegendCategoricalProps) {
+  if (!categories || categories.length === 0) {
+    return null;
+  }
   return (
     <Box sx={styles.container}>
       {categories.map((category, index) => (
