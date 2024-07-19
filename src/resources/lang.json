@@ -291,6 +291,11 @@
       "se": "Värdeintervall"
     },
     {
+      "en": "Assign min/max from color mapping values",
+      "de": "Min./Max. aus Farbzuordnungswerten übertragen",
+      "se": "Tilldela min/max från färgmappningsvärden"
+    },
+    {
       "en": "Log-scaled",
       "de": "Log-skaliert",
       "se": "Log-skalad"

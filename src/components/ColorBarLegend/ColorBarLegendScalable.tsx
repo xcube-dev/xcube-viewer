@@ -32,10 +32,10 @@ import ColorBarLabels from "./ColorBarLabels";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";
 
 export interface ColorBarLegendScalableProps {
+  variableColorBar: ColorBar;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
   variableColorBarNorm: ColorBarNorm; // will be "lin" or "log"
-  variableColorBar: ColorBar;
   variableOpacity: number;
   updateVariableColorBar: (
     colorBarName: string,
@@ -47,10 +47,10 @@ export interface ColorBarLegendScalableProps {
 }
 
 export default function ColorBarLegendScalable({
+  variableColorBar,
   variableColorBarName,
   variableColorBarMinMax,
   variableColorBarNorm,
-  variableColorBar,
   variableOpacity,
   updateVariableColorBar,
   onOpenColorBarEditor,
@@ -88,6 +88,7 @@ export default function ColorBarLegendScalable({
         transformOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <ColorBarRangeEditor
+          variableColorBar={variableColorBar}
           variableColorBarName={variableColorBarName}
           variableColorBarMinMax={variableColorBarMinMax}
           variableColorBarNorm={variableColorBarNorm}

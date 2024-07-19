@@ -29,11 +29,14 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import CompressIcon from "@mui/icons-material/Compress";
 
 import i18n from "@/i18n";
 import { ColorBarNorm } from "@/model/variable";
 import { makeStyles } from "@/util/styles";
 import ColorBarRangeSlider from "./ColorBarRangeSlider";
+import { ColorBar } from "@/model/colorBar";
+import ToolButton from "@/components/ToolButton";
 
 const HOR_SLIDER_MARGIN = 5;
 
@@ -47,6 +50,7 @@ const styles = makeStyles({
   }),
   header: {
     display: "flex",
+    alignItems: "center",
     justifyContent: "space-between",
   },
   title: { paddingLeft: 2, fontWeight: "bold" },
@@ -73,6 +77,7 @@ const styles = makeStyles({
 });
 
 interface ColorBarRangeEditorProps {
+  variableColorBar: ColorBar;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
   variableColorBarNorm: ColorBarNorm;
@@ -86,6 +91,7 @@ interface ColorBarRangeEditorProps {
 }
 
 export default function ColorBarRangeEditor({
+  variableColorBar,
   variableColorBarName,
   variableColorBarMinMax,
   variableColorBarNorm,
@@ -159,6 +165,22 @@ export default function ColorBarRangeEditor({
     setEnteredMinMaxError([enteredMinMaxError[0], error]);
   };
 
+  const handleFromColorRecords = () => {
+    const colorRecords = variableColorBar.colorRecords!;
+    const vMin = colorRecords[0].value;
+    const vMax = colorRecords[colorRecords.length - 1].value;
+    const newMinMax: [number, number] = [vMin, vMax];
+    setCurrentMinMax(newMinMax);
+    setOriginalMinMax(newMinMax);
+    updateVariableColorBar(
+      variableColorBarName,
+      newMinMax,
+      variableColorBarNorm,
+      variableOpacity,
+    );
+    setEnteredMinMaxError([false, false]);
+  };
+
   const handleColorBarNorm = (
     _event: ChangeEvent<HTMLInputElement>,
     value: boolean,
@@ -176,6 +198,14 @@ export default function ColorBarRangeEditor({
       <Box sx={styles.header}>
         <Typography sx={styles.title}>{i18n.get("Value Range")}</Typography>
         <span style={{ flexGrow: 1 }} />
+        {variableColorBar.colorRecords && (
+          <ToolButton
+            sx={{ marginRight: 1 }}
+            icon={<CompressIcon />}
+            onClick={handleFromColorRecords}
+            tooltipText={i18n.get("Set min/max from color mapping values")}
+          />
+        )}
         <FormControlLabel
           sx={styles.logLabel}
           control={
