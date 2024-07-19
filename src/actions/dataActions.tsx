@@ -915,24 +915,28 @@ export function updateVariableColorBar(
     let [vMin, vMax] = colorBarMinMax;
 
     const userColorBar = selectedVariableUserColorBarSelector(getState());
-    if (userColorBar && userColorBar.fixesValueRange) {
-      const colorBar = selectedVariableColorBarSelector(getState());
-      if (colorBar.colorRecords && colorBar.colorRecords.length >= 2) {
-        const n = colorBar.colorRecords.length;
-        vMin = colorBar.colorRecords[0].value;
-        vMax = colorBar.colorRecords[n - 1].value;
-      }
-    }
-
     const isCategorical = userColorBar && userColorBar.type === "key";
-    if (colorBarNorm === "log" && !isCategorical) {
-      // Adjust range in case of log norm: Make sure xcube server can use
-      // matplotlib.colors.LogNorm(vmin, vmax) without errors
-      if (vMin <= 0) {
-        vMin = 1e-3;
+
+    if (!isCategorical) {
+      if (userColorBar && userColorBar.fixesValueRange) {
+        const colorBar = selectedVariableColorBarSelector(getState());
+        if (colorBar.colorRecords && colorBar.colorRecords.length >= 2) {
+          const n = colorBar.colorRecords.length;
+          vMin = colorBar.colorRecords[0].value;
+          vMax = colorBar.colorRecords[n - 1].value;
+          console.log("YES, FIXED!", vMin, vMax);
+        }
       }
-      if (vMax <= vMin) {
-        vMax = 1;
+
+      if (colorBarNorm === "log") {
+        // Adjust range in case of log norm: Make sure xcube server can use
+        // matplotlib.colors.LogNorm(vmin, vmax) without errors
+        if (vMin <= 0) {
+          vMin = 1e-3;
+        }
+        if (vMax <= vMin) {
+          vMax = 1;
+        }
       }
     }
 

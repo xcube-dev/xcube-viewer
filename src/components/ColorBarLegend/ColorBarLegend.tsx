@@ -106,8 +106,8 @@ export default function ColorBarLegend(
 
   return (
     <Box sx={styles.container} ref={colorBarSelectAnchorRef}>
-      <Box sx={styles.title}>
-        <span>{variableTitleWithUnits}</span>
+      <Box sx={styles.title} component="span">
+        {variableTitleWithUnits}
       </Box>
       {variableColorBar.type === "key" ? (
         <ColorBarLegendCategorical
