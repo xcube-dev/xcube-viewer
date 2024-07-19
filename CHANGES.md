@@ -8,13 +8,15 @@
 
 * Revised map color mapping for simplicity and clarity. (#390)
   This comprises the following changes:
-  - Removed the color mapping normalisation modes. Instead introduced
+  - Removed the color mapping normalisation modes. Instead, introduced
     a "Log" switch in the value-range popup. The normalisation mode
     "CAT" (categorical) is no longer required.
   - Renamed the user color mapping types "Node", "Bound", "Key" into
     "Cont." (continuous), "Stepwise", and "Categ." (categorical).
   - The color legend is now showing the variable's UI title instead of the
     variable identifier name. 
+  - The value range can now be assigned from the value range
+    of the color mapping values.
 
 * The datasets in the dataset selector are now sorted by name and may
   also be grouped if configured so in xcube server. (#385)
