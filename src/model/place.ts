@@ -29,6 +29,7 @@ import { default as OlGeometry } from "ol/geom/Geometry";
 
 import { getUserPlaceColorName } from "@/config";
 import { newId } from "@/util/id";
+import { isString } from "@/util/types";
 
 export const USER_ID_PREFIX = "user-";
 
@@ -56,13 +57,20 @@ export interface PlaceGroup extends GeoJSON.FeatureCollection {
 }
 
 /**
+ * Style part of PlaceInfo
+ */
+export interface PlaceStyle {
+  color: string;
+  opacity: number;
+}
+
+/**
  * Computed place information.
  */
-export interface PlaceInfo {
+export interface PlaceInfo extends PlaceStyle {
   placeGroup: PlaceGroup;
   place: Place;
   label: string;
-  color: string;
   image: string | null;
   description: string | null;
 }
@@ -101,6 +109,7 @@ export const DEFAULT_DESCRIPTION_PROPERTY_NAMES = mkCases([
   "comment",
 ]);
 export const DEFAULT_COLOR_PROPERTY_NAMES = mkCases(["color"]);
+export const DEFAULT_OPACITY_PROPERTY_NAMES = mkCases(["opacity"]);
 export const DEFAULT_IMAGE_PROPERTY_NAMES = mkCases([
   "image",
   "img",
@@ -128,6 +137,14 @@ export function computePlaceInfo(
     "color",
     getUserPlaceColorName(getPlaceHash(place)),
     DEFAULT_COLOR_PROPERTY_NAMES,
+  );
+  updatePlaceInfo(
+    infoObj,
+    placeGroup,
+    place,
+    "opacity",
+    0.2,
+    DEFAULT_OPACITY_PROPERTY_NAMES,
   );
   updatePlaceInfo(
     infoObj,
@@ -245,8 +262,21 @@ export function forEachPlace(
 
 export function findPlaceInfo(
   placeGroups: PlaceGroup[],
+  placeId: string,
+): PlaceInfo | null;
+export function findPlaceInfo(
+  placeGroups: PlaceGroup[],
   predicate: (placeGroup: PlaceGroup, place: Place) => boolean,
+): PlaceInfo | null;
+export function findPlaceInfo(
+  placeGroups: PlaceGroup[],
+  placeIdOrPredicate:
+    | string
+    | ((placeGroup: PlaceGroup, place: Place) => boolean),
 ): PlaceInfo | null {
+  const predicate = isString(placeIdOrPredicate)
+    ? (_placeGroup: PlaceGroup, place: Place) => place.id === placeIdOrPredicate
+    : placeIdOrPredicate;
   for (const placeGroup of placeGroups) {
     if (isValidPlaceGroup(placeGroup)) {
       const place = placeGroup.features.find((place: Place) =>

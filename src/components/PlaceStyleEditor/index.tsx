@@ -22,38 +22,6 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import PlaceStyleEditor from "./PlaceStyleEditor";
 
-import { AppState } from "@/states/appState";
-import {
-  resolvedStatisticsRecordsSelector,
-  selectedDatasetSelector,
-  selectedDatasetTimeLabelSelector,
-  selectedPlaceInfoSelector,
-  selectedVariableSelector,
-} from "@/selectors/controlSelectors";
-import _StatisticsPanel from "@/components/StatisticsPanel";
-import { addStatistics, removeStatistics } from "@/actions/dataActions";
-import { statisticsLoadingSelector } from "@/selectors/dataSelectors";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    selectedDataset: selectedDatasetSelector(state),
-    selectedVariable: selectedVariableSelector(state),
-    selectedTime: selectedDatasetTimeLabelSelector(state),
-    selectedPlaceInfo: selectedPlaceInfoSelector(state),
-    statisticsLoading: statisticsLoadingSelector(state),
-    statisticsRecords: resolvedStatisticsRecordsSelector(state),
-  };
-};
-
-const mapDispatchToProps = {
-  addStatistics,
-  removeStatistics,
-};
-
-const StatisticsPanel = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_StatisticsPanel);
-export default StatisticsPanel;
+export default PlaceStyleEditor;

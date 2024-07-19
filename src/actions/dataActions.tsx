@@ -32,7 +32,12 @@ import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { Dataset, getDatasetUserVariables } from "@/model/dataset";
-import { findPlaceInPlaceGroups, Place, PlaceGroup } from "@/model/place";
+import {
+  findPlaceInPlaceGroups,
+  Place,
+  PlaceGroup,
+  PlaceStyle,
+} from "@/model/place";
 import { getUserPlacesFromCsv } from "@/model/user-place/csv";
 import { getUserPlacesFromGeoJson } from "@/model/user-place/geojson";
 import { getUserPlacesFromWkt } from "@/model/user-place/wkt";
@@ -81,7 +86,7 @@ import {
 } from "./controlActions";
 import { VolumeRenderMode } from "@/states/controlState";
 import { MessageLogAction, postMessage } from "./messageLogActions";
-import { renameUserPlaceInLayer } from "./mapActions";
+import { renameUserPlaceInLayer, restyleUserPlaceInLayer } from "./mapActions";
 import { ColorBarNorm } from "@/model/variable";
 import { getStatistics } from "@/api/getStatistics";
 import { StatisticsRecord } from "@/model/statistics";
@@ -447,6 +452,36 @@ export function _renameUserPlace(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const RESTYLE_USER_PLACE = "RESTYLE_USER_PLACE";
+
+export interface RestyleUserPlace {
+  type: typeof RESTYLE_USER_PLACE;
+  placeGroupId: string;
+  placeId: string;
+  placeStyle: PlaceStyle;
+}
+
+export function restyleUserPlace(
+  placeGroupId: string,
+  placeId: string,
+  placeStyle: PlaceStyle,
+) {
+  return (dispatch: Dispatch<RestyleUserPlace>) => {
+    dispatch(_restyleUserPlace(placeGroupId, placeId, placeStyle));
+    restyleUserPlaceInLayer(placeGroupId, placeId, placeStyle);
+  };
+}
+
+export function _restyleUserPlace(
+  placeGroupId: string,
+  placeId: string,
+  placeStyle: PlaceStyle,
+): RestyleUserPlace {
+  return { type: RESTYLE_USER_PLACE, placeGroupId, placeId, placeStyle };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const REMOVE_USER_PLACE = "REMOVE_USER_PLACE";
 
 export interface RemoveUserPlace {
@@ -529,34 +564,6 @@ export function addStatistics() {
       });
   };
 }
-
-// const addStatisticsFromMock = () => {
-//   const i = statisticsRecords.length + 1;
-//   setStatisticsRecords([
-//     ...statisticsRecords,
-//     {
-//       source: {
-//         datasetId: `ds${i}`,
-//         datasetTitle: `Dataset ${i}`,
-//         variableName: "CHL",
-//         placeId: "p029840456",
-//         geometry: null,
-//       },
-//       minimum: i,
-//       maximum: i + 1,
-//       mean: i + 0.5,
-//       standardDev: 0.1 * i,
-//       histogram: {
-//         bins: Array.from({ length: 100 }, (_, index) => ({
-//           x1: index,
-//           xc: index + 0.5,
-//           x2: index + 1,
-//           count: 1000 * Math.random(),
-//         })),
-//       },
-//     },
-//   ]);
-// };
 
 export const ADD_STATISTICS = "ADD_STATISTICS";
 
@@ -1206,6 +1213,7 @@ export type DataAction =
   | AddImportedUserPlaces
   | RenameUserPlaceGroup
   | RenameUserPlace
+  | RestyleUserPlace
   | RemoveUserPlace
   | RemoveUserPlaceGroup
   | AddStatistics
