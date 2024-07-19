@@ -39,11 +39,11 @@ import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
 
 import { Config, getTileAccess, getUserPlaceFillOpacity } from "@/config";
+import { ApiServerConfig } from "@/model/apiServer";
 import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
 import { Vector } from "@/components/ol/layer/Vector";
 import { MapElement } from "@/components/ol/Map";
-import { ApiServerConfig } from "@/model/apiServer";
 
 import {
   Dataset,
@@ -88,7 +88,6 @@ import {
   ColorBar,
   ColorBarGroup,
   ColorBars,
-  HexColorRecord,
   parseColorBarName,
 } from "@/model/colorBar";
 import {
@@ -234,6 +233,13 @@ export const selectedVariable2Selector = createSelector(
   _findDatasetVariable,
 );
 
+export const selectedVariableTitleSelector = createSelector(
+  selectedVariableSelector,
+  (variable: Variable | null): string | null => {
+    return variable && (variable.title || variable.name);
+  },
+);
+
 export const selectedVariableUnitsSelector = createSelector(
   selectedVariableSelector,
   (variable: Variable | null): string => {
@@ -272,7 +278,7 @@ export const selectedVariable2ColorBarMinMaxSelector = createSelector(
 );
 
 const getVariableColorBarNorm = (variable: Variable | null): ColorBarNorm => {
-  return (variable && variable.colorBarNorm) || "lin";
+  return (variable && variable.colorBarNorm) === "log" ? "log" : "lin";
 };
 
 export const selectedVariableColorBarNormSelector = createSelector(
@@ -323,14 +329,12 @@ const getVariableColorBar = (
   const userColorBar = userColorBars.find(
     (userColorBar) => userColorBar.id === baseName,
   );
-  let categories: HexColorRecord[] | undefined = undefined;
-  if (
-    userColorBar &&
-    (userColorBar.type == "key" || userColorBar.type == "bound")
-  ) {
-    categories = getUserColorBarHexRecords(userColorBar.code);
+  if (userColorBar) {
+    const type = userColorBar.type;
+    const colorRecords = getUserColorBarHexRecords(userColorBar.code);
+    return { ...colorBar, imageData, type, colorRecords };
   }
-  return { ...colorBar, imageData, categories };
+  return { ...colorBar, imageData };
 };
 
 export const selectedVariableColorBarSelector = createSelector(
@@ -981,7 +985,7 @@ const getVariableTileLayer = (
     ["cmap", colorBarJson ? colorBarJson : colorBarName],
     // ['retina', '1'],
   ];
-  if (colorBarNorm !== "lin") {
+  if (colorBarNorm === "log") {
     queryParams.push(["norm", colorBarNorm]);
   }
   return getTileLayer(

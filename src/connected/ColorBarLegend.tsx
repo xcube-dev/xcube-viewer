@@ -35,6 +35,7 @@ import {
   colorBarsSelector,
   userColorBarsSelector,
   selectedVariableColorBarNormSelector,
+  selectedVariableTitleSelector,
 } from "@/selectors/controlSelectors";
 import { updateVariableColorBar } from "@/actions/dataActions";
 import {
@@ -48,6 +49,7 @@ import _ColorBarLegend from "@/components/ColorBarLegend";
 const mapStateToProps = (state: AppState) => {
   return {
     variableName: selectedVariableNameSelector(state),
+    variableTitle: selectedVariableTitleSelector(state),
     variableUnits: selectedVariableUnitsSelector(state),
     variableColorBarName: selectedVariableColorBarNameSelector(state),
     variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),

@@ -291,6 +291,31 @@
       "se": "Opacitet"
     },
     {
+      "en": "Value Range",
+      "de": "Wertebereich",
+      "se": "Värdeintervall"
+    },
+    {
+      "en": "Assign min/max from color mapping values",
+      "de": "Min./Max. aus Farbzuordnungswerten übertragen",
+      "se": "Tilldela min/max från färgmappningsvärden"
+    },
+    {
+      "en": "Log-scaled",
+      "de": "Log-skaliert",
+      "se": "Log-skalad"
+    },
+    {
+      "en": "Logarithmic scaling",
+      "de": "Logarithmische Skalierung",
+      "se": "Logaritmisk skalning"
+    },
+    {
+      "en": "Others",
+      "de": "Andere",
+      "se": "Andra"
+    },
+    {
       "en": "Dataset information",
       "de": "Informationen zum Datensatz",
       "se": "Information om dataset"
@@ -926,34 +951,34 @@
       "se": "Användardefinierade färgskalor."
     },
     {
-      "en": "Node",
-      "de": "Knoten",
-      "se": "Noder"
+      "en": "Contin.",
+      "de": "Kontin.",
+      "se": "Kontin."
     },
     {
-      "en": "Bound",
-      "de": "Grenzen",
-      "se": "Gränser"
+      "en": "Stepwise",
+      "de": "Schrittw.",
+      "se": "Stegvis"
     },
     {
-      "en": "Key",
-      "de": "Schlüssel",
-      "se": "Nycklar"
+      "en": "Categ.",
+      "de": "Kateg.",
+      "se": "Kateg."
     },
     {
-      "en": "Values are nodes of a continuous color gradient",
-      "de": "Werte sind Knoten eines kontinuierlichen Farbverlaufs",
-      "se": "Värden är noder i en kontinuerlig färggradient"
+      "en": "Continuous color mapping where values are nodes",
+      "de": "Kontinuierliche Farbzuordnung, bei der Werte Knoten sind",
+      "se": "Kontinuerlig färgkartläggning där värden är noder"
     },
     {
-      "en": "Values are bounds identifying individual colors",
-      "de": "Werte sind Grenzen, die einzelne Farben identifizieren",
-      "se": "Värden är gränser som identifierar enskilda färger"
+      "en": "Stepwise color mapping where values are bounds of ranges",
+      "de": "Schrittweise Farbzuordnung, bei der die Werte Bereichsgrenzen darstellen",
+      "se": "Stegvis färgmappning där värden är gränser för intervall"
     },
     {
-      "en": "Values are integer keys identifying individual colors",
-      "de": "Werte sind ganzzahlige Schlüssel, die einzelne Farben identifizieren",
-      "se": "Värden är heltalsnycklar som identifierar enskilda färger"
+      "en": "Values and their colors represent categories/classes",
+      "de": "Werte und deren Farben repräsentieren Kategorien/Klassen",
+      "se": "Värden och deras färger representerar kategorier/klasser"
     },
     {
       "en": "User",

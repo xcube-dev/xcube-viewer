@@ -23,9 +23,9 @@
  */
 
 import React, { useMemo } from "react";
+import Box from "@mui/material/Box";
 
 import { getLabelsForRange } from "@/util/label";
-import Box from "@mui/material/Box";
 import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({

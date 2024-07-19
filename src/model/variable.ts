@@ -24,7 +24,7 @@
 
 import { VolumeRenderMode } from "@/states/controlState";
 
-export type ColorBarNorm = "lin" | "log" | "cat";
+export type ColorBarNorm = "lin" | "log";
 
 export interface Variable {
   id: string;
