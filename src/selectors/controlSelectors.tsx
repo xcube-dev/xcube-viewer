@@ -88,7 +88,6 @@ import {
   ColorBar,
   ColorBarGroup,
   ColorBars,
-  HexColorRecord,
   parseColorBarName,
 } from "@/model/colorBar";
 import {
