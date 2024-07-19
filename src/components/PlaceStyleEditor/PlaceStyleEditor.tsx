@@ -72,9 +72,10 @@ const styles = makeStyles({
   colorMenuItemBox: { width: "104px", height: "18px" },
 });
 
-interface FeatureStyleEditorProps extends WithLocale {
+interface PlaceStyleEditorProps extends WithLocale {
   anchorEl: HTMLElement | null;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
+  isPoint: boolean;
   placeStyle: PlaceStyle;
   updatePlaceStyle: (placeStyle: PlaceStyle) => void;
 }
@@ -82,9 +83,10 @@ interface FeatureStyleEditorProps extends WithLocale {
 const PlaceStyleEditor = ({
   anchorEl,
   setAnchorEl,
+  isPoint,
   placeStyle,
   updatePlaceStyle,
-}: FeatureStyleEditorProps) => {
+}: PlaceStyleEditorProps) => {
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
 
   function handleColorClick(event: MouseEvent<HTMLDivElement>) {
@@ -102,7 +104,10 @@ const PlaceStyleEditor = ({
       >
         <Box sx={styles.container}>
           <Typography sx={styles.colorLabel}>{i18n.get("Color")}</Typography>
-          <Typography sx={styles.opacityLabel}>
+          <Typography
+            sx={styles.opacityLabel}
+            color={isPoint ? "text.secondary" : "text.primary"}
+          >
             {i18n.get("Opacity")}
           </Typography>
           <Box
@@ -112,6 +117,7 @@ const PlaceStyleEditor = ({
           />
           <Slider
             sx={styles.opacityValue}
+            disabled={isPoint}
             size="small"
             min={0}
             max={1}

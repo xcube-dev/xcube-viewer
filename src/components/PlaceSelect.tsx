@@ -98,8 +98,6 @@ export default function PlaceSelect({
   selectedPlaceId = selectedPlaceId || "";
   selectedPlaceGroupIds = selectedPlaceGroupIds || [];
 
-  console.log("selectedPlaceInfo:", selectedPlaceInfo);
-
   const selectedPlaceGroupId =
     selectedPlaceGroupIds!.length === 1 ? selectedPlaceGroupIds![0] : null;
 
@@ -146,7 +144,15 @@ export default function PlaceSelect({
     selectedPlaceGroupId.startsWith(USER_ID_PREFIX) &&
     selectedPlaceId !== "";
 
-  let actions;
+  let actions = [
+    <ToolButton
+      key="locatePlace"
+      onClick={locateSelectedPlace}
+      tooltipText={i18n.get("Locate place in map")}
+      icon={<TravelExploreIcon />}
+    />,
+  ];
+
   if (!editMode && isEditableUserPlace) {
     const handleEditButtonClick = () => {
       setEditMode(true);
@@ -179,13 +185,7 @@ export default function PlaceSelect({
         tooltipText={i18n.get("Remove place")}
         icon={<RemoveCircleOutlineIcon />}
       />,
-      <ToolButton
-        key="locatePlace"
-        onClick={locateSelectedPlace}
-        tooltipText={i18n.get("Locate place in map")}
-        icon={<TravelExploreIcon />}
-      />,
-    ];
+    ].concat(actions);
   }
 
   return (
@@ -204,6 +204,7 @@ export default function PlaceSelect({
         <PlaceStyleEditor
           anchorEl={styleAnchorEl}
           setAnchorEl={setStyleAnchorEl}
+          isPoint={selectedPlaceInfo.place.geometry.type === "Point"}
           placeStyle={selectedPlaceInfo}
           updatePlaceStyle={updatePlaceStyle}
         />
