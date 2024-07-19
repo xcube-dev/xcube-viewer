@@ -38,7 +38,7 @@ import { default as OlStyle } from "ol/style/Style";
 import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
 
-import { Config, getTileAccess } from "@/config";
+import { Config, getTileAccess, getUserPlaceFillOpacity } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
 import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
@@ -72,6 +72,7 @@ import { findIndexCloseTo } from "@/util/find";
 import {
   predefinedColorBarsSelector,
   datasetsSelector,
+  statisticsRecordsSelector,
   timeSeriesGroupsSelector,
   userPlaceGroupsSelector,
   userServersSelector,
@@ -87,6 +88,7 @@ import {
   ColorBar,
   ColorBarGroup,
   ColorBars,
+  HexColorRecord,
   parseColorBarName,
 } from "@/model/colorBar";
 import {
@@ -103,6 +105,7 @@ import {
 } from "@/model/layerDefinition";
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
+import { StatisticsRecord } from "@/model/statistics";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -517,10 +520,7 @@ export const selectedPlaceInfoSelector = createSelector(
     if (placeGroups.length === 0 || placeId === null) {
       return null;
     }
-    return findPlaceInfo(
-      placeGroups,
-      (_placeGroup, place) => place.id === placeId,
-    );
+    return findPlaceInfo(placeGroups, placeId);
   },
 );
 
@@ -599,6 +599,33 @@ export const timeSeriesPlaceInfosSelector = createSelector(
       }
     });
     return placeInfos;
+  },
+);
+
+export const resolvedStatisticsRecordsSelector = createSelector(
+  statisticsRecordsSelector,
+  selectedDatasetAndUserPlaceGroupsSelector,
+  (
+    statisticsRecords: StatisticsRecord[],
+    placeGroups: PlaceGroup[],
+  ): StatisticsRecord[] => {
+    const resolvedStatisticsRecords: StatisticsRecord[] = [];
+    statisticsRecords.forEach((statisticsRecord) => {
+      const placeId = statisticsRecord.source.placeInfo.place.id;
+      forEachPlace(placeGroups, (placeGroup, place) => {
+        if (place.id === placeId) {
+          const placeInfo = getPlaceInfo(placeGroup, place);
+          resolvedStatisticsRecords.push({
+            ...statisticsRecord,
+            source: {
+              ...statisticsRecord.source,
+              placeInfo,
+            },
+          });
+        }
+      });
+    });
+    return resolvedStatisticsRecords;
   },
 );
 
@@ -1093,7 +1120,7 @@ export function getTileUrl(
 }
 
 export function getDefaultFillOpacity() {
-  return Config.instance.branding.polygonFillOpacity || 0.25;
+  return getUserPlaceFillOpacity();
 }
 
 export function getDefaultStyleImage() {

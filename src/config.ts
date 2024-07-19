@@ -24,6 +24,7 @@
 
 import { Color, PaletteMode } from "@mui/material";
 import {
+  blue,
   brown,
   cyan,
   green,
@@ -34,6 +35,7 @@ import {
   pink,
   purple,
   red,
+  teal,
   yellow,
 } from "@mui/material/colors";
 
@@ -43,6 +45,7 @@ import { AuthClientConfig } from "@/util/auth";
 import { Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
+import { isNumber } from "./util/types";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -244,9 +247,10 @@ interface TileAccess {
 }
 
 // Array of user place colors in stable order (see #153)
-const userPlaceColorsArray: [string, Color][] = [
+export const userPlaceColorsArray: [string, Color][] = [
   ["red", red],
   ["yellow", yellow],
+  ["blue", blue],
   ["pink", pink],
   ["lightBlue", lightBlue],
   ["green", green],
@@ -256,6 +260,7 @@ const userPlaceColorsArray: [string, Color][] = [
   ["indigo", indigo],
   ["cyan", cyan],
   ["brown", brown],
+  ["teal", teal],
 ];
 
 const userPlaceColors: { [name: string]: Color } = (() => {
@@ -284,6 +289,13 @@ export function getUserPlaceColor(
 ): string {
   const shade = getStrokeShade(paletteMode);
   return userPlaceColors[colorName][shade];
+}
+
+export function getUserPlaceFillOpacity(opacity?: number): number {
+  if (!isNumber(opacity)) {
+    opacity = Config.instance.branding.polygonFillOpacity;
+  }
+  return isNumber(opacity) ? opacity : 0.25;
 }
 
 // See resources/maps.json

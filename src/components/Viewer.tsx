@@ -42,7 +42,11 @@ import { default as OlStyle } from "ol/style/Style";
 import { getRenderPixel } from "ol/render";
 
 import i18n from "@/i18n";
-import { Config, getUserPlaceColor, getUserPlaceColorName } from "@/config";
+import {
+  getUserPlaceColor,
+  getUserPlaceColorName,
+  getUserPlaceFillOpacity,
+} from "@/config";
 import {
   Place,
   PlaceGroup,
@@ -78,19 +82,30 @@ const COLOR_LEGEND_STYLE: React.CSSProperties = {
   top: 10,
 };
 
+const SELECTION_COLOR = [255, 220, 0, 0.8];
+
 const SELECTION_LAYER_STROKE = new OlStrokeStyle({
-  color: [255, 200, 0, 1.0],
-  width: 3,
+  color: SELECTION_COLOR,
+  width: 10,
+  lineCap: "square",
+  lineDash: [10, 15],
 });
+
 const SELECTION_LAYER_FILL = new OlFillStyle({
-  color: [255, 200, 0, 0.05],
+  color: [0, 0, 0, 0],
 });
+
 const SELECTION_LAYER_STYLE = new OlStyle({
   stroke: SELECTION_LAYER_STROKE,
   fill: SELECTION_LAYER_FILL,
   image: new OlCircleStyle({
-    radius: 10,
-    stroke: SELECTION_LAYER_STROKE,
+    radius: 15,
+    stroke: new OlStrokeStyle({
+      color: SELECTION_COLOR,
+      width: 6,
+      lineCap: "square",
+      lineDash: [6, 6],
+    }),
     fill: SELECTION_LAYER_FILL,
   }),
 });
@@ -320,11 +335,7 @@ export default function Viewer({
       const label = findNextLabel(userPlaceGroups, mapInteraction);
       const color = getUserPlaceColorName(colorIndex);
       const shadedColor = getUserPlaceColor(color, theme.palette.mode);
-      setFeatureStyle(
-        feature,
-        shadedColor,
-        Config.instance.branding.polygonFillOpacity,
-      );
+      setFeatureStyle(feature, shadedColor, getUserPlaceFillOpacity());
 
       addDrawnUserPlace(
         userDrawnPlaceGroupName,
@@ -386,6 +397,13 @@ export default function Viewer({
           {variableLayer}
           {overlayLayer}
           {datasetBoundaryLayer}
+          <Vector
+            id={SELECTION_LAYER_ID}
+            opacity={0.7}
+            zIndex={500}
+            style={SELECTION_LAYER_STYLE}
+            source={SELECTION_LAYER_SOURCE}
+          />
           {
             <>
               {userPlaceGroups.map((placeGroup) => (
@@ -400,13 +418,6 @@ export default function Viewer({
               ))}
             </>
           }
-          <Vector
-            id={SELECTION_LAYER_ID}
-            opacity={0.7}
-            zIndex={510}
-            style={SELECTION_LAYER_STYLE}
-            source={SELECTION_LAYER_SOURCE}
-          />
         </Layers>
         {placeGroupLayers}
         {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={handleSelect}/>*/}
