@@ -75,6 +75,7 @@ interface ColorBarLegendProps {
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
   onOpenColorBarEditor: (event: MouseEvent<HTMLCanvasElement>) => void;
+  storeSettings: () => void;
 }
 
 export default function ColorBarLegend(

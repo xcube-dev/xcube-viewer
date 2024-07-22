@@ -41,6 +41,7 @@ import { updateVariableColorBar } from "@/actions/dataActions";
 import {
   addUserColorBar,
   removeUserColorBar,
+  storeSettings,
   updateUserColorBar,
   updateUserColorBars,
 } from "@/actions/controlActions";
@@ -67,6 +68,7 @@ const mapDispatchToProps = {
   removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
+  storeSettings,
 };
 
 const ColorBarLegend = connect(

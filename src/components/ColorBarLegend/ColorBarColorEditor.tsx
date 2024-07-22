@@ -60,6 +60,7 @@ interface ColorBarColorEditorProps {
   removeUserColorBar: (userColorBarId: string) => void;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
+  storeSettings: () => void;
 }
 
 export default function ColorBarColorEditor(props: ColorBarColorEditorProps) {

@@ -690,6 +690,18 @@ export function updateSettings(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const STORE_SETTINGS = "STORE_SETTINGS";
+
+export interface StoreSettings {
+  type: typeof STORE_SETTINGS;
+}
+
+export function storeSettings(): StoreSettings {
+  return { type: STORE_SETTINGS };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export function addUserColorBar(colorBarId: string) {
   return (dispatch: Dispatch) => {
     dispatch(_addUserColorBar(colorBarId));
@@ -806,6 +818,7 @@ export type ControlAction =
   | RemoveUserColorBar
   | UpdateUserColorBar
   | UpdateSettings
+  | StoreSettings
   | OpenDialog
   | CloseDialog
   | SetLayerMenuOpen
