@@ -51,6 +51,7 @@ import {
   SET_VARIABLE_SPLIT_POS,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
+  STORE_SETTINGS,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
@@ -107,6 +108,10 @@ export function controlReducer(
       const settings = { ...state, ...action.settings };
       storeUserSettings(settings);
       return settings;
+    }
+    case STORE_SETTINGS: {
+      storeUserSettings(state);
+      return state;
     }
     case UPDATE_DATASETS: {
       let selectedDatasetId =
@@ -360,13 +365,15 @@ export function controlReducer(
         (ucb) => ucb.id === userColorBarId,
       );
       if (index >= 0) {
-        return {
+        const newState = {
           ...state,
           userColorBars: [
             ...state.userColorBars.slice(0, index),
             ...state.userColorBars.slice(index + 1),
           ],
         };
+        storeUserSettings(newState);
+        return newState;
       }
       return state;
     }

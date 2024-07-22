@@ -21,15 +21,18 @@
 * The datasets in the dataset selector are now sorted by name and may
   also be grouped if configured so in xcube server. (#385)
 
-
 * Made the right sidebar panel's tab bar position sticky. (#373)
 
 * It is now possible to change the color and opacity of user places
-  and hence associated timeseries and statistic charts. (#216, #97)
+  and hence associated time-series and statistic charts. (#216, #97)
 
 * Improved visual style of selected places in the map.
 
 ### Fixes
+
+* Fixed a problem with user color map changes that have not been automatically
+  saved. User color maps are now stored after a user confirms the 
+  addition, change, or removal. (#395)
 
 * Fixed a problem that caused categorical map legends to list the categories
   without their associated colors. (#387)
