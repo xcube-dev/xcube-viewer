@@ -45,6 +45,11 @@
   (screen turned white). It reproducibly occurred when first computing 
   statistics for a point and then for a polygon. (#376)
 
+### Other changes
+
+* Renamed internal color mapping types from `"node"`, `"bound"`, `"key"`
+  into `"continuous"`, `"stepwise"`, `"categorical"`.
+
 ## Changes in version 1.2.1
 
 * Updated language translations for German and Swedish in the statistics panel.

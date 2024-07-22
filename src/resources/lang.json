@@ -966,19 +966,19 @@
       "se": "Kateg."
     },
     {
-      "en": "Continuous color mapping where values are nodes",
-      "de": "Kontinuierliche Farbzuordnung, bei der Werte Knoten sind",
-      "se": "Kontinuerlig färgkartläggning där värden är noder"
+      "en": "Continuous color assignment, where each value represents a support point of a color gradient",
+      "de": "Kontinuierliche Farbzuordnung, bei der jeder Wert eine Stützstelle eines Farbverlaufs darstellt",
+      "se": "Kontinuerlig färgtilldelning där varje värde representerar en punkt i en färggradient"
     },
     {
-      "en": "Stepwise color mapping where values are bounds of ranges",
-      "de": "Schrittweise Farbzuordnung, bei der die Werte Bereichsgrenzen darstellen",
+      "en": "Stepwise color mapping where values are bounds of value ranges mapped to the same color",
+      "de": "Schrittweise Farbzuordnung, bei der die Werte Bereichsgrenzen darstellen, die einer einzelnen Frabe zugeordnet werden",
       "se": "Stegvis färgmappning där värden är gränser för intervall"
     },
     {
-      "en": "Values and their colors represent categories/classes",
-      "de": "Werte und deren Farben repräsentieren Kategorien/Klassen",
-      "se": "Värden och deras färger representerar kategorier/klasser"
+      "en": "Values represent unique categories or indexes that are mapped to a color",
+      "de": "Werte stellen eindeutige Kategorien oder Indizes dar, die einer Farbe zugeordnet sind",
+      "se": "Värden representerar unika kategorier eller index som är mappade till en färg"
     },
     {
       "en": "User",

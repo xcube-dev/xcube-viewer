@@ -30,14 +30,14 @@ import {
 } from "./userColorBar";
 
 describe("Assert that colorBar.getUserColorBarRgbaArray()", () => {
-  it("works as expected if type='node'", () => {
+  it("works as expected if type='continuous'", () => {
     const data = getUserColorBarRgbaArray(
       [
         { value: 0.0, color: [35, 255, 82, 255] },
         { value: 0.5, color: [255, 0, 0, 255] },
         { value: 1.0, color: [120, 30, 255, 255] },
       ],
-      "node",
+      "continuous",
       10,
     );
     expect(data).toBeInstanceOf(Uint8ClampedArray);
@@ -48,14 +48,14 @@ describe("Assert that colorBar.getUserColorBarRgbaArray()", () => {
     ]);
   });
 
-  it("works as expected if type='key'", () => {
+  it("works as expected if type='categorical'", () => {
     const data = getUserColorBarRgbaArray(
       [
         { value: 0.0, color: [35, 255, 82, 255] },
         { value: 0.5, color: [255, 0, 0, 255] },
         { value: 1.0, color: [120, 30, 255, 255] },
       ],
-      "key",
+      "categorical",
       10,
     );
     expect(data).toBeInstanceOf(Uint8ClampedArray);

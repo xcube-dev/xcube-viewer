@@ -347,7 +347,7 @@ export function controlReducer(
         userColorBars: [
           {
             id: id,
-            type: "node",
+            type: "continuous",
             code: USER_COLOR_BAR_CODE_EXAMPLE,
           },
           ...state.userColorBars,
