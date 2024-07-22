@@ -64,11 +64,13 @@ export class Storage {
     propertyName: string,
     defaultValue?: unknown,
     parser?: (value: string) => unknown,
+    converter?: (value: unknown) => unknown,
   ): unknown {
     const value = this.nativeStorage.getItem(this.makeKey(propertyName));
     if (value !== null) {
       try {
-        return parser ? parser(value) : value;
+        const result = parser ? parser(value) : value;
+        return converter ? converter(result) : result;
       } catch (e) {
         console.error(`Failed parsing user setting "${propertyName}": ${e}`);
       }
@@ -115,18 +117,25 @@ export class Storage {
     propertyName: keyof T,
     target: T,
     defaultObj: T,
+    converter?: (value: unknown) => unknown,
   ) {
-    this.getProperty(propertyName, target, defaultObj, (value) => {
-      const parsedArray = JSON.parse(value);
-      if (Array.isArray(parsedArray)) {
-        return parsedArray;
-      }
-      const defaultArray = defaultObj[propertyName];
-      if (Array.isArray(defaultArray)) {
-        return defaultArray;
-      }
-      return [];
-    });
+    this.getProperty(
+      propertyName,
+      target,
+      defaultObj,
+      (value) => {
+        const parsedArray = JSON.parse(value);
+        if (Array.isArray(parsedArray)) {
+          return parsedArray;
+        }
+        const defaultArray = defaultObj[propertyName];
+        if (Array.isArray(defaultArray)) {
+          return defaultArray;
+        }
+        return [];
+      },
+      converter,
+    );
   }
 
   getObjectProperty<T extends object>(
@@ -157,11 +166,13 @@ export class Storage {
     target: T,
     defaultObj: T,
     parser: (value: string) => unknown,
+    converter?: (value: unknown) => unknown,
   ) {
     (target as Record<keyof T, unknown>)[propertyName] = this.getItem(
       propertyName as string,
       (defaultObj as Record<keyof T, unknown>)[propertyName],
       parser,
+      converter,
     );
   }
 
