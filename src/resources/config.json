@@ -6,14 +6,15 @@
     "url": "http://localhost:8080"
   },
   "branding": {
-    "appBarTitle": "xcube Viewer",
-    "windowTitle": "xcube Viewer",
+    "appBarTitle": "SNAP Viewer",
+    "windowTitle": "SNAP Viewer",
     "windowIcon": null,
     "compact": false,
     "themeName": "light",
     "primaryColor": "blue",
     "secondaryColor": "pink",
-    "organisationUrl": "https://xcube.readthedocs.io/",
+    "headerBackgroundColor": "#003247",
+    "organisationUrl": "https://step.esa.int/main/",
     "logoImage": "images/logo.png",
     "logoWidth": 32,
     "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
