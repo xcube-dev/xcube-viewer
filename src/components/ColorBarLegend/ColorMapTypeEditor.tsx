@@ -39,13 +39,23 @@ const styles = makeStyles({
 });
 
 const typeLabels: [ColorMapType, string, string][] = [
-  ["node", "Contin.", "Continuous color mapping where values are nodes"],
   [
-    "bound",
-    "Stepwise",
-    "Stepwise color mapping where values are bounds of ranges",
+    "continuous",
+    "Contin.",
+    "Continuous color assignment, where each value represents" +
+      " a support point of a color gradient",
   ],
-  ["key", "Categ.", "Values and their colors represent categories/classes"],
+  [
+    "stepwise",
+    "Stepwise",
+    "Stepwise color mapping where values are bounds of value" +
+      " ranges mapped to the same single color",
+  ],
+  [
+    "categorical",
+    "Categ.",
+    "Values represent unique categories or indexes that are mapped to a color",
+  ],
 ];
 
 interface ColorMapTypeEditorProps {

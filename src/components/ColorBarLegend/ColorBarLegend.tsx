@@ -100,7 +100,7 @@ export default function ColorBarLegend(
   }
 
   const variableTitleWithUnits =
-    variableColorBar.type === "key"
+    variableColorBar.type === "categorical"
       ? variableTitle || variableName
       : `${variableTitle || variableName} (${variableUnits || "-"})`;
 
@@ -109,7 +109,7 @@ export default function ColorBarLegend(
       <Box sx={styles.title} component="span">
         {variableTitleWithUnits}
       </Box>
-      {variableColorBar.type === "key" ? (
+      {variableColorBar.type === "categorical" ? (
         <ColorBarLegendCategorical
           categories={variableColorBar.colorRecords}
           onOpenColorBarEditor={handleOpenColorBarSelect}
