@@ -32,6 +32,8 @@ import i18n from "@/i18n";
 import { Dataset } from "@/model/dataset";
 import { PlaceInfo } from "@/model/place";
 import { Variable } from "@/model/variable";
+import { ColorBar } from "@/model/colorBar";
+import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { WithLocale } from "@/util/lang";
 import {
   VolumeRenderMode,
@@ -41,8 +43,6 @@ import {
 import { VolumeOptions, VolumeScene } from "@/volume/VolumeScene";
 import { Volume } from "@/volume/Volume";
 import { NRRDLoader } from "@/volume/NRRDLoader";
-import { ColorBar } from "@/model/colorBar";
-
 import "./VolumeCanvas.css";
 
 interface VolumeCanvasProps extends WithLocale {
@@ -174,7 +174,7 @@ export class VolumeCanvas extends React.PureComponent<VolumeCanvasProps> {
         const noCacheArg = `dummy=${new Date().toLocaleTimeString()}`;
         const url =
           `${this.props.serverUrl}/volumes/` +
-          `${selectedDataset.id}/${selectedVariable.name}` +
+          `${encodeDatasetId(selectedDataset)}/${encodeVariableName(selectedVariable)}` +
           `?${noCacheArg}${bboxArg}`;
         new NRRDLoader().load(
           url,

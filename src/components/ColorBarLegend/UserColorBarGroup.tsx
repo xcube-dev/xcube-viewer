@@ -60,6 +60,7 @@ interface UserColorBarGroupProps {
   removeUserColorBar: (userColorBarId: string) => void;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
+  storeSettings: () => void;
 }
 
 export default function ColorBarSelect({
@@ -71,6 +72,7 @@ export default function ColorBarSelect({
   removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
+  storeSettings,
 }: UserColorBarGroupProps) {
   const [editMode, setEditMode] = useState<EditMode>({});
   const [undo, setUndo] = useUndo();
@@ -99,6 +101,7 @@ export default function ColorBarSelect({
   const handleDoneUserColorBarEdit = () => {
     setUndo(undefined);
     setEditMode({});
+    storeSettings();
   };
 
   const handleCancelUserColorBarEdit = () => {

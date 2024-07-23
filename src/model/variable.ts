@@ -24,7 +24,7 @@
 
 import { VolumeRenderMode } from "@/states/controlState";
 
-export type ColorBarNorm = "lin" | "log" | "cat";
+export type ColorBarNorm = "lin" | "log";
 
 export interface Variable {
   id: string;
@@ -34,6 +34,7 @@ export interface Variable {
   dtype: string;
   units: string;
   title: string;
+  expression?: string; // user-defined variables only
   timeChunkSize: number | null;
   // The following are new since xcube 0.11
   tileLevelMin?: number;

@@ -23,13 +23,13 @@
  */
 
 import React, { ChangeEvent } from "react";
-import { Theme } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import makeStyles from "@mui/styles/makeStyles";
 import TextField from "@mui/material/TextField";
+import { SxProps } from "@mui/system";
+import { Theme } from "@mui/material";
 
 import i18n from "@/i18n";
 import { ControlState } from "@/states/controlState";
@@ -37,19 +37,19 @@ import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  separatorTextField: {
+const styles: Record<string, SxProps<Theme>> = {
+  separatorTextField: (theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     fontSize: theme.typography.fontSize / 2,
     maxWidth: "6em",
-  },
-  fileNameTextField: {
+  }),
+  fileNameTextField: (theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     fontSize: theme.typography.fontSize / 2,
-  },
-}));
+  }),
+};
 
 interface ExportDialogProps {
   open: boolean;
@@ -66,8 +66,6 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
   updateSettings,
   downloadTimeSeries,
 }) => {
-  const classes = useStyles();
-
   const handleCloseDialog = () => {
     closeDialog("export");
   };
@@ -115,7 +113,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
             >
               <TextField
                 variant="standard"
-                className={classes.separatorTextField}
+                sx={styles.separatorTextField}
                 value={settings.exportTimeSeriesSeparator}
                 onChange={handleSeparatorChange}
                 disabled={!settings.exportTimeSeries}
@@ -157,7 +155,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
             <SettingsSubPanel label={i18n.get("File name")}>
               <TextField
                 variant="standard"
-                className={classes.fileNameTextField}
+                sx={styles.fileNameTextField}
                 value={settings.exportFileName}
                 onChange={handleFileNameChange}
                 margin="normal"

@@ -23,6 +23,7 @@
  */
 
 import * as React from "react";
+import { styled } from "@mui/system";
 
 import { GeoJsonOptions } from "@/model/user-place/geojson";
 import OptionsField from "./OptionsTextField";
@@ -32,16 +33,18 @@ const GeoJsonTextField = OptionsField<GeoJsonOptions, string>();
 interface GeoJsonOptionsEditorProps {
   options: GeoJsonOptions;
   updateOptions: (options: Partial<GeoJsonOptions>) => void;
-  className: string;
 }
+
+const StyledDiv = styled("div")(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+}));
 
 const GeoJsonOptionsEditor: React.FC<GeoJsonOptionsEditorProps> = ({
   options,
   updateOptions,
-  className,
 }) => {
   return (
-    <div className={className}>
+    <StyledDiv>
       <div
         style={{
           display: "grid",
@@ -82,7 +85,7 @@ const GeoJsonOptionsEditor: React.FC<GeoJsonOptionsEditorProps> = ({
           updateOptions={updateOptions}
         />
       </div>
-    </div>
+    </StyledDiv>
   );
 };
 

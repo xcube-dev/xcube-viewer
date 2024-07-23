@@ -51,24 +51,28 @@ const styles = makeStyles({
 });
 
 export interface ColorBarLegendCategoricalProps {
-  variableColorBarCategories: HexColorRecord[];
+  categories?: HexColorRecord[];
   onOpenColorBarEditor: () => void;
 }
 
 export default function ColorBarLegendCategorical({
-  variableColorBarCategories,
+  categories,
   onOpenColorBarEditor,
 }: ColorBarLegendCategoricalProps) {
+  if (!categories || categories.length === 0) {
+    return null;
+  }
   return (
     <Box sx={styles.container}>
-      {variableColorBarCategories.map((category, index) => (
+      {categories.map((category, index) => (
         <Box
           key={index}
           onClick={onOpenColorBarEditor}
           sx={styles.itemContainer}
         >
           <Box
-            sx={{ ...styles.itemColorBox, backgroundColor: category.color }}
+            sx={styles.itemColorBox}
+            style={{ backgroundColor: category.color }}
           />
           <Box component="span" sx={styles.itemLabelBox}>
             {`${category.label || `Category ${index + 1}`} (${category.value})`}

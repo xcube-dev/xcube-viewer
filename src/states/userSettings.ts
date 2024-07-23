@@ -26,6 +26,9 @@ import { Config } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
 import { getLocalStorage } from "@/util/storage";
 import { ControlState } from "./controlState";
+import { UserVariable } from "@/model/userVariable";
+import { ColorMapType } from "@/model/userColorBar";
+import { isString } from "@/util/types";
 
 export function storeUserServers(userServers: ApiServerConfig[]) {
   const storage = getLocalStorage(Config.instance.name);
@@ -48,6 +51,31 @@ export function loadUserServers(): ApiServerConfig[] {
     }
   }
   return [];
+}
+
+export function storeUserVariables(
+  userVariables: Record<string, UserVariable[]>,
+) {
+  const storage = getLocalStorage(Config.instance.name);
+  if (storage) {
+    try {
+      storage.setObjectItem("userVariables", userVariables);
+    } catch (e) {
+      console.warn(`failed to store user variables: ${e}`);
+    }
+  }
+}
+
+export function loadUserVariables(): Record<string, UserVariable[]> {
+  const storage = getLocalStorage(Config.instance.name);
+  if (storage) {
+    try {
+      return storage.getObjectItem("userVariables", {});
+    } catch (e) {
+      console.warn(`failed to load user variables: ${e}`);
+    }
+  }
+  return {};
 }
 
 export function storeUserSettings(settings: ControlState) {
@@ -148,7 +176,12 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
       storage.getStringProperty("selectedOverlayId", settings, defaultSettings);
       storage.getArrayProperty("userBaseMaps", settings, defaultSettings);
       storage.getArrayProperty("userOverlays", settings, defaultSettings);
-      storage.getArrayProperty("userColorBars", settings, defaultSettings);
+      storage.getArrayProperty(
+        "userColorBars",
+        settings,
+        defaultSettings,
+        convertColorBarsFrom16To17,
+      );
       storage.getStringProperty(
         "userDrawnPlaceGroupName",
         settings,
@@ -191,4 +224,29 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
     console.warn("User settings not found or access denied");
   }
   return defaultSettings;
+}
+
+/* Translates old color map types names to currently used names */
+const _COLOR_MAP_TYPES: Record<string, ColorMapType> = {
+  node: "continuous",
+  continuous: "continuous",
+  bound: "stepwise",
+  stepwise: "stepwise",
+  key: "categorical",
+  categorical: "categorical",
+};
+
+function convertColorBarsFrom16To17(colorBars: unknown) {
+  if (Array.isArray(colorBars)) {
+    return colorBars.map((colorBar: Record<string, unknown>) => ({
+      ...colorBar,
+      type: convertColorBarTypeFrom16To17(colorBar.type),
+    }));
+  }
+}
+
+function convertColorBarTypeFrom16To17(type: unknown): ColorMapType {
+  return isString(type) && type in _COLOR_MAP_TYPES
+    ? _COLOR_MAP_TYPES[type]
+    : "continuous";
 }

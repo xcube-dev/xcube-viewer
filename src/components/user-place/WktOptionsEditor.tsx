@@ -23,25 +23,28 @@
  */
 
 import * as React from "react";
+import { styled } from "@mui/system";
 
 import { WktOptions } from "@/model/user-place/wkt";
 import OptionsField from "./OptionsTextField";
 
 const WktTextField = OptionsField<WktOptions, string>();
 
+const StyledDiv = styled("div")(({ theme }) => ({
+  paddingTop: theme.spacing(2),
+}));
+
 interface WktOptionsEditorProps {
   options: WktOptions;
   updateOptions: (options: Partial<WktOptions>) => void;
-  className: string;
 }
 
 const WktOptionsEditor: React.FC<WktOptionsEditorProps> = ({
   options,
   updateOptions,
-  className,
 }) => {
   return (
-    <div className={className}>
+    <StyledDiv>
       <div
         style={{
           display: "grid",
@@ -84,7 +87,7 @@ const WktOptionsEditor: React.FC<WktOptionsEditorProps> = ({
           disabled={options.label.trim() !== ""}
         />
       </div>
-    </div>
+    </StyledDiv>
   );
 };
 

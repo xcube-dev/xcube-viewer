@@ -26,13 +26,13 @@ import { MouseEvent, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 
+import { makeStyles } from "@/util/styles";
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
 import { ColorBarNorm } from "@/model/variable";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
-import ColorBarLegendContinuous from "./ColorBarLegendContinuous";
+import ColorBarLegendScalable from "./ColorBarLegendScalable";
 import ColorBarColorEditor from "./ColorBarColorEditor";
-import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
   container: (theme) => ({
@@ -55,6 +55,7 @@ const styles = makeStyles({
 
 interface ColorBarLegendProps {
   variableName: string | null;
+  variableTitle: string | null;
   variableUnits: string;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
@@ -74,17 +75,14 @@ interface ColorBarLegendProps {
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
   onOpenColorBarEditor: (event: MouseEvent<HTMLCanvasElement>) => void;
+  storeSettings: () => void;
 }
 
 export default function ColorBarLegend(
   props: Omit<ColorBarLegendProps, "onOpenColorBarEditor">,
 ) {
-  const {
-    variableName,
-    variableUnits,
-    variableColorBar,
-    variableColorBarNorm,
-  } = props;
+  const { variableName, variableTitle, variableUnits, variableColorBar } =
+    props;
 
   const colorBarSelectAnchorRef = useRef<HTMLDivElement | null>(null);
   const [colorBarSelectAnchorEl, setColorBarSelectAnchorEl] =
@@ -102,24 +100,24 @@ export default function ColorBarLegend(
     return null;
   }
 
-  const variableTitle = variableColorBar.categories
-    ? variableName
-    : `${variableName} (${variableUnits || "-"})`;
+  const variableTitleWithUnits =
+    variableColorBar.type === "categorical"
+      ? variableTitle || variableName
+      : `${variableTitle || variableName} (${variableUnits || "-"})`;
 
   return (
     <Box sx={styles.container} ref={colorBarSelectAnchorRef}>
-      <Box sx={styles.title}>
-        <span>{variableTitle}</span>
+      <Box sx={styles.title} component="span">
+        {variableTitleWithUnits}
       </Box>
-      {variableColorBarNorm === "cat" && variableColorBar.categories ? (
+      {variableColorBar.type === "categorical" ? (
         <ColorBarLegendCategorical
-          variableColorBarCategories={variableColorBar.categories}
+          categories={variableColorBar.colorRecords}
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />
       ) : (
-        <ColorBarLegendContinuous
-          variableTitle={variableName}
+        <ColorBarLegendScalable
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />

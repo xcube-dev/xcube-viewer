@@ -22,21 +22,38 @@
  * SOFTWARE.
  */
 
-import React, { useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import CompressIcon from "@mui/icons-material/Compress";
 
+import i18n from "@/i18n";
 import { ColorBarNorm } from "@/model/variable";
-import ColorBarRangeSlider from "./ColorBarRangeSlider";
 import { makeStyles } from "@/util/styles";
+import ColorBarRangeSlider from "./ColorBarRangeSlider";
+import { ColorBar } from "@/model/colorBar";
+import ToolButton from "@/components/ToolButton";
 
 const HOR_SLIDER_MARGIN = 5;
 
 const styles = makeStyles({
-  colorBarMinMaxEditor: (theme) => ({
+  container: (theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    gap: 1,
   }),
+  header: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  title: { paddingLeft: 2, fontWeight: "bold" },
   sliderBox: (theme) => ({
     marginTop: theme.spacing(1),
     marginLeft: theme.spacing(HOR_SLIDER_MARGIN),
@@ -44,22 +61,23 @@ const styles = makeStyles({
     minWidth: 320,
     width: `calc(100% - ${theme.spacing(2 * (HOR_SLIDER_MARGIN + 1))}px)`,
   }),
+  logLabel: { margin: 0, paddingRight: 2, fontWeight: "bold" },
   minMaxBox: {
     display: "flex",
     justifyContent: "center",
   },
   minTextField: {
     maxWidth: "8em",
-    paddingRight: 2,
+    marginRight: 2,
   },
   maxTextField: {
     maxWidth: "8em",
-    paddingLeft: 2,
+    marginLeft: 2,
   },
 });
 
 interface ColorBarRangeEditorProps {
-  variableTitle: string;
+  variableColorBar: ColorBar;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
   variableColorBarNorm: ColorBarNorm;
@@ -73,7 +91,7 @@ interface ColorBarRangeEditorProps {
 }
 
 export default function ColorBarRangeEditor({
-  variableTitle,
+  variableColorBar,
   variableColorBarName,
   variableColorBarMinMax,
   variableColorBarNorm,
@@ -147,9 +165,64 @@ export default function ColorBarRangeEditor({
     setEnteredMinMaxError([enteredMinMaxError[0], error]);
   };
 
+  const handleFromColorRecords = () => {
+    const colorRecords = variableColorBar.colorRecords!;
+    const vMin = colorRecords[0].value;
+    const vMax = colorRecords[colorRecords.length - 1].value;
+    const newMinMax: [number, number] = [vMin, vMax];
+    setCurrentMinMax(newMinMax);
+    setOriginalMinMax(newMinMax);
+    updateVariableColorBar(
+      variableColorBarName,
+      newMinMax,
+      variableColorBarNorm,
+      variableOpacity,
+    );
+    setEnteredMinMaxError([false, false]);
+  };
+
+  const handleColorBarNorm = (
+    _event: ChangeEvent<HTMLInputElement>,
+    value: boolean,
+  ) => {
+    updateVariableColorBar(
+      variableColorBarName,
+      variableColorBarMinMax,
+      value ? "log" : "lin",
+      variableOpacity,
+    );
+  };
+
   return (
-    <Box sx={styles.colorBarMinMaxEditor}>
-      <span style={{ paddingLeft: 14 }}>{variableTitle}</span>
+    <Box sx={styles.container}>
+      <Box sx={styles.header}>
+        <Typography sx={styles.title}>{i18n.get("Value Range")}</Typography>
+        <span style={{ flexGrow: 1 }} />
+        {variableColorBar.colorRecords && (
+          <ToolButton
+            sx={{ marginRight: 1 }}
+            icon={<CompressIcon />}
+            onClick={handleFromColorRecords}
+            tooltipText={i18n.get("Set min/max from color mapping values")}
+          />
+        )}
+        <FormControlLabel
+          sx={styles.logLabel}
+          control={
+            <Tooltip title={i18n.get("Logarithmic scaling")}>
+              <Switch
+                checked={variableColorBarNorm === "log"}
+                onChange={handleColorBarNorm}
+                size="small"
+              />
+            </Tooltip>
+          }
+          label={
+            <Typography variant="body2">{i18n.get("Log-scaled")}</Typography>
+          }
+          labelPlacement="start"
+        />
+      </Box>
       <Box sx={styles.sliderBox}>
         <ColorBarRangeSlider
           variableColorBarName={variableColorBarName}

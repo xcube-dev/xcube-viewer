@@ -26,7 +26,7 @@ import * as React from "react";
 import { default as OlVectorSource } from "ol/source/Vector";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
 
-import { Config } from "@/config";
+import { getUserPlaceFillOpacity } from "@/config";
 import { PlaceGroup, USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 import { Vector } from "./ol/layer/Vector";
 import { setFeatureStyle } from "./ol/style";
@@ -69,13 +69,14 @@ const UserVectorLayer: React.FC<UserVectorLayerProps> = ({
           feature.setId(place.id);
         }
         const color = (place.properties || {}).color || "red";
+        const opacity = (place.properties || {}).opacity;
         const pointSymbol = (place.properties || {}).source
           ? "diamond"
           : "circle";
         setFeatureStyle(
           feature,
           color,
-          Config.instance.branding.polygonFillOpacity,
+          getUserPlaceFillOpacity(opacity),
           pointSymbol,
         );
         source.addFeature(feature);
@@ -88,7 +89,7 @@ const UserVectorLayer: React.FC<UserVectorLayerProps> = ({
       id={placeGroup.id}
       opacity={placeGroup.id === USER_DRAWN_PLACE_GROUP_ID ? 1 : 0.8}
       visible={visible}
-      zIndex={500}
+      zIndex={501}
       source={sourceRef.current}
     />
   );

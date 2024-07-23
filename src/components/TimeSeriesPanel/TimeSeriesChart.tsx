@@ -23,8 +23,6 @@
  */
 
 import { MouseEvent, useMemo, useRef, useState } from "react";
-import makeStyles from "@mui/styles/makeStyles";
-import { Theme, useTheme } from "@mui/material/styles";
 import {
   BarChart,
   CartesianGrid,
@@ -38,6 +36,7 @@ import {
   YAxis,
 } from "recharts";
 import { CategoricalChartState } from "recharts/types/chart/types";
+import { styled, useTheme } from "@mui/system";
 
 import { Place, PlaceInfo } from "@/model/place";
 import {
@@ -65,20 +64,18 @@ type CategoricalChartState_Fixed = Omit<
   "activeLabel"
 > & { activeLabel?: number };
 
-// TODO: no longer use makeStyles from from "@mui/styles"
-const useStyles = makeStyles((theme: Theme) => ({
-  chartContainer: {
-    userSelect: "none",
-    marginTop: theme.spacing(1),
-    width: "99%",
-    height: "32vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-stretch",
-  },
-  responsiveContainer: {
-    flexGrow: 1,
-  },
+const StyledContainerDiv = styled("div")(({ theme }) => ({
+  userSelect: "none",
+  marginTop: theme.spacing(1),
+  width: "99%",
+  height: "32vh",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-stretch",
+}));
+
+const StyledResponsiveContainer = styled(ResponsiveContainer)(() => ({
+  flexGrow: 1,
 }));
 
 interface Rectangle {
@@ -148,10 +145,7 @@ export default function TimeSeriesChart({
   addPlaceGroupTimeSeries,
   postMessage,
 }: TimeSeriesChartProps) {
-  // TODO: check if using MUI useTheme is still ok
   const theme = useTheme();
-  // TODO: replace by sx styling or styled components, but beware of refs!
-  const classes = useStyles();
 
   const [zoomMode, setZoomMode] = useState(false);
   const [showTooltips, setShowTooltips] = useState(true);
@@ -230,19 +224,20 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleClick = (
-    chartState: CategoricalChartState | CategoricalChartState_Fixed,
-  ) => {
-    removeZoomRectangle();
-    if (
-      chartState &&
-      selectTime &&
-      isNumber(chartState.activeLabel) &&
-      Number.isFinite(chartState.activeLabel)
-    ) {
-      selectTime(chartState.activeLabel);
-    }
-  };
+  // const handleClick = (
+  //   chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  // ) => {
+  //   console.log("Click!", chartState);
+  //   removeZoomRectangle();
+  //   if (
+  //     chartState &&
+  //     selectTime &&
+  //     isNumber(chartState.activeLabel) &&
+  //     Number.isFinite(chartState.activeLabel)
+  //   ) {
+  //     selectTime(chartState.activeLabel);
+  //   }
+  // };
 
   const handleMouseDown = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
@@ -291,8 +286,27 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleMouseUp = () => {
-    zoomIn();
+  const handleMouseUp = (
+    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  ) => {
+    const [selectedXRange1, selectedYRange1] =
+      normalizeZoomRectangle(zoomRectangle);
+
+    removeZoomRectangle();
+
+    if (selectedXRange1 && selectedXRange1[0] < selectedXRange1[1]) {
+      if (selectedYRange1) {
+        selectTimeRange(selectedXRange1, timeSeriesGroup.id, selectedYRange1);
+      } else {
+        selectTimeRange(selectedXRange1, timeSeriesGroup.id, null);
+      }
+    } else if (
+      chartState &&
+      isNumber(chartState.activeLabel) &&
+      Number.isFinite(chartState.activeLabel)
+    ) {
+      selectTime(chartState.activeLabel);
+    }
   };
 
   const handleMouseEnter = () => {
@@ -305,20 +319,6 @@ export default function TimeSeriesChart({
 
   const handleRemoveTimeSeriesClick = (index: number) => {
     removeTimeSeries!(timeSeriesGroup.id, index);
-  };
-
-  const zoomIn = () => {
-    const [selectedXRange, selectedYRange] =
-      normalizeZoomRectangle(zoomRectangle);
-    if (selectedXRange && selectedXRange[0] < selectedXRange[1]) {
-      if (selectedYRange) {
-        selectTimeRange(selectedXRange, timeSeriesGroup.id, selectedYRange);
-      } else {
-        selectTimeRange(selectedXRange, timeSeriesGroup.id, null);
-      }
-    } else {
-      removeZoomRectangle();
-    }
   };
 
   const resetZoom = () => {
@@ -414,7 +414,7 @@ export default function TimeSeriesChart({
   const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
   return (
-    <div ref={containerRef} className={classes.chartContainer}>
+    <StyledContainerDiv ref={containerRef}>
       <TimeSeriesChartHeader
         timeSeriesGroup={timeSeriesGroup}
         placeGroupTimeSeries={placeGroupTimeSeries}
@@ -437,10 +437,9 @@ export default function TimeSeriesChart({
         chartElement={containerRef}
         postMessage={postMessage}
       />
-      <ResponsiveContainer
+      <StyledResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
-        className={classes.responsiveContainer}
         onResize={handleChartResize}
       >
         <ChartComponent
@@ -449,7 +448,7 @@ export default function TimeSeriesChart({
           onMouseUp={handleMouseUp}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
+          // onClick={handleClick}
           syncId="anyId"
           style={{ color: labelTextColor, fontSize: "0.8em" }}
           data={data}
@@ -521,8 +520,8 @@ export default function TimeSeriesChart({
             />
           )}
         </ChartComponent>
-      </ResponsiveContainer>
-    </div>
+      </StyledResponsiveContainer>
+    </StyledContainerDiv>
   );
 }
 

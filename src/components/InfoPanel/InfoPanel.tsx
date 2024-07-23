@@ -31,9 +31,6 @@ import CardMedia from "@mui/material/CardMedia";
 import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
-import { Theme } from "@mui/material/styles";
-import createStyles from "@mui/styles/createStyles";
-import makeStyles from "@mui/styles/makeStyles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -65,43 +62,42 @@ import { Variable } from "@/model/variable";
 import pythonLogo from "@/resources/python-bw.png";
 import { ApiServerConfig } from "@/model/apiServer";
 import { commonStyles } from "@/components/common-styles";
+import { makeStyles } from "@/util/styles";
+import { isUserVariable } from "@/model/userVariable";
 
 type ViewMode = "text" | "list" | "code" | "python";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    card: {
-      maxWidth: "100%",
-      marginBottom: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    info: {
-      marginRight: theme.spacing(1),
-    },
-    close: {
-      marginLeft: "auto",
-    },
-    table: {},
-    keyValueTableContainer: {
-      background: theme.palette.divider,
-    },
-    variableHtmlReprContainer: {
-      background: theme.palette.divider,
-      padding: theme.spacing(1),
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-    media: {
-      height: 200,
-    },
-    cardContent: {
-      padding: 8,
-    },
-    code: {
-      fontFamily: "Monospace",
-    },
+const styles = makeStyles({
+  card: (theme) => ({
+    maxWidth: "100%",
+    marginBottom: theme.spacing(1),
+    marginRight: theme.spacing(1),
   }),
-);
+  info: (theme) => ({
+    marginRight: theme.spacing(1),
+  }),
+  close: {
+    marginLeft: "auto",
+  },
+  table: {},
+  keyValueTableContainer: (theme) => ({
+    background: theme.palette.divider,
+  }),
+  variableHtmlReprContainer: (theme) => ({
+    background: theme.palette.divider,
+    padding: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  }),
+  media: {
+    height: 200,
+  },
+  cardContent: {
+    padding: "8px",
+  },
+  code: {
+    fontFamily: "Monospace",
+  },
+});
 
 interface InfoPanelProps extends WithLocale {
   visibleInfoCardElements: string[];
@@ -131,8 +127,6 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
   serverConfig,
   allowViewModePython,
 }) => {
-  const classes = useStyles();
-
   const handleInfoElementsChanges = (
     _event: React.MouseEvent<HTMLElement>,
     visibleElementTypes: string[],
@@ -196,7 +190,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
   }
 
   return (
-    <Card className={classes.card}>
+    <Card sx={styles.card}>
       <CardActions disableSpacing>
         <ToggleButtonGroup
           key={0}
@@ -352,7 +346,6 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   serverConfig,
   hasPython,
 }) => {
-  const classes = useStyles();
   let content;
   let htmlReprPaper;
   if (viewMode === "code") {
@@ -361,6 +354,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       "name",
       "title",
       "units",
+      "expression",
       "shape",
       "dtype",
       "shape",
@@ -390,26 +384,31 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       };
       htmlReprPaper = (
         <CardContent2>
-          <Paper
-            ref={handleRef}
-            className={classes.variableHtmlReprContainer}
-          />
+          <Paper ref={handleRef} sx={styles.variableHtmlReprContainer} />
         </CardContent2>
       );
     }
   } else if (viewMode === "text") {
-    const data: KeyValue[] = [
-      [i18n.get("Title"), variable.title],
+    let data: KeyValue[] = [
       [i18n.get("Name"), variable.name],
+      [i18n.get("Title"), variable.title],
       [i18n.get("Units"), variable.units],
-      [i18n.get("Data type"), variable.dtype],
-      [i18n.get("Dimension names"), variable.dims.join(", ")],
-      [
-        i18n.get("Dimension lengths"),
-        variable.shape.map((s) => s + "").join(", "),
-      ],
-      [i18n.get("Time chunk size"), variable.timeChunkSize],
     ];
+    if (isUserVariable(variable)) {
+      data.push([i18n.get("Expression"), variable.expression]);
+    } else {
+      data = [
+        ...data,
+        [i18n.get("Data type"), variable.dtype],
+        [i18n.get("Dimension names"), variable.dims.join(", ")],
+        [
+          i18n.get("Dimension lengths"),
+          variable.shape.map((s) => s + "").join(", "),
+        ],
+        [i18n.get("Time chunk size"), variable.timeChunkSize],
+      ];
+    }
+
     content = (
       <CardContent2>
         <KeyValueTable data={data} />
@@ -452,7 +451,6 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
   setViewMode,
   placeInfo,
 }) => {
-  const classes = useStyles();
   const place = placeInfo.place;
   let content;
   let image;
@@ -482,7 +480,7 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
     if (placeInfo.image && placeInfo.image.startsWith("http")) {
       image = (
         <CardMedia
-          className={classes.media}
+          sx={styles.media}
           image={placeInfo.image}
           title={placeInfo.label}
         />
@@ -603,13 +601,9 @@ interface KeyValueTableProps {
 }
 
 const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
-  const classes = useStyles();
   return (
-    <TableContainer
-      component={Paper}
-      className={classes.keyValueTableContainer}
-    >
-      <Table className={classes.table} size="small">
+    <TableContainer component={Paper} sx={styles.keyValueTableContainer}>
+      <Table sx={styles.table} size="small">
         <TableBody>
           {data.map((kv, index) => {
             const [key, value] = kv;
@@ -643,8 +637,7 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
 ////////////////////////////////////////////////////////////////////////////////
 
 const CardContent2: React.FC = ({ children }) => {
-  const classes = useStyles();
-  return <CardContent className={classes.cardContent}>{children}</CardContent>;
+  return <CardContent sx={styles.cardContent}>{children}</CardContent>;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -725,12 +718,28 @@ function getVariablePythonCode(
   const cmap = variable.colorBarName;
   let timeSel = "";
   if (time !== null) {
-    timeSel = `.sel(time="${utcTimeToIsoDateTimeString(time)}", method="nearest")`;
+    timeSel = `sel(time="${utcTimeToIsoDateTimeString(time)}", method="nearest")`;
   }
-  return [
-    `var = dataset.${name}${timeSel}`,
-    `var.plot.imshow(vmin=${vmin}, vmax=${vmax}, cmap="${cmap}")`,
-  ].join("\n");
+  const code: string[] = [];
+  if (isUserVariable(variable)) {
+    const expression = variable.expression;
+    code.push("from xcube.util.expression import compute_array_expr");
+    code.push("from xcube.util.expression import new_dataset_namespace");
+    code.push("");
+    code.push(`namespace = new_dataset_namespace(dataset)`);
+    code.push(`${name} = compute_array_expr("${expression}", namespace`);
+    if (timeSel) {
+      code.push(`${name} = ${name}.${timeSel}`);
+    }
+  } else {
+    if (timeSel) {
+      code.push(`${name} = dataset.${name}.${timeSel}`);
+    } else {
+      code.push(`${name} = dataset.${name}`);
+    }
+  }
+  code.push(`${name}.plot.imshow(vmin=${vmin}, vmax=${vmax}, cmap="${cmap}")`);
+  return code.join("\n");
 }
 
 function getS3DataId(originalId: string): string {

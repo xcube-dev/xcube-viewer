@@ -26,6 +26,8 @@ import { assertArrayNotEmpty, assertDefinedAndNotNull } from "@/util/assert";
 import { PlaceGroup } from "./place";
 import { TimeRange } from "./timeSeries";
 import { Variable } from "./variable";
+import { isString } from "@/util/types";
+import { UserVariable } from "@/model/userVariable";
 
 export interface Dimension {
   name: string;
@@ -60,6 +62,8 @@ export interface RgbSchema {
 export interface Dataset {
   id: string;
   title: string;
+  groupTitle?: string;
+  tags?: string[];
   bbox: [number, number, number, number];
   geometry: {
     type: "Polygon";
@@ -94,6 +98,27 @@ export function findDatasetVariable(
       dataset.variables.find((variable) => variable.name === variableName)) ||
     null
   );
+}
+
+export function getDatasetUserVariablesIndex(dataset: Dataset): number {
+  // vIndex is the first index that is a user variable.
+  return dataset.variables.findIndex((v) => isString(v.expression));
+}
+
+export function getDatasetUserVariables(
+  dataset: Dataset,
+): [Variable[], UserVariable[]] {
+  // vIndex is the first index that is a user variable.
+  const vIndex = getDatasetUserVariablesIndex(dataset);
+  // All variables starting at vIndex are user variables.
+  if (vIndex >= 0) {
+    return [
+      dataset.variables.slice(0, vIndex),
+      dataset.variables.slice(vIndex) as UserVariable[],
+    ];
+  } else {
+    return [dataset.variables, []];
+  }
 }
 
 export function getDatasetTimeDimension(

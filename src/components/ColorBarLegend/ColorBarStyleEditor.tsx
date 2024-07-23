@@ -22,11 +22,9 @@
  * SOFTWARE.
  */
 
-import { MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import InvertColorsIcon from "@mui/icons-material/InvertColors";
 import OpacityIcon from "@mui/icons-material/Opacity";
@@ -111,18 +109,6 @@ export default function ColorBarStyleEditor({
     );
   };
 
-  const handleColorBarNorm = (
-    _event: MouseEvent<HTMLElement>,
-    value: ColorBarNorm,
-  ) => {
-    updateVariableColorBar(
-      variableColorBarName,
-      variableColorBarMinMax,
-      value,
-      variableOpacity,
-    );
-  };
-
   const handleVariableOpacity = (_event: Event, value: number | number[]) => {
     updateVariableColorBar(
       variableColorBarName,
@@ -157,26 +143,6 @@ export default function ColorBarStyleEditor({
             </ToggleButton>
           </Tooltip>
         </Box>
-        <ToggleButtonGroup
-          exclusive
-          value={variableColorBarNorm}
-          onChange={handleColorBarNorm}
-          size="small"
-        >
-          <ToggleButton value="lin" sx={styles.toggleButton}>
-            <Box fontSize="small">Lin</Box>
-          </ToggleButton>
-          <ToggleButton value="log" sx={styles.toggleButton}>
-            <Box fontSize="small">Log</Box>
-          </ToggleButton>
-          <ToggleButton
-            value="cat"
-            sx={styles.toggleButton}
-            disabled={!variableColorBar.categories}
-          >
-            <Box fontSize="small">Cat</Box>
-          </ToggleButton>
-        </ToggleButtonGroup>
       </Box>
       <Box component="div" sx={styles.opacityContainer}>
         <Box component="span" fontSize="small" sx={styles.opacityLabel}>

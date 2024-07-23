@@ -59,6 +59,7 @@ import {
   VolumeState,
 } from "@/states/controlState";
 import {
+  // TODO: strange dependency here, invert!
   UPDATE_DATASET_PLACE_GROUP,
   updateDatasetPlaceGroup,
   UpdateDatasetPlaceGroup,
@@ -87,7 +88,8 @@ export function selectDataset(
 ) {
   return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(_selectDataset(selectedDatasetId, datasets));
-    if (selectedDatasetId && showInMap) {
+    const locateMode = getState().controlState.datasetLocateMode;
+    if (selectedDatasetId && showInMap && locateMode !== "doNothing") {
       dispatch(
         locateDatasetInMap(
           selectedDatasetId,
@@ -110,14 +112,8 @@ export function _selectDataset(
 export function locateSelectedDatasetInMap() {
   return (dispatch: Dispatch, getState: () => AppState) => {
     const datasetId = selectedDatasetIdSelector(getState());
-    const locateMode = getState().controlState.datasetLocateMode;
-    if (datasetId && locateMode !== "doNothing") {
-      dispatch(
-        locateDatasetInMap(
-          datasetId,
-          locateMode === "panAndZoom",
-        ) as unknown as Action,
-      );
+    if (datasetId) {
+      dispatch(locateDatasetInMap(datasetId, true) as unknown as Action);
     }
   };
 }
@@ -125,14 +121,8 @@ export function locateSelectedDatasetInMap() {
 export function locateSelectedPlaceInMap() {
   return (dispatch: Dispatch, getState: () => AppState) => {
     const placeId = selectedPlaceIdSelector(getState());
-    const locateMode = getState().controlState.placeLocateMode;
-    if (placeId && locateMode !== "doNothing") {
-      dispatch(
-        locatePlaceInMap(
-          placeId,
-          locateMode === "panAndZoom",
-        ) as unknown as Action,
-      );
+    if (placeId) {
+      dispatch(locatePlaceInMap(placeId, true) as unknown as Action);
     }
   };
 }
@@ -294,7 +284,8 @@ export function selectPlace(
 ) {
   return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(_selectPlace(placeId, places));
-    if (showInMap && placeId) {
+    const locateMode = getState().controlState.placeLocateMode;
+    if (showInMap && placeId && locateMode !== "doNothing") {
       dispatch(
         locatePlaceInMap(
           placeId,
@@ -699,6 +690,18 @@ export function updateSettings(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const STORE_SETTINGS = "STORE_SETTINGS";
+
+export interface StoreSettings {
+  type: typeof STORE_SETTINGS;
+}
+
+export function storeSettings(): StoreSettings {
+  return { type: STORE_SETTINGS };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export function addUserColorBar(colorBarId: string) {
   return (dispatch: Dispatch) => {
     dispatch(_addUserColorBar(colorBarId));
@@ -815,6 +818,7 @@ export type ControlAction =
   | RemoveUserColorBar
   | UpdateUserColorBar
   | UpdateSettings
+  | StoreSettings
   | OpenDialog
   | CloseDialog
   | SetLayerMenuOpen
