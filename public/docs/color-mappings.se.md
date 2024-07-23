@@ -1,12 +1,11 @@
 En användardefinierad färgkarta associerar datavärden eller intervall 
 av datavärden med färgvärden. Raderna i textrutan har den allmänna 
-syntaxen <value>: <color>, där <color> kan vara
+syntaxen `<value>`: `<color>`, där `<color>` kan vara
 
 * en lista med RGB-värden, med värden i intervallet 0 till 255, 
-  till exempel, 255,165,0 för färgen Orange;
-* ett hexadecimalt RGB-värde, t.ex. #FFA500;
-* eller ett giltigt HTML-färgnamn som Orange, BlanchedAlmond eller 
-  MediumSeaGreen.
+  till exempel, `255,165,0` för färgen Orange;
+* ett hexadecimalt RGB-värde, t.ex. `#FFA500`;
+* eller ett giltigt [HTML-färgnamn](https://www.w3schools.com/colors/colors_names.asp) som `Orange`, `BlanchedAlmond` eller `MediumSeaGreen`.
 
 Färgvärdet kan kompletteras med ett opacitetsvärde (alpha-värde) i 
 intervallet 0 till 1, till exempel `110,220,230,0.5` eller `#FFA500,0.8` 
