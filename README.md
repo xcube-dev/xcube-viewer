@@ -75,6 +75,55 @@ directory. Note, it is important to replace the contents,
 do not just copy. 
 Finally, add new files to git and commit all changes.  
 
+
+## Developer Guide
+
+### Code organisation
+
+Given here are the top-level modules in the source code folder `src`:
+
+| Module        | Content                                                              |
+|---------------|----------------------------------------------------------------------|
+| `actions/`    | Actions associated with different application states                 |
+| `api/`        | Server endpoint access functions                                     |
+| `components/` | Plain React components                                               |
+| `connected/`  | Higher-level Rect components connected to Redux                      |
+| `hooks/`      | React hook functions                                                 |
+| `model/`      | Data model types and model-specific functions                        |
+| `reducers/`   | Redux reducer functions associated with different application states |
+| `resources/`  | Application JSON and image resources                                 |
+| `selectors/`  | Selectors associated with with different application states          |
+| `states/`     | All the application states                                           |
+| `util/`       | Basic utility types and functions                                    |
+| `volume/`     | Experimental volume rendering code                                   |
+| `config`      | Application configuration access                                     |
+| `index`       | Application entry point                                              |
+| `version`     | Application version string                                           |
+
+
+### Styling
+
+Use the `sx` property of MUI components. Avoid inline style objects. Instead,
+create a local module object `styles` 
+
+```typescript
+import { makeStyles } from "@/util/styles";
+
+const styles = makeStyles({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  ...
+}
+```
+
+and use its properties in components
+
+```typescript
+<Box sx={styles.container}>...</Box>
+```
+
 ## More
 
 * [User Guide](https://xcube.readthedocs.io/en/latest/viewer.html#)
