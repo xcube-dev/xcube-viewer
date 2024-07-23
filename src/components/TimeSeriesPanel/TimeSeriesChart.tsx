@@ -39,6 +39,8 @@ import { CategoricalChartState } from "recharts/types/chart/types";
 import { styled, useTheme } from "@mui/system";
 
 import { Place, PlaceInfo } from "@/model/place";
+import { TimeSeriesChartType } from "@/states/controlState";
+import { MessageType } from "@/states/messageLogState";
 import {
   equalTimeRanges,
   PlaceGroupTimeSeries,
@@ -49,7 +51,6 @@ import {
   TimeSeriesPoint,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
-import { TimeSeriesChartType } from "@/states/controlState";
 import { isNumber } from "@/util/types";
 import { formatTimeTick, formatValueTick } from "./util";
 import CustomLegend from "./CustomLegend";
@@ -71,10 +72,6 @@ const StyledContainerDiv = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-stretch",
-}));
-
-const StyledResponsiveContainer = styled(ResponsiveContainer)(() => ({
-  flexGrow: 1,
 }));
 
 interface Rectangle {
@@ -122,6 +119,7 @@ interface TimeSeriesChartProps extends WithLocale {
     timeSeriesGroupId: string,
     timeSeries: TimeSeries,
   ) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function TimeSeriesChart({
@@ -141,6 +139,7 @@ export default function TimeSeriesChart({
   removeTimeSeriesGroup,
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
+  postMessage,
 }: TimeSeriesChartProps) {
   const theme = useTheme();
 
@@ -410,7 +409,7 @@ export default function TimeSeriesChart({
   const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
   return (
-    <StyledContainerDiv ref={containerRef}>
+    <StyledContainerDiv>
       <TimeSeriesChartHeader
         timeSeriesGroup={timeSeriesGroup}
         placeGroupTimeSeries={placeGroupTimeSeries}
@@ -430,11 +429,14 @@ export default function TimeSeriesChart({
         setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
+        chartElement={containerRef}
+        postMessage={postMessage}
       />
-      <StyledResponsiveContainer
+      <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
         onResize={handleChartResize}
+        ref={containerRef}
       >
         <ChartComponent
           onMouseDown={handleMouseDown}
@@ -514,7 +516,7 @@ export default function TimeSeriesChart({
             />
           )}
         </ChartComponent>
-      </StyledResponsiveContainer>
+      </ResponsiveContainer>
     </StyledContainerDiv>
   );
 }
