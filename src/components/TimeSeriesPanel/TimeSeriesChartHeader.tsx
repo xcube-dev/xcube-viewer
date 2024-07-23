@@ -170,12 +170,14 @@ export default function TimeSeriesChartHeader({
     setStdevBars(showStdDevNew);
   };
 
-  const handleExportSuccess = (message: string) => {
-    postMessage("success", i18n.get(message));
+  const handleExportSuccess = () => {
+    postMessage("success", i18n.get("Snapshot copied to clipboard"));
   };
 
-  const handleExportError = (message: string, error: unknown) => {
-    postMessage("error", i18n.get(`${message}: ${error}`));
+  const handleExportError = (error: unknown) => {
+    const message = "Error copying snapshot to clipboard";
+    console.error(message + ":", error);
+    postMessage("error", i18n.get(message));
   };
 
   const exportOptions: ExportOptions = {
@@ -201,19 +203,6 @@ export default function TimeSeriesChartHeader({
             </IconButton>
           </Tooltip>
         )}
-        <Tooltip arrow title={i18n.get("Export Timeseries as image")}>
-          <IconButton
-            key={"exportButton"}
-            sx={styles.actionButton}
-            onClick={() =>
-              chartElement.current &&
-              exportElement(chartElement.current, exportOptions)
-            }
-            size="small"
-          >
-            <CameraAltIcon fontSize={"inherit"}></CameraAltIcon>
-          </IconButton>
-        </Tooltip>
 
         <Tooltip arrow title={i18n.get("Toggle zoom mode (or press CTRL key)")}>
           <ToggleButton
@@ -291,6 +280,20 @@ export default function TimeSeriesChartHeader({
             </ToggleButton>
           </Tooltip>
         </ToggleButtonGroup>
+
+        <Tooltip arrow title={i18n.get("Copy snapshot of chart to clipboard")}>
+          <IconButton
+            key={"exportButton"}
+            sx={styles.actionButton}
+            onClick={() =>
+              chartElement.current &&
+              exportElement(chartElement.current, exportOptions)
+            }
+            size="small"
+          >
+            <CameraAltIcon fontSize={"inherit"}></CameraAltIcon>
+          </IconButton>
+        </Tooltip>
 
         <TimeSeriesAddButton
           sx={styles.actionButton}

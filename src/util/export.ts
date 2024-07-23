@@ -22,16 +22,21 @@
  * SOFTWARE.
  */
 
-import { toPng } from "html-to-image";
+import { toJpeg, toPng } from "html-to-image";
 
-export type ExportFormat = "png" | "jpeg" | "svg";
+const converters = {
+  png: toPng,
+  jpeg: toJpeg,
+};
+
+export type ExportFormat = keyof typeof converters;
 
 export interface ExportOptions {
   format?: ExportFormat;
   width?: number;
   height?: number;
-  handleSuccess?: (message: string) => void;
-  handleError?: (message: string, error: unknown) => void;
+  handleSuccess?: () => void;
+  handleError?: (error: unknown) => void;
 }
 
 /**
@@ -40,7 +45,7 @@ export interface ExportOptions {
  *
  * @param element The HTML element to export.
  * @param options Specifies image export options.
- *     Default image format is PNG.
+ *     Default image format is `"png"`.
  * @returns The image copied into the clipboard.
  */
 export function exportElement(
@@ -50,30 +55,29 @@ export function exportElement(
   _exportElement(element, options)
     .then(() => {
       if (options?.handleSuccess) {
-        options.handleSuccess("Image copied to clipboard.");
+        options.handleSuccess();
       }
     })
     .catch((error) => {
-      console.error("Failed to export:", error);
       if (options?.handleError) {
-        options.handleError("Failed to export", error);
+        options.handleError(error);
       } else {
         throw error;
       }
     });
 }
 
-export async function _exportElement(
+async function _exportElement(
   element: HTMLElement,
   options: ExportOptions = {},
 ): Promise<void> {
   const chartElement = element;
-  if (options.format !== "png") {
-    const errorMessage = `Format '${options.format}' is not supported.`;
-    throw new Error(errorMessage);
+  const format = options.format || "png";
+  if (!(format in converters)) {
+    throw new Error(`Image format '${format}' is unknown or not supported.`);
   }
-  const dataUrl = await toPng(chartElement, {
-    backgroundColor: "#ffffff",
+  const dataUrl = await converters[format](chartElement, {
+    backgroundColor: "#00000000",
     canvasWidth:
       options.width ||
       ((options.height || chartElement.clientHeight) *
