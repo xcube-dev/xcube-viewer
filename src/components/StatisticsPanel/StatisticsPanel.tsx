@@ -31,6 +31,8 @@ import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
 import StatisticsDataRow from "./StatisticsDataRow";
 import StatisticsFirstRow from "./StatisticsFirstRow";
+import { MessageType } from "@/states/messageLogState";
+import { useRef } from "react";
 
 const styles = makeStyles({
   container: {
@@ -50,6 +52,7 @@ interface StatisticsPanelProps {
   statisticsRecords: StatisticsRecord[];
   addStatistics: () => void;
   removeStatistics: (index: number) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function StatisticsPanel({
@@ -61,7 +64,10 @@ export default function StatisticsPanel({
   statisticsRecords,
   addStatistics,
   removeStatistics,
+  postMessage,
 }: StatisticsPanelProps) {
+  const chartContainerRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <Box sx={styles.container}>
       <StatisticsFirstRow
@@ -78,6 +84,8 @@ export default function StatisticsPanel({
           statisticsRecord={sr}
           rowIndex={rowIndex}
           removeStatistics={removeStatistics}
+          chartContainerRef={chartContainerRef}
+          postMessage
         />
       ))}
     </Box>

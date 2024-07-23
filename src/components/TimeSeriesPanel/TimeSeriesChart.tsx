@@ -151,7 +151,7 @@ export default function TimeSeriesChart({
   const xDomain = useRef<[number, number]>();
   const yDomain = useRef<[number, number]>();
   const chartSize = useRef<[number, number]>();
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const legendWrapperRef = useRef<HTMLDivElement | null>(null);
   const data = useMemo(() => {
     const dataMap = new Map<number, Record<string, number>>();
@@ -330,10 +330,10 @@ export default function TimeSeriesChart({
 
   const handleChartResize = (w: number, h: number) => {
     chartSize.current = [w, h];
-    if (containerRef.current) {
+    if (chartContainerRef.current) {
       // Hack: get the recharts legend wrapper div, so we can use its height
       // to compute cartesian chart coordinates
-      const elements = containerRef.current.getElementsByClassName(
+      const elements = chartContainerRef.current.getElementsByClassName(
         "recharts-legend-wrapper",
       );
       if (elements.length !== 0) {
@@ -429,14 +429,14 @@ export default function TimeSeriesChart({
         setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
-        chartElement={containerRef}
+        chartElement={chartContainerRef}
         postMessage={postMessage}
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
         onResize={handleChartResize}
-        ref={containerRef}
+        ref={chartContainerRef}
       >
         <ChartComponent
           onMouseDown={handleMouseDown}

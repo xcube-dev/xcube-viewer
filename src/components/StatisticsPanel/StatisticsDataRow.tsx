@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useState } from "react";
+import { RefObject, useState } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -36,9 +36,12 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
+import SnapshotButton from "@/components/SnapshotButton";
 import StatisticsTable from "./StatisticsTable";
 import HistogramChart from "./HistogramChart";
 import StatisticsRow from "./StatisticsRow";
+import { postMessage } from "@/actions/messageLogActions";
+import { MessageType } from "@/states/messageLogState";
 
 const styles = makeStyles({
   table: {
@@ -53,6 +56,8 @@ interface StatisticsDataRowProps extends WithLocale {
   statisticsRecord: StatisticsRecord;
   rowIndex: number;
   removeStatistics: (rowIndex: number) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  chartContainerRef: RefObject<HTMLDivElement | null>;
 }
 
 export default function StatisticsDataRow({
@@ -60,6 +65,8 @@ export default function StatisticsDataRow({
   statisticsRecord,
   rowIndex,
   removeStatistics,
+  postMessage,
+  chartContainerRef,
 }: StatisticsDataRowProps) {
   const [brush, setBrush] = useState(false);
   const [details, setDetails] = useState(false);
@@ -109,9 +116,15 @@ export default function StatisticsDataRow({
               </Tooltip>
             </ToggleButtonGroup>
           )}
+
           <IconButton size="small" onClick={handleRemoveStatistics}>
             <CloseIcon fontSize="inherit" />
           </IconButton>
+
+          <SnapshotButton
+            elementRef={chartContainerRef}
+            postMessage={postMessage}
+          />
         </>
       }
       body={
@@ -127,6 +140,7 @@ export default function StatisticsDataRow({
               showBrush={brush}
               showDetails={details}
               statisticsRecord={statisticsRecord}
+              chartContainerRef={chartContainerRef}
             />
           </Box>
         </>
