@@ -26,6 +26,9 @@
 * It is now possible to change the color and opacity of user places
   and hence associated time-series and statistic charts. (#216, #97)
 
+* Users can now download/export the time-series chart as PNG by clicking
+  on the camera icon on time-series chart's action bar. (#290)
+
 * Improved visual style of selected places in the map.
 
 ### Fixes
