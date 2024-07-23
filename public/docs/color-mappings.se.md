@@ -1,6 +1,6 @@
 En användardefinierad färgkarta associerar datavärden eller intervall 
 av datavärden med färgvärden. Raderna i textrutan har den allmänna 
-syntaxen <värde>: <färg>, där <färg> kan vara
+syntaxen <value>: <color>, där <color> kan vara
 
 * en lista med RGB-värden, med värden i intervallet 0 till 255, 
   till exempel, 255,165,0 för färgen Orange;
@@ -17,9 +17,9 @@ Tolkningen av `<value>` beror på den valda färgkartläggningstypen:
 
 * **Kontinuerlig:** Kontinuerlig färgtilldelning där varje `<value>` 
   representerar en punkt i en färggradient.
-* **Stegvis:** Stegvis färgmappning där värden är gränser för intervall 
-  `<color>` associeras med det första `<value>` i varje gräns. Det sista 
-  färgvärdet ignoreras.
+* **Stegvis:** Stegvis färgmappning där värden är gränser för intervall. 
+  En `<color>` associeras med det första `<value>` i gränsintervall, medan 
+  den sista färgen ignoreras.
 * **Kategorisk:** Värden representerar unika kategorier eller index som 
   är mappade till en färg. Innehållet i datasetet samt `<value>` måste 
   vara av typ Integer. Om en kategori inte har något `<value>` i 
