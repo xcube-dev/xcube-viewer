@@ -973,7 +973,7 @@
     {
       "en": "Stepwise color mapping where values are bounds of value ranges mapped to the same color",
       "de": "Schrittweise Farbzuordnung, bei der die Werte Bereichsgrenzen darstellen, die einer einzelnen Frabe zugeordnet werden",
-      "se": "Stegvis färgmappning där värden är gränser för intervall"
+      "se": "Gradvis färgmappning, där värdena representerar intervallgränser mappade till en enda färg"
     },
     {
       "en": "Values represent unique categories or indexes that are mapped to a color",
