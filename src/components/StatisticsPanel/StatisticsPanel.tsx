@@ -24,15 +24,14 @@
 
 import Box from "@mui/material/Box";
 
-import { makeStyles } from "@/util/styles";
+import { MessageType } from "@/states/messageLogState";
 import { StatisticsRecord } from "@/model/statistics";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
+import { makeStyles } from "@/util/styles";
 import StatisticsDataRow from "./StatisticsDataRow";
 import StatisticsFirstRow from "./StatisticsFirstRow";
-import { MessageType } from "@/states/messageLogState";
-import { useRef } from "react";
 
 const styles = makeStyles({
   container: {
@@ -66,8 +65,6 @@ export default function StatisticsPanel({
   removeStatistics,
   postMessage,
 }: StatisticsPanelProps) {
-  const chartContainerRef = useRef<HTMLDivElement | null>(null);
-
   return (
     <Box sx={styles.container}>
       <StatisticsFirstRow
@@ -84,8 +81,7 @@ export default function StatisticsPanel({
           statisticsRecord={sr}
           rowIndex={rowIndex}
           removeStatistics={removeStatistics}
-          chartContainerRef={chartContainerRef}
-          postMessage
+          postMessage={postMessage}
         />
       ))}
     </Box>

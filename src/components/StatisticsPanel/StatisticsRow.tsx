@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { RefObject } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
@@ -61,6 +61,7 @@ interface StatisticsRowProps extends WithLocale {
   placeInfo: PlaceInfo | null;
   actions: React.ReactNode;
   body?: React.ReactNode;
+  containerRef?: RefObject<HTMLDivElement>;
 }
 
 function Missing({ phrase }: { phrase: string }) {
@@ -74,6 +75,7 @@ export default function StatisticsRow({
   placeInfo,
   actions,
   body,
+  containerRef,
 }: StatisticsRowProps) {
   const datasetLabel = dataset ? dataset.title : <Missing phrase="Dataset" />;
   const variableLabel = variable ? (
@@ -88,7 +90,7 @@ export default function StatisticsRow({
   );
   const placeLabel = placeInfo ? placeInfo.label : <Missing phrase="Place" />;
   return (
-    <Box sx={styles.container}>
+    <Box sx={styles.container} ref={containerRef}>
       <Box sx={styles.header}>
         <Typography fontSize="small">
           {datasetLabel} / {variableLabel}, {timeLabel}, {placeLabel}

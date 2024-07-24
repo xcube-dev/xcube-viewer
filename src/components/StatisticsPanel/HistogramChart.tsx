@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { RefObject, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -44,14 +44,12 @@ interface HistogramChartProps {
   statisticsRecord: StatisticsRecord;
   showBrush?: boolean;
   showDetails?: boolean;
-  chartContainerRef: RefObject<HTMLDivElement>;
 }
 
 export default function HistogramChart({
   statisticsRecord,
   showBrush,
   showDetails,
-  chartContainerRef,
 }: HistogramChartProps) {
   const theme = useTheme();
   const statistics = statisticsRecord.statistics as AreaStatistics;
@@ -114,7 +112,7 @@ export default function HistogramChart({
   };
 
   return (
-    <ResponsiveContainer width="100%" height="100%" ref={chartContainerRef}>
+    <ResponsiveContainer width="100%" height="100%">
       <AreaChart
         data={data}
         margin={{ top: 0, right: showBrush ? 30 : 5, bottom: 1, left: 2 }}

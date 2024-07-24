@@ -51,17 +51,20 @@ export default function SnapshotButton({
   };
 
   const handleButtonClick = () => {
-    exportElement(elementRef.current!, {
-      format: "png",
-      width: 2000,
-      handleSuccess: handleExportSuccess,
-      handleError: handleExportError,
-    });
+    if (elementRef.current) {
+      exportElement(elementRef.current!, {
+        format: "png",
+        width: 2000,
+        handleSuccess: handleExportSuccess,
+        handleError: handleExportError,
+      });
+    } else {
+      handleExportError(new Error("missing element reference"));
+    }
   };
 
   return (
     <ToolButton
-      disabled={elementRef.current === null}
       tooltipText={i18n.get("Copy snapshot of chart to clipboard")}
       onClick={handleButtonClick}
       icon={<CameraAltIcon fontSize="inherit" />}

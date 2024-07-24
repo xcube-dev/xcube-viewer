@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { RefObject, useState } from "react";
+import { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -40,7 +40,6 @@ import SnapshotButton from "@/components/SnapshotButton";
 import StatisticsTable from "./StatisticsTable";
 import HistogramChart from "./HistogramChart";
 import StatisticsRow from "./StatisticsRow";
-import { postMessage } from "@/actions/messageLogActions";
 import { MessageType } from "@/states/messageLogState";
 
 const styles = makeStyles({
@@ -57,7 +56,6 @@ interface StatisticsDataRowProps extends WithLocale {
   rowIndex: number;
   removeStatistics: (rowIndex: number) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  chartContainerRef: RefObject<HTMLDivElement | null>;
 }
 
 export default function StatisticsDataRow({
@@ -66,8 +64,8 @@ export default function StatisticsDataRow({
   rowIndex,
   removeStatistics,
   postMessage,
-  chartContainerRef,
 }: StatisticsDataRowProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [brush, setBrush] = useState(false);
   const [details, setDetails] = useState(false);
   const { dataset, variable, time, placeInfo } = statisticsRecord.source;
@@ -87,6 +85,7 @@ export default function StatisticsDataRow({
       variable={variable}
       time={time}
       placeInfo={placeInfo}
+      containerRef={containerRef}
       actions={
         <>
           {hasHistogram && (
@@ -117,14 +116,16 @@ export default function StatisticsDataRow({
             </ToggleButtonGroup>
           )}
 
+          {hasHistogram && (
+            <SnapshotButton
+              elementRef={containerRef}
+              postMessage={postMessage}
+            />
+          )}
+
           <IconButton size="small" onClick={handleRemoveStatistics}>
             <CloseIcon fontSize="inherit" />
           </IconButton>
-
-          <SnapshotButton
-            elementRef={chartContainerRef}
-            postMessage={postMessage}
-          />
         </>
       }
       body={
@@ -140,7 +141,6 @@ export default function StatisticsDataRow({
               showBrush={brush}
               showDetails={details}
               statisticsRecord={statisticsRecord}
-              chartContainerRef={chartContainerRef}
             />
           </Box>
         </>
