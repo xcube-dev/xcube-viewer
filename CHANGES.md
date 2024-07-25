@@ -18,6 +18,9 @@
   - The value range can now be assigned from the value range
     of the color mapping values.
 
+* When in map split mode each of the two variables has its own
+  color legend with same functionality. (#401)
+
 * The datasets in the dataset selector are now sorted by name and may
   also be grouped if configured so in xcube server. (#385)
 
