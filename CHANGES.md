@@ -6,7 +6,7 @@
   band-math expressions. The variables are defined for a given
   dataset and are persisted in the browser's local storage. (#371)
 
-* Revised map color mapping for simplicity and clarity. (#390)
+* Revised map color mapping for simplicity and clarity. (#306, #390)
   This comprises the following changes:
   - Removed the color mapping normalisation modes. Instead, introduced
     a "Log" switch in the value-range popup. The normalisation mode
@@ -33,7 +33,6 @@
 * The title of time-series charts has been turned into a label of the 
   chart's y-axis in order to include an indication of the units when 
   snapshots are made.
-  
 
 * Improved visual style of selected places in the map.
 
