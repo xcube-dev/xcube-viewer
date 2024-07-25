@@ -225,7 +225,7 @@ export default function Viewer({
     }
   }, [map, imageSmoothing]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (map === null || !isNumber(variableSplitPos)) {
       return;
     }
@@ -367,9 +367,15 @@ export default function Viewer({
   }
 
   let colorBarControl2 = null;
-  if (colorBarLegend2) {
+  if (colorBarLegend2 && variableSplitPos && map) {
     colorBarControl2 = (
-      <Control id="legend" style={COLOR_LEGEND_STYLE}>
+      <Control
+        id="legend"
+        style={{
+          ...COLOR_LEGEND_STYLE,
+          right: map.getSize()![0] - variableSplitPos + 10,
+        }}
+      >
         {colorBarLegend2}
       </Control>
     );
