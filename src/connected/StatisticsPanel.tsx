@@ -34,6 +34,7 @@ import {
 } from "@/selectors/controlSelectors";
 import _StatisticsPanel from "@/components/StatisticsPanel";
 import { addStatistics, removeStatistics } from "@/actions/dataActions";
+import { postMessage } from "@/actions/messageLogActions";
 import { statisticsLoadingSelector } from "@/selectors/dataSelectors";
 
 const mapStateToProps = (state: AppState) => {
@@ -50,6 +51,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   addStatistics,
   removeStatistics,
+  postMessage,
 };
 
 const StatisticsPanel = connect(

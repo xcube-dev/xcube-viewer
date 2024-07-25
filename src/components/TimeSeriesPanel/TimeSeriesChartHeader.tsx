@@ -29,7 +29,6 @@ import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import CloseIcon from "@mui/icons-material/Close";
@@ -39,7 +38,6 @@ import FitScreenIcon from "@mui/icons-material/FitScreen";
 import IsoIcon from "@mui/icons-material/Iso";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 import i18n from "@/i18n";
 import {
@@ -51,9 +49,9 @@ import { WithLocale } from "@/util/lang";
 import { makeStyles } from "@/util/styles";
 import { TimeSeriesChartType } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
+import SnapshotButton from "@/components/SnapshotButton";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
-import { ExportOptions, exportElement } from "@/util/export";
 
 type ValueRange = [number, number];
 const SHOW_DEV_VALUE = "stddev";
@@ -62,9 +60,7 @@ const styles = makeStyles({
   headerContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: "10px",
+    justifyContent: "right",
   },
   actionsContainer: {
     display: "flex",
@@ -89,7 +85,6 @@ const styles = makeStyles({
     paddingRight: theme.spacing(1),
   }),
 });
-const EXPORT_WIDTH = 2000; // in pixels
 
 interface TimeSeriesChartHeaderProps extends WithLocale {
   timeSeriesGroup: TimeSeriesGroup;
@@ -141,9 +136,6 @@ export default function TimeSeriesChartHeader({
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
-  const timeSeriesText = i18n.get("Time-Series");
-  const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
-  const chartTitle = `${timeSeriesText} (${unitsText})`;
   const handleToggleValueRangeEditor = () => {
     setValueRangeEditorOpen(!valueRangeEditorOpen);
   };
@@ -170,26 +162,8 @@ export default function TimeSeriesChartHeader({
     setStdevBars(showStdDevNew);
   };
 
-  const handleExportSuccess = () => {
-    postMessage("success", i18n.get("Snapshot copied to clipboard"));
-  };
-
-  const handleExportError = (error: unknown) => {
-    const message = "Error copying snapshot to clipboard";
-    console.error(message + ":", error);
-    postMessage("error", i18n.get(message));
-  };
-
-  const exportOptions: ExportOptions = {
-    format: "png",
-    width: EXPORT_WIDTH,
-    handleSuccess: handleExportSuccess,
-    handleError: handleExportError,
-  };
-
   return (
     <Box sx={styles.headerContainer}>
-      <Typography sx={styles.chartTitle}>{chartTitle}</Typography>
       <Box sx={styles.actionsContainer}>
         {zoomed && (
           <Tooltip arrow title={i18n.get("Zoom to full range")}>
@@ -281,19 +255,7 @@ export default function TimeSeriesChartHeader({
           </Tooltip>
         </ToggleButtonGroup>
 
-        <Tooltip arrow title={i18n.get("Copy snapshot of chart to clipboard")}>
-          <IconButton
-            key={"exportButton"}
-            sx={styles.actionButton}
-            onClick={() =>
-              chartElement.current &&
-              exportElement(chartElement.current, exportOptions)
-            }
-            size="small"
-          >
-            <CameraAltIcon fontSize={"inherit"}></CameraAltIcon>
-          </IconButton>
-        </Tooltip>
+        <SnapshotButton elementRef={chartElement} postMessage={postMessage} />
 
         <TimeSeriesAddButton
           sx={styles.actionButton}

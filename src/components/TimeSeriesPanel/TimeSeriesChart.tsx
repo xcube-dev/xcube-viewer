@@ -57,6 +57,7 @@ import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "./TimeSeriesLine";
 import TimeSeriesChartHeader from "./TimeSeriesChartHeader";
+import i18n from "@/i18n";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -82,6 +83,13 @@ interface Rectangle {
 }
 
 type ValueRange = [number, number];
+
+const Y_AXIS_LABEL = {
+  style: { textAnchor: "middle" },
+  angle: -90,
+  position: "left",
+  offset: 0,
+};
 
 interface TimeSeriesChartProps extends WithLocale {
   timeSeriesGroup: TimeSeriesGroup;
@@ -151,7 +159,7 @@ export default function TimeSeriesChart({
   const xDomain = useRef<[number, number]>();
   const yDomain = useRef<[number, number]>();
   const chartSize = useRef<[number, number]>();
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const legendWrapperRef = useRef<HTMLDivElement | null>(null);
   const data = useMemo(() => {
     const dataMap = new Map<number, Record<string, number>>();
@@ -209,6 +217,9 @@ export default function TimeSeriesChart({
       commonValueDataKey = valueDataKey;
     }
   });
+
+  const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
+  const yAxisText = `${i18n.get("Quantity")} (${unitsText})`;
 
   const lightStroke = theme.palette.primary.light;
   const mainStroke = theme.palette.primary.main;
@@ -330,10 +341,10 @@ export default function TimeSeriesChart({
 
   const handleChartResize = (w: number, h: number) => {
     chartSize.current = [w, h];
-    if (containerRef.current) {
+    if (chartContainerRef.current) {
       // Hack: get the recharts legend wrapper div, so we can use its height
       // to compute cartesian chart coordinates
-      const elements = containerRef.current.getElementsByClassName(
+      const elements = chartContainerRef.current.getElementsByClassName(
         "recharts-legend-wrapper",
       );
       if (elements.length !== 0) {
@@ -429,14 +440,14 @@ export default function TimeSeriesChart({
         setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
-        chartElement={containerRef}
+        chartElement={chartContainerRef}
         postMessage={postMessage}
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
         onResize={handleChartResize}
-        ref={containerRef}
+        ref={chartContainerRef}
       >
         <ChartComponent
           onMouseDown={handleMouseDown}
@@ -468,6 +479,7 @@ export default function TimeSeriesChart({
             tickFormatter={formatValueTick}
             stroke={labelTextColor}
             allowDataOverflow
+            label={{ ...Y_AXIS_LABEL, value: yAxisText }}
           />
           <CartesianGrid strokeDasharray="3 3" />
           {showTooltips && !isNumber(zoomRectangle.x1) && (
