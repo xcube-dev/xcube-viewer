@@ -26,18 +26,18 @@ import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
 import {
-  selectedVariableNameSelector,
-  selectedVariableTitleSelector,
-  selectedVariableUnitsSelector,
-  selectedVariableColorBarNameSelector,
-  selectedVariableColorBarMinMaxSelector,
-  selectedVariableOpacitySelector,
-  selectedVariableColorBarNormSelector,
-  selectedVariableColorBarSelector,
+  selectedVariable2NameSelector,
+  selectedVariable2TitleSelector,
+  selectedVariable2UnitsSelector,
+  selectedVariable2ColorBarNameSelector,
+  selectedVariable2ColorBarMinMaxSelector,
+  selectedVariable2ColorBarNormSelector,
+  selectedVariable2OpacitySelector,
+  selectedVariable2ColorBarSelector,
   colorBarsSelector,
   userColorBarsSelector,
 } from "@/selectors/controlSelectors";
-import { updateVariableColorBar } from "@/actions/dataActions";
+import { updateVariable2ColorBar } from "@/actions/dataActions";
 import {
   addUserColorBar,
   removeUserColorBar,
@@ -49,21 +49,21 @@ import _ColorBarLegend from "@/components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
   return {
-    variableName: selectedVariableNameSelector(state),
-    variableTitle: selectedVariableTitleSelector(state),
-    variableUnits: selectedVariableUnitsSelector(state),
-    variableColorBarName: selectedVariableColorBarNameSelector(state),
-    variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),
-    variableColorBarNorm: selectedVariableColorBarNormSelector(state),
-    variableColorBar: selectedVariableColorBarSelector(state),
-    variableOpacity: selectedVariableOpacitySelector(state),
+    variableName: selectedVariable2NameSelector(state),
+    variableTitle: selectedVariable2TitleSelector(state),
+    variableUnits: selectedVariable2UnitsSelector(state),
+    variableColorBarName: selectedVariable2ColorBarNameSelector(state),
+    variableColorBarMinMax: selectedVariable2ColorBarMinMaxSelector(state),
+    variableColorBarNorm: selectedVariable2ColorBarNormSelector(state),
+    variableColorBar: selectedVariable2ColorBarSelector(state),
+    variableOpacity: selectedVariable2OpacitySelector(state),
     userColorBars: userColorBarsSelector(state),
     colorBars: colorBarsSelector(state),
   };
 };
 
 const mapDispatchToProps = {
-  updateVariableColorBar,
+  updateVariableColorBar: updateVariable2ColorBar,
   addUserColorBar,
   removeUserColorBar,
   updateUserColorBar,

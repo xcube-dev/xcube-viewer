@@ -233,18 +233,32 @@ export const selectedVariable2Selector = createSelector(
   _findDatasetVariable,
 );
 
+const getVariableTitle = (variable: Variable | null): string | null => {
+  return variable && (variable.title || variable.name);
+};
+
 export const selectedVariableTitleSelector = createSelector(
   selectedVariableSelector,
-  (variable: Variable | null): string | null => {
-    return variable && (variable.title || variable.name);
-  },
+  getVariableTitle,
 );
+
+export const selectedVariable2TitleSelector = createSelector(
+  selectedVariable2Selector,
+  getVariableTitle,
+);
+
+const getVariableUnits = (variable: Variable | null): string => {
+  return (variable && variable.units) || "-";
+};
 
 export const selectedVariableUnitsSelector = createSelector(
   selectedVariableSelector,
-  (variable: Variable | null): string => {
-    return (variable && variable.units) || "-";
-  },
+  getVariableUnits,
+);
+
+export const selectedVariable2UnitsSelector = createSelector(
+  selectedVariable2Selector,
+  getVariableUnits,
 );
 
 const getVariableColorBarName = (variable: Variable | null): string => {

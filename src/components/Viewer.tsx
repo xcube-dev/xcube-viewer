@@ -124,6 +124,7 @@ interface ViewerProps {
   overlayLayer?: MapElement;
   placeGroupLayers?: MapElement;
   colorBarLegend?: MapElement;
+  colorBarLegend2?: MapElement;
   mapSplitter?: MapElement;
   userDrawnPlaceGroupName: string;
   addDrawnUserPlace?: (
@@ -163,6 +164,7 @@ export default function Viewer({
   placeGroupLayers,
   overlayLayer,
   colorBarLegend,
+  colorBarLegend2,
   mapSplitter,
   userDrawnPlaceGroupName,
   addDrawnUserPlace,
@@ -215,7 +217,7 @@ export default function Viewer({
     if (map) {
       map.getLayers().forEach((layer) => {
         if (layer instanceof OlTileLayer) {
-          layer.getSource().changed();
+          layer.getSource()!.changed();
         } else {
           layer.changed();
         }
@@ -364,6 +366,15 @@ export default function Viewer({
     );
   }
 
+  let colorBarControl2 = null;
+  if (colorBarLegend2) {
+    colorBarControl2 = (
+      <Control id="legend" style={COLOR_LEGEND_STYLE}>
+        {colorBarLegend2}
+      </Control>
+    );
+  }
+
   const handleDropFiles = (files: File[]) => {
     if (importUserPlacesFromText) {
       files.forEach((file) => {
@@ -449,6 +460,7 @@ export default function Viewer({
           onDrawEnd={handleDrawEnd}
         />
         {colorBarControl}
+        {colorBarControl2}
         {mapSplitter}
         <ScaleLine bar={false} />
       </Map>
