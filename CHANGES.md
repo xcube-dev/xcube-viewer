@@ -29,6 +29,11 @@
 * Users can now copy snapshots of a time-series charts into the clipboard
   by clicking a new camera icon on a time-series chart's action bar. (#290)
 
+* The title of time-series charts has been turned into a label of the 
+  chart's y-axis in order to include an indication of the units when 
+  snapshots are made.
+  
+
 * Improved visual style of selected places in the map.
 
 ### Fixes

@@ -116,6 +116,11 @@
       "se": "Tidsserier"
     },
     {
+      "en": "Quantity",
+      "de": "Größe",
+      "se": "Kvantitet"
+    },
+    {
       "en": "unknown units",
       "de": "unbekannte Einheiten",
       "se": "okända enheter"

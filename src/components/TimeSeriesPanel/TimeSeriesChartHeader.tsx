@@ -29,7 +29,6 @@ import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import CloseIcon from "@mui/icons-material/Close";
@@ -62,9 +61,7 @@ const styles = makeStyles({
   headerContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: "10px",
+    justifyContent: "right",
   },
   actionsContainer: {
     display: "flex",
@@ -141,9 +138,6 @@ export default function TimeSeriesChartHeader({
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
-  const timeSeriesText = i18n.get("Time-Series");
-  const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
-  const chartTitle = `${timeSeriesText} (${unitsText})`;
   const handleToggleValueRangeEditor = () => {
     setValueRangeEditorOpen(!valueRangeEditorOpen);
   };
@@ -189,7 +183,6 @@ export default function TimeSeriesChartHeader({
 
   return (
     <Box sx={styles.headerContainer}>
-      <Typography sx={styles.chartTitle}>{chartTitle}</Typography>
       <Box sx={styles.actionsContainer}>
         {zoomed && (
           <Tooltip arrow title={i18n.get("Zoom to full range")}>

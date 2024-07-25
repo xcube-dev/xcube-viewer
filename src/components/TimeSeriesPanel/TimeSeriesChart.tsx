@@ -57,6 +57,7 @@ import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "./TimeSeriesLine";
 import TimeSeriesChartHeader from "./TimeSeriesChartHeader";
+import i18n from "@/i18n";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -82,6 +83,13 @@ interface Rectangle {
 }
 
 type ValueRange = [number, number];
+
+const Y_AXIS_LABEL = {
+  style: { textAnchor: "middle" },
+  angle: -90,
+  position: "left",
+  offset: 0,
+};
 
 interface TimeSeriesChartProps extends WithLocale {
   timeSeriesGroup: TimeSeriesGroup;
@@ -209,6 +217,9 @@ export default function TimeSeriesChart({
       commonValueDataKey = valueDataKey;
     }
   });
+
+  const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
+  const yAxisText = `${i18n.get("Quantity")} (${unitsText})`;
 
   const lightStroke = theme.palette.primary.light;
   const mainStroke = theme.palette.primary.main;
@@ -468,6 +479,7 @@ export default function TimeSeriesChart({
             tickFormatter={formatValueTick}
             stroke={labelTextColor}
             allowDataOverflow
+            label={{ ...Y_AXIS_LABEL, value: yAxisText }}
           />
           <CartesianGrid strokeDasharray="3 3" />
           {showTooltips && !isNumber(zoomRectangle.x1) && (
