@@ -26,8 +26,9 @@
 * It is now possible to change the color and opacity of user places
   and hence associated time-series and statistic charts. (#216, #97)
 
-* Users can now copy snapshots of a time-series charts into the clipboard
-  by clicking a new camera icon on a time-series chart's action bar. (#290)
+* Users can now copy snapshots of a time-series charts and statistics 
+  into the clipboard by clicking a new camera icon on a chart's action bar. 
+  (#290)
 
 * The title of time-series charts has been turned into a label of the 
   chart's y-axis in order to include an indication of the units when 
