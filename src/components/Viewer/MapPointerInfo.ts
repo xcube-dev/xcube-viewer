@@ -22,18 +22,22 @@
  * SOFTWARE.
  */
 
-export function throttle<T extends (...args: Parameters<T>) => ReturnType<T>>(
-  func: T,
-  delay: number,
-): T {
-  let lastExecutionTime = 0;
-  let lastResult: ReturnType<T>;
-  return ((...args: Parameters<T>) => {
-    const currentTime = Date.now();
-    if (lastExecutionTime === 0 || currentTime - lastExecutionTime >= delay) {
-      lastResult = func(...args);
-      lastExecutionTime = currentTime;
-    }
-    return lastResult;
-  }) as T;
+import { Variable } from "@/model/variable";
+import { Dataset } from "@/model/dataset";
+
+export interface ValueState {
+  value?: number;
+  fetching?: boolean;
+  error?: Error;
+}
+
+export default interface MapPointerInfo {
+  pixelX: number;
+  pixelY: number;
+  dataset: Dataset;
+  variable: Variable;
+  lon: number;
+  lat: number;
+  time?: string;
+  valueState: ValueState;
 }

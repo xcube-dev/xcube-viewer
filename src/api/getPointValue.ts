@@ -22,18 +22,45 @@
  * SOFTWARE.
  */
 
-export function throttle<T extends (...args: Parameters<T>) => ReturnType<T>>(
-  func: T,
-  delay: number,
-): T {
-  let lastExecutionTime = 0;
-  let lastResult: ReturnType<T>;
-  return ((...args: Parameters<T>) => {
-    const currentTime = Date.now();
-    if (lastExecutionTime === 0 || currentTime - lastExecutionTime >= delay) {
-      lastResult = func(...args);
-      lastExecutionTime = currentTime;
-    }
-    return lastResult;
-  }) as T;
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import {
+  callJsonApi,
+  makeRequestInit,
+  makeRequestUrl,
+  QueryComponent,
+} from "@/api/callApi";
+import { encodeDatasetId, encodeVariableName } from "@/model/encode";
+
+interface Value {
+  value?: number;
+}
+
+interface Result {
+  result?: Value;
+}
+
+export function getPointValue(
+  apiServerUrl: string,
+  dataset: Dataset,
+  variable: Variable,
+  lon: number,
+  lat: number,
+  time: string | null,
+  accessToken: string | null,
+): Promise<Value> {
+  const query: QueryComponent[] = [
+    ["lon", lon.toString()],
+    ["lat", lat.toString()],
+  ];
+  if (time) {
+    query.push(["time", time]);
+  }
+  const url = makeRequestUrl(
+    `${apiServerUrl}/statistics/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
+    query,
+  );
+  return callJsonApi(url, makeRequestInit(accessToken), (result: Result) =>
+    result.result ? result.result : {},
+  );
 }

@@ -31,8 +31,10 @@ import {
   overlayLayerSelector,
   imageSmoothingSelector,
   mapProjectionSelector,
+  selectedDatasetSelector,
   selectedDatasetBoundaryLayerSelector,
   selectedDatasetPlaceGroupLayersSelector,
+  selectedDatasetTimeLabelSelector,
   selectedDatasetRgbLayerSelector,
   selectedDataset2RgbLayerSelector,
   selectedDatasetVariableLayerSelector,
@@ -40,6 +42,8 @@ import {
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
   showUserPlacesLayerSelector,
+  selectedVariableSelector,
+  selectedServerSelector,
 } from "@/selectors/controlSelectors";
 import {
   addDrawnUserPlace,
@@ -59,6 +63,10 @@ interface OwnProps {
 const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
   return {
     locale: state.controlState.locale,
+    serverUrl: selectedServerSelector(state).url,
+    dataset: selectedDatasetSelector(state),
+    variable: selectedVariableSelector(state),
+    time: selectedDatasetTimeLabelSelector(state),
     variableLayer: selectedDatasetVariableLayerSelector(state),
     variable2Layer: selectedDatasetVariable2LayerSelector(state),
     rgbLayer: selectedDatasetRgbLayerSelector(state),

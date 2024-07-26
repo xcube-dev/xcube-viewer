@@ -40,6 +40,7 @@ import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { getRenderPixel } from "ol/render";
+import RenderEvent from "ol/render/Event";
 
 import i18n from "@/i18n";
 import {
@@ -56,19 +57,22 @@ import {
 import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
 import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import UserVectorLayer from "./UserVectorLayer";
-import ErrorBoundary from "./ErrorBoundary";
-import { Control } from "./ol/control/Control";
-import { ScaleLine } from "./ol/control/ScaleLine";
-import { Draw, DrawEvent } from "./ol/interaction/Draw";
-import { Layers } from "./ol/layer/Layers";
-import { Vector } from "./ol/layer/Vector";
-import { Map, MapElement } from "./ol/Map";
-import { View } from "./ol/View";
-import { setFeatureStyle } from "./ol/style";
-import { findMapLayer } from "./ol/util";
-import RenderEvent from "ol/render/Event";
+import UserVectorLayer from "@/components/UserVectorLayer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { Control } from "@/components/ol/control/Control";
+import { ScaleLine } from "@/components/ol/control/ScaleLine";
+import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
+import { Layers } from "@/components/ol/layer/Layers";
+import { Vector } from "@/components/ol/layer/Vector";
+import { Map, MapElement } from "@/components/ol/Map";
+import { View } from "@/components/ol/View";
+import { setFeatureStyle } from "@/components/ol/style";
+import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
+import useMapPointerInfo from "@/components/Viewer/useMapPointerInfo";
+import MapPointerInfoBox from "@/components/Viewer/MapPointerInfoBox";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
 
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
@@ -80,6 +84,18 @@ const COLOR_LEGEND_STYLE: React.CSSProperties = {
   zIndex: 1000,
   right: 10,
   top: 10,
+};
+
+const MAP_POINTER_INFO_BOX_STYLE: React.CSSProperties = {
+  position: "absolute",
+  zIndex: 1000,
+  backgroundColor: "#333",
+  color: "#fff",
+  borderRadius: "4px",
+  padding: "5px",
+  transform: "translateX(3%)",
+  visibility: "hidden",
+  pointerEvents: "none",
 };
 
 const SELECTION_COLOR = [255, 220, 0, 0.8];
@@ -148,6 +164,10 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
+  serverUrl: string;
+  dataset: Dataset | null;
+  variable: Variable | null;
+  time: string | null;
 }
 
 export default function Viewer({
@@ -178,11 +198,23 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
+  serverUrl,
+  dataset,
+  variable,
+  time,
 }: ViewerProps) {
   theme = useTheme();
   const [map, setMap] = useState<OlMap | null>(null);
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
+  );
+
+  const mapPointerInfo = useMapPointerInfo(
+    serverUrl,
+    dataset,
+    variable,
+    time,
+    map,
   );
 
   useEffect(() => {
@@ -357,20 +389,21 @@ export default function Viewer({
     setMap(map);
   }
 
-  let colorBarControl = null;
+  let colorBarLegendControl = null;
   if (colorBarLegend) {
-    colorBarControl = (
-      <Control id="legend" style={COLOR_LEGEND_STYLE}>
+    colorBarLegendControl = (
+      <Control key="legend" id="legend" style={COLOR_LEGEND_STYLE}>
         {colorBarLegend}
       </Control>
     );
   }
 
-  let colorBarControl2 = null;
+  let colorBarLegendControl2 = null;
   if (colorBarLegend2 && variableSplitPos && map) {
-    colorBarControl2 = (
+    colorBarLegendControl2 = (
       <Control
-        id="legend"
+        key="legend2"
+        id="legend2"
         style={{
           ...COLOR_LEGEND_STYLE,
           right: map.getSize()![0] - variableSplitPos + 10,
@@ -380,6 +413,25 @@ export default function Viewer({
       </Control>
     );
   }
+
+  const mapPointerInfoBoxControl = (
+    <div
+      id="infoBox"
+      key="infoBox"
+      style={
+        mapPointerInfo
+          ? {
+              ...MAP_POINTER_INFO_BOX_STYLE,
+              visibility: "visible",
+              left: mapPointerInfo.pixelX,
+              top: mapPointerInfo.pixelY,
+            }
+          : MAP_POINTER_INFO_BOX_STYLE
+      }
+    >
+      {mapPointerInfo && <MapPointerInfoBox {...mapPointerInfo} />}
+    </div>
+  );
 
   const handleDropFiles = (files: File[]) => {
     if (importUserPlacesFromText) {
@@ -465,8 +517,9 @@ export default function Viewer({
           stopClick={true}
           onDrawEnd={handleDrawEnd}
         />
-        {colorBarControl}
-        {colorBarControl2}
+        {colorBarLegendControl}
+        {colorBarLegendControl2}
+        {mapPointerInfoBoxControl}
         {mapSplitter}
         <ScaleLine bar={false} />
       </Map>

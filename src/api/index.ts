@@ -28,5 +28,7 @@ export { getDatasetPlaceGroup } from "./getDatasetPlaceGroup";
 export { getExpressionCapabilities } from "./getExpressionCapabilities";
 export { getServerInfo } from "./getServerInfo";
 export { getTimeSeriesForGeometry } from "./getTimeSeries";
+export { getStatistics } from "./getStatistics";
+export { getPointValue } from "./getPointValue";
 export { updateResources } from "./updateResources";
 export { HTTPError } from "./errors";
