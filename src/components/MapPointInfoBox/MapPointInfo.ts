@@ -25,19 +25,25 @@
 import { Variable } from "@/model/variable";
 import { Dataset } from "@/model/dataset";
 
-export interface ValueState {
-  value?: number;
-  fetching?: boolean;
-  error?: Error;
+export interface Location {
+  pixelX: number;
+  pixelY: number;
+  lon: number;
+  lat: number;
+}
+
+export interface Payload {
+  dataset: Dataset;
+  variable: Variable;
+  result: {
+    value?: number;
+    fetching?: boolean;
+    error?: unknown;
+  };
 }
 
 export default interface MapPointInfo {
-  pixelX: number;
-  pixelY: number;
-  dataset: Dataset;
-  variable: Variable;
-  lon: number;
-  lat: number;
-  time?: string;
-  valueState: ValueState;
+  location: Location;
+  payload: Payload;
+  payload2?: Payload;
 }

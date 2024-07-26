@@ -27,9 +27,11 @@ import { connect } from "react-redux";
 import { AppState } from "@/states/appState";
 import _MapPointInfoBox from "@/components/MapPointInfoBox";
 import {
+  selectedDataset2Selector,
   selectedDatasetSelector,
   selectedDatasetTimeLabelSelector,
   selectedServerSelector,
+  selectedVariable2Selector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
@@ -37,8 +39,10 @@ const mapStateToProps = (state: AppState) => {
   return {
     enabled: state.controlState.mapPointInfoBoxEnabled,
     serverUrl: selectedServerSelector(state).url,
-    dataset: selectedDatasetSelector(state),
-    variable: selectedVariableSelector(state),
+    dataset1: selectedDatasetSelector(state),
+    variable1: selectedVariableSelector(state),
+    dataset2: selectedDataset2Selector(state),
+    variable2: selectedVariable2Selector(state),
     time: selectedDatasetTimeLabelSelector(state),
   };
 };

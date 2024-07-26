@@ -36,6 +36,7 @@ const styles = makeStyles({
     zIndex: 1000,
     backgroundColor: "#000000A0",
     color: "#fff",
+    border: "1px solid #FFFFFF50",
     borderRadius: "4px",
     transform: "translateX(3%)",
     pointerEvents: "none",
@@ -45,23 +46,29 @@ const styles = makeStyles({
 interface MapPointInfoBoxProps {
   enabled: boolean;
   serverUrl: string;
-  dataset: Dataset | null;
-  variable: Variable | null;
+  dataset1: Dataset | null;
+  variable1: Variable | null;
+  dataset2: Dataset | null;
+  variable2: Variable | null;
   time: string | null;
 }
 
 export default function MapPointInfoBox({
   enabled,
   serverUrl,
-  dataset,
-  variable,
+  dataset1,
+  variable1,
+  dataset2,
+  variable2,
   time,
 }: MapPointInfoBoxProps) {
   const mapPointInfo = useMapPointInfo(
     enabled,
     serverUrl,
-    dataset,
-    variable,
+    dataset1,
+    variable1,
+    dataset2,
+    variable2,
     time,
   );
 
@@ -69,7 +76,7 @@ export default function MapPointInfoBox({
     return null;
   }
 
-  const { pixelX, pixelY } = mapPointInfo;
+  const { pixelX, pixelY } = mapPointInfo.location;
 
   // console.info("mapPointInfo", mapPointInfo);
 

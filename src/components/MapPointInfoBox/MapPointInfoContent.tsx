@@ -23,7 +23,7 @@
  */
 
 import { getLabelForValue } from "@/util/label";
-import MapPointInfo from "./MapPointInfo";
+import MapPointInfo, { Payload } from "./MapPointInfo";
 import Box from "@mui/material/Box";
 import { makeStyles } from "@/util/styles";
 import { isNumber } from "@/util/types";
@@ -43,30 +43,39 @@ const styles = makeStyles({
 interface MapPointInfoContentProps extends MapPointInfo {}
 
 export default function MapPointInfoContent({
-  lon,
-  lat,
-  valueState,
+  location,
+  payload,
+  payload2,
 }: MapPointInfoContentProps) {
-  let valueLabel: string;
-  if (valueState.error) {
-    valueLabel = `${valueState.error}`;
-  } else if (valueState.fetching) {
-    valueLabel = "..."; // "Loading...";
-  } else if (isNumber(valueState.value)) {
-    valueLabel = getLabelForValue(valueState.value, 4);
-  } else {
-    valueLabel = "---";
-  }
-
   return (
     <Box sx={styles.container}>
       <Box sx={styles.labelItem}>{"Longitude"}</Box>
-      <Box sx={styles.valueItem}>{getLabelForValue(lon, 4)}</Box>
+      <Box sx={styles.valueItem}>{getLabelForValue(location.lon, 4)}</Box>
       <Box sx={styles.labelItem}>{"Latitude"}</Box>
-      <Box sx={styles.valueItem}>{getLabelForValue(lat, 4)}</Box>
+      <Box sx={styles.valueItem}>{getLabelForValue(location.lat, 4)}</Box>
 
-      <Box sx={styles.labelItem}>{"Value"}</Box>
-      <Box sx={styles.valueItem}>{valueLabel}</Box>
+      <Box sx={styles.labelItem}>{formatLabel(payload)}</Box>
+      <Box sx={styles.valueItem}>{formatValue(payload)}</Box>
+      {payload2 && <Box sx={styles.labelItem}>{formatLabel(payload2)}</Box>}
+      {payload2 && <Box sx={styles.valueItem}>{formatValue(payload2)}</Box>}
     </Box>
   );
+}
+
+function formatLabel(payload: Payload) {
+  const variable = payload.variable;
+  return variable.title || variable.name;
+}
+
+function formatValue(payload: Payload) {
+  const result = payload.result;
+  if (result.error) {
+    return `${result.error}`;
+  } else if (result.fetching) {
+    return "..."; // "Loading...";
+  } else if (isNumber(result.value)) {
+    return getLabelForValue(result.value, 4);
+  } else {
+    return "---";
+  }
 }

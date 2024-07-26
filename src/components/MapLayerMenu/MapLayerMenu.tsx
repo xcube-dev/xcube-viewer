@@ -144,12 +144,12 @@ export default function MapLayerMenu(props: LayerMenuProps) {
           <MapLayerMenuItem layerId="overlay" {...layerSelectProps} />
           <Divider />
           <SelectableMenuItem
-            title={i18n.get("Compare Mode (Swipe)")}
+            title={i18n.get("Compare Mode (Drag)")}
             selected={variableCompareMode}
             onClick={() => setVariableCompareMode(!variableCompareMode)}
           />
           <SelectableMenuItem
-            title={i18n.get("Show Point Info")}
+            title={i18n.get("Point Info Mode (Hover)")}
             selected={mapPointInfoBoxEnabled}
             onClick={() => setMapPointInfoBoxEnabled(!mapPointInfoBoxEnabled)}
           />
