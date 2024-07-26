@@ -29,28 +29,27 @@ import { transform as olTransform } from "ol/proj";
 
 import { throttle } from "@/util/throttle";
 import { getPointValue } from "@/api";
-import MapPointerInfo from "./MapPointerInfo";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
+import { MAP_OBJECTS } from "@/states/controlState";
+import MapPointInfo from "./MapPointInfo";
 
 const getPointValueThrottled = throttle(getPointValue, 500);
 
-export default function useMapPointerInfo(
+export default function useMapPointInfo(
+  enabled: boolean,
   serverUrl: string,
   dataset: Dataset | null,
   variable: Variable | null,
   time: string | null,
-  map: OlMap | null,
-): MapPointerInfo | null {
-  const [mapPointerInfo, setMapPointerInfo] = useState<MapPointerInfo | null>(
-    null,
-  );
+): MapPointInfo | null {
+  const [mapPointInfo, setMapPointInfo] = useState<MapPointInfo | null>(null);
 
   const updateCoordinateDisplay = useCallback(
     (event: OlMapBrowserEvent<PointerEvent>) => {
       const map = event.map;
-      if (!dataset || !variable || !map) {
-        setMapPointerInfo(null);
+      if (!enabled || !dataset || !variable || !map) {
+        setMapPointInfo(null);
         return;
       }
       const geoCoordinate = olTransform(
@@ -58,7 +57,7 @@ export default function useMapPointerInfo(
         map.getView().getProjection().getCode(),
         "EPSG:4326",
       );
-      const newMapPointerInfo: MapPointerInfo = {
+      const newMapPointerInfo: MapPointInfo = {
         dataset,
         variable,
         pixelX: event.pixel[0],
@@ -68,7 +67,7 @@ export default function useMapPointerInfo(
         time: time || undefined,
         valueState: { fetching: true },
       };
-      setMapPointerInfo(newMapPointerInfo);
+      setMapPointInfo(newMapPointerInfo);
       getPointValueThrottled(
         serverUrl,
         dataset,
@@ -79,37 +78,51 @@ export default function useMapPointerInfo(
         null,
       )
         .then((result) => {
-          setMapPointerInfo({
-            ...newMapPointerInfo,
-            valueState: { value: result.value },
-          });
+          setMapPointInfo(
+            enabled
+              ? {
+                  ...newMapPointerInfo,
+                  valueState: { value: result.value },
+                }
+              : null,
+          );
         })
         .catch((error: Error) => {
-          setMapPointerInfo({
-            ...newMapPointerInfo,
-            valueState: { error },
-          });
+          setMapPointInfo(
+            enabled
+              ? {
+                  ...newMapPointerInfo,
+                  valueState: { error },
+                }
+              : null,
+          );
         });
     },
-    [serverUrl, dataset, time, variable],
+    [enabled, dataset, time, variable],
   );
 
+  // TODO: using MAP_OBJECTS here is really a bad idea,
+  //   but it seems we have no choice.
+  const map = MAP_OBJECTS["map"] as OlMap | undefined;
+
   useEffect(() => {
-    if (map) {
+    if (enabled && map) {
       const listener = (event: OlMapBrowserEvent<PointerEvent>) => {
-        if (event.dragging) {
-          setMapPointerInfo(null);
-          return;
+        if (!event.dragging) {
+          updateCoordinateDisplay(event);
+        } else {
+          setMapPointInfo(null);
         }
-        updateCoordinateDisplay(event);
       };
 
       map.on("pointermove", listener);
       return () => {
         map.un("pointermove", listener);
       };
+    } else {
+      setMapPointInfo(null);
     }
-  }, [map, updateCoordinateDisplay]);
+  }, [enabled, map, updateCoordinateDisplay]);
 
-  return mapPointerInfo;
+  return mapPointInfo;
 }

@@ -146,6 +146,7 @@ export interface ControlState {
   layerVisibilities: LayerVisibilities;
   variableCompareMode: boolean;
   variableSplitPos?: number;
+  mapPointInfoBoxEnabled: boolean;
   selectedBaseMapId: string | null;
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
@@ -207,6 +208,7 @@ export function newControlState(): ControlState {
       overlay: true,
     },
     variableCompareMode: false,
+    mapPointInfoBoxEnabled: false,
     datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
     layerMenuOpen: false,

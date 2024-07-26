@@ -31,7 +31,7 @@ export interface ValueState {
   error?: Error;
 }
 
-export default interface MapPointerInfo {
+export default interface MapPointInfo {
   pixelX: number;
   pixelY: number;
   dataset: Dataset;

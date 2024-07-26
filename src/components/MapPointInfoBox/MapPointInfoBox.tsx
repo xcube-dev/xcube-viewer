@@ -22,48 +22,60 @@
  * SOFTWARE.
  */
 
-import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
 
-import { getLabelsForRange } from "@/util/label";
 import { makeStyles } from "@/util/styles";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import useMapPointInfo from "./useMapPointInfo";
+import MapPointInfoContent from "./MapPointInfoContent";
 
 const styles = makeStyles({
   container: {
-    fontSize: "x-small",
-    fontWeight: "bold",
-    width: "100%",
-    display: "flex",
-    flexWrap: "nowrap",
-    justifyContent: "space-between",
-    cursor: "pointer",
+    position: "absolute",
+    zIndex: 1000,
+    backgroundColor: "#000000A0",
+    color: "#fff",
+    borderRadius: "4px",
+    transform: "translateX(3%)",
+    pointerEvents: "none",
   },
 });
 
-interface ColorBarLabelsProps {
-  minValue: number;
-  maxValue: number;
-  numTicks: number;
-  logScaled?: boolean;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+interface MapPointInfoBoxProps {
+  enabled: boolean;
+  serverUrl: string;
+  dataset: Dataset | null;
+  variable: Variable | null;
+  time: string | null;
 }
 
-export default function ColorBarLabels({
-  minValue,
-  maxValue,
-  numTicks,
-  logScaled,
-  onClick,
-}: ColorBarLabelsProps) {
-  const labels = useMemo(
-    () => getLabelsForRange(minValue, maxValue, numTicks, logScaled),
-    [minValue, maxValue, numTicks, logScaled],
+export default function MapPointInfoBox({
+  enabled,
+  serverUrl,
+  dataset,
+  variable,
+  time,
+}: MapPointInfoBoxProps) {
+  const mapPointInfo = useMapPointInfo(
+    enabled,
+    serverUrl,
+    dataset,
+    variable,
+    time,
   );
+
+  if (!mapPointInfo) {
+    return null;
+  }
+
+  const { pixelX, pixelY } = mapPointInfo;
+
+  // console.info("mapPointInfo", mapPointInfo);
+
   return (
-    <Box sx={styles.container} onClick={onClick}>
-      {labels.map((label, i) => (
-        <span key={i}>{label}</span>
-      ))}
+    <Box sx={{ ...styles.container, left: pixelX, top: pixelY }}>
+      <MapPointInfoContent {...mapPointInfo} />
     </Box>
   );
 }

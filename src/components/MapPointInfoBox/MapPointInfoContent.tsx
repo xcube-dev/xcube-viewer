@@ -23,7 +23,7 @@
  */
 
 import { getLabelForValue } from "@/util/label";
-import MapPointerInfo from "./MapPointerInfo";
+import MapPointInfo from "./MapPointInfo";
 import Box from "@mui/material/Box";
 import { makeStyles } from "@/util/styles";
 import { isNumber } from "@/util/types";
@@ -32,19 +32,21 @@ const styles = makeStyles({
   container: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: 0.2,
+    gap: 0,
+    padding: 1,
     fontSize: "small",
   },
-  item: { padding: 0.2 },
+  labelItem: { paddingRight: 1 },
+  valueItem: {},
 });
 
-interface MapPointerInfoBoxProps extends MapPointerInfo {}
+interface MapPointInfoContentProps extends MapPointInfo {}
 
-export default function MapPointerInfoBox({
+export default function MapPointInfoContent({
   lon,
   lat,
   valueState,
-}: MapPointerInfoBoxProps) {
+}: MapPointInfoContentProps) {
   let valueLabel: string;
   if (valueState.error) {
     valueLabel = `${valueState.error}`;
@@ -58,13 +60,13 @@ export default function MapPointerInfoBox({
 
   return (
     <Box sx={styles.container}>
-      <Box sx={styles.item}>{"Longitude"}</Box>
-      <Box sx={styles.item}>{getLabelForValue(lon, 4)}</Box>
-      <Box sx={styles.item}>{"Latitude"}</Box>
-      <Box sx={styles.item}>{getLabelForValue(lat, 4)}</Box>
+      <Box sx={styles.labelItem}>{"Longitude"}</Box>
+      <Box sx={styles.valueItem}>{getLabelForValue(lon, 4)}</Box>
+      <Box sx={styles.labelItem}>{"Latitude"}</Box>
+      <Box sx={styles.valueItem}>{getLabelForValue(lat, 4)}</Box>
 
-      <Box sx={styles.item}>{"Value"}</Box>
-      <Box sx={styles.item}>{valueLabel}</Box>
+      <Box sx={styles.labelItem}>{"Value"}</Box>
+      <Box sx={styles.valueItem}>{valueLabel}</Box>
     </Box>
   );
 }

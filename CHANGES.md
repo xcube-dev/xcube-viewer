@@ -19,7 +19,15 @@
     of the color mapping values.
 
 * When in map split mode each of the two variables has its own
-  color legend with same functionality. (#401)
+  variable color legend with same functionality. (#401)
+
+* All selectable items of the variable legend (color bar, value range)
+  now show a "pointer" cursor to indicate interactivity.
+
+* The layer selector menu can now be used to enable displaying an 
+  information box that is shown next to the cursor when hovering over the map.
+  It shows the current map coordinates and the values of the currently 
+  selected variable at that position.
 
 * The datasets in the dataset selector are now sorted by name and may
   also be grouped if configured so in xcube server. (#385)

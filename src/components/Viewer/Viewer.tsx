@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/system";
 import * as geojson from "geojson";
@@ -59,7 +58,6 @@ import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
 import UserVectorLayer from "@/components/UserVectorLayer";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { Control } from "@/components/ol/control/Control";
 import { ScaleLine } from "@/components/ol/control/ScaleLine";
 import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
 import { Layers } from "@/components/ol/layer/Layers";
@@ -69,34 +67,12 @@ import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
-import useMapPointerInfo from "@/components/Viewer/useMapPointerInfo";
-import MapPointerInfoBox from "@/components/Viewer/MapPointerInfoBox";
-import { Dataset } from "@/model/dataset";
-import { Variable } from "@/model/variable";
 
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
 // TODO (forman): move all map styles into dedicated module,
 //  so settings will be easier to find & adjust
-
-const COLOR_LEGEND_STYLE: React.CSSProperties = {
-  zIndex: 1000,
-  right: 10,
-  top: 10,
-};
-
-const MAP_POINTER_INFO_BOX_STYLE: React.CSSProperties = {
-  position: "absolute",
-  zIndex: 1000,
-  backgroundColor: "#333",
-  color: "#fff",
-  borderRadius: "4px",
-  padding: "5px",
-  transform: "translateX(3%)",
-  visibility: "hidden",
-  pointerEvents: "none",
-};
 
 const SELECTION_COLOR = [255, 220, 0, 0.8];
 
@@ -142,6 +118,7 @@ interface ViewerProps {
   colorBarLegend?: MapElement;
   colorBarLegend2?: MapElement;
   mapSplitter?: MapElement;
+  mapPointInfoBox?: MapElement;
   userDrawnPlaceGroupName: string;
   addDrawnUserPlace?: (
     placeGroupTitle: string,
@@ -164,10 +141,6 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
-  serverUrl: string;
-  dataset: Dataset | null;
-  variable: Variable | null;
-  time: string | null;
 }
 
 export default function Viewer({
@@ -186,6 +159,7 @@ export default function Viewer({
   colorBarLegend,
   colorBarLegend2,
   mapSplitter,
+  mapPointInfoBox,
   userDrawnPlaceGroupName,
   addDrawnUserPlace,
   importUserPlacesFromText,
@@ -198,23 +172,11 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
-  serverUrl,
-  dataset,
-  variable,
-  time,
 }: ViewerProps) {
   theme = useTheme();
   const [map, setMap] = useState<OlMap | null>(null);
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
-  );
-
-  const mapPointerInfo = useMapPointerInfo(
-    serverUrl,
-    dataset,
-    variable,
-    time,
-    map,
   );
 
   useEffect(() => {
@@ -389,50 +351,6 @@ export default function Viewer({
     setMap(map);
   }
 
-  let colorBarLegendControl = null;
-  if (colorBarLegend) {
-    colorBarLegendControl = (
-      <Control key="legend" id="legend" style={COLOR_LEGEND_STYLE}>
-        {colorBarLegend}
-      </Control>
-    );
-  }
-
-  let colorBarLegendControl2 = null;
-  if (colorBarLegend2 && variableSplitPos && map) {
-    colorBarLegendControl2 = (
-      <Control
-        key="legend2"
-        id="legend2"
-        style={{
-          ...COLOR_LEGEND_STYLE,
-          right: map.getSize()![0] - variableSplitPos + 10,
-        }}
-      >
-        {colorBarLegend2}
-      </Control>
-    );
-  }
-
-  const mapPointerInfoBoxControl = (
-    <div
-      id="infoBox"
-      key="infoBox"
-      style={
-        mapPointerInfo
-          ? {
-              ...MAP_POINTER_INFO_BOX_STYLE,
-              visibility: "visible",
-              left: mapPointerInfo.pixelX,
-              top: mapPointerInfo.pixelY,
-            }
-          : MAP_POINTER_INFO_BOX_STYLE
-      }
-    >
-      {mapPointerInfo && <MapPointerInfoBox {...mapPointerInfo} />}
-    </div>
-  );
-
   const handleDropFiles = (files: File[]) => {
     if (importUserPlacesFromText) {
       files.forEach((file) => {
@@ -517,9 +435,9 @@ export default function Viewer({
           stopClick={true}
           onDrawEnd={handleDrawEnd}
         />
-        {colorBarLegendControl}
-        {colorBarLegendControl2}
-        {mapPointerInfoBoxControl}
+        {colorBarLegend}
+        {colorBarLegend2}
+        {mapPointInfoBox}
         {mapSplitter}
         <ScaleLine bar={false} />
       </Map>

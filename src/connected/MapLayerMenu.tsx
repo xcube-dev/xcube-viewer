@@ -30,6 +30,7 @@ import {
   openDialog,
   setLayerMenuOpen,
   setLayerVisibility,
+  setMapPointInfoBoxEnabled,
   setVariableCompareMode,
 } from "@/actions/controlActions";
 import {
@@ -48,6 +49,7 @@ const mapStateToProps = (state: AppState) => {
     layerDisablements: layerDisablementsSelector(state),
     layerVisibilities: layerVisibilitiesSelector(state),
     variableCompareMode: state.controlState.variableCompareMode,
+    mapPointInfoBoxEnabled: state.controlState.mapPointInfoBoxEnabled,
   };
 };
 
@@ -56,6 +58,7 @@ const mapDispatchToProps = {
   setLayerMenuOpen,
   setLayerVisibility,
   setVariableCompareMode,
+  setMapPointInfoBoxEnabled,
 };
 
 const MapLayerMenu = connect(

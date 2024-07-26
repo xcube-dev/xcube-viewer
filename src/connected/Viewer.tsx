@@ -31,10 +31,8 @@ import {
   overlayLayerSelector,
   imageSmoothingSelector,
   mapProjectionSelector,
-  selectedDatasetSelector,
   selectedDatasetBoundaryLayerSelector,
   selectedDatasetPlaceGroupLayersSelector,
-  selectedDatasetTimeLabelSelector,
   selectedDatasetRgbLayerSelector,
   selectedDataset2RgbLayerSelector,
   selectedDatasetVariableLayerSelector,
@@ -42,8 +40,6 @@ import {
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
   showUserPlacesLayerSelector,
-  selectedVariableSelector,
-  selectedServerSelector,
 } from "@/selectors/controlSelectors";
 import {
   addDrawnUserPlace,
@@ -54,7 +50,8 @@ import { userPlaceGroupsSelector } from "@/selectors/dataSelectors";
 import { selectPlace } from "@/actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
 import ColorBarLegend2 from "./ColorBarLegend2";
-import MapSplitter from "@/connected/MapSplitter";
+import MapSplitter from "./MapSplitter";
+import MapPointInfoBox from "./MapPointInfoBox";
 
 interface OwnProps {
   onMapRef?: (map: OlMap | null) => void;
@@ -62,11 +59,8 @@ interface OwnProps {
 
 const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
   return {
+    mapId: "map",
     locale: state.controlState.locale,
-    serverUrl: selectedServerSelector(state).url,
-    dataset: selectedDatasetSelector(state),
-    variable: selectedVariableSelector(state),
-    time: selectedDatasetTimeLabelSelector(state),
     variableLayer: selectedDatasetVariableLayerSelector(state),
     variable2Layer: selectedDatasetVariable2LayerSelector(state),
     rgbLayer: selectedDatasetRgbLayerSelector(state),
@@ -76,11 +70,11 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     colorBarLegend: <ColorBarLegend />,
     colorBarLegend2: <ColorBarLegend2 />,
     mapSplitter: <MapSplitter />,
+    mapPointInfoBox: <MapPointInfoBox />,
     userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
     userPlaceGroups: userPlaceGroupsSelector(state),
     userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
     showUserPlaces: showUserPlacesLayerSelector(state),
-    mapId: "map",
     mapInteraction: state.controlState.mapInteraction,
     mapProjection: mapProjectionSelector(state),
     selectedPlaceId: state.controlState.selectedPlaceId,

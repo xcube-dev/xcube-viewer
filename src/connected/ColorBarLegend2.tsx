@@ -59,6 +59,7 @@ const mapStateToProps = (state: AppState) => {
     variableOpacity: selectedVariable2OpacitySelector(state),
     userColorBars: userColorBarsSelector(state),
     colorBars: colorBarsSelector(state),
+    style: { left: (state.controlState.variableSplitPos || 0) - 280 },
   };
 };
 
