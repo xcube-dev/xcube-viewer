@@ -31,13 +31,16 @@ import { isNumber } from "@/util/types";
 const styles = makeStyles({
   container: {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "auto minmax(60px, auto)",
     gap: 0,
     padding: 1,
     fontSize: "small",
   },
   labelItem: { paddingRight: 1 },
-  valueItem: {},
+  valueItem: {
+    textAlign: "right",
+    fontFamily: "monospace",
+  },
 });
 
 interface MapPointInfoContentProps extends MapPointInfo {}
