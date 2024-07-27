@@ -97,8 +97,8 @@ export default function useMapPointInfo(
       // Throttle
       const currentTime = new Date().getTime();
       if (currentTime - lastFetchTime.current >= 500) {
+        lastFetchTime.current = currentTime;
         fetchPointValue(dataset, variable, lon, lat, setPayload).finally(() => {
-          lastFetchTime.current = currentTime;
           if (dataset2 && variable2) {
             void fetchPointValue(dataset2, variable2, lon, lat, setPayload2);
           }
