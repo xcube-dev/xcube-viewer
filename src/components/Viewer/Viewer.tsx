@@ -67,6 +67,8 @@ import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
+import { default as OlLayer } from "ol/layer/Layer";
+import { Pixel } from "ol/pixel";
 
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
@@ -174,11 +176,17 @@ export default function Viewer({
   onMapRef,
 }: ViewerProps) {
   theme = useTheme();
+
+  // TODO (forman): there is way too much logic in this component!
+  //    Extract code into dedicated hooks or actions/reducers.
+
   const [map, setMap] = useState<OlMap | null>(null);
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
   );
 
+  // If the place selection changed in the UI,
+  // synchronize selection in the map.
   useEffect(() => {
     if (map) {
       const selectedPlaceIdCurr = selectedPlaceId || null;
@@ -206,6 +214,7 @@ export default function Viewer({
     }
   }, [map, selectedPlaceId, selectedPlaceIdPrev]);
 
+  // If imageSmoothing changed, notify all tile layers.
   useEffect(() => {
     // Force layer source updates after imageSmoothing change
     if (map) {
@@ -219,32 +228,21 @@ export default function Viewer({
     }
   }, [map, imageSmoothing]);
 
+  // If variableSplitPos changed, adjust Canvas2D clip
+  // paths of concerned layers.
   useEffect(() => {
     if (map === null || !isNumber(variableSplitPos)) {
       return;
     }
-    // https://openlayers.org/en/latest/examples/layer-swipe.html
-    const handlePreRender = (event: RenderEvent) => {
-      const mapSize = map.getSize();
-      if (!mapSize) {
-        return;
-      }
-      const mapWidth = mapSize[0];
-      const mapHeight = mapSize[1];
-      const tl = getRenderPixel(event, [variableSplitPos, 0]);
-      const tr = getRenderPixel(event, [mapWidth, 0]);
-      const bl = getRenderPixel(event, [variableSplitPos, mapHeight]);
-      const br = getRenderPixel(event, [mapWidth, mapHeight]);
 
-      const ctx = event.context as CanvasRenderingContext2D;
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(tl[0], tl[1]);
-      ctx.lineTo(bl[0], bl[1]);
-      ctx.lineTo(br[0], br[1]);
-      ctx.lineTo(tr[0], tr[1]);
-      ctx.closePath();
-      ctx.clip();
+    // https://openlayers.org/en/latest/examples/layer-swipe.html
+
+    const handlePreRenderL = (event: RenderEvent) => {
+      setLayerClip(map, event, variableSplitPos, 0);
+    };
+
+    const handlePreRenderR = (event: RenderEvent) => {
+      setLayerClip(map, event, variableSplitPos, 1);
     };
 
     const handlePostRender = (event: RenderEvent) => {
@@ -252,26 +250,31 @@ export default function Viewer({
       ctx.restore();
     };
 
+    const rgb2Layer = findMapLayer(map, "rgb2");
+    const variable2Layer = findMapLayer(map, "variable2");
     const rgbLayer = findMapLayer(map, "rgb");
     const variableLayer = findMapLayer(map, "variable");
-    if (rgbLayer || variableLayer) {
-      const splitLayers = [rgbLayer, variableLayer];
-      for (const layer of splitLayers) {
+    const preRenders: [OlLayer | null, (e: RenderEvent) => void][] = [
+      [rgb2Layer, handlePreRenderL],
+      [variable2Layer, handlePreRenderL],
+      [rgbLayer, handlePreRenderR],
+      [variableLayer, handlePreRenderR],
+    ];
+    for (const [layer, handlePreRender] of preRenders) {
+      if (layer) {
+        layer.on("prerender", handlePreRender);
+        layer.on("postrender", handlePostRender);
+      }
+    }
+    return () => {
+      for (const [layer, handlePreRender] of preRenders) {
         if (layer) {
-          layer.on("prerender", handlePreRender);
-          layer.on("postrender", handlePostRender);
+          layer.un("prerender", handlePreRender);
+          layer.un("postrender", handlePostRender);
         }
       }
-      return () => {
-        for (const layer of splitLayers) {
-          if (layer) {
-            layer.un("prerender", handlePreRender);
-            layer.un("postrender", handlePostRender);
-          }
-        }
-      };
-    }
-  }, [map, variableSplitPos]);
+    };
+  });
 
   const handleMapClick = (event: OlMapBrowserEvent<UIEvent>) => {
     if (mapInteraction === "Select") {
@@ -293,7 +296,6 @@ export default function Viewer({
   };
 
   const handleDrawEnd = (event: DrawEvent) => {
-    // TODO (forman): too much logic here! put the following code into an action + reducer.
     if (map !== null && addDrawnUserPlace && mapInteraction !== "Select") {
       const feature = event.feature;
       let geometry = feature.getGeometry();
@@ -484,4 +486,42 @@ function findNextLabel(
     }
   }
   return `${nameBase} 1`;
+}
+
+function setLayerClip(
+  map: OlMap,
+  event: RenderEvent,
+  splitPos: number,
+  side: 0 | 1,
+) {
+  const mapSize = map.getSize();
+  if (!mapSize) {
+    return;
+  }
+
+  const mapWidth = mapSize[0];
+  const mapHeight = mapSize[1];
+
+  let tl: Pixel, tr: Pixel, bl: Pixel, br: Pixel;
+  if (side === 0) {
+    tl = getRenderPixel(event, [0, 0]);
+    tr = getRenderPixel(event, [splitPos, 0]);
+    bl = getRenderPixel(event, [0, mapHeight]);
+    br = getRenderPixel(event, [splitPos, mapHeight]);
+  } else {
+    tl = getRenderPixel(event, [splitPos, 0]);
+    tr = getRenderPixel(event, [mapWidth, 0]);
+    bl = getRenderPixel(event, [splitPos, mapHeight]);
+    br = getRenderPixel(event, [mapWidth, mapHeight]);
+  }
+
+  const ctx = event.context as CanvasRenderingContext2D;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(tl[0], tl[1]);
+  ctx.lineTo(bl[0], bl[1]);
+  ctx.lineTo(br[0], br[1]);
+  ctx.lineTo(tr[0], tr[1]);
+  ctx.closePath();
+  ctx.clip();
 }

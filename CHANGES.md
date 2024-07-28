@@ -49,6 +49,14 @@
 
 ### Fixes
 
+* Fixed a problem in map split mode, where the left variable layer
+  was still rendered on the right side so that it appeared in transparent 
+  regions of the right layer. Left and right layers do not overlay each other
+  anymore. (#403)
+
+* Fixed a problem in map split mode where layer clipping was initially not 
+  applied to the right layer after its visibility was switched on.    
+
 * Fixed a problem with user color map changes that have not been automatically
   saved. User color maps are now stored after a user confirms the 
   addition, change, or removal. (#395)
