@@ -48,7 +48,7 @@ import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
 import RadioSetting from "./RadioSetting";
-import LayerMenu from "@/components/LayerMenu";
+import LayerSelectMenu from "@/components/LayerSelectMenu";
 import {
   findLayer,
   getLayerTitle,
@@ -463,7 +463,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         {localeMenuItems}
       </Menu>
 
-      <LayerMenu
+      <LayerSelectMenu
         anchorElement={baseMapMenuAnchor}
         layers={baseMapLayers}
         selectedLayerId={settings.selectedBaseMapId}
@@ -473,7 +473,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         onClose={handleBaseMapMenuClose}
       />
 
-      <LayerMenu
+      <LayerSelectMenu
         anchorElement={overlayMenuAnchor}
         layers={overlayLayers}
         selectedLayerId={settings.selectedOverlayId}
