@@ -7,7 +7,7 @@
   (#290)
 
 * It is now possible to change the color and opacity of user places
-  and hence associated time-series and statistic charts. (#216, #97)
+  and hence associated time-series and statistic charts. (#97, #216)
 
 * When in map split mode each of the two variables has its own
   variable color legend with same functionality. (#401)
