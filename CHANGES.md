@@ -7,7 +7,7 @@
   (#290)
 
 * It is now possible to change the color and opacity of user places
-  and hence associated time-series and statistic charts. (#216, #97)
+  and hence associated time-series and statistic charts. (#97, #216)
 
 * When in map split mode each of the two variables has its own
   variable color legend with same functionality. (#401)
@@ -54,6 +54,14 @@
 * Improved visual style of selected places in the map.
 
 ### Fixes
+
+* Fixed a problem in map split mode, where the left variable layer
+  was still rendered on the right side so that it appeared in transparent 
+  regions of the right layer. Left and right layers do not overlay each other
+  anymore. (#403)
+
+* Fixed a problem in map split mode where layer clipping was initially not 
+  applied to the right layer after its visibility was switched on.    
 
 * Fixed a problem with user color map changes that have not been automatically
   saved. User color maps are now stored after a user confirms the 
