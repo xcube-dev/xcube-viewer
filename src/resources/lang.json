@@ -1046,9 +1046,14 @@
       "se": "Växla justerbart x-intervall"
     },
     {
-      "en": "Compare Mode (Swipe)",
-      "de": "Vergleichsmodus (Swipe)",
-      "se": "Jämförelseläge (Svep)"
+      "en": "Compare Mode (Drag)",
+      "de": "Vergleichsmodus (Ziehen)",
+      "se": "Jämförelseläge (Dra)"
+    },
+    {
+      "en": "Point Info Mode (Hover)",
+      "de": "Punktinformationsmodus (Bewegen)",
+      "se": "Punktinformationsläge (Sväva)"
     },
     {
       "en": "Dataset RGB",

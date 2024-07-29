@@ -22,48 +22,35 @@
  * SOFTWARE.
  */
 
-import React, { useMemo } from "react";
-import Box from "@mui/material/Box";
+import { connect } from "react-redux";
 
-import { getLabelsForRange } from "@/util/label";
-import { makeStyles } from "@/util/styles";
+import { AppState } from "@/states/appState";
+import _MapPointInfoBox from "@/components/MapPointInfoBox";
+import {
+  selectedDataset2Selector,
+  selectedDatasetSelector,
+  selectedDatasetTimeLabelSelector,
+  selectedServerSelector,
+  selectedVariable2Selector,
+  selectedVariableSelector,
+} from "@/selectors/controlSelectors";
 
-const styles = makeStyles({
-  container: {
-    fontSize: "x-small",
-    fontWeight: "bold",
-    width: "100%",
-    display: "flex",
-    flexWrap: "nowrap",
-    justifyContent: "space-between",
-    cursor: "pointer",
-  },
-});
+const mapStateToProps = (state: AppState) => {
+  return {
+    enabled: state.controlState.mapPointInfoBoxEnabled,
+    serverUrl: selectedServerSelector(state).url,
+    dataset1: selectedDatasetSelector(state),
+    variable1: selectedVariableSelector(state),
+    dataset2: selectedDataset2Selector(state),
+    variable2: selectedVariable2Selector(state),
+    time: selectedDatasetTimeLabelSelector(state),
+  };
+};
 
-interface ColorBarLabelsProps {
-  minValue: number;
-  maxValue: number;
-  numTicks: number;
-  logScaled?: boolean;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-}
+const mapDispatchToProps = {};
 
-export default function ColorBarLabels({
-  minValue,
-  maxValue,
-  numTicks,
-  logScaled,
-  onClick,
-}: ColorBarLabelsProps) {
-  const labels = useMemo(
-    () => getLabelsForRange(minValue, maxValue, numTicks, logScaled),
-    [minValue, maxValue, numTicks, logScaled],
-  );
-  return (
-    <Box sx={styles.container} onClick={onClick}>
-      {labels.map((label, i) => (
-        <span key={i}>{label}</span>
-      ))}
-    </Box>
-  );
-}
+const MapPointInfoBox = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_MapPointInfoBox);
+export default MapPointInfoBox;

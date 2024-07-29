@@ -22,48 +22,45 @@
  * SOFTWARE.
  */
 
-import React, { useMemo } from "react";
-import Box from "@mui/material/Box";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import {
+  callJsonApi,
+  makeRequestInit,
+  makeRequestUrl,
+  QueryComponent,
+} from "@/api/callApi";
+import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 
-import { getLabelsForRange } from "@/util/label";
-import { makeStyles } from "@/util/styles";
-
-const styles = makeStyles({
-  container: {
-    fontSize: "x-small",
-    fontWeight: "bold",
-    width: "100%",
-    display: "flex",
-    flexWrap: "nowrap",
-    justifyContent: "space-between",
-    cursor: "pointer",
-  },
-});
-
-interface ColorBarLabelsProps {
-  minValue: number;
-  maxValue: number;
-  numTicks: number;
-  logScaled?: boolean;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+interface Value {
+  value?: number;
 }
 
-export default function ColorBarLabels({
-  minValue,
-  maxValue,
-  numTicks,
-  logScaled,
-  onClick,
-}: ColorBarLabelsProps) {
-  const labels = useMemo(
-    () => getLabelsForRange(minValue, maxValue, numTicks, logScaled),
-    [minValue, maxValue, numTicks, logScaled],
+interface Result {
+  result?: Value;
+}
+
+export function getPointValue(
+  apiServerUrl: string,
+  dataset: Dataset,
+  variable: Variable,
+  lon: number,
+  lat: number,
+  time: string | null,
+  accessToken: string | null,
+): Promise<Value> {
+  const query: QueryComponent[] = [
+    ["lon", lon.toString()],
+    ["lat", lat.toString()],
+  ];
+  if (time) {
+    query.push(["time", time]);
+  }
+  const url = makeRequestUrl(
+    `${apiServerUrl}/statistics/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
+    query,
   );
-  return (
-    <Box sx={styles.container} onClick={onClick}>
-      {labels.map((label, i) => (
-        <span key={i}>{label}</span>
-      ))}
-    </Box>
+  return callJsonApi(url, makeRequestInit(accessToken), (result: Result) =>
+    result.result ? result.result : {},
   );
 }

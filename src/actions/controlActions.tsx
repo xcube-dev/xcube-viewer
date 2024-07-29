@@ -319,6 +319,24 @@ export function setLayerVisibility(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SET_MAP_POINT_INFO_BOX_ENABLED = "SET_MAP_POINT_INFO_BOX_ENABLED";
+
+export interface SetMapPointInfoBoxEnabled {
+  type: typeof SET_MAP_POINT_INFO_BOX_ENABLED;
+  mapPointInfoBoxEnabled: boolean;
+}
+
+export function setMapPointInfoBoxEnabled(
+  mapPointInfoBoxEnabled: boolean,
+): SetMapPointInfoBoxEnabled {
+  return {
+    type: SET_MAP_POINT_INFO_BOX_ENABLED,
+    mapPointInfoBoxEnabled,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SET_VARIABLE_COMPARE_MODE = "SET_VARIABLE_COMPARE_MODE";
 
 export interface SetVariableCompareMode {
@@ -830,6 +848,7 @@ export type ControlAction =
   | SetVisibleInfoCardElements
   | UpdateInfoCardElementCodeMode
   | SelectVariable2
+  | SetMapPointInfoBoxEnabled
   | SetVariableCompareMode
   | SetVariableSplitPos
   | FlyTo;

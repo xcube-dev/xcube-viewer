@@ -70,6 +70,13 @@ import {
   userPlaceGroupsSelector,
 } from "@/selectors/dataSelectors";
 import { AppState } from "@/states/appState";
+import { VolumeRenderMode } from "@/states/controlState";
+import { ColorBarNorm } from "@/model/variable";
+import { StatisticsRecord } from "@/model/statistics";
+import { UserVariable, ExpressionCapabilities } from "@/model/userVariable";
+import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
+import { MessageLogAction, postMessage } from "./messageLogActions";
+import { renameUserPlaceInLayer, restyleUserPlaceInLayer } from "./mapActions";
 import {
   AddActivity,
   addActivity,
@@ -84,14 +91,6 @@ import {
   SetSidebarPanelId,
   setSidebarPanelId,
 } from "./controlActions";
-import { VolumeRenderMode } from "@/states/controlState";
-import { MessageLogAction, postMessage } from "./messageLogActions";
-import { renameUserPlaceInLayer, restyleUserPlaceInLayer } from "./mapActions";
-import { ColorBarNorm } from "@/model/variable";
-import { getStatistics } from "@/api/getStatistics";
-import { StatisticsRecord } from "@/model/statistics";
-import { UserVariable, ExpressionCapabilities } from "@/model/userVariable";
-import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -550,14 +549,15 @@ export function addStatistics() {
       dispatch(setSidebarOpen(true));
     }
     dispatch(_addStatistics(null));
-    getStatistics(
-      apiServer.url,
-      selectedDataset,
-      selectedVariable,
-      selectedPlaceInfo,
-      selectedTimeLabel,
-      getState().userAuthState.accessToken,
-    )
+    api
+      .getStatistics(
+        apiServer.url,
+        selectedDataset,
+        selectedVariable,
+        selectedPlaceInfo,
+        selectedTimeLabel,
+        getState().userAuthState.accessToken,
+      )
       .then((stats) => dispatch(_addStatistics(stats)))
       .catch((error: Error) => {
         dispatch(postMessage("error", error));

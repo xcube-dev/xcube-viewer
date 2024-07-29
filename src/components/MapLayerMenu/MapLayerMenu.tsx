@@ -37,11 +37,11 @@ import Paper from "@mui/material/Paper";
 import CloseIcon from "@mui/icons-material/Close";
 
 import i18n from "@/i18n";
+import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { LayerVisibilities } from "@/states/controlState";
-import MapLayerMenuItem from "./MapLayerMenuItem";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
-import { makeStyles } from "@/util/styles";
+import MapLayerMenuItem from "./MapLayerMenuItem";
 
 const initialPos: ControlPosition = { x: 10, y: 180 };
 
@@ -78,6 +78,8 @@ interface LayerMenuProps extends WithLocale {
   ) => void;
   variableCompareMode: boolean;
   setVariableCompareMode: (selected: boolean) => void;
+  mapPointInfoBoxEnabled: boolean;
+  setMapPointInfoBoxEnabled: (showPointInfoBox: boolean) => void;
 }
 
 export default function MapLayerMenu(props: LayerMenuProps) {
@@ -89,6 +91,8 @@ export default function MapLayerMenu(props: LayerMenuProps) {
     openDialog,
     variableCompareMode,
     setVariableCompareMode,
+    mapPointInfoBoxEnabled,
+    setMapPointInfoBoxEnabled,
     ...layerSelectProps
   } = props;
 
@@ -140,9 +144,14 @@ export default function MapLayerMenu(props: LayerMenuProps) {
           <MapLayerMenuItem layerId="overlay" {...layerSelectProps} />
           <Divider />
           <SelectableMenuItem
-            title={i18n.get("Compare Mode (Swipe)")}
+            title={i18n.get("Compare Mode (Drag)")}
             selected={variableCompareMode}
             onClick={() => setVariableCompareMode(!variableCompareMode)}
+          />
+          <SelectableMenuItem
+            title={i18n.get("Point Info Mode (Hover)")}
+            selected={mapPointInfoBoxEnabled}
+            onClick={() => setMapPointInfoBoxEnabled(!mapPointInfoBoxEnabled)}
           />
           <Divider />
           <MenuItem onClick={handleUserBaseMaps}>

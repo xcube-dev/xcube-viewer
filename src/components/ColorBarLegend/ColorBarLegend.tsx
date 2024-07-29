@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { MouseEvent, useRef, useState } from "react";
+import { CSSProperties, MouseEvent, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 
@@ -36,11 +36,19 @@ import ColorBarColorEditor from "./ColorBarColorEditor";
 
 const styles = makeStyles({
   container: (theme) => ({
+    position: "absolute",
+    zIndex: 1000,
+    top: 10,
+    borderRadius: "5px",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: "#00000020",
+    backgroundColor: "#FFFFFFAA",
+    color: "black",
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
     paddingBottom: theme.spacing(0.5),
     paddingTop: theme.spacing(0.5),
-    color: "black",
   }),
   title: (theme) => ({
     fontSize: "small",
@@ -76,13 +84,19 @@ interface ColorBarLegendProps {
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
   onOpenColorBarEditor: (event: MouseEvent<HTMLCanvasElement>) => void;
   storeSettings: () => void;
+  style?: CSSProperties;
 }
 
 export default function ColorBarLegend(
   props: Omit<ColorBarLegendProps, "onOpenColorBarEditor">,
 ) {
-  const { variableName, variableTitle, variableUnits, variableColorBar } =
-    props;
+  const {
+    variableName,
+    variableTitle,
+    variableUnits,
+    variableColorBar,
+    style,
+  } = props;
 
   const colorBarSelectAnchorRef = useRef<HTMLDivElement | null>(null);
   const [colorBarSelectAnchorEl, setColorBarSelectAnchorEl] =
@@ -106,7 +120,7 @@ export default function ColorBarLegend(
       : `${variableTitle || variableName} (${variableUnits || "-"})`;
 
   return (
-    <Box sx={styles.container} ref={colorBarSelectAnchorRef}>
+    <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
       <Box sx={styles.title} component="span">
         {variableTitleWithUnits}
       </Box>

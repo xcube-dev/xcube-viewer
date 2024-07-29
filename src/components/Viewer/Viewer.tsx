@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/system";
 import * as geojson from "geojson";
@@ -40,6 +39,7 @@ import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { getRenderPixel } from "ol/render";
+import RenderEvent from "ol/render/Event";
 
 import i18n from "@/i18n";
 import {
@@ -56,18 +56,16 @@ import {
 import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
 import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import UserVectorLayer from "./UserVectorLayer";
-import ErrorBoundary from "./ErrorBoundary";
-import { Control } from "./ol/control/Control";
-import { ScaleLine } from "./ol/control/ScaleLine";
-import { Draw, DrawEvent } from "./ol/interaction/Draw";
-import { Layers } from "./ol/layer/Layers";
-import { Vector } from "./ol/layer/Vector";
-import { Map, MapElement } from "./ol/Map";
-import { View } from "./ol/View";
-import { setFeatureStyle } from "./ol/style";
-import { findMapLayer } from "./ol/util";
-import RenderEvent from "ol/render/Event";
+import UserVectorLayer from "@/components/UserVectorLayer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { ScaleLine } from "@/components/ol/control/ScaleLine";
+import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
+import { Layers } from "@/components/ol/layer/Layers";
+import { Vector } from "@/components/ol/layer/Vector";
+import { Map, MapElement } from "@/components/ol/Map";
+import { View } from "@/components/ol/View";
+import { setFeatureStyle } from "@/components/ol/style";
+import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
 
 const SELECTION_LAYER_ID = "selection";
@@ -75,12 +73,6 @@ const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
 // TODO (forman): move all map styles into dedicated module,
 //  so settings will be easier to find & adjust
-
-const COLOR_LEGEND_STYLE: React.CSSProperties = {
-  zIndex: 1000,
-  right: 10,
-  top: 10,
-};
 
 const SELECTION_COLOR = [255, 220, 0, 0.8];
 
@@ -126,6 +118,7 @@ interface ViewerProps {
   colorBarLegend?: MapElement;
   colorBarLegend2?: MapElement;
   mapSplitter?: MapElement;
+  mapPointInfoBox?: MapElement;
   userDrawnPlaceGroupName: string;
   addDrawnUserPlace?: (
     placeGroupTitle: string,
@@ -166,6 +159,7 @@ export default function Viewer({
   colorBarLegend,
   colorBarLegend2,
   mapSplitter,
+  mapPointInfoBox,
   userDrawnPlaceGroupName,
   addDrawnUserPlace,
   importUserPlacesFromText,
@@ -357,30 +351,6 @@ export default function Viewer({
     setMap(map);
   }
 
-  let colorBarControl = null;
-  if (colorBarLegend) {
-    colorBarControl = (
-      <Control id="legend" style={COLOR_LEGEND_STYLE}>
-        {colorBarLegend}
-      </Control>
-    );
-  }
-
-  let colorBarControl2 = null;
-  if (colorBarLegend2 && variableSplitPos && map) {
-    colorBarControl2 = (
-      <Control
-        id="legend"
-        style={{
-          ...COLOR_LEGEND_STYLE,
-          right: map.getSize()![0] - variableSplitPos + 10,
-        }}
-      >
-        {colorBarLegend2}
-      </Control>
-    );
-  }
-
   const handleDropFiles = (files: File[]) => {
     if (importUserPlacesFromText) {
       files.forEach((file) => {
@@ -465,8 +435,9 @@ export default function Viewer({
           stopClick={true}
           onDrawEnd={handleDrawEnd}
         />
-        {colorBarControl}
-        {colorBarControl2}
+        {colorBarLegend}
+        {colorBarLegend2}
+        {mapPointInfoBox}
         {mapSplitter}
         <ScaleLine bar={false} />
       </Map>

@@ -34,6 +34,7 @@ const colorBarItemStyle = (theme: Theme) => ({
   height: 20,
   borderWidth: 1,
   borderStyle: "solid",
+  cursor: "pointer",
 });
 
 const styles = makeStyles({

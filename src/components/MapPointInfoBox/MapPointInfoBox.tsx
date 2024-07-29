@@ -22,48 +22,67 @@
  * SOFTWARE.
  */
 
-import React, { useMemo } from "react";
 import Box from "@mui/material/Box";
 
-import { getLabelsForRange } from "@/util/label";
 import { makeStyles } from "@/util/styles";
+import { Dataset } from "@/model/dataset";
+import { Variable } from "@/model/variable";
+import useMapPointInfo from "./useMapPointInfo";
+import MapPointInfoContent from "./MapPointInfoContent";
 
 const styles = makeStyles({
   container: {
-    fontSize: "x-small",
-    fontWeight: "bold",
-    width: "100%",
-    display: "flex",
-    flexWrap: "nowrap",
-    justifyContent: "space-between",
-    cursor: "pointer",
+    position: "absolute",
+    zIndex: 1000,
+    backgroundColor: "#000000A0",
+    color: "#fff",
+    border: "1px solid #FFFFFF50",
+    borderRadius: "4px",
+    transform: "translateX(3%)",
+    pointerEvents: "none",
   },
 });
 
-interface ColorBarLabelsProps {
-  minValue: number;
-  maxValue: number;
-  numTicks: number;
-  logScaled?: boolean;
-  onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+interface MapPointInfoBoxProps {
+  enabled: boolean;
+  serverUrl: string;
+  dataset1: Dataset | null;
+  variable1: Variable | null;
+  dataset2: Dataset | null;
+  variable2: Variable | null;
+  time: string | null;
 }
 
-export default function ColorBarLabels({
-  minValue,
-  maxValue,
-  numTicks,
-  logScaled,
-  onClick,
-}: ColorBarLabelsProps) {
-  const labels = useMemo(
-    () => getLabelsForRange(minValue, maxValue, numTicks, logScaled),
-    [minValue, maxValue, numTicks, logScaled],
+export default function MapPointInfoBox({
+  enabled,
+  serverUrl,
+  dataset1,
+  variable1,
+  dataset2,
+  variable2,
+  time,
+}: MapPointInfoBoxProps) {
+  const mapPointInfo = useMapPointInfo(
+    enabled,
+    serverUrl,
+    dataset1,
+    variable1,
+    dataset2,
+    variable2,
+    time,
   );
+
+  if (!mapPointInfo) {
+    return null;
+  }
+
+  const { pixelX, pixelY } = mapPointInfo.location;
+
+  // console.info("mapPointInfo", mapPointInfo);
+
   return (
-    <Box sx={styles.container} onClick={onClick}>
-      {labels.map((label, i) => (
-        <span key={i}>{label}</span>
-      ))}
+    <Box sx={{ ...styles.container, left: pixelX, top: pixelY }}>
+      <MapPointInfoContent {...mapPointInfo} />
     </Box>
   );
 }

@@ -47,6 +47,7 @@ import {
   SET_SIDEBAR_OPEN,
   SET_SIDEBAR_PANEL_ID,
   SET_SIDEBAR_POSITION,
+  SET_MAP_POINT_INFO_BOX_ENABLED,
   SET_VARIABLE_COMPARE_MODE,
   SET_VARIABLE_SPLIT_POS,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
@@ -215,6 +216,10 @@ export function controlReducer(
           [action.layerId]: action.visible,
         },
       };
+    }
+    case SET_MAP_POINT_INFO_BOX_ENABLED: {
+      const { mapPointInfoBoxEnabled } = action;
+      return { ...state, mapPointInfoBoxEnabled };
     }
     case SET_VARIABLE_COMPARE_MODE: {
       const { variableCompareMode } = action;
