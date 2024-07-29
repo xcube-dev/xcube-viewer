@@ -1,10 +1,34 @@
 ## Changes in version 1.3.0 (in development)
 
-### Enhancements
+### New Features 
 
-* Users can now define their own variables computed from arbitrary
-  band-math expressions. The variables are defined for a given
-  dataset and are persisted in the browser's local storage. (#371)
+* Users can now copy snapshots of a time-series charts and statistics
+  into the clipboard by clicking a new camera icon on a chart's action bar.
+  (#290)
+
+* It is now possible to change the color and opacity of user places
+  and hence associated time-series and statistic charts. (#216, #97)
+
+* When in map split mode each of the two variables has its own
+  variable color legend with same functionality. (#401)
+
+* Users can now enable a small pixel information box being displayed
+  next to the pointer when hovering over the map. It shows the current 
+  map coordinates and the values of the currently selected variable at 
+  that position. The feature is switched on and off from the layer 
+  selector menu. (#404)
+
+* The datasets in the dataset selector are now sorted by name and may
+  also be grouped if configured so in xcube server. (#385)
+
+* Users can now define their own variables computed from Python-like
+  expressions. The expressions can combine other variables of the
+  current dataset using almost all Python operators and all
+  [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs).  
+  User data variables are persisted in the browser's local storage.
+  (#371)
+
+### Enhancements
 
 * Revised map color mapping for simplicity and clarity. (#306, #390)
   This comprises the following changes:
@@ -18,28 +42,10 @@
   - The value range can now be assigned from the value range
     of the color mapping values.
 
-* When in map split mode each of the two variables has its own
-  variable color legend with same functionality. (#401)
-
 * All selectable items of the variable legend (color bar, value range)
   now show a "pointer" cursor to indicate interactivity.
 
-* The layer selector menu can now be used to enable displaying an 
-  information box that is shown next to the cursor when hovering over the map.
-  It shows the current map coordinates and the values of the currently 
-  selected variable at that position.
-
-* The datasets in the dataset selector are now sorted by name and may
-  also be grouped if configured so in xcube server. (#385)
-
 * Made the right sidebar panel's tab bar position sticky. (#373)
-
-* It is now possible to change the color and opacity of user places
-  and hence associated time-series and statistic charts. (#216, #97)
-
-* Users can now copy snapshots of a time-series charts and statistics 
-  into the clipboard by clicking a new camera icon on a chart's action bar. 
-  (#290)
 
 * The title of time-series charts has been turned into a label of the 
   chart's y-axis in order to include an indication of the units when 
