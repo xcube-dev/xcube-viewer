@@ -44,16 +44,16 @@ import {
   TimeAnimationInterval,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
-import SettingsPanel from "./SettingsPanel";
-import SettingsSubPanel from "./SettingsSubPanel";
-import ToggleSetting from "./ToggleSetting";
-import RadioSetting from "./RadioSetting";
-import LayerSelectMenu from "@/components/LayerSelectMenu";
 import {
   findLayer,
   getLayerTitle,
   LayerDefinition,
 } from "@/model/layerDefinition";
+import LayerSelectMenu from "@/components/LayerSelectMenu";
+import SettingsPanel from "./SettingsPanel";
+import SettingsSubPanel from "./SettingsSubPanel";
+import ToggleSetting from "./ToggleSetting";
+import RadioSetting from "./RadioSetting";
 
 const styles: Record<string, SxProps<Theme>> = {
   textField: (theme) => ({
