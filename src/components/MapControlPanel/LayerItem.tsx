@@ -22,47 +22,38 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import i18n from "@/i18n";
+import { LayerVisibilities } from "@/states/controlState";
+import SelectableMenuItem from "@/components/SelectableMenuItem";
 
-import { AppState } from "@/states/appState";
-import _MapLayerMenu from "@/components/MapLayerMenu";
-import {
-  openDialog,
-  setLayerMenuOpen,
+interface LayerItemProps {
+  layerId: keyof LayerVisibilities;
+  layerTitles: Record<keyof LayerVisibilities, string>;
+  layerSubtitles: Record<keyof LayerVisibilities, string>;
+  layerDisablements: Record<keyof LayerVisibilities, boolean>;
+  layerVisibilities: LayerVisibilities;
+  setLayerVisibility: (
+    layerId: keyof LayerVisibilities,
+    visible: boolean,
+  ) => void;
+}
+
+export default function LayerItem({
+  layerId,
+  layerTitles,
+  layerSubtitles,
+  layerDisablements,
+  layerVisibilities,
   setLayerVisibility,
-  setMapPointInfoBoxEnabled,
-  setVariableCompareMode,
-} from "@/actions/controlActions";
-import {
-  layerDisablementsSelector,
-  layerSubtitlesSelector,
-  layerTitlesSelector,
-  layerVisibilitiesSelector,
-} from "@/selectors/controlSelectors";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    layerMenuOpen: state.controlState.layerMenuOpen,
-    layerTitles: layerTitlesSelector(state),
-    layerSubtitles: layerSubtitlesSelector(state),
-    layerDisablements: layerDisablementsSelector(state),
-    layerVisibilities: layerVisibilitiesSelector(state),
-    variableCompareMode: state.controlState.variableCompareMode,
-    mapPointInfoBoxEnabled: state.controlState.mapPointInfoBoxEnabled,
-  };
-};
-
-const mapDispatchToProps = {
-  openDialog,
-  setLayerMenuOpen,
-  setLayerVisibility,
-  setVariableCompareMode,
-  setMapPointInfoBoxEnabled,
-};
-
-const MapLayerMenu = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_MapLayerMenu);
-export default MapLayerMenu;
+}: LayerItemProps) {
+  const visible = !!layerVisibilities[layerId];
+  return (
+    <SelectableMenuItem
+      title={i18n.get(layerTitles[layerId])}
+      subtitle={layerSubtitles[layerId]}
+      disabled={layerDisablements[layerId]}
+      selected={visible}
+      onClick={() => setLayerVisibility(layerId, !visible)}
+    />
+  );
+}

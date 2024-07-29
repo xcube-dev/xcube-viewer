@@ -22,38 +22,47 @@
  * SOFTWARE.
  */
 
-import i18n from "@/i18n";
-import { LayerVisibilities } from "@/states/controlState";
-import SelectableMenuItem from "@/components/SelectableMenuItem";
+import { connect } from "react-redux";
 
-interface LayerMenuItemProps {
-  layerId: keyof LayerVisibilities;
-  layerTitles: Record<keyof LayerVisibilities, string>;
-  layerSubtitles: Record<keyof LayerVisibilities, string>;
-  layerDisablements: Record<keyof LayerVisibilities, boolean>;
-  layerVisibilities: LayerVisibilities;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
-}
-
-export default function MapLayerMenuItem({
-  layerId,
-  layerTitles,
-  layerSubtitles,
-  layerDisablements,
-  layerVisibilities,
+import { AppState } from "@/states/appState";
+import _MapControlPanel from "@/components/MapControlPanel";
+import {
+  openDialog,
+  setLayerMenuOpen,
   setLayerVisibility,
-}: LayerMenuItemProps) {
-  const visible = !!layerVisibilities[layerId];
-  return (
-    <SelectableMenuItem
-      title={i18n.get(layerTitles[layerId])}
-      subtitle={layerSubtitles[layerId]}
-      disabled={layerDisablements[layerId]}
-      selected={visible}
-      onClick={() => setLayerVisibility(layerId, !visible)}
-    />
-  );
-}
+  setMapPointInfoBoxEnabled,
+  setVariableCompareMode,
+} from "@/actions/controlActions";
+import {
+  layerDisablementsSelector,
+  layerSubtitlesSelector,
+  layerTitlesSelector,
+  layerVisibilitiesSelector,
+} from "@/selectors/controlSelectors";
+
+const mapStateToProps = (state: AppState) => {
+  return {
+    locale: state.controlState.locale,
+    layerMenuOpen: state.controlState.layerMenuOpen,
+    layerTitles: layerTitlesSelector(state),
+    layerSubtitles: layerSubtitlesSelector(state),
+    layerDisablements: layerDisablementsSelector(state),
+    layerVisibilities: layerVisibilitiesSelector(state),
+    variableCompareMode: state.controlState.variableCompareMode,
+    mapPointInfoBoxEnabled: state.controlState.mapPointInfoBoxEnabled,
+  };
+};
+
+const mapDispatchToProps = {
+  openDialog,
+  setLayerMenuOpen,
+  setLayerVisibility,
+  setVariableCompareMode,
+  setMapPointInfoBoxEnabled,
+};
+
+const MapControlPanel = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_MapControlPanel);
+export default MapControlPanel;

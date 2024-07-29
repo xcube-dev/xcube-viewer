@@ -22,6 +22,6 @@
  * SOFTWARE.
  */
 
-import MapLayerMenu from "./MapLayerMenu";
+import MapControlPanel from "./MapControlPanel";
 
-export default MapLayerMenu;
+export default MapControlPanel;

@@ -41,7 +41,7 @@ import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { LayerVisibilities } from "@/states/controlState";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
-import MapLayerMenuItem from "./MapLayerMenuItem";
+import LayerItem from "./LayerItem";
 
 const initialPos: ControlPosition = { x: 10, y: 180 };
 
@@ -64,7 +64,7 @@ const styles = makeStyles({
   },
 });
 
-interface LayerMenuProps extends WithLocale {
+interface MapControlPanelProps extends WithLocale {
   layerMenuOpen: boolean;
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
@@ -82,7 +82,7 @@ interface LayerMenuProps extends WithLocale {
   setMapPointInfoBoxEnabled: (showPointInfoBox: boolean) => void;
 }
 
-export default function MapLayerMenu(props: LayerMenuProps) {
+export default function MapControlPanel(props: MapControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
 
   const {
@@ -133,15 +133,15 @@ export default function MapLayerMenu(props: LayerMenuProps) {
         </Box>
         <MenuList dense>
           <Divider />
-          <MapLayerMenuItem layerId="baseMap" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="datasetRgb2" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="datasetRgb" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="datasetVariable2" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="datasetVariable" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="datasetBoundary" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="datasetPlaces" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="userPlaces" {...layerSelectProps} />
-          <MapLayerMenuItem layerId="overlay" {...layerSelectProps} />
+          <LayerItem layerId="baseMap" {...layerSelectProps} />
+          <LayerItem layerId="datasetRgb2" {...layerSelectProps} />
+          <LayerItem layerId="datasetRgb" {...layerSelectProps} />
+          <LayerItem layerId="datasetVariable2" {...layerSelectProps} />
+          <LayerItem layerId="datasetVariable" {...layerSelectProps} />
+          <LayerItem layerId="datasetBoundary" {...layerSelectProps} />
+          <LayerItem layerId="datasetPlaces" {...layerSelectProps} />
+          <LayerItem layerId="userPlaces" {...layerSelectProps} />
+          <LayerItem layerId="overlay" {...layerSelectProps} />
           <Divider />
           <SelectableMenuItem
             title={i18n.get("Compare Mode (Drag)")}
