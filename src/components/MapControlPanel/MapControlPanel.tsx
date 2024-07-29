@@ -22,12 +22,15 @@
  * SOFTWARE.
  */
 
-import { useState } from "react";
+import { CSSProperties, SyntheticEvent, useState } from "react";
 import Draggable, {
   ControlPosition,
   DraggableData,
   DraggableEvent,
 } from "react-draggable";
+import { ResizableBox, ResizeCallbackData } from "react-resizable";
+import "react-resizable/css/styles.css";
+import { Theme } from "@mui/system";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -44,21 +47,25 @@ import SelectableMenuItem from "@/components/SelectableMenuItem";
 import LayerItem from "./LayerItem";
 
 const initialPos: ControlPosition = { x: 10, y: 180 };
+const initialSize = { width: 320, height: 580 };
 
 const styles = makeStyles({
+  resizeBox: { position: "absolute", zIndex: 1000 },
   windowPaper: {
-    position: "absolute",
-    zIndex: 1000,
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
   },
-  windowHeader: {
+  windowHeader: (theme: Theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     cursor: "move",
-    paddingTop: 1,
-    paddingLeft: 1,
-    paddingRight: 1,
-  },
+    padding: 1,
+    marginBottom: "2px",
+    borderBottom: `1px solid ${theme.palette.mode === "dark" ? "#FFFFFF3F" : "#0000003F"}`,
+  }),
   windowTitle: {
     fontWeight: "bolder",
   },
@@ -84,6 +91,7 @@ interface MapControlPanelProps extends WithLocale {
 
 export default function MapControlPanel(props: MapControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
+  const [size, setSize] = useState(initialSize);
 
   const {
     layerMenuOpen,
@@ -95,6 +103,10 @@ export default function MapControlPanel(props: MapControlPanelProps) {
     setMapPointInfoBoxEnabled,
     ...layerSelectProps
   } = props;
+
+  if (!layerMenuOpen) {
+    return null;
+  }
 
   const handleUserOverlays = () => {
     openDialog("userOverlays");
@@ -112,9 +124,9 @@ export default function MapControlPanel(props: MapControlPanelProps) {
     setPosition({ ...data });
   };
 
-  if (!layerMenuOpen) {
-    return null;
-  }
+  const handleResize = (_e: SyntheticEvent, data: ResizeCallbackData) => {
+    setSize({ ...data.size });
+  };
 
   return (
     <Draggable
@@ -122,46 +134,57 @@ export default function MapControlPanel(props: MapControlPanelProps) {
       position={position}
       onStop={handleDragStop}
     >
-      <Paper elevation={10} sx={styles.windowPaper}>
-        <Box id="layer-select-header" sx={styles.windowHeader}>
-          <Box component="span" sx={styles.windowTitle}>
-            {i18n.get("Layers")}
+      <ResizableBox
+        width={size.width}
+        height={size.height}
+        style={styles.resizeBox as CSSProperties}
+        onResize={handleResize}
+      >
+        <Paper elevation={10} sx={styles.windowPaper} component="div">
+          <Box id="layer-select-header" sx={styles.windowHeader}>
+            <Box component="span" sx={styles.windowTitle}>
+              {i18n.get("Layers")}
+            </Box>
+            <IconButton size="small" onClick={handleCloseLayerMenu}>
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
           </Box>
-          <IconButton size="small" onClick={handleCloseLayerMenu}>
-            <CloseIcon fontSize="inherit" />
-          </IconButton>
-        </Box>
-        <MenuList dense>
-          <Divider />
-          <LayerItem layerId="baseMap" {...layerSelectProps} />
-          <LayerItem layerId="datasetRgb2" {...layerSelectProps} />
-          <LayerItem layerId="datasetRgb" {...layerSelectProps} />
-          <LayerItem layerId="datasetVariable2" {...layerSelectProps} />
-          <LayerItem layerId="datasetVariable" {...layerSelectProps} />
-          <LayerItem layerId="datasetBoundary" {...layerSelectProps} />
-          <LayerItem layerId="datasetPlaces" {...layerSelectProps} />
-          <LayerItem layerId="userPlaces" {...layerSelectProps} />
-          <LayerItem layerId="overlay" {...layerSelectProps} />
-          <Divider />
-          <SelectableMenuItem
-            title={i18n.get("Compare Mode (Drag)")}
-            selected={variableCompareMode}
-            onClick={() => setVariableCompareMode(!variableCompareMode)}
-          />
-          <SelectableMenuItem
-            title={i18n.get("Point Info Mode (Hover)")}
-            selected={mapPointInfoBoxEnabled}
-            onClick={() => setMapPointInfoBoxEnabled(!mapPointInfoBoxEnabled)}
-          />
-          <Divider />
-          <MenuItem onClick={handleUserBaseMaps}>
-            {i18n.get("User Base Maps") + "..."}
-          </MenuItem>
-          <MenuItem onClick={handleUserOverlays}>
-            {i18n.get("User Overlays") + "..."}
-          </MenuItem>
-        </MenuList>
-      </Paper>
+          <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
+            <MenuList dense>
+              {/*<Divider />*/}
+              <LayerItem layerId="overlay" {...layerSelectProps} />
+              <LayerItem layerId="userPlaces" {...layerSelectProps} />
+              <LayerItem layerId="datasetPlaces" {...layerSelectProps} />
+              <LayerItem layerId="datasetBoundary" {...layerSelectProps} />
+              <LayerItem layerId="datasetVariable" {...layerSelectProps} />
+              <LayerItem layerId="datasetVariable2" {...layerSelectProps} />
+              <LayerItem layerId="datasetRgb" {...layerSelectProps} />
+              <LayerItem layerId="datasetRgb2" {...layerSelectProps} />
+              <LayerItem layerId="baseMap" {...layerSelectProps} />
+              <Divider />
+              <SelectableMenuItem
+                title={i18n.get("Compare Mode (Drag)")}
+                selected={variableCompareMode}
+                onClick={() => setVariableCompareMode(!variableCompareMode)}
+              />
+              <SelectableMenuItem
+                title={i18n.get("Point Info Mode (Hover)")}
+                selected={mapPointInfoBoxEnabled}
+                onClick={() =>
+                  setMapPointInfoBoxEnabled(!mapPointInfoBoxEnabled)
+                }
+              />
+              <Divider />
+              <MenuItem onClick={handleUserBaseMaps}>
+                {i18n.get("User Base Maps") + "..."}
+              </MenuItem>
+              <MenuItem onClick={handleUserOverlays}>
+                {i18n.get("User Overlays") + "..."}
+              </MenuItem>
+            </MenuList>
+          </Box>
+        </Paper>
+      </ResizableBox>
     </Draggable>
   );
 }
