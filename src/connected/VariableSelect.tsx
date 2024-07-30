@@ -26,7 +26,7 @@ import { connect } from "react-redux";
 
 import _VariableSelect from "@/components/VariableSelect";
 import { AppState } from "@/states/appState";
-import { addTimeSeries } from "@/actions/dataActions";
+import { addStatistics, addTimeSeries } from "@/actions/dataActions";
 import {
   openDialog,
   selectVariable,
@@ -36,6 +36,7 @@ import {
   canAddTimeSeriesSelector,
   userVariablesAllowedSelector,
   selectedVariablesSelector,
+  canAddStatisticsSelector,
 } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
@@ -47,6 +48,7 @@ const mapStateToProps = (state: AppState) => {
     selectedVariable2Name: state.controlState.selectedVariable2Name,
     userVariablesAllowed: userVariablesAllowedSelector(state),
     canAddTimeSeries: canAddTimeSeriesSelector(state),
+    canAddStatistics: canAddStatisticsSelector(state),
     variables: selectedVariablesSelector(state),
   };
 };
@@ -56,6 +58,7 @@ const mapDispatchToProps = {
   selectVariable,
   selectVariable2,
   addTimeSeries,
+  addStatistics,
 };
 
 const VariableSelect = connect(

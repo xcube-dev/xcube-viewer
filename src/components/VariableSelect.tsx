@@ -31,7 +31,8 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import CalculateIcon from "@mui/icons-material/Calculate";
-import CompareIcon from "@mui/icons-material/Compare";
+import FunctionsIcon from "@mui/icons-material/Functions";
+import PushPinIcon from "@mui/icons-material/PushPin";
 import TimelineIcon from "@mui/icons-material/Timeline";
 
 import i18n from "@/i18n";
@@ -52,6 +53,8 @@ interface VariableSelectProps extends WithLocale {
   userVariablesAllowed?: boolean;
   canAddTimeSeries: boolean;
   addTimeSeries: () => void;
+  canAddStatistics: boolean;
+  addStatistics: () => void;
   selectVariable: (variableName: string | null) => void;
   selectVariable2: (
     dataset2Id: string | null,
@@ -69,6 +72,8 @@ export default function VariableSelect({
   userVariablesAllowed,
   canAddTimeSeries,
   addTimeSeries,
+  canAddStatistics,
+  addStatistics,
   selectVariable,
   selectVariable2,
   openDialog,
@@ -83,6 +88,10 @@ export default function VariableSelect({
 
   const handleAddTimeSeriesButtonClick = () => {
     addTimeSeries();
+  };
+
+  const handleAddStatisticsButtonClick = () => {
+    addStatistics();
   };
 
   const isSelectedVariable2 =
@@ -154,17 +163,26 @@ export default function VariableSelect({
       icon={<TimelineIcon />}
     />
   );
+  const addStatisticsButton = (
+    <ToolButton
+      key={"timeSeries"}
+      disabled={!canAddStatistics}
+      onClick={handleAddStatisticsButtonClick}
+      tooltipText={i18n.get("Add statistics")}
+      icon={<FunctionsIcon />}
+    />
+  );
   const variable2Button = (
     <ToggleButton
       key={"variable2"}
       selected={isSelectedVariable2}
       value={"comparison"}
       size="small"
-      sx={commonStyles.toggleButton}
+      sx={{ ...commonStyles.toggleButton, marginLeft: 0.4 }}
       onClick={() => selectVariable2(selectedDatasetId, selectedVariableName)}
     >
       <Tooltip arrow title={i18n.get("Make it 2nd variable for comparison")}>
-        {<CompareIcon />}
+        {<PushPinIcon fontSize="small" />}
       </Tooltip>
     </ToggleButton>
   );
@@ -174,9 +192,10 @@ export default function VariableSelect({
       label={variableSelectLabel}
       control={variableSelect}
       actions={[
+        variable2Button,
         manageUserVariablesButton,
         addTimeSeriesButton,
-        variable2Button,
+        addStatisticsButton,
       ]}
     />
   );

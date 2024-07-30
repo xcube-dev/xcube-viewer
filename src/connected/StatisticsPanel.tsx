@@ -26,6 +26,7 @@ import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
 import {
+  canAddStatisticsSelector,
   resolvedStatisticsRecordsSelector,
   selectedDatasetSelector,
   selectedDatasetTimeLabelSelector,
@@ -45,6 +46,7 @@ const mapStateToProps = (state: AppState) => {
     selectedPlaceInfo: selectedPlaceInfoSelector(state),
     statisticsLoading: statisticsLoadingSelector(state),
     statisticsRecords: resolvedStatisticsRecordsSelector(state),
+    canAddStatistics: canAddStatisticsSelector(state),
   };
 };
 

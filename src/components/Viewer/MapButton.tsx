@@ -31,6 +31,11 @@ const BUTTON_STYLE: CSSProperties = {
   height: "1.375em",
 };
 
+const SELECTED_BUTTON_STYLE: CSSProperties = {
+  ...BUTTON_STYLE,
+  backgroundColor: "rgba(0,80,180,0.9)",
+};
+
 interface MapButtonProps {
   icon: ReactElement;
   tooltipTitle?: ReactNode;
@@ -66,11 +71,7 @@ export default function MapButton({
   return (
     <IconButton
       onClick={handleClick}
-      style={
-        selected
-          ? { ...BUTTON_STYLE, backgroundColor: "rgba(0,60,136,0.7)" }
-          : BUTTON_STYLE
-      }
+      style={selected ? SELECTED_BUTTON_STYLE : BUTTON_STYLE}
     >
       {icon}
     </IconButton>
