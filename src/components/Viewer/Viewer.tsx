@@ -40,6 +40,8 @@ import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { getRenderPixel } from "ol/render";
 import RenderEvent from "ol/render/Event";
+import { default as OlLayer } from "ol/layer/Layer";
+import { Pixel } from "ol/pixel";
 
 import i18n from "@/i18n";
 import {
@@ -67,8 +69,6 @@ import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
-import { default as OlLayer } from "ol/layer/Layer";
-import { Pixel } from "ol/pixel";
 
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
@@ -121,6 +121,7 @@ interface ViewerProps {
   colorBarLegend2?: MapElement;
   mapSplitter?: MapElement;
   mapPointInfoBox?: MapElement;
+  mapControlActions?: MapElement;
   userDrawnPlaceGroupName: string;
   addDrawnUserPlace?: (
     placeGroupTitle: string,
@@ -162,6 +163,7 @@ export default function Viewer({
   colorBarLegend2,
   mapSplitter,
   mapPointInfoBox,
+  mapControlActions,
   userDrawnPlaceGroupName,
   addDrawnUserPlace,
   importUserPlacesFromText,
@@ -440,6 +442,7 @@ export default function Viewer({
         {colorBarLegend}
         {colorBarLegend2}
         {mapPointInfoBox}
+        {mapControlActions}
         {mapSplitter}
         <ScaleLine bar={false} />
       </Map>

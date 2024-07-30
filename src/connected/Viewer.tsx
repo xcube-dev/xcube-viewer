@@ -52,6 +52,7 @@ import ColorBarLegend from "./ColorBarLegend";
 import ColorBarLegend2 from "./ColorBarLegend2";
 import MapSplitter from "./MapSplitter";
 import MapPointInfoBox from "./MapPointInfoBox";
+import MapControlActions from "./MapControlActions";
 
 interface OwnProps {
   onMapRef?: (map: OlMap | null) => void;
@@ -71,6 +72,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     colorBarLegend2: <ColorBarLegend2 />,
     mapSplitter: <MapSplitter />,
     mapPointInfoBox: <MapPointInfoBox />,
+    mapControlActions: <MapControlActions />,
     userDrawnPlaceGroupName: state.controlState.userDrawnPlaceGroupName,
     userPlaceGroups: userPlaceGroupsSelector(state),
     userPlaceGroupsVisibility: userPlaceGroupsVisibilitySelector(state),
