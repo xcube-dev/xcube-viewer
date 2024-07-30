@@ -25,6 +25,7 @@
 import i18n from "@/i18n";
 import { LayerVisibilities } from "@/states/controlState";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
+import Divider from "@mui/material/Divider";
 
 interface LayerItemProps {
   layerId: keyof LayerVisibilities;
@@ -36,6 +37,7 @@ interface LayerItemProps {
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
+  last?: boolean;
 }
 
 export default function LayerItem({
@@ -45,15 +47,27 @@ export default function LayerItem({
   layerDisablements,
   layerVisibilities,
   setLayerVisibility,
+  last,
 }: LayerItemProps) {
   const visible = !!layerVisibilities[layerId];
   return (
-    <SelectableMenuItem
-      title={i18n.get(layerTitles[layerId])}
-      subtitle={layerSubtitles[layerId]}
-      disabled={layerDisablements[layerId]}
-      selected={visible}
-      onClick={() => setLayerVisibility(layerId, !visible)}
-    />
+    <>
+      <SelectableMenuItem
+        title={i18n.get(layerTitles[layerId])}
+        subtitle={layerSubtitles[layerId]}
+        disabled={layerDisablements[layerId]}
+        selected={visible}
+        onClick={() => setLayerVisibility(layerId, !visible)}
+      />
+      {last ? (
+        <Divider />
+      ) : (
+        <Divider
+          variant="inset"
+          component="li"
+          style={{ margin: "0 0 0 52px" }}
+        />
+      )}
+    </>
   );
 }

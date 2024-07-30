@@ -27,6 +27,7 @@ import CompareIcon from "@mui/icons-material/Compare";
 import LayersIcon from "@mui/icons-material/Layers";
 import MessageIcon from "@mui/icons-material/Message";
 
+import i18n from "@/i18n";
 import MapButtonGroup from "@/components/Viewer/MapButtonGroup";
 import MapButton from "@/components/Viewer/MapButton";
 
@@ -60,6 +61,7 @@ export default function MapControlActions({
     <MapButtonGroup style={GROUP_STYLE}>
       <MapButton
         icon={<LayersIcon fontSize={"small"} />}
+        tooltipTitle={i18n.get("Layer visibilities")}
         selected={layerMenuOpen}
         onSelect={(_e, selected) => void setLayerMenuOpen(selected)}
       />

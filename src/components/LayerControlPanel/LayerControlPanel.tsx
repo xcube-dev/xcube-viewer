@@ -32,7 +32,6 @@ import { ResizableBox, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { Theme } from "@mui/system";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
@@ -43,11 +42,10 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { LayerVisibilities } from "@/states/controlState";
-import SelectableMenuItem from "@/components/SelectableMenuItem";
 import LayerItem from "./LayerItem";
 
-const initialPos: ControlPosition = { x: 10, y: 180 };
-const initialSize = { width: 320, height: 580 };
+const initialPos: ControlPosition = { x: 48, y: 128 };
+const initialSize = { width: 320, height: 500 };
 
 const styles = makeStyles({
   resizeBox: { position: "absolute", zIndex: 1000 },
@@ -83,26 +81,14 @@ interface MapControlPanelProps extends WithLocale {
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
-  variableCompareMode: boolean;
-  setVariableCompareMode: (selected: boolean) => void;
-  mapPointInfoBoxEnabled: boolean;
-  setMapPointInfoBoxEnabled: (showPointInfoBox: boolean) => void;
 }
 
-export default function MapControlPanel(props: MapControlPanelProps) {
+export default function LayerControlPanel(props: MapControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
   const [size, setSize] = useState(initialSize);
 
-  const {
-    layerMenuOpen,
-    setLayerMenuOpen,
-    openDialog,
-    variableCompareMode,
-    setVariableCompareMode,
-    mapPointInfoBoxEnabled,
-    setMapPointInfoBoxEnabled,
-    ...layerSelectProps
-  } = props;
+  const { layerMenuOpen, setLayerMenuOpen, openDialog, ...layerSelectProps } =
+    props;
 
   if (!layerMenuOpen) {
     return null;
@@ -160,21 +146,7 @@ export default function MapControlPanel(props: MapControlPanelProps) {
               <LayerItem layerId="datasetVariable2" {...layerSelectProps} />
               <LayerItem layerId="datasetRgb" {...layerSelectProps} />
               <LayerItem layerId="datasetRgb2" {...layerSelectProps} />
-              <LayerItem layerId="baseMap" {...layerSelectProps} />
-              <Divider />
-              <SelectableMenuItem
-                title={i18n.get("Compare Mode (Drag)")}
-                selected={variableCompareMode}
-                onClick={() => setVariableCompareMode(!variableCompareMode)}
-              />
-              <SelectableMenuItem
-                title={i18n.get("Point Info Mode (Hover)")}
-                selected={mapPointInfoBoxEnabled}
-                onClick={() =>
-                  setMapPointInfoBoxEnabled(!mapPointInfoBoxEnabled)
-                }
-              />
-              <Divider />
+              <LayerItem layerId="baseMap" {...layerSelectProps} last={true} />
               <MenuItem onClick={handleUserBaseMaps}>
                 {i18n.get("User Base Maps") + "..."}
               </MenuItem>

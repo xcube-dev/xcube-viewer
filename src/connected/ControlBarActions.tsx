@@ -31,7 +31,6 @@ import {
   setLayerVisibility,
   setVariableCompareMode,
   setSidebarOpen,
-  setLayerMenuOpen,
 } from "@/actions/controlActions";
 import { Config } from "@/config";
 import { updateResources } from "@/actions/dataActions";
@@ -48,7 +47,6 @@ const mapStateToProps = (state: AppState) => {
     visible: !!(
       state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
     ),
-    layerMenuOpen: state.controlState.layerMenuOpen,
     sidebarOpen: state.controlState.sidebarOpen,
     compact: Config.instance.branding.compact,
     allowRefresh: Config.instance.branding.allowRefresh,
@@ -62,7 +60,6 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  setLayerMenuOpen,
   setSidebarOpen,
   openDialog,
   updateResources,

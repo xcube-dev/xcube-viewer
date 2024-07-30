@@ -32,13 +32,11 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
-import LayersIcon from "@mui/icons-material/Layers";
 
 import i18n from "@/i18n";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
-import ToolButton from "./ToolButton";
 
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(
@@ -51,8 +49,6 @@ const StyledFormControl = styled(FormControl)(
 
 interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
-  layerMenuOpen: boolean;
-  setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   sidebarOpen: boolean;
   setSidebarOpen: (sideBarOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
@@ -63,8 +59,6 @@ interface ControlBarActionsProps extends WithLocale {
 
 export default function ControlBarActions({
   visible,
-  layerMenuOpen,
-  setLayerMenuOpen,
   sidebarOpen,
   setSidebarOpen,
   openDialog,
@@ -75,17 +69,6 @@ export default function ControlBarActions({
   if (!visible) {
     return null;
   }
-
-  const layersButton = (
-    <ToolButton
-      onClick={() => setLayerMenuOpen(!layerMenuOpen)}
-      tooltipText={i18n.get("Layer visibilities")}
-      toggle
-      value="open"
-      selected={layerMenuOpen}
-      icon={<LayersIcon />}
-    />
-  );
 
   const sidebarButton = (
     <ToggleButton
@@ -137,7 +120,6 @@ export default function ControlBarActions({
         {refreshButton}
         {downloadButton}
         {settingsButton}
-        {layersButton}
         {sidebarButton}
       </Box>
     </StyledFormControl>

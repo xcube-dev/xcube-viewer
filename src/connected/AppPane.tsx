@@ -31,7 +31,7 @@ import { AppState } from "@/states/appState";
 import { Config } from "@/config";
 import ControlBar from "./ControlBar";
 import Workspace from "./Workspace";
-import MapControlPanel from "./MapControlPanel";
+import LayerControlPanel from "./LayerControlPanel";
 
 interface AppPaneProps {
   hasConsent: boolean;
@@ -71,7 +71,7 @@ const _AppPane: React.FC<AppPaneProps> = ({ hasConsent, compact }) => {
         <>
           <ControlBar />
           <Workspace />
-          <MapControlPanel />
+          <LayerControlPanel />
         </>
       )}
     </StyledMain>

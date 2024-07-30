@@ -22,6 +22,41 @@
  * SOFTWARE.
  */
 
-import MapControlPanel from "./MapControlPanel";
+import { connect } from "react-redux";
 
-export default MapControlPanel;
+import { AppState } from "@/states/appState";
+import _LayerControlPanel from "@/components/LayerControlPanel";
+import {
+  openDialog,
+  setLayerMenuOpen,
+  setLayerVisibility,
+} from "@/actions/controlActions";
+import {
+  layerDisablementsSelector,
+  layerSubtitlesSelector,
+  layerTitlesSelector,
+  layerVisibilitiesSelector,
+} from "@/selectors/controlSelectors";
+
+const mapStateToProps = (state: AppState) => {
+  return {
+    locale: state.controlState.locale,
+    layerMenuOpen: state.controlState.layerMenuOpen,
+    layerTitles: layerTitlesSelector(state),
+    layerSubtitles: layerSubtitlesSelector(state),
+    layerDisablements: layerDisablementsSelector(state),
+    layerVisibilities: layerVisibilitiesSelector(state),
+  };
+};
+
+const mapDispatchToProps = {
+  openDialog,
+  setLayerMenuOpen,
+  setLayerVisibility,
+};
+
+const LayerControlPanel = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_LayerControlPanel);
+export default LayerControlPanel;
