@@ -1046,6 +1046,11 @@
       "se": "Växla justerbart x-intervall"
     },
     {
+      "en": "pinned",
+      "de": "angepinnt",
+      "se": "fäst"
+    },
+    {
       "en": "Compare Mode (Drag)",
       "de": "Vergleichsmodus (Ziehen)",
       "se": "Jämförelseläge (Dra)"

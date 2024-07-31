@@ -43,9 +43,10 @@ import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { LayerVisibilities } from "@/states/controlState";
 import LayerItem from "./LayerItem";
+import { LayerState } from "@/model/layerState";
 
 const initialPos: ControlPosition = { x: 48, y: 128 };
-const initialSize = { width: 320, height: 500 };
+const initialSize = { width: 320, height: 520 };
 
 const styles = makeStyles({
   resizeBox: { position: "absolute", zIndex: 1000 },
@@ -69,30 +70,28 @@ const styles = makeStyles({
   },
 });
 
-interface MapControlPanelProps extends WithLocale {
+interface LayerControlPanelProps extends WithLocale {
   layerMenuOpen: boolean;
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
-  layerTitles: Record<keyof LayerVisibilities, string>;
-  layerSubtitles: Record<keyof LayerVisibilities, string>;
-  layerDisablements: Record<keyof LayerVisibilities, boolean>;
-  layerVisibilities: LayerVisibilities;
+  layerStates: Record<keyof LayerVisibilities, LayerState>;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
     visible: boolean,
   ) => void;
 }
 
-export default function LayerControlPanel(props: MapControlPanelProps) {
+export default function LayerControlPanel(props: LayerControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
   const [size, setSize] = useState(initialSize);
 
-  const { layerMenuOpen, setLayerMenuOpen, openDialog, ...layerSelectProps } =
-    props;
+  const { layerMenuOpen, setLayerMenuOpen, openDialog, ...layerProps } = props;
 
   if (!layerMenuOpen) {
     return null;
   }
+
+  console.log("layerProps", layerProps);
 
   const handleUserOverlays = () => {
     openDialog("userOverlays");
@@ -138,15 +137,15 @@ export default function LayerControlPanel(props: MapControlPanelProps) {
           <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
             <MenuList dense>
               {/*<Divider />*/}
-              <LayerItem layerId="overlay" {...layerSelectProps} />
-              <LayerItem layerId="userPlaces" {...layerSelectProps} />
-              <LayerItem layerId="datasetPlaces" {...layerSelectProps} />
-              <LayerItem layerId="datasetBoundary" {...layerSelectProps} />
-              <LayerItem layerId="datasetVariable" {...layerSelectProps} />
-              <LayerItem layerId="datasetVariable2" {...layerSelectProps} />
-              <LayerItem layerId="datasetRgb" {...layerSelectProps} />
-              <LayerItem layerId="datasetRgb2" {...layerSelectProps} />
-              <LayerItem layerId="baseMap" {...layerSelectProps} last={true} />
+              <LayerItem layerId="overlay" {...layerProps} />
+              <LayerItem layerId="userPlaces" {...layerProps} />
+              <LayerItem layerId="datasetPlaces" {...layerProps} />
+              <LayerItem layerId="datasetBoundary" {...layerProps} />
+              <LayerItem layerId="datasetVariable" {...layerProps} />
+              <LayerItem layerId="datasetVariable2" {...layerProps} />
+              <LayerItem layerId="datasetRgb" {...layerProps} />
+              <LayerItem layerId="datasetRgb2" {...layerProps} />
+              <LayerItem layerId="baseMap" {...layerProps} last={true} />
               <MenuItem onClick={handleUserBaseMaps}>
                 {i18n.get("User Base Maps") + "..."}
               </MenuItem>

@@ -104,20 +104,6 @@ export default function VariableSelect({
     </InputLabel>
   );
 
-  function getVariableLabel(variable: Variable | undefined) {
-    if (!variable) {
-      return "?";
-    }
-    const label = variable.title || variable.name;
-    if (
-      selectedDatasetId === selectedDataset2Id &&
-      variable.name === selectedVariable2Name
-    ) {
-      return `${label} (#2)`;
-    }
-    return label;
-  }
-
   const variableSelect = (
     <Select
       variant="standard"
@@ -142,6 +128,10 @@ export default function VariableSelect({
             </ListItemIcon>
           )}
           <ListItemText>{getVariableLabel(variable)}</ListItemText>
+          {selectedDatasetId === selectedDataset2Id &&
+            variable.name === selectedVariable2Name && (
+              <PushPinIcon fontSize="small" color="secondary" />
+            )}
         </MenuItem>
       ))}
     </Select>
@@ -165,7 +155,7 @@ export default function VariableSelect({
   );
   const addStatisticsButton = (
     <ToolButton
-      key={"timeSeries"}
+      key={"statistics"}
       disabled={!canAddStatistics}
       onClick={handleAddStatisticsButtonClick}
       tooltipText={i18n.get("Add statistics")}
@@ -199,4 +189,11 @@ export default function VariableSelect({
       ]}
     />
   );
+}
+
+function getVariableLabel(variable: Variable | undefined) {
+  if (!variable) {
+    return "?";
+  }
+  return variable.title || variable.name;
 }

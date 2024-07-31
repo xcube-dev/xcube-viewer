@@ -26,20 +26,9 @@ import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
-import {
-  openDialog,
-  setLayerVisibility,
-  setVariableCompareMode,
-  setSidebarOpen,
-} from "@/actions/controlActions";
+import { openDialog, setSidebarOpen } from "@/actions/controlActions";
 import { Config } from "@/config";
 import { updateResources } from "@/actions/dataActions";
-import {
-  layerDisablementsSelector,
-  layerSubtitlesSelector,
-  layerTitlesSelector,
-  layerVisibilitiesSelector,
-} from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -50,12 +39,6 @@ const mapStateToProps = (state: AppState) => {
     sidebarOpen: state.controlState.sidebarOpen,
     compact: Config.instance.branding.compact,
     allowRefresh: Config.instance.branding.allowRefresh,
-    // MapLayerMenu
-    layerTitles: layerTitlesSelector(state),
-    layerSubtitles: layerSubtitlesSelector(state),
-    layerDisablements: layerDisablementsSelector(state),
-    layerVisibilities: layerVisibilitiesSelector(state),
-    variableCompareMode: state.controlState.variableCompareMode,
   };
 };
 
@@ -63,8 +46,6 @@ const mapDispatchToProps = {
   setSidebarOpen,
   openDialog,
   updateResources,
-  setLayerVisibility,
-  setVariableCompareMode,
 };
 
 const ControlBarActions = connect(

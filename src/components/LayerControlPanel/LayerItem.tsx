@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
+import Divider from "@mui/material/Divider";
+import PushPinIcon from "@mui/icons-material/PushPin";
+
 import i18n from "@/i18n";
 import { LayerVisibilities } from "@/states/controlState";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
-import Divider from "@mui/material/Divider";
+import { LayerState } from "@/model/layerState";
 
 interface LayerItemProps {
   layerId: keyof LayerVisibilities;
-  layerTitles: Record<keyof LayerVisibilities, string>;
-  layerSubtitles: Record<keyof LayerVisibilities, string>;
-  layerDisablements: Record<keyof LayerVisibilities, boolean>;
-  layerVisibilities: LayerVisibilities;
+  layerStates: Record<keyof LayerVisibilities, LayerState>;
   setLayerVisibility: (
     layerId: keyof LayerVisibilities,
     visible: boolean,
@@ -42,22 +42,24 @@ interface LayerItemProps {
 
 export default function LayerItem({
   layerId,
-  layerTitles,
-  layerSubtitles,
-  layerDisablements,
-  layerVisibilities,
+  layerStates,
   setLayerVisibility,
   last,
 }: LayerItemProps) {
-  const visible = !!layerVisibilities[layerId];
+  const layerState = layerStates[layerId];
+  if (layerState.disabled) {
+    return null;
+  }
   return (
     <>
       <SelectableMenuItem
-        title={i18n.get(layerTitles[layerId])}
-        subtitle={layerSubtitles[layerId]}
-        disabled={layerDisablements[layerId]}
-        selected={visible}
-        onClick={() => setLayerVisibility(layerId, !visible)}
+        title={i18n.get(layerState.title)}
+        subtitle={layerState.subTitle}
+        selected={!!layerState.visible}
+        secondaryIcon={
+          layerState.pinned && <PushPinIcon fontSize="small" color="disabled" />
+        }
+        onClick={() => setLayerVisibility(layerId, !layerState.visible)}
       />
       {last ? (
         <Divider />

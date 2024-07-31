@@ -30,6 +30,16 @@
 
 ### Enhancements
 
+* Avoiding confusion regarding variable comparison. (#407)
+  Improved the user experience in several ways:
+  - No longer using the term _second variable_ and the `(#2)` suffix in
+    variable titles. Instead, it is now the _pinned variable_.
+    A pin icon is now used to mark a pinned variable.
+  - Moved map-related actions directly into the map, namely
+    - show/hide map layer panel (moved from main toolbar)
+    - enable/disable map split mode (moved from layer control panel)
+    - enable/disable new map info box  (moved from layer control panel)
+
 * Revised map color mapping for simplicity and clarity. (#306, #390)
   This comprises the following changes:
   - Removed the color mapping normalisation modes. Instead, introduced
