@@ -37,6 +37,7 @@ import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
+import { transformExtent as olTransformExtent } from "ol/proj";
 
 import { Config, getTileAccess, getUserPlaceFillOpacity } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
@@ -857,6 +858,7 @@ function getLoadTileOnlyAfterMove() {
 function getTileLayer(
   layerId: string,
   tileUrl: string,
+  extent: [number, number, number, number],
   tileLevelMin: number | undefined,
   tileLevelMax: number | undefined,
   queryParams: Array<[string, string]>,
@@ -889,8 +891,19 @@ function getTileLayer(
     tileLevelMin,
     tileLevelMax,
   );
+  const transformedExtent =
+    mapProjection === GEOGRAPHIC_CRS
+      ? extent
+      : olTransformExtent(extent, "EPSG:4326", mapProjection);
+  console.log("extent:", extent, transformedExtent);
   return (
-    <Tile id={layerId} source={source} zIndex={zIndex} opacity={opacity} />
+    <Tile
+      id={layerId}
+      source={source}
+      extent={transformedExtent}
+      zIndex={zIndex}
+      opacity={opacity}
+    />
   );
 }
 
@@ -1005,6 +1018,7 @@ const getVariableTileLayer = (
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, variable),
+    dataset.bbox,
     variable.tileLevelMin,
     variable.tileLevelMax,
     queryParams,
@@ -1078,6 +1092,7 @@ const getDatasetRgbTileLayer = (
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, "rgb"),
+    dataset.bbox,
     rgbSchema.tileLevelMin,
     rgbSchema.tileLevelMax,
     queryParams,

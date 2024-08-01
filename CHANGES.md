@@ -42,6 +42,10 @@
   - The value range can now be assigned from the value range
     of the color mapping values.
 
+* Map layers that represent dataset variable's will no longer request
+  tiles for regions that do not intersect with the dataset's extent. 
+  This improves both viewer and server performance. (#412)
+
 * All selectable items of the variable legend (color bar, value range)
   now show a "pointer" cursor to indicate interactivity.
 

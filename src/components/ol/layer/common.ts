@@ -42,6 +42,7 @@ export function processLayerProperties(
   updateLayerProperty(layer, prevProps, nextProps, "visible", true);
   updateLayerProperty(layer, prevProps, nextProps, "opacity", 1.0);
   updateLayerProperty(layer, prevProps, nextProps, "zIndex", undefined);
+  updateLayerProperty(layer, prevProps, nextProps, "extent", undefined);
   updateLayerProperty(layer, prevProps, nextProps, "minResolution", undefined);
   updateLayerProperty(layer, prevProps, nextProps, "maxResolution", undefined);
   // TODO: add more props here
