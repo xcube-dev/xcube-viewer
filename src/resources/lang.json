@@ -456,6 +456,11 @@
       "se": "Visa tidsseriediagram"
     },
     {
+      "en": "Add statistics",
+      "de": "Statistik hinzufügen",
+      "se": "Lägg till statistik"
+    },
+    {
       "en": "Help",
       "de": "Hilfe",
       "se": "Hjälp"
@@ -559,6 +564,11 @@
       "en": "Rename place",
       "de": "Ort umbenennen",
       "se": "Byt namn på plats"
+    },
+    {
+      "en": "Style place",
+      "de": "Styling von Ort anpassen",
+      "se": "Anpassa stil från plats"
     },
     {
       "en": "Remove place",

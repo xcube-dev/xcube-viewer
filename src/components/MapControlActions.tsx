@@ -67,11 +67,13 @@ export default function MapControlActions({
       />
       <MapButton
         icon={<CompareIcon fontSize={"small"} />}
+        tooltipTitle={i18n.get("Compare Mode (Drag)")}
         selected={variableCompareMode}
         onSelect={(_e, selected) => void setVariableCompareMode(selected)}
       />
       <MapButton
         icon={<MessageIcon fontSize={"small"} />}
+        tooltipTitle={i18n.get("Point Info Mode (Hover)")}
         selected={mapPointInfoBoxEnabled}
         onSelect={(_e, selected) => void setMapPointInfoBoxEnabled(selected)}
       />
