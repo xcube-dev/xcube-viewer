@@ -42,6 +42,8 @@
 
 * Placed an "Add Statistics" action next to the "Add Time-Series" action
   in the main toolbar for consistency.
+
+* Improved the visibility of the layer split bar over bright map backgrounds.
   
 * Revised map color mapping for simplicity and clarity. (#306, #390)
   This comprises the following changes:
