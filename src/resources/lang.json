@@ -791,9 +791,19 @@
       "se": "Lägg till lager från en Tiled Web Map"
     },
     {
-      "en": "Layer visibilities",
-      "de": "Layersichtbarkeiten",
-      "se": "Lagrets synlighet"
+      "en": "Show or hide layers panel",
+      "de": "Layer-Bedienfeld ein- oder ausblenden",
+      "se": "Visa eller dölj panelen Lager"
+    },
+    {
+      "en": "Turn layer split mode on or off",
+      "de": "Layer-Split-Modus ein- oder ausschalten",
+      "se": "Aktivera eller inaktivera lagerdelningsläget"
+    },
+    {
+      "en": "Turn info box on or off",
+      "de": "Infobox ein- oder ausschalten",
+      "se": "Slå på eller av informationsrutan"
     },
     {
       "en": "Show or hide sidebar",

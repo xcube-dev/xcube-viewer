@@ -27,6 +27,7 @@ import { CSSProperties, MouseEvent, ReactElement, ReactNode } from "react";
 import Tooltip from "@mui/material/Tooltip";
 
 const BUTTON_STYLE: CSSProperties = {
+  // Same sizes as for OpenLayers
   width: "1.375em",
   height: "1.375em",
 };
@@ -34,6 +35,17 @@ const BUTTON_STYLE: CSSProperties = {
 const SELECTED_BUTTON_STYLE: CSSProperties = {
   ...BUTTON_STYLE,
   backgroundColor: "rgba(0,80,180,0.9)",
+};
+
+const TOOLTIP_COMPONENT_PROPS = {
+  tooltip: {
+    // Makes tooltip style  similar to OpenLayers
+    sx: {
+      backgroundColor: "#4A4A4A",
+      border: "1px solid white",
+      borderRadius: 0,
+    },
+  },
 };
 
 interface MapButtonProps {
@@ -62,7 +74,7 @@ export default function MapButton({
 
   if (tooltipTitle) {
     icon = (
-      <Tooltip arrow title={tooltipTitle}>
+      <Tooltip title={tooltipTitle} componentsProps={TOOLTIP_COMPONENT_PROPS}>
         {icon}
       </Tooltip>
     );

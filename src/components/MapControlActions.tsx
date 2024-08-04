@@ -61,17 +61,19 @@ export default function MapControlActions({
     <MapButtonGroup style={GROUP_STYLE}>
       <MapButton
         icon={<LayersIcon fontSize={"small"} />}
-        tooltipTitle={i18n.get("Layer visibilities")}
+        tooltipTitle={i18n.get("Show or hide layers panel")}
         selected={layerMenuOpen}
         onSelect={(_e, selected) => void setLayerMenuOpen(selected)}
       />
       <MapButton
         icon={<CompareIcon fontSize={"small"} />}
+        tooltipTitle={i18n.get("Turn layer split mode on or off")}
         selected={variableCompareMode}
         onSelect={(_e, selected) => void setVariableCompareMode(selected)}
       />
       <MapButton
         icon={<MessageIcon fontSize={"small"} />}
+        tooltipTitle={i18n.get("Turn info box on or off")}
         selected={mapPointInfoBoxEnabled}
         onSelect={(_e, selected) => void setMapPointInfoBoxEnabled(selected)}
       />
