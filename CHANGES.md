@@ -55,6 +55,8 @@
 
 ### Fixes
 
+* In the map's color legend long variable are now wrapped at words. (#410) 
+
 * Fixed a problem in map split mode, where the left variable layer
   was still rendered on the right side so that it appeared in transparent 
   regions of the right layer. Left and right layers do not overlay each other
