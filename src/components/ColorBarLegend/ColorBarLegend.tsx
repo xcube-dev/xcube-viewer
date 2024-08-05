@@ -33,6 +33,8 @@ import { ColorBarNorm } from "@/model/variable";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
 import ColorBarLegendScalable from "./ColorBarLegendScalable";
 import ColorBarColorEditor from "./ColorBarColorEditor";
+import Typography from "@mui/material/Typography";
+import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
 
 const styles = makeStyles({
   container: (theme) => ({
@@ -45,6 +47,7 @@ const styles = makeStyles({
     borderColor: "#00000020",
     backgroundColor: "#FFFFFFAA",
     color: "black",
+    maxWidth: `${COLOR_BAR_ITEM_WIDTH + 20}px`,
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
     paddingBottom: theme.spacing(0.5),
@@ -55,7 +58,8 @@ const styles = makeStyles({
     fontWeight: "bold",
     width: "100%",
     display: "flex",
-    flexWrap: "nowrap",
+    wordBreak: "break-word",
+    wordWrap: "break-word",
     justifyContent: "center",
     paddingBottom: theme.spacing(0.5),
   }),
@@ -121,9 +125,7 @@ export default function ColorBarLegend(
 
   return (
     <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
-      <Box sx={styles.title} component="span">
-        {variableTitleWithUnits}
-      </Box>
+      <Typography sx={styles.title}>{variableTitleWithUnits}</Typography>
       {variableColorBar.type === "categorical" ? (
         <ColorBarLegendCategorical
           categories={variableColorBar.colorRecords}
