@@ -106,6 +106,7 @@ import {
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { StatisticsRecord } from "@/model/statistics";
+import { LayerState } from "@/model/layerState";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -613,6 +614,26 @@ export const timeSeriesPlaceInfosSelector = createSelector(
       }
     });
     return placeInfos;
+  },
+);
+
+export const canAddStatisticsSelector = createSelector(
+  selectedDatasetIdSelector,
+  selectedVariableNameSelector,
+  selectedTimeSelector,
+  selectedPlaceIdSelector,
+  (
+    selectedDatasetId: string | null,
+    selectedVariableName: string | null,
+    selectedTime: Time | null,
+    selectedPlaceId: string | null,
+  ): boolean => {
+    return !!(
+      selectedDatasetId &&
+      selectedVariableName &&
+      selectedTime &&
+      selectedPlaceId
+    );
   },
 );
 
@@ -1338,67 +1359,85 @@ export const selectedOverlayTitleSelector = createSelector(
   _getLayerTitle,
 );
 
-export const layerTitlesSelector = (
-  _state: AppState,
-): Record<keyof LayerVisibilities, string> => ({
-  baseMap: "Base Map",
-  datasetRgb2: "Dataset RGB 2",
-  datasetRgb: "Dataset RGB",
-  datasetVariable2: "Dataset Variable 2",
-  datasetVariable: "Dataset Variable",
-  datasetBoundary: "Dataset Boundary",
-  datasetPlaces: "Dataset Places",
-  userPlaces: "User Places",
-  overlay: "Overlay",
-});
-
-export const layerSubtitlesSelector = createSelector(
+export const layerStatesSelector = createSelector(
   selectedBaseMapTitleSelector,
   selectedOverlayTitleSelector,
-  selectedDatasetSelector,
-  selectedVariableNameSelector,
-  selectedDataset2Selector,
-  selectedVariable2NameSelector,
-  (
-    baseMapTitle,
-    overlayTitle,
-    dataset,
-    variableName,
-    dataset2,
-    variable2Name,
-  ) =>
-    ({
-      baseMap: baseMapTitle || undefined,
-      overlay: overlayTitle || undefined,
-      datasetRgb: dataset ? dataset.title : undefined,
-      datasetRgb2: dataset2 ? dataset2.title : undefined,
-      datasetVariable:
-        dataset && variableName
-          ? `${dataset.title} / ${variableName}`
-          : undefined,
-      datasetVariable2:
-        dataset2 && variable2Name
-          ? `${dataset2.title} / ${variable2Name}`
-          : undefined,
-    }) as Record<keyof LayerVisibilities, string>,
-);
-
-export const layerDisablementsSelector = createSelector(
   selectedBaseMapIdSelector,
   selectedOverlayIdSelector,
-  selectedDatasetIdSelector,
-  selectedDataset2IdSelector,
-  selectedVariableNameSelector,
-  selectedDataset2IdSelector,
-  selectedVariable2NameSelector,
-  (baseMapId, overlayId, datasetId, dataset2Id, variableName, variable2Name) =>
+  selectedDatasetSelector,
+  selectedDataset2Selector,
+  selectedVariableSelector,
+  selectedVariable2Selector,
+  layerVisibilitiesSelector,
+  (
+    basemapTitle,
+    overlayTitle,
+    baseMapId,
+    overlayId,
+    dataset,
+    dataset2,
+    variable,
+    variable2,
+    visibilities,
+  ) =>
     ({
-      baseMap: !baseMapId,
-      overlay: !overlayId,
-      datasetRgb: !datasetId,
-      datasetRgb2: !dataset2Id,
-      datasetVariable: !variableName,
-      datasetVariable2: !variable2Name,
-      datasetBoundary: !datasetId,
-    }) as Record<keyof LayerVisibilities, boolean>,
+      baseMap: {
+        title: "Base Map",
+        subTitle: basemapTitle || undefined,
+        visible: visibilities.baseMap,
+        disabled: !baseMapId,
+      },
+      overlay: {
+        title: "Overlay",
+        subTitle: overlayTitle || undefined,
+        visible: visibilities.overlay,
+        disabled: !overlayId,
+      },
+      datasetRgb: {
+        title: "Dataset RGB",
+        subTitle: dataset ? dataset.title : undefined,
+        visible: visibilities.datasetRgb,
+        disabled: !dataset,
+      },
+      datasetRgb2: {
+        title: "Dataset RGB",
+        subTitle: dataset2 ? dataset2.title : undefined,
+        visible: visibilities.datasetRgb2,
+        disabled: !dataset2,
+        pinned: true,
+      },
+      datasetVariable: {
+        title: "Dataset Variable",
+        subTitle:
+          dataset && variable
+            ? `${dataset.title} / ${variable.title || variable.name}`
+            : undefined,
+        visible: visibilities.datasetVariable,
+        disabled: !(dataset && variable),
+      },
+      datasetVariable2: {
+        title: "Dataset Variable",
+        subTitle:
+          dataset2 && variable2
+            ? `${dataset2.title} / ${variable2.title || variable2.name}`
+            : undefined,
+        visible: visibilities.datasetVariable2,
+        disabled: !(dataset2 && variable2),
+        pinned: true,
+      },
+      datasetBoundary: {
+        title: "Dataset Boundary",
+        subTitle: dataset ? dataset.title : undefined,
+        visible: visibilities.datasetBoundary,
+        disabled: !dataset,
+      },
+      datasetPlaces: {
+        title: "Dataset Places",
+        visible: visibilities.datasetPlaces,
+      },
+      userPlaces: {
+        title: "User Places",
+        visible: visibilities.userPlaces,
+      },
+    }) as Record<keyof LayerVisibilities, LayerState>,
 );

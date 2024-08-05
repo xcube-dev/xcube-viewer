@@ -49,6 +49,7 @@ interface StatisticsPanelProps {
   selectedPlaceInfo: PlaceInfo | null;
   statisticsLoading: boolean;
   statisticsRecords: StatisticsRecord[];
+  canAddStatistics: boolean;
   addStatistics: () => void;
   removeStatistics: (index: number) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
@@ -61,6 +62,7 @@ export default function StatisticsPanel({
   selectedPlaceInfo,
   statisticsLoading,
   statisticsRecords,
+  canAddStatistics,
   addStatistics,
   removeStatistics,
   postMessage,
@@ -72,6 +74,7 @@ export default function StatisticsPanel({
         selectedVariable={selectedVariable}
         selectedTime={selectedTime}
         selectedPlaceInfo={selectedPlaceInfo}
+        canAddStatistics={canAddStatistics}
         addStatistics={addStatistics}
         statisticsLoading={statisticsLoading}
       />

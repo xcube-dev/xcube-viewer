@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import { ReactNode } from "react";
 import Check from "@mui/icons-material/Check";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -33,6 +34,7 @@ interface SelectableMenuItemProps {
   disabled?: boolean;
   dense?: boolean;
   selected: boolean;
+  secondaryIcon?: ReactNode;
   onClick: () => void;
 }
 
@@ -42,6 +44,7 @@ export default function SelectableMenuItem({
   disabled,
   dense,
   selected,
+  secondaryIcon,
   onClick,
 }: SelectableMenuItemProps) {
   return selected ? (
@@ -50,10 +53,12 @@ export default function SelectableMenuItem({
         <Check />
       </ListItemIcon>
       <ListItemText primary={title} secondary={subtitle} />
+      {secondaryIcon}
     </MenuItem>
   ) : (
     <MenuItem onClick={onClick} disabled={disabled} dense={dense}>
       <ListItemText inset primary={title} secondary={subtitle} />
+      {secondaryIcon}
     </MenuItem>
   );
 }

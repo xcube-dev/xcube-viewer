@@ -22,6 +22,10 @@
  * SOFTWARE.
  */
 
-import MapLayerMenu from "./MapLayerMenu";
-
-export default MapLayerMenu;
+export interface LayerState {
+  title: string;
+  subTitle?: string;
+  disabled?: boolean;
+  visible?: boolean;
+  pinned?: boolean;
+}

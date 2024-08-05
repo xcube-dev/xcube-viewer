@@ -22,34 +22,6 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import LayerControlPanel from "./LayerControlPanel";
 
-import { AppState } from "@/states/appState";
-import _ControlBarActions from "@/components/ControlBarActions";
-import { openDialog, setSidebarOpen } from "@/actions/controlActions";
-import { Config } from "@/config";
-import { updateResources } from "@/actions/dataActions";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    visible: !!(
-      state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
-    ),
-    sidebarOpen: state.controlState.sidebarOpen,
-    compact: Config.instance.branding.compact,
-    allowRefresh: Config.instance.branding.allowRefresh,
-  };
-};
-
-const mapDispatchToProps = {
-  setSidebarOpen,
-  openDialog,
-  updateResources,
-};
-
-const ControlBarActions = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_ControlBarActions);
-export default ControlBarActions;
+export default LayerControlPanel;

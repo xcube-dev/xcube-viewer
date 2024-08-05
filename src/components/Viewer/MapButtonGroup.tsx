@@ -22,38 +22,34 @@
  * SOFTWARE.
  */
 
-import i18n from "@/i18n";
-import { LayerVisibilities } from "@/states/controlState";
-import SelectableMenuItem from "@/components/SelectableMenuItem";
+import { CSSProperties, PropsWithChildren } from "react";
+import { SxProps } from "@mui/material";
+import Box from "@mui/material/Box";
 
-interface LayerMenuItemProps {
-  layerId: keyof LayerVisibilities;
-  layerTitles: Record<keyof LayerVisibilities, string>;
-  layerSubtitles: Record<keyof LayerVisibilities, string>;
-  layerDisablements: Record<keyof LayerVisibilities, boolean>;
-  layerVisibilities: LayerVisibilities;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
+const CONTAINER_STYLE: CSSProperties = {
+  position: "absolute",
+  display: "flex",
+  flexDirection: "column",
+  zIndex: 1000,
+};
+
+interface MapButtonGroupProps {
+  style?: CSSProperties;
+  sx?: SxProps;
 }
 
-export default function MapLayerMenuItem({
-  layerId,
-  layerTitles,
-  layerSubtitles,
-  layerDisablements,
-  layerVisibilities,
-  setLayerVisibility,
-}: LayerMenuItemProps) {
-  const visible = !!layerVisibilities[layerId];
+export default function MapButtonGroup({
+  style,
+  sx,
+  children,
+}: PropsWithChildren<MapButtonGroupProps>) {
   return (
-    <SelectableMenuItem
-      title={i18n.get(layerTitles[layerId])}
-      subtitle={layerSubtitles[layerId]}
-      disabled={layerDisablements[layerId]}
-      selected={visible}
-      onClick={() => setLayerVisibility(layerId, !visible)}
-    />
+    <Box
+      className="ol-unselectable ol-control"
+      sx={sx}
+      style={style ? { ...CONTAINER_STYLE, ...style } : CONTAINER_STYLE}
+    >
+      {children}
+    </Box>
   );
 }

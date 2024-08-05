@@ -4,7 +4,7 @@ import Menu from "@mui/material/Menu";
 
 import { getLayerTitle, LayerDefinition } from "@/model/layerDefinition";
 
-interface LayerMenuProps {
+interface LayerSelectMenuProps {
   anchorElement: Element | null;
   layers: LayerDefinition[];
   selectedLayerId: string | null;
@@ -12,13 +12,13 @@ interface LayerMenuProps {
   onClose: () => void;
 }
 
-const LayerMenu = ({
+const LayerSelectMenu = ({
   anchorElement,
   layers,
   selectedLayerId,
   setSelectedLayerId,
   onClose,
-}: LayerMenuProps) => {
+}: LayerSelectMenuProps) => {
   return (
     <Menu
       anchorEl={anchorElement}
@@ -43,4 +43,4 @@ const LayerMenu = ({
   );
 };
 
-export default LayerMenu;
+export default LayerSelectMenu;

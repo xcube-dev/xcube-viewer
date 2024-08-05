@@ -30,6 +30,21 @@
 
 ### Enhancements
 
+* Avoiding confusion regarding variable comparison.
+  No longer using the term _second variable_ and the `(#2)` suffix in
+  variable titles. Instead, it is now the _pinned variable_.
+  A pin icon is now used to mark a pinned variable in lists.  (#407)
+
+* Moved map-related actions directly into the map, namely
+  - show/hide map layer panel (moved from main toolbar);
+  - enable/disable map split mode (moved from layer control panel);
+  - enable/disable new map info box  (moved from layer control panel),
+
+* Placed an "Add Statistics" action next to the "Add Time-Series" action
+  in the main toolbar for consistency.
+
+* Improved the visibility of the layer split bar over bright map backgrounds.
+  
 * Revised map color mapping for simplicity and clarity. (#306, #390)
   This comprises the following changes:
   - Removed the color mapping normalisation modes. Instead, introduced

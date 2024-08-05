@@ -25,44 +25,29 @@
 import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
-import _MapLayerMenu from "@/components/MapLayerMenu";
+import _MapControlActions from "@/components/MapControlActions";
 import {
-  openDialog,
   setLayerMenuOpen,
-  setLayerVisibility,
   setMapPointInfoBoxEnabled,
   setVariableCompareMode,
 } from "@/actions/controlActions";
-import {
-  layerDisablementsSelector,
-  layerSubtitlesSelector,
-  layerTitlesSelector,
-  layerVisibilitiesSelector,
-} from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
-    locale: state.controlState.locale,
     layerMenuOpen: state.controlState.layerMenuOpen,
-    layerTitles: layerTitlesSelector(state),
-    layerSubtitles: layerSubtitlesSelector(state),
-    layerDisablements: layerDisablementsSelector(state),
-    layerVisibilities: layerVisibilitiesSelector(state),
     variableCompareMode: state.controlState.variableCompareMode,
     mapPointInfoBoxEnabled: state.controlState.mapPointInfoBoxEnabled,
   };
 };
 
 const mapDispatchToProps = {
-  openDialog,
   setLayerMenuOpen,
-  setLayerVisibility,
   setVariableCompareMode,
   setMapPointInfoBoxEnabled,
 };
 
-const MapLayerMenu = connect(
+const MapControlActions = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(_MapLayerMenu);
-export default MapLayerMenu;
+)(_MapControlActions);
+export default MapControlActions;

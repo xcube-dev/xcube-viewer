@@ -48,8 +48,9 @@ import {
 import _ColorBarLegend from "@/components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
+  const splitPos = state.controlState.variableSplitPos;
   return {
-    variableName: selectedVariable2NameSelector(state),
+    variableName: splitPos ? selectedVariable2NameSelector(state) : null,
     variableTitle: selectedVariable2TitleSelector(state),
     variableUnits: selectedVariable2UnitsSelector(state),
     variableColorBarName: selectedVariable2ColorBarNameSelector(state),
@@ -59,7 +60,7 @@ const mapStateToProps = (state: AppState) => {
     variableOpacity: selectedVariable2OpacitySelector(state),
     userColorBars: userColorBarsSelector(state),
     colorBars: colorBarsSelector(state),
-    style: { left: (state.controlState.variableSplitPos || 0) - 280 },
+    style: { left: splitPos ? splitPos - 280 : 0 },
   };
 };
 
