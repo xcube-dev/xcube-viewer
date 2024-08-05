@@ -2,12 +2,12 @@
 
 A simple viewer component for [xcube](https://xcube.readthedocs.io/).
 
-![xcube-viewer](./doc/xcube-viewer.jpg)
+![xcube-viewer](./doc/xcube-viewer.png)
 
 ## Run it
 
 Note, there is no need to install xcube Viewer on its own.
-It is bundled with the [xcube](https://github.com/dcs4cop/xcube)
+It is bundled with the [xcube](https://github.com/xcube-dev/xcube)
 Python package since version 1.0. Just run
 ```bash
 xcube serve -c server-config.yaml
@@ -17,14 +17,14 @@ hence http://127.0.0.1/viewer, when run without URL prefix.
 
 For development or for independent deployment, please read ahead to
 
-1. install [xcube](https://github.com/dcs4cop/xcube) and run server in demo mode;
+1. install [xcube](https://github.com/xcube-dev/xcube) and run server in demo mode;
 2. install and start `xcube-viewer` with demo configuration.
 
 ### Install `xcube` in development mode
 
 `xcube` one-time install:
 
-    $ git clone https://github.com/dcs4cop/xcube.git
+    $ git clone https://github.com/xcube-dev/xcube.git
     $ cd xcube
     $ conda env create
     $ conda activate xcube
@@ -45,7 +45,7 @@ If errors occur, you may need to update the environment:
 
 Checkout `xcube-viewer` sources:
 
-    $ git clone https://github.com/dcs4cop/xcube-viewer.git
+    $ git clone https://github.com/xcube-dev/xcube-viewer.git
     $ cd xcube-viewer
     $ npm install
     $ npm run dev
@@ -127,8 +127,8 @@ and use its properties in components
 ## More
 
 * [User Guide](https://xcube.readthedocs.io/en/latest/viewer.html#)
-* [Planned Enhancements](https://github.com/dcs4cop/xcube-viewer/labels/enhancement)
-* [Known Issues](https://github.com/dcs4cop/xcube-viewer/labels/bug)
+* [Planned Enhancements](https://github.com/xcube-dev/xcube-viewer/labels/enhancement)
+* [Known Issues](https://github.com/xcube-dev/xcube-viewer/labels/bug)
 
 --- 
 
