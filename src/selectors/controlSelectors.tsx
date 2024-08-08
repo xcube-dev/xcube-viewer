@@ -329,7 +329,7 @@ export const colorBarsSelector = createSelector(
         images: { ...predefinedColorBars.images, ...userImages },
       };
     } else {
-      return { groups: [userGroup], images: userImages };
+      return { groups: [userGroup], images: userImages, customColorMaps: {} };
     }
   },
 );
@@ -340,8 +340,8 @@ const getVariableColorBar = (
   userColorBars: UserColorBar[],
 ): ColorBar => {
   const colorBar: ColorBar = parseColorBarName(colorBarName);
-  const imageData = colorBars.images[colorBar.baseName];
   const { baseName } = colorBar;
+  const imageData = colorBars.images[baseName];
   const userColorBar = userColorBars.find(
     (userColorBar) => userColorBar.id === baseName,
   );
@@ -349,6 +349,13 @@ const getVariableColorBar = (
     const type = userColorBar.type;
     const colorRecords = getUserColorBarHexRecords(userColorBar.code);
     return { ...colorBar, imageData, type, colorRecords };
+  } else {
+    const customColorMap = colorBars.customColorMaps[baseName];
+    if (customColorMap) {
+      const type = customColorMap.type;
+      const colorRecords = customColorMap.colorRecords;
+      return { ...colorBar, imageData, type, colorRecords };
+    }
   }
   return { ...colorBar, imageData };
 };

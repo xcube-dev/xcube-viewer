@@ -29,7 +29,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Tooltip from "@mui/material/Tooltip";
 
 import i18n from "@/i18n";
-import { ColorMapType } from "@/model/userColorBar";
+import { ColorMapType } from "@/model/colorBar";
 import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({

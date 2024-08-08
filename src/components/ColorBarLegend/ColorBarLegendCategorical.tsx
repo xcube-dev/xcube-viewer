@@ -24,7 +24,7 @@
 
 import Box from "@mui/material/Box";
 
-import { HexColorRecord } from "@/model/colorBar";
+import { CssColorRecord } from "@/model/colorBar";
 import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
 import { makeStyles } from "@/util/styles";
 
@@ -51,7 +51,7 @@ const styles = makeStyles({
 });
 
 export interface ColorBarLegendCategoricalProps {
-  categories?: HexColorRecord[];
+  categories?: CssColorRecord[];
   onOpenColorBarEditor: () => void;
 }
 

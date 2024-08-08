@@ -28,6 +28,9 @@
   User data variables are persisted in the browser's local storage.
   (#371)
 
+* Now recognising new custom color maps from xcube server, for details 
+  refer to https://github.com/xcube-dev/xcube/issues/1046. (#392)
+
 ### Enhancements
 
 * Avoiding confusion regarding variable comparison.
