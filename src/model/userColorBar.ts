@@ -23,15 +23,13 @@
  */
 
 import { parseColor, rgbToHex } from "@/util/color";
-import { ColorRecord, HexColorRecord } from "@/model/colorBar";
+import { ColorMapType, ColorRecord, CssColorRecord } from "@/model/colorBar";
 
 export const USER_COLOR_BAR_GROUP_TITLE = "User";
 export const USER_COLOR_BAR_CODE_EXAMPLE =
   "0.0: #23FF52\n" + // tie point 1
   "0.5: red\n" + // tie point 2
   "1.0: 120,30,255"; // tie point 3
-
-export type ColorMapType = "continuous" | "stepwise" | "categorical";
 
 export interface UserColorBar {
   /**
@@ -144,7 +142,7 @@ export function renderUserColorBarAsBase64(
 
 export function getUserColorBarHexRecords(
   code: string,
-): HexColorRecord[] | undefined {
+): CssColorRecord[] | undefined {
   const { colorRecords } = getUserColorBarColorRecords(code);
   if (colorRecords) {
     return colorRecords.map((r) => ({ ...r, color: rgbToHex(r.color) }));

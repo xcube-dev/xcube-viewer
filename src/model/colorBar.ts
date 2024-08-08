@@ -24,7 +24,6 @@
 
 import bgImageData from "./bg.png";
 import { RGBA } from "@/util/color";
-import { ColorMapType } from "@/model/userColorBar";
 
 const BG_IMAGE = new Image();
 BG_IMAGE.src = bgImageData;
@@ -35,11 +34,22 @@ export interface ColorRecord {
   label?: string;
 }
 
-export type HexColorRecord = Omit<ColorRecord, "color"> & { color: string };
+export type CssColorRecord = Omit<ColorRecord, "color"> & { color: string };
+
+export type ColorMapType = "continuous" | "stepwise" | "categorical";
+
+export interface CustomColorMap {
+  name: string;
+  type: ColorMapType;
+  colorRecords: CssColorRecord[];
+}
 
 export interface ColorBars {
   groups: ColorBarGroup[];
+  // base64 encoded color bar image
   images: Record<string, string>;
+  // Predefined, but custom color bars (new in xcube 1.7)
+  customColorMaps: Record<string, CustomColorMap>;
 }
 
 export interface ColorBarGroup {
@@ -83,7 +93,7 @@ export interface ColorBar {
    * Color records. Defined, if this color bar is a
    * custom color bar.
    */
-  colorRecords?: HexColorRecord[];
+  colorRecords?: CssColorRecord[];
 }
 
 export function parseColorBarName(name: string): ColorBar {

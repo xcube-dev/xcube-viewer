@@ -27,10 +27,10 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
 import i18n from "@/i18n";
+import { ColorMapType } from "@/model/colorBar";
 import {
   USER_COLOR_BAR_CODE_EXAMPLE,
   UserColorBar,
-  ColorMapType,
 } from "@/model/userColorBar";
 import DoneCancel from "@/components/DoneCancel";
 import ColorBarItem from "./ColorBarItem";

@@ -27,7 +27,7 @@ import { ApiServerConfig } from "@/model/apiServer";
 import { getLocalStorage } from "@/util/storage";
 import { ControlState } from "./controlState";
 import { UserVariable } from "@/model/userVariable";
-import { ColorMapType } from "@/model/userColorBar";
+import { ColorMapType } from "@/model/colorBar";
 import { isString } from "@/util/types";
 
 export function storeUserServers(userServers: ApiServerConfig[]) {
