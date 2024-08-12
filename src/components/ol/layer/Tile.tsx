@@ -41,7 +41,7 @@ let trace: (message?: string, ...optionalParams: unknown[]) => void;
 if (import.meta.env.DEV && DEBUG) {
   trace = console.debug;
 } else {
-  trace = () => {};
+  trace = () => { };
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -66,12 +66,16 @@ export function OSMBlackAndWhite(): JSX.Element {
 
 interface TileProps
   extends MapComponentProps,
-    OlTileLayerOptions<OlTileSource> {}
+  OlTileLayerOptions<OlTileSource> { }
 
 export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
     const layer = new OlTileLayer(this.props);
     layer.set("id", this.props.id);
+    const source = layer.getSource();
+    if (source && 'crossOrigin' in source) {
+      (source as any).crossOrigin = "Anonymous";
+    }
     map.getLayers().push(layer);
     return layer;
   }
@@ -170,7 +174,6 @@ const NATURAL_EARTH_2_SOURCE = new OlXYZSource({
     "&copy; <a href=&quot;https://www.naturalearthdata.com/&quot;>MapBox</a>",
     "&copy; <a href=&quot;https://www.mapbox.com/&quot;>MapBox</a> and contributors",
   ],
-  crossOrigin: "anonymous",
 });
 
 const BATHYMETRY_SOURCE = new OlXYZSource({
@@ -179,7 +182,6 @@ const BATHYMETRY_SOURCE = new OlXYZSource({
     "&copy; <a href=&quot;https://www.gebco.net/data_and_products/gridded_bathymetry_data/&quot;>GEBCO</a>",
     "&copy; <a href=&quot;https://maps.ngdc.noaa.gov/&quot;>NOAHH</a> and contributors",
   ],
-  crossOrigin: "anonymous",
 });
 
 const OSM_SOURCE = new OlOSMSource();
@@ -189,7 +191,6 @@ const OSM_BW_SOURCE = new OlXYZSource({
   attributions: [
     "&copy; <a href=&quot;https://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors",
   ],
-  crossOrigin: "anonymous",
 });
 
 function equalTileGrids(
