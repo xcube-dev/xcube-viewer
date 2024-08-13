@@ -1,0 +1,38 @@
+site_name: xcube Viewer
+
+copyright: Copyright &copy; 2024 Brockmann Consult
+
+nav:
+  - Documentation: index.md
+
+theme:
+  name: material
+  logo: assets/logo512.png
+  favicon: assets/logo192.png
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue grey
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue grey
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/xcube-dev/xcube-viewer
+
+plugins:
+  - search
+  - autorefs
