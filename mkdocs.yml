@@ -13,7 +13,6 @@ nav:
       - "Datamanagement": user_guide/datamanagement.md
       - "Analyse Variables": user_guide/analyse.md
       - "Working with Color Maps": user_guide/colormaps.md
-      - "Functionality": user_guide/user_guide.md
 
 theme:
   name: material

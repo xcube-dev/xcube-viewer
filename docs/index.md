@@ -7,13 +7,11 @@ hide:
 
 Welcome to the **xcube Viewer** documentation page. The xcube Viewer is a single-page web application that provides tools to visualise and analyse multitemporal spatial datasets. The data is provided via the [xcube Server](https://xcube.readthedocs.io/en/latest/webapi.html).
 
-#![Start Image](assets/images/start.png)
-
-![Start Image](assets/images/xcube-viewer.png)
+![Start Image](assets/images/overview_viewer.png)
 
 ## Features
 
-The Viewer provides the following features:
+The features of the Viewer include:
 
 - **Visualisation** of multitemporal spatial datasets
 - **Comparison** of two variables of two or the same Datasets visually
