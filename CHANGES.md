@@ -1,4 +1,4 @@
-## Changes in version 1.3.0 (in development)
+## Changes in version 1.3.0
 
 ### New Features 
 
