@@ -9,6 +9,7 @@ nav:
   - Getting Started: get_started/index.md
   - User Guide:
       - user_guide/index.md
+      # - "User Guide": user_guide/index.md
       - "Settings": user_guide/settings.md
       - "Datamanagement": user_guide/datamanagement.md
       - "Analyse Variables": user_guide/analyse.md
@@ -23,10 +24,11 @@ theme:
   features:
     - navigation.top
     - navigation.indexes
-    - navigation.sections
+    # - navigation.sections
     # - navigation.expand
     # - navigation.tabs
     # - toc.integrate
+    - toc.permalink
     - toc.follow
   palette:
     # Palette toggle for light mode
@@ -37,14 +39,17 @@ theme:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
-    - scheme: slate
-      primary: blue grey
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
       accent: pink
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
 
 markdown_extensions:
+  - toc:
+      permalink: true
   - admonition
   - pymdownx.details
   - pymdownx.superfences
