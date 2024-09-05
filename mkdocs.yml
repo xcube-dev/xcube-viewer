@@ -6,7 +6,6 @@ copyright: Copyright &copy; 2024 Brockmann Consult
 
 nav:
   - Overview: index.md
-  - Getting Started: get_started/index.md
   - User Guide:
       - user_guide/index.md
       # - "User Guide": user_guide/index.md
@@ -14,6 +13,7 @@ nav:
       - "Datamanagement": user_guide/datamanagement.md
       - "Analyse Variables": user_guide/analyse.md
       - "Working with Color Maps": user_guide/colormaps.md
+  - Get your own Viewer: build_viewer.md
 
 theme:
   name: material
@@ -53,6 +53,8 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - attr_list
+  - md_in_html
 
 extra:
   social:

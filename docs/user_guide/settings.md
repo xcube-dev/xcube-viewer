@@ -14,13 +14,13 @@ Change the Server URL by selecting 'Server'. A 'Select Server' panel is opened a
 
 ### Player Interval
 
-Adjust the interval of the Player. Additional information on the Player can be found [here](../user_guide/analyse.md).
+Adjust the interval of the Player. Additional information on the Player can be found [here](../user_guide/analyse.md/#player).
 
 ![Settings - Player Interval](../assets/images/viewer/settings_player.png)
 
 ## Time-Series
 
-This is the place to set preferences of displaying data and graphs of the time series.
+This is the place to set preferences of displaying data and graphs of the time series. Additional information on the Player can be found [here](../user_guide/analyse.md).
 
 ![Settings - Time Series](../assets/images/viewer/settings_timeseries_02.png)
 
@@ -36,6 +36,16 @@ The Viewer gives the option to display the datasets in front of a Base Map and t
 
 ![Settings - Maps - Overlay](../assets/images/viewer/settings_overlay_02.png)
 
-Additional layers (WMS, XYZ) from external services can also be added by clicking on 'User base map...' or 'User overlays...'.
+Additional layers (WMS, XYZ) from external services can also be added by clicking on 'User base map...' or 'User overlays...'. Additionally, 'User base maps' and 'User overlays' can be added via the [Layers Panel](../user_guide/datamanagement.md/#adjust-layer-visibilities).
 
 ![Settings - Maps - User Maps](../assets/images/viewer/settings_usermaps_02.png)
+
+### Zoom on Dataset/Variable selection
+
+![On Selection](../assets/images/viewer/settings_on_selection.png)
+
+The map extent can be changes when selecting a new Dataset or Variable. The following options are available:
+
+- `pan` : map moves to the center of dataset bounding box
+- `pan and zoom`: map moves to the center and zooms to the extent of the dataset
+- `do nothing`
