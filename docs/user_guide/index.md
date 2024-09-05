@@ -5,26 +5,40 @@ hide:
 
 # User Guide
 
-The xcube viewer functionality is described exemplary using the [xcube viewer demo](https://bc-viewer.brockmann-consult.de).
-The viewer visualizes data from the xcube datasets on top of a basemap.
-
-The interface of the viewer is grouped into different blocks with different tasks. These are the groups:
+The Viewer interface is divided into several functional groups. The contents of this User Guide are structured according to these groups.
 
 ![Interface](../assets/images/interface.png)
 
-1. Datamanagement (Select Datasets, Variables or Basemaps)
-2. Analyse (create Time Series and Compare Variables)
-3. Creating, managing Places for Statistics and Time Series
-4. Select Dates from the Dataset or move through time with Player
-5. Side bar (Metadata or diplay of Statistics or Time Series)
-6. Color Mapping (change and create Colormapping)
-7. Settings
+??? info "The Basics"
 
-For zooming use the buttons in the top right corner of the map window or the zooming function of your
-computer mouse. A scale for the map is located in the lower right corner and in the
-upper left corner a corresponding legend to the mapped data of the data cube is available.
+    **Zoom:** buttons in the top left corner or zooming function of your computer mouse.
 
-![Overview](../assets/images/screenshot_overview.png)
+    **Scaling:** located in the lower left corner
+
+    **Legend:** Color Mapping Box on the upper right corner
+
+**These are the groups:**
+
+- [Settings](settings.md)
+
+      * General
+      * Time-Series
+      * Map
+
+- [Datamanagement](datamanagement.md)
+
+      * Select Dataset and Variables
+      * Integrate Base Maps and Overlays
+      * Adjust Layer Visibilities
+      * Metadata
+
+- Analyse (create Time Series and Compare Variables)
+- Create and manage Places for Statistics and Time Series
+- Select Dates from the Dataset or iterate through dataset with Player
+- Sidebar (diplay Metadata, Statistics or Time Series)
+- Color Mapping (change and create Color Mapping)
+
+---
 
 The xcube viewer app is constantly evolving and enhancements are added, therefore please be aware that the above
 described features may not always be completely up-to-date.
