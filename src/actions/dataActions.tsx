@@ -535,8 +535,7 @@ export function addStatistics() {
       !(
         selectedDataset &&
         selectedVariable &&
-        selectedPlaceInfo &&
-        selectedTimeLabel
+        selectedPlaceInfo
       )
     ) {
       return;

@@ -627,18 +627,15 @@ export const timeSeriesPlaceInfosSelector = createSelector(
 export const canAddStatisticsSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
-  selectedTimeSelector,
   selectedPlaceIdSelector,
   (
     selectedDatasetId: string | null,
     selectedVariableName: string | null,
-    selectedTime: Time | null,
     selectedPlaceId: string | null,
   ): boolean => {
     return !!(
       selectedDatasetId &&
       selectedVariableName &&
-      selectedTime &&
       selectedPlaceId
     );
   },
