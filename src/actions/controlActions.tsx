@@ -65,7 +65,6 @@ import {
 } from "./dataActions";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { locateInMap } from "./mapActions";
-import { exportMap } from "./mapActions";
 
 ////////////////////////////////////////////////////////////////////////////////
 
