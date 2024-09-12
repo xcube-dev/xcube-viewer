@@ -22,16 +22,13 @@
  * SOFTWARE.
  */
 
-import { useRef, useState } from "react";
 import { SxProps } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import DoneIcon from "@mui/icons-material/Done";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DoneIcon from "@mui/icons-material/Done";
 
-import useFetchText from "@/hooks/useFetchText";
-import MarkdownPopover from "@/components/MarkdownPopover";
+import HelpButton from "@/components/HelpButton";
 
 const styles: Record<string, SxProps> = {
   container: { display: "flex", justifyContent: "space-between", gap: 0.2 },
@@ -55,41 +52,9 @@ export default function DoneCancel({
   size,
   helpUrl,
 }: DoneCancelProps) {
-  const [helpAnchorEl, setHelpAnchorEl] = useState<HTMLButtonElement | null>(
-    null,
-  );
-  const helpButtonRef = useRef<HTMLButtonElement>(null);
-  const helpText = useFetchText(helpUrl);
-
-  const handleHelpOpen = () => {
-    setHelpAnchorEl(helpButtonRef.current);
-  };
-
-  const handleHelpClose = () => {
-    setHelpAnchorEl(null);
-  };
-
   return (
     <Box sx={styles.container}>
-      <Box>
-        {helpText && (
-          <>
-            <IconButton
-              onClick={handleHelpOpen}
-              size={size}
-              ref={helpButtonRef}
-            >
-              <HelpOutlineIcon fontSize="inherit" />
-            </IconButton>
-            <MarkdownPopover
-              anchorEl={helpAnchorEl}
-              open={!!helpAnchorEl}
-              onClose={handleHelpClose}
-              markdownText={helpText}
-            />
-          </>
-        )}
-      </Box>
+      <Box>{helpUrl && <HelpButton size={size} helpUrl={helpUrl} />}</Box>
 
       <Box sx={styles.doneCancel}>
         <IconButton

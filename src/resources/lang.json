@@ -116,6 +116,11 @@
       "se": "Tidsserier"
     },
     {
+      "en": "Quantity",
+      "de": "Größe",
+      "se": "Kvantitet"
+    },
+    {
       "en": "unknown units",
       "de": "unbekannte Einheiten",
       "se": "okända enheter"
@@ -281,9 +286,39 @@
       "se": "Omvänt"
     },
     {
+      "en": "Color",
+      "de": "Farbe",
+      "se": "Färg"
+    },
+    {
       "en": "Opacity",
       "de": "Opazität",
       "se": "Opacitet"
+    },
+    {
+      "en": "Value Range",
+      "de": "Wertebereich",
+      "se": "Värdeintervall"
+    },
+    {
+      "en": "Assign min/max from color mapping values",
+      "de": "Min./Max. aus Farbzuordnungswerten übertragen",
+      "se": "Tilldela min/max från färgmappningsvärden"
+    },
+    {
+      "en": "Log-scaled",
+      "de": "Log-skaliert",
+      "se": "Log-skalad"
+    },
+    {
+      "en": "Logarithmic scaling",
+      "de": "Logarithmische Skalierung",
+      "se": "Logaritmisk skalning"
+    },
+    {
+      "en": "Others",
+      "de": "Andere",
+      "se": "Andra"
     },
     {
       "en": "Dataset information",
@@ -344,6 +379,11 @@
       "en": "Units",
       "de": "Einheiten",
       "se": "Enheter"
+    },
+    {
+      "en": "Expression",
+      "de": "Ausdruck",
+      "se": "Uttryck"
     },
     {
       "en": "Data type",
@@ -419,6 +459,21 @@
       "en": "Help",
       "de": "Hilfe",
       "se": "Hjälp"
+    },
+    {
+      "en": "Copy snapshot of chart to clipboard",
+      "de": "Schnappschuss des Diagramms in die Zwischenablage kopieren",
+      "se": "Kopiera ögonblicksbild av diagrammet till urklipp"
+    },
+    {
+      "en": "Snapshot copied to clipboard",
+      "de": "Schnappschuss wurde in die Zwischenablage kopiert",
+      "se": "Ögonblicksbild har kopierats till urklipp"
+    },
+    {
+      "en": "Error copying snapshot to clipboard",
+      "de": "Fehler beim Kopieren des Schnappschusses in die Zwischenablage",
+      "se": "Det gick inte att kopiera ögonblicksbilden till urklipp"
     },
     {
       "en": "Export data",
@@ -736,9 +791,19 @@
       "se": "Lägg till lager från en Tiled Web Map"
     },
     {
-      "en": "Layer visibilities",
-      "de": "Layersichtbarkeiten",
-      "se": "Lagrets synlighet"
+      "en": "Show or hide layers panel",
+      "de": "Layer-Bedienfeld ein- oder ausblenden",
+      "se": "Visa eller dölj panelen Lager"
+    },
+    {
+      "en": "Turn layer split mode on or off",
+      "de": "Layer-Split-Modus ein- oder ausschalten",
+      "se": "Aktivera eller inaktivera lagerdelningsläget"
+    },
+    {
+      "en": "Turn info box on or off",
+      "de": "Infobox ein- oder ausschalten",
+      "se": "Slå på eller av informationsrutan"
     },
     {
       "en": "Show or hide sidebar",
@@ -907,7 +972,7 @@
     },
     {
       "en": "Please note that the 3D volume rendering is still an experimental feature.",
-      "de": "Bitte beachten Sie, dass das 3D-Volumen-Rendering noch eine experimentelle Funktion ist.",
+      "de": "Bitte beachte, dass das 3D-Volumen-Rendering noch eine experimentelle Funktion ist.",
       "se": "Observera att 3D-volymrendering fortfarande är en experimentell funktion."
     },
     {
@@ -916,34 +981,34 @@
       "se": "Användardefinierade färgskalor."
     },
     {
-      "en": "Node",
-      "de": "Knoten",
-      "se": "Noder"
+      "en": "Contin.",
+      "de": "Kontin.",
+      "se": "Kontin."
     },
     {
-      "en": "Bound",
-      "de": "Grenzen",
-      "se": "Gränser"
+      "en": "Stepwise",
+      "de": "Schrittw.",
+      "se": "Stegvis"
     },
     {
-      "en": "Key",
-      "de": "Schlüssel",
-      "se": "Nycklar"
+      "en": "Categ.",
+      "de": "Kateg.",
+      "se": "Kateg."
     },
     {
-      "en": "Values are nodes of a continuous color gradient",
-      "de": "Werte sind Knoten eines kontinuierlichen Farbverlaufs",
-      "se": "Värden är noder i en kontinuerlig färggradient"
+      "en": "Continuous color assignment, where each value represents a support point of a color gradient",
+      "de": "Kontinuierliche Farbzuordnung, bei der jeder Wert eine Stützstelle eines Farbverlaufs darstellt",
+      "se": "Kontinuerlig färgtilldelning där varje värde representerar en punkt i en färggradient"
     },
     {
-      "en": "Values are bounds identifying individual colors",
-      "de": "Werte sind Grenzen, die einzelne Farben identifizieren",
-      "se": "Värden är gränser som identifierar enskilda färger"
+      "en": "Stepwise color mapping where values are bounds of value ranges mapped to the same color",
+      "de": "Schrittweise Farbzuordnung, bei der die Werte Bereichsgrenzen darstellen, die einer einzelnen Farbe zugeordnet werden",
+      "se": "Gradvis färgmappning, där värdena representerar intervallgränser mappade till en enda färg"
     },
     {
-      "en": "Values are integer keys identifying individual colors",
-      "de": "Werte sind ganzzahlige Schlüssel, die einzelne Farben identifizieren",
-      "se": "Värden är heltalsnycklar som identifierar enskilda färger"
+      "en": "Values represent unique categories or indexes that are mapped to a color",
+      "de": "Werte stellen eindeutige Kategorien oder Indizes dar, die einer Farbe zugeordnet sind",
+      "se": "Värden representerar unika kategorier eller index som är mappade till en färg"
     },
     {
       "en": "User",
@@ -957,7 +1022,7 @@
     },
     {
       "en": "No time-series have been obtained yet. Select a variable and a place first.",
-      "de": "Es wurden noch keine Zeitreihen abgerufen. Wählen Sie zuerst eine Variable und einen Ort aus.",
+      "de": "Es wurden noch keine Zeitreihen abgerufen. Wähle zuerst eine Variable und einen Ort aus.",
       "se": "Inga tidsserier har hämtats ännu. Välj först en variabel och en plats."
     },
     {
@@ -991,9 +1056,19 @@
       "se": "Växla justerbart x-intervall"
     },
     {
-      "en": "Compare Mode (Swipe)",
-      "de": "Vergleichsmodus (Swipe)",
-      "se": "Jämförelseläge (Svep)"
+      "en": "pinned",
+      "de": "angepinnt",
+      "se": "fäst"
+    },
+    {
+      "en": "Compare Mode (Drag)",
+      "de": "Vergleichsmodus (Ziehen)",
+      "se": "Jämförelseläge (Dra)"
+    },
+    {
+      "en": "Point Info Mode (Hover)",
+      "de": "Punktinformationsmodus (Bewegen)",
+      "se": "Punktinformationsläge (Sväva)"
     },
     {
       "en": "Dataset RGB",
@@ -1036,6 +1111,91 @@
       "se": "Lager"
     },
     {
+      "en": "User Variables",
+      "de": "Nutzer-Variablen",
+      "se": "Användarvariabler"
+    },
+    {
+      "en": "Create and manage user variables",
+      "de": "Nutzer-Variablen erstellen und verwalten",
+      "se": "Skapa och hantera användarvariabler"
+    },
+    {
+      "en": "Manage user variables",
+      "de": "Nutzer-Variablen verwalten",
+      "se": "Hantera användarvariabler"
+    },
+    {
+      "en": "Add user variable",
+      "de": "Nutzer-Variable hinzufügen",
+      "se": "Lägg till användarvariabel"
+    },
+    {
+      "en": "Duplicate user variable",
+      "de": "Nutzer-Variable duplizieren",
+      "se": "Duplicera användarvariabel"
+    },
+    {
+      "en": "Edit user variable",
+      "de": "Nutzer-Variable bearbeiten",
+      "se": "Redigera användarvariabel"
+    },
+    {
+      "en": "Remove user variable",
+      "de": "Nutzer-Variable löschen",
+      "se": "Ta bort användarvariabel"
+    },
+    {
+      "en": "Use keys CTRL+SPACE to show autocompletions",
+      "de": "Tasten STRG+LEER benutzen, um Autovervollständigungen zu zeigen",
+      "se": "Använd tangenterna CTRL+MELLANSLAG för att visa autoslutföranden"
+    },
+    {
+      "en": "Display further elements to be used in expressions",
+      "de": "Weitere Elemente anzeigen, die in Ausdrücken verwendet werden können",
+      "se": "Visa fler element som kan användas i uttryck"
+    },
+    {
+      "en": "Variables",
+      "de": "Variablen",
+      "se": "Variabler"
+    },
+    {
+      "en": "Constants",
+      "de": "Konstanten",
+      "se": "Konstanter"
+    },
+    {
+      "en": "Array operators",
+      "de": "Array-Operatoren",
+      "se": "Arrayoperatorer"
+    },
+    {
+      "en": "Other operators",
+      "de": "Andere Operatoren",
+      "se": "Andra Operatorer"
+    },
+    {
+      "en": "Array functions",
+      "de": "Array-Funktionen",
+      "se": "Arrayfunktioner"
+    },
+    {
+      "en": "Other functions",
+      "de": "Andere Funktionen",
+      "se": "Andra funktioner"
+    },
+    {
+      "en": "Not a valid identifier",
+      "de": "Kein gültiger Bezeichner",
+      "se": "Inte en giltig identifierare"
+    },
+    {
+      "en": "Must not be empty",
+      "de": "Darf nicht leer sein",
+      "se": "Får inte vara tom"
+    },
+    {
       "en": "docs/privacy-note.en.md",
       "de": "docs/privacy-note.de.md",
       "se": "docs/privacy-note.se.md"
@@ -1054,6 +1214,11 @@
       "en": "docs/color-mappings.en.md",
       "de": "docs/color-mappings.de.md",
       "se": "docs/color-mappings.se.md"
+    },
+    {
+      "en": "docs/user-variables.en.md",
+      "de": "docs/user-variables.de.md",
+      "se": "docs/user-variables.se.md"
     }
   ]
 }

@@ -22,6 +22,32 @@
  * SOFTWARE.
  */
 
-import MapLayerMenu from "./MapLayerMenu";
+import { connect } from "react-redux";
 
-export default MapLayerMenu;
+import { AppState } from "@/states/appState";
+import _MapControlActions from "@/components/MapControlActions";
+import {
+  setLayerMenuOpen,
+  setMapPointInfoBoxEnabled,
+  setVariableCompareMode,
+} from "@/actions/controlActions";
+
+const mapStateToProps = (state: AppState) => {
+  return {
+    layerMenuOpen: state.controlState.layerMenuOpen,
+    variableCompareMode: state.controlState.variableCompareMode,
+    mapPointInfoBoxEnabled: state.controlState.mapPointInfoBoxEnabled,
+  };
+};
+
+const mapDispatchToProps = {
+  setLayerMenuOpen,
+  setVariableCompareMode,
+  setMapPointInfoBoxEnabled,
+};
+
+const MapControlActions = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(_MapControlActions);
+export default MapControlActions;

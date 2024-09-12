@@ -31,8 +31,13 @@ import * as api from "@/api";
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import { ColorBar, ColorBars } from "@/model/colorBar";
-import { Dataset } from "@/model/dataset";
-import { findPlaceInPlaceGroups, Place, PlaceGroup } from "@/model/place";
+import { Dataset, getDatasetUserVariables } from "@/model/dataset";
+import {
+  findPlaceInPlaceGroups,
+  Place,
+  PlaceGroup,
+  PlaceStyle,
+} from "@/model/place";
 import { getUserPlacesFromCsv } from "@/model/user-place/csv";
 import { getUserPlacesFromGeoJson } from "@/model/user-place/geojson";
 import { getUserPlacesFromWkt } from "@/model/user-place/wkt";
@@ -65,6 +70,13 @@ import {
   userPlaceGroupsSelector,
 } from "@/selectors/dataSelectors";
 import { AppState } from "@/states/appState";
+import { VolumeRenderMode } from "@/states/controlState";
+import { ColorBarNorm } from "@/model/variable";
+import { StatisticsRecord } from "@/model/statistics";
+import { UserVariable, ExpressionCapabilities } from "@/model/userVariable";
+import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
+import { MessageLogAction, postMessage } from "./messageLogActions";
+import { renameUserPlaceInLayer, restyleUserPlaceInLayer } from "./mapActions";
 import {
   AddActivity,
   addActivity,
@@ -79,12 +91,6 @@ import {
   SetSidebarPanelId,
   setSidebarPanelId,
 } from "./controlActions";
-import { VolumeRenderMode } from "@/states/controlState";
-import { MessageLogAction, postMessage } from "./messageLogActions";
-import { renameUserPlaceInLayer } from "./mapActions";
-import { ColorBarNorm } from "@/model/variable";
-import { getStatistics } from "@/api/getStatistics";
-import { StatisticsRecord } from "@/model/statistics";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -171,7 +177,15 @@ export function updateDatasets() {
     api
       .getDatasets(apiServer.url, getState().userAuthState.accessToken)
       .then((datasets: Dataset[]) => {
+        // Add user variables from local storage
+        const userVariables = loadUserVariables();
+        datasets = datasets.map((ds) => ({
+          ...ds,
+          variables: [...ds.variables, ...(userVariables[ds.id] || [])],
+        }));
+        // Dispatch updated dataset
         dispatch(_updateDatasets(datasets));
+        // Adjust selection state
         if (datasets.length > 0) {
           const selectedDatasetId =
             getState().controlState.selectedDatasetId || datasets[0].id;
@@ -197,6 +211,40 @@ export function updateDatasets() {
 
 export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
   return { type: UPDATE_DATASETS, datasets };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export function updateDatasetUserVariables(
+  datasetId: string,
+  variables: UserVariable[],
+) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    dispatch(_updateDatasetUserVariables(datasetId, variables));
+    const userVariables: Record<string, UserVariable[]> = {};
+    getState().dataState.datasets.forEach((dataset) => {
+      const [_, variables] = getDatasetUserVariables(dataset);
+      if (variables.length >= 0) {
+        userVariables[dataset.id] = variables;
+      }
+    });
+    storeUserVariables(userVariables);
+  };
+}
+
+export const UPDATE_DATASET_USER_VARIABLES = "UPDATE_DATASET_USER_VARIABLES";
+
+export interface UpdateDatasetUserVariables {
+  type: typeof UPDATE_DATASET_USER_VARIABLES;
+  datasetId: string;
+  userVariables: UserVariable[];
+}
+
+export function _updateDatasetUserVariables(
+  datasetId: string,
+  userVariables: UserVariable[],
+): UpdateDatasetUserVariables {
+  return { type: UPDATE_DATASET_USER_VARIABLES, datasetId, userVariables };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -403,6 +451,36 @@ export function _renameUserPlace(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const RESTYLE_USER_PLACE = "RESTYLE_USER_PLACE";
+
+export interface RestyleUserPlace {
+  type: typeof RESTYLE_USER_PLACE;
+  placeGroupId: string;
+  placeId: string;
+  placeStyle: PlaceStyle;
+}
+
+export function restyleUserPlace(
+  placeGroupId: string,
+  placeId: string,
+  placeStyle: PlaceStyle,
+) {
+  return (dispatch: Dispatch<RestyleUserPlace>) => {
+    dispatch(_restyleUserPlace(placeGroupId, placeId, placeStyle));
+    restyleUserPlaceInLayer(placeGroupId, placeId, placeStyle);
+  };
+}
+
+export function _restyleUserPlace(
+  placeGroupId: string,
+  placeId: string,
+  placeStyle: PlaceStyle,
+): RestyleUserPlace {
+  return { type: RESTYLE_USER_PLACE, placeGroupId, placeId, placeStyle };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const REMOVE_USER_PLACE = "REMOVE_USER_PLACE";
 
 export interface RemoveUserPlace {
@@ -471,48 +549,21 @@ export function addStatistics() {
       dispatch(setSidebarOpen(true));
     }
     dispatch(_addStatistics(null));
-    getStatistics(
-      apiServer.url,
-      selectedDataset,
-      selectedVariable,
-      selectedPlaceInfo,
-      selectedTimeLabel,
-      getState().userAuthState.accessToken,
-    )
+    api
+      .getStatistics(
+        apiServer.url,
+        selectedDataset,
+        selectedVariable,
+        selectedPlaceInfo,
+        selectedTimeLabel,
+        getState().userAuthState.accessToken,
+      )
       .then((stats) => dispatch(_addStatistics(stats)))
       .catch((error: Error) => {
         dispatch(postMessage("error", error));
       });
   };
 }
-
-// const addStatisticsFromMock = () => {
-//   const i = statisticsRecords.length + 1;
-//   setStatisticsRecords([
-//     ...statisticsRecords,
-//     {
-//       source: {
-//         datasetId: `ds${i}`,
-//         datasetTitle: `Dataset ${i}`,
-//         variableName: "CHL",
-//         placeId: "p029840456",
-//         geometry: null,
-//       },
-//       minimum: i,
-//       maximum: i + 1,
-//       mean: i + 0.5,
-//       standardDev: 0.1 * i,
-//       histogram: {
-//         bins: Array.from({ length: 100 }, (_, index) => ({
-//           x1: index,
-//           xc: index + 0.5,
-//           x2: index + 1,
-//           count: 1000 * Math.random(),
-//         })),
-//       },
-//     },
-//   ]);
-// };
 
 export const ADD_STATISTICS = "ADD_STATISTICS";
 
@@ -764,7 +815,44 @@ export function syncWithServer() {
   return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
+    dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_EXPRESSION_CAPABILITIES = "UPDATE_EXPRESSION_CAPABILITIES";
+
+export interface UpdateExpressionCapabilities {
+  type: typeof UPDATE_EXPRESSION_CAPABILITIES;
+  expressionCapabilities: ExpressionCapabilities;
+}
+
+export function updateExpressionCapabilities() {
+  return (
+    dispatch: Dispatch<UpdateExpressionCapabilities | MessageLogAction>,
+    getState: () => AppState,
+  ) => {
+    const apiServer = selectedServerSelector(getState());
+
+    api
+      .getExpressionCapabilities(apiServer.url)
+      .then((expressionCapabilities: ExpressionCapabilities) => {
+        dispatch(_updateExpressionCapabilities(expressionCapabilities));
+      })
+      .catch((error: Error) => {
+        dispatch(postMessage("error", error));
+      });
+  };
+}
+
+export function _updateExpressionCapabilities(
+  expressionCapabilities: ExpressionCapabilities,
+): UpdateExpressionCapabilities {
+  return {
+    type: UPDATE_EXPRESSION_CAPABILITIES,
+    expressionCapabilities: expressionCapabilities,
   };
 }
 
@@ -826,18 +914,33 @@ export function updateVariableColorBar(
     const selectedDatasetId = getState().controlState.selectedDatasetId;
     const selectedVariableName = getState().controlState.selectedVariableName;
     if (selectedDatasetId && selectedVariableName) {
-      if (colorBarNorm === "log") {
-        // Adjust range in case of log norm: Make sure xcube server can use
-        // matplotlib.colors.LogNorm(vmin, vmax) without errors
-        let [vMin, vMax] = colorBarMinMax;
-        if (vMin <= 0) {
-          vMin = 1e-3;
-        }
-        if (vMax <= vMin) {
-          vMax = 1;
-        }
-        colorBarMinMax = [vMin, vMax];
-      }
+      dispatch(
+        _updateVariableColorBar(
+          selectedDatasetId,
+          selectedVariableName,
+          colorBarName,
+          colorBarMinMax,
+          colorBarNorm,
+          opacity,
+        ),
+      );
+    }
+  };
+}
+
+export function updateVariable2ColorBar(
+  colorBarName: string,
+  colorBarMinMax: [number, number],
+  colorBarNorm: ColorBarNorm,
+  opacity: number,
+) {
+  return (
+    dispatch: Dispatch<UpdateVariableColorBar>,
+    getState: () => AppState,
+  ) => {
+    const selectedDatasetId = getState().controlState.selectedDatasetId;
+    const selectedVariableName = getState().controlState.selectedVariable2Name;
+    if (selectedDatasetId && selectedVariableName) {
       dispatch(
         _updateVariableColorBar(
           selectedDatasetId,
@@ -860,6 +963,18 @@ export function _updateVariableColorBar(
   colorBarNorm: ColorBarNorm,
   opacity: number,
 ): UpdateVariableColorBar {
+  if (colorBarNorm === "log") {
+    // Adjust range in case of log norm: Make sure xcube server can use
+    // matplotlib.colors.LogNorm(vmin, vmax) without errors
+    let [vMin, vMax] = colorBarMinMax;
+    if (vMin <= 0) {
+      vMin = 1e-3;
+    }
+    if (vMax <= vMin) {
+      vMax = 1;
+    }
+    colorBarMinMax = [vMin, vMax];
+  }
   return {
     type: UPDATE_VARIABLE_COLOR_BAR,
     datasetId,
@@ -1116,13 +1231,16 @@ function _downloadTimeSeriesGeoJSON(timeSeriesGroups: TimeSeriesGroup[],
 
 export type DataAction =
   | UpdateServerInfo
+  | UpdateExpressionCapabilities
   | UpdateDatasets
+  | UpdateDatasetUserVariables
   | UpdateDatasetPlaceGroup
   | AddPlaceGroupTimeSeries
   | AddDrawnUserPlace
   | AddImportedUserPlaces
   | RenameUserPlaceGroup
   | RenameUserPlace
+  | RestyleUserPlace
   | RemoveUserPlace
   | RemoveUserPlaceGroup
   | AddStatistics

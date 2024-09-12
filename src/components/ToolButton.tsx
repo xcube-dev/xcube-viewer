@@ -24,13 +24,14 @@
 
 import * as React from "react";
 import { MouseEvent } from "react";
+import { SxProps } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
-import { ToggleButton } from "@mui/material";
-
-import { commonStyles } from "./common-styles";
 
 interface ToolButtonProps {
+  sx?: SxProps;
+  className?: string;
   icon: React.ReactElement;
   onClick: (
     event: MouseEvent<HTMLButtonElement | HTMLElement>,
@@ -38,21 +39,21 @@ interface ToolButtonProps {
   ) => void;
   disabled?: boolean;
   tooltipText?: string;
-  className?: string;
   toggle?: boolean;
-  value?: string;
+  value?: string; // required for toggle buttons
   selected?: boolean;
 }
 
 const ToolButton: React.FC<ToolButtonProps> = ({
+  sx,
   className,
   disabled,
   onClick,
   icon,
   tooltipText,
-  toggle = false,
-  value = "",
-  selected = false,
+  toggle,
+  value,
+  selected,
 }) => {
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     if (toggle) {
@@ -73,13 +74,13 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   if (toggle) {
     return (
       <ToggleButton
+        sx={{ padding: 0.3, ...sx }}
         className={className}
         disabled={disabled}
         size="small"
         onClick={handleClick}
-        value={value}
+        value={value || ""}
         selected={selected}
-        sx={commonStyles.toggleButton}
       >
         {iconComp}
       </ToggleButton>
@@ -87,10 +88,11 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   } else {
     return (
       <IconButton
+        sx={sx}
         className={className}
         disabled={disabled}
-        onClick={handleClick}
         size="small"
+        onClick={handleClick}
       >
         {iconComp}
       </IconButton>

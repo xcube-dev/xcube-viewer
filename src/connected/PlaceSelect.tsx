@@ -26,7 +26,11 @@ import { connect } from "react-redux";
 
 import _PlaceSelect from "@/components/PlaceSelect";
 import { AppState } from "@/states/appState";
-import { renameUserPlace, removeUserPlace } from "@/actions/dataActions";
+import {
+  renameUserPlace,
+  removeUserPlace,
+  restyleUserPlace,
+} from "@/actions/dataActions";
 import {
   selectPlace,
   locateSelectedPlaceInMap,
@@ -35,6 +39,7 @@ import {
 import {
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupPlaceLabelsSelector,
+  selectedPlaceInfoSelector,
 } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
@@ -43,6 +48,7 @@ const mapStateToProps = (state: AppState) => {
     datasets: state.dataState.datasets,
     selectedPlaceGroupIds: state.controlState.selectedPlaceGroupIds,
     selectedPlaceId: state.controlState.selectedPlaceId,
+    selectedPlaceInfo: selectedPlaceInfoSelector(state),
     places: selectedPlaceGroupPlacesSelector(state),
     placeLabels: selectedPlaceGroupPlaceLabelsSelector(state),
   };
@@ -51,6 +57,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   selectPlace,
   renameUserPlace,
+  restyleUserPlace,
   removeUserPlace,
   locateSelectedPlace: locateSelectedPlaceInMap,
   openDialog,

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
 import { useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/system";
 import * as geojson from "geojson";
@@ -40,9 +39,16 @@ import { default as OlFillStyle } from "ol/style/Fill";
 import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { getRenderPixel } from "ol/render";
+import RenderEvent from "ol/render/Event";
+import { default as OlLayer } from "ol/layer/Layer";
+import { Pixel } from "ol/pixel";
 
 import i18n from "@/i18n";
-import { Config, getUserPlaceColor, getUserPlaceColorName } from "@/config";
+import {
+  getUserPlaceColor,
+  getUserPlaceColorName,
+  getUserPlaceFillOpacity,
+} from "@/config";
 import {
   Place,
   PlaceGroup,
@@ -52,18 +58,16 @@ import {
 import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
 import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import UserVectorLayer from "./UserVectorLayer";
-import ErrorBoundary from "./ErrorBoundary";
-import { Control } from "./ol/control/Control";
-import { ScaleLine } from "./ol/control/ScaleLine";
-import { Draw, DrawEvent } from "./ol/interaction/Draw";
-import { Layers } from "./ol/layer/Layers";
-import { Vector } from "./ol/layer/Vector";
-import { Map, MapElement } from "./ol/Map";
-import { View } from "./ol/View";
-import { setFeatureStyle } from "./ol/style";
-import { findMapLayer } from "./ol/util";
-import RenderEvent from "ol/render/Event";
+import UserVectorLayer from "@/components/UserVectorLayer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { ScaleLine } from "@/components/ol/control/ScaleLine";
+import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
+import { Layers } from "@/components/ol/layer/Layers";
+import { Vector } from "@/components/ol/layer/Vector";
+import { Map, MapElement } from "@/components/ol/Map";
+import { View } from "@/components/ol/View";
+import { setFeatureStyle } from "@/components/ol/style";
+import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
 
 const SELECTION_LAYER_ID = "selection";
@@ -72,25 +76,30 @@ const SELECTION_LAYER_SOURCE = new OlVectorSource();
 // TODO (forman): move all map styles into dedicated module,
 //  so settings will be easier to find & adjust
 
-const COLOR_LEGEND_STYLE: React.CSSProperties = {
-  zIndex: 1000,
-  right: 10,
-  top: 10,
-};
+const SELECTION_COLOR = [255, 220, 0, 0.8];
 
 const SELECTION_LAYER_STROKE = new OlStrokeStyle({
-  color: [255, 200, 0, 1.0],
-  width: 3,
+  color: SELECTION_COLOR,
+  width: 10,
+  lineCap: "square",
+  lineDash: [10, 15],
 });
+
 const SELECTION_LAYER_FILL = new OlFillStyle({
-  color: [255, 200, 0, 0.05],
+  color: [0, 0, 0, 0],
 });
+
 const SELECTION_LAYER_STYLE = new OlStyle({
   stroke: SELECTION_LAYER_STROKE,
   fill: SELECTION_LAYER_FILL,
   image: new OlCircleStyle({
-    radius: 10,
-    stroke: SELECTION_LAYER_STROKE,
+    radius: 15,
+    stroke: new OlStrokeStyle({
+      color: SELECTION_COLOR,
+      width: 6,
+      lineCap: "square",
+      lineDash: [6, 6],
+    }),
     fill: SELECTION_LAYER_FILL,
   }),
 });
@@ -109,7 +118,10 @@ interface ViewerProps {
   overlayLayer?: MapElement;
   placeGroupLayers?: MapElement;
   colorBarLegend?: MapElement;
+  colorBarLegend2?: MapElement;
   mapSplitter?: MapElement;
+  mapPointInfoBox?: MapElement;
+  mapControlActions?: MapElement;
   userDrawnPlaceGroupName: string;
   addDrawnUserPlace?: (
     placeGroupTitle: string,
@@ -148,7 +160,10 @@ export default function Viewer({
   placeGroupLayers,
   overlayLayer,
   colorBarLegend,
+  colorBarLegend2,
   mapSplitter,
+  mapPointInfoBox,
+  mapControlActions,
   userDrawnPlaceGroupName,
   addDrawnUserPlace,
   importUserPlacesFromText,
@@ -163,11 +178,17 @@ export default function Viewer({
   onMapRef,
 }: ViewerProps) {
   theme = useTheme();
+
+  // TODO (forman): there is way too much logic in this component!
+  //    Extract code into dedicated hooks or actions/reducers.
+
   const [map, setMap] = useState<OlMap | null>(null);
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
   );
 
+  // If the place selection changed in the UI,
+  // synchronize selection in the map.
   useEffect(() => {
     if (map) {
       const selectedPlaceIdCurr = selectedPlaceId || null;
@@ -195,12 +216,13 @@ export default function Viewer({
     }
   }, [map, selectedPlaceId, selectedPlaceIdPrev]);
 
+  // If imageSmoothing changed, notify all tile layers.
   useEffect(() => {
     // Force layer source updates after imageSmoothing change
     if (map) {
       map.getLayers().forEach((layer) => {
         if (layer instanceof OlTileLayer) {
-          layer.getSource().changed();
+          layer.getSource()!.changed();
         } else {
           layer.changed();
         }
@@ -208,32 +230,21 @@ export default function Viewer({
     }
   }, [map, imageSmoothing]);
 
-  React.useEffect(() => {
+  // If variableSplitPos changed, adjust Canvas2D clip
+  // paths of concerned layers.
+  useEffect(() => {
     if (map === null || !isNumber(variableSplitPos)) {
       return;
     }
-    // https://openlayers.org/en/latest/examples/layer-swipe.html
-    const handlePreRender = (event: RenderEvent) => {
-      const mapSize = map.getSize();
-      if (!mapSize) {
-        return;
-      }
-      const mapWidth = mapSize[0];
-      const mapHeight = mapSize[1];
-      const tl = getRenderPixel(event, [variableSplitPos, 0]);
-      const tr = getRenderPixel(event, [mapWidth, 0]);
-      const bl = getRenderPixel(event, [variableSplitPos, mapHeight]);
-      const br = getRenderPixel(event, [mapWidth, mapHeight]);
 
-      const ctx = event.context as CanvasRenderingContext2D;
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(tl[0], tl[1]);
-      ctx.lineTo(bl[0], bl[1]);
-      ctx.lineTo(br[0], br[1]);
-      ctx.lineTo(tr[0], tr[1]);
-      ctx.closePath();
-      ctx.clip();
+    // https://openlayers.org/en/latest/examples/layer-swipe.html
+
+    const handlePreRenderL = (event: RenderEvent) => {
+      setLayerClip(map, event, variableSplitPos, 0);
+    };
+
+    const handlePreRenderR = (event: RenderEvent) => {
+      setLayerClip(map, event, variableSplitPos, 1);
     };
 
     const handlePostRender = (event: RenderEvent) => {
@@ -241,26 +252,31 @@ export default function Viewer({
       ctx.restore();
     };
 
+    const rgb2Layer = findMapLayer(map, "rgb2");
+    const variable2Layer = findMapLayer(map, "variable2");
     const rgbLayer = findMapLayer(map, "rgb");
     const variableLayer = findMapLayer(map, "variable");
-    if (rgbLayer || variableLayer) {
-      const splitLayers = [rgbLayer, variableLayer];
-      for (const layer of splitLayers) {
+    const preRenders: [OlLayer | null, (e: RenderEvent) => void][] = [
+      [rgb2Layer, handlePreRenderL],
+      [variable2Layer, handlePreRenderL],
+      [rgbLayer, handlePreRenderR],
+      [variableLayer, handlePreRenderR],
+    ];
+    for (const [layer, handlePreRender] of preRenders) {
+      if (layer) {
+        layer.on("prerender", handlePreRender);
+        layer.on("postrender", handlePostRender);
+      }
+    }
+    return () => {
+      for (const [layer, handlePreRender] of preRenders) {
         if (layer) {
-          layer.on("prerender", handlePreRender);
-          layer.on("postrender", handlePostRender);
+          layer.un("prerender", handlePreRender);
+          layer.un("postrender", handlePostRender);
         }
       }
-      return () => {
-        for (const layer of splitLayers) {
-          if (layer) {
-            layer.un("prerender", handlePreRender);
-            layer.un("postrender", handlePostRender);
-          }
-        }
-      };
-    }
-  }, [map, variableSplitPos]);
+    };
+  });
 
   const handleMapClick = (event: OlMapBrowserEvent<UIEvent>) => {
     if (mapInteraction === "Select") {
@@ -282,7 +298,6 @@ export default function Viewer({
   };
 
   const handleDrawEnd = (event: DrawEvent) => {
-    // TODO (forman): too much logic here! put the following code into an action + reducer.
     if (map !== null && addDrawnUserPlace && mapInteraction !== "Select") {
       const feature = event.feature;
       let geometry = feature.getGeometry();
@@ -320,11 +335,7 @@ export default function Viewer({
       const label = findNextLabel(userPlaceGroups, mapInteraction);
       const color = getUserPlaceColorName(colorIndex);
       const shadedColor = getUserPlaceColor(color, theme.palette.mode);
-      setFeatureStyle(
-        feature,
-        shadedColor,
-        Config.instance.branding.polygonFillOpacity,
-      );
+      setFeatureStyle(feature, shadedColor, getUserPlaceFillOpacity());
 
       addDrawnUserPlace(
         userDrawnPlaceGroupName,
@@ -342,15 +353,6 @@ export default function Viewer({
       onMapRef(map);
     }
     setMap(map);
-  }
-
-  let colorBarControl = null;
-  if (colorBarLegend) {
-    colorBarControl = (
-      <Control id="legend" style={COLOR_LEGEND_STYLE}>
-        {colorBarLegend}
-      </Control>
-    );
   }
 
   const handleDropFiles = (files: File[]) => {
@@ -386,6 +388,13 @@ export default function Viewer({
           {variableLayer}
           {overlayLayer}
           {datasetBoundaryLayer}
+          <Vector
+            id={SELECTION_LAYER_ID}
+            opacity={0.7}
+            zIndex={500}
+            style={SELECTION_LAYER_STYLE}
+            source={SELECTION_LAYER_SOURCE}
+          />
           {
             <>
               {userPlaceGroups.map((placeGroup) => (
@@ -400,13 +409,6 @@ export default function Viewer({
               ))}
             </>
           }
-          <Vector
-            id={SELECTION_LAYER_ID}
-            opacity={0.7}
-            zIndex={510}
-            style={SELECTION_LAYER_STYLE}
-            source={SELECTION_LAYER_SOURCE}
-          />
         </Layers>
         {placeGroupLayers}
         {/*<Select id='select' selectedFeaturesIds={selectedFeaturesId} onSelect={handleSelect}/>*/}
@@ -437,7 +439,10 @@ export default function Viewer({
           stopClick={true}
           onDrawEnd={handleDrawEnd}
         />
-        {colorBarControl}
+        {colorBarLegend}
+        {colorBarLegend2}
+        {mapPointInfoBox}
+        {mapControlActions}
         {mapSplitter}
         <ScaleLine bar={false} />
       </Map>
@@ -484,4 +489,42 @@ function findNextLabel(
     }
   }
   return `${nameBase} 1`;
+}
+
+function setLayerClip(
+  map: OlMap,
+  event: RenderEvent,
+  splitPos: number,
+  side: 0 | 1,
+) {
+  const mapSize = map.getSize();
+  if (!mapSize) {
+    return;
+  }
+
+  const mapWidth = mapSize[0];
+  const mapHeight = mapSize[1];
+
+  let tl: Pixel, tr: Pixel, bl: Pixel, br: Pixel;
+  if (side === 0) {
+    tl = getRenderPixel(event, [0, 0]);
+    tr = getRenderPixel(event, [splitPos, 0]);
+    bl = getRenderPixel(event, [0, mapHeight]);
+    br = getRenderPixel(event, [splitPos, mapHeight]);
+  } else {
+    tl = getRenderPixel(event, [splitPos, 0]);
+    tr = getRenderPixel(event, [mapWidth, 0]);
+    bl = getRenderPixel(event, [splitPos, mapHeight]);
+    br = getRenderPixel(event, [mapWidth, mapHeight]);
+  }
+
+  const ctx = event.context as CanvasRenderingContext2D;
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(tl[0], tl[1]);
+  ctx.lineTo(bl[0], bl[1]);
+  ctx.lineTo(br[0], br[1]);
+  ctx.lineTo(tr[0], tr[1]);
+  ctx.closePath();
+  ctx.clip();
 }

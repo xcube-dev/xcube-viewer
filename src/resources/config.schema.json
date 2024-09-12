@@ -159,6 +159,10 @@
           "type": "boolean",
           "default": true
         },
+        "allowUserVariables": {
+          "type": "boolean",
+          "default": true
+        },
         "allow3D": {
           "type": "boolean",
           "default": true

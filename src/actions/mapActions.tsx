@@ -24,6 +24,8 @@
 
 import { default as OlMap } from "ol/Map";
 import { Geometry as OlGeometry } from "ol/geom";
+import { Vector as OlVectorLayer } from "ol/layer";
+import { Vector as OlVectorSource } from "ol/source";
 import { fromExtent } from "ol/geom/Polygon";
 import { Extent as OlExtent } from "ol/extent";
 import { getCenter } from "ol/extent";
@@ -31,6 +33,8 @@ import { default as OlSimpleGeometry } from "ol/geom/SimpleGeometry";
 
 import { GEOGRAPHIC_CRS } from "@/model/proj";
 import { MAP_OBJECTS } from "@/states/controlState";
+import { PlaceStyle } from "@/model/place";
+import { setFeatureStyle } from "@/components/ol/style";
 import { exportMapAsImage } from "@/components/ol/ExportMap";
 
 // noinspection JSUnusedLocalSymbols
@@ -45,6 +49,24 @@ export function renameUserPlaceInLayer(
     // TODO (forman): update feature source in user layer to reflect newName.
     //  Note, this is not yet an issue, because we still don't show user places labels
     //  in the viewer.
+  }
+}
+
+export function restyleUserPlaceInLayer(
+  placeGroupId: string,
+  placeId: string,
+  placeStyle: PlaceStyle,
+) {
+  if (MAP_OBJECTS[placeGroupId]) {
+    const userLayer = MAP_OBJECTS[
+      placeGroupId
+    ] as OlVectorLayer<OlVectorSource>;
+    const source = userLayer.getSource();
+    const feature = source?.getFeatureById(placeId);
+    if (feature) {
+      // console.log("selected feature:", feature, placeStyle);
+      setFeatureStyle(feature, placeStyle.color, placeStyle.opacity);
+    }
   }
 }
 

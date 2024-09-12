@@ -24,11 +24,12 @@
 
 import Box from "@mui/material/Box";
 
-import { makeStyles } from "@/util/styles";
+import { MessageType } from "@/states/messageLogState";
 import { StatisticsRecord } from "@/model/statistics";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
+import { makeStyles } from "@/util/styles";
 import StatisticsDataRow from "./StatisticsDataRow";
 import StatisticsFirstRow from "./StatisticsFirstRow";
 
@@ -48,8 +49,10 @@ interface StatisticsPanelProps {
   selectedPlaceInfo: PlaceInfo | null;
   statisticsLoading: boolean;
   statisticsRecords: StatisticsRecord[];
+  canAddStatistics: boolean;
   addStatistics: () => void;
   removeStatistics: (index: number) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function StatisticsPanel({
@@ -59,8 +62,10 @@ export default function StatisticsPanel({
   selectedPlaceInfo,
   statisticsLoading,
   statisticsRecords,
+  canAddStatistics,
   addStatistics,
   removeStatistics,
+  postMessage,
 }: StatisticsPanelProps) {
   return (
     <Box sx={styles.container}>
@@ -69,6 +74,7 @@ export default function StatisticsPanel({
         selectedVariable={selectedVariable}
         selectedTime={selectedTime}
         selectedPlaceInfo={selectedPlaceInfo}
+        canAddStatistics={canAddStatistics}
         addStatistics={addStatistics}
         statisticsLoading={statisticsLoading}
       />
@@ -78,6 +84,7 @@ export default function StatisticsPanel({
           statisticsRecord={sr}
           rowIndex={rowIndex}
           removeStatistics={removeStatistics}
+          postMessage={postMessage}
         />
       ))}
     </Box>

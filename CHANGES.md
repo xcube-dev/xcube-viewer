@@ -1,6 +1,114 @@
-## Changes in version 1.2.2 (in development)
+## Changes in version 1.3.0
+
+### New Features 
+
+* Users can now copy snapshots of a time-series charts and statistics
+  into the clipboard by clicking a new camera icon on a chart's action bar.
+  (#290)
+
+* It is now possible to change the color and opacity of user places
+  and hence associated time-series and statistic charts. (#97, #216)
+
+* When in map split mode each of the two variables has its own
+  variable color legend with same functionality. (#401)
+
+* Users can now enable a small pixel information box being displayed
+  next to the pointer when hovering over the map. It shows the current 
+  map coordinates and the values of the currently selected variable at 
+  that position. The feature is switched on and off from the layer 
+  selector menu. (#404)
+
+* The datasets in the dataset selector are now sorted by name and may
+  also be grouped if configured so in xcube server. (#385)
+
+* Users can now define their own variables computed from Python-like
+  expressions. The expressions can combine other variables of the
+  current dataset using almost all Python operators and all
+  [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs).  
+  User data variables are persisted in the browser's local storage.
+  (#371)
+
+* Now recognising new custom color maps from xcube server, for details 
+  refer to https://github.com/xcube-dev/xcube/issues/1046. (#392)
+
+### Enhancements
+
+* Avoiding confusion regarding variable comparison.
+  No longer using the term _second variable_ and the `(#2)` suffix in
+  variable titles. Instead, it is now the _pinned variable_.
+  A pin icon is now used to mark a pinned variable in lists.  (#407)
+
+* Moved map-related actions directly into the map, namely
+  - show/hide map layer panel (moved from main toolbar);
+  - enable/disable map split mode (moved from layer control panel);
+  - enable/disable new map info box  (moved from layer control panel),
+
+* Placed an "Add Statistics" action next to the "Add Time-Series" action
+  in the main toolbar for consistency.
+
+* Improved the visibility of the layer split bar over bright map backgrounds.
+  
+* Revised map color mapping for simplicity and clarity. (#306, #390)
+  This comprises the following changes:
+  - Removed the color mapping normalisation modes. Instead, introduced
+    a "Log" switch in the value-range popup. The normalisation mode
+    "CAT" (categorical) is no longer required.
+  - Renamed the user color mapping types "Node", "Bound", "Key" into
+    "Cont." (continuous), "Stepwise", and "Categ." (categorical).
+  - The color legend is now showing the variable's UI title instead of the
+    variable identifier name. 
+  - The value range can now be assigned from the value range
+    of the color mapping values.
+
+* Map layers that represent dataset variable's will no longer request
+  tiles for regions that do not intersect with the dataset's extent. 
+  This improves both viewer and server performance. (#412)
+
+* All selectable items of the variable legend (color bar, value range)
+  now show a "pointer" cursor to indicate interactivity.
 
 * Made the right sidebar panel's tab bar position sticky. (#373)
+
+* The title of time-series charts has been turned into a label of the 
+  chart's y-axis in order to include an indication of the units when 
+  snapshots are made.
+
+* Improved visual style of selected places in the map.
+
+### Fixes
+
+* In the map's color legend long variable are now wrapped at words. (#410) 
+
+* Fixed a problem in map split mode, where the left variable layer
+  was still rendered on the right side so that it appeared in transparent 
+  regions of the right layer. Left and right layers do not overlay each other
+  anymore. (#403)
+
+* Fixed a problem in map split mode where layer clipping was initially not 
+  applied to the right layer after its visibility was switched on.    
+
+* Fixed a problem with user color map changes that have not been automatically
+  saved. User color maps are now stored after a user confirms the 
+  addition, change, or removal. (#395)
+
+* Fixed a problem that caused categorical map legends to list the categories
+  without their associated colors. (#387)
+
+* Fixed a problem where a date in the time-series chart could not be selected
+  if clicked next to a data point. (#381)
+
+* Fixed a problem with the setting that determines panning/zooming behaviour 
+  after selecting a dataset or a place. The setting value "Do nothing" 
+  still panned to the dataset center. (#379)
+
+* Fixed a bug in the statistics panel which caused the app to crashed 
+  (screen turned white). It reproducibly occurred when first computing 
+  statistics for a point and then for a polygon. (#376)
+
+### Other changes
+
+* Renamed internal color mapping types from `"node"`, `"bound"`, `"key"`
+  into `"continuous"`, `"stepwise"`, `"categorical"`.
 
 ## Changes in version 1.2.1
 
@@ -96,6 +204,9 @@
   - No longer using deprecated `adaptV4Theme()` function from `@mui/material`.
   - Applied new MUI v5 styling defaults. 
 
+### Fixes
+
+* Fixed a crash when loading statistics for polygon after loading point statistics. (#376)
 
 ## Changes in version 1.1.1
 

@@ -46,6 +46,7 @@ interface ColorBarSelectProps {
   removeUserColorBar: (userColorBarId: string) => void;
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
+  storeSettings: () => void;
 }
 
 export default function ColorBarSelect({
@@ -61,6 +62,7 @@ export default function ColorBarSelect({
   removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
+  storeSettings,
 }: ColorBarSelectProps) {
   const handleSelectColorBar = (baseName: string) => {
     variableColorBarName = formatColorBarName({
@@ -89,6 +91,7 @@ export default function ColorBarSelect({
             removeUserColorBar={removeUserColorBar}
             updateUserColorBar={updateUserColorBar}
             updateUserColorBars={updateUserColorBars}
+            storeSettings={storeSettings}
           />
         ) : (
           <ColorBarGroupComponent

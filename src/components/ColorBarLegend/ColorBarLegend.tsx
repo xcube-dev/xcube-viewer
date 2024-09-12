@@ -22,32 +22,44 @@
  * SOFTWARE.
  */
 
-import { MouseEvent, useRef, useState } from "react";
+import { CSSProperties, MouseEvent, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 
+import { makeStyles } from "@/util/styles";
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { UserColorBar } from "@/model/userColorBar";
 import { ColorBarNorm } from "@/model/variable";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
-import ColorBarLegendContinuous from "./ColorBarLegendContinuous";
+import ColorBarLegendScalable from "./ColorBarLegendScalable";
 import ColorBarColorEditor from "./ColorBarColorEditor";
-import { makeStyles } from "@/util/styles";
+import Typography from "@mui/material/Typography";
+import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
 
 const styles = makeStyles({
   container: (theme) => ({
+    position: "absolute",
+    zIndex: 1000,
+    top: 10,
+    borderRadius: "5px",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: "#00000020",
+    backgroundColor: "#FFFFFFAA",
+    color: "black",
+    maxWidth: `${COLOR_BAR_ITEM_WIDTH + 20}px`,
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
     paddingBottom: theme.spacing(0.5),
     paddingTop: theme.spacing(0.5),
-    color: "black",
   }),
   title: (theme) => ({
     fontSize: "small",
     fontWeight: "bold",
     width: "100%",
     display: "flex",
-    flexWrap: "nowrap",
+    wordBreak: "break-word",
+    wordWrap: "break-word",
     justifyContent: "center",
     paddingBottom: theme.spacing(0.5),
   }),
@@ -55,6 +67,7 @@ const styles = makeStyles({
 
 interface ColorBarLegendProps {
   variableName: string | null;
+  variableTitle: string | null;
   variableUnits: string;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
@@ -74,6 +87,8 @@ interface ColorBarLegendProps {
   updateUserColorBar: (userColorBar: UserColorBar) => void;
   updateUserColorBars: (userColorBars: UserColorBar[]) => void;
   onOpenColorBarEditor: (event: MouseEvent<HTMLCanvasElement>) => void;
+  storeSettings: () => void;
+  style?: CSSProperties;
 }
 
 export default function ColorBarLegend(
@@ -81,9 +96,10 @@ export default function ColorBarLegend(
 ) {
   const {
     variableName,
+    variableTitle,
     variableUnits,
     variableColorBar,
-    variableColorBarNorm,
+    style,
   } = props;
 
   const colorBarSelectAnchorRef = useRef<HTMLDivElement | null>(null);
@@ -102,24 +118,22 @@ export default function ColorBarLegend(
     return null;
   }
 
-  const variableTitle = variableColorBar.categories
-    ? variableName
-    : `${variableName} (${variableUnits || "-"})`;
+  const variableTitleWithUnits =
+    variableColorBar.type === "categorical"
+      ? variableTitle || variableName
+      : `${variableTitle || variableName} (${variableUnits || "-"})`;
 
   return (
-    <Box sx={styles.container} ref={colorBarSelectAnchorRef}>
-      <Box sx={styles.title}>
-        <span>{variableTitle}</span>
-      </Box>
-      {variableColorBarNorm === "cat" && variableColorBar.categories ? (
+    <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
+      <Typography sx={styles.title}>{variableTitleWithUnits}</Typography>
+      {variableColorBar.type === "categorical" ? (
         <ColorBarLegendCategorical
-          variableColorBarCategories={variableColorBar.categories}
+          categories={variableColorBar.colorRecords}
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />
       ) : (
-        <ColorBarLegendContinuous
-          variableTitle={variableName}
+        <ColorBarLegendScalable
           onOpenColorBarEditor={handleOpenColorBarSelect}
           {...props}
         />

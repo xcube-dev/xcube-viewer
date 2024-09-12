@@ -43,7 +43,7 @@ export function setFeatureStyle(
 ) {
   if (feature.getGeometry() instanceof OlPoint) {
     feature.setStyle(
-      createPointGeometryStyle(7, color, "white", 1, pointSymbol),
+      createPointGeometryStyle(7, color, "white", 2, pointSymbol),
     );
   } else {
     fillOpacity = typeof fillOpacity === "number" ? fillOpacity : 0.25;

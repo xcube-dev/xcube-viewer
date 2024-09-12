@@ -33,6 +33,9 @@ import { Dataset } from "@/model/dataset";
 import { WithLocale } from "@/util/lang";
 import ToolButton from "@/components/ToolButton";
 import ControlBarItem from "./ControlBarItem";
+import { ReactElement, useMemo } from "react";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 
 interface DatasetSelectProps extends WithLocale {
   selectedDatasetId: string | null;
@@ -51,6 +54,20 @@ export default function DatasetSelect({
   selectDataset,
   locateSelectedDataset,
 }: DatasetSelectProps) {
+  const sortedDatasets = useMemo(() => {
+    return datasets.sort((dataset1: Dataset, dataset2: Dataset) => {
+      const groupTitle1 = dataset1.groupTitle || "zzz";
+      const groupTitle2 = dataset2.groupTitle || "zzz";
+      const delta = groupTitle1.localeCompare(groupTitle2);
+      if (delta !== 0) {
+        return delta;
+      }
+      return dataset1.title.localeCompare(dataset2.title);
+    });
+  }, [datasets]);
+
+  const hasGroups = sortedDatasets.length > 0 && !!sortedDatasets[0].groupTitle;
+
   const handleDatasetChange = (event: SelectChangeEvent) => {
     const datasetId = event.target.value || null;
     selectDataset(datasetId, datasets, true);
@@ -65,6 +82,34 @@ export default function DatasetSelect({
     </InputLabel>
   );
 
+  const items: ReactElement[] = [];
+  let lastGroupTitle: string | undefined;
+  sortedDatasets.forEach((dataset) => {
+    if (hasGroups) {
+      const groupTitle = dataset.groupTitle || i18n.get("Others");
+      if (groupTitle !== lastGroupTitle) {
+        items.push(
+          <Divider key={groupTitle}>
+            <Typography fontSize="small" color="text.secondary">
+              {groupTitle}
+            </Typography>
+          </Divider>,
+        );
+      }
+      lastGroupTitle = groupTitle;
+    }
+
+    items.push(
+      <MenuItem
+        key={dataset.id}
+        value={dataset.id}
+        selected={dataset.id === selectedDatasetId}
+      >
+        {dataset.title}
+      </MenuItem>,
+    );
+  });
+
   const datasetSelect = (
     <Select
       variant="standard"
@@ -74,15 +119,7 @@ export default function DatasetSelect({
       displayEmpty
       name="dataset"
     >
-      {datasets.map((dataset) => (
-        <MenuItem
-          key={dataset.id}
-          value={dataset.id}
-          selected={dataset.id === selectedDatasetId}
-        >
-          {dataset.title}
-        </MenuItem>
-      ))}
+      {items}
     </Select>
   );
 

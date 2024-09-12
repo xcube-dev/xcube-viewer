@@ -33,7 +33,8 @@ import {
 } from "@/components/ColorBarLegend/constants";
 
 const styles: Record<string, CSSProperties> = {
-  error: { border: "0.5px solid red" },
+  nominal: { cursor: "pointer" },
+  error: { cursor: "pointer", border: "0.5px solid red" },
 };
 
 interface ColorBarCanvasProps {
@@ -72,7 +73,7 @@ export default function ColorBarCanvas({
         width={width || COLOR_BAR_ITEM_WIDTH}
         height={height || COLOR_BAR_ITEM_HEIGHT + 4}
         onClick={onClick}
-        style={!imageData ? styles.error : undefined}
+        style={!imageData ? styles.error : styles.nominal}
       />
     </Tooltip>
   );

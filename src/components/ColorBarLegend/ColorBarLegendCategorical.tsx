@@ -24,7 +24,7 @@
 
 import Box from "@mui/material/Box";
 
-import { HexColorRecord } from "@/model/colorBar";
+import { CssColorRecord } from "@/model/colorBar";
 import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
 import { makeStyles } from "@/util/styles";
 
@@ -51,24 +51,28 @@ const styles = makeStyles({
 });
 
 export interface ColorBarLegendCategoricalProps {
-  variableColorBarCategories: HexColorRecord[];
+  categories?: CssColorRecord[];
   onOpenColorBarEditor: () => void;
 }
 
 export default function ColorBarLegendCategorical({
-  variableColorBarCategories,
+  categories,
   onOpenColorBarEditor,
 }: ColorBarLegendCategoricalProps) {
+  if (!categories || categories.length === 0) {
+    return null;
+  }
   return (
     <Box sx={styles.container}>
-      {variableColorBarCategories.map((category, index) => (
+      {categories.map((category, index) => (
         <Box
           key={index}
           onClick={onOpenColorBarEditor}
           sx={styles.itemContainer}
         >
           <Box
-            sx={{ ...styles.itemColorBox, backgroundColor: category.color }}
+            sx={styles.itemColorBox}
+            style={{ backgroundColor: category.color }}
           />
           <Box component="span" sx={styles.itemLabelBox}>
             {`${category.label || `Category ${index + 1}`} (${category.value})`}

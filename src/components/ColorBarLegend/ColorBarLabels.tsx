@@ -23,19 +23,20 @@
  */
 
 import React, { useMemo } from "react";
+import Box from "@mui/material/Box";
 
 import { getLabelsForRange } from "@/util/label";
-import Box from "@mui/material/Box";
 import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
-  label: {
+  container: {
     fontSize: "x-small",
     fontWeight: "bold",
     width: "100%",
     display: "flex",
     flexWrap: "nowrap",
     justifyContent: "space-between",
+    cursor: "pointer",
   },
 });
 
@@ -59,7 +60,7 @@ export default function ColorBarLabels({
     [minValue, maxValue, numTicks, logScaled],
   );
   return (
-    <Box sx={styles.label} onClick={onClick}>
+    <Box sx={styles.container} onClick={onClick}>
       {labels.map((label, i) => (
         <span key={i}>{label}</span>
       ))}

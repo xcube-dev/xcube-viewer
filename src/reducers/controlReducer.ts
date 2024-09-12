@@ -47,10 +47,12 @@ import {
   SET_SIDEBAR_OPEN,
   SET_SIDEBAR_PANEL_ID,
   SET_SIDEBAR_POSITION,
+  SET_MAP_POINT_INFO_BOX_ENABLED,
   SET_VARIABLE_COMPARE_MODE,
   SET_VARIABLE_SPLIT_POS,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
+  STORE_SETTINGS,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_TIME_ANIMATION,
@@ -107,6 +109,10 @@ export function controlReducer(
       const settings = { ...state, ...action.settings };
       storeUserSettings(settings);
       return settings;
+    }
+    case STORE_SETTINGS: {
+      storeUserSettings(state);
+      return state;
     }
     case UPDATE_DATASETS: {
       let selectedDatasetId =
@@ -210,6 +216,10 @@ export function controlReducer(
           [action.layerId]: action.visible,
         },
       };
+    }
+    case SET_MAP_POINT_INFO_BOX_ENABLED: {
+      const { mapPointInfoBoxEnabled } = action;
+      return { ...state, mapPointInfoBoxEnabled };
     }
     case SET_VARIABLE_COMPARE_MODE: {
       const { variableCompareMode } = action;
@@ -347,7 +357,7 @@ export function controlReducer(
         userColorBars: [
           {
             id: id,
-            type: "node",
+            type: "continuous",
             code: USER_COLOR_BAR_CODE_EXAMPLE,
           },
           ...state.userColorBars,
@@ -360,13 +370,15 @@ export function controlReducer(
         (ucb) => ucb.id === userColorBarId,
       );
       if (index >= 0) {
-        return {
+        const newState = {
           ...state,
           userColorBars: [
             ...state.userColorBars.slice(0, index),
             ...state.userColorBars.slice(index + 1),
           ],
         };
+        storeUserSettings(newState);
+        return newState;
       }
       return state;
     }

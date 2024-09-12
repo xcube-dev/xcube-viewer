@@ -22,44 +22,29 @@
  * SOFTWARE.
  */
 
-import { connect } from "react-redux";
+import { callApi } from "./callApi";
+import { encodeDatasetId } from "@/model/encode";
+import i18n from "@/i18n";
 
-import { AppState } from "@/states/appState";
-import _MapLayerMenu from "@/components/MapLayerMenu";
-import {
-  openDialog,
-  setLayerMenuOpen,
-  setLayerVisibility,
-  setVariableCompareMode,
-} from "@/actions/controlActions";
-import {
-  layerDisablementsSelector,
-  layerSubtitlesSelector,
-  layerTitlesSelector,
-  layerVisibilitiesSelector,
-} from "@/selectors/controlSelectors";
-
-const mapStateToProps = (state: AppState) => {
-  return {
-    locale: state.controlState.locale,
-    layerMenuOpen: state.controlState.layerMenuOpen,
-    layerTitles: layerTitlesSelector(state),
-    layerSubtitles: layerSubtitlesSelector(state),
-    layerDisablements: layerDisablementsSelector(state),
-    layerVisibilities: layerVisibilitiesSelector(state),
-    variableCompareMode: state.controlState.variableCompareMode,
-  };
-};
-
-const mapDispatchToProps = {
-  openDialog,
-  setLayerMenuOpen,
-  setLayerVisibility,
-  setVariableCompareMode,
-};
-
-const MapLayerMenu = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(_MapLayerMenu);
-export default MapLayerMenu;
+export async function validateExpression(
+  apiServerUrl: string,
+  datasetId: string,
+  expression: string,
+): Promise<string | null> {
+  if (expression!.trim() === "") {
+    return i18n.get("Must not be empty");
+  }
+  const url = `${apiServerUrl}/expressions/validate/${encodeDatasetId(datasetId)}/${encodeURIComponent(expression)}`;
+  try {
+    await callApi(url);
+    return null;
+  } catch (e) {
+    const message = (e as Error).message;
+    if (message) {
+      const i1 = message.indexOf("(");
+      const i2 = message.lastIndexOf(")");
+      return message.slice(i1 >= 0 ? i1 + 1 : 0, i2 >= 0 ? i2 : message.length);
+    }
+    return i18n.get("Invalid expression");
+  }
+}

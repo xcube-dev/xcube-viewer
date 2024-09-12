@@ -41,6 +41,7 @@ const styles = makeStyles({
     borderLeft: "0.5px solid #ffffffd0",
     borderRight: "0.5px solid #ffffffd0",
     cursor: "col-resize",
+    boxShadow: "0px 0px 1px 0px black",
   },
 });
 

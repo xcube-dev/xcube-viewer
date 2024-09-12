@@ -39,6 +39,8 @@ import { CategoricalChartState } from "recharts/types/chart/types";
 import { styled, useTheme } from "@mui/system";
 
 import { Place, PlaceInfo } from "@/model/place";
+import { TimeSeriesChartType } from "@/states/controlState";
+import { MessageType } from "@/states/messageLogState";
 import {
   equalTimeRanges,
   PlaceGroupTimeSeries,
@@ -49,13 +51,13 @@ import {
   TimeSeriesPoint,
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
-import { TimeSeriesChartType } from "@/states/controlState";
 import { isNumber } from "@/util/types";
 import { formatTimeTick, formatValueTick } from "./util";
 import CustomLegend from "./CustomLegend";
 import CustomTooltip from "./CustomTooltip";
 import TimeSeriesLine from "./TimeSeriesLine";
 import TimeSeriesChartHeader from "./TimeSeriesChartHeader";
+import i18n from "@/i18n";
 
 // Fix typing problem in recharts v2.12.4
 type CategoricalChartState_Fixed = Omit<
@@ -73,10 +75,6 @@ const StyledContainerDiv = styled("div")(({ theme }) => ({
   alignItems: "flex-stretch",
 }));
 
-const StyledResponsiveContainer = styled(ResponsiveContainer)(() => ({
-  flexGrow: 1,
-}));
-
 interface Rectangle {
   x1?: number;
   y1?: number;
@@ -85,6 +83,13 @@ interface Rectangle {
 }
 
 type ValueRange = [number, number];
+
+const Y_AXIS_LABEL = {
+  style: { textAnchor: "middle" },
+  angle: -90,
+  position: "left",
+  offset: 0,
+};
 
 interface TimeSeriesChartProps extends WithLocale {
   timeSeriesGroup: TimeSeriesGroup;
@@ -122,6 +127,7 @@ interface TimeSeriesChartProps extends WithLocale {
     timeSeriesGroupId: string,
     timeSeries: TimeSeries,
   ) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function TimeSeriesChart({
@@ -141,8 +147,8 @@ export default function TimeSeriesChart({
   removeTimeSeriesGroup,
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
+  postMessage,
 }: TimeSeriesChartProps) {
-  // TODO: check if using MUI useTheme is still ok
   const theme = useTheme();
 
   const [zoomMode, setZoomMode] = useState(false);
@@ -153,7 +159,7 @@ export default function TimeSeriesChart({
   const xDomain = useRef<[number, number]>();
   const yDomain = useRef<[number, number]>();
   const chartSize = useRef<[number, number]>();
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const legendWrapperRef = useRef<HTMLDivElement | null>(null);
   const data = useMemo(() => {
     const dataMap = new Map<number, Record<string, number>>();
@@ -212,6 +218,9 @@ export default function TimeSeriesChart({
     }
   });
 
+  const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
+  const yAxisText = `${i18n.get("Quantity")} (${unitsText})`;
+
   const lightStroke = theme.palette.primary.light;
   const mainStroke = theme.palette.primary.main;
   const labelTextColor = theme.palette.text.primary;
@@ -222,19 +231,20 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleClick = (
-    chartState: CategoricalChartState | CategoricalChartState_Fixed,
-  ) => {
-    removeZoomRectangle();
-    if (
-      chartState &&
-      selectTime &&
-      isNumber(chartState.activeLabel) &&
-      Number.isFinite(chartState.activeLabel)
-    ) {
-      selectTime(chartState.activeLabel);
-    }
-  };
+  // const handleClick = (
+  //   chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  // ) => {
+  //   console.log("Click!", chartState);
+  //   removeZoomRectangle();
+  //   if (
+  //     chartState &&
+  //     selectTime &&
+  //     isNumber(chartState.activeLabel) &&
+  //     Number.isFinite(chartState.activeLabel)
+  //   ) {
+  //     selectTime(chartState.activeLabel);
+  //   }
+  // };
 
   const handleMouseDown = (
     chartState: CategoricalChartState | CategoricalChartState_Fixed | null,
@@ -283,8 +293,27 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleMouseUp = () => {
-    zoomIn();
+  const handleMouseUp = (
+    chartState: CategoricalChartState | CategoricalChartState_Fixed,
+  ) => {
+    const [selectedXRange1, selectedYRange1] =
+      normalizeZoomRectangle(zoomRectangle);
+
+    removeZoomRectangle();
+
+    if (selectedXRange1 && selectedXRange1[0] < selectedXRange1[1]) {
+      if (selectedYRange1) {
+        selectTimeRange(selectedXRange1, timeSeriesGroup.id, selectedYRange1);
+      } else {
+        selectTimeRange(selectedXRange1, timeSeriesGroup.id, null);
+      }
+    } else if (
+      chartState &&
+      isNumber(chartState.activeLabel) &&
+      Number.isFinite(chartState.activeLabel)
+    ) {
+      selectTime(chartState.activeLabel);
+    }
   };
 
   const handleMouseEnter = () => {
@@ -297,20 +326,6 @@ export default function TimeSeriesChart({
 
   const handleRemoveTimeSeriesClick = (index: number) => {
     removeTimeSeries!(timeSeriesGroup.id, index);
-  };
-
-  const zoomIn = () => {
-    const [selectedXRange, selectedYRange] =
-      normalizeZoomRectangle(zoomRectangle);
-    if (selectedXRange && selectedXRange[0] < selectedXRange[1]) {
-      if (selectedYRange) {
-        selectTimeRange(selectedXRange, timeSeriesGroup.id, selectedYRange);
-      } else {
-        selectTimeRange(selectedXRange, timeSeriesGroup.id, null);
-      }
-    } else {
-      removeZoomRectangle();
-    }
   };
 
   const resetZoom = () => {
@@ -326,10 +341,10 @@ export default function TimeSeriesChart({
 
   const handleChartResize = (w: number, h: number) => {
     chartSize.current = [w, h];
-    if (containerRef.current) {
+    if (chartContainerRef.current) {
       // Hack: get the recharts legend wrapper div, so we can use its height
       // to compute cartesian chart coordinates
-      const elements = containerRef.current.getElementsByClassName(
+      const elements = chartContainerRef.current.getElementsByClassName(
         "recharts-legend-wrapper",
       );
       if (elements.length !== 0) {
@@ -405,7 +420,7 @@ export default function TimeSeriesChart({
   const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
   return (
-    <StyledContainerDiv ref={containerRef}>
+    <StyledContainerDiv>
       <TimeSeriesChartHeader
         timeSeriesGroup={timeSeriesGroup}
         placeGroupTimeSeries={placeGroupTimeSeries}
@@ -425,11 +440,14 @@ export default function TimeSeriesChart({
         setStdevBars={setStdevBars}
         valueRange={yDomain.current}
         setValueRange={handleEnteredValueRange}
+        chartElement={chartContainerRef}
+        postMessage={postMessage}
       />
-      <StyledResponsiveContainer
+      <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172
         width="98%"
         onResize={handleChartResize}
+        ref={chartContainerRef}
       >
         <ChartComponent
           onMouseDown={handleMouseDown}
@@ -437,7 +455,7 @@ export default function TimeSeriesChart({
           onMouseUp={handleMouseUp}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
+          // onClick={handleClick}
           syncId="anyId"
           style={{ color: labelTextColor, fontSize: "0.8em" }}
           data={data}
@@ -461,6 +479,7 @@ export default function TimeSeriesChart({
             tickFormatter={formatValueTick}
             stroke={labelTextColor}
             allowDataOverflow
+            label={{ ...Y_AXIS_LABEL, value: yAxisText }}
           />
           <CartesianGrid strokeDasharray="3 3" />
           {showTooltips && !isNumber(zoomRectangle.x1) && (
@@ -509,7 +528,7 @@ export default function TimeSeriesChart({
             />
           )}
         </ChartComponent>
-      </StyledResponsiveContainer>
+      </ResponsiveContainer>
     </StyledContainerDiv>
   );
 }

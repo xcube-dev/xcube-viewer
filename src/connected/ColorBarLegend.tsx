@@ -27,19 +27,21 @@ import { connect } from "react-redux";
 import { AppState } from "@/states/appState";
 import {
   selectedVariableNameSelector,
+  selectedVariableTitleSelector,
   selectedVariableUnitsSelector,
   selectedVariableColorBarNameSelector,
   selectedVariableColorBarMinMaxSelector,
   selectedVariableOpacitySelector,
+  selectedVariableColorBarNormSelector,
   selectedVariableColorBarSelector,
   colorBarsSelector,
   userColorBarsSelector,
-  selectedVariableColorBarNormSelector,
 } from "@/selectors/controlSelectors";
 import { updateVariableColorBar } from "@/actions/dataActions";
 import {
   addUserColorBar,
   removeUserColorBar,
+  storeSettings,
   updateUserColorBar,
   updateUserColorBars,
 } from "@/actions/controlActions";
@@ -48,6 +50,7 @@ import _ColorBarLegend from "@/components/ColorBarLegend";
 const mapStateToProps = (state: AppState) => {
   return {
     variableName: selectedVariableNameSelector(state),
+    variableTitle: selectedVariableTitleSelector(state),
     variableUnits: selectedVariableUnitsSelector(state),
     variableColorBarName: selectedVariableColorBarNameSelector(state),
     variableColorBarMinMax: selectedVariableColorBarMinMaxSelector(state),
@@ -56,6 +59,7 @@ const mapStateToProps = (state: AppState) => {
     variableOpacity: selectedVariableOpacitySelector(state),
     userColorBars: userColorBarsSelector(state),
     colorBars: colorBarsSelector(state),
+    style: { right: 10 },
   };
 };
 
@@ -65,6 +69,7 @@ const mapDispatchToProps = {
   removeUserColorBar,
   updateUserColorBar,
   updateUserColorBars,
+  storeSettings,
 };
 
 const ColorBarLegend = connect(

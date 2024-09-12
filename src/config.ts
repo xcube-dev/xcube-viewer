@@ -24,6 +24,7 @@
 
 import { Color, PaletteMode } from "@mui/material";
 import {
+  blue,
   brown,
   cyan,
   green,
@@ -34,6 +35,7 @@ import {
   pink,
   purple,
   red,
+  teal,
   yellow,
 } from "@mui/material/colors";
 
@@ -43,6 +45,7 @@ import { AuthClientConfig } from "@/util/auth";
 import { Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
+import { isNumber } from "./util/types";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -82,7 +85,7 @@ export class Config {
     const authClient = this.getAuthConfig(rawConfig);
     const server = this.getServerConfig(rawConfig);
     const compact = parseInt(appParams.get("compact") || "0") !== 0;
-    const branding = parseBranding(
+    let branding = parseBranding(
       {
         ...rawDefaultConfig.branding,
         ...(rawConfig.branding as Record<string, unknown>),
@@ -91,8 +94,8 @@ export class Config {
       },
       configPath,
     );
-    branding.allow3D =
-      !!parseInt(appParams.get("allow3D") || "0") || branding.allow3D;
+    branding = decodeBrandingFlag(branding, "allowUserVariables");
+    branding = decodeBrandingFlag(branding, "allow3D");
     Config._instance = new Config(name, server, branding, authClient);
     if (import.meta.env.DEV) {
       console.debug("Configuration:", Config._instance);
@@ -244,9 +247,10 @@ interface TileAccess {
 }
 
 // Array of user place colors in stable order (see #153)
-const userPlaceColorsArray: [string, Color][] = [
+export const userPlaceColorsArray: [string, Color][] = [
   ["red", red],
   ["yellow", yellow],
+  ["blue", blue],
   ["pink", pink],
   ["lightBlue", lightBlue],
   ["green", green],
@@ -256,6 +260,7 @@ const userPlaceColorsArray: [string, Color][] = [
   ["indigo", indigo],
   ["cyan", cyan],
   ["brown", brown],
+  ["teal", teal],
 ];
 
 const userPlaceColors: { [name: string]: Color } = (() => {
@@ -286,6 +291,13 @@ export function getUserPlaceColor(
   return userPlaceColors[colorName][shade];
 }
 
+export function getUserPlaceFillOpacity(opacity?: number): number {
+  if (!isNumber(opacity)) {
+    opacity = Config.instance.branding.polygonFillOpacity;
+  }
+  return isNumber(opacity) ? opacity : 0.25;
+}
+
 // See resources/maps.json
 const tileAccess: { [name: string]: TileAccess } = {
   Mapbox: {
@@ -297,4 +309,15 @@ const tileAccess: { [name: string]: TileAccess } = {
 
 export function getTileAccess(groupName: string) {
   return tileAccess[groupName];
+}
+
+function decodeBrandingFlag(
+  branding: Branding,
+  flagName: keyof Branding,
+): Branding {
+  const _flagValue = appParams.get(flagName);
+  const flagValue: boolean = _flagValue
+    ? !!parseInt(_flagValue)
+    : !!branding[flagName];
+  return { ...branding, [flagName]: flagValue };
 }

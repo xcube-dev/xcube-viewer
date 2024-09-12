@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import CloseIcon from "@mui/icons-material/Close";
@@ -49,6 +48,8 @@ import {
 import { WithLocale } from "@/util/lang";
 import { makeStyles } from "@/util/styles";
 import { TimeSeriesChartType } from "@/states/controlState";
+import { MessageType } from "@/states/messageLogState";
+import SnapshotButton from "@/components/SnapshotButton";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
 
@@ -59,9 +60,7 @@ const styles = makeStyles({
   headerContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: "10px",
+    justifyContent: "right",
   },
   actionsContainer: {
     display: "flex",
@@ -109,6 +108,8 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setStdevBars: (showStdDev: boolean) => void;
   valueRange: ValueRange | undefined;
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
+  chartElement: RefObject<HTMLDivElement>;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function TimeSeriesChartHeader({
@@ -130,13 +131,11 @@ export default function TimeSeriesChartHeader({
   setStdevBars,
   valueRange,
   setValueRange,
+  chartElement,
+  postMessage,
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
-  const timeSeriesText = i18n.get("Time-Series");
-  const unitsText = timeSeriesGroup.variableUnits || i18n.get("unknown units");
-  const chartTitle = `${timeSeriesText} (${unitsText})`;
-
   const handleToggleValueRangeEditor = () => {
     setValueRangeEditorOpen(!valueRangeEditorOpen);
   };
@@ -165,7 +164,6 @@ export default function TimeSeriesChartHeader({
 
   return (
     <Box sx={styles.headerContainer}>
-      <Typography sx={styles.chartTitle}>{chartTitle}</Typography>
       <Box sx={styles.actionsContainer}>
         {zoomed && (
           <Tooltip arrow title={i18n.get("Zoom to full range")}>
@@ -256,6 +254,8 @@ export default function TimeSeriesChartHeader({
             </ToggleButton>
           </Tooltip>
         </ToggleButtonGroup>
+
+        <SnapshotButton elementRef={chartElement} postMessage={postMessage} />
 
         <TimeSeriesAddButton
           sx={styles.actionButton}

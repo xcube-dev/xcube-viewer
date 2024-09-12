@@ -44,6 +44,7 @@ interface StatisticsFirstRowProps extends WithLocale {
   selectedVariable: Variable | null;
   selectedTime: string | null;
   selectedPlaceInfo: PlaceInfo | null;
+  canAddStatistics: boolean;
   addStatistics: () => void;
   statisticsLoading: boolean;
 }
@@ -53,15 +54,10 @@ export default function StatisticsFirstRow({
   selectedVariable,
   selectedTime,
   selectedPlaceInfo,
+  canAddStatistics,
   addStatistics,
   statisticsLoading,
 }: StatisticsFirstRowProps) {
-  const canAdd = !!(
-    selectedDataset &&
-    selectedVariable &&
-    selectedTime &&
-    selectedPlaceInfo
-  );
   return (
     <StatisticsRow
       dataset={selectedDataset}
@@ -74,7 +70,7 @@ export default function StatisticsFirstRow({
         ) : (
           <IconButton
             size="small"
-            disabled={!canAdd}
+            disabled={!canAddStatistics}
             onClick={addStatistics}
             color={"primary"}
           >
