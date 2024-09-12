@@ -35,7 +35,6 @@ import { GEOGRAPHIC_CRS } from "@/model/proj";
 import { MAP_OBJECTS } from "@/states/controlState";
 import { PlaceStyle } from "@/model/place";
 import { setFeatureStyle } from "@/components/ol/style";
-import { exportMapAsImage } from "@/components/ol/ExportMap";
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(
@@ -92,12 +91,5 @@ export function locateInMap(
     } else {
       map.getView().fit(geometry, { size: map.getSize() });
     }
-  }
-}
-
-export function exportMap(mapId: string) {
-  if (MAP_OBJECTS[mapId]) {
-    const map = MAP_OBJECTS[mapId] as OlMap;
-    exportMapAsImage(map);
   }
 }

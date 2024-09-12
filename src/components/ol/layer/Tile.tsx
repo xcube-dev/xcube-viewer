@@ -72,10 +72,6 @@ export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
     const layer = new OlTileLayer(this.props);
     layer.set("id", this.props.id);
-    const source = layer.getSource();
-    if (source && 'crossOrigin' in source) {
-      (source as any).crossOrigin = "Anonymous";
-    }
     map.getLayers().push(layer);
     return layer;
   }

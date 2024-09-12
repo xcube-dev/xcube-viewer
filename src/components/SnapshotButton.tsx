@@ -24,22 +24,30 @@
 
 import { RefObject } from "react";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { default as OlMap } from "ol/Map";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { MessageType } from "@/states/messageLogState";
 import { exportElement } from "@/util/export";
 import ToolButton from "@/components/ToolButton";
+import { MAP_OBJECTS } from "@/states/controlState";
 
 interface SnapshotButtonProps extends WithLocale {
-  elementRef: RefObject<HTMLDivElement | null>;
+  //btnKey?: string;
+  elementRef?: RefObject<HTMLDivElement | null>;
+  mapRef?: string;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function SnapshotButton({
+  //btnKey,
   elementRef,
+  mapRef,
   postMessage,
 }: SnapshotButtonProps) {
+  const pixelRatio = 2;
+
   const handleExportSuccess = () => {
     postMessage("success", i18n.get("Snapshot copied to clipboard"));
   };
@@ -51,12 +59,27 @@ export default function SnapshotButton({
   };
 
   const handleButtonClick = () => {
-    if (elementRef.current) {
-      exportElement(elementRef.current!, {
+    let targetElement: HTMLElement | null = null;
+
+    if (mapRef) {
+      if (MAP_OBJECTS[mapRef]) {
+        const map = MAP_OBJECTS[mapRef] as OlMap;
+        targetElement = map.getTargetElement();
+      }
+    } else if (elementRef) {
+      // Handle elementRef scenario
+      if (elementRef.current) {
+        targetElement = elementRef.current;
+      }
+    }
+
+    if (targetElement) {
+      exportElement(targetElement, {
         format: "png",
         width: 2000,
         handleSuccess: handleExportSuccess,
         handleError: handleExportError,
+        pixelratio: pixelRatio,
       });
     } else {
       handleExportError(new Error("missing element reference"));
@@ -65,7 +88,8 @@ export default function SnapshotButton({
 
   return (
     <ToolButton
-      tooltipText={i18n.get("Copy snapshot of chart to clipboard")}
+      //key={btnKey}
+      tooltipText={i18n.get("Copy snapshot to clipboard")}
       onClick={handleButtonClick}
       icon={<CameraAltIcon fontSize="inherit" />}
     />

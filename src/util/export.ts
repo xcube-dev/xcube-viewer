@@ -37,6 +37,7 @@ export interface ExportOptions {
   height?: number;
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
+  pixelratio?: number;
 }
 
 /**
@@ -88,6 +89,16 @@ async function _exportElement(
       ((options.width || chartElement.clientWidth) *
         chartElement.clientHeight) /
         chartElement.clientWidth,
+    pixelRatio: options.pixelratio,
+  });
+  let image = new Image();
+  image.crossOrigin = "anonymous";
+  image.src = dataUrl;
+
+  // Wait for the image to load before proceeding
+  await new Promise<void>((resolve, reject) => {
+    image.onload = () => resolve();
+    image.onerror = (error) => reject(error);
   });
   const response = await fetch(dataUrl);
   const blob = await response.blob();

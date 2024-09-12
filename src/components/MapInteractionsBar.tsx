@@ -34,13 +34,13 @@ import CategoryIcon from "@mui/icons-material/Category";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import FileUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/system";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
-import { exportMap } from "@/actions/mapActions";
+import SnapshotButton from "./SnapshotButton";
+import { MessageType } from "@/states/messageLogState";
 
 const StyledFromControl = styled(FormControl)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -51,11 +51,13 @@ const StyledFromControl = styled(FormControl)(({ theme }) => ({
 interface MapInteractionsBarProps extends WithLocale {
   mapInteraction: MapInteraction;
   setMapInteraction: (interaction: MapInteraction) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function MapInteractionsBar({
   mapInteraction,
   setMapInteraction,
+  postMessage
 }: MapInteractionsBarProps) {
   function handleChange(
     _event: React.MouseEvent<HTMLElement>,
@@ -130,12 +132,8 @@ export default function MapInteractionsBar({
           key={5}
           value="Export"
           size="small"
-          sx={commonStyles.toggleButton}
-          onClick={() => exportMap("map")}
-        >
-          <Tooltip arrow title={i18n.get("Export map")}>
-            <CameraAltIcon />
-          </Tooltip>
+          sx={commonStyles.toggleButton}>
+          <SnapshotButton mapRef={"map"} postMessage={postMessage} />
         </ToggleButton>
       </ToggleButtonGroup>
     </StyledFromControl>
