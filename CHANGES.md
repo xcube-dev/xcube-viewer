@@ -1,12 +1,17 @@
 ## Changes in version 1.3.1 (in development)
 
+### Fixes
+
+* The `<Time>` parameter is now no longer required to calculate the statistics 
+  of the selected Point/Polygon for datasets that does not contain a time 
+  parameter. (#421)
 
 ## Changes in version 1.3.0
 
 ### New Features 
 
 * Users can now copy snapshots of a time-series charts and statistics
-  into the clipboard by clicking a new camera icon on a chart's action bar.
+  into the clipboard by clicking a new camera icon on a chart's action bar.    
   (#290)
 
 * It is now possible to change the color and opacity of user places
