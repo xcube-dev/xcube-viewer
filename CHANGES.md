@@ -31,6 +31,8 @@
 * Now recognising new custom color maps from xcube server, for details 
   refer to https://github.com/xcube-dev/xcube/issues/1046. (#392)
 
+* Users can now copy snapshots of a map into the clipboard by clicking a new camera icon on a map's action bar.(#290)
+
 ### Enhancements
 
 * Avoiding confusion regarding variable comparison.
