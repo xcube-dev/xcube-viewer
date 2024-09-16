@@ -38,6 +38,8 @@ export interface ExportOptions {
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
   pixelratio?: number;
+  controlDiv?: HTMLElement | null;
+  zoomDiv?: HTMLElement | null;
 }
 
 /**
@@ -72,40 +74,68 @@ async function _exportElement(
   element: HTMLElement,
   options: ExportOptions = {},
 ): Promise<void> {
-  const chartElement = element;
   const format = options.format || "png";
   if (!(format in converters)) {
     throw new Error(`Image format '${format}' is unknown or not supported.`);
   }
-  const dataUrl = await converters[format](chartElement, {
+
+  const canvasWidth =
+    options.width ||
+    ((options.height || element.clientHeight) * element.clientWidth) /
+      element.clientHeight;
+  const canvasHeight =
+    options.height ||
+    ((options.width || element.clientWidth) * element.clientHeight) /
+      element.clientWidth;
+
+  const controlDiv = options.controlDiv;
+  if (controlDiv) controlDiv.style.display = "none";
+  const zoomDiv = options.zoomDiv;
+  if (zoomDiv) zoomDiv.hidden = true;
+
+  const offScreenCanvas = document.createElement("canvas");
+  offScreenCanvas.width = canvasWidth;
+  offScreenCanvas.height = canvasHeight;
+  const context = offScreenCanvas.getContext("2d");
+
+  if (!context) {
+    throw new Error("Failed to get canvas context.");
+  }
+
+  const dataUrl = await converters[format](element, {
     backgroundColor: "#00000000",
-    canvasWidth:
-      options.width ||
-      ((options.height || chartElement.clientHeight) *
-        chartElement.clientWidth) /
-        chartElement.clientHeight,
-    canvasHeight:
-      options.height ||
-      ((options.width || chartElement.clientWidth) *
-        chartElement.clientHeight) /
-        chartElement.clientWidth,
+    canvasWidth,
+    canvasHeight,
     pixelRatio: options.pixelratio,
   });
-  let image = new Image();
+
+  const image = new Image();
   image.crossOrigin = "anonymous";
   image.src = dataUrl;
 
-  // Wait for the image to load before proceeding
   await new Promise<void>((resolve, reject) => {
     image.onload = () => resolve();
     image.onerror = (error) => reject(error);
   });
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
+
+  context.drawImage(image, 0, 0);
+
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    offScreenCanvas.toBlob((blob) => {
+      if (blob === null) {
+        reject(new Error("Failed to create a blob from the canvas."));
+      } else {
+        resolve(blob);
+      }
+    }, `image/${format}`);
+  });
 
   await navigator.clipboard.write([
     new ClipboardItem({
-      "image/png": blob,
+      [`image/${format}`]: blob,
     }),
   ]);
+
+  if (controlDiv) controlDiv.style.display = "block";
+  if (zoomDiv) zoomDiv.hidden = false;
 }

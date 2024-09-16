@@ -34,10 +34,11 @@ import ToolButton from "@/components/ToolButton";
 import { MAP_OBJECTS } from "@/states/controlState";
 
 interface SnapshotButtonProps extends WithLocale {
-  //btnKey?: string;
   elementRef?: RefObject<HTMLDivElement | null>;
   mapRef?: string;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  fontSize?: 'small' | 'inherit' | 'medium' | 'large';
+  isToggle?: boolean
 }
 
 export default function SnapshotButton({
@@ -45,8 +46,10 @@ export default function SnapshotButton({
   elementRef,
   mapRef,
   postMessage,
+  fontSize = "inherit",
+  isToggle = false,
 }: SnapshotButtonProps) {
-  const pixelRatio = 2;
+  const pixelRatio = 1;
 
   const handleExportSuccess = () => {
     postMessage("success", i18n.get("Snapshot copied to clipboard"));
@@ -58,29 +61,39 @@ export default function SnapshotButton({
     postMessage("error", i18n.get(message));
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     let targetElement: HTMLElement | null = null;
+    let controlDiv: HTMLElement | null = null;
+    let zoomDiv: HTMLElement | null = null;
 
     if (mapRef) {
       if (MAP_OBJECTS[mapRef]) {
         const map = MAP_OBJECTS[mapRef] as OlMap;
         targetElement = map.getTargetElement();
+        controlDiv = targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0') as HTMLElement;
+        zoomDiv = targetElement.querySelector(".ol-zoom.ol-unselectable.ol-control") as HTMLElement;
       }
     } else if (elementRef) {
-      // Handle elementRef scenario
       if (elementRef.current) {
         targetElement = elementRef.current;
       }
     }
 
     if (targetElement) {
-      exportElement(targetElement, {
-        format: "png",
-        width: 2000,
-        handleSuccess: handleExportSuccess,
-        handleError: handleExportError,
-        pixelratio: pixelRatio,
-      });
+      try {
+        // Pass controlDiv as part of ExportOptions
+        exportElement(targetElement, {
+          format: "png",
+          width: 2000,
+          handleSuccess: handleExportSuccess,
+          handleError: handleExportError,
+          pixelratio: pixelRatio,
+          controlDiv: controlDiv,
+          zoomDiv: zoomDiv,
+        });
+      } catch (error) {
+        handleExportError(error);
+      }
     } else {
       handleExportError(new Error("missing element reference"));
     }
@@ -91,7 +104,8 @@ export default function SnapshotButton({
       //key={btnKey}
       tooltipText={i18n.get("Copy snapshot to clipboard")}
       onClick={handleButtonClick}
-      icon={<CameraAltIcon fontSize="inherit" />}
+      toggle={isToggle}
+      icon={<CameraAltIcon fontSize={fontSize} />}
     />
   );
 }

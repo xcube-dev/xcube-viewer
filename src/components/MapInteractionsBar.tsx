@@ -128,13 +128,7 @@ export default function MapInteractionsBar({
             <FileUploadIcon />
           </Tooltip>
         </ToggleButton>
-        <ToggleButton
-          key={5}
-          value="Export"
-          size="small"
-          sx={commonStyles.toggleButton}>
-          <SnapshotButton mapRef={"map"} postMessage={postMessage} />
-        </ToggleButton>
+        <SnapshotButton mapRef={"map"} postMessage={postMessage} fontSize="medium" isToggle={true} />
       </ToggleButtonGroup>
     </StyledFromControl>
   );
