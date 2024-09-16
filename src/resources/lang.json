@@ -461,9 +461,9 @@
       "se": "Hjälp"
     },
     {
-      "en": "Copy snapshot of chart to clipboard",
-      "de": "Schnappschuss des Diagramms in die Zwischenablage kopieren",
-      "se": "Kopiera ögonblicksbild av diagrammet till urklipp"
+      "en": "Copy snapshot to clipboard",
+      "de": "Schnappschuss in die Zwischenablage kopieren",
+      "se": "Kopiera ögonblicksbild till urklipp"
     },
     {
       "en": "Snapshot copied to clipboard",
