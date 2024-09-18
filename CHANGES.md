@@ -3,7 +3,7 @@
 ### New Features
 
 * Users can now copy snapshots of a map into the clipboard by clicking a new 
-  camera icon on a map's action bar.(#290)
+  camera icon on a map's action bar. (#290)
 
 ### Fixes
 
