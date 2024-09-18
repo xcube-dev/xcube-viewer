@@ -11,7 +11,6 @@
   of the selected Point/Polygon for datasets that do not contain a time 
   dimension. (#421)
 
-
 ## Changes in version 1.3.0
 
 ### New Features 
