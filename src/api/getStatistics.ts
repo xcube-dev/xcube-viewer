@@ -47,10 +47,10 @@ export function getStatistics(
   dataset: Dataset,
   variable: Variable,
   placeInfo: PlaceInfo,
-  timeLabel: string,
+  timeLabel: string | null,
   accessToken: string | null,
 ): Promise<StatisticsRecord> {
-  const query: QueryComponent[] = [["time", timeLabel]];
+  const query: QueryComponent[] = timeLabel !== null ? [["time", timeLabel]] : [];
   const url = makeRequestUrl(
     `${apiServerUrl}/statistics/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
     query,
