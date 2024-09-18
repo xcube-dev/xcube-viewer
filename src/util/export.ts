@@ -33,11 +33,9 @@ export type ExportFormat = keyof typeof converters;
 
 export interface ExportOptions {
   format?: ExportFormat;
-  width?: number;
-  height?: number;
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
-  pixelratio?: number;
+  exportResolution?: number;
   controlDiv?: HTMLElement | null;
   zoomDiv?: HTMLElement | null;
 }
@@ -75,18 +73,22 @@ async function _exportElement(
   options: ExportOptions = {},
 ): Promise<void> {
   const format = options.format || "png";
+  const AVG_SCREEN_PPI = 96;
   if (!(format in converters)) {
     throw new Error(`Image format '${format}' is unknown or not supported.`);
   }
 
-  const canvasWidth =
-    options.width ||
-    ((options.height || element.clientHeight) * element.clientWidth) /
-      element.clientHeight;
-  const canvasHeight =
-    options.height ||
-    ((options.width || element.clientWidth) * element.clientHeight) /
-      element.clientWidth;
+  const dpi = options.exportResolution!;
+  const factor = dpi / AVG_SCREEN_PPI;
+  const exportWidth = Math.round(element.clientWidth * factor);
+  const exportHeight = Math.round(element.clientHeight * factor);
+
+  // const canvasWidth =
+  //   exportWidth ||
+  //   (element.clientHeight * element.clientWidth) / element.clientHeight;
+  // const canvasHeight =
+  //   exportHeight ||
+  //   (element.clientWidth * element.clientHeight) / element.clientWidth;
 
   const controlDiv = options.controlDiv;
   if (controlDiv) controlDiv.style.display = "none";
@@ -94,8 +96,8 @@ async function _exportElement(
   if (zoomDiv) zoomDiv.hidden = true;
 
   const offScreenCanvas = document.createElement("canvas");
-  offScreenCanvas.width = canvasWidth;
-  offScreenCanvas.height = canvasHeight;
+  offScreenCanvas.width = exportHeight;
+  offScreenCanvas.height = exportHeight;
   const context = offScreenCanvas.getContext("2d");
 
   if (!context) {
@@ -104,9 +106,8 @@ async function _exportElement(
 
   const dataUrl = await converters[format](element, {
     backgroundColor: "#00000000",
-    canvasWidth,
-    canvasHeight,
-    pixelRatio: options.pixelratio,
+    width: exportWidth,
+    height: exportHeight,
   });
 
   const image = new Image();

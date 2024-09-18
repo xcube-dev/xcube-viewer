@@ -36,7 +36,7 @@ import FileUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/system";
 
 import i18n from "@/i18n";
-import { MapInteraction } from "@/states/controlState";
+import { ExportResolution, MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
 import SnapshotButton from "./SnapshotButton";
@@ -52,13 +52,16 @@ interface MapInteractionsBarProps extends WithLocale {
   mapInteraction: MapInteraction;
   setMapInteraction: (interaction: MapInteraction) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  exportResolution: ExportResolution;
 }
 
 export default function MapInteractionsBar({
   mapInteraction,
   setMapInteraction,
-  postMessage
+  postMessage,
+  exportResolution,
 }: MapInteractionsBarProps) {
+
   function handleChange(
     _event: React.MouseEvent<HTMLElement>,
     value: MapInteraction | null,
@@ -128,7 +131,7 @@ export default function MapInteractionsBar({
             <FileUploadIcon />
           </Tooltip>
         </ToggleButton>
-        <SnapshotButton mapRef={"map"} postMessage={postMessage} fontSize="medium" isToggle={true} />
+        <SnapshotButton mapRef={"map"} postMessage={postMessage} fontSize="medium" isToggle={true} exportResolution={exportResolution} />
       </ToggleButtonGroup>
     </StyledFromControl>
   );

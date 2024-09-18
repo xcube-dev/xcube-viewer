@@ -38,7 +38,8 @@ interface SnapshotButtonProps extends WithLocale {
   mapRef?: string;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   fontSize?: 'small' | 'inherit' | 'medium' | 'large';
-  isToggle?: boolean
+  isToggle?: boolean;
+  exportResolution?: number;
 }
 
 export default function SnapshotButton({
@@ -48,8 +49,8 @@ export default function SnapshotButton({
   postMessage,
   fontSize = "inherit",
   isToggle = false,
+  exportResolution
 }: SnapshotButtonProps) {
-  const pixelRatio = 1;
 
   const handleExportSuccess = () => {
     postMessage("success", i18n.get("Snapshot copied to clipboard"));
@@ -84,10 +85,9 @@ export default function SnapshotButton({
         // Pass controlDiv as part of ExportOptions
         exportElement(targetElement, {
           format: "png",
-          width: 2000,
           handleSuccess: handleExportSuccess,
           handleError: handleExportError,
-          pixelratio: pixelRatio,
+          exportResolution: exportResolution,
           controlDiv: controlDiv,
           zoomDiv: zoomDiv,
         });
