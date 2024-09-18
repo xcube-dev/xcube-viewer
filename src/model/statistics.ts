@@ -29,7 +29,7 @@ import { PlaceInfo } from "./place";
 export interface StatisticsSource {
   dataset: Dataset;
   variable: Variable;
-  time: string;
+  time: string | null;
   placeInfo: PlaceInfo;
 }
 

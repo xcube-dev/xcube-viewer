@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
-const version = "1.3.0";
+// Important: use semantic versioning (https://semver.org/)
+const version = "1.3.1-dev.0";
 
 export default version;
