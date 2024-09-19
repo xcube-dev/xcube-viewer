@@ -2,7 +2,7 @@
 
 A simple viewer component for [xcube](https://xcube.readthedocs.io/).
 
-![xcube-viewer](./doc/xcube-viewer.png)
+![xcube-viewer](./docs/assets/images/xcube-viewer.png)
 
 ## Run it
 
