@@ -12,4 +12,10 @@
 
 ## Place and Place Group
 
+## User Places
+
 ## Selected Time
+
+## Layers
+
+## Basemaps and Overlays
