@@ -5,14 +5,15 @@ repo_name: xcube-dev/xcube-viewer
 copyright: Copyright &copy; 2024 Brockmann Consult
 
 nav:
-  - Overview: index.md
+  - About: index.md
   - User Guide:
       - user_guide/index.md
-      - "Viewer Interface": user_guide/interface.md
-      - "Settings": user_guide/settings.md
-      - "Datamanagement": user_guide/datamanagement.md
+      - "Getting Started": user_guide/getting_started.md
       - "Analyse Variables": user_guide/analyse.md
-      - "Working with Color Maps": user_guide/colormaps.md
+      - "Colour Mapping": user_guide/colormaps.md
+      - "Adjust Settings": user_guide/settings.md
+  - Concepts: concepts.md
+  - Feature References: features.md
   - Get your own Viewer: build_viewer.md
 
 theme:

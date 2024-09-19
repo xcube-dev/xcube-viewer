@@ -7,7 +7,7 @@ hide:
 
 ## Demo
 
-To test the viewer app, you can use the [xcube viewer demo](https://bc-viewer.brockmann-consult.de). This is our Brockmann Consult Demo xcube viewer. Via the [viewer's settings](../user_guide/settings.md) it is possible to change the xcube server url which is used for displaying data. Here is another demo server that you may add for testing:
+To test the viewer app, you can use the [xcube viewer demo](https://bc-viewer.brockmann-consult.de). This is our Brockmann Consult Demo xcube viewer. Via the [viewer's settings](user_guide/settings.md) it is possible to change the xcube server url which is used for displaying data. Here is another demo server that you may add for testing:
 
 - Euro Data Cube Server (`https://edc-api.brockmann-consult.de/api`) has integrated amongst others a data cube with global essential climate variables (ECVs) variables from the ESA Earth System Data Lab Project. To access the Euro Data Cube viewer directly please visit [https://edc-viewer.brockmann-consult.de](https://edc-viewer.brockmann-consult.de) .
 

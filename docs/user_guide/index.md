@@ -7,8 +7,6 @@ hide:
 
 The functions of the Viewer can be categorized into several groups. The content of this User Guide will be structured accordingly.
 
-- [Viewer Interface](interface.md)
-
 - [Settings](settings.md)
 
       * General

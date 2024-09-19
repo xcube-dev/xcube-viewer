@@ -1,4 +1,4 @@
-# Working with Color Mapping
+# Color Mapping
 
 ## Adjust the Value Range
 
@@ -11,4 +11,4 @@ To change the value ranges of the displayed variable click into the area of the 
 You can change the color mapping as well by clicking into the color range of the legend. There you can also decide to
 hide lower values and it is possible to adjust the opacity.
 
-![Colormap](../assets/images/viewer/color_overview.png)
+![Colormap](../assets/images/viewer/colour_mapping.png)
