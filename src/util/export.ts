@@ -35,7 +35,8 @@ export interface ExportOptions {
   format?: ExportFormat;
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
-  exportResolution?: number;
+  width?: number;
+  height?: number;
   controlDiv?: HTMLElement | null;
   zoomDiv?: HTMLElement | null;
 }
@@ -72,71 +73,92 @@ async function _exportElement(
   element: HTMLElement,
   options: ExportOptions = {},
 ): Promise<void> {
-  const format = options.format || "png";
-  const AVG_SCREEN_PPI = 96;
-  if (!(format in converters)) {
-    throw new Error(`Image format '${format}' is unknown or not supported.`);
+  try {
+    const format = options.format || "png";
+    if (!(format in converters)) {
+      throw new Error(`Image format '${format}' is unknown or not supported.`);
+    }
+
+    const originalWidth = element.clientWidth;
+    const originalHeight = element.clientHeight;
+    const originalTransform = element.style.transform;
+
+    const controlDiv = options.controlDiv;
+    const zoomDiv = options.zoomDiv;
+
+    if (controlDiv) controlDiv.style.display = "none";
+    if (zoomDiv) zoomDiv.hidden = true;
+
+    const offScreenCanvas = document.createElement("canvas");
+    offScreenCanvas.width = options.width || element.clientWidth;
+    offScreenCanvas.height = options.height || element.clientHeight;
+
+    const context = offScreenCanvas.getContext("2d");
+    if (!context) {
+      throw new Error("Failed to get canvas context.");
+    }
+
+    // Export the element to data URL
+    const dataUrl = await converters[format](element, {
+      backgroundColor: "#ffffff", // Solid white background for testing
+      width: element.clientWidth,
+      height: element.clientHeight,
+    });
+
+    console.log("Data URL received");
+
+    // Create a new image to draw on the canvas
+    const image = new Image();
+    image.src = dataUrl;
+    image.width = element.clientWidth;
+    image.height = element.clientHeight;
+
+    // Ensure the image is loaded before drawing
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => {
+        console.log("Image loaded successfully");
+        resolve();
+      };
+      image.onerror = (error) => {
+        console.error("Error loading image:", error);
+        reject(error);
+      };
+    });
+
+    // Draw the image on the off-screen canvas
+    context.drawImage(image, 0, 0, element.clientWidth, element.clientHeight);
+
+    console.log("Image drawn on canvas");
+
+    // Convert the canvas to a Blob for export
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      offScreenCanvas.toBlob((blob) => {
+        if (blob === null) {
+          reject(new Error("Failed to create a blob from the canvas."));
+        } else {
+          resolve(blob);
+        }
+      }, `image/${format}`);
+    });
+
+    console.log("Blob created successfully");
+
+    // Write the image to the clipboard
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [`image/${format}`]: blob,
+      }),
+    ]);
+
+    console.log("Image copied to clipboard");
+
+    element.style.transform = originalTransform;
+    element.style.width = `${originalWidth}px`;
+    element.style.height = `${originalHeight}px`;
+    if (controlDiv) controlDiv.style.display = "block";
+    if (zoomDiv) zoomDiv.hidden = false;
+  } catch (error) {
+    console.error("Error during export:", error);
+    throw error;
   }
-
-  const dpi = options.exportResolution!;
-  const factor = dpi / AVG_SCREEN_PPI;
-  const exportWidth = Math.round(element.clientWidth * factor);
-  const exportHeight = Math.round(element.clientHeight * factor);
-
-  // const canvasWidth =
-  //   exportWidth ||
-  //   (element.clientHeight * element.clientWidth) / element.clientHeight;
-  // const canvasHeight =
-  //   exportHeight ||
-  //   (element.clientWidth * element.clientHeight) / element.clientWidth;
-
-  const controlDiv = options.controlDiv;
-  if (controlDiv) controlDiv.style.display = "none";
-  const zoomDiv = options.zoomDiv;
-  if (zoomDiv) zoomDiv.hidden = true;
-
-  const offScreenCanvas = document.createElement("canvas");
-  offScreenCanvas.width = exportHeight;
-  offScreenCanvas.height = exportHeight;
-  const context = offScreenCanvas.getContext("2d");
-
-  if (!context) {
-    throw new Error("Failed to get canvas context.");
-  }
-
-  const dataUrl = await converters[format](element, {
-    backgroundColor: "#00000000",
-    width: exportWidth,
-    height: exportHeight,
-  });
-
-  const image = new Image();
-  image.crossOrigin = "anonymous";
-  image.src = dataUrl;
-
-  await new Promise<void>((resolve, reject) => {
-    image.onload = () => resolve();
-    image.onerror = (error) => reject(error);
-  });
-
-  context.drawImage(image, 0, 0);
-
-  const blob = await new Promise<Blob>((resolve, reject) => {
-    offScreenCanvas.toBlob((blob) => {
-      if (blob === null) {
-        reject(new Error("Failed to create a blob from the canvas."));
-      } else {
-        resolve(blob);
-      }
-    }, `image/${format}`);
-  });
-
-  await navigator.clipboard.write([
-    new ClipboardItem({
-      [`image/${format}`]: blob,
-    }),
-  ]);
-
-  if (controlDiv) controlDiv.style.display = "block";
-  if (zoomDiv) zoomDiv.hidden = false;
 }

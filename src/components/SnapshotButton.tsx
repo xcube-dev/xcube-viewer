@@ -73,31 +73,105 @@ export default function SnapshotButton({
         targetElement = map.getTargetElement();
         controlDiv = targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0') as HTMLElement;
         zoomDiv = targetElement.querySelector(".ol-zoom.ol-unselectable.ol-control") as HTMLElement;
+
+        const originalSize = map.getSize() ?? [targetElement.clientWidth, targetElement.clientHeight];
+        const originalResolution = map.getView().getResolution() ?? 1;
+        const DPI = exportResolution ?? 96;
+        const scaleFactor = DPI / 96;
+
+        // Calculate export dimensions
+        const exportWidth = Math.round(targetElement.clientWidth * scaleFactor);
+        const exportHeight = Math.round(targetElement.clientHeight * scaleFactor);
+
+        // Save original dimensions and transformation
+        const originalWidth = targetElement.clientWidth;
+        const originalHeight = targetElement.clientHeight;
+        const originalTransform = targetElement.style.transform;
+
+        // Apply new size and scale
+        targetElement.style.width = `${exportWidth}px`;
+        targetElement.style.height = `${exportHeight}px`;
+        targetElement.style.transformOrigin = 'top left';
+        targetElement.style.transform = `scale(${scaleFactor})`;
+
+        map.setSize([exportWidth, exportHeight]);
+
+        const scaling = Math.min(
+          exportWidth / originalSize[0],
+          exportHeight / originalSize[1]
+        );
+
+        map.getView().setResolution(originalResolution / scaling);
+
+        map.updateSize();
+
+        try {
+          await exportElement(targetElement, {
+            format: "png",
+            handleSuccess: handleExportSuccess,
+            handleError: handleExportError,
+            width: exportWidth,
+            height: exportHeight,
+            controlDiv: controlDiv,
+            zoomDiv: zoomDiv,
+          });
+        } catch (error) {
+          handleExportError(error);
+        }
+        //finally {
+        //   // Restore original dimensions and transformation
+        //   targetElement.style.transform = originalTransform;
+        //   targetElement.style.width = `${originalWidth}px`;
+        //   targetElement.style.height = `${originalHeight}px`;
+
+        //   map.setSize(originalSize);
+        //   map.getView().setResolution(originalResolution);
+        //   map.updateSize();
+        // }
       }
     } else if (elementRef) {
       if (elementRef.current) {
         targetElement = elementRef.current;
       }
     }
-
-    if (targetElement) {
-      try {
-        // Pass controlDiv as part of ExportOptions
-        exportElement(targetElement, {
-          format: "png",
-          handleSuccess: handleExportSuccess,
-          handleError: handleExportError,
-          exportResolution: exportResolution,
-          controlDiv: controlDiv,
-          zoomDiv: zoomDiv,
-        });
-      } catch (error) {
-        handleExportError(error);
-      }
-    } else {
-      handleExportError(new Error("missing element reference"));
-    }
   };
+
+  // const handleButtonClick = async () => {
+  //   let targetElement: HTMLElement | null = null;
+  //   let controlDiv: HTMLElement | null = null;
+  //   let zoomDiv: HTMLElement | null = null;
+
+  //   if (mapRef) {
+  //     if (MAP_OBJECTS[mapRef]) {
+  //       const map = MAP_OBJECTS[mapRef] as OlMap;
+  //       targetElement = map.getTargetElement();
+  //       controlDiv = targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0') as HTMLElement;
+  //       zoomDiv = targetElement.querySelector(".ol-zoom.ol-unselectable.ol-control") as HTMLElement;
+  //     }
+  //   } else if (elementRef) {
+  //     if (elementRef.current) {
+  //       targetElement = elementRef.current;
+  //     }
+  //   }
+
+  //   if (targetElement) {
+  //     try {
+  //       // Pass controlDiv as part of ExportOptions
+  //       exportElement(targetElement, {
+  //         format: "png",
+  //         handleSuccess: handleExportSuccess,
+  //         handleError: handleExportError,
+  //         exportResolution: exportResolution,
+  //         controlDiv: controlDiv,
+  //         zoomDiv: zoomDiv,
+  //       });
+  //     } catch (error) {
+  //       handleExportError(error);
+  //     }
+  //   } else {
+  //     handleExportError(new Error("missing element reference"));
+  //   }
+  // };
 
   return (
     <ToolButton
