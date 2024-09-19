@@ -5,19 +5,9 @@ hide:
 
 # User Guide
 
-The Viewer interface is divided into several functional groups. The contents of this User Guide are structured according to these groups.
+The functions of the Viewer can be categorized into several groups. The content of this User Guide will be structured accordingly.
 
-![Interface](../assets/images/interface.png)
-
-??? info "The Basics"
-
-    **Zoom:** buttons in the top left corner or zooming function of your computer mouse.
-
-    **Scaling:** located in the lower left corner
-
-    **Legend:** Color Mapping Box on the upper right corner
-
-**These are the groups:**
+- [Viewer Interface](interface.md)
 
 - [Settings](settings.md)
 
@@ -32,13 +22,18 @@ The Viewer interface is divided into several functional groups. The contents of 
       * Adjust Layer Visibilities
       * Metadata
 
-- Analyse (create Time Series and Compare Variables)
-- Create and manage Places for Statistics and Time Series
-- Select Dates from the Dataset or iterate through dataset with Player
-- Sidebar (diplay Metadata, Statistics or Time Series)
-- Color Mapping (change and create Color Mapping)
+- [Analyse Variables](analyse.md)
+
+      * create Time Series and Compare Variables
+      * Compare Variables visually
+      * Working with Places (create and manage places for Statistics and Time Series)
+      * The Viewer Player (Select specific time steps and interate trough timesets)
+
+- [Working with Color Mapping](colormaps.md)
+
+      * Change and create color mapping
 
 ---
 
-The xcube viewer app is constantly evolving and enhancements are added, therefore please be aware that the above
+The xcube viewer app is constantly evolving and enhancements are added, therefore please be aware that the here
 described features may not always be completely up-to-date.

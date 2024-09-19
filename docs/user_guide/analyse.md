@@ -2,7 +2,7 @@
 
 ## Player
 
-<video controls src="../../assets/videos/overview.mp4" title="Title"></video>
+![Player](../assets/videos/Player_hh.gif)
 
 To obtain a time series set a point marker on the map and then select the _graph_-icon next to the _Variables_ drop-down
 menu. You can select a different date by clicking into the time series graph on a value of interest. The data displayed
