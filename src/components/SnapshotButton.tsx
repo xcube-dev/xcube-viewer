@@ -37,7 +37,7 @@ interface SnapshotButtonProps extends WithLocale {
   elementRef?: RefObject<HTMLDivElement | null>;
   mapRef?: string;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  fontSize?: 'small' | 'inherit' | 'medium' | 'large';
+  fontSize?: "small" | "inherit" | "medium" | "large";
   isToggle?: boolean
 }
 
@@ -65,15 +65,15 @@ export default function SnapshotButton({
       ? (MAP_OBJECTS[mapRef] as OlMap).getTargetElement()
       : elementRef?.current || null;
     const controlDiv: HTMLElement | null = targetElement
-      ? targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0')
+      ? targetElement.querySelector(".ol-unselectable.ol-control.MuiBox-root.css-0")
       : null;
     const zoomDiv: HTMLElement | null = targetElement
-      ? targetElement.querySelector('.ol-zoom.ol-unselectable.ol-control')
+      ? targetElement.querySelector(".ol-zoom.ol-unselectable.ol-control")
       : null;
     if (targetElement) {
       try {
         exportElement(targetElement, {
-          format: 'png',
+          format: "png",
           width: 2000,
           handleSuccess: handleExportSuccess,
           handleError: handleExportError,
@@ -85,10 +85,9 @@ export default function SnapshotButton({
         handleExportError(error);
       }
     } else {
-      handleExportError(new Error('missing element reference'));
+      handleExportError(new Error("missing element reference"));
     }
   };
-
 
   return (
     <ToolButton
