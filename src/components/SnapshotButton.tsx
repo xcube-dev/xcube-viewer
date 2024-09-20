@@ -42,7 +42,6 @@ interface SnapshotButtonProps extends WithLocale {
 }
 
 export default function SnapshotButton({
-  //btnKey,
   elementRef,
   mapRef,
   postMessage,
@@ -62,46 +61,37 @@ export default function SnapshotButton({
   };
 
   const handleButtonClick = async () => {
-    let targetElement: HTMLElement | null = null;
-    let controlDiv: HTMLElement | null = null;
-    let zoomDiv: HTMLElement | null = null;
-
-    if (mapRef) {
-      if (MAP_OBJECTS[mapRef]) {
-        const map = MAP_OBJECTS[mapRef] as OlMap;
-        targetElement = map.getTargetElement();
-        controlDiv = targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0') as HTMLElement;
-        zoomDiv = targetElement.querySelector(".ol-zoom.ol-unselectable.ol-control") as HTMLElement;
-      }
-    } else if (elementRef) {
-      if (elementRef.current) {
-        targetElement = elementRef.current;
-      }
-    }
-
+    const targetElement: HTMLElement | null = mapRef && MAP_OBJECTS[mapRef]
+      ? (MAP_OBJECTS[mapRef] as OlMap).getTargetElement()
+      : elementRef?.current || null;
+    const controlDiv: HTMLElement | null = targetElement
+      ? targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0')
+      : null;
+    const zoomDiv: HTMLElement | null = targetElement
+      ? targetElement.querySelector('.ol-zoom.ol-unselectable.ol-control')
+      : null;
     if (targetElement) {
       try {
-        // Pass controlDiv as part of ExportOptions
         exportElement(targetElement, {
-          format: "png",
+          format: 'png',
           width: 2000,
           handleSuccess: handleExportSuccess,
           handleError: handleExportError,
           pixelratio: pixelRatio,
-          controlDiv: controlDiv,
-          zoomDiv: zoomDiv,
+          controlDiv,
+          zoomDiv,
         });
       } catch (error) {
         handleExportError(error);
       }
     } else {
-      handleExportError(new Error("missing element reference"));
+      handleExportError(new Error('missing element reference'));
     }
   };
 
+
   return (
     <ToolButton
-      //key={btnKey}
       tooltipText={i18n.get("Copy snapshot to clipboard")}
       onClick={handleButtonClick}
       toggle={isToggle}
