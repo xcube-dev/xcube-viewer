@@ -1,5 +1,27 @@
 # Analyse Variables
 
+## Infobox
+
+## User Variables
+
+## Working with Places
+
+### Dataset and User-defined
+
+### Create, Style, Manage
+
+### Import and Export Statistic results
+
+## Time-Series
+
+## Statistics
+
+## Volume
+
+## Compare Variables
+
+## Usage of the Player
+
 ## Player
 
 ![Player](../assets/videos/Player_hh.gif)
