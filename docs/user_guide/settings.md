@@ -36,7 +36,7 @@ The Viewer gives the option to display the datasets in front of a Base Map and t
 
 ![Settings - Maps - Overlay](../assets/images/viewer/settings_overlay.png)
 
-Additional layers (WMS, XYZ) from external services can also be added by clicking on 'User base map...' or 'User overlays...'. Additionally, 'User base maps' and 'User overlays' can be added via the [Layers Panel](../user_guide/datamanagement.md/#adjust-layer-visibilities).
+Additional layers (WMS, XYZ) from external services can also be added by clicking on 'User base map...' or 'User overlays...'. Additionally, 'User base maps' and 'User overlays' can be added via the [Layers Panel](../user_guide/getting_started.md/#adjust-layer-visibilities).
 
 ![Settings - Maps - User Maps](../assets/images/viewer/settings_usermaps.png)
 

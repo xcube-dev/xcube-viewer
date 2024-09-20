@@ -13,7 +13,7 @@ The functions of the Viewer can be categorized into several groups. The content 
       * Time-Series
       * Map
 
-- [Datamanagement](datamanagement.md)
+- [Datamanagement](getting_started.md)
 
       * Select Dataset and Variables
       * Integrate Base Maps and Overlays

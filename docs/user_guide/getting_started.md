@@ -21,9 +21,9 @@ The Viewer gives the option to display the datasets in front of a Base Map and t
 
 ---
 
-![Datamanagement - Layer Visibilities](../assets/images/viewer/datamanagement_visibility.png){ align=right }
-
 ## Adjust Layer Visibilities
+
+![Datamanagement - Layer Visibilities](../assets/images/viewer/datamanagement_visibility_added.png){ align=right }
 
 The draggable Layer Visibility Menu can be opened on the left-hand side of the viewer. The menu can be used to control the display and hiding of the following objects:
 
@@ -38,16 +38,16 @@ User Base Maps and User Overlays can also be added here.
 
 ---
 
-![Metadata](../assets/images/viewer/datamanagement_meta.png){ align=left }
-
 ## Metadata
+
+![Metadata](../assets/images/viewer/datamanagement_meta.png){ align=left }
 
 The metadata is placed in a tab in the sidebar, which can be enabled on the right side of the viewer [1]. Here, meta information of the selected dataset, the selected variable or a selected place can be displayed. The information is enabled at the top left [2].
 
 The information can be displayed in three different formats:
 
-- Format 1
-- Format 2
-- Python code that can be used to select a dataset or variable. This is useful for further analysing data, e.g., in Jupyter Notebooks.
+1. **Textual:** a property summary in human readable form
+2. **Tabular:** the complete list of attributes in a table
+3. **JSON:** all the attributes as machine-readable JSON
 
 The format is selected to the right of the title [3].
