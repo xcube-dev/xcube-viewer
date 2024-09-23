@@ -3,7 +3,7 @@
 ## Dataset
 
 In the context of xcube, a _dataset_ is a container for spatial
-gridded data [_variables_](#Variable) that usually share the same
+gridded data [variables](#Variable) that usually share the same
 coordinate reference system, the same dimensions, and therefore 
 the same grid.
 Besides the data variables, a dataset also provides metadata such 
@@ -16,7 +16,7 @@ supported by the viewer are 4-dimensional: variable, time, y, and x.
 The viewer may support also other data cube dimensions in the future. 
 
 The viewer allows only a single dataset to be selected at the same time.
-This is the [_selected dataset](#Selected-Dataset).
+This is the [selected dataset](#Selected-Dataset).
 
 ## Variable
 
@@ -26,8 +26,8 @@ a time dimension.
 
 ## Selected Dataset
 
-The selected dataset determines the set of selectable [_variables_](#Variable) 
-and the possible range of the currently [_selected time](#Selected-Time).
+The selected dataset determines the set of selectable [variables](#Variable) 
+and the possible range of the currently [selected time](#Selected-Time).
 
 If the selected dataset changes also the selected variable changes.
 The selected variable will then be either 
