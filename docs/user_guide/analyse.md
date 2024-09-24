@@ -115,6 +115,17 @@ Define your own variables computed from Python-like expressions. The expressions
 
 ## Compare Variables
 
+Visually compare two variables using **Compare Mode**. This mode displays two variables side by side, with a slider in the middle that can be adjusted.
+
+![Compare Mode](../assets/videos/analysis_compare-mode.gif)
+
+To **enter** Compare Mode:
+
+1. Pin a variable, which will be displayed on the left. This will automatically activate Compare Mode.
+2. Select a second variable for comparison, which will be displayed on the right.
+
+To **exit** Compare Mode: use the button on the left
+
 ---
 
 ## Navigate through time
