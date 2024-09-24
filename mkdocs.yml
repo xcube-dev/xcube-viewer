@@ -12,7 +12,7 @@ nav:
       - "Analyse Variables": user_guide/analyse.md
       - "Colour Mapping": user_guide/colormaps.md
       - "Adjust Settings": user_guide/settings.md
-  - Concepts: concepts.md
+  - General Concepts: concepts.md
   - Feature References: features.md
   - Get your own Viewer: build_viewer.md
 

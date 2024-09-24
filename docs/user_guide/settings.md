@@ -14,7 +14,7 @@ Change the Server URL by selecting 'Server'. A 'Select Server' panel is opened a
 
 ### Player Interval
 
-Adjust the interval of the Player. Additional information on the Player can be found [here](../user_guide/analyse.md/#player).
+Adjust the interval of the Player. Additional information on the Player can be found [here](../user_guide/analyse.md/#the-player).
 
 ![Settings - Player Interval](../assets/images/viewer/settings_player.png)
 
