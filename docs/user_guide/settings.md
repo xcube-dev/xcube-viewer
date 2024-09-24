@@ -1,6 +1,6 @@
 # Adjust Settings
 
-In the settings, the user has the option of adjusting the default settings according to their needs. This can be the server, the language or adjustments to the player, time series or the map. A selection of settings are explained in more detail below. Information regarding the legal agreements and the viewer and server version is also given here.
+In the settings, the user has the option of adjusting the default settings according to their needs. This can be the server, the language or adjustments to the player, time series or the map. A selection of settings are explained in more detail below. Information regarding the legal agreements and the viewer and server version is also given in the Settings.
 
 ---
 

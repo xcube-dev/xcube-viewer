@@ -7,7 +7,6 @@ copyright: Copyright &copy; 2024 Brockmann Consult
 nav:
   - About: index.md
   - User Guide:
-      - user_guide/index.md
       - "Getting Started": user_guide/getting_started.md
       - "Analyse Variables": user_guide/analyse.md
       - "Colour Mapping": user_guide/colormaps.md
@@ -54,6 +53,8 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
   - attr_list
   - md_in_html
 
@@ -68,3 +69,7 @@ plugins:
 
 extra_css:
   - css/custom.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

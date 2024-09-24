@@ -12,52 +12,50 @@ selector menu on the left.
 
 ---
 
-## Time-Series, Statistics, Volume
+## Extract Information
+
+The Viewer provides the ability to extract information from variables at specific [places](#places) (point, circle, or polygon), in the form of time series and basic statistics. All extracted information is displayed on the right side of the Viewer in the sidebar.
+
+![Time Series](../assets/images/viewer/analysis_timeseries.png)
 
 ### Time-Series
 
-To obtain a time series set a point marker on the map and then select the _graph_-icon next to the _Variables_ drop-down
-menu. You can select a different date by clicking into the time series graph on a value of interest. The data displayed
-in the viewer changes accordingly to the newly selected date.
+When adding a new place to the map, a time series will automatically be extracted and displayed by default. If the place already exists, simply select it and use the _graph_-icon next to the Variables drop-down menu. To remove a place from a graph, click the `-`-icon next to the place listed below the graph. The color of the places corresponds to the color of the graph in the time series. You can find the coordinates of the places visualized in the time series beneath the graphs.
 
-![Timeseries](../assets/images/screenshot_timeseries.png)
+![Time Series Graph](../assets/images/viewer/analysis_timeseries_graphs.png)
 
-The current date is preserved when you select a different variable and the data of the variable is mapped for the date.
+There are multiple options to explore the graph:
 
-![Change Variable](../assets/images/screenshot_change_variable.png)
+- Adjust the time range to focus on a specific period of interest. This applies to time series of different variables within a dataset
+- Display data with points, lines, or bars. For polygons or circles, you can also add the standard deviation to the graph
+- Hover over the graph to view detailed information for specific time steps via a popup info box
+- Zoom into the graph freely by pressing the Ctrl key
+- Set a fixed y-scale for the graph
+- Reset everything back to the full scale
+- Copy a snapshot of the statistics to clipboard
 
-To generate a time series for the newly selected variable press the _time series_-icon again.
+#### Export time series
 
-![Timeseries second variable](../assets/images/screenshot_timeseries_second_variable.png)
+Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the Places, or both together.
 
-You may place multiple points on the map and you can generate time series for them. This allows a comparison between
-two locations. The color of the points corresponds to the color of the graph in the time series. You can find the
-coordinates of the point markers visualized in the time series beneath the graphs.
-
-![Timeseries second location](../assets/images/screenshot_timeseries_second_location.png)
-
-![Calender](../assets/images/screenshot_calendar.png)
-
-When a time series is displayed two time-line tools are visible, the upper one for selecting the date displayed
-on the map of the viewer and the lower one may be used to narrow the time frame displayed in the time series graph.
-Just above the graph of the time series on the right-hand side is an _x_-icon for removing the time series from the
-view and to left of it is an icon which sets the time series back to the whole time extent.
-
-## ![Timeline](../assets/images/screenshot_timeline.png)
-
-To delete a created location use the _remove_-icon next to the _Place_ drop-down menu.
-Not only point location may be selected via the viewer, you can draw polygons and circular areas by using the icons on
-the right-hand side of the _Place_ drop-down menu as well. You can visualize time series for areas, too.
-
-![Polygon](../assets/images/screenshot_polygon.png)
-
-![Circle](../assets/images/screenshot_circle.png)
+![Export](../assets/images/viewer/analysis_timeseries_export.png)
 
 ### Statistics
 
-### Volume
+Compute and display basic statistics for the currently selected variable, selected timestamp, and selected place. To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the Variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
 
-### Export Statistics
+![Statistics](../assets/images/viewer/analysis_statistics.png)
+
+If the place is an area:
+
+- Statistics include minimum, maximum, mean, standard deviation, and a histogram
+- Adjust the x-range of the histogramm
+- Add the standard deviation to the histogramm
+- Copy a snapshot of the statistics to clipboard
+
+For point places:
+
+- the value at the point is displayed
 
 ---
 
@@ -191,4 +189,4 @@ Modify both the color and opacity of a Place. The selected color will be reflect
 
 The geometry of Places created in the Viewer can be exported. This can be applied during [the export of statistical data](#export-statistics). To include the geometry information in the export, it must be explicitly selected.
 
-![Export](../assets/images/viewer/export_statistics.png)
+![Export](../assets/images/viewer/analysis_timeseries_export.png)
