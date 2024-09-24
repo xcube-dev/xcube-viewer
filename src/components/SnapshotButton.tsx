@@ -37,13 +37,12 @@ interface SnapshotButtonProps extends WithLocale {
   elementRef?: RefObject<HTMLDivElement | null>;
   mapRef?: string;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  fontSize?: 'small' | 'inherit' | 'medium' | 'large';
-  isToggle?: boolean;
+  fontSize?: "small" | "inherit" | "medium" | "large";
+  isToggle?: boolean
   exportResolution?: number;
 }
 
 export default function SnapshotButton({
-  //btnKey,
   elementRef,
   mapRef,
   postMessage,
@@ -63,119 +62,103 @@ export default function SnapshotButton({
   };
 
   const handleButtonClick = async () => {
-    let targetElement: HTMLElement | null = null;
-    let controlDiv: HTMLElement | null = null;
-    let zoomDiv: HTMLElement | null = null;
+    const targetElement: HTMLElement | null = mapRef && MAP_OBJECTS[mapRef]
+      ? (MAP_OBJECTS[mapRef] as OlMap).getTargetElement()
+      : elementRef?.current || null;
 
-    if (mapRef) {
-      if (MAP_OBJECTS[mapRef]) {
-        const map = MAP_OBJECTS[mapRef] as OlMap;
-        targetElement = map.getTargetElement();
-        controlDiv = targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0') as HTMLElement;
-        zoomDiv = targetElement.querySelector(".ol-zoom.ol-unselectable.ol-control") as HTMLElement;
+    const controlDiv: HTMLElement | null = targetElement
+      ? targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0')
+      : null;
 
-        const originalSize = map.getSize() ?? [targetElement.clientWidth, targetElement.clientHeight];
-        const originalResolution = map.getView().getResolution() ?? 1;
-        const DPI = exportResolution ?? 96;
-        const scaleFactor = DPI / 96;
+    const zoomDiv: HTMLElement | null = targetElement
+      ? targetElement.querySelector('.ol-zoom.ol-unselectable.ol-control')
+      : null;
 
-        // Calculate export dimensions
-        const exportWidth = Math.round(targetElement.clientWidth * scaleFactor);
-        const exportHeight = Math.round(targetElement.clientHeight * scaleFactor);
+    const colorBarLegendDiv: HTMLElement | null = targetElement
+      ? targetElement.querySelector('.MuiBox-root css-1dlw01u')
+      : null;
 
-        // Save original dimensions and transformation
-        const originalWidth = targetElement.clientWidth;
-        const originalHeight = targetElement.clientHeight;
-        const originalTransform = targetElement.style.transform;
+    if (targetElement) {
+      try {
+        if (mapRef && MAP_OBJECTS[mapRef]) {
+          const map = MAP_OBJECTS[mapRef] as OlMap;
+          const originalSize = map.getSize() ?? [targetElement.clientWidth, targetElement.clientHeight];
+          const originalResolution = map.getView().getResolution() ?? 1;
+          const DPI = exportResolution ?? 96;
+          const scaleFactor = DPI / 96;
+          const exportWidth = Math.round(targetElement.clientWidth * scaleFactor);
+          const exportHeight = Math.round(targetElement.clientHeight * scaleFactor);
 
-        // Apply new size and scale
-        targetElement.style.width = `${exportWidth}px`;
-        targetElement.style.height = `${exportHeight}px`;
-        targetElement.style.transformOrigin = 'top left';
-        targetElement.style.transform = `scale(${scaleFactor})`;
+          const originalWidth = targetElement.clientWidth;
+          const originalHeight = targetElement.clientHeight;
 
-        map.setSize([exportWidth, exportHeight]);
+          //targetElement.style.width = `${exportWidth}px`;
+          //targetElement.style.height = `${exportHeight}px`;
+          //targetElement.style.transformOrigin = 'top left';
 
-        const scaling = Math.min(
-          exportWidth / originalSize[0],
-          exportHeight / originalSize[1]
-        );
+          map.setSize([exportWidth, exportHeight]);
+          const scaling = Math.min(
+            exportWidth / originalSize[0],
+            exportHeight / originalSize[1]
+          );
+          map.getView().setResolution(originalResolution / scaling);
+          map.updateSize();
 
-        map.getView().setResolution(originalResolution / scaling);
+          if (colorBarLegendDiv) {
+            const originalLegendWidth = colorBarLegendDiv.clientWidth;
+            const originalLegendHeight = colorBarLegendDiv.clientHeight;
 
-        map.updateSize();
+            const scaledLegendWidth = originalLegendWidth * scaleFactor;
+            const scaledLegendHeight = originalLegendHeight * scaleFactor;
 
-        try {
-          await exportElement(targetElement, {
-            format: "png",
+            colorBarLegendDiv.style.width = `${scaledLegendWidth}px`;
+            colorBarLegendDiv.style.height = `${scaledLegendHeight}px`;
+            colorBarLegendDiv.style.transformOrigin = 'top left';
+            colorBarLegendDiv.style.transform = `scale(${scaleFactor})`;
+          }
+
+
+          exportElement(targetElement, {
+            format: 'png',
+            width: exportWidth,
             handleSuccess: handleExportSuccess,
             handleError: handleExportError,
-            width: exportWidth,
-            height: exportHeight,
-            controlDiv: controlDiv,
-            zoomDiv: zoomDiv,
+            controlDiv,
+            zoomDiv,
           });
-        } catch (error) {
-          handleExportError(error);
-        }
-        //finally {
-        //   // Restore original dimensions and transformation
-        //   targetElement.style.transform = originalTransform;
-        //   targetElement.style.width = `${originalWidth}px`;
-        //   targetElement.style.height = `${originalHeight}px`;
 
-        //   map.setSize(originalSize);
-        //   map.getView().setResolution(originalResolution);
-        //   map.updateSize();
-        // }
+          // if (colorBarLegendDiv) {
+          //   colorBarLegendDiv.style.width = `${colorBarLegendDiv.clientWidth}px`;
+          //   colorBarLegendDiv.style.height = `${colorBarLegendDiv.clientHeight}px`;
+          //   colorBarLegendDiv.style.transform = 'none'; // Reset scaling
+          // }
+          // colorBarLegendDiv!.hidden = false;
+          // map.setSize(originalSize);
+          // map.getView().setResolution(originalResolution);
+          // map.updateSize();
+          // targetElement.style.width = `${originalWidth}px`;
+          // targetElement.style.height = `${originalHeight}px`;
+
+        } else {
+          exportElement(targetElement, {
+            format: 'png',
+            width: 2000,
+            handleSuccess: handleExportSuccess,
+            handleError: handleExportError,
+            controlDiv,
+            zoomDiv,
+          });
+        }
+      } catch (error) {
+        handleExportError(error);
       }
-    } else if (elementRef) {
-      if (elementRef.current) {
-        targetElement = elementRef.current;
-      }
+    } else {
+      handleExportError(new Error("missing element reference"));
     }
   };
 
-  // const handleButtonClick = async () => {
-  //   let targetElement: HTMLElement | null = null;
-  //   let controlDiv: HTMLElement | null = null;
-  //   let zoomDiv: HTMLElement | null = null;
-
-  //   if (mapRef) {
-  //     if (MAP_OBJECTS[mapRef]) {
-  //       const map = MAP_OBJECTS[mapRef] as OlMap;
-  //       targetElement = map.getTargetElement();
-  //       controlDiv = targetElement.querySelector('.ol-unselectable.ol-control.MuiBox-root.css-0') as HTMLElement;
-  //       zoomDiv = targetElement.querySelector(".ol-zoom.ol-unselectable.ol-control") as HTMLElement;
-  //     }
-  //   } else if (elementRef) {
-  //     if (elementRef.current) {
-  //       targetElement = elementRef.current;
-  //     }
-  //   }
-
-  //   if (targetElement) {
-  //     try {
-  //       // Pass controlDiv as part of ExportOptions
-  //       exportElement(targetElement, {
-  //         format: "png",
-  //         handleSuccess: handleExportSuccess,
-  //         handleError: handleExportError,
-  //         exportResolution: exportResolution,
-  //         controlDiv: controlDiv,
-  //         zoomDiv: zoomDiv,
-  //       });
-  //     } catch (error) {
-  //       handleExportError(error);
-  //     }
-  //   } else {
-  //     handleExportError(new Error("missing element reference"));
-  //   }
-  // };
-
   return (
     <ToolButton
-      //key={btnKey}
       tooltipText={i18n.get("Copy snapshot to clipboard")}
       onClick={handleButtonClick}
       toggle={isToggle}
