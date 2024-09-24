@@ -1,0 +1,13 @@
+/* Hide the dark mode image by default */
+.dark-image {
+  display: none;
+}
+
+/* Show the dark mode image and hide the light mode image when dark mode is active */
+[data-md-color-scheme="slate"] .light-image {
+  display: none;
+}
+
+[data-md-color-scheme="slate"] .dark-image {
+  display: block;
+}
