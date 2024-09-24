@@ -29,14 +29,14 @@ There are multiple options to explore the graph:
 - Adjust the time range to focus on a specific period of interest. This applies to time series of different variables within a dataset
 - Display data with points, lines, or bars. For polygons or circles, you can also add the standard deviation to the graph
 - Hover over the graph to view detailed information for specific time steps via a popup info box
-- Zoom into the graph freely by pressing the Ctrl key
+- Zoom into the graph freely by pressing the `Ctrl`-key
 - Set a fixed y-scale for the graph
 - Reset everything back to the full scale
-- Copy a snapshot of the statistics to clipboard
+- Copy a snapshot a time series to clipboard
 
 #### Export time series
 
-Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the Places, or both together.
+Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the Places, or both.
 
 ![Export](../assets/images/viewer/analysis_timeseries_export.png)
 
@@ -135,7 +135,7 @@ Use the showen features of the Viewer to navigate through the time steps of a va
 
 ### The Player
 
-Use the Player to auto-step through the variable of a dataset. The interval can be adjusted in the [settings](settings.md/#time-series).
+Use the player to auto-step through the variable of a dataset. The interval can be adjusted in the [settings](settings.md/#time-series).
 
 ![Player](../assets/videos/Player_hh.gif)
 
@@ -143,18 +143,11 @@ Use the Player to auto-step through the variable of a dataset. The interval can 
 
 ## Places
 
-**Places** provide a spatial reference for extracting statistical values and time series data. They can be represented as either `points` or `polygons/circles`.
+**Places** provide a spatial reference for extracting statistical values and time series data. They can be represented as either `points` or `polygons/circles`. Places are organized into **groups** which hold individial places.
 
 ![Places](../assets/images/viewer/analysis_places.png)
 
-There are two types of Places:
-
-- **Dataset Places:** These are part of the dataset and are hosted on the xcube server.
-- **User-defined Places:** These can be imported or created directly in the Viewer.
-
-Places are organized into **groups** which hold individial places.
-
-The Viewer offers a variety of features (such as adding, removing, and styling) for working with Places to obtain statistical information. The following sections will explain the available features
+The Viewer offers a variety of features (such as adding, removing, and styling) for working with Places to obtain statistical information. The following sections will explain the available features.
 
 ![Places](../assets/images/viewer/analysis_places_light.png){: class="light-image" }
 ![Places](../assets/images/viewer/analysis_places_dark.png){: class="dark-image" }
@@ -179,14 +172,14 @@ Place groups and individual places can be **selected** through a drop-down menu.
 
 ### Rename
 
-Place Groups and individial places can also be **renamed** in the Viewer via the according buttons.
+Place Groups and individial places can be **renamed** in the Viewer via the according buttons.
 
 ### Styling
 
-Modify both the color and opacity of a Place. The selected color will be reflected consistently in the Time Series chart.
+Modify both the color and opacity of a place. The selected color will be reflected consistently in the time series chart.
 
-### Export user-defined places
+### Export
 
-The geometry of Places created in the Viewer can be exported. This can be applied during [the export of statistical data](#export-statistics). To include the geometry information in the export, it must be explicitly selected.
+The geometry of Places created in the Viewer can be exported. This can be applied during [the export of time series](#export-time-series). To include the geometry information in the export, it must be explicitly selected.
 
 ![Export](../assets/images/viewer/analysis_timeseries_export.png)
