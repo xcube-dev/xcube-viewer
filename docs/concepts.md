@@ -13,7 +13,7 @@ Besides the data variables, a dataset also provides metadata such
 as the spatio-temporal coverages, the type of coordinates, and information
 about the content.
 A dataset can be associated with [places](#Place) that are
-organised in [place groups](#Place-Group)
+organised in [place groups](#Place-Group).
 
 Datasets that provide variables with two spatial dimensions and a time
 dimension are also referred to as _data cubes_. Hence, the data cubes 
