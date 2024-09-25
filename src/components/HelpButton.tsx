@@ -32,9 +32,10 @@ import MarkdownPopover from "@/components/MarkdownPopover";
 interface HelpButtonProps {
   size?: "small" | "medium" | "large";
   helpUrl?: string;
+  currentAppTheme?: boolean;
 }
 
-export default function HelpButton({ size, helpUrl }: HelpButtonProps) {
+export default function HelpButton({ size, helpUrl, currentAppTheme }: HelpButtonProps) {
   const [helpAnchorEl, setHelpAnchorEl] = useState<HTMLButtonElement | null>(
     null,
   );
@@ -59,6 +60,7 @@ export default function HelpButton({ size, helpUrl }: HelpButtonProps) {
         open={!!helpAnchorEl}
         onClose={handleHelpClose}
         markdownText={helpText}
+        currentAppTheme={currentAppTheme}
       />
     </>
   );

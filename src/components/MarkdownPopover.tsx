@@ -31,6 +31,7 @@ interface MarkdownPopoverProps {
   open: boolean;
   onClose?: () => void;
   markdownText?: string;
+  currentAppTheme?: boolean;
 }
 
 export default function MarkdownPopover({
@@ -38,12 +39,24 @@ export default function MarkdownPopover({
   markdownText,
   open,
   onClose,
+  currentAppTheme,
 }: MarkdownPopoverProps) {
   if (!markdownText) {
     return null;
   }
 
   const components = {
+    a: (props: Record<string, unknown>) => {
+      const { node: _, ...rest } = props;
+      return (
+        <a
+          {...rest}
+          style={{
+            color: currentAppTheme ? "#90caf9" : "#1e90ff",
+          }}
+        />
+      );
+    },
     code: (props: Record<string, unknown>) => {
       const { node: _, ...rest } = props;
       return <code {...rest} style={{ color: "green" }} />;

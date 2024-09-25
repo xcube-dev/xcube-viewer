@@ -48,31 +48,31 @@ import UserVariablesDialog from "./UserVariablesDialog";
 
 interface AppProps {
   compact: boolean;
+  currentAppTheme: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (_state: AppState) => {
   return {
     compact: Config.instance.branding.compact,
+    currentAppTheme: _state.controlState.currentAppTheme,
   };
 };
 
 const mapDispatchToProps = {};
 
-const newTheme = () =>
-  createTheme({
+const _App: React.FC<AppProps> = ({ compact, currentAppTheme }) => {
+  const newTheme = () => createTheme({
     typography: {
       fontSize: 12,
       htmlFontSize: 14,
     },
     palette: {
-      mode: Config.instance.branding.themeName,
+      mode: currentAppTheme ? "dark" : "light", // Dynamic dark/light mode
       primary: Config.instance.branding.primaryColor,
       secondary: Config.instance.branding.secondaryColor,
     },
   });
-
-const _App: React.FC<AppProps> = ({ compact }) => {
   return (
     <AuthWrapper>
       <StyledEngineProvider injectFirst>

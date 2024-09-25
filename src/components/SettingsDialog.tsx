@@ -279,6 +279,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 ))}
               </TextField>
             </SettingsSubPanel>
+            <SettingsSubPanel
+              label={i18n.get("Change application theme to dark mode")}
+              value={getOnOff(settings.currentAppTheme)}
+            >
+              <ToggleSetting
+                propertyName={"currentAppTheme"}
+                settings={settings}
+                updateSettings={updateSettings}
+              />
+            </SettingsSubPanel>
           </SettingsPanel>
 
           <SettingsPanel title={i18n.get("Time-Series")}>
