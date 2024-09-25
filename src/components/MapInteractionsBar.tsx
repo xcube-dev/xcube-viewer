@@ -39,6 +39,8 @@ import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
+import SnapshotButton from "./SnapshotButton";
+import { MessageType } from "@/states/messageLogState";
 
 const StyledFromControl = styled(FormControl)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -49,11 +51,13 @@ const StyledFromControl = styled(FormControl)(({ theme }) => ({
 interface MapInteractionsBarProps extends WithLocale {
   mapInteraction: MapInteraction;
   setMapInteraction: (interaction: MapInteraction) => void;
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function MapInteractionsBar({
   mapInteraction,
   setMapInteraction,
+  postMessage
 }: MapInteractionsBarProps) {
   function handleChange(
     _event: React.MouseEvent<HTMLElement>,
@@ -124,6 +128,7 @@ export default function MapInteractionsBar({
             <FileUploadIcon />
           </Tooltip>
         </ToggleButton>
+        <SnapshotButton mapRef={"map"} postMessage={postMessage} fontSize="medium" isToggle={true} />
       </ToggleButtonGroup>
     </StyledFromControl>
   );
