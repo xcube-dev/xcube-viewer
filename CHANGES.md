@@ -6,6 +6,8 @@
   of the selected Point/Polygon for datasets that do not contain a time 
   dimension. (#421)
 
+* The help icon button now opens the new documentation [xcube Viewer documentation]
+(https://xcube-dev.github.io/xcube-viewer/) in a new browser tab.
 
 ## Changes in version 1.3.0
 
@@ -228,7 +230,7 @@
 ### Other changes
 
 * Inlined the help menu into the app bar. The help icon button now opens the
-  [xcube Viewer documentation](https://xcube-dev.github.io/xcube-viewer/)
+  [xcube Viewer documentation](https://xcube.readthedocs.io/en/latest/viewer.html)
   in a new browser tab.
 
 * No longer obtaining Roboto font from Google servers.
