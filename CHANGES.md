@@ -228,7 +228,7 @@
 ### Other changes
 
 * Inlined the help menu into the app bar. The help icon button now opens the
-  [xcube Viewer documentation](https://xcube.readthedocs.io/en/latest/viewer.html)
+  [xcube Viewer documentation](https://xcube-dev.github.io/xcube-viewer/)
   in a new browser tab.
 
 * No longer obtaining Roboto font from Google servers.

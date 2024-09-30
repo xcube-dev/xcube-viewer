@@ -142,7 +142,7 @@ const _AppBar: React.FC<AppBarProps> = ({
   };
 
   const handleOpenManual = () => {
-    window.open("https://xcube.readthedocs.io/en/latest/viewer.html", "Manual");
+    window.open(" https://xcube-dev.github.io/xcube-viewer/", "Manual");
   };
 
   const handleOpenImprint = () => {
