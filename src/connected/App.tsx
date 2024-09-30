@@ -68,7 +68,7 @@ const _App: React.FC<AppProps> = ({ compact, currentAppTheme }) => {
       htmlFontSize: 14,
     },
     palette: {
-      mode: currentAppTheme ? "dark" : "light", // Dynamic dark/light mode
+      mode: currentAppTheme ? "dark" : "light",
       primary: Config.instance.branding.primaryColor,
       secondary: Config.instance.branding.secondaryColor,
     },
