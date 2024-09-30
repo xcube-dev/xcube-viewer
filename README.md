@@ -1,6 +1,6 @@
 # xcube Viewer
 
-A simple viewer component for [xcube](https://xcube-dev.github.io/xcube-viewer/).
+A simple viewer component for [xcube](https://xcube.readthedocs.io/).
 
 ![xcube-viewer](./docs/assets/images/xcube-viewer.png)
 
