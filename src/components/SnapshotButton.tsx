@@ -92,9 +92,8 @@ export default function SnapshotButton({
           const originalWidth = targetElement.clientWidth;
           const originalHeight = targetElement.clientHeight;
 
-          //targetElement.style.width = `${exportWidth}px`;
-          //targetElement.style.height = `${exportHeight}px`;
-          //targetElement.style.transformOrigin = 'top left';
+          targetElement.style.width = `${exportWidth}px`;
+          targetElement.style.height = `${exportHeight}px`;
 
           map.setSize([exportWidth, exportHeight]);
           const scaling = Math.min(
@@ -116,29 +115,31 @@ export default function SnapshotButton({
             colorBarLegendDiv.style.transformOrigin = 'top left';
             colorBarLegendDiv.style.transform = `scale(${scaleFactor})`;
           }
-
-
           exportElement(targetElement, {
             format: 'png',
             width: exportWidth,
-            handleSuccess: handleExportSuccess,
+            height: exportHeight,
+            handleSuccess: () => {
+              handleExportSuccess();
+              setTimeout(() => {
+                if (colorBarLegendDiv) {
+                  colorBarLegendDiv.style.width = `${colorBarLegendDiv.clientWidth}px`;
+                  colorBarLegendDiv.style.height = `${colorBarLegendDiv.clientHeight}px`;
+                  colorBarLegendDiv.style.transform = 'none';
+                }
+
+                map.setSize(originalSize);
+                map.getView().setResolution(originalResolution);
+                map.updateSize();
+
+                targetElement.style.width = `${originalWidth}px`;
+                targetElement.style.height = `${originalHeight}px`;
+              }, 2000);
+            },
             handleError: handleExportError,
             controlDiv,
             zoomDiv,
           });
-
-          // if (colorBarLegendDiv) {
-          //   colorBarLegendDiv.style.width = `${colorBarLegendDiv.clientWidth}px`;
-          //   colorBarLegendDiv.style.height = `${colorBarLegendDiv.clientHeight}px`;
-          //   colorBarLegendDiv.style.transform = 'none'; // Reset scaling
-          // }
-          // colorBarLegendDiv!.hidden = false;
-          // map.setSize(originalSize);
-          // map.getView().setResolution(originalResolution);
-          // map.updateSize();
-          // targetElement.style.width = `${originalWidth}px`;
-          // targetElement.style.height = `${originalHeight}px`;
-
         } else {
           exportElement(targetElement, {
             format: 'png',
@@ -156,6 +157,7 @@ export default function SnapshotButton({
       handleExportError(new Error("missing element reference"));
     }
   };
+
 
   return (
     <ToolButton
