@@ -6,6 +6,8 @@
   of the selected Point/Polygon for datasets that do not contain a time 
   dimension. (#421)
 
+* The help icon button now opens the new documentation [xcube Viewer documentation]
+(https://xcube-dev.github.io/xcube-viewer/) in a new browser tab.
 
 ## Changes in version 1.3.0
 
