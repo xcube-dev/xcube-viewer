@@ -49,8 +49,8 @@ Compute and display basic statistics for the currently selected variable, select
 If the place is an area:
 
 - Statistics include minimum, maximum, mean, standard deviation, and a histogram
-- Adjust the x-range of the histogramm
-- Add the standard deviation to the histogramm
+- Adjust the x-range of the histogram
+- Add the standard deviation to the histogram
 - Copy a snapshot of the statistics to clipboard
 
 For point places:
