@@ -9,6 +9,14 @@
 * The help icon button now opens the new documentation [xcube Viewer documentation]
 (https://xcube-dev.github.io/xcube-viewer/) in a new browser tab.
 
+### Other changes
+
+* Tooltips (incl. translations) have been added to the Time Player buttons
+  for jumping to the first, last, next and previous time steps.
+
+* Updated language translations (German and Swedish) for `Add Statistics`
+  and `Style Place`.
+
 ## Changes in version 1.3.0
 
 ### New Features 
