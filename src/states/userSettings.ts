@@ -112,6 +112,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("exportFileName", settings);
       storage.setPrimitiveProperty("userPlacesFormatName", settings);
       storage.setObjectProperty("userPlacesFormatOptions", settings);
+      storage.setPrimitiveProperty("currentAppTheme", settings);
       if (import.meta.env.DEV) {
         console.debug("Stored user settings:", settings);
       }
@@ -213,6 +214,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         settings,
         defaultSettings,
       );
+      storage.getBooleanProperty("currentAppTheme", settings, defaultSettings);
       if (import.meta.env.DEV) {
         console.debug("Loaded user settings:", settings);
       }

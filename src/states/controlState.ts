@@ -160,6 +160,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
+  currentAppTheme: boolean;
 }
 
 export function newControlState(): ControlState {
@@ -235,6 +236,7 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
+    currentAppTheme: false,
   };
   return loadUserSettings(state);
 }
