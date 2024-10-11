@@ -1,4 +1,4 @@
-## Changes in version 1.3.1 (in development)
+## Changes in version 1.3.1
 
 ### Fixes
 
@@ -6,8 +6,14 @@
   of the selected Point/Polygon for datasets that do not contain a time 
   dimension. (#421)
 
-* The help icon button now opens the new documentation [xcube Viewer documentation]
-(https://xcube-dev.github.io/xcube-viewer/) in a new browser tab.
+* Statistics and also the map's info-box now also work for datasets with 
+  non-geographic grids.
+  (See xcube server issues https://github.com/xcube-dev/xcube/issues/1066
+  and https://github.com/xcube-dev/xcube/issues/1069)
+
+* The help icon button now opens the new documentation 
+  [xcube Viewer documentation](https://xcube-dev.github.io/xcube-viewer/) 
+  in a new browser tab.
 
 ### Other changes
 
