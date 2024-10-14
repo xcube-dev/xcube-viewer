@@ -64,7 +64,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					href="/user_guide/getting_started/#select-dataset-and-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -153,7 +153,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					href="/user_guide/getting_started/#select-dataset-and-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -199,7 +199,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					href="/user_guide/getting_started/#adjust-layer-visibilities"
 					rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -258,7 +258,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					href="/user_guide/getting_started/#adjust-layer-visibilities"
 					rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -315,7 +315,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					href="/user_guide/analyse/#compare-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -360,7 +360,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					href="/user_guide/analyse/#infobox"
 					rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -416,11 +416,13 @@ A list of all the features that the viewer contains will be created here, in whi
 					href="/user_guide/analyse/#compare-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
 </table>
+
+## User Variables
 
 ### Open User Variable Management
 
@@ -452,7 +454,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				Link to feature mentioned in
 				<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -532,7 +534,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				Link to feature mentioned in
 				<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User Guide</a
-				>
+				>.
 			</td>
 		</tr>
 	</tbody>
@@ -593,9 +595,421 @@ A list of all the features that the viewer contains will be created here, in whi
     			Link to feature mentioned in
     			<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
     				>User Guide</a
-    			>
+    			>.
     		</td>
     	</tr>
     </tbody>
 
+</table>
+
+### Edit User Variable
+
+<table>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Add User Variable</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A window that opens using the <code>Edit</code>-button in the User
+				Variables Management menu. For layout see
+				<a href="#add-user-variables" rel="noopener noreferrer"
+					>add user variables</a
+				>.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				See
+				<a href="#add-user-variables" rel="noopener noreferrer"
+					>add user variables</a
+				>.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>To edit user variables.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Time Series
+
+### Add Time Series
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="/assets/images/features/add_timeseries.png"
+					alt="Add Time Series" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Add time series/ Show time-series diagramm</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A button in the top toolbar with a graph icon, initially disabled. It
+				becomes active only when a location is selected..
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				A place must be selected for the feature to work. If not already
+				open, the sidebar will open upon using this feature, displaying the time
+				series data for the selected place. If no data is available for the
+				selected place, an informational pop-up window displays the message:
+				<code>No information data found here</code> along with a warning. And
+				no time series will be added to the diagram..
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Create a time series for the selected variable of a selected place.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#time-series" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Statistics
+
+### Add Statistics
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="/assets/images/features/add_statistics.png"
+					alt="Add Statistics" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Add Statistics</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A button in the top toolbar with a graph icon, initially disabled. It
+				becomes active only when a location is selected.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				A place must be selected for the feature to work. If not already open,
+				the sidebar will open upon using this feature, displaying the statistics
+				for the selected place. If no data is available for the selected place,
+				an informational pop-up window displays the message:
+				<code>No information data found here</code> along with a warning. An
+				empty table is shown in this case.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Create statistics for the selected variable a selected place.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Places
+
+### Select Place Group
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="/assets/images/features/select_place_group.png"
+					alt="Select Place Group" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Select Place Group</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A drop-down menu that lists place groups available on the server, along
+				with a <code>My Places</code> group that contains all the places created in the
+				Viewer. A selected group is marked with a checked checkbox and
+				highlighted background.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Select one or multiple groups by clicking on their names, which will be
+				marked with a checkmark in the checkbox to display them on the map.
+				Selecting a group does not automatically adjust the map's view to the
+				extent of the Place Group.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Manage visibility of place groups.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#select" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Select Place
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="/assets/images/features/select_place.png"
+					alt="Select Place" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Select Place</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A drop-down menu that contains a list of all places within the selected
+				place groups. The selected place is highlighted in the list.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Select a place by clicking on it in the list. The selected place will be
+				visually highlighted on the map with a yellow outline. The map
+				automatically pans and zooms to the selected place.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Select and focus on a specific place.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#select" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Rename Place Group/ Place
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="/assets/images/features/rename_place.png"
+					alt="Rename Place" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Rename Place Group/ Place</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button located next to the drop-down menu.</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Provides the option to rename the selected place or place group.
+				<strong>Important:</strong> Only place groups created within the
+				Viewer and their associated places can be renamed.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Rename a place group or individual place.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#rename" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Remove Place Group/ Place
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="/assets/images/features/remove_place.png"
+					alt="Rename Place" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Remove Place Group/ Place</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button located next to the drop-down menu.</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Removes the selected place or place group.
+				<underline>Important:</underline> Only place groups created within the
+				Viewer and their associated places can be removed.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Remove a place group or individual place.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#remove" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Style Place
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="/assets/images/features/style_place.png" alt="Style Place" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Style Place</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A button that opens a small window for adjusting colour and opacity.
+				When clicking on the colour box, a drop-down menu with a variety of
+				colours appears. The opacity is controlled with a slider.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Adjust the appearance (colour and opacity) of the selected place in the
+				window that appears when clicking the button. The changes are
+				immediately reflected on the map. The selected color also determines the
+				representation of points in time series charts.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Change the appearance of a place.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#styling" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Locate Place in Map
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="/assets/images/features/locate_place.png" alt="Style Place" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Locate Place in Map</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button located next to the selection of places.</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>Pans and zooms to the selected place on the map.</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Locate the selected place on the map.</td>
+		</tr>
+	</tbody>
 </table>
