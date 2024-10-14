@@ -45,7 +45,7 @@ import {
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
   SET_SIDEBAR_OPEN,
-  SET_SIDEBAR_PANEL_ID,
+  // SET_SIDEBAR_PANEL_ID,
   SET_SIDEBAR_POSITION,
   SET_MAP_POINT_INFO_BOX_ENABLED,
   SET_VARIABLE_COMPARE_MODE,
@@ -433,12 +433,12 @@ export function controlReducer(
       storeUserSettings(state);
       return state;
     }
-    case SET_SIDEBAR_PANEL_ID: {
-      const { sidebarPanelId } = action;
-      state = { ...state, sidebarPanelId };
-      storeUserSettings(state);
-      return state;
-    }
+    // case SET_SIDEBAR_PANEL_ID: {
+    //   const { sidebarPanelId } = action;
+    //   state = { ...state, sidebarPanelId };
+    //   storeUserSettings(state);
+    //   return state;
+    // }
     case SET_VOLUME_RENDER_MODE: {
       state = {
         ...state,

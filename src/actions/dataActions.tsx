@@ -88,9 +88,9 @@ import {
   selectPlace,
   SetSidebarOpen,
   setSidebarOpen,
-  SetSidebarPanelId,
-  setSidebarPanelId,
 } from "./controlActions";
+import { setSidebarPanelId } from "@/features/sidebar/actions/sidebar";
+import { SetSidebarPanelId } from "@/features/sidebar/slice/sidebar";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -531,18 +531,12 @@ export function addStatistics() {
     const sidebarOpen = getState().controlState.sidebarOpen;
     const sidebarPanelId = getState().controlState.sidebarPanelId;
 
-    if (
-      !(
-        selectedDataset &&
-        selectedVariable &&
-        selectedPlaceInfo
-      )
-    ) {
+    if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
 
     if (sidebarPanelId !== "stats") {
-      dispatch(setSidebarPanelId("stats"));
+      setSidebarPanelId("stats");
     }
     if (!sidebarOpen) {
       dispatch(setSidebarOpen(true));
@@ -623,7 +617,7 @@ export function addTimeSeries() {
       selectedDatasetTimeDim
     ) {
       if (sidebarPanelId !== "timeSeries") {
-        dispatch(setSidebarPanelId("timeSeries"));
+        setSidebarPanelId("timeSeries");
       }
       if (!sidebarOpen) {
         dispatch(setSidebarOpen(true));

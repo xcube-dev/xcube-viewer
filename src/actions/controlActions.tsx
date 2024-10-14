@@ -52,7 +52,7 @@ import {
   ControlState,
   LayerVisibilities,
   MapInteraction,
-  SidebarPanelId,
+  // SidebarPanelId,
   TimeAnimationInterval,
   ViewMode,
   VolumeRenderMode,
@@ -547,18 +547,18 @@ export function setSidebarOpen(sidebarOpen: boolean): SetSidebarOpen {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
-
-export interface SetSidebarPanelId {
-  type: typeof SET_SIDEBAR_PANEL_ID;
-  sidebarPanelId: SidebarPanelId;
-}
-
-export function setSidebarPanelId(
-  sidebarPanelId: SidebarPanelId,
-): SetSidebarPanelId {
-  return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
-}
+// export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
+//
+// export interface SetSidebarPanelId {
+//   type: typeof SET_SIDEBAR_PANEL_ID;
+//   sidebarPanelId: SidebarPanelId;
+// }
+//
+// export function setSidebarPanelId(
+//   sidebarPanelId: SidebarPanelId,
+// ): SetSidebarPanelId {
+//   return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
+// }
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -842,7 +842,7 @@ export type ControlAction =
   | SetLayerMenuOpen
   | SetSidebarPosition
   | SetSidebarOpen
-  | SetSidebarPanelId
+  // | SetSidebarPanelId
   | SetVolumeRenderMode
   | UpdateVolumeState
   | SetVisibleInfoCardElements
