@@ -1,30 +1,35 @@
 import { create } from "zustand";
-import registerAllSlices from "@/store/registerSlices";
 import { ControlState } from "@/states/controlState";
+import { DataState } from "@/states/dataState";
+import registerAllSlices, { SliceType } from "@/store/registerSlices";
 
-type Slice<T extends object> = T;
+export type Slice = (Partial<ControlState> | Partial<DataState>) & SliceType;
 
-const sliceRegistry: Slice<object>[] = [];
+const sliceRegistry: Slice[] = [];
 
-export const registerSlice = <T extends object>(slice: Slice<T>) => {
+export const registerSlice = <T extends Slice>(slice: T) => {
   sliceRegistry.push(slice);
 };
 
 export interface zAppStore {
   controlState: Partial<ControlState>;
+  dataState: Partial<DataState>;
 }
 
-const combineSlices = () => {
+const combineSlices = (): zAppStore => {
   const combinedState: zAppStore = {
     controlState: {},
+    dataState: {},
   };
+
   registerAllSlices();
-  console.log("sliceRegistry", sliceRegistry);
   sliceRegistry.forEach((slice) => {
-    console.log("slice::", slice);
-    combinedState.controlState = slice;
+    if ((slice as Slice).type === "control") {
+      Object.assign(combinedState.controlState, slice);
+    } else if ((slice as Slice).type === "data") {
+      Object.assign(combinedState.dataState, slice);
+    }
   });
-  console.log("combinedState", combinedState);
   return combinedState;
 };
 

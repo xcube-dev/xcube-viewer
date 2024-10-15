@@ -1,5 +1,7 @@
-import { ControlState } from "@/states/controlState";
+import { Slice } from "@/store/appStore";
 
-export const createSidebarSlice: Partial<ControlState> = {
+export const createControlSidebarSlice: Slice = {
   sidebarPanelId: "info",
+  sidebarOpen: false,
+  type: "control",
 };
