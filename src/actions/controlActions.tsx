@@ -52,7 +52,6 @@ import {
   ControlState,
   LayerVisibilities,
   MapInteraction,
-  // SidebarPanelId,
   TimeAnimationInterval,
   ViewMode,
   VolumeRenderMode,
@@ -827,7 +826,6 @@ export type ControlAction =
   | SetLayerMenuOpen
   | SetSidebarPosition
   | SetSidebarOpen
-  // | SetSidebarPanelId
   | SetVolumeRenderMode
   | UpdateVolumeState
   | SetVisibleInfoCardElements
