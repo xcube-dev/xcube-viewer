@@ -1,5 +1,5 @@
 import { usezAppStore } from "@/store/appStore";
-import { SidebarPanelId } from "@/features/sidebar/slice/sidebar";
+import { SidebarPanelId } from "@/features/sidebar/model/sidebar";
 
 const set = usezAppStore.setState;
 

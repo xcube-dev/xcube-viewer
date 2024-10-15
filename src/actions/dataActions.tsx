@@ -90,7 +90,6 @@ import {
   setSidebarOpen,
 } from "./controlActions";
 import { setSidebarPanelId } from "@/features/sidebar/actions/sidebar";
-import { SetSidebarPanelId } from "@/features/sidebar/slice/sidebar";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -517,9 +516,7 @@ export function removeUserPlaceGroup(
 
 export function addStatistics() {
   return (
-    dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | AddStatistics | MessageLogAction
-    >,
+    dispatch: Dispatch<SetSidebarOpen | AddStatistics | MessageLogAction>,
     getState: () => AppState,
   ) => {
     const apiServer = selectedServerSelector(getState());
@@ -588,9 +585,7 @@ export function removeStatistics(index: number): RemoveStatistics {
 
 export function addTimeSeries() {
   return (
-    dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | UpdateTimeSeries | MessageLogAction
-    >,
+    dispatch: Dispatch<SetSidebarOpen | UpdateTimeSeries | MessageLogAction>,
     getState: () => AppState,
   ) => {
     const apiServer = selectedServerSelector(getState());

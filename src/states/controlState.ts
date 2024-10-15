@@ -38,6 +38,7 @@ import {
 } from "@/model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
+import { SidebarPanelId } from "@/features/sidebar/model/sidebar";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -92,13 +93,6 @@ export interface ExportSettings {
   multiFile: boolean;
   zipArchive: boolean;
 }
-export type SidebarPanelId = "info" | "timeSeries" | "stats" | "volume";
-export const sidebarPanelIds: SidebarPanelId[] = [
-  "info",
-  "timeSeries",
-  "stats",
-  "volume",
-];
 
 export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";

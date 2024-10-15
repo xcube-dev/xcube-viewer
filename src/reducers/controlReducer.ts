@@ -433,12 +433,6 @@ export function controlReducer(
       storeUserSettings(state);
       return state;
     }
-    // case SET_SIDEBAR_PANEL_ID: {
-    //   const { sidebarPanelId } = action;
-    //   state = { ...state, sidebarPanelId };
-    //   storeUserSettings(state);
-    //   return state;
-    // }
     case SET_VOLUME_RENDER_MODE: {
       state = {
         ...state,

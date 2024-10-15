@@ -39,12 +39,12 @@ import InfoPanel from "@/connected/InfoPanel";
 import StatisticsPanel from "@/connected/StatisticsPanel";
 import TimeSeriesPanel from "@/connected/TimeSeriesPanel";
 import VolumePanel from "@/connected/VolumePanel";
+import { setSidebarPanelId } from "@/features/sidebar/actions/sidebar";
+import { usezAppStore } from "@/store/appStore";
 import {
   SidebarPanelId,
   sidebarPanelIds,
-} from "@/features/sidebar/slice/sidebar";
-import { setSidebarPanelId } from "@/features/sidebar/actions/sidebar";
-import { usezAppStore } from "@/store/appStore";
+} from "@/features/sidebar/model/sidebar";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
@@ -78,28 +78,10 @@ const styles = makeStyles({
   },
 });
 
-// interface SidebarProps {
-//   sidebarPanelId: SidebarPanelId;
-//   setSidebarPanelId: (sidebarPanelId: SidebarPanelId) => void;
-// }
-
-// // noinspection JSUnusedLocalSymbols
-// const mapStateToProps = (state: AppState) => {
-//   return {
-//     sidebarPanelId: state.controlState.sidebarPanelId,
-//   };
-// };
-//
-// const mapDispatchToProps = {
-//   setSidebarPanelId,
-// };
-
 function Sidebar() {
-  console.log("usezAppStore.getState():::", usezAppStore.getState());
   const sidebarPanelId = usezAppStore(
     (state) => state.controlState.sidebarPanelId,
   );
-  console.log("sidepanelId in sidebar:::", sidebarPanelId);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={styles.tabBoxHeader}>

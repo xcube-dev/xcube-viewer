@@ -547,21 +547,6 @@ export function setSidebarOpen(sidebarOpen: boolean): SetSidebarOpen {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
-//
-// export interface SetSidebarPanelId {
-//   type: typeof SET_SIDEBAR_PANEL_ID;
-//   sidebarPanelId: SidebarPanelId;
-// }
-//
-// export function setSidebarPanelId(
-//   sidebarPanelId: SidebarPanelId,
-// ): SetSidebarPanelId {
-//   return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
-// }
-
-////////////////////////////////////////////////////////////////////////////////
-
 export const SET_VOLUME_RENDER_MODE = "SET_VOLUME_RENDER_MODE";
 
 export interface SetVolumeRenderMode {
