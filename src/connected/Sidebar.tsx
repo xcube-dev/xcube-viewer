@@ -36,12 +36,12 @@ import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
 // TODO: if I import "dashi" we get 935 errors of the form:
 //   error TS2786: 'X' cannot be used as a JSX component.
 //   Its type 'typeof X' is not a valid JSX element type.
-// import {
-//   Contribution,
-//   ContributionState,
-//   useContributionModelsRecord,
-//   useContributionStatesRecord,
-// } from "dashi";
+import {
+  Contribution,
+  ContributionState,
+  useContributionModelsRecord,
+  useContributionStatesRecord,
+} from "dashi";
 
 import { AppState } from "@/states/appState";
 import i18n from "@/i18n";
@@ -102,12 +102,12 @@ const mapDispatchToProps = {
 };
 
 function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
-  // const contributionStatesRecord = useContributionStatesRecord();
-  // const contributionModelsRecord = useContributionModelsRecord();
-  // const contributionStates: ContributionState[] =
-  //   contributionStatesRecord["panels"] || [];
-  // const contributions: Contribution[] =
-  //   contributionModelsRecord["panels"] || [];
+  const contributionStatesRecord = useContributionStatesRecord();
+  const contributionModelsRecord = useContributionModelsRecord();
+  const contributionStates: ContributionState[] =
+    contributionStatesRecord["panels"] || [];
+  const contributions: Contribution[] =
+    contributionModelsRecord["panels"] || [];
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -131,15 +131,15 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
               label={i18n.get(sidebarPanelLabels[panelId])}
             />
           ))}
-          {/*{contributions.map((contribution, i) => (*/}
-          {/*  <Tab*/}
-          {/*    key={contribution.name}*/}
-          {/*    sx={styles.tab}*/}
-          {/*    disableRipple*/}
-          {/*    value={contribution.name}*/}
-          {/*    label={contributionStates[i].title}*/}
-          {/*  />*/}
-          {/*))}*/}
+          {contributions.map((contribution, i) => (
+            <Tab
+              key={contribution.name}
+              sx={styles.tab}
+              disableRipple
+              value={contribution.name}
+              label={contributionStates[i].title}
+            />
+          ))}
         </Tabs>
       </Box>
       {sidebarPanelId === "info" && <InfoPanel />}
