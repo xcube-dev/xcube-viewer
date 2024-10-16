@@ -1,4 +1,4 @@
-import { Slice } from "@/store/appStore";
+import { Slice } from "@/store/registerSlices";
 
 export const createControlSidebarSlice: Slice = {
   sidebarPanelId: "info",
