@@ -1,6 +1,6 @@
 import { Slice } from "@/store/registerSlices";
 
-export const createControlSidebarSlice: Slice = {
+export const controlSidebarSlice: Slice = {
   sidebarPanelId: "info",
   sidebarOpen: false,
   type: "control",

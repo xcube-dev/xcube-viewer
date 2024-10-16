@@ -40,7 +40,7 @@ import StatisticsPanel from "@/connected/StatisticsPanel";
 import TimeSeriesPanel from "@/connected/TimeSeriesPanel";
 import VolumePanel from "@/connected/VolumePanel";
 import { setSidebarPanelId } from "@/features/sidebar/actions/sidebar";
-import { usezAppStore } from "@/store/appStore";
+import { store } from "@/store/appStore";
 import {
   SidebarPanelId,
   sidebarPanelIds,
@@ -79,9 +79,7 @@ const styles = makeStyles({
 });
 
 function Sidebar() {
-  const sidebarPanelId = usezAppStore(
-    (state) => state.controlState.sidebarPanelId,
-  );
+  const sidebarPanelId = store((state) => state.controlState.sidebarPanelId);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={styles.tabBoxHeader}>

@@ -1,15 +1,14 @@
-import { usezAppStore } from "@/store/appStore";
+import { store } from "@/store/appStore";
 import { SidebarPanelId } from "@/features/sidebar/model/sidebar";
 
-const set = usezAppStore.setState;
+const setState = store.setState;
 
 export const setSidebarPanelId = (panelId: SidebarPanelId): void => {
-  const { controlState } = usezAppStore.getState();
-  set({
+  const { controlState } = store.getState();
+  setState({
     controlState: {
       ...controlState,
       ["sidebarPanelId"]: panelId,
     },
   });
-  console.log("zustand state changed::::", usezAppStore.getState());
 };

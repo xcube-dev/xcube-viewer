@@ -45,10 +45,9 @@ import ExportDialog from "./ExportDialog";
 import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
-import { usezAppStore } from "@/store/appStore";
+import { configureLogging } from "@/store/configureLogging";
 
-const state = usezAppStore.getState();
-console.log("state", state);
+configureLogging();
 
 interface AppProps {
   compact: boolean;
