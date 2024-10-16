@@ -89,7 +89,7 @@ import {
   SetSidebarOpen,
   setSidebarOpen,
 } from "./controlActions";
-import { setSidebarPanelId } from "@/features/sidebar/actions/sidebar";
+import { setSidebarPanelId } from "@/features/sidebar/actions";
 
 ////////////////////////////////////////////////////////////////////////////////
 

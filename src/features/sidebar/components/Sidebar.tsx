@@ -39,12 +39,9 @@ import InfoPanel from "@/connected/InfoPanel";
 import StatisticsPanel from "@/connected/StatisticsPanel";
 import TimeSeriesPanel from "@/connected/TimeSeriesPanel";
 import VolumePanel from "@/connected/VolumePanel";
-import { setSidebarPanelId } from "@/features/sidebar/actions/sidebar";
+import { setSidebarPanelId } from "@/features/sidebar/actions";
 import { store } from "@/store/appStore";
-import {
-  SidebarPanelId,
-  sidebarPanelIds,
-} from "@/features/sidebar/model/sidebar";
+import { SidebarPanelId, sidebarPanelIds } from "@/features/sidebar/types";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,

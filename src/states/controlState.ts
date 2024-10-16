@@ -38,7 +38,7 @@ import {
 } from "@/model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
-import { SidebarPanelId } from "@/features/sidebar/model/sidebar";
+import { SidebarPanelId } from "@/features/sidebar/types";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [

@@ -1,5 +1,5 @@
 import { store } from "@/store/appStore";
-import { SidebarPanelId } from "@/features/sidebar/model/sidebar";
+import { SidebarPanelId } from "@/features/sidebar/types";
 
 const setState = store.setState;
 
