@@ -33,9 +33,6 @@ import InfoIcon from "@mui/icons-material/Info";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
-// TODO: if I import "dashi" we get 935 errors of the form:
-//   error TS2786: 'X' cannot be used as a JSX component.
-//   Its type 'typeof X' is not a valid JSX element type.
 import {
   Contribution,
   ContributionState,
