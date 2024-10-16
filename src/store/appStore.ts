@@ -22,6 +22,7 @@ const combineSlices = (): zAppStore => {
 
   registerAllSlices();
   sliceRegistry.forEach((slice) => {
+    // @typescript-eslint/no-unused-vars
     const { type, ...remainingSlice } = slice;
     if (slice.type === "control") {
       combinedState.controlState = {
