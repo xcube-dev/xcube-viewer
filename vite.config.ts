@@ -51,6 +51,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["src/setupTests.ts"],
+    globals: true,
     onConsoleLog: (/*_log: string, _type: "stdout" | "stderr"*/):
       | false
       | void => {
