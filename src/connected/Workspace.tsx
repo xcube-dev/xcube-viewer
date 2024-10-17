@@ -32,7 +32,7 @@ import { AppState } from "@/states/appState";
 import { setSidebarPosition } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
-import Sidebar from "./Sidebar";
+import Sidebar from "@/features/sidebar/components/Sidebar";
 import { useTheme } from "@mui/material";
 
 // Adjust for debugging split pane style

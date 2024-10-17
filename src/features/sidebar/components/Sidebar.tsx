@@ -25,7 +25,6 @@
  */
 
 import { ReactElement } from "react";
-import { connect } from "react-redux";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
@@ -34,15 +33,15 @@ import FunctionsIcon from "@mui/icons-material/Functions";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
 
-import { AppState } from "@/states/appState";
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
-import { setSidebarPanelId } from "@/actions/controlActions";
-import { SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
-import InfoPanel from "./InfoPanel";
-import TimeSeriesPanel from "./TimeSeriesPanel";
-import StatisticsPanel from "./StatisticsPanel";
-import VolumePanel from "./VolumePanel";
+import InfoPanel from "@/connected/InfoPanel";
+import StatisticsPanel from "@/connected/StatisticsPanel";
+import TimeSeriesPanel from "@/connected/TimeSeriesPanel";
+import VolumePanel from "@/connected/VolumePanel";
+import { setSidebarPanelId } from "@/features/sidebar/actions";
+import { SidebarPanelId, sidebarPanelIds } from "@/features/sidebar/types";
+import { AppStoreZ } from "@/features/sidebar/store";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
@@ -76,23 +75,8 @@ const styles = makeStyles({
   },
 });
 
-interface SidebarProps {
-  sidebarPanelId: SidebarPanelId;
-  setSidebarPanelId: (sidebarPanelId: SidebarPanelId) => void;
-}
-
-// noinspection JSUnusedLocalSymbols
-const mapStateToProps = (state: AppState) => {
-  return {
-    sidebarPanelId: state.controlState.sidebarPanelId,
-  };
-};
-
-const mapDispatchToProps = {
-  setSidebarPanelId,
-};
-
-function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
+function Sidebar() {
+  const sidebarPanelId = AppStoreZ((state) => state.sidebarPanelId);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={styles.tabBoxHeader}>
@@ -125,5 +109,4 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
   );
 }
 
-const Sidebar = connect(mapStateToProps, mapDispatchToProps)(_Sidebar);
 export default Sidebar;

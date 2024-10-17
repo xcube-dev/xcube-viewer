@@ -88,9 +88,9 @@ import {
   selectPlace,
   SetSidebarOpen,
   setSidebarOpen,
-  SetSidebarPanelId,
-  setSidebarPanelId,
 } from "./controlActions";
+import { setSidebarPanelId } from "@/features/sidebar/actions";
+import { AppStoreZ } from "@/features/sidebar/store";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -517,9 +517,7 @@ export function removeUserPlaceGroup(
 
 export function addStatistics() {
   return (
-    dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | AddStatistics | MessageLogAction
-    >,
+    dispatch: Dispatch<SetSidebarOpen | AddStatistics | MessageLogAction>,
     getState: () => AppState,
   ) => {
     const apiServer = selectedServerSelector(getState());
@@ -529,20 +527,14 @@ export function addStatistics() {
     const selectedPlaceInfo = selectedPlaceInfoSelector(getState());
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const { sidebarPanelId } = AppStoreZ.getState();
 
-    if (
-      !(
-        selectedDataset &&
-        selectedVariable &&
-        selectedPlaceInfo
-      )
-    ) {
+    if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
 
     if (sidebarPanelId !== "stats") {
-      dispatch(setSidebarPanelId("stats"));
+      setSidebarPanelId("stats");
     }
     if (!sidebarOpen) {
       dispatch(setSidebarOpen(true));
@@ -594,9 +586,7 @@ export function removeStatistics(index: number): RemoveStatistics {
 
 export function addTimeSeries() {
   return (
-    dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | UpdateTimeSeries | MessageLogAction
-    >,
+    dispatch: Dispatch<SetSidebarOpen | UpdateTimeSeries | MessageLogAction>,
     getState: () => AppState,
   ) => {
     const apiServer = selectedServerSelector(getState());
@@ -612,7 +602,7 @@ export function addTimeSeries() {
     const includeStdev = getState().controlState.timeSeriesIncludeStdev;
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
     const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const { sidebarPanelId } = AppStoreZ.getState();
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -623,7 +613,7 @@ export function addTimeSeries() {
       selectedDatasetTimeDim
     ) {
       if (sidebarPanelId !== "timeSeries") {
-        dispatch(setSidebarPanelId("timeSeries"));
+        setSidebarPanelId("timeSeries");
       }
       if (!sidebarOpen) {
         dispatch(setSidebarOpen(true));
