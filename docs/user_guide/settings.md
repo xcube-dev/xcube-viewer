@@ -1,6 +1,6 @@
 # Adjust Settings
 
-In the settings, the user has the option of adjusting the default settings according to their needs. This can be the server, the language or adjustments to the player, time series or the map. A selection of settings are explained in more detail below. Information regarding the legal agreements and the viewer and server version is also given in the Settings.
+In the settings, you have the option to adjust the default settings according to your needs. This can be the xcube Server, the language or adjustments to the Player, time series or the map. Detailed explanations of specific settings are provided below. Additionally, you can find information about legal agreements, as well as the Viewer and server version, within the settings.
 
 ---
 
@@ -8,19 +8,21 @@ In the settings, the user has the option of adjusting the default settings accor
 
 ### Change the Server
 
-Change the Server URL by selecting 'Server'. A 'Select Server' panel is opened and click the "+" button to add a new server.
+Change the Server URL by selecting `Server` and clicking the `+`-button to add a new server.
 
 ![Settings - Change Server](../assets/images/viewer/settings_server.png)
 
 ### Player Interval
 
-Adjust the interval of the Player. Additional information on the Player can be found [here](../user_guide/analyse.md/#the-player).
+Adjust the Player's interval settings. Additional information on the Player can be found [here](../user_guide/analyse.md/#the-player).
 
 ![Settings - Player Interval](../assets/images/viewer/settings_player.png)
 
+---
+
 ## Time-Series
 
-This is the place to set preferences of displaying data and graphs of the time series. Additional information on the Player can be found [here](../user_guide/analyse.md).
+This is the place to set preferences of displaying data and graphs of the time series. Additional information on time series can be found [here](../user_guide/analyse.md/#time-series).
 
 ![Settings - Time Series](../assets/images/viewer/settings_timeseries.png)
 
@@ -28,19 +30,21 @@ This is the place to set preferences of displaying data and graphs of the time s
 
 ## Map
 
-Adjust the **Base Map** and **Overlays**, switch the displayed **projection** between _Geographic_ and _Mercator_. You can also choose to turn **image smoothing** on decide on the **zoom** of the Viewer when secting a dataset or place (e.g. zoom to place).
+Adjust the **base map** and **overlays**, choose the **projection** (_Geographic_ or _Mercator_), enable **image smoothing** or decide on the **map extent and focus** when selecting datasets or places.
 
 ### Base maps and Overlays
 
-The Viewer gives the option to display the datasets in front of a Base Map and to overlay datasets with additional information (regarding e.g. transportation or place names). A large number of Base Maps and Overlay layers are already integrated in the viewer. Other can be selected by clicking on 'Base map' or 'Overlay'.
+The Viewer allows you to display datasets over a Base Map and overlay them with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer. Others can be selected by clicking on `Base map` or `Overlay`.
 
 ![Settings - Maps - Overlay](../assets/images/viewer/settings_overlay.png)
 
-Additional layers (WMS, XYZ) from external services can also be added by clicking on 'User base map...' or 'User overlays...'. Additionally, 'User base maps' and 'User overlays' can be added via the [Layers Panel](../user_guide/getting_started.md/#adjust-layer-visibilities).
+### User Base maps and Overlays
+
+Additional layers (WMS, XYZ) from external services can also be added by clicking on `User base map...` or `User overlays...`. These can also be added via the [Layers Panel](../user_guide/getting_started.md/#adjust-layer-visibilities).
 
 ![Settings - Maps - User Maps](../assets/images/viewer/settings_usermaps.png)
 
-### Zoom on Dataset/Variable selection
+### Zoom on Dataset/Variable Selection
 
 ![On Selection](../assets/images/viewer/settings_on_selection.png)
 

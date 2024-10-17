@@ -135,7 +135,7 @@ Use the showen features of the Viewer to navigate through the time steps of a va
 
 ### The Player
 
-Use the player to auto-step through the variable of a dataset. The interval can be adjusted in the [settings](settings.md/#time-series).
+Use the player to auto-step through the variable of a dataset. The interval can be adjusted in the [settings](settings.md/#player-interval).
 
 ![Player](../assets/videos/Player_hh.gif)
 

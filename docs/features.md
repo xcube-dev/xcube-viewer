@@ -5,6 +5,8 @@
 
 A list of all the features that the viewer contains will be created here, in which the functionality of each one is explained in more detail.
 
+## General Features
+
 ### Select Dataset
 
 <table>
@@ -190,7 +192,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
-			<td>Enable users to controll the visibility of layers.</td>
+			<td>Enable users to control the visibility of layers.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -244,7 +246,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					rel="noopener noreferrer"
 					>settings</a
 				>. The window appears when the function is enabled and can be closed
-				either by clicking the 'X' or by clicking the button again.
+				either by clicking the <code>X</code> or by clicking the button again.
 			</td>
 		</tr>
 		<tr>
@@ -256,6 +258,109 @@ A list of all the features that the viewer contains will be created here, in whi
 				Link to feature mentioned in
 				<a
 					href="/user_guide/getting_started/#adjust-layer-visibilities"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Information Box
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="/assets/images/features/infobox.png" alt="Info box" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Information Box</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>Button, highlighted when function is enabled</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Displays an information box that provides pixel details for the area
+				being hovered over. This includes latitude, longitude, the selected
+				variable, and the pinned variable.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Enable users to quickly access information about a pixel.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/analyse/#infobox"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Compare Variables
+
+### Pin Variables
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="/assets/images/features/pin_variable.png"
+					alt="Pin Variable" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Pin Variable</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Button that has a dark background when activated or when a pinned
+				variable is selected.
+			</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				The button pins a variable. When a variable is pinned, the 
+				<a
+					href="#split-mode"
+					rel="noopener noreferrer"
+					>split mode</a
+				> for visual comparison is automatically activated, if it hasn't
+				been opened yet. A variable can be unpinned by clicking the button
+				again. If the variable should remain pinned but the split mode should be
+				closed, the split mode button must be clicked.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>To pin variables for comparison.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/analyse/#compare-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -307,107 +412,6 @@ A list of all the features that the viewer contains will be created here, in whi
 				Enables visual comparison of the selected variable with another (pinned
 				variable) or with other layers, such as a user basemap or dataset RGB.
 			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				Link to feature mentioned in
-				<a
-					href="/user_guide/analyse/#compare-variables"
-					rel="noopener noreferrer"
-					>User Guide</a
-				>.
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-### Information Box
-
-<table>
-	<thead>
-		<tr>
-			<th colspan="2">
-				<img src="/assets/images/features/infobox.png" alt="Info box" />
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><b>Feature Name</b></td>
-			<td>Information Box</td>
-		</tr>
-		<tr>
-			<td><b>Description</b></td>
-			<td>Button, highlighted when function is enabled</td>
-		</tr>
-		<tr></tr>
-		<tr>
-			<td><b>Functionality</b></td>
-			<td>
-				Displays an information box that provides pixel details for the area
-				being hovered over. This includes latitude, longitude, the selected
-				variable, and the pinned variable.
-			</td>
-		</tr>
-		<tr>
-			<td><b>Aim</b></td>
-			<td>tbc.</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				Link to feature mentioned in
-				<a
-					href="/user_guide/analyse/#infobox"
-					rel="noopener noreferrer"
-					>User Guide</a
-				>.
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-### Pin Variables
-
-<table>
-	<thead>
-		<tr>
-			<th colspan="2">
-				<img
-					src="/assets/images/features/pin_variable.png"
-					alt="Pin Variable" />
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><b>Feature Name</b></td>
-			<td>Pin Variable</td>
-		</tr>
-		<tr>
-			<td><b>Description</b></td>
-			<td>
-				Button that has a dark background when activated or when a pinned
-				variable is selected.
-			</td>
-		</tr>
-		<tr></tr>
-		<tr>
-			<td><b>Functionality</b></td>
-			<td>
-				The button pins a variable. When a variable is pinned, the 
-				<a
-					href="#split-mode"
-					rel="noopener noreferrer"
-					>split mode</a
-				> for visual comparison is automatically activated, if it hasn't
-				been opened yet. A variable can be unpinned by clicking the button
-				again. If the variable should remain pinned but the split mode should be
-				closed, the split mode button must be clicked.
-			</td>
-		</tr>
-		<tr>
-			<td><b>Aim</b></td>
-			<td>To pin variables for comparison.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -506,7 +510,9 @@ A list of all the features that the viewer contains will be created here, in whi
 				When a user variable is selected:
 				<ul>
 					<li>
-						<strong>Add User Variable</strong>: Opens a new window to create a
+						<a href="#add-user-variable" rel="noopener noreferrer"
+					><strong>Add User Variable</strong></a
+				>: Opens a new window to create a
 						user variable.
 					</li>
 					<li>
@@ -515,7 +521,9 @@ A list of all the features that the viewer contains will be created here, in whi
 						duplicate.
 					</li>
 					<li>
-						<strong>Edit User Variable</strong>: Opens a window similar to the
+						<a href="#edit-user-variable" rel="noopener noreferrer"
+					><strong>Edit User Variable</strong></a
+				>: Opens a window similar to the
 						Add User Variable window for editing the selected variable.
 					</li>
 					<li>
@@ -562,8 +570,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				A window that opens using the <code>+</code>-button in the User Variables
 				Management menu. The window contains input fields for
-				<strong>Name</strong>, <strong>Title</strong>, <strong>Unit</strong>,
-				and the <strong>Expression</strong>. There is also an option to display
+				name, title, units, and expression. There is also an option to display
 				various optional components of the expression.
 			</td>
 		</tr>
@@ -571,17 +578,17 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				To successfully add a variable, a valid <strong>Name</strong> and a
-				valid <strong>Python Expression</strong> must be provided.
-				<strong>Title</strong> and <strong>Units</strong> are optional fields.
+				To successfully add a variable, a valid <strong>name</strong> and a
+				valid <strong>python expression</strong> must be provided.
+				title and units are optional fields.
     			<ul>
     				<li>
-    					The Name must be a unique identifier within the
+    					The name must be a unique identifier within the
     					User Variables and must start with a letter.
     				</li>
     				<li>
-    					The Expression is an algebraic expression that
-    					follows the syntax of Python expressions.
+    					The expression is an algebraic expression that
+    					follows the syntax of python expressions.
     				</li>
     			</ul>
     		</td>
@@ -608,7 +615,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	<tbody>
 		<tr>
 			<td><b>Feature Name</b></td>
-			<td>Add User Variable</td>
+			<td>Edit User Variable</td>
 		</tr>
 		<tr>
 			<td><b>Description</b></td>
@@ -667,7 +674,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A button in the top toolbar with a graph icon, initially disabled. It
-				becomes active only when a location is selected..
+				becomes active only when a location is selected.
 			</td>
 		</tr>
 		<tr>
@@ -678,7 +685,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				series data for the selected place. If no data is available for the
 				selected place, an informational pop-up window displays the message:
 				<code>No information data found here</code> along with a warning. And
-				no time series will be added to the diagram..
+				no time series will be added to the diagram.
 			</td>
 		</tr>
 		<tr>
@@ -784,7 +791,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				Select one or multiple groups by clicking on their names, which will be
 				marked with a checkmark in the checkbox to display them on the map.
 				Selecting a group does not automatically adjust the map's view to the
-				extent of the Place Group.
+				extent of the place group.
 			</td>
 		</tr>
 		<tr>
@@ -831,7 +838,12 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				Select a place by clicking on it in the list. The selected place will be
 				visually highlighted on the map with a yellow outline. The map
-				automatically pans and zooms to the selected place.
+				automatically pans and zooms to the selected place, if selected in the
+				<a
+					href="/user_guide/settings.md/##zoom-on-datasetvariable-selection"
+					rel="noopener noreferrer"
+					>settings</a
+				>.
 			</td>
 		</tr>
 		<tr>
@@ -918,7 +930,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Functionality</b></td>
 			<td>
 				Removes the selected place or place group.
-				<underline>Important:</underline> Only place groups created within the
+				<strong>Important:</strong> Only place groups created within the
 				Viewer and their associated places can be removed.
 			</td>
 		</tr>
