@@ -47,7 +47,9 @@ import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
 import { configureLogging } from "@/store/configureLogging";
 
-configureLogging();
+if (import.meta.env.DEV) {
+  configureLogging();
+}
 
 interface AppProps {
   compact: boolean;

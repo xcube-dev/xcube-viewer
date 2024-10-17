@@ -38,7 +38,6 @@ import {
 } from "@/model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
-import { SidebarPanelId } from "@/features/sidebar/types";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -131,7 +130,6 @@ export interface ControlState {
   layerMenuOpen: boolean;
   sidebarPosition: number;
   sidebarOpen: boolean;
-  sidebarPanelId: SidebarPanelId;
   volumeRenderMode: VolumeRenderMode;
   volumeStates: VolumeStates;
   infoCardElementStates: InfoCardElementStates;
@@ -208,7 +206,6 @@ export function newControlState(): ControlState {
     layerMenuOpen: false,
     sidebarPosition: (2 * Math.max(window.innerWidth, window.innerHeight)) / 3,
     sidebarOpen: false,
-    sidebarPanelId: "info",
     volumeRenderMode: "mip",
     volumeStates: {},
     infoCardElementStates: {

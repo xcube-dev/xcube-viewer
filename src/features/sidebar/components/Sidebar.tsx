@@ -40,15 +40,8 @@ import StatisticsPanel from "@/connected/StatisticsPanel";
 import TimeSeriesPanel from "@/connected/TimeSeriesPanel";
 import VolumePanel from "@/connected/VolumePanel";
 import { setSidebarPanelId } from "@/features/sidebar/actions";
-import { store } from "@/store/appStore";
 import { SidebarPanelId, sidebarPanelIds } from "@/features/sidebar/types";
-import { registerSlice } from "@/store/registerSlices";
-import {
-  controlSidebar3Slice,
-  controlSidebar4Slice,
-  controlSidebarSlice,
-  dataSidebar2Slice,
-} from "@/features/sidebar/slice/sidebar";
+import { AppStoreZ } from "@/features/sidebar/store";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
@@ -82,14 +75,8 @@ const styles = makeStyles({
   },
 });
 
-registerSlice(controlSidebarSlice);
-// For testing - To be removed
-registerSlice(dataSidebar2Slice);
-registerSlice(controlSidebar3Slice);
-registerSlice(controlSidebar4Slice);
-
 function Sidebar() {
-  const sidebarPanelId = store((state) => state.controlState.sidebarPanelId);
+  const sidebarPanelId = AppStoreZ((state) => state.sidebarPanelId);
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={styles.tabBoxHeader}>
