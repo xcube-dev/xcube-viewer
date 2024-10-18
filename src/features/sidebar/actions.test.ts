@@ -4,7 +4,7 @@ import { AppStoreZ, StoreState } from "@/features/sidebar/store";
 import { setSidebarPanelId } from "@/features/sidebar/actions";
 
 describe("Test Sidebar Panel ID state management", () => {
-  beforeEach(() => {
+  afterEach(() => {
     AppStoreZ.setState({ sidebarPanelId: "info" });
   });
 
@@ -12,27 +12,20 @@ describe("Test Sidebar Panel ID state management", () => {
     expect(AppStoreZ.getState().sidebarPanelId).toBe("info");
   });
 
-  it("should update the state to stats", () => {
-    const expected: StoreState = {
-      sidebarPanelId: "stats",
-    };
-    setSidebarPanelId("stats");
-    expect(AppStoreZ.getState()).toStrictEqual(expected);
+  it("should not accept invalid panel IDs", () => {
+    setSidebarPanelId("holoStats" as unknown as SidebarPanelId);
+    expect(AppStoreZ.getState()).toEqual({
+      sidebarPanelId: "info",
+    });
   });
 
-  it("should update the state to timeSeries", () => {
-    const expected: StoreState = {
-      sidebarPanelId: "timeSeries",
-    };
-    setSidebarPanelId("timeSeries");
-    expect(AppStoreZ.getState()).toStrictEqual(expected);
-  });
-
-  it("should update the state to timeSeries", () => {
-    const expected: StoreState = {
-      sidebarPanelId: "volume",
-    };
-    setSidebarPanelId("volume");
-    expect(AppStoreZ.getState()).toStrictEqual(expected);
+  it("should update the state to other panel IDs", () => {
+    const panelIds: SidebarPanelId[] = ["info", "stats", "timeSeries", "volume"];
+    panelIds.forEach((panelId) => {
+      setSidebarPanelId(panelId);
+      expect(AppStoreZ.getState()).toEqual({
+        sidebarPanelId: panelId,
+      });
+    }
   });
 });
