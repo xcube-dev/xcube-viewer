@@ -4,11 +4,7 @@ import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 import { AppStoreZ } from "@/features/sidebar/store";
 import Sidebar from "@/features/sidebar/components/Sidebar";
 import * as actions from "@/features/sidebar/actions";
-// import { setSidebarPanelId } from "@/features/sidebar/actions";
 
-// const setSidebarPanelIdSpy = vi.spyOn(actions, "setSidebarPanelId");
-
-// Mock the connected components
 vi.mock("@/connected/InfoPanel", () => {
   return {
     default: () => <div>Info Panel</div>,
@@ -29,12 +25,9 @@ vi.mock("@/connected/VolumePanel", () => {
     default: () => <div>Volume Panel</div>,
   };
 });
-// const setSidebarPanelId = vi.fn(setSidebarPanelId);
+
 const setSidebarPanelIdSpy = vi.spyOn(actions, "setSidebarPanelId");
-// vi.mock("@/features/sidebar/actions", () => ({
-//   setSidebarPanelId: vi.fn()
-// }));
-// const setSidebarPanelIdSpy = vi.fn(setSidebarPanelId);
+
 describe("Sidebar Component", () => {
   beforeEach(() => {
     setSidebarPanelIdSpy.mockClear();
@@ -43,11 +36,6 @@ describe("Sidebar Component", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
-  });
-
-  it("renders without crashing", () => {
-    render(<Sidebar />);
-    expect(screen.getByText("Info Panel")).toBeInTheDocument();
   });
 
   it("displays the correct initial panel", () => {
