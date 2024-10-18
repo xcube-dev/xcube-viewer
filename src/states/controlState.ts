@@ -92,13 +92,6 @@ export interface ExportSettings {
   multiFile: boolean;
   zipArchive: boolean;
 }
-export type SidebarPanelId = "info" | "timeSeries" | "stats" | "volume";
-export const sidebarPanelIds: SidebarPanelId[] = [
-  "info",
-  "timeSeries",
-  "stats",
-  "volume",
-];
 
 export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
@@ -137,7 +130,6 @@ export interface ControlState {
   layerMenuOpen: boolean;
   sidebarPosition: number;
   sidebarOpen: boolean;
-  sidebarPanelId: SidebarPanelId;
   volumeRenderMode: VolumeRenderMode;
   volumeStates: VolumeStates;
   infoCardElementStates: InfoCardElementStates;
@@ -214,7 +206,6 @@ export function newControlState(): ControlState {
     layerMenuOpen: false,
     sidebarPosition: (2 * Math.max(window.innerWidth, window.innerHeight)) / 3,
     sidebarOpen: false,
-    sidebarPanelId: "info",
     volumeRenderMode: "mip",
     volumeStates: {},
     infoCardElementStates: {
