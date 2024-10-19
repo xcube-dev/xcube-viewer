@@ -45,7 +45,7 @@ import ExportDialog from "./ExportDialog";
 import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
-import { configureLogging } from "@/store/configureLogging";
+import { configureLogging } from "@/store";
 
 if (import.meta.env.DEV) {
   configureLogging();

@@ -6,3 +6,7 @@ export const sidebarPanelIds: SidebarPanelId[] = [
   "stats",
   "volume",
 ];
+
+export interface SidebarState {
+  sidebarPanelId: SidebarPanelId;
+}

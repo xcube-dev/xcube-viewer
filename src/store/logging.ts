@@ -1,5 +1,5 @@
 import diff, { type Difference } from "microdiff";
-import { AppStoreZ, StoreState } from "@/features/sidebar/store";
+import { store, StoreState } from "@/store/store";
 
 const indexStyle = "color:light-dark(lightblue, lightblue)";
 const typeStyle = "font-weight:bold";
@@ -7,13 +7,17 @@ const pathStyle = "color:light-dark(darkgrey, lightgray)";
 
 let unsubscribe: (() => void) | undefined = undefined;
 
-export function configureLogging(options?: { enabled?: boolean }) {
+export interface LoggingOptions {
+  enabled?: boolean;
+}
+
+export function configureLogging(options?: LoggingOptions) {
   if (unsubscribe) {
     unsubscribe();
     unsubscribe = undefined;
   }
   if (!options || options.enabled) {
-    unsubscribe = AppStoreZ.subscribe(logState);
+    unsubscribe = store.subscribe(logState);
   }
 }
 

@@ -41,7 +41,7 @@ import TimeSeriesPanel from "@/connected/TimeSeriesPanel";
 import VolumePanel from "@/connected/VolumePanel";
 import { setSidebarPanelId } from "@/features/sidebar/actions";
 import { SidebarPanelId, sidebarPanelIds } from "@/features/sidebar/types";
-import { AppStoreZ } from "@/features/sidebar/store";
+import { sidebarStore } from "@/features/sidebar/store";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
@@ -76,7 +76,7 @@ const styles = makeStyles({
 });
 
 function Sidebar() {
-  const sidebarPanelId = AppStoreZ((state) => state.sidebarPanelId);
+  const { sidebarPanelId } = sidebarStore.useStore();
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={styles.tabBoxHeader}>

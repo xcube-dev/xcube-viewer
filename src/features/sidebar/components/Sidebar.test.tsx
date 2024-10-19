@@ -1,10 +1,19 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
-import { AppStoreZ } from "@/features/sidebar/store";
 import Sidebar from "@/features/sidebar/components/Sidebar";
+import { sidebarStore } from "@/features/sidebar/store";
 import * as actions from "@/features/sidebar/actions";
 
+vi.mock("@/config", () => {
+  return {
+    Config: {
+      instance: {
+        name: "xyz",
+      },
+    },
+  };
+});
 vi.mock("@/connected/InfoPanel", () => {
   return {
     default: () => <div>Info Panel</div>,
@@ -31,7 +40,7 @@ const setSidebarPanelIdSpy = vi.spyOn(actions, "setSidebarPanelId");
 describe("Sidebar Component", () => {
   beforeEach(() => {
     setSidebarPanelIdSpy.mockClear();
-    AppStoreZ.setState({ sidebarPanelId: "info" });
+    sidebarStore.setState({ sidebarPanelId: "info" });
   });
 
   afterEach(() => {
@@ -60,9 +69,20 @@ describe("Sidebar Component", () => {
     });
   });
 
-  it("calls setSidebarPanelId with the correct value stats", () => {
+  it("calls setSidebarPanelId with the correct value 'info'", () => {
     render(<Sidebar />);
-    screen.debug();
+    // screen.debug();
+
+    fireEvent.click(screen.getByText("Statistics"));
+    fireEvent.click(screen.getByText("Info"));
+
+    expect(setSidebarPanelIdSpy).toHaveBeenCalledWith("info");
+    expect(setSidebarPanelIdSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("calls setSidebarPanelId with the correct value 'stats'", () => {
+    render(<Sidebar />);
+    // screen.debug();
 
     fireEvent.click(screen.getByText("Statistics"));
 
@@ -70,9 +90,30 @@ describe("Sidebar Component", () => {
     expect(setSidebarPanelIdSpy).toHaveBeenCalledTimes(1);
   });
 
+  it("calls setSidebarPanelId with the correct value 'timeSeries'", () => {
+    render(<Sidebar />);
+    // screen.debug();
+
+    fireEvent.click(screen.getByText("Time-Series"));
+
+    expect(setSidebarPanelIdSpy).toHaveBeenCalledWith("timeSeries");
+    expect(setSidebarPanelIdSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("calls setSidebarPanelId with the correct value 'volume'", () => {
+    render(<Sidebar />);
+    // screen.debug();
+
+    fireEvent.click(screen.getByText("Volume"));
+
+    expect(setSidebarPanelIdSpy).toHaveBeenCalledWith("volume");
+    expect(setSidebarPanelIdSpy).toHaveBeenCalledTimes(1);
+  });
+
   it("calls setSidebarPanelId with the correct number of times", () => {
     render(<Sidebar />);
-    screen.debug();
+    // screen.debug();
+
     fireEvent.click(screen.getByText("Statistics"));
     fireEvent.click(screen.getByText("Statistics"));
 
@@ -86,18 +127,10 @@ describe("Sidebar Component", () => {
     expect(setSidebarPanelIdSpy).toHaveBeenCalledTimes(3);
   });
 
-  it("calls setSidebarPanelId with the correct value volume", () => {
-    render(<Sidebar />);
-    screen.debug();
-    fireEvent.click(screen.getByText("Volume"));
-
-    expect(setSidebarPanelIdSpy).toHaveBeenCalledWith("volume");
-    expect(setSidebarPanelIdSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls setSidebarPanelId with the no calls when it is info", () => {
+  it("doesn't call setSidebarPanelId when it is already 'info'", () => {
     render(<Sidebar />);
 
+    fireEvent.click(screen.getByText("Info"));
     fireEvent.click(screen.getByText("Info"));
     fireEvent.click(screen.getByText("Info"));
 

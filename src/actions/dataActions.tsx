@@ -90,7 +90,7 @@ import {
   setSidebarOpen,
 } from "./controlActions";
 import { setSidebarPanelId } from "@/features/sidebar/actions";
-import { AppStoreZ } from "@/features/sidebar/store";
+import { sidebarStore } from "@/features/sidebar/store";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -527,7 +527,7 @@ export function addStatistics() {
     const selectedPlaceInfo = selectedPlaceInfoSelector(getState());
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidebarOpen = getState().controlState.sidebarOpen;
-    const { sidebarPanelId } = AppStoreZ.getState();
+    const { sidebarPanelId } = sidebarStore.getState();
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
@@ -602,7 +602,7 @@ export function addTimeSeries() {
     const includeStdev = getState().controlState.timeSeriesIncludeStdev;
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
     const sidebarOpen = getState().controlState.sidebarOpen;
-    const { sidebarPanelId } = AppStoreZ.getState();
+    const { sidebarPanelId } = sidebarStore.getState();
 
     const placeGroups = placeGroupsSelector(getState());
 
