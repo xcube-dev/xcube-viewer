@@ -861,6 +861,49 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
+### Select Place in Map
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/select_place_map.png"
+					alt="Select Place in Map" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Select Place in Map</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button that is highlighted when enabled.</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Select a place by clicking on it directly in the map. The selected place
+				will be visually highlighted on the map with a yellow outline.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Select a place directly in the map.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#select" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 ### Rename Place Group/ Place
 
 <table>
@@ -1022,6 +1065,402 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Aim</b></td>
 			<td>Locate the selected place on the map.</td>
+		</tr>
+	</tbody>
+</table>
+
+### Add Place
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="../assets/images/features/add_place.png" alt="Add Place" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Create Place</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button that is highlighted when enabled.</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				<ul>
+					<li>
+						Create a new place directly in the map, options for creating places
+						include: <code>Point</code>, <code>Polygon</code>, and
+						<code>Circle</code>.
+					</li>
+					<li>
+						A newly created place is automatically set as the selected place.
+					</li>
+					<li>
+						New places are named according to their geometry type and order,
+						e.g., <code>Circle 1</code>.
+					</li>
+					<li>
+						Automatically display a time series for the selected variable when a
+						new place is created. If no data is available for the new place in
+						the dataset, a pop-up window appears with the
+						message:
+						<code>No information data found here</code>.
+					</li>
+					<li>
+						When the create feature mode is disabled, the
+						<a href="#select-place-in-map" rel="noopener noreferrer"
+							>Select place in map</a
+						>
+						mode is automatically enabled.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Create a place directly in the map.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#create" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Import Places
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/import_places.png"
+					alt="Import Places" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Import Places</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A button that is highlighted when enabled and opens a window for
+				importing places. Supports importing places in various formats,
+				including text/CSV, GeoJSON, and WKT.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				<ul>
+					<li>
+						Import places through different methods:
+						<ul>
+							<li>
+								<strong>Open from file:</strong> Opens a window to browse and
+								select a file locally.
+							</li>
+							<li>
+								<strong>Enter text:</strong> Manually input data into a text
+								box.
+							</li>
+							<li>
+								<strong>Drag & drop:</strong> Drag a file into the designated
+								area to load it into the text box.
+							</li>
+						</ul>
+					</li>
+					<li>
+						Includes a <strong>Clear</strong> button to remove the content of
+						the text box, available only when the box contains data.
+					</li>
+					<li>
+						<strong>Options:</strong> Can be expanded to provide additional
+						information and settings related to the import process.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Enable import of places from various sources, making it easier to manage
+				and display custom places within the Viewer.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#import" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Navigate Time Steps
+
+### Select Time Steps (Calender)
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/select_timestep_calender.png"
+					alt="Select Time Step" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Select Time Step (Calender)</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button that opens a calendar window when enabled.</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				The button opens a calendar window when clicked. Click on a date in the
+				calendar, to select and display the time step that is closest to the
+				chosen date.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Easily navigate and select specific time steps within a dataset using a
+				visual calendar interface.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/analyse/#navigate-through-time"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Select Time Steps (Slider)
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/select_timestep_slider.png"
+					alt="Select Time Step" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Select Time Step (Slider)</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A time slider to navigate through the time steps of the selected
+				variable. The slider is labeled with the first and last time steps of
+				the dataset at the start and end points.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>Move the slider to select and display the desired time step.</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Easily navigate and explore time steps within a dataset.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/analyse/#navigate-through-time"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### +/- 1 Time Step
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/player_next_prev.png"
+					alt="Move to previous or next Time Step" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Move to +/- 1 Time Step</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Buttons, designed according to its function, allowing to navigate to
+				either the previous or next time step of the dataset.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Click the buttons to move to the previous/next time step in the dataset
+				and displays the corresponding data on the map.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Quick navigation option to access the previous and next time steps in
+				the dataset.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/analyse/#navigate-through-time"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### First/Last Time Step
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/player_first_last.png"
+					alt="Step to first/last Time Step" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Move to first/last Time Step</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Buttons, designed according to its function, allowing to navigate to
+				either the first or last time step of the dataset.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Click the buttons to move to the first/last time step in the dataset and
+				displays the corresponding data on the map.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Quick navigation option to access the first and last time steps in the
+				dataset.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/analyse/#navigate-through-time"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Auto-step
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/player_autostep_start.png"
+					alt="Autostep" />
+				<img
+					src="../assets/images/features/player_autostep_pause.png"
+					alt="Autostep" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Auto-step</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A button that changes its appearance when the feature is activated,
+				while disabling the buttons used to navigate through time steps.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				When enabled, the button cycles through the time steps sequentially,
+				displaying each step in the viewer. The speed or interval of this
+				cycling can be configured in the 						<a
+							href="/user_guide/settings/#player-interval"
+							rel="noopener noreferrer"
+							>settings</a
+						>. Click the button again to
+				pause.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Engaging way to explore visually explore multiple time steps.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#the-player" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
 		</tr>
 	</tbody>
 </table>
