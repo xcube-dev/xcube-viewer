@@ -14,7 +14,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/select_dataset.png"
+					src="../assets/images/features/select_dataset.png"
 					alt="Select Dataset" />
 			</th>
 		</tr>
@@ -79,7 +79,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/locate_dataset.png"
+					src="../assets/images/features/locate_dataset.png"
 					alt="Locate Dataset" />
 			</th>
 		</tr>
@@ -108,7 +108,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/select_variable.png"
+					src="../assets/images/features/select_variable.png"
 					alt="Select Variable" />
 			</th>
 		</tr>
@@ -169,7 +169,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="/assets/images/features/layerpanel.png" alt="Layerpanel" />
+				<img src="../assets/images/features/layerpanel.png" alt="Layerpanel" />
 			</th>
 		</tr>
 	</thead>
@@ -213,7 +213,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="/assets/images/features/layerpanel.png" alt="Layerpanel" />
+				<img src="../assets/images/features/layerpanel.png" alt="Layerpanel" />
 			</th>
 		</tr>
 	</thead>
@@ -272,7 +272,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="/assets/images/features/infobox.png" alt="Info box" />
+				<img src="../assets/images/features/infobox.png" alt="Info box" />
 			</th>
 		</tr>
 	</thead>
@@ -320,7 +320,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/pin_variable.png"
+					src="../assets/images/features/pin_variable.png"
 					alt="Pin Variable" />
 			</th>
 		</tr>
@@ -375,7 +375,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="/assets/images/features/splitmode.png" alt="Split Mode" />
+				<img src="../assets/images/features/splitmode.png" alt="Split Mode" />
 			</th>
 		</tr>
 	</thead>
@@ -435,7 +435,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/user_variables.png"
+					src="../assets/images/features/user_variables.png"
 					alt="User Variable" />
 			</th>
 		</tr>
@@ -471,7 +471,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/user_variables_management.png"
+					src="../assets/images/features/user_variables_management.png"
 					alt="User Variables Management" />
 			</th>
 		</tr>
@@ -555,7 +555,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/user_variables_add.png"
+					src="../assets/images/features/user_variables_add.png"
 					alt="Add User Variable" />
 			</th>
 		</tr>
@@ -660,7 +660,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/add_timeseries.png"
+					src="../assets/images/features/add_timeseries.png"
 					alt="Add Time Series" />
 			</th>
 		</tr>
@@ -714,7 +714,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/add_statistics.png"
+					src="../assets/images/features/add_statistics.png"
 					alt="Add Statistics" />
 			</th>
 		</tr>
@@ -766,7 +766,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/select_place_group.png"
+					src="../assets/images/features/select_place_group.png"
 					alt="Select Place Group" />
 			</th>
 		</tr>
@@ -816,7 +816,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/select_place.png"
+					src="../assets/images/features/select_place.png"
 					alt="Select Place" />
 			</th>
 		</tr>
@@ -868,7 +868,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/rename_place.png"
+					src="../assets/images/features/rename_place.png"
 					alt="Rename Place" />
 			</th>
 		</tr>
@@ -912,7 +912,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<th colspan="2">
 				<img
-					src="/assets/images/features/remove_place.png"
+					src="../assets/images/features/remove_place.png"
 					alt="Rename Place" />
 			</th>
 		</tr>
@@ -955,7 +955,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="/assets/images/features/style_place.png" alt="Style Place" />
+				<img src="../assets/images/features/style_place.png" alt="Style Place" />
 			</th>
 		</tr>
 	</thead>
@@ -1002,7 +1002,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="/assets/images/features/locate_place.png" alt="Style Place" />
+				<img src="../assets/images/features/locate_place.png" alt="Style Place" />
 			</th>
 		</tr>
 	</thead>
