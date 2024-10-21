@@ -49,8 +49,8 @@ Compute and display basic statistics for the currently selected variable, select
 If the place is an area:
 
 - Statistics include minimum, maximum, mean, standard deviation, and a histogram
-- Adjust the x-range of the histogramm
-- Add the standard deviation to the histogramm
+- Adjust the x-range of the histogram
+- Add the standard deviation to the histogram
 - Copy a snapshot of the statistics to clipboard
 
 For point places:
@@ -135,7 +135,7 @@ Use the showen features of the Viewer to navigate through the time steps of a va
 
 ### The Player
 
-Use the player to auto-step through the variable of a dataset. The interval can be adjusted in the [settings](settings.md/#time-series).
+Use the player to auto-step through the variable of a dataset. The interval can be adjusted in the [settings](settings.md/#player-interval).
 
 ![Player](../assets/videos/Player_hh.gif)
 
