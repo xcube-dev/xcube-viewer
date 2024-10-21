@@ -38,7 +38,7 @@ import {
   ContributionState,
   useContributionModelsRecord,
   useContributionStatesRecord,
-} from "dashi";
+} from "dashipopashi";
 
 import { AppState } from "@/states/appState";
 import i18n from "@/i18n";
