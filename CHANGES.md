@@ -2,8 +2,7 @@
 
 ### New Features 
 
-* Users can now choose the application theme between light and dark mode 
-  from settings. Light mode is set as default. 
+* Users can now change the application theme from light, dark or system mode from settings.
   
 ### Fixes
 
