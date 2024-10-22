@@ -56,7 +56,6 @@ import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
 import RadioSetting from "./RadioSetting";
-import { Config } from "@/config";
 
 const styles: Record<string, SxProps<Theme>> = {
   textField: (theme) => ({

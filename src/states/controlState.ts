@@ -246,7 +246,6 @@ export function newControlState(): ControlState {
       ? Config.instance.branding.themeName
       : "system",
   };
-  console.log(Config.instance.branding.themeName);
   return loadUserSettings(state);
 }
 
