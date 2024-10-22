@@ -31,7 +31,7 @@ interface MarkdownPopoverProps {
   open: boolean;
   onClose?: () => void;
   markdownText?: string;
-  currentAppTheme?: boolean;
+  applicationTheme?: string;
 }
 
 export default function MarkdownPopover({
@@ -39,7 +39,7 @@ export default function MarkdownPopover({
   markdownText,
   open,
   onClose,
-  currentAppTheme,
+  applicationTheme,
 }: MarkdownPopoverProps) {
   if (!markdownText) {
     return null;
@@ -52,7 +52,7 @@ export default function MarkdownPopover({
         <a
           {...rest}
           style={{
-            color: currentAppTheme ? "#90caf9" : "#1e90ff",
+            color: applicationTheme ? "#90caf9" : "#1e90ff",
           }}
         />
       );

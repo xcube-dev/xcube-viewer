@@ -29,6 +29,7 @@ import {
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
+  useMediaQuery,
 } from "@mui/material";
 
 import { Config } from "@/config";
@@ -48,35 +49,50 @@ import UserVariablesDialog from "./UserVariablesDialog";
 
 interface AppProps {
   compact: boolean;
-  currentAppTheme: boolean;
+  applicationTheme: string;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (_state: AppState) => {
   return {
     compact: Config.instance.branding.compact,
-    currentAppTheme: _state.controlState.currentAppTheme,
+    applicationTheme: _state.controlState.applicationTheme,
   };
 };
 
 const mapDispatchToProps = {};
 
-const _App: React.FC<AppProps> = ({ compact, currentAppTheme }) => {
-  const newTheme = () => createTheme({
-    typography: {
-      fontSize: 12,
-      htmlFontSize: 14,
-    },
-    palette: {
-      mode: currentAppTheme ? "dark" : "light",
-      primary: Config.instance.branding.primaryColor,
-      secondary: Config.instance.branding.secondaryColor,
-    },
-  });
+const _App: React.FC<AppProps> = ({ compact, applicationTheme }) => {
+
+  const systemMode = useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light";
+
+  const createAppTheme = React.useCallback(() => {
+    const mode =
+      applicationTheme === "system"
+        ? systemMode
+        : applicationTheme === "dark"
+          ? "dark"
+          : "light";
+
+    return createTheme({
+      typography: {
+        fontSize: 12,
+        htmlFontSize: 14,
+      },
+      palette: {
+        mode: mode,
+        primary: Config.instance.branding.primaryColor,
+        secondary: Config.instance.branding.secondaryColor,
+      },
+    });
+  }, [applicationTheme, systemMode]);
+
+  const theme = createAppTheme();
+
   return (
     <AuthWrapper>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={newTheme()}>
+        <ThemeProvider theme={theme}>
           <CssBaseline />
           {!compact && <AppBar />}
           <AppPane />

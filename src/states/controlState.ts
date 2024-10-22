@@ -100,10 +100,16 @@ export const sidebarPanelIds: SidebarPanelId[] = [
   "volume",
 ];
 
+export const APPLICATION_THEMES: [ApplicationThemes, string][] = [
+  ["light", "Light"],
+  ["dark", "Dark"],
+  ["system", "System"],
+];
 export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
 export type VolumeState = { status: VolumeStatus; message?: string };
 export type VolumeStates = { [volumeId: string]: VolumeState };
+export type ApplicationThemes = "light" | "dark" | "system";
 
 export interface ControlState {
   selectedDatasetId: string | null;
@@ -160,7 +166,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
-  currentAppTheme: boolean;
+  applicationTheme: string;
 }
 
 export function newControlState(): ControlState {
@@ -236,8 +242,11 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
-    currentAppTheme: false,
+    applicationTheme: Config.instance.branding.themeName
+      ? Config.instance.branding.themeName
+      : "system",
   };
+  console.log(Config.instance.branding.themeName);
   return loadUserSettings(state);
 }
 
