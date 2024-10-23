@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-import { ReactElement } from "react";
+import { ReactElement, SyntheticEvent, useCallback, useMemo } from "react";
 import { connect } from "react-redux";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -34,8 +34,11 @@ import FunctionsIcon from "@mui/icons-material/Functions";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
 import {
-  Contribution,
-  ContributionState,
+  type Contribution,
+  type ContributionState,
+  DashiComponent,
+  applyPropertyChange,
+  setComponentVisibility,
   useContributionModelsRecord,
   useContributionStatesRecord,
 } from "dashipopashi";
@@ -49,6 +52,8 @@ import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
+import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
@@ -83,8 +88,8 @@ const styles = makeStyles({
 });
 
 interface SidebarProps {
-  sidebarPanelId: SidebarPanelId;
-  setSidebarPanelId: (sidebarPanelId: SidebarPanelId) => void;
+  sidebarPanelId: SidebarPanelId | string;
+  setSidebarPanelId: (sidebarPanelId: SidebarPanelId | string) => void;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -99,21 +104,43 @@ const mapDispatchToProps = {
 };
 
 function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
-  const contributionStatesRecord = useContributionStatesRecord();
   const contributionModelsRecord = useContributionModelsRecord();
-  const contributionStates: ContributionState[] =
-    contributionStatesRecord["panels"] || [];
-  const contributions: Contribution[] =
-    contributionModelsRecord["panels"] || [];
+  const contributionStatesRecord = useContributionStatesRecord();
+  const contributions: Contribution[] = useMemo(
+    () => contributionModelsRecord["panels"] || [],
+    [contributionModelsRecord],
+  );
+  const contributionStates: ContributionState[] = useMemo(
+    () => contributionStatesRecord["panels"] || [],
+    [contributionStatesRecord],
+  );
+
+  const contributionIndexes = useMemo(
+    () =>
+      contributions.reduce((map, contribution, contribIndex) => {
+        map.set(contribution.name, contribIndex);
+        return map;
+      }, new Map<string, number>()),
+    [contributions],
+  );
+
+  const handleTabChange = useCallback(
+    (_: SyntheticEvent, value: SidebarPanelId | string) => {
+      setSidebarPanelId(value);
+      const contribIndex = contributionIndexes.get(value);
+      if (typeof contribIndex === "number") {
+        setComponentVisibility("panels", contribIndex, true);
+      }
+    },
+    [contributionIndexes, setSidebarPanelId],
+  );
 
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={styles.tabBoxHeader}>
         <Tabs
           value={sidebarPanelId}
-          onChange={(_, value) => {
-            setSidebarPanelId(value as SidebarPanelId);
-          }}
+          onChange={handleTabChange}
           variant="scrollable"
           sx={styles.tabs}
         >
@@ -143,6 +170,34 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
       {sidebarPanelId === "stats" && <StatisticsPanel />}
       {sidebarPanelId === "timeSeries" && <TimeSeriesPanel />}
       {sidebarPanelId === "volume" && <VolumePanel />}
+      {contributions.map((contribution, panelIndex) => {
+        if (sidebarPanelId !== contribution.name) {
+          return null;
+        }
+        const contributionState = contributionStates[panelIndex];
+        const componentStateResult = contributionState.componentStateResult;
+        if (componentStateResult.status === "pending") {
+          return <CircularProgress />;
+        } else if (componentStateResult.error) {
+          return (
+            <div>
+              <Typography color="error">
+                {componentStateResult.error.message}
+              </Typography>
+            </div>
+          );
+        } else if (contributionState.componentState) {
+          return (
+            <DashiComponent
+              {...contributionState.componentState}
+              onPropertyChange={(event) => {
+                applyPropertyChange("panels", panelIndex, event);
+              }}
+            />
+          );
+        }
+        return null;
+      })}
     </Box>
   );
 }

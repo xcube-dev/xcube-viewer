@@ -551,11 +551,11 @@ export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
 
 export interface SetSidebarPanelId {
   type: typeof SET_SIDEBAR_PANEL_ID;
-  sidebarPanelId: SidebarPanelId;
+  sidebarPanelId: SidebarPanelId | string;
 }
 
 export function setSidebarPanelId(
-  sidebarPanelId: SidebarPanelId,
+  sidebarPanelId: SidebarPanelId | string,
 ): SetSidebarPanelId {
   return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
 }
