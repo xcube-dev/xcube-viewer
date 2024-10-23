@@ -42,7 +42,7 @@ import ControlBarItem from "./ControlBarItem";
 const styles = (theme: Theme) =>
   createStyles({
     dateTimePicker: {
-      marginTop: theme.spacing(2.5),
+      marginTop: theme.spacing(2),
     },
   });
 
@@ -100,7 +100,12 @@ const _TimeSelect: React.FC<TimeSelectProps> = ({
         maxDateTime={maxTimeValue}
         onChange={handleTimeChange}
         ampm={false}
-        slotProps={{ textField: { variant: "standard", size: "small" } }}
+        slotProps={{
+          textField: {
+            variant: "standard",
+            size: "small",
+          },
+        }}
         viewRenderers={{
           hours: null,
           minutes: null,
