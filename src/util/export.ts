@@ -78,13 +78,13 @@ async function _exportElement(
     if (!(format in converters)) {
       throw new Error(`Image format '${format}' is unknown or not supported.`);
     }
+    const scaledWidth = options.width || element.clientWidth;
+    const scaledHeight = options.height || element.clientHeight;
     const controlDiv = options.controlDiv;
     const zoomDiv = options.zoomDiv;
     if (controlDiv) controlDiv.style.display = "none";
     if (zoomDiv) zoomDiv.hidden = true;
     const offScreenCanvas = document.createElement("canvas");
-    const scaledWidth = options.width || element.clientWidth;
-    const scaledHeight = options.height || element.clientHeight;
     offScreenCanvas.width = scaledWidth;
     offScreenCanvas.height = scaledHeight;
     const context = offScreenCanvas.getContext("2d");
@@ -114,6 +114,7 @@ async function _exportElement(
         }
       }, `image/${format}`);
     });
+
     await navigator.clipboard.write([
       new ClipboardItem({
         [`image/${format}`]: blob,
