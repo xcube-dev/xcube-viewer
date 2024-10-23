@@ -101,6 +101,11 @@ const _TimeSelect: React.FC<TimeSelectProps> = ({
         onChange={handleTimeChange}
         ampm={false}
         slotProps={{ textField: { variant: "standard", size: "small" } }}
+        viewRenderers={{
+          hours: null,
+          minutes: null,
+          seconds: null,
+        }}
       />
     </LocalizationProvider>
   );
