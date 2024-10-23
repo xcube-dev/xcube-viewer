@@ -134,18 +134,29 @@ export default function SnapshotButton({
 
                 targetElement.style.width = `${originalWidth}px`;
                 targetElement.style.height = `${originalHeight}px`;
-              }, 2000);
+              }, 1000);
             },
             handleError: handleExportError,
             controlDiv,
             zoomDiv,
           });
         } else {
+          // const DPI = exportResolution ?? 96;
+          // const scaleFactor = DPI / 96;
+          // const exportWidth = Math.round(targetElement.clientWidth * scaleFactor);
+          // const exportHeight = Math.round(targetElement.clientHeight * scaleFactor);
+
+          // targetElement.style.width = `${exportWidth}px`;
+          // targetElement.style.height = `${exportHeight}px`;
+
           exportElement(targetElement, {
             format: 'png',
-            width: 2000,
-            handleSuccess: handleExportSuccess,
-            handleError: handleExportError,
+            handleSuccess: () => {
+              handleExportSuccess();
+            },
+            handleError: (error: any) => {
+              handleExportError(error);
+            },
             controlDiv,
             zoomDiv,
           });
