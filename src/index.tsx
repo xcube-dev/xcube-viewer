@@ -28,6 +28,7 @@ import * as Redux from "redux";
 import { Action, Dispatch } from "redux";
 import * as ReduxLogger from "redux-logger";
 import thunk from "redux-thunk";
+import { configureLogging, initSystemStore } from "dashipopashi";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -56,6 +57,9 @@ Config.load().then(() => {
   });
   const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
   const store = Redux.createStore(appReducer, middlewares);
+
+  configureLogging();
+  initSystemStore();
 
   const dispatch: Dispatch = store.dispatch;
 
