@@ -110,6 +110,7 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
   chartElement: RefObject<HTMLDivElement>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  exportResolution?: number;
 }
 
 export default function TimeSeriesChartHeader({
@@ -133,6 +134,7 @@ export default function TimeSeriesChartHeader({
   setValueRange,
   chartElement,
   postMessage,
+  exportResolution
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
@@ -255,7 +257,7 @@ export default function TimeSeriesChartHeader({
           </Tooltip>
         </ToggleButtonGroup>
 
-        <SnapshotButton elementRef={chartElement} postMessage={postMessage} />
+        <SnapshotButton elementRef={chartElement} postMessage={postMessage} exportResolution={exportResolution} />
 
         <TimeSeriesAddButton
           sx={styles.actionButton}

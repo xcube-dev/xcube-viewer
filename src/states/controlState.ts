@@ -49,7 +49,8 @@ export type MapInteraction =
   | "Point"
   | "Polygon"
   | "Circle"
-  | "Geometry";
+  | "Geometry"
+  | "Export";
 
 export type ViewMode = "text" | "list" | "code" | "python";
 
@@ -104,6 +105,7 @@ export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
 export type VolumeState = { status: VolumeStatus; message?: string };
 export type VolumeStates = { [volumeId: string]: VolumeState };
+export type ExportResolution = 96 | 150 | 300 | 600;
 
 export interface ControlState {
   selectedDatasetId: string | null;
@@ -160,6 +162,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
+  exportResolution: ExportResolution;
 }
 
 export function newControlState(): ControlState {
@@ -235,6 +238,7 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
+    exportResolution: 96,
   };
   return loadUserSettings(state);
 }
