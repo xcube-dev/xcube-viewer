@@ -1239,7 +1239,10 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				The button opens a calendar window when clicked. Click on a date in the
 				calendar, to select and display the time step that is closest to the
-				chosen date.
+				chosen date.<br /><br />
+				The time resolution (HH:MM:SS) is not supported yet, but it will be
+				displayed in the calendar view if the resolution is available in the
+				dataset.
 			</td>
 		</tr>
 		<tr>
@@ -1452,12 +1455,274 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
-			<td>Engaging way to explore visually explore multiple time steps.</td>
+			<td>Engaging way to visually explore multiple time steps.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
 				<a href="/user_guide/analyse/#the-player" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Color Mapping
+
+### Legend
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/colormap_legend.png"
+					alt="Color Map Legend" style="max-width: 40%" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Legend</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Displays the current color map, the value range, and the long name of
+				the variable along with its units (these details are extracted from the
+				dataset). The color mapping is selected automatically based on the
+				configuration in xcube Server. The value range and color bar are hidden
+				buttons, providing access to adjust the value range and
+				color map.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				The legend is interactiv:
+				<ul>
+				<li>
+					Click on the color map open the
+					<a href="#color-map-menu" rel="noopener noreferrer"
+						>Color Mapping Menu</a
+					>.
+				</li>
+				<li>
+					Click on the ticks of the
+					<a href="#value-range" rel="noopener noreferrer">value range</a> to
+					adjust the range through a small pop-up window.
+				</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Display the color mapping of the current variable and provide access
+				to further adjustments regarding the color mapping.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/colormaps/" rel="noopener noreferrer">User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Value Range
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/colormap_valuerange.png"
+					alt="Color Map Value Range" style="max-width: 40%" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Adjust Value Range</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A window that opens when clicking on the value range of the color bar in the legend,
+				to adjust the settings of the value range.
+				<br />This includes:
+				<ul>
+					<li>
+						A slider to manually adjust the
+						<strong>minimum and maximum</strong> values.
+					</li>
+					<li>
+						Text fields to enter <strong>minimum and maximum</strong> values.
+					</li>
+					<li>
+						A toggle button on the top-right corner to enable
+						<strong>log-scaling</strong>.
+					</li>
+					<li>
+						A toggle button for applying the value range of the color map. This
+						feature is only available if the <strong>color map</strong> has an
+						<strong>assigned value range</strong>.
+					</li>
+				</ul>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td><b>Functionality</b></td>
+    		<td>
+				Open the feature by clicking on the legend area where the value ticks
+				are shown. Then use the available features to adjust the edges of the
+				value range, to use a log-scaling or to apply the assigned value range
+				of the color map.
+    		</td>
+    	</tr>
+    	<tr>
+    		<td><b>Aim</b></td>
+    		<td>
+    			Adjust the value range of the current color mapping .
+    		</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2">
+    			Link to feature mentioned in
+    			<a
+    				href="/user_guide/colormaps/#adjust-the-value-range"
+    				rel="noopener noreferrer"
+    				>User Guide</a
+    			>.
+    		</td>
+    	</tr>
+    </tbody>
+
+</table>
+
+### Color Map Menu
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="../assets/images/features/colormap_menu.png" alt="Color Map Menu" style="max-width: 20%" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Color Map Menu</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A window that opens when clicking on the color bar in the legend. This
+				window provides access to custom colormap management, including a list
+				of all available color maps. It also offers options for hiding small
+				values (button), adjusting opacity (slider), and reversing the color map
+				(button).
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				<ul>
+					<li>Open the menu by clicking on the colormap in the legend.</li>
+					<li>
+						Use the menu to select, create, edit, or delete custom color maps.
+					</li>
+					<li>Select from a list of pre-installed color maps.</li>
+					<li>
+						Adjust the appearance of the current colormap by hiding small
+						values, changing opacity, or reversing the color map.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Manage custom color maps, change, adjust and modify the current color
+				mapping.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/colormaps/#change-or-create-color-maps"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Custom Colour Maps
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/colormap_custom.png"
+					alt="Color Map Custom" style="max-width: 30%"/>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Custom Color Maps</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A small workspace that appears when clicking the <code>+</code>-button
+				in the Color Mapping Menu or when editing an existing custom color map.
+				Displayed at the top is the color bar, then there is the option to select
+				the color map type (continious, stepwise, categorical) followed by a
+				text field where users can define or edit the color map.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				<ul>
+					<li>
+						Opens when the <code>+</code>-button is used in the Color Mapping
+						Menu or when an existing custom color map is selected for editing.
+					</li>
+					<li>
+						Decide on the color mapping type (continious, stepwise,
+						categorical).
+					</li>
+					<li>
+						In the text box, define the mapping using the general
+						syntax <code>&lt;value&gt;: &lt;color&gt;</code>.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Select, create, edit or delete custom color maps.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/colormaps/#user-defined-color-maps"
+					rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
