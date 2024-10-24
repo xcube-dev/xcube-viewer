@@ -1,5 +1,10 @@
 ## Changes in version 1.4.0 (in development)
 
+### New Features 
+
+* Users can now copy snapshots of a map into the clipboard by clicking a new 
+  camera icon on a map's action bar. (#290)
+
 ### Other changes
 
 * Updated dependencies, development dependencies and updated TypeScript code base accordingly.
@@ -32,14 +37,10 @@
 
 * Updated language translations (German and Swedish) for `Add Statistics`
   and `Style Place`.
-
+  
 ## Changes in version 1.3.0
 
 ### New Features 
-
-* Users can now copy snapshots of a time-series charts and statistics
-  into the clipboard by clicking a new camera icon on a chart's action bar.
-  (#290)
 
 * It is now possible to change the color and opacity of user places
   and hence associated time-series and statistic charts. (#97, #216)
@@ -65,6 +66,7 @@
 
 * Now recognising new custom color maps from xcube server, for details 
   refer to https://github.com/xcube-dev/xcube/issues/1046. (#392)
+
 
 ### Enhancements
 

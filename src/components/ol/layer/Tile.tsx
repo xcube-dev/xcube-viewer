@@ -41,7 +41,7 @@ let trace: (message?: string, ...optionalParams: unknown[]) => void;
 if (import.meta.env.DEV && DEBUG) {
   trace = console.debug;
 } else {
-  trace = () => {};
+  trace = () => { };
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -66,12 +66,16 @@ export function OSMBlackAndWhite(): JSX.Element {
 
 interface TileProps
   extends MapComponentProps,
-    OlTileLayerOptions<OlTileSource> {}
+  OlTileLayerOptions<OlTileSource> { }
 
 export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
     const layer = new OlTileLayer(this.props);
     layer.set("id", this.props.id);
+    const source = layer.getSource() as OlTileSource & { crossOrigin?: string };
+    if (source && 'crossOrigin' in source) {
+      source.crossOrigin = "Anonymous";
+    }
     map.getLayers().push(layer);
     return layer;
   }
