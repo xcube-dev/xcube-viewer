@@ -2,7 +2,7 @@
 
 A simple viewer component for [xcube](https://xcube.readthedocs.io/).
 
-![xcube-viewer](./doc/xcube-viewer.png)
+![xcube-viewer](./docs/assets/images/xcube-viewer.png)
 
 ## Run it
 
@@ -126,7 +126,7 @@ and use its properties in components
 
 ## More
 
-* [User Guide](https://xcube.readthedocs.io/en/latest/viewer.html#)
+* [User Guide](https://xcube-dev.github.io/xcube-viewer/)
 * [Planned Enhancements](https://github.com/xcube-dev/xcube-viewer/labels/enhancement)
 * [Known Issues](https://github.com/xcube-dev/xcube-viewer/labels/bug)
 

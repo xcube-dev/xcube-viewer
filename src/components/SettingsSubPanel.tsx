@@ -32,6 +32,7 @@ interface SettingsSubPanelProps {
   label: string;
   value?: string | number;
   onClick?: (event: React.MouseEvent) => void;
+  children?: React.ReactNode;
 }
 
 const SettingsSubPanel: React.FC<SettingsSubPanelProps> = ({
