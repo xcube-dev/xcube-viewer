@@ -156,7 +156,9 @@ export default function TimePlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <FirstPageIcon />
+      <Tooltip arrow title={i18n.get("First time step")}>
+        <FirstPageIcon />
+      </Tooltip>
     </IconButton>
   );
 
@@ -167,7 +169,9 @@ export default function TimePlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <ChevronLeftIcon />
+      <Tooltip arrow title={i18n.get("Previous time step")}>
+        <ChevronLeftIcon />
+      </Tooltip>
     </IconButton>
   );
   const nextTimeStepButton = (
@@ -177,7 +181,9 @@ export default function TimePlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <ChevronRightIcon />
+      <Tooltip arrow title={i18n.get("Next time step")}>
+        <ChevronRightIcon />
+      </Tooltip>
     </IconButton>
   );
   const lastTimeStepButton = (
@@ -187,7 +193,9 @@ export default function TimePlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <LastPageIcon />
+      <Tooltip arrow title={i18n.get("Last time step")}>
+        <LastPageIcon />
+      </Tooltip>
     </IconButton>
   );
 
