@@ -151,12 +151,8 @@ export default function SnapshotButton({
 
           exportElement(targetElement, {
             format: 'png',
-            handleSuccess: () => {
-              handleExportSuccess();
-            },
-            handleError: (error: any) => {
-              handleExportError(error);
-            },
+            handleSuccess: handleExportSuccess,
+            handleError: handleExportError,
             controlDiv,
             zoomDiv,
           });
