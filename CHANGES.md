@@ -51,10 +51,6 @@
 
 ### New Features 
 
-* Users can now copy snapshots of a time-series charts and statistics
-  into the clipboard by clicking a new camera icon on a chart's action bar.
-  (#290)
-
 * It is now possible to change the color and opacity of user places
   and hence associated time-series and statistic charts. (#97, #216)
 
