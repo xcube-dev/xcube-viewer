@@ -3,16 +3,16 @@
 
 ### New Features
 
-* Users can now copy snapshots of a map into the clipboard by clicking a new 
+* Users can now copy snapshots of a map into the clipboard by clicking a new
   camera icon on a map's action bar. (#290)
 
 ### Other changes
 
 * Updated dependencies, development dependencies and updated TypeScript code base accordingly.
-    - `react` from v17 to v18
-    - `react-dom` from v17 to v18
-    - `mui` from v5 to v6
-    - `testing-library/react` from v12 to v16
+  - `react` from v17 to v18
+  - `react-dom` from v17 to v18
+  - `mui` from v5 to v6
+  - `testing-library/react` from v12 to v16
 
 ## Changes in version 1.3.1
 

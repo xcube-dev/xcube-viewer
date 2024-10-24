@@ -518,6 +518,7 @@ interface InfoCardContentProps {
   viewMode: ViewMode;
   setViewMode: (viewMode: ViewMode) => void;
   hasPython?: boolean;
+  children?: React.ReactNode;
 }
 
 const InfoCardContent: React.FC<InfoCardContentProps> = ({
@@ -594,7 +595,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-type KeyValue = [string, unknown];
+type KeyValue = [string, React.ReactNode];
 
 interface KeyValueTableProps {
   data: KeyValue[];
@@ -635,8 +636,11 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+interface CardContent2Props {
+  children: React.ReactNode;
+}
 
-const CardContent2: React.FC = ({ children }) => {
+const CardContent2: React.FC<CardContent2Props> = ({ children }) => {
   return <CardContent sx={styles.cardContent}>{children}</CardContent>;
 };
 

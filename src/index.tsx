@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import * as ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import * as Redux from "redux";
 import { Action, Dispatch } from "redux";
@@ -65,8 +65,7 @@ Config.load().then(() => {
     dispatch(syncWithServer() as unknown as Action);
   }
 
-  ReactDOM.render(
+  ReactDOM.createRoot(document.getElementById("root")!).render(
     <Provider store={store}>{<App />}</Provider>,
-    document.getElementById("root") as HTMLElement,
   );
 });
