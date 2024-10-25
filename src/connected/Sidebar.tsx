@@ -177,10 +177,10 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
         const contributionState = contributionStates[panelIndex];
         const componentStateResult = contributionState.componentStateResult;
         if (componentStateResult.status === "pending") {
-          return <CircularProgress />;
+          return <CircularProgress key={contribution.name} />;
         } else if (componentStateResult.error) {
           return (
-            <div>
+            <div key={contribution.name}>
               <Typography color="error">
                 {componentStateResult.error.message}
               </Typography>
@@ -189,6 +189,7 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
         } else if (contributionState.componentState) {
           return (
             <DashiComponent
+              key={contribution.name}
               {...contributionState.componentState}
               onPropertyChange={(event) => {
                 applyPropertyChange("panels", panelIndex, event);
