@@ -651,6 +651,93 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
+## Metadata
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/sidebar_metadata.png"
+					alt="Metadata" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Metadata</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Positioned in the sidebar, this is the first tab that displays metadata
+				for a dataset, selected variable, or selected place. The display of
+				metadata for each of these objects can be toggled using the buttons at
+				the top left. When a display is enabled, the button's background appears
+				highlighted in gray. Next to the displayed metadata information, three
+				additional buttons control the format of the metadata display. Depending
+				on the selected format, the active button's background is highlighted in
+				gray.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the sidebar and navigate to the "Info" tab to view the metadata.
+				Enable the display for the object of interest: <strong>dataset, selected
+				variable, or selected place</strong>. If no place is currently selected, the most
+				recently selected place will be used. Then, choose the relevant metadata
+				format:
+				<ul>
+					<li>
+						<strong>Textual:</strong> A summary of properties in a
+						human-readable format.
+					</li>
+					<li>
+						<strong>Tabular:</strong> A complete list of attributes presented in
+						a table.
+					</li>
+					<li>
+						<strong>JSON:</strong> All attributes shown as machine-readable
+						JSON.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				To provide metadata information for the dataset, the selected variable,
+				or the selected place.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="/user_guide/getting_started/#metadata"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+				<tr>
+			<td colspan="3" style="text-align: center;">
+				<img
+					src="../assets/images/features/sidebar_meta_textual.png"
+					alt="Metadata Textual Format" style="max-width: 30%" />
+				<img
+					src="../assets/images/features/sidebar_meta_tabular.png"
+					alt="Metadata Tabular Format" style="max-width: 30%" />
+				<img
+					src="../assets/images/features/sidebar_meta_json.png"
+					alt="Metadata JSON Format"  style="max-width: 30%"/>
+			</td>
+		</tr>
+    </tbody>
+</table>
+
 ## Time Series
 
 ### Add Time Series
@@ -703,6 +790,141 @@ A list of all the features that the viewer contains will be created here, in whi
 			</td>
 		</tr>
 	</tbody>
+</table>
+
+### Add Initial Time Series
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/sidebar_initial_timeseries.png"
+					alt="Initial Time Series" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Initial Time Series</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				The space under the "Time Series" tab in the sidebar varies depending on
+				whether a time series graph is present. If no time series graph exists:
+				A message indicates that no time series is currently displayed. A button
+				is also available, which becomes active (with blue font color) when a
+				variable and place are selected and it is possible to create a time
+				series.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the sidebar and navigate to the "Time Series". Select a place and a
+				variable, then click the button to display a time series. Alternatively,
+				the time series can be created using
+				<a href="#add-time-series" rel="noopener noreferrer"
+					>the button in the header</a
+				>.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				To create the initial time series graph for a selected place and
+				variable in the sidebar.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#time-series" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Navigate Time Series Graphs
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/sidebar_navigate_timeseries.png"
+					alt="Navigate Time Series Graphs" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Navigate Time Series Graphs</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A time series graph is displayed in the sidebar under the "Time Series"
+				tab. Time series extracted from the same variable are displayed in a
+				combined plot, allowing for easy comparison. A slider located at the top
+				of the section to controll the displayed time range. Additionally,
+				several features for navigating through the time series plot are
+				conveniently positioned at the top right of the graph. The places for
+				which time series have been extracted are listed below each plot,
+				displaying the place name and coordinates if they are points.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the sidebar and navigate to the "Time Series".
+    			<ul>
+    				<li>
+    					Remove time series graphs of places by clicking the <code>-</code>-
+    					button located below the plot next to the respective place. (h)
+    				</li>
+    				<li>Adjust the time range to focus on a specific period of interest.
+						This applies to time series of different variables within a
+						dataset (a)</li>
+    				<li>Additionally, enable the buttons on the top right to:</li>
+					<ul>
+						<li>Reset everything back to the full scale (b)</li>
+						<li>Zoom into the graph freely by pressing the Ctrl-key (c)</li>
+						<li>Set a fixed y-scale for the graph (d)</li>
+						<li>
+							Hover over the graph to view detailed information for specific
+							time steps via a popup info box (e)
+						</li>
+						<li>
+							Display data with points, lines, or bars. For polygons or circles,
+							you can also add the standard deviation to the graph (f)
+						</li>
+						<li>Copy a snapshot a time series to clipboard (g)</li>
+					</ul>
+    			</ul>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td><b>Aim</b></td>
+    		<td>
+    			To provide a range of functions for investigating time series data.
+    		</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2">
+    			Link to feature mentioned in
+    			<a href="/user_guide/analyse/#time-series" rel="noopener noreferrer"
+    				>User Guide</a
+    			>.
+    		</td>
+    	</tr>
+    </tbody>
+
 </table>
 
 ## Statistics
