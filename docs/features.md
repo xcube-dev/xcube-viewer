@@ -929,6 +929,59 @@ A list of all the features that the viewer contains will be created here, in whi
 
 ## Statistics
 
+### Statistics Overview
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/sidebar_statistics_overview.png"
+					alt="Statistics Overview" style="max-width: 70%" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Statistics Overview</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				This tab, located in the sidebar, lists all generated statistics with
+				the most recent ones at the top. When a variable and place are selected,
+				an option to generate statistics for them appears above the list of
+				existing statistics. This option becomes active once a place is
+				selected.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the tab in the sidebar and add new statistics with the
+				<code>+</code>-button and remove statistics using the
+				<code>x</code>-button.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				To provide a dedicated space to display, generate, and manage
+				statistics.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#staticstics" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 ### Add Statistics
 
 <table>
@@ -972,6 +1025,113 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Statistics Display - Points
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/sidebar_statistics_points.png"
+					alt="Statistics Points" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Statistics Display Points</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Located in the <strong>Statistics</strong>-tab, a table displays the
+				value at the selected point's coordinates for the selected variable.
+				Above the table, details are shown, including the dataset, variable,
+				time step, and place name.
+			</td>
+		</tr>
+				<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the tab in the sidebar and add new statistics with the
+				<code>+</code>-button and remove statistics using the
+				<code>x</code>-button.
+			</td>
+		</tr>
+    	<tr>
+    		<td><b>Aim</b></td>
+    		<td>To display statistical information for places of type "Point."</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2">
+    			Link to feature mentioned in
+    			<a href="/user_guide/analyse/#staticstics" rel="noopener noreferrer"
+    				>User Guide</a
+    			>.
+    		</td>
+    	</tr>
+    </tbody>
+</table>
+
+### Statistics Display - Polygons/Circles
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/sidebar_statistics_polygons.png"
+					alt="Statistics Polygons/Circles" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Statistics Display Polygons/Circles</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Located in the <strong>Statistics</strong>-tab, a table provides
+				statistical values, including pixel count, minimum, maximum, mean, and
+				standard deviation. A histogram displays these values, using the color
+				associated with the place. Features to explore the statistics include:
+				<ul>
+					<li>Adjust the x-range of the histogram (a)</li>
+					<li>Add the standard deviation to the histogram (b)</li>
+					<li>Copy a snapshot of the statistics to clipboard (c)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the tab in the sidebar and add new statistics with the
+				<code>+</code>-button and remove statistics using the
+				<code>x</code>-button. Then, use the mentioned features to explore and
+				work with the statistics
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				To display and explore statistical information for places of type
+				"Polygon" or "Circle."
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#staticstics" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1426,6 +1586,68 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a href="/user_guide/analyse/#import" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## Export Data
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/export_data.png"
+					alt="Export Data" style="max-width: 40%" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Export Data</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A pop-up window that provides options for configuring the export
+				settings for time series and place geometries.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the export settings and select options for export:
+				<ul>
+					<li>
+						<strong>Include time series data</strong> (file format:
+						<code>.txt</code>)
+					</li>
+					<li>
+						<strong>Separator</strong> for time series data (default:
+						<code>,</code>)
+					</li>
+					<li>
+						<strong>Include place data</strong> (file format:
+						<code>.geojson</code>)
+					</li>
+					<li><strong>Combine place data</strong> into a single file</li>
+					<li>Export as a <strong>ZIP archive</strong></li>
+					<li><strong>Filename</strong> configuration</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>To export places and/or time series created within the Viewer.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analyse/#export" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
