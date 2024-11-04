@@ -44,11 +44,11 @@ Additional layers (WMS, XYZ) from external services can also be added by clickin
 
 ![Settings - Maps - User Maps](../assets/images/viewer/settings_usermaps.png)
 
-### Zoom on Dataset/Variable Selection
+### Zoom on Dataset/Place Selection
 
 ![On Selection](../assets/images/viewer/settings_on_selection.png)
 
-The map extent can be changed when selecting a new Dataset or Variable. The following options are available:
+The map extent can be changed when selecting a new Dataset or Place. The following options are available:
 
 - `pan` : map moves to the center of dataset bounding box
 - `pan and zoom`: map moves to the center and zooms to the extent of the dataset

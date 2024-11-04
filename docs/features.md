@@ -27,36 +27,33 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				A drop-down menu, grouped by data format, selected dataset is
-				highlighted
+				A drop-down menu, which is grouped by data format. The selected dataset is
+				highlighted.
 			</td>
 		</tr>
 		<tr></tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
+				The drop-down menu holds all datasets available on the server. When a
+				new dataset is selected:
 				<ul>
-					<li>Holds all datasets available on the server.</li>
 					<li>
-						The map's zoom and pan behavior upon dataset selection depends on
-						<a
-							href="/user_guide/settings/#zoom-on-datasetvarialbe-selection"
-							rel="noopener noreferrer"
-							>user-defined settings</a
-						>.
+						The first variable in the dataset is automatically selected,
+						<b>or</b>
 					</li>
-					<li>When a new dataset is selected:</li>
-					<ul>
-						<li>
-							The first variable in the dataset is automatically selected,
-							<b>or</b>
-						</li>
-						<li>
-							If the new dataset contains a variable with the same name as the
-							previously selected variable, that variable will be pre-selected.
-						</li>
-					</ul>
+					<li>
+						If the new dataset contains a variable with the same name as the
+						previously selected variable, that variable will be pre-selected.
+					</li>
 				</ul>
+				Upon dataset selection the map can pan and zoom to the extent of the
+				dataset. The map's zoom and pan behavior depends on the
+				<a
+					href="/user_guide/settings/#zoom-on-datasetvariable-selection"
+					rel="noopener noreferrer"
+					>user-defined settings</a
+				>.
 			</td>
 		</tr>
 		<tr>
@@ -135,13 +132,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Functionality</b></td>
 			<td>
 				Displays all variables available in the dataset, along with any
-				user-defined variables. The map's zoom and pan behavior when selecting a
-				dataset depends on the
-				<a
-					href="/user_guide/settings/#zoom-on-datasetvarialbe-selection"
-					rel="noopener noreferrer"
-					>user-defined settings</a
-				>.
+				user-defined variables.
 			</td>
 		</tr>
 		<tr>
@@ -213,7 +204,10 @@ A list of all the features that the viewer contains will be created here, in whi
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="../assets/images/features/layerpanel.png" alt="Layerpanel" />
+				<img
+					src="../assets/images/viewer/datamanagement_visibility_added.png"
+					alt="Layerpanel"
+					style="max-width: 50%" />
 			</th>
 		</tr>
 	</thead>
@@ -228,30 +222,39 @@ A list of all the features that the viewer contains will be created here, in whi
 				A draggable window displaying a list of available layers, with options
 				at the bottom to add user-defined basemaps or overlays. Visible layers
 				are marked with a checkmark, while pinned variables are indicated by a
-				pin icon.
+				pin icon.<br><br>This is the list of available layers in the Layers Panel:
+				<ul>
+					<li>the selected variable</li>
+					<li>pinned variable (marked with an icon)</li>
+					<li>user and dataset places</li>
+					<li>base map and overlay</li>
+					<li>the boundary box of the selected dataset</li>
+					<li>the RGB of both the selected and pinned dataset</li>
+				</ul>
 			</td>
 		</tr>
 		<tr></tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				The Layer Panel allows users to show or hide the following layers: the
-				selected variable, pinned variable (marked with an icon), user and
-				dataset places, base map and overlay, the boundary box of the selected
-				dataset, and the RGB of both the selected and pinned dataset. It also
-				enables users to add or modify user variables or overlays, a function
-				that can also be performed in the
+				Open the panel by using
+				<a href="#showhide-layer-panel" rel="noopener noreferrer">the button</a>
+				on the left side of the map and control the visibility of the available
+				layers by clicking on them in the list.<br /><br />Add or modify user
+				variables or overlays at the bottom of the panel. Alternatively, that
+				can also be done in the
 				<a
-					href="user_guide/settings/#base-maps-and-overlays"
+					href="/user_guide/settings/#user-base-maps-and-overlays"
 					rel="noopener noreferrer"
 					>settings</a
-				>. The window appears when the function is enabled and can be closed
-				either by clicking the <code>X</code> or by clicking the button again.
+				>.<br /><br />
+				Close the panel by by either clicking the <code>X</code> or the button
+				again.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
-			<td>Enable users to controll the visibility of layers.</td>
+			<td>Enable users to control the visibility of layers.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -266,13 +269,58 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
+### Enable Info Box
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/features/infobox_button.png"
+					alt="Enable Information Box" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Enable Info Box</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>Button, highlighted when feature is enabled</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Enables the
+				<a href="#infobox" rel="noopener noreferrer">info box</a
+				>.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Enable users to use the info box.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="/user_guide/analysis/#infobox" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 ### Information Box
 
 <table>
 	<thead>
 		<tr>
 			<th colspan="2">
-				<img src="../assets/images/features/infobox.png" alt="Info box" />
+				<img src="../assets/images/features/infobox_box.png" alt="Info box" />
 			</th>
 		</tr>
 	</thead>
@@ -283,15 +331,20 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 		<tr>
 			<td><b>Description</b></td>
-			<td>Button, highlighted when function is enabled</td>
+			<td>
+				Displays an information box that provides pixel details for the area
+				being hovered over. This includes latitude, longitude, the selected
+				variable, and the pinned variable.
+			</td>
 		</tr>
 		<tr></tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Displays an information box that provides pixel details for the area
-				being hovered over. This includes latitude, longitude, the selected
-				variable, and the pinned variable.
+				Enable the info box feature by using 
+				<a href="#enable-info-box" rel="noopener noreferrer">the button</a>
+				on the left side of the map and hover over the map to access pixel
+				information.
 			</td>
 		</tr>
 		<tr>
@@ -301,9 +354,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a
-					href="/user_guide/analyse/#infobox"
-					rel="noopener noreferrer"
+				<a href="/user_guide/analyse/#infobox" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -333,23 +384,22 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				Button that has a dark background when activated or when a pinned
-				variable is selected.
+				Button that is highlighted when the currently selected variable is the
+				pinned variable.
 			</td>
 		</tr>
 		<tr></tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				The button pins a variable. When a variable is pinned, the 
-				<a
-					href="#split-mode"
-					rel="noopener noreferrer"
-					>split mode</a
-				> for visual comparison is automatically activated, if it hasn't
-				been opened yet. A variable can be unpinned by clicking the button
-				again. If the variable should remain pinned but the split mode should be
-				closed, the split mode button must be clicked.
+				Click the button to pin a variable. When a variable is pinned, the
+				<a href="#split-mode" rel="noopener noreferrer">split mode</a> for
+				visual comparison is automatically activated, if it hasn't been opened
+				yet.<br /><br />A variable can be unpinned by clicking the button again.
+				If the variable should remain pinned but the split mode should be
+				closed, the
+				<a href="#split-mode" rel="noopener noreferrer">split mode</a> button
+				must be clicked.
 			</td>
 		</tr>
 		<tr>
@@ -395,15 +445,20 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				In comparison mode, the currently selected variable is displayed on the
-				right side of the slidable line. If a variable is pinned, it is
-				displayed on the left side of the screen along with its color bar. But
-				the pinned variable can also be made transparent using the layer
-				visibility menu. The slidable line allows users to shift the view,
-				enabling spatial comparison with underlying layers, such as basemaps or
-				the pinned variable. Comparison mode is automatically activated when a
-				variable is pinned, and the variable on the left can be displayed with
-				transparency to enhance the comparison.
+				Start the comparison mode by using the button. The map is now split in
+				the middle and the currently <strong>selected</strong> variable is
+				displayed on the <strong>right side</strong> of the slidable line. If a
+				variable is <strong>pinned</strong>, it is displayed on the
+				<strong>left side</strong> of the screen along with its color bar.
+				<br /><br />
+				The slidable line allows users to shift the view, enabling spatial
+				comparison with underlying layers (e.g. basemaps, the pinned variable).
+				The variable on the left can be made transparent to enhance the
+				comparison.
+				<br /><br />
+				<strong>Side note:</strong> The comparison mode is automatically
+				activated when a variable is
+				<a href="#pin-variables" rel="noopener noreferrer">pinned</a>.
 			</td>
 		</tr>
 		<tr>
@@ -447,7 +502,12 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 		<tr>
 			<td><b>Description</b></td>
-			<td>A button that opens a window for managing user variables.</td>
+			<td>
+				A button that opens a window for
+				<a href="#user-variable-management" rel="noopener noreferrer"
+					>managing user variables</a
+				>.
+			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
@@ -484,50 +544,51 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				A window for managing user variables when activated through
-				<a href="#open-user-variable-management" rel="noopener noreferrer"
-					>this feature</a
-				>. The window displays a list of all existing user variables, including
-				their name, title, units, and expression. It also contains various
-				buttons for managing user variables, as well as a button that opens an
-				informational text regarding user variables.
+				A window for managing user variables, that displays a list of all
+				existing user variables, including their name, title, units, and
+				expression. It also contains various buttons for managing user
+				variables, as well as a button that opens an informational text
+				regarding user variables.
 			</td>
 		</tr>
 		<tr></tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				The following features can be used to manage the variables:<br /><br />
+				Open the User Variable Management menu with
+				<a href="#open-user-variable-management" rel="noopener noreferrer"
+					>this button</a
+				>
+				in order to manage user variables with the following features:
+				<br /><br />
 				When no variable is selected:
 				<ul>
 					<li>
 						<a href="#add-user-variable" rel="noopener noreferrer"
-					><strong>Add User Variable</strong></a
-				>: Opens a new window to create a
-						user variable.
+							><strong>Add User Variable</strong></a
+						>: To open a new window to create a user variable.
 					</li>
 				</ul>
 				When a user variable is selected:
 				<ul>
 					<li>
 						<a href="#add-user-variable" rel="noopener noreferrer"
-					><strong>Add User Variable</strong></a
-				>: Opens a new window to create a
-						user variable.
+							><strong>Add User Variable</strong></a
+						>: To open a new window to create a user variable.
 					</li>
 					<li>
-						<strong>Duplicate User Variable</strong>: Duplicates the selected
+						<strong>Duplicate User Variable</strong>: To duplicate the selected
 						variable, appending <code>_copy</code> to the title of the
 						duplicate.
 					</li>
 					<li>
 						<a href="#edit-user-variable" rel="noopener noreferrer"
-					><strong>Edit User Variable</strong></a
-				>: Opens a window similar to the
-						Add User Variable window for editing the selected variable.
+							><strong>Edit User Variable</strong></a
+						>: To open a window similar to the Add User Variable window for
+						editing the selected variable.
 					</li>
 					<li>
-						<strong>Remove User Variable</strong>: Removes the variable from the
+						<strong>Remove User Variable</strong>: To remove the variable from the
 						list.
 					</li>
 				</ul>
@@ -548,7 +609,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
-### Add User Variables
+### Add User Variable
 
 <table>
 	<thead>
@@ -578,19 +639,26 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				To successfully add a variable, a valid <strong>name</strong> and a
-				valid <strong>python expression</strong> must be provided.
-				title and units are optional fields.
-    			<ul>
-    				<li>
-    					The name must be a unique identifier within the
-    					User Variables and must start with a letter.
-    				</li>
-    				<li>
-    					The expression is an algebraic expression that
-    					follows the syntax of python expressions.
-    				</li>
-    			</ul>
+			Open this feature by using the
+			<code>+</code
+			>-button in the User Variables Management menu and fill in the fields to
+			create a new variable.
+			<br /><br />
+			To successfully add a variable, a valid
+			<strong>name</strong>
+			and a valid
+			<strong>python expression</strong>
+			must be provided. title and units are optional fields.
+			<ul>
+				<li>
+					The <strong>name</strong> must be a unique identifier within the User
+					Variables and must start with a letter.
+				</li>
+				<li>
+					The <strong>expression</strong> is an algebraic expression that
+					follows the syntax of python expressions.
+				</li>
+			</ul>
     		</td>
     	</tr>
     	<tr>
@@ -606,7 +674,6 @@ A list of all the features that the viewer contains will be created here, in whi
     		</td>
     	</tr>
     </tbody>
-
 </table>
 
 ### Edit User Variable
@@ -622,7 +689,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				A window that opens using the <code>Edit</code>-button in the User
 				Variables Management menu. For layout see
-				<a href="#add-user-variables" rel="noopener noreferrer"
+				<a href="#add-user-variable" rel="noopener noreferrer"
 					>add user variables</a
 				>.
 			</td>
@@ -631,7 +698,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Functionality</b></td>
 			<td>
 				See
-				<a href="#add-user-variables" rel="noopener noreferrer"
+				<a href="#add-user-variable" rel="noopener noreferrer"
 					>add user variables</a
 				>.
 			</td>
@@ -671,13 +738,15 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				Positioned in the sidebar, this is the first tab that displays metadata
-				for a dataset, selected variable, or selected place. The display of
-				metadata for each of these objects can be toggled using the buttons at
-				the top left. When a display is enabled, the button's background appears
-				highlighted in gray. Next to the displayed metadata information, three
-				additional buttons control the format of the metadata display. Depending
-				on the selected format, the active button's background is highlighted in
+				Positioned in the sidebar, the metadata for the
+				<strong>selected dataset, variable, or place</strong> is located under
+				the "Info"-Tab. The <strong>display can be enabled</strong> using the
+				buttons at the top left. When a display is enabled, the button's
+				background appears highlighted in gray. 
+				<br /><br />
+				Next to the displayed metadata information, three additional buttons
+				control the <strong>format of the metadata</strong> display. Depending
+				on the selected format, the enabled button's background is highlighted in
 				gray.
 			</td>
 		</tr>
@@ -761,7 +830,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A button in the top toolbar with a graph icon, initially disabled. It
-				becomes active only when a location is selected.
+				becomes available only when a place is selected.
 			</td>
 		</tr>
 		<tr>
@@ -974,7 +1043,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#staticstics" rel="noopener noreferrer"
+				<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1019,7 +1088,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
-			<td>Create statistics for the selected variable a selected place.</td>
+			<td>Create statistics for the selected variable of a selected place.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -1068,12 +1137,12 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
     	<tr>
     		<td><b>Aim</b></td>
-    		<td>To display statistical information for places of type "Point."</td>
+    		<td>To display statistical information for places of type <code>Point</code>.</td>
     	</tr>
     	<tr>
     		<td colspan="2">
     			Link to feature mentioned in
-    			<a href="/user_guide/analyse/#staticstics" rel="noopener noreferrer"
+    			<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
     				>User Guide</a
     			>.
     		</td>
@@ -1125,13 +1194,13 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Aim</b></td>
 			<td>
 				To display and explore statistical information for places of type
-				"Polygon" or "Circle."
+				<code>Polygon</code> or <code>Circle</code>.
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#staticstics" rel="noopener noreferrer"
+				<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1162,18 +1231,20 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A drop-down menu that lists place groups available on the server, along
-				with a <code>My Places</code> group that contains all the places created in the
-				Viewer. A selected group is marked with a checked checkbox and
+				with a <code>My Places</code> group that contains all the places created
+				in the Viewer. A selected group is marked with a checked checkbox and
 				highlighted background.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Select one or multiple groups by clicking on their names, which will be
-				marked with a checkmark in the checkbox to display them on the map.
-				Selecting a group does not automatically adjust the map's view to the
-				extent of the place group.
+				Select one or multiple groups in the drop-down menu by clicking on their
+				names, which will be marked with a checkmark in the checkbox to display
+				them on the map.
+				<br /><br />
+				<strong>Side note:</strong> Selecting a group does not automatically
+				adjust the map's view to the extent of the place group.
 			</td>
 		</tr>
 		<tr>
@@ -1392,18 +1463,20 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				A button that opens a small window for adjusting colour and opacity.
-				When clicking on the colour box, a drop-down menu with a variety of
-				colours appears. The opacity is controlled with a slider.
+				A button that opens a small window for adjusting color and opacity.
+				When clicking on the color box, a drop-down menu with a variety of
+				colors appears. The opacity is controlled with a slider.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Adjust the appearance (colour and opacity) of the selected place in the
+				Adjust the appearance (color and opacity) of the selected place in the
 				window that appears when clicking the button. The changes are
 				immediately reflected on the map. The selected color also determines the
-				representation of points in time series charts.
+				representation of points in <a href="#time-series" rel="noopener noreferrer"
+					>time series chart</a
+				>.
 			</td>
 		</tr>
 		<tr>
@@ -1473,34 +1546,23 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				<ul>
-					<li>
-						Create a new place directly in the map, options for creating places
-						include: <code>Point</code>, <code>Polygon</code>, and
-						<code>Circle</code>.
-					</li>
-					<li>
-						A newly created place is automatically set as the selected place.
-					</li>
-					<li>
-						New places are named according to their geometry type and order,
-						e.g., <code>Circle 1</code>.
-					</li>
-					<li>
-						Automatically display a time series for the selected variable when a
-						new place is created. If no data is available for the new place in
-						the dataset, a pop-up window appears with the
-						message:
-						<code>No information data found here</code>.
-					</li>
-					<li>
-						When the create feature mode is disabled, the
-						<a href="#select-place-in-map" rel="noopener noreferrer"
-							>Select place in map</a
-						>
-						mode is automatically enabled.
-					</li>
-				</ul>
+				Click on one of the three buttons to create a new place directly in the
+				map. The available geometry types are: <code>Point</code>,
+				<code>Polygon</code>, and <code>Circle</code>. The newly created place
+				is automatically set as the selected place. The names of places are
+				chosen according to their geometry type and order, e.g.,
+				<code>Circle 1</code>. <br /><br />
+				When creating a new place, a time series for the selected variable is
+				created and displayed in the side bar automatically. If no data is
+				available for the new place in the dataset, a pop-up window appears with
+				the message:
+				<code>No information data found here</code>. <br /><br />
+				<strong>Side note: </strong>When the feature is disabled,
+				the
+				<a href="#select-place-in-map" rel="noopener noreferrer"
+					>Select place in map</a
+				>
+				mode is automatically enabled.
 			</td>
 		</tr>
 		<tr>
@@ -1539,14 +1601,20 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A button that is highlighted when enabled and opens a window for
-				importing places. Supports importing places in various formats,
-				including text/CSV, GeoJSON, and WKT.
+				importing places. In the window Supports importing places in various
+				formats, including text/CSV, GeoJSON, and WKT.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
+				Open the feature by clicking on the button, then:
+				<br /><br />
 				<ul>
+					<li>
+						Decide on the data format of the imported places (text/CSV, GeoJSON,
+						or WKT)
+					</li>
 					<li>
 						Import places through different methods:
 						<ul>
@@ -1565,12 +1633,13 @@ A list of all the features that the viewer contains will be created here, in whi
 						</ul>
 					</li>
 					<li>
-						Includes a <strong>Clear</strong> button to remove the content of
-						the text box, available only when the box contains data.
+						Remove the content of the text box with the
+						<strong>Clear</strong>-button. This is only available when the box
+						contains data.
 					</li>
 					<li>
-						<strong>Options:</strong> Can be expanded to provide additional
-						information and settings related to the import process.
+						<strong>Options</strong>-button: Can be expanded to provide
+						additional information and settings related to the import process.
 					</li>
 				</ul>
 			</td>
@@ -1783,7 +1852,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Functionality</b></td>
 			<td>
 				Click the buttons to move to the previous/next time step in the dataset
-				and displays the corresponding data on the map.
+				and display the corresponding data on the map.
 			</td>
 		</tr>
 		<tr>
@@ -1834,7 +1903,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Functionality</b></td>
 			<td>
 				Click the buttons to move to the first/last time step in the dataset and
-				displays the corresponding data on the map.
+				display the corresponding data on the map.
 			</td>
 		</tr>
 		<tr>
@@ -1887,9 +1956,9 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				When enabled, the button cycles through the time steps sequentially,
-				displaying each step in the viewer. The speed or interval of this
-				cycling can be configured in the 						<a
+				When enabled, the feature iterates through the time steps sequentially,
+				displaying each step in the Viewer. The speed or interval of this
+				iterating can be configured in the 						<a
 							href="/user_guide/settings/#player-interval"
 							rel="noopener noreferrer"
 							>settings</a
@@ -1956,7 +2025,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				<li>
 					Click on the ticks of the
 					<a href="#value-range" rel="noopener noreferrer">value range</a> to
-					adjust the range through a small pop-up window.
+					adjust the range via a small pop-up window.
 				</li>
 				</ul>
 			</td>
@@ -2069,49 +2138,48 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A window that opens when clicking on the color bar in the legend. This
-				window provides access to custom colormap management, including a list
-				of all available color maps. It also offers options for hiding small
-				values (button), adjusting opacity (slider), and reversing the color map
-				(button).
+				menu provides:
+				<ul>
+					<li>access to custom colormap management</li>
+					<li>a list of already available color maps</li>
+					<li>options for hiding small values (button)</li>
+					<li>options for adjusting opacity (slider)</li>
+					<li>options for reversing the color map (button) (button)</li>
+				</ul>
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				<ul>
-					<li>Open the menu by clicking on the colormap in the legend.</li>
-					<li>
-						Use the menu to select, create, edit, or delete custom color maps.
-					</li>
-					<li>Select from a list of pre-installed color maps.</li>
-					<li>
-						Adjust the appearance of the current colormap by hiding small
-						values, changing opacity, or reversing the color map.
-					</li>
-				</ul>
+				Open the menu by clicking on the colormap in the legend. Then use the
+				menu to access
+				<a href="#custom-color-maps" rel="noopener noreferrer"
+					>custom colormap management</a
+				>, select new colormaps or adjust the currently selected.
 			</td>
-		</tr>
-		<tr>
-			<td><b>Aim</b></td>
-			<td>
-				Manage custom color maps, change, adjust and modify the current color
-				mapping.
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				Link to feature mentioned in
-				<a
-					href="/user_guide/colormaps/#change-or-create-color-maps"
-					rel="noopener noreferrer"
-					>User Guide</a
-				>.
-			</td>
-		</tr>
-	</tbody>
+    	</tr>
+    	<tr>
+    		<td><b>Aim</b></td>
+    		<td>
+    			Manage custom color maps, change, adjust and modify the current color
+    			mapping.
+    		</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2">
+    			Link to feature mentioned in
+    			<a
+    				href="/user_guide/colormaps/#change-or-create-color-maps"
+    				rel="noopener noreferrer"
+    				>User Guide</a
+    			>.
+    		</td>
+    	</tr>
+    </tbody>
+
 </table>
 
-### Custom Colour Maps
+### Custom color Maps
 
 <table>
 	<thead>
@@ -2119,7 +2187,8 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/features/colormap_custom.png"
-					alt="Color Map Custom" style="max-width: 30%"/>
+					alt="Color Map Custom"
+					style="max-width: 30%" />
 			</th>
 		</tr>
 	</thead>
@@ -2133,26 +2202,28 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				A small workspace that appears when clicking the <code>+</code>-button
 				in the Color Mapping Menu or when editing an existing custom color map.
-				Displayed at the top is the color bar, then there is the option to select
-				the color map type (continious, stepwise, categorical) followed by a
-				text field where users can define or edit the color map.
+				Displayed at the top is the color bar, then there is the option to
+				select the color map type followed by a text field where users can
+				define or edit the color map.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
+				Access the Custom Color Map workspace by using the <code>+</code>-button
+				in the
+				<a href="#color-map-menu" rel="noopener noreferrer"
+					>Color Mapping Menu</a
+				>
+				or entering the editing mode for custom color maps. In the workspace:
 				<ul>
-					<li>
-						Opens when the <code>+</code>-button is used in the Color Mapping
-						Menu or when an existing custom color map is selected for editing.
-					</li>
 					<li>
 						Decide on the color mapping type (continious, stepwise,
 						categorical).
 					</li>
 					<li>
-						In the text box, define the mapping using the general
-						syntax <code>&lt;value&gt;: &lt;color&gt;</code>.
+						In the text box, define the mapping using the general syntax
+						<code>&lt;value&gt;: &lt;color&gt;</code>.
 					</li>
 				</ul>
 			</td>
