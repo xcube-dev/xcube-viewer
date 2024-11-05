@@ -2,7 +2,7 @@
 
 ## Infobox
 
-![Infobox](../assets/images/viewer/analysis_infobox.png)
+![Infobox](../assets/images/analysis_infobox.png)
 
 Enable a small pixel information box being displayed
 next to the pointer when hovering over the map. It shows the current
@@ -16,7 +16,7 @@ selector menu on the left.
 
 The Viewer provides the ability to extract information from variables at specific [places](#places) (point, circle, or polygon), in the form of time series and basic statistics. All extracted information is displayed on the right side of the Viewer in the sidebar.
 
-![Time Series](../assets/images/viewer/analysis_timeseries.png)
+![Time Series](../assets/images/analysis_timeseries.png)
 
 ### Time-Series
 
@@ -24,7 +24,7 @@ When adding a new place to the map, a time series will automatically be extracte
 
 To remove a place from a graph, click the `-`-icon next to the place listed below the graph. The color of a place corresponds to the color in the time series graphs. The coordinates of the places visualized in the time series can be found beneath the graphs.
 
-![Time Series Graph](../assets/images/viewer/analysis_timeseries_graphs.png)
+![Time Series Graph](../assets/images/analysis_timeseries_graphs.png)
 
 There are multiple options to explore the graph:
 
@@ -40,13 +40,13 @@ There are multiple options to explore the graph:
 
 Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the places, or both.
 
-![Export](../assets/images/viewer/analysis_timeseries_export.png)
+![Export](../assets/images/analysis_timeseries_export.png)
 
 ### Statistics
 
 Compute and display basic statistics for the currently selected variable, selected timestamp, and selected place. To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
 
-![Statistics](../assets/images/viewer/analysis_statistics.png)
+![Statistics](../assets/images/analysis_statistics.png)
 
 If the place is an area:
 
@@ -63,7 +63,7 @@ For point places:
 
 ## User Variables
 
-![User Variables](../assets/images/viewer/analysis_uservariables.png)
+![User Variables](../assets/images/analysis_uservariables.png)
 
 Define your own variables computed from Python-like expressions. The expressions can combine other variables of the current dataset using almost all Python operators and all [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs). User data variables are persisted in the browser's local storage.
 
@@ -130,8 +130,8 @@ To **exit** Compare Mode: use the button on the left
 
 ## Navigate through time
 
-![Player](../assets/images/viewer/analysis_player_light.png){: class="light-image" }
-![Player](../assets/images/viewer/analysis_player_dark.png){: class="dark-image" }
+![Player](../assets/images/analysis_player_light.png){: class="light-image" }
+![Player](../assets/images/analysis_player_dark.png){: class="dark-image" }
 
 Use the shown features of the Viewer to navigate through the time steps of a variable. Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.
 
@@ -147,12 +147,12 @@ Use the player to auto-step through the variable of a dataset. The interval can 
 
 **Places** provide a spatial reference for extracting statistical values and time series data. They can be represented as either `points` or `polygons/circles` and are organized into **groups** which hold individial places.
 
-![Places](../assets/images/viewer/analysis_places.png)
+![Places](../assets/images/analysis_places.png)
 
 The Viewer offers a variety of features for working with Places (such as adding, removing, and styling) to obtain statistical information. The following sections will explain the available features.
 
-![Places](../assets/images/viewer/analysis_places_light.png){: class="light-image" }
-![Places](../assets/images/viewer/analysis_places_dark.png){: class="dark-image" }
+![Places](../assets/images/analysis_places_light.png){: class="light-image" }
+![Places](../assets/images/analysis_places_dark.png){: class="dark-image" }
 
 ### Create
 
@@ -162,7 +162,7 @@ New Places can be **created** in the Viewer using the buttons in the header, wit
 
 Externally created places can also be **imported**. The allowed formats are `text/csv`, `GeoJSON` and `WKT`. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.
 
-![Import Places](../assets/images/viewer/analysis_import_places.png)
+![Import Places](../assets/images/analysis_import_places.png)
 
 ### Select
 
@@ -184,4 +184,4 @@ Modify both the color and opacity of a place. The selected color will be reflect
 
 The geometry of Places created in the Viewer can be exported. This feature can be enabled during [the export of time series](#export-time-series). To include the geometry information in the export, it must be explicitly selected.
 
-![Export](../assets/images/viewer/analysis_timeseries_export.png)
+![Export](../assets/images/analysis_timeseries_export.png)

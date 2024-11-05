@@ -8,7 +8,7 @@ To modify the value ranges of the displayed variable, click on the legend area w
 
 Enter the desired values in the **Minimum** and/or **Maximum** text fields, or adjust the values directly with the **slider**.
 
-![Value Ranges](../assets/images/viewer/color_valuerange.png){ align=right }
+![Value Ranges](../assets/images/color_valuerange.png){ align=right }
 
 ### Log-scaling
 
@@ -22,7 +22,7 @@ If the color mapping has an assigned value range, apply it to the variable using
 
 ## Change or create Color Maps
 
-![Colormap](../assets/images/viewer/color_mapping.png){ align=left }
+![Colormap](../assets/images/color_mapping.png){ align=left }
 
 Change the color mapping by clicking on the color range in the legend.
 

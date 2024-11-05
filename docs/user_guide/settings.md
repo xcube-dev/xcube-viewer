@@ -10,13 +10,13 @@ In the settings, you have the option to adjust the default settings according to
 
 Change the Server URL by selecting `Server` and clicking the `+`-button to add a new server.
 
-![Settings - Change Server](../assets/images/viewer/settings_server.png)
+![Settings - Change Server](../assets/images/settings_server.png)
 
 ### Player Interval
 
 Adjust the Player's interval settings. Additional information on the Player can be found [here](../user_guide/analyse.md/#the-player).
 
-![Settings - Player Interval](../assets/images/viewer/settings_player.png)
+![Settings - Player Interval](../assets/images/settings_player.png)
 
 ---
 
@@ -24,7 +24,7 @@ Adjust the Player's interval settings. Additional information on the Player can 
 
 This is the place to set preferences of displaying data and graphs of the time series. Additional information on time series can be found [here](../user_guide/analyse.md/#time-series).
 
-![Settings - Time Series](../assets/images/viewer/settings_timeseries.png)
+![Settings - Time Series](../assets/images/settings_timeseries.png)
 
 ---
 
@@ -36,17 +36,17 @@ Adjust the **base map** and **overlays**, choose the **projection** (_Geographic
 
 The Viewer allows you to display datasets over a Base Map and overlay them with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer. Others can be selected by clicking on `Base map` or `Overlay`.
 
-![Settings - Maps - Overlay](../assets/images/viewer/settings_overlay.png)
+![Settings - Maps - Overlay](../assets/images/settings_overlay.png)
 
 ### User Base maps and Overlays
 
 Additional layers (WMS, XYZ) from external services can also be added by clicking on `User base map...` or `User overlays...`. These can also be added via the [Layers Panel](../user_guide/getting_started.md/#adjust-layer-visibilities).
 
-![Settings - Maps - User Maps](../assets/images/viewer/settings_usermaps.png)
+![Settings - Maps - User Maps](../assets/images/settings_usermaps.png)
 
 ### Zoom on Dataset/Place Selection
 
-![On Selection](../assets/images/viewer/settings_on_selection.png)
+![On Selection](../assets/images/settings_on_selection.png)
 
 The map extent can be changed when selecting a new Dataset or Place. The following options are available:
 
