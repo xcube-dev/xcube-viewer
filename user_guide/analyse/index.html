@@ -902,7 +902,7 @@
 
 <h1 id="analyse-variables">Analyse Variables<a class="headerlink" href="#analyse-variables" title="Permanent link">&para;</a></h1>
 <h2 id="infobox">Infobox<a class="headerlink" href="#infobox" title="Permanent link">&para;</a></h2>
-<p><img alt="Infobox" src="../../assets/images/viewer/analysis_infobox.png" /></p>
+<p><img alt="Infobox" src="../../assets/images/analysis_infobox.png" /></p>
 <p>Enable a small pixel information box being displayed
 next to the pointer when hovering over the map. It shows the current
 map coordinates and the values of the currently selected variable at
@@ -911,32 +911,33 @@ selector menu on the left.</p>
 <hr />
 <h2 id="extract-information">Extract Information<a class="headerlink" href="#extract-information" title="Permanent link">&para;</a></h2>
 <p>The Viewer provides the ability to extract information from variables at specific <a href="#places">places</a> (point, circle, or polygon), in the form of time series and basic statistics. All extracted information is displayed on the right side of the Viewer in the sidebar.</p>
-<p><img alt="Time Series" src="../../assets/images/viewer/analysis_timeseries.png" /></p>
+<p><img alt="Time Series" src="../../assets/images/analysis_timeseries.png" /></p>
 <h3 id="time-series">Time-Series<a class="headerlink" href="#time-series" title="Permanent link">&para;</a></h3>
-<p>When adding a new place to the map, a time series will automatically be extracted and displayed by default. If the place already exists, simply select it and use the <em>graph</em>-icon next to the Variables drop-down menu. To remove a place from a graph, click the <code>-</code>-icon next to the place listed below the graph. The color of the places corresponds to the color of the graph in the time series. You can find the coordinates of the places visualized in the time series beneath the graphs.</p>
-<p><img alt="Time Series Graph" src="../../assets/images/viewer/analysis_timeseries_graphs.png" /></p>
+<p>When adding a new place to the map, a time series will automatically be extracted and displayed by default. To display a time series for an already existing place, simply select it and use the <em>graph</em>-icon next to the variables drop-down menu.</p>
+<p>To remove a place from a graph, click the <code>-</code>-icon next to the place listed below the graph. The color of a place corresponds to the color in the time series graphs. The coordinates of the places visualized in the time series can be found beneath the graphs.</p>
+<p><img alt="Time Series Graph" src="../../assets/images/analysis_timeseries_graphs.png" /></p>
 <p>There are multiple options to explore the graph:</p>
 <ul>
-<li>Adjust the time range to focus on a specific period of interest. This applies to time series of different variables within a dataset</li>
-<li>Display data with points, lines, or bars. For polygons or circles, you can also add the standard deviation to the graph</li>
-<li>Hover over the graph to view detailed information for specific time steps via a popup info box</li>
-<li>Zoom into the graph freely by pressing the <code>Ctrl</code>-key</li>
-<li>Set a fixed y-scale for the graph</li>
-<li>Reset everything back to the full scale</li>
-<li>Copy a snapshot a time series to clipboard</li>
+<li>Adjust the time range to focus on a specific period of interest. This applies to time series of different variables within a dataset (a)</li>
+<li>Reset everything back to the full scale (b)</li>
+<li>Zoom into the graph freely by pressing the <code>Ctrl</code>-key (c)</li>
+<li>Set a fixed y-scale for the graph (d)</li>
+<li>Hover over the graph to view detailed information for specific time steps via a popup info box (e)</li>
+<li>Display data with points, lines, or bars. For polygons or circles, you can also add the standard deviation to the graph (f)</li>
+<li>Copy a snapshot a time series to clipboard (g)</li>
 </ul>
 <h4 id="export-time-series">Export time series<a class="headerlink" href="#export-time-series" title="Permanent link">&para;</a></h4>
-<p>Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the Places, or both.</p>
-<p><img alt="Export" src="../../assets/images/viewer/analysis_timeseries_export.png" /></p>
+<p>Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the places, or both.</p>
+<p><img alt="Export" src="../../assets/images/analysis_timeseries_export.png" /></p>
 <h3 id="statistics">Statistics<a class="headerlink" href="#statistics" title="Permanent link">&para;</a></h3>
-<p>Compute and display basic statistics for the currently selected variable, selected timestamp, and selected place. To obtain the statistics select a place and compute by using the <span class="arithmatex">\(\Sigma\)</span> -icon next to the Variables drop-down menu or use the <code>+</code>-icon under the Statistics Tab in the sidebar.</p>
-<p><img alt="Statistics" src="../../assets/images/viewer/analysis_statistics.png" /></p>
+<p>Compute and display basic statistics for the currently selected variable, selected timestamp, and selected place. To obtain the statistics select a place and compute by using the <span class="arithmatex">\(\Sigma\)</span> -icon next to the variables drop-down menu or use the <code>+</code>-icon under the Statistics Tab in the sidebar.</p>
+<p><img alt="Statistics" src="../../assets/images/analysis_statistics.png" /></p>
 <p>If the place is an area:</p>
 <ul>
 <li>Statistics include minimum, maximum, mean, standard deviation, and a histogram</li>
-<li>Adjust the x-range of the histogram</li>
-<li>Add the standard deviation to the histogram</li>
-<li>Copy a snapshot of the statistics to clipboard</li>
+<li>Adjust the x-range of the histogram (a)</li>
+<li>Add the standard deviation to the histogram (b)</li>
+<li>Copy a snapshot of the statistics to clipboard (c)</li>
 </ul>
 <p>For point places:</p>
 <ul>
@@ -944,7 +945,7 @@ selector menu on the left.</p>
 </ul>
 <hr />
 <h2 id="user-variables">User Variables<a class="headerlink" href="#user-variables" title="Permanent link">&para;</a></h2>
-<p><img alt="User Variables" src="../../assets/images/viewer/analysis_uservariables.png" /></p>
+<p><img alt="User Variables" src="../../assets/images/analysis_uservariables.png" /></p>
 <p>Define your own variables computed from Python-like expressions. The expressions can combine other variables of the current dataset using almost all Python operators and all <a href="https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs">numpy universal functions</a>. User data variables are persisted in the browser's local storage.</p>
 <details class="info" open="open">
 <summary>In more detail</summary>
@@ -996,26 +997,26 @@ available Python functions and constants</p>
 <p>To <strong>exit</strong> Compare Mode: use the button on the left</p>
 <hr />
 <h2 id="navigate-through-time">Navigate through time<a class="headerlink" href="#navigate-through-time" title="Permanent link">&para;</a></h2>
-<p><img alt="Player" class="light-image" src="../../assets/images/viewer/analysis_player_light.png" />
-<img alt="Player" class="dark-image" src="../../assets/images/viewer/analysis_player_dark.png" /></p>
-<p>Use the showen features of the Viewer to navigate through the time steps of a variable. Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.</p>
+<p><img alt="Player" class="light-image" src="../../assets/images/analysis_player_light.png" />
+<img alt="Player" class="dark-image" src="../../assets/images/analysis_player_dark.png" /></p>
+<p>Use the shown features of the Viewer to navigate through the time steps of a variable. Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.</p>
 <h3 id="the-player">The Player<a class="headerlink" href="#the-player" title="Permanent link">&para;</a></h3>
 <p>Use the player to auto-step through the variable of a dataset. The interval can be adjusted in the <a href="../settings/#player-interval">settings</a>.</p>
 <p><img alt="Player" src="../../assets/videos/Player_hh.gif" /></p>
 <hr />
 <h2 id="places">Places<a class="headerlink" href="#places" title="Permanent link">&para;</a></h2>
-<p><strong>Places</strong> provide a spatial reference for extracting statistical values and time series data. They can be represented as either <code>points</code> or <code>polygons/circles</code>. Places are organized into <strong>groups</strong> which hold individial places.</p>
-<p><img alt="Places" src="../../assets/images/viewer/analysis_places.png" /></p>
-<p>The Viewer offers a variety of features (such as adding, removing, and styling) for working with Places to obtain statistical information. The following sections will explain the available features.</p>
-<p><img alt="Places" class="light-image" src="../../assets/images/viewer/analysis_places_light.png" />
-<img alt="Places" class="dark-image" src="../../assets/images/viewer/analysis_places_dark.png" /></p>
+<p><strong>Places</strong> provide a spatial reference for extracting statistical values and time series data. They can be represented as either <code>points</code> or <code>polygons/circles</code> and are organized into <strong>groups</strong> which hold individial places.</p>
+<p><img alt="Places" src="../../assets/images/analysis_places.png" /></p>
+<p>The Viewer offers a variety of features for working with Places (such as adding, removing, and styling) to obtain statistical information. The following sections will explain the available features.</p>
+<p><img alt="Places" class="light-image" src="../../assets/images/analysis_places_light.png" />
+<img alt="Places" class="dark-image" src="../../assets/images/analysis_places_dark.png" /></p>
 <h3 id="create">Create<a class="headerlink" href="#create" title="Permanent link">&para;</a></h3>
 <p>New Places can be <strong>created</strong> in the Viewer using the buttons in the header, with <code>points</code> and <code>polygons/circles</code> being the available geometry types.</p>
 <h3 id="import">Import<a class="headerlink" href="#import" title="Permanent link">&para;</a></h3>
-<p>Already created places can also be <strong>imported</strong>. The allowed formats are <code>text/csv</code>, <code>GeoJSON</code> and <code>WKT</code>. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.</p>
-<p><img alt="Import Places" src="../../assets/images/viewer/analysis_import_places.png" /></p>
+<p>Externally created places can also be <strong>imported</strong>. The allowed formats are <code>text/csv</code>, <code>GeoJSON</code> and <code>WKT</code>. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.</p>
+<p><img alt="Import Places" src="../../assets/images/analysis_import_places.png" /></p>
 <h3 id="select">Select<a class="headerlink" href="#select" title="Permanent link">&para;</a></h3>
-<p>Place groups and individual places can be <strong>selected</strong> through a drop-down menu. Additionally, single places can be chosen by clicking on them with the mouse when the corresponding function is enabled. Selected places are marked with a yellow ring around them.</p>
+<p>Place groups and individual places can be <strong>selected</strong> through a drop-down menu in the header. Additionally, individual places can be selected by clicking on them directly on the map when the corresponding function is enabled. Selected places are highlighted on the map with a yellow ring.</p>
 <h3 id="remove">Remove<a class="headerlink" href="#remove" title="Permanent link">&para;</a></h3>
 <p><strong>Remove</strong> Place groups or Places by selecting the group or object and deleting it via the button in the header.</p>
 <h3 id="rename">Rename<a class="headerlink" href="#rename" title="Permanent link">&para;</a></h3>
@@ -1023,8 +1024,8 @@ available Python functions and constants</p>
 <h3 id="styling">Styling<a class="headerlink" href="#styling" title="Permanent link">&para;</a></h3>
 <p>Modify both the color and opacity of a place. The selected color will be reflected consistently in the time series chart.</p>
 <h3 id="export">Export<a class="headerlink" href="#export" title="Permanent link">&para;</a></h3>
-<p>The geometry of Places created in the Viewer can be exported. This can be applied during <a href="#export-time-series">the export of time series</a>. To include the geometry information in the export, it must be explicitly selected.</p>
-<p><img alt="Export" src="../../assets/images/viewer/analysis_timeseries_export.png" /></p>
+<p>The geometry of Places created in the Viewer can be exported. This feature can be enabled during <a href="#export-time-series">the export of time series</a>. To include the geometry information in the export, it must be explicitly selected.</p>
+<p><img alt="Export" src="../../assets/images/analysis_timeseries_export.png" /></p>
 
 
 
