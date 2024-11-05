@@ -28,6 +28,7 @@ import { TimeRange } from "./timeSeries";
 import { Variable } from "./variable";
 import { isString } from "@/util/types";
 import { UserVariable } from "@/model/userVariable";
+import { ReactNode } from "react";
 
 export interface Dimension {
   name: string;
@@ -74,7 +75,7 @@ export interface Dataset {
   variables: Variable[];
   placeGroups?: PlaceGroup[];
   attributions?: string[];
-  attrs: Record<string, unknown>;
+  attrs: Record<string, ReactNode>;
   rgbSchema?: RgbSchema;
 }
 

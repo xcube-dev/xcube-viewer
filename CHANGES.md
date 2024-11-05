@@ -1,4 +1,14 @@
-## Changes in version 1.3.1 (in development)
+## Changes in version 1.4.0 (in development)
+
+### Other changes
+
+* Updated dependencies, development dependencies and updated TypeScript code base accordingly.
+    - `react` from v17 to v18
+    - `react-dom` from v17 to v18
+    - `mui` from v5 to v6
+    - `testing-library/react` from v12 to v16
+
+## Changes in version 1.3.1
 
 ### New Features 
 
@@ -10,6 +20,22 @@
   of the selected Point/Polygon for datasets that do not contain a time 
   dimension. (#421)
 
+* Statistics and also the map's info-box now also work for datasets with 
+  non-geographic grids.
+  (See xcube server issues https://github.com/xcube-dev/xcube/issues/1066
+  and https://github.com/xcube-dev/xcube/issues/1069)
+
+* The help icon button now opens the new documentation 
+  [xcube Viewer documentation](https://xcube-dev.github.io/xcube-viewer/) 
+  in a new browser tab.
+
+### Other changes
+
+* Tooltips (incl. translations) have been added to the Time Player buttons
+  for jumping to the first, last, next and previous time steps.
+
+* Updated language translations (German and Swedish) for `Add Statistics`
+  and `Style Place`.
 
 ## Changes in version 1.3.0
 

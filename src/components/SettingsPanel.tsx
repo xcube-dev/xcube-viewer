@@ -49,6 +49,7 @@ const styles = makeStyles({
 
 interface SettingsPanelProps {
   title?: string;
+  children?: React.ReactNode;
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({

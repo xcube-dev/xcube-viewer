@@ -31,6 +31,7 @@ import { MapComponent, MapComponentProps } from "../MapComponent";
 interface ControlProps extends MapComponentProps {
   style?: React.CSSProperties;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export class Control extends MapComponent<OlControl, ControlProps> {
