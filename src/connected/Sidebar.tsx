@@ -34,13 +34,9 @@ import FunctionsIcon from "@mui/icons-material/Functions";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
 import {
-  type Contribution,
   type ContributionState,
-  DashiComponent,
-  applyPropertyChange,
-  setComponentVisibility,
-  useContributionModelsRecord,
-  useContributionStatesRecord,
+  updateContributionContainer,
+  useContributionsRecord,
 } from "dashipopashi";
 
 import { AppState } from "@/states/appState";
@@ -48,12 +44,11 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { setSidebarPanelId } from "@/actions/controlActions";
 import { SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
+import ContributedPanel from "@/components/ContributedPanel";
 import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
-import CircularProgress from "@mui/material/CircularProgress";
-import Typography from "@mui/material/Typography";
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
@@ -87,6 +82,11 @@ const styles = makeStyles({
   },
 });
 
+interface SidebarPanelContributionProps {
+  title: string;
+  visible?: boolean;
+}
+
 interface SidebarProps {
   sidebarPanelId: SidebarPanelId | string;
   setSidebarPanelId: (sidebarPanelId: SidebarPanelId | string) => void;
@@ -104,24 +104,21 @@ const mapDispatchToProps = {
 };
 
 function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
-  const contributionModelsRecord = useContributionModelsRecord();
-  const contributionStatesRecord = useContributionStatesRecord();
-  const contributions: Contribution[] = useMemo(
-    () => contributionModelsRecord["panels"] || [],
-    [contributionModelsRecord],
-  );
-  const contributionStates: ContributionState[] = useMemo(
-    () => contributionStatesRecord["panels"] || [],
-    [contributionStatesRecord],
+  const contributionsRecord = useContributionsRecord();
+  const panelContributions = useMemo(
+    () =>
+      (contributionsRecord["panels"] ||
+        []) as ContributionState<SidebarPanelContributionProps>[],
+    [contributionsRecord],
   );
 
   const contributionIndexes = useMemo(
     () =>
-      contributions.reduce((map, contribution, contribIndex) => {
+      panelContributions.reduce((map, contribution, contribIndex) => {
         map.set(contribution.name, contribIndex);
         return map;
       }, new Map<string, number>()),
-    [contributions],
+    [panelContributions],
   );
 
   const handleTabChange = useCallback(
@@ -129,7 +126,9 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
       setSidebarPanelId(value);
       const contribIndex = contributionIndexes.get(value);
       if (typeof contribIndex === "number") {
-        setComponentVisibility("panels", contribIndex, true);
+        updateContributionContainer("panels", contribIndex, {
+          visible: true,
+        });
       }
     },
     [contributionIndexes, setSidebarPanelId],
@@ -155,13 +154,13 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
               label={i18n.get(sidebarPanelLabels[panelId])}
             />
           ))}
-          {contributions.map((contribution, i) => (
+          {panelContributions.map((contribution) => (
             <Tab
               key={contribution.name}
               sx={styles.tab}
               disableRipple
               value={contribution.name}
-              label={contributionStates[i].title}
+              label={contribution.container.title}
             />
           ))}
         </Tabs>
@@ -170,35 +169,16 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
       {sidebarPanelId === "stats" && <StatisticsPanel />}
       {sidebarPanelId === "timeSeries" && <TimeSeriesPanel />}
       {sidebarPanelId === "volume" && <VolumePanel />}
-      {contributions.map((contribution, panelIndex) => {
-        if (sidebarPanelId !== contribution.name) {
-          return null;
-        }
-        const contributionState = contributionStates[panelIndex];
-        const componentStateResult = contributionState.componentStateResult;
-        if (componentStateResult.status === "pending") {
-          return <CircularProgress key={contribution.name} />;
-        } else if (componentStateResult.error) {
-          return (
-            <div key={contribution.name}>
-              <Typography color="error">
-                {componentStateResult.error.message}
-              </Typography>
-            </div>
-          );
-        } else if (contributionState.componentState) {
-          return (
-            <DashiComponent
+      {panelContributions.map(
+        (contribution, panelIndex) =>
+          sidebarPanelId === contribution.name && (
+            <ContributedPanel
               key={contribution.name}
-              {...contributionState.componentState}
-              onPropertyChange={(event) => {
-                applyPropertyChange("panels", panelIndex, event);
-              }}
+              contribution={contribution}
+              panelIndex={panelIndex}
             />
-          );
-        }
-        return null;
-      })}
+          ),
+      )}
     </Box>
   );
 }
