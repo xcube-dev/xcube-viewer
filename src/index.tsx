@@ -46,6 +46,7 @@ import {
 import { syncWithServer } from "@/actions/dataActions";
 import { appReducer } from "@/reducers/appReducer";
 import { AppState } from "@/states/appState";
+import { type StoreApi } from "zustand/vanilla";
 
 Config.load().then(() => {
   const actionFilter = (_getState: () => AppState, action: Action) =>
@@ -58,7 +59,33 @@ Config.load().then(() => {
   const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
   const store = Redux.createStore(appReducer, middlewares);
 
-  initializeContributions();
+
+  const hostStore: StoreApi<AppState> & {_initialState: AppState, _prevState: AppState } = {
+    _initialState: store.getState(),
+    getInitialState() {
+      return this._initialState;
+    },
+    getState() {
+      return store.getState();
+    },
+    setState(_state: AppState | Partial<AppState> | ((state: AppState) => AppState | Partial<AppState>), _replace?: boolean) {
+      throw new Error("Changing the host state from contributions is not yet supported");
+    },
+    _prevState: store.getState(),
+    subscribe(listener: (store: AppState, prevState: AppState) => void): () => void {
+      const self = this;
+      const unsubscribe = store.subscribe(() => {
+        const state = store.getState();
+        if (state !== self._prevState) {
+          listener(state, self._prevState);
+          self._prevState = state;
+        }
+      });
+      return () => void unsubscribe();
+    }
+  }
+
+  initializeContributions({ hostStore });
 
   const dispatch: Dispatch = store.dispatch;
 
