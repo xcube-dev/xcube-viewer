@@ -18,6 +18,13 @@ Adjust the Player's interval settings. Additional information on the Player can 
 
 ![Settings - Player Interval](../assets/images/settings_player.png)
 
+### Change Application Theme
+
+Change the theme (dark, light) of the xcube Viewer according to preference.
+
+![Settings - Switch Theme](../assets/images/settings_theme_light.png)
+![Settings - Switch Theme](../assets/images/settings_theme_dark.png)
+
 ---
 
 ## Time-Series
