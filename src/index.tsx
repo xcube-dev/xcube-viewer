@@ -28,7 +28,6 @@ import * as Redux from "redux";
 import { Action, Dispatch } from "redux";
 import * as ReduxLogger from "redux-logger";
 import thunk from "redux-thunk";
-import { initializeContributions } from "dashipopashi";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -46,7 +45,6 @@ import {
 import { syncWithServer } from "@/actions/dataActions";
 import { appReducer } from "@/reducers/appReducer";
 import { AppState } from "@/states/appState";
-import { type StoreApi } from "zustand/vanilla";
 
 Config.load().then(() => {
   const actionFilter = (_getState: () => AppState, action: Action) =>
@@ -59,40 +57,12 @@ Config.load().then(() => {
   const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
   const store = Redux.createStore(appReducer, middlewares);
 
-
-  const hostStore: StoreApi<AppState> & {_initialState: AppState, _prevState: AppState } = {
-    _initialState: store.getState(),
-    getInitialState() {
-      return this._initialState;
-    },
-    getState() {
-      return store.getState();
-    },
-    setState(_state: AppState | Partial<AppState> | ((state: AppState) => AppState | Partial<AppState>), _replace?: boolean) {
-      throw new Error("Changing the host state from contributions is not yet supported");
-    },
-    _prevState: store.getState(),
-    subscribe(listener: (store: AppState, prevState: AppState) => void): () => void {
-      const self = this;
-      const unsubscribe = store.subscribe(() => {
-        const state = store.getState();
-        if (state !== self._prevState) {
-          listener(state, self._prevState);
-          self._prevState = state;
-        }
-      });
-      return () => void unsubscribe();
-    }
-  }
-
-  initializeContributions({ hostStore });
-
   const dispatch: Dispatch = store.dispatch;
 
   dispatch(changeLocale(store.getState().controlState.locale));
   dispatch(updateUserColorBarsImageData() as unknown as Action);
   if (store.getState().controlState.privacyNoticeAccepted) {
-    dispatch(syncWithServer() as unknown as Action);
+    dispatch(syncWithServer(store) as unknown as Action);
   }
 
   ReactDOM.createRoot(document.getElementById("root")!).render(

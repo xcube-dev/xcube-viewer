@@ -633,11 +633,7 @@ export const canAddStatisticsSelector = createSelector(
     selectedVariableName: string | null,
     selectedPlaceId: string | null,
   ): boolean => {
-    return !!(
-      selectedDatasetId &&
-      selectedVariableName &&
-      selectedPlaceId
-    );
+    return !!(selectedDatasetId && selectedVariableName && selectedPlaceId);
   },
 );
 
@@ -920,7 +916,6 @@ function getTileLayer(
     mapProjection === GEOGRAPHIC_CRS
       ? extent
       : olTransformExtent(extent, "EPSG:4326", mapProjection);
-  console.log("extent:", extent, transformedExtent);
   return (
     <Tile
       id={layerId}

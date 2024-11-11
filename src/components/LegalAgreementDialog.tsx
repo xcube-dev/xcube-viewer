@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Store } from "redux";
+import { ReactReduxContext } from "react-redux";
 import Markdown from "react-markdown";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -47,7 +49,7 @@ interface LegalAgreementDialogProps {
   open: boolean;
   settings: ControlState;
   updateSettings: (settings: ControlState) => void;
-  syncWithServer: () => void;
+  syncWithServer: (store: Store) => void;
 }
 
 export default function LegalAgreementDialog({
@@ -57,6 +59,8 @@ export default function LegalAgreementDialog({
   syncWithServer,
 }: LegalAgreementDialogProps) {
   const [markdownText, setMarkdownText] = useState<string | null>(null);
+
+  const { store } = useContext(ReactReduxContext);
 
   useEffect(() => {
     const href = i18n.get("docs/privacy-note.en.md");
@@ -72,7 +76,7 @@ export default function LegalAgreementDialog({
 
   function handleConfirm() {
     updateSettings({ ...settings, privacyNoticeAccepted: true });
-    syncWithServer();
+    syncWithServer(store);
   }
 
   function handleLeave() {
