@@ -25,11 +25,7 @@
 import React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import {
-  Component,
-  ContributionState,
-  handleComponentChange,
-} from "dashipopashi";
+import { Component, ContributionState, handleComponentChange } from "chartlets";
 
 interface ContributedPanelState {
   title: string;

@@ -26,7 +26,7 @@ import { Action, Dispatch, Store } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { initializeContributions } from "dashipopashi";
+import { initializeContributions } from "chartlets";
 import type { StoreApi } from "zustand/vanilla";
 
 import * as api from "@/api";

@@ -37,7 +37,7 @@ import {
   type ContributionState,
   updateContributionContainer,
   useContributionsRecord,
-} from "dashipopashi";
+} from "chartlets";
 
 import { AppState } from "@/states/appState";
 import i18n from "@/i18n";
