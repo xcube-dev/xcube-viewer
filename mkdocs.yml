@@ -1,32 +1,62 @@
 site_name: xcube Viewer
+repo_url: https://github.com/xcube-dev/xcube-viewer
+repo_name: xcube-dev/xcube-viewer
 
 copyright: Copyright &copy; 2024 Brockmann Consult
 
 nav:
-  - Documentation: index.md
+  - About: index.md
+  - User Guide:
+      - "Getting Started": user_guide/getting_started.md
+      - "Analyse Variables": user_guide/analyse.md
+      - "Colour Mapping": user_guide/colormaps.md
+      - "Adjust Settings": user_guide/settings.md
+  - General Concepts: concepts.md
+  - Feature References: features.md
+  - Get your own Viewer: build_viewer.md
 
 theme:
   name: material
   logo: assets/logo512.png
   favicon: assets/logo192.png
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.top
+    - navigation.indexes
+    # - navigation.sections
+    # - navigation.expand
+    # - navigation.tabs
+    # - toc.integrate
+    - toc.permalink
+    - toc.follow
   palette:
     # Palette toggle for light mode
     - scheme: default
       primary: blue grey
+      accent: pink
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
-    - scheme: slate
-      primary: blue grey
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: pink
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
 
 markdown_extensions:
+  - toc:
+      permalink: true
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  - attr_list
+  - md_in_html
 
 extra:
   social:
@@ -36,3 +66,10 @@ extra:
 plugins:
   - search
   - autorefs
+
+extra_css:
+  - css/custom.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

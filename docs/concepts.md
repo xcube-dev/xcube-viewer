@@ -16,9 +16,9 @@ A dataset can be associated with [places](#Place) that are
 organised in [place groups](#Place-Group).
 
 Datasets that provide variables with two spatial dimensions and a time
-dimension are also referred to as _data cubes_. Hence, the data cubes 
+dimension are also referred to as _data cubes_. Hence, the data cubes
 supported by the viewer are 4-D: variable, time, y, and x.
-The viewer may support also other data cube dimensions in the future. 
+The viewer may support also other data cube dimensions in the future.
 
 The list of available datasets is usually fixed for a deployed viewer
 application instance. One of the datasets is the viewer's 
@@ -28,8 +28,8 @@ application instance. One of the datasets is the viewer's
 
 A _variable_ provides n-dimensional, gridded, geospatial data.
 Every variable has a name, a numeric data type, and two spatial dimensions.
-Usually, variables are 3-D and also have a time dimension that can be of 
-variable length. Each time step along the dimension determines an individual 
+Usually, variables are 3-D and also have a time dimension that can be of
+variable length. Each time step along the dimension determines an individual
 2-D spatial image of the 3-D variable and is associated with a given timestamp.
 
 ### Place

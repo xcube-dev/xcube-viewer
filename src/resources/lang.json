@@ -456,6 +456,11 @@
       "se": "Visa tidsseriediagram"
     },
     {
+      "en": "Add Statistics",
+      "de": "Statistiken hinzufügen",
+      "se": "Lägg till statistik"
+    },
+    {
       "en": "Help",
       "de": "Hilfe",
       "se": "Hjälp"
@@ -561,6 +566,11 @@
       "se": "Byt namn på plats"
     },
     {
+      "en": "Style place",
+      "de": "Ort stylen",
+      "se": "Styla plats"
+    },
+    {
       "en": "Remove place",
       "de": "Ort entfernen",
       "se": "Ta bort plats"
@@ -584,6 +594,26 @@
       "en": "Auto-step through times in the dataset",
       "de": "Zeiten im Datensatz automatisch durchlaufen",
       "se": "Kör automatiskt genom tider i dataposten"
+    },
+    {
+      "en": "First time step",
+      "de": "Erster Zeitschritt",
+      "se": "Första tidssteg"
+    },
+    {
+      "en": "Last time step",
+      "de": "Letzter Zeitschritt",
+      "se": "Sista tidssteg"
+    },
+    {
+      "en": "Previous time step",
+      "de": "Vorheriger Zeitschritt",
+      "se": "Föregående tidssteg"
+    },
+    {
+      "en": "Next time step",
+      "de": "Nächster Zeitschritt",
+      "se": "Nästa tidssteg"
     },
     {
       "en": "Select time in dataset",
@@ -1194,6 +1224,21 @@
       "en": "Must not be empty",
       "de": "Darf nicht leer sein",
       "se": "Får inte vara tom"
+    },
+    {
+      "en": "Textual format",
+      "de": "Textformat",
+      "se": "Textformat"
+    },
+    {
+      "en": "Tabular format",
+      "de": "Tabellenformat",
+      "se": "Tabellformat"
+    },
+    {
+      "en": "JSON format",
+      "de": "JSON-Format",
+      "se": "JSON-format"
     },
     {
       "en": "docs/privacy-note.en.md",

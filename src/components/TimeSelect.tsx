@@ -27,9 +27,7 @@ import { Theme } from "@mui/material";
 import createStyles from "@mui/styles/createStyles";
 import withStyles from "@mui/styles/withStyles";
 import { WithStyles } from "@mui/styles";
-import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel/InputLabel";
-import { TextFieldProps as MuiTextFieldPropsType } from "@mui/material/TextField/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -44,7 +42,7 @@ import ControlBarItem from "./ControlBarItem";
 const styles = (theme: Theme) =>
   createStyles({
     dateTimePicker: {
-      marginTop: theme.spacing(2.5),
+      marginTop: theme.spacing(2),
     },
   });
 
@@ -95,16 +93,24 @@ const _TimeSelect: React.FC<TimeSelectProps> = ({
         //         : undefined
         // }
         className={classes.dateTimePicker}
-        inputFormat="yyyy-MM-dd hh:mm:ss"
+        format="yyyy-MM-dd hh:mm:ss"
         // id="time-select"
         value={timeValue}
         minDateTime={minTimeValue}
         maxDateTime={maxTimeValue}
         onChange={handleTimeChange}
         ampm={false}
-        renderInput={(props: MuiTextFieldPropsType) => (
-          <TextField {...props} variant="standard" size="small" />
-        )}
+        slotProps={{
+          textField: {
+            variant: "standard",
+            size: "small",
+          },
+        }}
+        viewRenderers={{
+          hours: null,
+          minutes: null,
+          seconds: null,
+        }}
       />
     </LocalizationProvider>
   );
