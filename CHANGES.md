@@ -1,3 +1,16 @@
+## Changes in version 1.4.0 (in development)
+
+### Other changes
+
+* Updated dependencies, development dependencies and updated TypeScript code base accordingly.
+    - `react` from v17 to v18
+    - `react-dom` from v17 to v18
+    - `mui` from v5 to v6
+    - `testing-library/react` from v12 to v16
+
+* Tooltips (incl. translation) have been added to the toogle buttons that 
+  control the format of the metadata information in the sidebar.
+
 ## Changes in version 1.3.1
 
 ### Fixes

@@ -23,6 +23,7 @@
  */
 
 import { VolumeRenderMode } from "@/states/controlState";
+import React from "react";
 
 export type ColorBarNorm = "lin" | "log";
 
@@ -48,5 +49,5 @@ export interface Variable {
   volumeRenderMode?: VolumeRenderMode;
   volumeIsoThreshold?: number;
   htmlRepr?: string;
-  attrs: Record<string, unknown>;
+  attrs: Record<string, React.ReactNode>;
 }

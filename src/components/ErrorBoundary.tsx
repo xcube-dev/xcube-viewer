@@ -29,7 +29,9 @@ import { WithLocale } from "@/util/lang";
 
 import "./ErrorBoundary.css";
 
-interface ErrorBoundaryProps extends WithLocale {}
+interface ErrorBoundaryProps extends WithLocale {
+  children?: React.ReactNode;
+}
 
 interface ErrorBoundaryState {
   error: Error | null;

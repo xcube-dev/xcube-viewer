@@ -518,6 +518,7 @@ interface InfoCardContentProps {
   viewMode: ViewMode;
   setViewMode: (viewMode: ViewMode) => void;
   hasPython?: boolean;
+  children?: React.ReactNode;
 }
 
 const InfoCardContent: React.FC<InfoCardContentProps> = ({
@@ -556,7 +557,9 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
               size="small"
               sx={commonStyles.toggleButton}
             >
+            <Tooltip arrow title={i18n.get("Textual format")}>
               <TextFieldsIcon />
+            </Tooltip>
             </ToggleButton>
             <ToggleButton
               key={1}
@@ -564,7 +567,9 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
               size="small"
               sx={commonStyles.toggleButton}
             >
+            <Tooltip arrow title={i18n.get("Tabular format")}>
               <ListAltIcon />
+            </Tooltip>
             </ToggleButton>
             <ToggleButton
               key={2}
@@ -572,7 +577,9 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
               size="small"
               sx={commonStyles.toggleButton}
             >
+            <Tooltip arrow title={i18n.get("JSON format")}>
               <JsonIcon />
+            </Tooltip>
             </ToggleButton>
             {hasPython && (
               <ToggleButton
@@ -594,7 +601,7 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
 
 ////////////////////////////////////////////////////////////////////////////////
 
-type KeyValue = [string, unknown];
+type KeyValue = [string, React.ReactNode];
 
 interface KeyValueTableProps {
   data: KeyValue[];
@@ -635,8 +642,11 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+interface CardContent2Props {
+  children: React.ReactNode;
+}
 
-const CardContent2: React.FC = ({ children }) => {
+const CardContent2: React.FC<CardContent2Props> = ({ children }) => {
   return <CardContent sx={styles.cardContent}>{children}</CardContent>;
 };
 
