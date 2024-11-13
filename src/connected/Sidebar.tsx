@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-import { ReactElement } from "react";
+import { ReactElement, SyntheticEvent, useCallback, useMemo } from "react";
 import { connect } from "react-redux";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -33,12 +33,18 @@ import InfoIcon from "@mui/icons-material/Info";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
+import {
+  type ContributionState,
+  updateContributionContainer,
+  useContributionsRecord,
+} from "chartlets";
 
 import { AppState } from "@/states/appState";
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { setSidebarPanelId } from "@/actions/controlActions";
 import { SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
+import ContributedPanel from "@/components/ContributedPanel";
 import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
@@ -76,9 +82,14 @@ const styles = makeStyles({
   },
 });
 
+interface SidebarPanelContributionProps {
+  title: string;
+  visible?: boolean;
+}
+
 interface SidebarProps {
-  sidebarPanelId: SidebarPanelId;
-  setSidebarPanelId: (sidebarPanelId: SidebarPanelId) => void;
+  sidebarPanelId: SidebarPanelId | string;
+  setSidebarPanelId: (sidebarPanelId: SidebarPanelId | string) => void;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -93,14 +104,42 @@ const mapDispatchToProps = {
 };
 
 function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
+  const contributionsRecord = useContributionsRecord();
+  const panelContributions = useMemo(
+    () =>
+      (contributionsRecord["panels"] ||
+        []) as ContributionState<SidebarPanelContributionProps>[],
+    [contributionsRecord],
+  );
+
+  const contributionIndexes = useMemo(
+    () =>
+      panelContributions.reduce((map, contribution, contribIndex) => {
+        map.set(contribution.name, contribIndex);
+        return map;
+      }, new Map<string, number>()),
+    [panelContributions],
+  );
+
+  const handleTabChange = useCallback(
+    (_: SyntheticEvent, value: SidebarPanelId | string) => {
+      setSidebarPanelId(value);
+      const contribIndex = contributionIndexes.get(value);
+      if (typeof contribIndex === "number") {
+        updateContributionContainer("panels", contribIndex, {
+          visible: true,
+        });
+      }
+    },
+    [contributionIndexes, setSidebarPanelId],
+  );
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={styles.tabBoxHeader}>
         <Tabs
           value={sidebarPanelId}
-          onChange={(_, value) => {
-            setSidebarPanelId(value as SidebarPanelId);
-          }}
+          onChange={handleTabChange}
           variant="scrollable"
           sx={styles.tabs}
         >
@@ -115,12 +154,31 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
               label={i18n.get(sidebarPanelLabels[panelId])}
             />
           ))}
+          {panelContributions.map((contribution) => (
+            <Tab
+              key={contribution.name}
+              sx={styles.tab}
+              disableRipple
+              value={contribution.name}
+              label={contribution.container.title}
+            />
+          ))}
         </Tabs>
       </Box>
       {sidebarPanelId === "info" && <InfoPanel />}
       {sidebarPanelId === "stats" && <StatisticsPanel />}
       {sidebarPanelId === "timeSeries" && <TimeSeriesPanel />}
       {sidebarPanelId === "volume" && <VolumePanel />}
+      {panelContributions.map(
+        (contribution, panelIndex) =>
+          sidebarPanelId === contribution.name && (
+            <ContributedPanel
+              key={contribution.name}
+              contribution={contribution}
+              panelIndex={panelIndex}
+            />
+          ),
+      )}
     </Box>
   );
 }

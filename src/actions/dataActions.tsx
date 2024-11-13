@@ -22,10 +22,12 @@
  * SOFTWARE.
  */
 
-import { Action, Dispatch } from "redux";
+import { Action, Dispatch, Store } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { initializeContributions } from "chartlets";
+import type { StoreApi } from "zustand/vanilla";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
@@ -531,13 +533,7 @@ export function addStatistics() {
     const sidebarOpen = getState().controlState.sidebarOpen;
     const sidebarPanelId = getState().controlState.sidebarPanelId;
 
-    if (
-      !(
-        selectedDataset &&
-        selectedVariable &&
-        selectedPlaceInfo
-      )
-    ) {
+    if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
 
@@ -789,12 +785,13 @@ export interface ConfigureServers {
 export function configureServers(
   servers: ApiServerConfig[],
   selectedServerId: string,
+  store: Store,
 ) {
   return (dispatch: Dispatch, getState: () => AppState) => {
     if (getState().controlState.selectedServerId !== selectedServerId) {
       dispatch(removeAllTimeSeries());
       dispatch(_configureServers(servers, selectedServerId));
-      dispatch(syncWithServer() as unknown as Action);
+      dispatch(syncWithServer(store) as unknown as Action);
     } else if (getState().dataState.userServers !== servers) {
       dispatch(_configureServers(servers, selectedServerId));
     }
@@ -810,12 +807,58 @@ export function _configureServers(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function syncWithServer() {
-  return (dispatch: Dispatch) => {
+export function syncWithServer(store: Store) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
+
+    const apiServer = selectedServerSelector(getState());
+    initializeContributions({
+      hostStore: newHostStore(store),
+      logging: { enabled: import.meta.env.DEV },
+      api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
+    });
+  };
+}
+
+function newHostStore(store: Store): StoreApi<AppState> & {
+  _initialState: AppState;
+  _prevState: AppState;
+} {
+  return {
+    _initialState: store.getState(),
+    getInitialState(): AppState {
+      // noinspection JSPotentiallyInvalidUsageOfThis
+      return this._initialState;
+    },
+    getState(): AppState {
+      return store.getState();
+    },
+    setState(
+      _state:
+        | AppState
+        | Partial<AppState>
+        | ((state: AppState) => AppState | Partial<AppState>),
+      _replace?: boolean,
+    ): void {
+      throw new Error(
+        "Changing the host state from contributions is not yet supported",
+      );
+    },
+    _prevState: store.getState(),
+    subscribe(
+      listener: (store: AppState, prevState: AppState) => void,
+    ): () => void {
+      return store.subscribe(() => {
+        const state = store.getState();
+        if (state !== this._prevState) {
+          listener(state, this._prevState);
+          this._prevState = state;
+        }
+      });
+    },
   };
 }
 
