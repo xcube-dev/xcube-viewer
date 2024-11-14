@@ -124,7 +124,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					>User-defined variables</a
 				>
 				are marked with an icon and placed at the bottom of the list. The
-				currently selected variable is highlighted in blue.
+				currently selected variable is highlighted.
 			</td>
 		</tr>
 		<tr></tr>
@@ -883,10 +883,10 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				The space under the "Time Series" tab in the sidebar varies depending on
 				whether a time series graph is present. If no time series graph exists:
-				A message indicates that no time series is currently displayed. A button
-				is also available, which becomes active (with blue font color) when a
-				variable and place are selected and it is possible to create a time
-				series.
+				A message indicates that no time series is currently displayed. Additionally 
+				a button in the header is also available, which becomes active (with blue 
+				font color) when a variable and place are selected and it is possible to 
+				create a time series.
 			</td>
 		</tr>
 		<tr>
@@ -1662,6 +1662,47 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
+### Open Export Data Menu
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/export_data_button.png"
+					alt="Open Export Data Menu" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Open Export Data Menu</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A button that opens the
+				<a href="#export-data" rel="noopener noreferrer"
+					>Export Data</a
+				> menu.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>To open the Export Data menu.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="../user_guide/analyse/#export" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 ## Export Data
 
 <table>
@@ -1670,7 +1711,8 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/export_data.png"
-					alt="Export Data" style="max-width: 40%" />
+					alt="Export Data"
+					style="max-width: 40%" />
 			</th>
 		</tr>
 	</thead>
@@ -1689,7 +1731,11 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Open the export settings and select options for export:
+				Open the export settings by using
+				<a href="#open-export-data-menu" rel="noopener noreferrer"
+					>this button</a
+				>
+				in the header of the Viewer and select options for export:
 				<ul>
 					<li>
 						<strong>Include time series data</strong> (file format:
@@ -2179,7 +2225,7 @@ A list of all the features that the viewer contains will be created here, in whi
 
 </table>
 
-### Custom color Maps
+### Custom Color Maps
 
 <table>
 	<thead>
