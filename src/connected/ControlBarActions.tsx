@@ -28,7 +28,7 @@ import { AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
 import { openDialog, setSidebarOpen } from "@/actions/controlActions";
 import { Config } from "@/config";
-import { updateResources } from "@/actions/dataActions";
+import { shareStatePermalink, updateResources } from "@/actions/dataActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -39,6 +39,7 @@ const mapStateToProps = (state: AppState) => {
     sidebarOpen: state.controlState.sidebarOpen,
     compact: Config.instance.branding.compact,
     allowRefresh: Config.instance.branding.allowRefresh,
+    allowSharing: Config.instance.branding.allowSharing,
   };
 };
 
@@ -46,6 +47,7 @@ const mapDispatchToProps = {
   setSidebarOpen,
   openDialog,
   updateResources,
+  shareStatePermalink,
 };
 
 const ControlBarActions = connect(

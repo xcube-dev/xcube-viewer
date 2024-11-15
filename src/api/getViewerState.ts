@@ -22,15 +22,27 @@
  * SOFTWARE.
  */
 
-export { getColorBars } from "./getColorBars";
-export { getDatasets } from "./getDatasets";
-export { getDatasetPlaceGroup } from "./getDatasetPlaceGroup";
-export { getExpressionCapabilities } from "./getExpressionCapabilities";
-export { getServerInfo } from "./getServerInfo";
-export { getTimeSeriesForGeometry } from "./getTimeSeries";
-export { getStatistics } from "./getStatistics";
-export { getPointValue } from "./getPointValue";
-export { updateResources } from "./updateResources";
-export { getViewerState } from "./getViewerState";
-export { putViewerState } from "./putViewerState";
-export { HTTPError } from "./errors";
+import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
+
+export function getViewerState(
+  apiServerUrl: string,
+  accessToken: string | null,
+  stateId: string,
+): Promise<unknown> {
+  const url = makeRequestUrl(`${apiServerUrl}/viewer/state`, [
+    ["stateId", stateId],
+  ]);
+  try {
+    return callJsonApi<unknown>(url, makeRequestInit(accessToken))
+      .then((state: unknown) => {
+        return state;
+      })
+      .catch((error) => {
+        console.error(error);
+        return undefined;
+      });
+  } catch (error) {
+    console.error(error);
+    return Promise.resolve(undefined);
+  }
+}

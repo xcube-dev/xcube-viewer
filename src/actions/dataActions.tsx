@@ -135,6 +135,43 @@ export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const SHARE_STATE_PERMALINK = "SHARE_STATE_PERMALINK";
+
+export function shareStatePermalink() {
+  return (
+    dispatch: Dispatch<AddActivity | RemoveActivity | MessageLogAction>,
+    getState: () => AppState,
+  ) => {
+    const apiServer = selectedServerSelector(getState());
+    dispatch(
+      addActivity(SHARE_STATE_PERMALINK, i18n.get("Creating permalink")),
+    );
+    api
+      .putViewerState(
+        apiServer.url,
+        getState().userAuthState.accessToken,
+        getState().controlState as unknown as Record<string, unknown>,
+      )
+      .then((stateId) => {
+        if (stateId) {
+          const viewerUrl = `${window.location}?stateId=${stateId}`;
+          navigator.clipboard.writeText(viewerUrl).then(() => {
+            dispatch(
+              postMessage("success", i18n.get("Permalink copied to clipboard")),
+            );
+          });
+        } else {
+          dispatch(
+            postMessage("error", i18n.get("Failed to create permalink")),
+          );
+        }
+      })
+      .finally(() => dispatch(removeActivity(SHARE_STATE_PERMALINK)));
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const UPDATE_RESOURCES = "UPDATE_RESOURCES";
 
 export function updateResources() {

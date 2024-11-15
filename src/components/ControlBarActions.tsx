@@ -30,6 +30,7 @@ import Tooltip from "@mui/material/Tooltip";
 import ToggleButton from "@mui/material/ToggleButton";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import ShareIcon from "@mui/icons-material/Share";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 
@@ -54,6 +55,8 @@ interface ControlBarActionsProps extends WithLocale {
   openDialog: (dialogId: string) => void;
   allowRefresh?: boolean;
   updateResources: () => void;
+  allowSharing?: boolean;
+  shareStatePermalink: () => void;
   compact: boolean;
 }
 
@@ -64,6 +67,8 @@ export default function ControlBarActions({
   openDialog,
   allowRefresh,
   updateResources,
+  allowSharing,
+  shareStatePermalink,
   compact,
 }: ControlBarActionsProps) {
   if (!visible) {
@@ -85,6 +90,7 @@ export default function ControlBarActions({
   );
 
   let refreshButton;
+  let shareButton;
   let downloadButton;
   let settingsButton;
 
@@ -93,6 +99,14 @@ export default function ControlBarActions({
       <IconButton onClick={updateResources} size="small">
         <Tooltip arrow title={i18n.get("Refresh")}>
           <RefreshIcon />
+        </Tooltip>
+      </IconButton>
+    );
+
+    shareButton = allowSharing && (
+      <IconButton onClick={shareStatePermalink} size="small">
+        <Tooltip arrow title={i18n.get("Share")}>
+          <ShareIcon />
         </Tooltip>
       </IconButton>
     );
@@ -118,6 +132,7 @@ export default function ControlBarActions({
     <StyledFormControl variant="standard">
       <Box>
         {refreshButton}
+        {shareButton}
         {downloadButton}
         {settingsButton}
         {sidebarButton}
