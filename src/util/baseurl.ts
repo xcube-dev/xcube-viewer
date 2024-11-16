@@ -43,5 +43,3 @@ function _getBaseUrl(): URL {
 const baseUrl = _getBaseUrl();
 
 export default baseUrl;
-
-console.log("baseUrl = ", baseUrl.href);
