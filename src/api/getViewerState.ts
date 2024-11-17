@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
+import { PersistedState } from "@/states/persistedState";
 import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
 
 export function getViewerState(
   apiServerUrl: string,
   accessToken: string | null,
   stateId: string,
-): Promise<unknown> {
+): Promise<PersistedState | undefined> {
   const url = makeRequestUrl(`${apiServerUrl}/viewer/state`, [
-    ["stateId", stateId],
+    ["key", stateId],
   ]);
   try {
-    return callJsonApi<unknown>(url, makeRequestInit(accessToken))
-      .then((state: unknown) => {
+    return callJsonApi<PersistedState>(url, makeRequestInit(accessToken))
+      .then((state) => {
         return state;
       })
       .catch((error) => {

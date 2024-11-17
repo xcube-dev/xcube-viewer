@@ -85,6 +85,7 @@ import { findIndexCloseTo } from "@/util/find";
 import { appParams } from "@/config";
 import { USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/userColorBar";
+import { APPLY_PERSISTED_STATE, OtherAction } from "@/actions/otherActions";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET,
 //  SELECT_PLACE, SELECT_VARIABLE so they produce a consistent state.
@@ -98,13 +99,17 @@ import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/userColorBar";
 
 export function controlReducer(
   state: ControlState | undefined,
-  action: ControlAction | DataAction,
+  action: ControlAction | DataAction | OtherAction,
   appState: AppState | undefined,
 ): ControlState {
   if (state === undefined) {
     state = newControlState();
   }
   switch (action.type) {
+    case APPLY_PERSISTED_STATE: {
+      const { controlState } = action.persistedState.state;
+      return { ...state, ...controlState };
+    }
     case UPDATE_SETTINGS: {
       const settings = { ...state, ...action.settings };
       storeUserSettings(settings);

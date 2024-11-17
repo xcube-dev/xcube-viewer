@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
+import { PersistedState } from "@/states/persistedState";
 import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
 
 export function putViewerState(
   apiServerUrl: string,
   accessToken: string | null,
-  state: Record<string, unknown>,
+  state: PersistedState,
 ): Promise<string | undefined> {
   const url = makeRequestUrl(`${apiServerUrl}/viewer/state`, []);
   const init = {
@@ -36,9 +37,9 @@ export function putViewerState(
     body: JSON.stringify(state),
   };
   try {
-    return callJsonApi<{ stateId: string }>(url, init)
+    return callJsonApi<{ key: string }>(url, init)
       .then((result) => {
-        return result.stateId;
+        return result.key;
       })
       .catch((error) => {
         console.error(error);

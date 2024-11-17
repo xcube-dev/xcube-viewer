@@ -31,6 +31,7 @@ import type { StoreApi } from "zustand/vanilla";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
+import { appParams } from "@/config";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { Dataset, getDatasetUserVariables } from "@/model/dataset";
@@ -93,6 +94,9 @@ import {
   SetSidebarPanelId,
   setSidebarPanelId,
 } from "./controlActions";
+import baseUrl from "@/util/baseurl";
+import { newPersistentAppState } from "@/states/persistedState";
+import { applyPersistentState } from "@/actions/otherActions";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -150,11 +154,11 @@ export function shareStatePermalink() {
       .putViewerState(
         apiServer.url,
         getState().userAuthState.accessToken,
-        getState().controlState as unknown as Record<string, unknown>,
+        newPersistentAppState(getState()),
       )
       .then((stateId) => {
         if (stateId) {
-          const viewerUrl = `${window.location}?stateId=${stateId}`;
+          const viewerUrl = `${baseUrl.origin}?stateId=${stateId}`;
           navigator.clipboard.writeText(viewerUrl).then(() => {
             dispatch(
               postMessage("success", i18n.get("Permalink copied to clipboard")),
@@ -844,7 +848,7 @@ export function _configureServers(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function syncWithServer(store: Store) {
+export function syncWithServer(store: Store, init: boolean = false) {
   return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
@@ -857,6 +861,21 @@ export function syncWithServer(store: Store) {
       logging: { enabled: import.meta.env.DEV },
       api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
     });
+
+    const stateId = appParams.get("stateId");
+    if (stateId && init) {
+      api
+        .getViewerState(
+          selectedServerSelector(store.getState()).url,
+          getState().userAuthState.accessToken,
+          stateId,
+        )
+        .then((persistedState) => {
+          if (persistedState) {
+            dispatch(applyPersistentState(persistedState) as unknown as Action);
+          }
+        });
+    }
   };
 }
 
