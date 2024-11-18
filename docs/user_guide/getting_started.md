@@ -2,11 +2,11 @@
 
 ## Select Dataset and Variables
 
-A xcube viewer may hold several datasets which you can select via the drop-down menu **Dataset**. When a new dataset gets selected, the map extent changes, according to the option selected in the [settings](../user_guide/settings.md/#zoom-on-datasetplace-selection).
+A xcube viewer may hold several [datasets](../concepts.md/#dataset) which you can select via the drop-down menu **Dataset**. When a new dataset gets [selected](../concepts.md/#selected-dataset), the map extent changes, according to the option selected in the [settings](../user_guide/settings.md/#zoom-on-datasetplace-selection).
 
 ![Datamanagement - Dataset](../assets/images/datamanagement_dataset.png)
 
-If more than one variable is available within a selected xcube dataset, you may change the variable by using the drop-down menu
+If more than one [variable](../concepts.md/#variable) is available within a [selected xcube dataset](../concepts.md/#selected-dataset), you may change the variable by using the drop-down menu
 **Variable**.
 
 ![Datamanagement - Variables](../assets/images/datamanagement_variables.png)
@@ -15,7 +15,7 @@ If more than one variable is available within a selected xcube dataset, you may 
 
 ## Integrate (User) Base Maps and Overlays
 
-The Viewer gives the option to display the datasets in front of a base map and to overlay datasets with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer, with the option to add more as needed. Further instructions can be found [here](../user_guide/settings.md/#base-maps-and-overlays).
+The Viewer gives the option to display the datasets in front of a [base map](../concepts.md/#basemaps-and-overlays) and to [overlay](../concepts.md/#basemaps-and-overlays) datasets with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer, with the option to add more as needed. Further instructions can be found [here](../user_guide/settings.md/#base-maps-and-overlays).
 
 ---
 

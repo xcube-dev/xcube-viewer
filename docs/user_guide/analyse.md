@@ -6,7 +6,7 @@
 
 Enable a small pixel information box being displayed
 next to the pointer when hovering over the map. It shows the current
-map coordinates and the values of the currently selected variable at
+map coordinates and the values of the currently [selected variable](../concepts.md/#selected-variable) at
 that position. The feature is switched on and off from the layer
 selector menu on the left.
 
@@ -14,7 +14,7 @@ selector menu on the left.
 
 ## Extract Information
 
-The Viewer provides the ability to extract information from variables at specific [places](#places) (point, circle, or polygon), in the form of time series and basic statistics. All extracted information is displayed on the right side of the Viewer in the sidebar.
+The Viewer provides the ability to extract information from variables at [selected places](../concepts.md/#selected-place) (point, circle, or polygon), in the form of [time series](#time-series) and [basic statistics](#statistics). All extracted information is displayed on the right side of the Viewer in the sidebar.
 
 ![Time Series](../assets/images/analysis_timeseries.png)
 
@@ -44,7 +44,7 @@ Export the time series using the option in the header at the top right. You have
 
 ### Statistics
 
-Compute and display basic statistics for the currently selected variable, selected timestamp, and selected place. To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
+Compute and display basic statistics for the currently [selected variable](../concepts.md/#selected-variable), [selected timestamp](../concepts.md/#selected-time), and [selected place](../concepts.md/#selected-place). To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
 
 ![Statistics](../assets/images/analysis_statistics.png)
 
@@ -65,7 +65,7 @@ For point places:
 
 ![User Variables](../assets/images/analysis_uservariables.png)
 
-Define your own variables computed from Python-like expressions. The expressions can combine other variables of the current dataset using almost all Python operators and all [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs). User data variables are persisted in the browser's local storage.
+Define your own variables computed from Python-like expressions. The expressions can combine other variables of the [current dataset](../concepts.md/#selected-dataset) using almost all Python operators and all [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs). User data variables are persisted in the browser's local storage.
 
 ???+ info "In more detail"
 
@@ -121,8 +121,8 @@ Visually compare two variables using **Compare Mode**. This mode displays two va
 
 To **enter** Compare Mode:
 
-1. Pin a variable, which will be displayed on the left. This will automatically activate Compare Mode.
-2. Select a second variable for comparison, which will be displayed on the right.
+1. [Pin](../concepts.md/#pinned-variable) a variable, which will be displayed on the left. This will automatically activate Compare Mode.
+2. [Select](../concepts.md/#selected-variable) a second variable for comparison, which will be displayed on the right.
 
 To **exit** Compare Mode: use the button on the left
 
@@ -145,43 +145,43 @@ Use the player to auto-step through the variable of a dataset. The interval can 
 
 ## Places
 
-**Places** provide a spatial reference for extracting statistical values and time series data. They can be represented as either `points` or `polygons/circles` and are organized into **groups** which hold individial places.
+[**Places**](../concepts.md/#places-and-place-groups) provide a spatial reference for extracting statistical values and time series data. They can be represented as either `points` or `polygons/circles` and are organized into [**groups**](../concepts.md/#places-and-place-groups) which hold individial places.
 
 ![Places](../assets/images/analysis_places.png)
 
-The Viewer offers a variety of features for working with Places (such as adding, removing, and styling) to obtain statistical information. The following sections will explain the available features.
+The Viewer offers a variety of features for working with [places](../concepts.md/#places-and-place-groups) (such as adding, removing, and styling) to obtain statistical information. The following sections will explain the available features.
 
 ![Places](../assets/images/analysis_places_light.png){: class="light-image" }
 ![Places](../assets/images/analysis_places_dark.png){: class="dark-image" }
 
 ### Create
 
-New Places can be **created** in the Viewer using the buttons in the header, with `points` and `polygons/circles` being the available geometry types.
+New [places](../concepts.md/#places-and-place-groups) can be **created** in the Viewer using the buttons in the header, with `points` and `polygons/circles` being the available geometry types.
 
 ### Import
 
-Externally created places can also be **imported**. The allowed formats are `text/csv`, `GeoJSON` and `WKT`. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.
+Externally created [places](../concepts.md/#places-and-place-groups) can also be **imported**. The allowed formats are `text/csv`, `GeoJSON` and `WKT`. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.
 
 ![Import Places](../assets/images/analysis_import_places.png)
 
 ### Select
 
-Place groups and individual places can be **selected** through a drop-down menu in the header. Additionally, individual places can be selected by clicking on them directly on the map when the corresponding function is enabled. Selected places are highlighted on the map with a yellow ring.
+[Place](../concepts.md/#places-and-place-groups) groups and individual places can be [**selected**](../concepts.md/#selected-place) through a drop-down menu in the header. Additionally, individual places can be selected by clicking on them directly on the map when the corresponding function is enabled. Selected places are highlighted on the map with a yellow ring.
 
 ### Remove
 
-**Remove** Place groups or Places by selecting the group or object and deleting it via the button in the header.
+**Remove** [place](../concepts.md/#places-and-place-groups) groups or places by selecting the group or object and deleting it via the button in the header.
 
 ### Rename
 
-Place Groups and individial places can be **renamed** in the Viewer via the according buttons.
+[Place](../concepts.md/#places-and-place-groups) groups and individial places can be **renamed** in the Viewer via the according buttons.
 
 ### Styling
 
-Modify both the color and opacity of a place. The selected color will be reflected consistently in the time series chart.
+Modify both the color and opacity of a [place](../concepts.md/#places-and-place-groups). The selected color will be reflected consistently in the time series chart.
 
 ### Export
 
-The geometry of Places created in the Viewer can be exported. This feature can be enabled during [the export of time series](#export-time-series). To include the geometry information in the export, it must be explicitly selected.
+The geometry of [places](../concepts.md/#places-and-place-groups) created in the Viewer can be exported. This feature can be enabled during [the export of time series](#export-time-series). To include the geometry information in the export, it must be explicitly selected.
 
 ![Export](../assets/images/analysis_timeseries_export.png)
