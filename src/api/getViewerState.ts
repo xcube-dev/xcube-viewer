@@ -29,21 +29,15 @@ export function getViewerState(
   apiServerUrl: string,
   accessToken: string | null,
   stateKey: string,
-): Promise<PersistedState | undefined> {
+): Promise<PersistedState | string> {
   const url = makeRequestUrl(`${apiServerUrl}/viewer/state`, [
     ["key", stateKey],
   ]);
-  try {
-    return callJsonApi<PersistedState>(url, makeRequestInit(accessToken))
-      .then((state) => {
-        return state;
-      })
-      .catch((error) => {
-        console.error(error);
-        return undefined;
-      });
-  } catch (error) {
-    console.error(error);
-    return Promise.resolve(undefined);
-  }
+  return callJsonApi<PersistedState>(url, makeRequestInit(accessToken))
+    .then((state) => {
+      return state;
+    })
+    .catch((error) => {
+      return `${error}`;
+    });
 }

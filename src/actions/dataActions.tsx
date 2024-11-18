@@ -95,7 +95,7 @@ import {
   setSidebarPanelId,
 } from "./controlActions";
 import baseUrl from "@/util/baseurl";
-import { newPersistentAppState } from "@/states/persistedState";
+import { newPersistentAppState, PersistedState } from "@/states/persistedState";
 import { applyPersistentState } from "@/actions/otherActions";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -871,9 +871,10 @@ export function syncWithServer(store: Store, init: boolean = false) {
           getState().userAuthState.accessToken,
           stateKey,
         )
-        .then((persistedState) => {
-          if (persistedState) {
-            const { apiUrl } = persistedState;
+        .then((stateResult) => {
+          if (typeof stateResult === "object") {
+            const persistedState = stateResult as PersistedState;
+            const { apiUrl } = persistedState as PersistedState;
             if (apiUrl === serverUrl) {
               dispatch(
                 applyPersistentState(persistedState) as unknown as Action,
@@ -886,6 +887,8 @@ export function syncWithServer(store: Store, init: boolean = false) {
                 ),
               );
             }
+          } else {
+            dispatch(postMessage("warning", stateResult));
           }
         });
     }
