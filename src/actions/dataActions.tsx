@@ -156,9 +156,9 @@ export function shareStatePermalink() {
         getState().userAuthState.accessToken,
         newPersistentAppState(getState()),
       )
-      .then((stateId) => {
-        if (stateId) {
-          const viewerUrl = `${baseUrl.origin}?stateId=${stateId}`;
+      .then((stateKey) => {
+        if (stateKey) {
+          const viewerUrl = `${baseUrl.origin}?stateKey=${stateKey}`;
           navigator.clipboard.writeText(viewerUrl).then(() => {
             dispatch(
               postMessage("success", i18n.get("Permalink copied to clipboard")),
@@ -862,13 +862,13 @@ export function syncWithServer(store: Store, init: boolean = false) {
       api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
     });
 
-    const stateId = appParams.get("stateId");
-    if (stateId && init) {
+    const stateKey = appParams.get("stateKey");
+    if (stateKey && init) {
       api
         .getViewerState(
           selectedServerSelector(store.getState()).url,
           getState().userAuthState.accessToken,
-          stateId,
+          stateKey,
         )
         .then((persistedState) => {
           if (persistedState) {

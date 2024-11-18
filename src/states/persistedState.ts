@@ -27,10 +27,13 @@ import { AppState } from "./appState";
 import { ControlState, MAP_OBJECTS } from "./controlState";
 import { DataState } from "./dataState";
 import { default as OlMap } from "ol/Map";
+import { selectedServerSelector } from '@/selectors/controlSelectors';
+import baseUrl from '@/util/baseurl';
 
 const dataStateProps: readonly (keyof DataState)[] = [
-  "statistics",
   "userPlaceGroups",
+  "timeSeriesGroups",
+  "statistics",
 ];
 
 const controlStateProps: readonly (keyof ControlState)[] = [
@@ -74,6 +77,8 @@ export interface PersistedMapState {
 
 export interface PersistedState {
   version: string;
+  apiUrl: string
+  viewerUrl: string;
   state: {
     dataState: PersistedDataState;
     controlState: PersistedControlState;
@@ -84,6 +89,8 @@ export interface PersistedState {
 export function newPersistentAppState(appState: AppState): PersistedState {
   return {
     version,
+    apiUrl: selectedServerSelector(appState).url,
+    viewerUrl: baseUrl.origin,
     state: {
       dataState: newSubsetState(appState.dataState, dataStateProps),
       controlState: newSubsetState(appState.controlState, controlStateProps),

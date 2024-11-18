@@ -28,10 +28,10 @@ import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
 export function getViewerState(
   apiServerUrl: string,
   accessToken: string | null,
-  stateId: string,
+  stateKey: string,
 ): Promise<PersistedState | undefined> {
   const url = makeRequestUrl(`${apiServerUrl}/viewer/state`, [
-    ["key", stateId],
+    ["key", stateKey],
   ]);
   try {
     return callJsonApi<PersistedState>(url, makeRequestInit(accessToken))
