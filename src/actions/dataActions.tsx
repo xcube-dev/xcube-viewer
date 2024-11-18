@@ -864,15 +864,28 @@ export function syncWithServer(store: Store, init: boolean = false) {
 
     const stateKey = appParams.get("stateKey");
     if (stateKey && init) {
+      const serverUrl = selectedServerSelector(store.getState()).url;
       api
         .getViewerState(
-          selectedServerSelector(store.getState()).url,
+          serverUrl,
           getState().userAuthState.accessToken,
           stateKey,
         )
         .then((persistedState) => {
           if (persistedState) {
-            dispatch(applyPersistentState(persistedState) as unknown as Action);
+            const { apiUrl } = persistedState;
+            if (apiUrl === serverUrl) {
+              dispatch(
+                applyPersistentState(persistedState) as unknown as Action,
+              );
+            } else {
+              dispatch(
+                postMessage(
+                  "warning",
+                  "Failed to restore state, backend mismatch",
+                ),
+              );
+            }
           }
         });
     }
