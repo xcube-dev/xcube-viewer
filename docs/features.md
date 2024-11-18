@@ -50,7 +50,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				Upon dataset selection the map can pan and zoom to the extent of the
 				dataset. The map's zoom and pan behavior depends on the
 				<a
-					href="/user_guide/settings/#zoom-on-datasetvariable-selection"
+					href="../user_guide/settings/#zoom-on-datasetvariable-selection"
 					rel="noopener noreferrer"
 					>user-defined settings</a
 				>.
@@ -60,7 +60,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/getting_started/#select-dataset-and-variables"
+					href="../user_guide/getting_started/#select-dataset-and-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -120,7 +120,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				A drop-down menu lists all variables in the dataset, ordered according
 				to their sequence in the dataset.
-				<a href="user_guide/analyse/#user-variables" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User-defined variables</a
 				>
 				are marked with an icon and placed at the bottom of the list. The
@@ -143,7 +143,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/getting_started/#select-dataset-and-variables"
+					href="../user_guide/getting_started/#select-dataset-and-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -189,7 +189,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/getting_started/#adjust-layer-visibilities"
+					href="../user_guide/getting_started/#adjust-layer-visibilities"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -244,7 +244,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				variables or overlays at the bottom of the panel. Alternatively, that
 				can also be done in the
 				<a
-					href="/user_guide/settings/#user-base-maps-and-overlays"
+					href="../user_guide/settings/#user-base-maps-and-overlays"
 					rel="noopener noreferrer"
 					>settings</a
 				>.<br /><br />
@@ -260,7 +260,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/getting_started/#adjust-layer-visibilities"
+					href="../user_guide/getting_started/#adjust-layer-visibilities"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -306,7 +306,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analysis/#infobox" rel="noopener noreferrer"
+				<a href="../user_guide/analysis/#infobox" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -354,7 +354,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#infobox" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#infobox" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -410,7 +410,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/analyse/#compare-variables"
+					href="../user_guide/analyse/#compare-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -472,7 +472,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/analyse/#compare-variables"
+					href="../user_guide/analyse/#compare-variables"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -516,7 +516,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -601,7 +601,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -668,7 +668,7 @@ A list of all the features that the viewer contains will be created here, in whi
     	<tr>
     		<td colspan="2">
     			Link to feature mentioned in
-    			<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
+    			<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
     				>User Guide</a
     			>.
     		</td>
@@ -710,7 +710,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#user-variables" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -785,7 +785,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/getting_started/#metadata"
+					href="../user_guide/getting_started/#metadata"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -853,7 +853,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#time-series" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#time-series" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -910,7 +910,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#time-series" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#time-series" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -987,7 +987,7 @@ A list of all the features that the viewer contains will be created here, in whi
     	<tr>
     		<td colspan="2">
     			Link to feature mentioned in
-    			<a href="/user_guide/analyse/#time-series" rel="noopener noreferrer"
+    			<a href="../user_guide/analyse/#time-series" rel="noopener noreferrer"
     				>User Guide</a
     			>.
     		</td>
@@ -1043,7 +1043,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#statistics" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1093,7 +1093,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#statistics" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1142,7 +1142,7 @@ A list of all the features that the viewer contains will be created here, in whi
     	<tr>
     		<td colspan="2">
     			Link to feature mentioned in
-    			<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
+    			<a href="../user_guide/analyse/#statistics" rel="noopener noreferrer"
     				>User Guide</a
     			>.
     		</td>
@@ -1200,7 +1200,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#statistics" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#statistics" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1254,7 +1254,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#select" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#select" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1293,7 +1293,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				visually highlighted on the map with a yellow outline. The map
 				automatically pans and zooms to the selected place, if selected in the
 				<a
-					href="/user_guide/settings.md/##zoom-on-datasetvariable-selection"
+					href="../user_guide/settings.md/##zoom-on-datasetvariable-selection"
 					rel="noopener noreferrer"
 					>settings</a
 				>.
@@ -1306,7 +1306,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#select" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#select" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1349,7 +1349,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#select" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#select" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1393,7 +1393,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#rename" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#rename" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1437,7 +1437,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#remove" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#remove" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1486,7 +1486,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#styling" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#styling" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1572,7 +1572,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#create" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#create" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1654,7 +1654,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#import" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#import" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1716,7 +1716,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#export" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#export" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -1769,7 +1769,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/analyse/#navigate-through-time"
+					href="../user_guide/analyse/#navigate-through-time"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -1815,7 +1815,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/analyse/#navigate-through-time"
+					href="../user_guide/analyse/#navigate-through-time"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -1866,7 +1866,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/analyse/#navigate-through-time"
+					href="../user_guide/analyse/#navigate-through-time"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -1917,7 +1917,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/analyse/#navigate-through-time"
+					href="../user_guide/analyse/#navigate-through-time"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -1959,7 +1959,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				When enabled, the feature iterates through the time steps sequentially,
 				displaying each step in the Viewer. The speed or interval of this
 				iterating can be configured in the 						<a
-							href="/user_guide/settings/#player-interval"
+							href="../user_guide/settings/#player-interval"
 							rel="noopener noreferrer"
 							>settings</a
 						>. Click the button again to
@@ -1973,7 +1973,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/analyse/#the-player" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#the-player" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>
@@ -2040,7 +2040,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="/user_guide/colormaps/" rel="noopener noreferrer">User Guide</a
+				<a href="../user_guide/colormaps/" rel="noopener noreferrer">User Guide</a
 				>.
 			</td>
 		</tr>
@@ -2109,7 +2109,7 @@ A list of all the features that the viewer contains will be created here, in whi
     		<td colspan="2">
     			Link to feature mentioned in
     			<a
-    				href="/user_guide/colormaps/#adjust-the-value-range"
+    				href="../user_guide/colormaps/#adjust-the-value-range"
     				rel="noopener noreferrer"
     				>User Guide</a
     			>.
@@ -2169,7 +2169,7 @@ A list of all the features that the viewer contains will be created here, in whi
     		<td colspan="2">
     			Link to feature mentioned in
     			<a
-    				href="/user_guide/colormaps/#change-or-create-color-maps"
+    				href="../user_guide/colormaps/#change-or-create-color-maps"
     				rel="noopener noreferrer"
     				>User Guide</a
     			>.
@@ -2236,7 +2236,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="/user_guide/colormaps/#user-defined-color-maps"
+					href="../user_guide/colormaps/#user-defined-color-maps"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
