@@ -65,6 +65,7 @@ import {
   userPlacesFormatOptionsWktSelector,
   selectedDatasetTimeLabelSelector,
   selectedPlaceInfoSelector,
+  selectedPlaceGeometrySelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -817,13 +818,27 @@ export function syncWithServer(store: Store) {
     const apiServer = selectedServerSelector(getState());
     initializeContributions({
       hostStore: newHostStore(store),
+      getDerivedHostState,
       logging: { enabled: import.meta.env.DEV },
       api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
     });
   };
 }
 
-function newHostStore(store: Store): StoreApi<AppState> & {
+function getDerivedHostState(
+  hostState: AppState,
+  propertyName: string,
+): unknown {
+  if (propertyName === "controlState.selectedPlaceGeometry") {
+    return selectedPlaceGeometrySelector(hostState);
+  }
+  if (propertyName === "controlState.selectedTimeLabel") {
+    return selectedDatasetTimeLabelSelector(hostState);
+  }
+  return undefined;
+}
+
+function newHostStore(store: Store<AppState>): StoreApi<AppState> & {
   _initialState: AppState;
   _prevState: AppState;
 } {
@@ -849,13 +864,13 @@ function newHostStore(store: Store): StoreApi<AppState> & {
     },
     _prevState: store.getState(),
     subscribe(
-      listener: (store: AppState, prevState: AppState) => void,
+      listener: (state: AppState, prevState: AppState) => void,
     ): () => void {
       return store.subscribe(() => {
-        const state = store.getState();
-        if (state !== this._prevState) {
-          listener(state, this._prevState);
-          this._prevState = state;
+        const _state = store.getState();
+        if (_state !== this._prevState) {
+          listener(_state, this._prevState);
+          this._prevState = _state;
         }
       });
     },

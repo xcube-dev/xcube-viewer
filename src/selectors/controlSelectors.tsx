@@ -107,6 +107,7 @@ import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { StatisticsRecord } from "@/model/statistics";
 import { LayerState } from "@/model/layerState";
+import { Geometry } from "geojson";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -532,6 +533,13 @@ export const selectedPlaceSelector = createSelector(
   selectedPlaceIdSelector,
   (places: Place[], placeId: string | null): Place | null => {
     return places.find((place) => place.id === placeId) || null;
+  },
+);
+
+export const selectedPlaceGeometrySelector = createSelector(
+  selectedPlaceSelector,
+  (place: Place | null): Geometry | null => {
+    return place?.geometry || null;
   },
 );
 
