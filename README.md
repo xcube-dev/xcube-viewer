@@ -173,12 +173,19 @@ Create a Python enviromnent and install the following packages:
 - ``mkdocs-material``
 - ``mkdocs-autorefs``
 
-With repository root as current working directory:
+
+#With repository root as current working directory:
+
+To test local
+```bash
+mkdocs serve
+```
+
+To deploy on GitHub Pages
 
 ```bash
-# Test local
-mkdocs serve
+git checkout main
+git pull 
 
-# Publish
 mkdocs gh-deploy
 ```
