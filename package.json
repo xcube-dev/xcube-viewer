@@ -30,7 +30,7 @@
     "classnames": "^2.2.6",
     "codemirror": "^6.0.1",
     "color-rgba": "^2.2.3",
-    "chartlets": "^0.0.16",
+    "chartlets": "0.0.22",
     "date-fns": "^2.29.3",
     "fast-memoize": "^2.5.2",
     "fflate": "^0.7.4",
