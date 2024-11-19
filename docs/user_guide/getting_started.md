@@ -23,14 +23,14 @@ The Viewer gives the option to display the datasets in front of a [base map](../
 
 ![Datamanagement - Layer Visibilities](../assets/images/datamanagement_visibility_added.png){ align=right }
 
-The draggable Layer Visibility Menu can be opened on the left-hand side of the viewer. The menu can be used to control the display and hiding of the following objects:
+The draggable Layer Visibility Menu can be opened on the left-hand side of the viewer. The menu can be used to control the display and hiding of the following [layers](../concepts.md/#layers):
 
-- selected Variable
-- pinned Variable (marked by icon)
-- User and Dataset Places
-- Base Map and Overlay
+- [Selected Variable](../concepts.md/#variable-layer)
+- [Pinned Variable](../concepts.md/#pinned-variable) (marked by icon)
+- User and Dataset [Places](../concepts.md/#places-and-place-groups)
+- [Base Map and Overlay](../concepts.md/#basemaps-and-overlays)
 - boundary box of the selected Dataset
-- RGB of Dataset (selected and pinned)
+- [RGB of Dataset](../concepts.md/#dataset-rgb-layer) (selected and pinned)
 
 User Base Maps and User Overlays can also be added here.
 
@@ -40,7 +40,7 @@ User Base Maps and User Overlays can also be added here.
 
 ![Metadata](../assets/images/datamanagement_meta.png){ align=left }
 
-The metadata information is accessible through a tab in the sidebar, which can be displayed using a button on the right side of the Viewer [1]. This section displays metadata for the selected dataset, variable, or location. The visibility of this information can be enabled at the top left [2].
+The metadata information is accessible through a tab in the sidebar, which can be displayed using a button on the right side of the Viewer [1]. This section displays metadata for the [selected dataset](../concepts.md/#selected-dataset), [variable](../concepts.md/#selected-variable), or [location](../concepts.md/#selected-place). The visibility of this information can be enabled at the top left [2].
 
 The metadata can be displayed in three different formats:
 

@@ -34,7 +34,7 @@ Adjust the **base map** and **overlays**, choose the **projection** (_Geographic
 
 ### Base maps and Overlays
 
-The Viewer allows you to display datasets over a [Base Map](../concepts.md/#basemaps-and-overlays) and [overlay](../concepts.md/#basemaps-and-overlays) them with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer. Others can be selected by clicking on `Base map` or `Overlay`.
+The Viewer allows you to display datasets over a [base map](../concepts.md/#basemaps-and-overlays) and [overlay](../concepts.md/#basemaps-and-overlays) them with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer. Others can be selected by clicking on `Base map` or `Overlay`.
 
 ![Settings - Maps - Overlay](../assets/images/settings_overlay.png)
 
@@ -48,7 +48,7 @@ The Viewer allows you to display datasets over a [Base Map](../concepts.md/#base
 
 ![On Selection](../assets/images/settings_on_selection.png)
 
-The map extent can be changed when [selecting](../concepts.md/#selections) a new Dataset or Place. The following options are available:
+The map extent can be changed when [selecting](../concepts.md/#selections) a new [dataset](../concepts.md/#selected-dataset) or [place](../concepts.md/#selected-place). The following options are available:
 
 - `pan` : map moves to the center of dataset bounding box
 - `pan and zoom`: map moves to the center and zooms to the extent of the dataset

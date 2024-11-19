@@ -20,7 +20,7 @@ The Viewer provides the ability to extract information from variables at [select
 
 ### Time-Series
 
-When adding a new place to the map, a time series will automatically be extracted and displayed by default. To display a time series for an already existing place, simply select it and use the _graph_-icon next to the variables drop-down menu.
+When [adding a new place](#create) to the map, a time series will automatically be extracted and displayed by default. To display a time series for an already existing place, simply select it and use the _graph_-icon next to the variables drop-down menu.
 
 To remove a place from a graph, click the `-`-icon next to the place listed below the graph. The color of a place corresponds to the color in the time series graphs. The coordinates of the places visualized in the time series can be found beneath the graphs.
 
@@ -67,7 +67,7 @@ For point places:
 
 Define your own variables computed from Python-like expressions. The expressions can combine other variables of the [current dataset](../concepts.md/#selected-dataset) using almost all Python operators and all [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs). User data variables are persisted in the browser's local storage.
 
-???+ info "In more detail"
+??? info "In more detail"
 
     A _user variable_ is a variable that is defined by a _name_, _title_, _units_,
     and by an algebraic _expression_ that is used to compute the variable's array
@@ -115,7 +115,7 @@ Define your own variables computed from Python-like expressions. The expressions
 
 ## Compare Variables
 
-Visually compare two variables using **Compare Mode**. This mode displays two variables side by side, with a slider in the middle that can be adjusted.
+Visually compare two [variables](../concepts.md/#variable) using **Compare Mode**. This mode displays two variables side by side, with a slider in the middle that can be adjusted.
 
 ![Compare Mode](../assets/videos/analysis_compare-mode.gif)
 
@@ -133,11 +133,11 @@ To **exit** Compare Mode: use the button on the left
 ![Player](../assets/images/analysis_player_light.png){: class="light-image" }
 ![Player](../assets/images/analysis_player_dark.png){: class="dark-image" }
 
-Use the shown features of the Viewer to navigate through the time steps of a variable. Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.
+Use the shown features of the Viewer to navigate through the time steps of a [variable](../concepts.md/#variable). Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.
 
 ### The Player
 
-Use the player to auto-step through the variable of a dataset. The interval can be adjusted in the [settings](settings.md/#player-interval).
+Use the player to auto-step through the [variable](../concepts.md/#variable) of a [dataset](../concepts.md/#dataset). The interval can be adjusted in the [settings](settings.md/#player-interval).
 
 ![Player](../assets/videos/Player_hh.gif)
 
@@ -160,7 +160,7 @@ New [places](../concepts.md/#places-and-place-groups) can be **created** in the 
 
 ### Import
 
-Externally created [places](../concepts.md/#places-and-place-groups) can also be **imported**. The allowed formats are `text/csv`, `GeoJSON` and `WKT`. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.
+Externally created [places](../concepts.md/#places-and-place-groups) can also be **imported**. The allowed formats are `text/csv`, `GeoJSON` and `WKT`. When importing a CSV table or a GeoJSON object, the time column name or time property can be specified. If given, time values are expected to be UTC and ISO format.
 
 ![Import Places](../assets/images/analysis_import_places.png)
 
