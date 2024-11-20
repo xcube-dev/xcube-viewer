@@ -1226,6 +1226,21 @@
       "se": "Får inte vara tom"
     },
     {
+      "en": "Textual format",
+      "de": "Textformat",
+      "se": "Textformat"
+    },
+    {
+      "en": "Tabular format",
+      "de": "Tabellenformat",
+      "se": "Tabellformat"
+    },
+    {
+      "en": "JSON format",
+      "de": "JSON-Format",
+      "se": "JSON-format"
+    },
+    {
       "en": "docs/privacy-note.en.md",
       "de": "docs/privacy-note.de.md",
       "se": "docs/privacy-note.se.md"

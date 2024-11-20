@@ -62,7 +62,7 @@ Config.load().then(() => {
   dispatch(changeLocale(store.getState().controlState.locale));
   dispatch(updateUserColorBarsImageData() as unknown as Action);
   if (store.getState().controlState.privacyNoticeAccepted) {
-    dispatch(syncWithServer() as unknown as Action);
+    dispatch(syncWithServer(store) as unknown as Action);
   }
 
   ReactDOM.createRoot(document.getElementById("root")!).render(

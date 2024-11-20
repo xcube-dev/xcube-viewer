@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import { Store } from "redux";
+import { ReactReduxContext } from "react-redux";
 import { SxProps, Theme } from "@mui/system";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -74,6 +76,7 @@ interface ServerDialogProps extends WithLocale {
   configureServers: (
     servers: ApiServerConfig[],
     selectedServerId: string,
+    store: Store,
   ) => void;
   closeDialog: (dialogId: string) => void;
 }
@@ -98,10 +101,12 @@ export default function ServerDialog({
     ref.current = true;
   }, [servers, selectedServer]);
 
+  const { store } = useContext(ReactReduxContext);
+
   const handleConfirm = () => {
     if (dialogMode === "select") {
       closeDialog("server");
-      configureServers(servers_, selectedServer_.id);
+      configureServers(servers_, selectedServer_.id, store);
     } else if (dialogMode === "add") {
       doAddServer();
     } else if (dialogMode === "edit") {

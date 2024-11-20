@@ -2,14 +2,14 @@
 
 ## Select Dataset and Variables
 
-A xcube viewer may hold several datasets which you can select via the drop-down menu **Dataset**. When a new dataset gets selected, the map extent changes, according to the option selected in the [settings](../user_guide/settings.md/#zoom-on-datasetvariable-selection).
+A xcube viewer may hold several datasets which you can select via the drop-down menu **Dataset**. When a new dataset gets selected, the map extent changes, according to the option selected in the [settings](../user_guide/settings.md/#zoom-on-datasetplace-selection).
 
-![Datamanagement - Dataset](../assets/images/viewer/datamanagement_dataset.png)
+![Datamanagement - Dataset](../assets/images/datamanagement_dataset.png)
 
 If more than one variable is available within a selected xcube dataset, you may change the variable by using the drop-down menu
 **Variable**.
 
-![Datamanagement - Variables](../assets/images/viewer/datamanagement_variables.png)
+![Datamanagement - Variables](../assets/images/datamanagement_variables.png)
 
 ---
 
@@ -21,7 +21,7 @@ The Viewer gives the option to display the datasets in front of a base map and t
 
 ## Adjust Layer Visibilities
 
-![Datamanagement - Layer Visibilities](../assets/images/viewer/datamanagement_visibility_added.png){ align=right }
+![Datamanagement - Layer Visibilities](../assets/images/datamanagement_visibility_added.png){ align=right }
 
 The draggable Layer Visibility Menu can be opened on the left-hand side of the viewer. The menu can be used to control the display and hiding of the following objects:
 
@@ -38,7 +38,7 @@ User Base Maps and User Overlays can also be added here.
 
 ## Metadata
 
-![Metadata](../assets/images/viewer/datamanagement_meta.png){ align=left }
+![Metadata](../assets/images/datamanagement_meta.png){ align=left }
 
 The metadata information is accessible through a tab in the sidebar, which can be displayed using a button on the right side of the Viewer [1]. This section displays metadata for the selected dataset, variable, or location. The visibility of this information can be enabled at the top left [2].
 

@@ -2,7 +2,7 @@
 
 ## Infobox
 
-![Infobox](../assets/images/viewer/analysis_infobox.png)
+![Infobox](../assets/images/analysis_infobox.png)
 
 Enable a small pixel information box being displayed
 next to the pointer when hovering over the map. It shows the current
@@ -16,42 +16,44 @@ selector menu on the left.
 
 The Viewer provides the ability to extract information from variables at specific [places](#places) (point, circle, or polygon), in the form of time series and basic statistics. All extracted information is displayed on the right side of the Viewer in the sidebar.
 
-![Time Series](../assets/images/viewer/analysis_timeseries.png)
+![Time Series](../assets/images/analysis_timeseries.png)
 
 ### Time-Series
 
-When adding a new place to the map, a time series will automatically be extracted and displayed by default. If the place already exists, simply select it and use the _graph_-icon next to the Variables drop-down menu. To remove a place from a graph, click the `-`-icon next to the place listed below the graph. The color of the places corresponds to the color of the graph in the time series. You can find the coordinates of the places visualized in the time series beneath the graphs.
+When adding a new place to the map, a time series will automatically be extracted and displayed by default. To display a time series for an already existing place, simply select it and use the _graph_-icon next to the variables drop-down menu.
 
-![Time Series Graph](../assets/images/viewer/analysis_timeseries_graphs.png)
+To remove a place from a graph, click the `-`-icon next to the place listed below the graph. The color of a place corresponds to the color in the time series graphs. The coordinates of the places visualized in the time series can be found beneath the graphs.
+
+![Time Series Graph](../assets/images/analysis_timeseries_graphs.png)
 
 There are multiple options to explore the graph:
 
-- Adjust the time range to focus on a specific period of interest. This applies to time series of different variables within a dataset
-- Display data with points, lines, or bars. For polygons or circles, you can also add the standard deviation to the graph
-- Hover over the graph to view detailed information for specific time steps via a popup info box
-- Zoom into the graph freely by pressing the `Ctrl`-key
-- Set a fixed y-scale for the graph
-- Reset everything back to the full scale
-- Copy a snapshot a time series to clipboard
+- Adjust the time range to focus on a specific period of interest. This applies to time series of different variables within a dataset (a)
+- Reset everything back to the full scale (b)
+- Zoom into the graph freely by pressing the `Ctrl`-key (c)
+- Set a fixed y-scale for the graph (d)
+- Hover over the graph to view detailed information for specific time steps via a popup info box (e)
+- Display data with points, lines, or bars. For polygons or circles, you can also add the standard deviation to the graph (f)
+- Copy a snapshot a time series to clipboard (g)
 
 #### Export time series
 
-Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the Places, or both.
+Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the places, or both.
 
-![Export](../assets/images/viewer/analysis_timeseries_export.png)
+![Export](../assets/images/analysis_timeseries_export.png)
 
 ### Statistics
 
-Compute and display basic statistics for the currently selected variable, selected timestamp, and selected place. To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the Variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
+Compute and display basic statistics for the currently selected variable, selected timestamp, and selected place. To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
 
-![Statistics](../assets/images/viewer/analysis_statistics.png)
+![Statistics](../assets/images/analysis_statistics.png)
 
 If the place is an area:
 
 - Statistics include minimum, maximum, mean, standard deviation, and a histogram
-- Adjust the x-range of the histogram
-- Add the standard deviation to the histogram
-- Copy a snapshot of the statistics to clipboard
+- Adjust the x-range of the histogram (a)
+- Add the standard deviation to the histogram (b)
+- Copy a snapshot of the statistics to clipboard (c)
 
 For point places:
 
@@ -61,7 +63,7 @@ For point places:
 
 ## User Variables
 
-![User Variables](../assets/images/viewer/analysis_uservariables.png)
+![User Variables](../assets/images/analysis_uservariables.png)
 
 Define your own variables computed from Python-like expressions. The expressions can combine other variables of the current dataset using almost all Python operators and all [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs). User data variables are persisted in the browser's local storage.
 
@@ -128,10 +130,10 @@ To **exit** Compare Mode: use the button on the left
 
 ## Navigate through time
 
-![Player](../assets/images/viewer/analysis_player_light.png){: class="light-image" }
-![Player](../assets/images/viewer/analysis_player_dark.png){: class="dark-image" }
+![Player](../assets/images/analysis_player_light.png){: class="light-image" }
+![Player](../assets/images/analysis_player_dark.png){: class="dark-image" }
 
-Use the showen features of the Viewer to navigate through the time steps of a variable. Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.
+Use the shown features of the Viewer to navigate through the time steps of a variable. Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.
 
 ### The Player
 
@@ -143,14 +145,14 @@ Use the player to auto-step through the variable of a dataset. The interval can 
 
 ## Places
 
-**Places** provide a spatial reference for extracting statistical values and time series data. They can be represented as either `points` or `polygons/circles`. Places are organized into **groups** which hold individial places.
+**Places** provide a spatial reference for extracting statistical values and time series data. They can be represented as either `points` or `polygons/circles` and are organized into **groups** which hold individial places.
 
-![Places](../assets/images/viewer/analysis_places.png)
+![Places](../assets/images/analysis_places.png)
 
-The Viewer offers a variety of features (such as adding, removing, and styling) for working with Places to obtain statistical information. The following sections will explain the available features.
+The Viewer offers a variety of features for working with Places (such as adding, removing, and styling) to obtain statistical information. The following sections will explain the available features.
 
-![Places](../assets/images/viewer/analysis_places_light.png){: class="light-image" }
-![Places](../assets/images/viewer/analysis_places_dark.png){: class="dark-image" }
+![Places](../assets/images/analysis_places_light.png){: class="light-image" }
+![Places](../assets/images/analysis_places_dark.png){: class="dark-image" }
 
 ### Create
 
@@ -158,13 +160,13 @@ New Places can be **created** in the Viewer using the buttons in the header, wit
 
 ### Import
 
-Already created places can also be **imported**. The allowed formats are `text/csv`, `GeoJSON` and `WKT`. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.
+Externally created places can also be **imported**. The allowed formats are `text/csv`, `GeoJSON` and `WKT`. When importing a CSV table or a GeoJSON object, user can specify the time column name or time property. If given, time values are expected to be UTC and use ISO format.
 
-![Import Places](../assets/images/viewer/analysis_import_places.png)
+![Import Places](../assets/images/analysis_import_places.png)
 
 ### Select
 
-Place groups and individual places can be **selected** through a drop-down menu. Additionally, single places can be chosen by clicking on them with the mouse when the corresponding function is enabled. Selected places are marked with a yellow ring around them.
+Place groups and individual places can be **selected** through a drop-down menu in the header. Additionally, individual places can be selected by clicking on them directly on the map when the corresponding function is enabled. Selected places are highlighted on the map with a yellow ring.
 
 ### Remove
 
@@ -180,6 +182,6 @@ Modify both the color and opacity of a place. The selected color will be reflect
 
 ### Export
 
-The geometry of Places created in the Viewer can be exported. This can be applied during [the export of time series](#export-time-series). To include the geometry information in the export, it must be explicitly selected.
+The geometry of Places created in the Viewer can be exported. This feature can be enabled during [the export of time series](#export-time-series). To include the geometry information in the export, it must be explicitly selected.
 
-![Export](../assets/images/viewer/analysis_timeseries_export.png)
+![Export](../assets/images/analysis_timeseries_export.png)

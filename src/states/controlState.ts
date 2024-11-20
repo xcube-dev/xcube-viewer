@@ -138,7 +138,7 @@ export interface ControlState {
   layerMenuOpen: boolean;
   sidebarPosition: number;
   sidebarOpen: boolean;
-  sidebarPanelId: SidebarPanelId;
+  sidebarPanelId: SidebarPanelId | string;
   volumeRenderMode: VolumeRenderMode;
   volumeStates: VolumeStates;
   infoCardElementStates: InfoCardElementStates;
