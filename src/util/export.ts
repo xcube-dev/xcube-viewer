@@ -37,14 +37,13 @@ export interface ExportOptions {
   height?: number;
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
-  pixelratio?: number;
-  controlDiv?: HTMLElement | null;
-  zoomDiv?: HTMLElement | null;
+  pixelRatio?: number;
+  hiddenElements?: HTMLElement[]; // Array of elements to hide
 }
 
 /**
- * Exports a HTML element as image.
- * It uses package `html-to-image` for that purpose.
+ * Exports a HTML element as an image.
+ * It uses the `html-to-image` package for that purpose.
  *
  * @param element The HTML element to export.
  * @param options Specifies image export options.
@@ -88,10 +87,10 @@ async function _exportElement(
     ((options.width || element.clientWidth) * element.clientHeight) /
       element.clientWidth;
 
-  const controlDiv = options.controlDiv;
-  if (controlDiv) controlDiv.style.display = "none";
-  const zoomDiv = options.zoomDiv;
-  if (zoomDiv) zoomDiv.hidden = true;
+  const hiddenElements = options.hiddenElements || [];
+  hiddenElements.forEach((el) => {
+    el.style.visibility = "hidden";
+  });
 
   const offScreenCanvas = document.createElement("canvas");
   offScreenCanvas.width = canvasWidth;
@@ -106,7 +105,7 @@ async function _exportElement(
     backgroundColor: "#00000000",
     canvasWidth,
     canvasHeight,
-    pixelRatio: options.pixelratio,
+    pixelRatio: options.pixelRatio,
   });
 
   const image = new Image();
@@ -136,6 +135,7 @@ async function _exportElement(
     }),
   ]);
 
-  if (controlDiv) controlDiv.style.display = "block";
-  if (zoomDiv) zoomDiv.hidden = false;
+  hiddenElements.forEach((el) => {
+    el.style.visibility = "visible";
+  });
 }

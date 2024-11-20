@@ -124,7 +124,7 @@ export default function ColorBarLegend(
       : `${variableTitle || variableName} (${variableUnits || "-"})`;
 
   return (
-    <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef} id="clrbarlegend">
+    <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
       <Typography sx={styles.title}>{variableTitleWithUnits}</Typography>
       {variableColorBar.type === "categorical" ? (
         <ColorBarLegendCategorical

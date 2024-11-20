@@ -72,6 +72,11 @@ export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
     const layer = new OlTileLayer(this.props);
     layer.set("id", this.props.id);
+
+    //The below lines of code of setting source as "Anonymous" is for allowing 
+    //to copy image on clipboard as we have custom tiles. If the source is 
+    //not set to anonymous it will give the CORS error and image will not be copied.
+    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html 
     const source = layer.getSource() as OlTileSource & { crossOrigin?: string };
     if (source && 'crossOrigin' in source) {
       source.crossOrigin = "Anonymous";

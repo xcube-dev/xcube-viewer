@@ -39,8 +39,8 @@ import i18n from "@/i18n";
 import { MapInteraction } from "@/states/controlState";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
-import SnapshotButton from "./SnapshotButton";
 import { MessageType } from "@/states/messageLogState";
+import MapSnapshotButton from "./MapSnapshotButton";
 
 const StyledFromControl = styled(FormControl)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -128,7 +128,7 @@ export default function MapInteractionsBar({
             <FileUploadIcon />
           </Tooltip>
         </ToggleButton>
-        <SnapshotButton mapRef={"map"} postMessage={postMessage} fontSize="medium" isToggle={true} />
+        <MapSnapshotButton mapRef={"map"} postMessage={postMessage} fontSize="medium" isToggle={true} />
       </ToggleButtonGroup>
     </StyledFromControl>
   );
