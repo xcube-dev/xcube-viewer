@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/logo192.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.44">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
     
     
       
@@ -838,10 +838,10 @@
 <h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h2>
 <h3 id="dataset">Dataset<a class="headerlink" href="#dataset" title="Permanent link">&para;</a></h3>
 <p>In the context of xcube, a <em>dataset</em> is a container for spatial
-gridded data <a href="#variable">variables</a> that usually share the same
-coordinate reference system, the same dimensions, and therefore 
+gridded data <a href="#variable">variables</a> that usually shares the same
+coordinate reference system, the same dimensions, and therefore
 the same grid.
-Besides the data variables, a dataset also provides metadata such 
+Besides the data variables, a dataset also provides metadata such
 as the spatio-temporal coverages, the type of coordinates, and information
 about the content.
 A dataset can be associated with <a href="#places-and-place-groups">place groups</a>.</p>
@@ -850,7 +850,7 @@ dimension are also referred to as <em>data cubes</em>. Hence, the data cubes
 supported by the viewer are 4-D: variable, time, y, and x.
 The viewer may support also other data cube dimensions in the future.</p>
 <p>The list of available datasets is usually fixed for a deployed viewer
-application instance. One of the available datasets is the viewer's 
+application instance. One of the available datasets is the viewer's
 <a href="#selected-dataset">selected dataset</a>.</p>
 <h3 id="variable">Variable<a class="headerlink" href="#variable" title="Permanent link">&para;</a></h3>
 <p>A <em>variable</em> provides n-dimensional, gridded, geospatial data.
@@ -864,23 +864,23 @@ data about that region or location. For this purpose a place comprises
 a name, a geographical vector geometry (point, polygon, etc), and a
 set of optional data properties.</p>
 <p>A <em>place group</em> is a named collection of places.</p>
-<p>Places and place groups can be associated with a <a href="#dataset">dataset</a> or 
-provided by the user. Users can define new places either by drawing points 
-and shapes into the map. Drawn places end up in special place group 
-called <code>My places</code>. Or they import custom place groups from GeoJSON 
-or CSV files. </p>
+<p>Places and place groups can be associated with a <a href="#dataset">dataset</a> or
+provided by the user. Users can define new places either by drawing points
+and shapes into the map. Drawn places end up in special place group
+called <code>My places</code>. Or they import custom place groups from GeoJSON
+or CSV files.</p>
 <h2 id="selections">Selections<a class="headerlink" href="#selections" title="Permanent link">&para;</a></h2>
 <h3 id="selected-dataset">Selected Dataset<a class="headerlink" href="#selected-dataset" title="Permanent link">&para;</a></h3>
 <p>The selected dataset determines the set of selectable <a href="#variable">variables</a>
 and the possible range of the currently <a href="#selected-time">selected time</a>.
 Only one dataset can be selected at the same time.
-The selected dataset's time coverage limits the possible values for the 
-<a href="#selected-time">selected time</a>. <br />
+The selected dataset's time coverage limits the possible values for the
+<a href="#selected-time">selected time</a>.<br />
 If the dataset selection changes, the <a href="#selected-variable">selected variable</a>
 and the <a href="#selected-time">selected time</a> may be adjusted if their current values
 are not applicable to the newly selected dataset. In this case:</p>
 <ul>
-<li>The newly <a href="#selected-variable">selected variable</a> will be the first 
+<li>The newly <a href="#selected-variable">selected variable</a> will be the first
   variable of the selected dataset.</li>
 <li>The <a href="#selected-time">selected time</a> will be the latest time stamp
   of the selected dataset.</li>
@@ -888,22 +888,22 @@ are not applicable to the newly selected dataset. In this case:</p>
 <h3 id="selected-variable">Selected Variable<a class="headerlink" href="#selected-variable" title="Permanent link">&para;</a></h3>
 <p>The <em>selected variable</em> is the one shown in the map, given that the
 <a href="#variable-layer">variable layer</a> is visible.
-Only one variable of a dataset can be selected, 
-but a selected variable may be <em>pinned</em> to allow for inspection of two 
+Only one variable of a dataset can be selected,
+but a selected variable may be <em>pinned</em> to allow for inspection of two
 variables at the same time.</p>
 <h3 id="pinned-variable">Pinned Variable<a class="headerlink" href="#pinned-variable" title="Permanent link">&para;</a></h3>
 <p>A <em>pinned variable</em> is a variable that is marked for comparison with
 the <a href="#selected-variable">selected variable</a>.<br />
-Only one variable can be pinned at the same time. Note that the 
-pinned variable does not depend on the <a href="#selected-dataset">selected dataset</a>. 
+Only one variable can be pinned at the same time. Note that the
+pinned variable does not depend on the <a href="#selected-dataset">selected dataset</a>.
 If the dataset selection changes the pinned variable stays the same.</p>
 <h3 id="selected-place">Selected Place<a class="headerlink" href="#selected-place" title="Permanent link">&para;</a></h3>
-<p>One of the available <a href="#places-and-place-groups">places</a> can be selected by pointing at it the map.
-A selected place is required, for example, to compute time-series 
+<p>One of the available <a href="#places-and-place-groups">places</a> can be selected by pointing
+at it on the map. A selected place is required, for example, to compute time-series
 and statistics. Only one place can be selected at the same time.</p>
 <h3 id="selected-time">Selected Time<a class="headerlink" href="#selected-time" title="Permanent link">&para;</a></h3>
-<p>The <em>selected time</em> determines the current time step for datasets with a 
-time dimension. For such datasets, the selected time is required, for example, 
+<p>The <em>selected time</em> determines the current time step for datasets with a
+time dimension. For such datasets, the selected time is required, for example,
 to compute statistics.</p>
 <h2 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h2>
 <h3 id="variable-layer">Variable Layer<a class="headerlink" href="#variable-layer" title="Permanent link">&para;</a></h3>
@@ -911,7 +911,7 @@ to compute statistics.</p>
 It overlays the <a href="#dataset-rgb-layer">dataset RGB layer</a>.</p>
 <h3 id="dataset-rgb-layer">Dataset RGB Layer<a class="headerlink" href="#dataset-rgb-layer" title="Permanent link">&para;</a></h3>
 <p>Some datasets provide an additional RGB layer that can be displayed
-along with the <a href="#variable-layer">variable layer</a>. 
+along with the <a href="#variable-layer">variable layer</a>.
 Currently, there can be only be a single RGB layer per dataset.</p>
 <h3 id="basemaps-and-overlays">Basemaps and Overlays<a class="headerlink" href="#basemaps-and-overlays" title="Permanent link">&para;</a></h3>
 <p>The <em>basemap</em> is the layer that is optionally shown below any other layer.
