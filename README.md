@@ -168,7 +168,7 @@ export default {
 
 The `xcube-viewer` documentation is built using the [mkdocs](https://www.mkdocs.org/) tool.
 
-Create a Python enviromnent and install the following packages:
+Create a Python environment and install the following packages:
 - ``mkdocs``
 - ``mkdocs-material``
 - ``mkdocs-autorefs``
