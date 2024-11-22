@@ -58,7 +58,6 @@ import { geoJsonFormat, GeoJsonOptions } from "@/model/user-place/geojson";
 import { wktFormat, WktOptions } from "@/model/user-place/wkt";
 import { detectFormatName, Format } from "@/model/user-place/common";
 import { makeStyles } from "@/util/styles";
-import { useThemeContext } from "@/connected/App";
 import { useTheme } from "@mui/material";
 
 interface FormatWithCodeExt extends Format {
@@ -127,12 +126,6 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
   );
 
   const themeMode = useTheme();
-  // const resolvedTheme =
-  //   themeMode === "system"
-  //     ? window.matchMedia("(prefers-color-scheme: dark)").matches
-  //       ? "dark"
-  //       : "light"
-  //     : themeMode;
 
   React.useEffect(() => {
     setUserPlacesFormatName(userPlacesFormatName);

@@ -47,19 +47,6 @@ import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
 
-// ThemeContext to manage theme mode (light, dark, system)
-const ThemeContext = React.createContext<{
-  themeMode: "light" | "dark" | "system";
-  setThemeMode: (mode: "light" | "dark" | "system") => void;
-} | null>(null);
-
-export const useThemeContext = () => {
-  const context = React.useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useThemeContext must be used within a ThemeProvider");
-  }
-  return context;
-};
 
 interface AppProps {
   compact: boolean;
@@ -79,6 +66,7 @@ const mapDispatchToProps = {};
 const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
   const systemMode = useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light";
 
+  // Validate and fallback for themeMode
   const validatedThemeMode: "light" | "dark" | "system" =
     themeMode === "light" || themeMode === "dark" || themeMode === "system"
       ? themeMode
@@ -86,7 +74,6 @@ const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
 
   const theme = React.useMemo(() => {
     const mode: "light" | "dark" = validatedThemeMode === "system" ? systemMode : validatedThemeMode;
-
 
     return createTheme({
       typography: {
@@ -99,7 +86,7 @@ const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
         secondary: Config.instance.branding.secondaryColor,
       },
     });
-  }, [themeMode, systemMode]);
+  }, [validatedThemeMode, systemMode]);
 
   return (
     <AuthWrapper>
