@@ -47,32 +47,46 @@ import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
 
+// ThemeContext to manage theme mode (light, dark, system)
+const ThemeContext = React.createContext<{
+  themeMode: "light" | "dark" | "system";
+  setThemeMode: (mode: "light" | "dark" | "system") => void;
+} | null>(null);
+
+export const useThemeContext = () => {
+  const context = React.useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useThemeContext must be used within a ThemeProvider");
+  }
+  return context;
+};
+
 interface AppProps {
   compact: boolean;
-  applicationTheme: string;
+  themeMode: string;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (_state: AppState) => {
   return {
     compact: Config.instance.branding.compact,
-    applicationTheme: _state.controlState.applicationTheme,
+    themeMode: _state.controlState.themeMode,
   };
 };
 
 const mapDispatchToProps = {};
 
-const _App: React.FC<AppProps> = ({ compact, applicationTheme }) => {
-
+const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
   const systemMode = useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light";
 
-  const createAppTheme = React.useCallback(() => {
-    const mode =
-      applicationTheme === "system"
-        ? systemMode
-        : applicationTheme === "dark"
-          ? "dark"
-          : "light";
+  const validatedThemeMode: "light" | "dark" | "system" =
+    themeMode === "light" || themeMode === "dark" || themeMode === "system"
+      ? themeMode
+      : "light"; // Default fallback
+
+  const theme = React.useMemo(() => {
+    const mode: "light" | "dark" = validatedThemeMode === "system" ? systemMode : validatedThemeMode;
+
 
     return createTheme({
       typography: {
@@ -80,14 +94,12 @@ const _App: React.FC<AppProps> = ({ compact, applicationTheme }) => {
         htmlFontSize: 14,
       },
       palette: {
-        mode: mode,
+        mode,
         primary: Config.instance.branding.primaryColor,
         secondary: Config.instance.branding.secondaryColor,
       },
     });
-  }, [applicationTheme, systemMode]);
-
-  const theme = createAppTheme();
+  }, [themeMode, systemMode]);
 
   return (
     <AuthWrapper>
@@ -96,18 +108,16 @@ const _App: React.FC<AppProps> = ({ compact, applicationTheme }) => {
           <CssBaseline />
           {!compact && <AppBar />}
           <AppPane />
-          <>
-            <LoadingDialog />
-            <ServerDialog />
-            <SettingsDialog />
-            <UserLayersDialog key="userOverlays" dialogId="userOverlays" />
-            <UserLayersDialog key="userBaseMaps" dialogId="userBaseMaps" />
-            <UserVariablesDialog />
-            <UserPlacesDialog />
-            <ExportDialog />
-            <LegalAgreementDialog />
-            <MessageLog />
-          </>
+          <LoadingDialog />
+          <ServerDialog />
+          <SettingsDialog />
+          <UserLayersDialog key="userOverlays" dialogId="userOverlays" />
+          <UserLayersDialog key="userBaseMaps" dialogId="userBaseMaps" />
+          <UserVariablesDialog />
+          <UserPlacesDialog />
+          <ExportDialog />
+          <LegalAgreementDialog />
+          <MessageLog />
         </ThemeProvider>
       </StyledEngineProvider>
     </AuthWrapper>

@@ -61,7 +61,6 @@ interface UserVariablesDialogProps {
   ) => void;
   expressionCapabilities: ExpressionCapabilities | null;
   serverUrl: string;
-  applicationTheme: string;
 }
 
 export default function UserVariablesDialog({
@@ -74,7 +73,6 @@ export default function UserVariablesDialog({
   updateDatasetUserVariables,
   expressionCapabilities,
   serverUrl,
-  applicationTheme,
 }: UserVariablesDialogProps) {
   const [localUserVariables, setLocalUserVariables] =
     useState<UserVariable[]>(userVariables);
@@ -141,7 +139,6 @@ export default function UserVariablesDialog({
           <HelpButton
             size="medium"
             helpUrl={i18n.get("docs/user-variables.en.md")}
-            applicationTheme={applicationTheme}
           />
         </Box>
         <Box>

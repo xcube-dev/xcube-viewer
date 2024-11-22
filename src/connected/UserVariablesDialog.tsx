@@ -45,7 +45,7 @@ const mapStateToProps = (state: AppState) => {
     userVariables: selectedUserVariablesSelector(state),
     expressionCapabilities: expressionCapabilitiesSelector(state),
     serverUrl: selectedServerSelector(state).url,
-    applicationTheme: state.controlState.applicationTheme,
+    themeMode: state.controlState.themeMode,
   };
 };
 

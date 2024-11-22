@@ -32,7 +32,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { SxProps } from "@mui/system";
-import { Theme } from "@mui/material";
+import { Theme, useTheme } from "@mui/material";
 
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
@@ -122,6 +122,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
   );
+  const theme = useTheme();
 
   React.useEffect(() => {
     const newTimeChunkSize = parseInt(timeChunkSize);
@@ -244,7 +245,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
-      applicationTheme: event.target.value as ApplicationThemes,
+      themeMode: event.target.value as ApplicationThemes,
     });
   }
   const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
@@ -295,7 +296,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 variant="standard"
                 select
                 sx={styles.textField}
-                value={settings.applicationTheme}
+                value={theme.palette.mode}
                 onChange={handleApplicationThemeChange}
                 margin="normal"
               >

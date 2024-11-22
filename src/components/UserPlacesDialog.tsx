@@ -42,7 +42,6 @@ import { json } from "@codemirror/lang-json";
 import { styled } from "@mui/system";
 
 import i18n from "@/i18n";
-import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { FileUpload } from "./FileUpload";
 import {
@@ -59,6 +58,8 @@ import { geoJsonFormat, GeoJsonOptions } from "@/model/user-place/geojson";
 import { wktFormat, WktOptions } from "@/model/user-place/wkt";
 import { detectFormatName, Format } from "@/model/user-place/common";
 import { makeStyles } from "@/util/styles";
+import { useThemeContext } from "@/connected/App";
+import { useTheme } from "@mui/material";
 
 interface FormatWithCodeExt extends Format {
   codeExt: Extension[];
@@ -124,6 +125,14 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
   const [_userPlacesFormatOptions, setUserPlacesFormatOptions] = React.useState(
     userPlacesFormatOptions,
   );
+
+  const themeMode = useTheme();
+  // const resolvedTheme =
+  //   themeMode === "system"
+  //     ? window.matchMedia("(prefers-color-scheme: dark)").matches
+  //       ? "dark"
+  //       : "light"
+  //     : themeMode;
 
   React.useEffect(() => {
     setUserPlacesFormatName(userPlacesFormatName);
@@ -285,7 +294,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
           />
         </RadioGroup>
         <CodeMirror
-          theme={Config.instance.branding.themeName || "light"}
+          theme={themeMode.palette.mode}
           placeholder={i18n.get("Enter text or drag & drop a text file.")}
           autoFocus
           height="400px"

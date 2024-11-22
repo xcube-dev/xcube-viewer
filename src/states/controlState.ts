@@ -166,7 +166,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
-  applicationTheme: string;
+  themeMode: string;
 }
 
 export function newControlState(): ControlState {
@@ -242,7 +242,7 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
-    applicationTheme: Config.instance.branding.themeName
+    themeMode: Config.instance.branding.themeName
       ? Config.instance.branding.themeName
       : "system",
   };
