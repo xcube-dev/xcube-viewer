@@ -26,8 +26,7 @@ import { Action, Dispatch, Store } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { initializeContributions } from "chartlets";
-import type { StoreApi } from "zustand/vanilla";
+import { initializeContributions, type HostStore } from "chartlets";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
@@ -66,6 +65,7 @@ import {
   selectedDatasetTimeLabelSelector,
   selectedPlaceInfoSelector,
   selectedPlaceGeometrySelector,
+  selectedDatasetIdSelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -818,61 +818,32 @@ export function syncWithServer(store: Store) {
     const apiServer = selectedServerSelector(getState());
     initializeContributions({
       hostStore: newHostStore(store),
-      getDerivedHostState,
       logging: { enabled: import.meta.env.DEV },
       api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
     });
   };
 }
 
-function getDerivedHostState(
-  hostState: AppState,
-  propertyName: string,
-): unknown {
-  if (propertyName === "controlState.selectedPlaceGeometry") {
-    return selectedPlaceGeometrySelector(hostState);
-  }
-  if (propertyName === "controlState.selectedTimeLabel") {
-    return selectedDatasetTimeLabelSelector(hostState);
-  }
-  return undefined;
-}
-
-function newHostStore(store: Store<AppState>): StoreApi<AppState> & {
-  _initialState: AppState;
-  _prevState: AppState;
-} {
+function newHostStore(store: Store<AppState>): HostStore {
   return {
-    _initialState: store.getState(),
-    getInitialState(): AppState {
-      // noinspection JSPotentiallyInvalidUsageOfThis
-      return this._initialState;
+    subscribe(listener: () => void): () => void {
+      return store.subscribe(listener);
     },
-    getState(): AppState {
-      return store.getState();
-    },
-    setState(
-      _state:
-        | AppState
-        | Partial<AppState>
-        | ((state: AppState) => AppState | Partial<AppState>),
-      _replace?: boolean,
-    ): void {
-      throw new Error(
-        "Changing the host state from contributions is not yet supported",
-      );
-    },
-    _prevState: store.getState(),
-    subscribe(
-      listener: (state: AppState, prevState: AppState) => void,
-    ): () => void {
-      return store.subscribe(() => {
-        const _state = store.getState();
-        if (_state !== this._prevState) {
-          listener(_state, this._prevState);
-          this._prevState = _state;
-        }
-      });
+    get(property: string): unknown {
+      // TODO: turn this into a global Map<string, Selector>.
+      //  Provide some view for developers that documents the
+      //  available properties, e.g., a help menu item
+      //  "For Developers...".
+      if (property === "selectedDatasetId") {
+        return selectedDatasetIdSelector(store.getState());
+      }
+      if (property === "selectedPlaceGeometry") {
+        return selectedPlaceGeometrySelector(store.getState());
+      }
+      if (property === "selectedTimeLabel") {
+        return selectedDatasetTimeLabelSelector(store.getState());
+      }
+      return undefined;
     },
   };
 }
