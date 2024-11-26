@@ -26,7 +26,6 @@ import { Action, Dispatch, Store } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { initializeContributions, type HostStore } from "chartlets";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
@@ -47,25 +46,24 @@ import {
   TimeSeriesGroup,
   timeSeriesGroupsToTable,
 } from "@/model/timeSeries";
+import { initializeExtensions } from "@/ext/actions";
 import {
   mapProjectionSelector,
   selectedDatasetSelector,
   selectedDatasetTimeDimensionSelector,
-  selectedVariableSelector,
+  selectedDatasetTimeLabelSelector,
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
+  selectedPlaceInfoSelector,
   selectedPlaceSelector,
   selectedServerSelector,
   selectedTimeChunkSizeSelector,
+  selectedVariableSelector,
   userPlacesFormatNameSelector,
   userPlacesFormatOptionsCsvSelector,
   userPlacesFormatOptionsGeoJsonSelector,
   userPlacesFormatOptionsWktSelector,
-  selectedDatasetTimeLabelSelector,
-  selectedPlaceInfoSelector,
-  selectedPlaceGeometrySelector,
-  selectedDatasetIdSelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -76,7 +74,7 @@ import { AppState } from "@/states/appState";
 import { VolumeRenderMode } from "@/states/controlState";
 import { ColorBarNorm } from "@/model/variable";
 import { StatisticsRecord } from "@/model/statistics";
-import { UserVariable, ExpressionCapabilities } from "@/model/userVariable";
+import { ExpressionCapabilities, UserVariable } from "@/model/userVariable";
 import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer, restyleUserPlaceInLayer } from "./mapActions";
@@ -809,42 +807,12 @@ export function _configureServers(
 ////////////////////////////////////////////////////////////////////////////////
 
 export function syncWithServer(store: Store) {
-  return (dispatch: Dispatch, getState: () => AppState) => {
+  return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
-
-    const apiServer = selectedServerSelector(getState());
-    initializeContributions({
-      hostStore: newHostStore(store),
-      logging: { enabled: import.meta.env.DEV },
-      api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
-    });
-  };
-}
-
-function newHostStore(store: Store<AppState>): HostStore {
-  return {
-    subscribe(listener: () => void): () => void {
-      return store.subscribe(listener);
-    },
-    get(property: string): unknown {
-      // TODO: turn this into a global Map<string, Selector>.
-      //  Provide some view for developers that documents the
-      //  available properties, e.g., a help menu item
-      //  "For Developers...".
-      if (property === "selectedDatasetId") {
-        return selectedDatasetIdSelector(store.getState());
-      }
-      if (property === "selectedPlaceGeometry") {
-        return selectedPlaceGeometrySelector(store.getState());
-      }
-      if (property === "selectedTimeLabel") {
-        return selectedDatasetTimeLabelSelector(store.getState());
-      }
-      return undefined;
-    },
+    dispatch(initializeExtensions(store) as unknown as Action);
   };
 }
 

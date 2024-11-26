@@ -44,7 +44,7 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { setSidebarPanelId } from "@/actions/controlActions";
 import { SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
-import ContributedPanel from "@/components/ContributedPanel";
+import ContributedPanel from "@/ext/components/ContributedPanel";
 import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";

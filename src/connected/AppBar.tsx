@@ -27,6 +27,8 @@ import { connect } from "react-redux";
 import { SxProps, Theme, styled } from "@mui/material";
 import AppBarComponent from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -38,14 +40,15 @@ import { deepOrange } from "@mui/material/colors";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 import i18n from "@/i18n";
+import { makeStyles } from "@/util/styles";
 import { Config } from "@/config";
+import { getDerivedStateMarkdown } from "@/ext/store";
 import { AppState } from "@/states/appState";
 import { WithLocale } from "@/util/lang";
 import { openDialog } from "@/actions/controlActions";
 import { updateResources } from "@/actions/dataActions";
 import MarkdownPage from "@/components/MarkdownPage";
 import UserControl from "./UserControl";
-import { makeStyles } from "@/util/styles";
 
 interface AppBarProps extends WithLocale {
   appName: string;
@@ -136,13 +139,37 @@ const _AppBar: React.FC<AppBarProps> = ({
   updateResources,
 }: AppBarProps) => {
   const [imprintOpen, setImprintOpen] = React.useState(false);
+  const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
+  const [devRefOpen, setDevRefOpen] = React.useState(false);
+  const helpButtonEl = React.useRef<HTMLButtonElement | null>(null);
+  const derivedStateMarkdown = React.useMemo(
+    () => getDerivedStateMarkdown(),
+    [],
+  );
 
   const handleSettingsButtonClicked = () => {
     openDialog("settings");
   };
 
+  const handleOpenHelpMenu = () => {
+    setHelpMenuOpen(true);
+  };
+
+  const handleCloseHelpMenu = () => {
+    setHelpMenuOpen(false);
+  };
+
   const handleOpenManual = () => {
+    setHelpMenuOpen(false);
     window.open("https://xcube-dev.github.io/xcube-viewer/", "Manual");
+  };
+
+  const handleOpenDevRef = () => {
+    setDevRefOpen(true);
+  };
+
+  const handleCloseDevRef = () => {
+    setDevRefOpen(false);
   };
 
   const handleOpenImprint = () => {
@@ -201,9 +228,10 @@ const _AppBar: React.FC<AppBarProps> = ({
         )}
         <Tooltip arrow title={i18n.get("Help")}>
           <IconButton
-            onClick={handleOpenManual}
+            onClick={handleOpenHelpMenu}
             size="small"
             sx={styles.iconButton}
+            ref={helpButtonEl}
           >
             <HelpOutlineIcon />
           </IconButton>
@@ -233,6 +261,21 @@ const _AppBar: React.FC<AppBarProps> = ({
         open={imprintOpen}
         onClose={handleCloseImprint}
       />
+      <MarkdownPage
+        title={i18n.get("Developer Reference")}
+        href={i18n.get("docs/dev-reference.en.md")}
+        text={derivedStateMarkdown}
+        open={devRefOpen}
+        onClose={handleCloseDevRef}
+      />
+      <Menu
+        anchorEl={helpButtonEl.current}
+        open={helpMenuOpen}
+        onClose={handleCloseHelpMenu}
+      >
+        <MenuItem onClick={handleOpenManual}>Documentation</MenuItem>
+        <MenuItem onClick={handleOpenDevRef}>Developer Reference</MenuItem>
+      </Menu>
     </AppBarComponent>
   );
 };

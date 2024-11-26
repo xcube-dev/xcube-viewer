@@ -1,5 +1,20 @@
 ## Changes in version 1.4.0 (in development)
 
+### New Features
+
+* Starting with xcube Server 1.8 and xcube Viewer it is possible to enhance
+  the viewer UI by _server-side contributions_ programmed in Python.
+  For this to work, service providers can now configure xcube Server to load
+  one or more Python modules that provide UI-contributions of type
+  `xcube.webapi.viewer.contrib.Panel`.
+  Users can create `Panel` objects and use the two decorators
+  `layout()` and `callback()` to implement the UI and the interaction
+  behaviour, respectively. The new functionality is provided by the
+  [Chartlets](https://bcdev.github.io/chartlets/) Python library.
+
+  A working example can be found in the
+  [xcube repository](https://github.com/xcube-dev/xcube/tree/5ebf4c76fdccebdd3b65f4e04218e112410f561b/examples/serve/panels-demo).
+
 ### Other changes
 
 * Updated dependencies, development dependencies and updated TypeScript code base accordingly.
@@ -8,7 +23,7 @@
     - `mui` from v5 to v6
     - `testing-library/react` from v12 to v16
 
-* Tooltips (incl. translation) have been added to the toogle buttons that 
+* Tooltips (incl. translation) have been added to the toggle buttons that 
   control the format of the metadata information in the sidebar.
 
 ## Changes in version 1.3.1
