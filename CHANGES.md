@@ -1,12 +1,18 @@
+
 ## Changes in version 1.4.0 (in development)
+
+### New Features
+
+* Users can now copy snapshots of a map into the clipboard by clicking a new
+  camera icon on a map's action bar. (#290)
 
 ### Other changes
 
 * Updated dependencies, development dependencies and updated TypeScript code base accordingly.
-    - `react` from v17 to v18
-    - `react-dom` from v17 to v18
-    - `mui` from v5 to v6
-    - `testing-library/react` from v12 to v16
+  - `react` from v17 to v18
+  - `react-dom` from v17 to v18
+  - `mui` from v5 to v6
+  - `testing-library/react` from v12 to v16
 
 * Tooltips (incl. translation) have been added to the toogle buttons that 
   control the format of the metadata information in the sidebar.
@@ -35,14 +41,18 @@
 
 * Updated language translations (German and Swedish) for `Add Statistics`
   and `Style Place`.
+  
+## Changes in version 1.3.1 (in development)
+
+### Fixes
+
+* The `<Time>` parameter is now no longer required to calculate the statistics 
+  of the selected Point/Polygon for datasets that do not contain a time 
+  dimension. (#421)
 
 ## Changes in version 1.3.0
 
 ### New Features 
-
-* Users can now copy snapshots of a time-series charts and statistics
-  into the clipboard by clicking a new camera icon on a chart's action bar.
-  (#290)
 
 * It is now possible to change the color and opacity of user places
   and hence associated time-series and statistic charts. (#97, #216)
@@ -68,6 +78,7 @@
 
 * Now recognising new custom color maps from xcube server, for details 
   refer to https://github.com/xcube-dev/xcube/issues/1046. (#392)
+
 
 ### Enhancements
 

@@ -27,15 +27,18 @@ import { connect } from "react-redux";
 import _MapInteractionsBar from "@/components/MapInteractionsBar";
 import { AppState } from "@/states/appState";
 import { setMapInteraction } from "@/actions/controlActions";
+import { postMessage } from "@/actions/messageLogActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
     mapInteraction: state.controlState.mapInteraction,
+    exportResolution: state.controlState.exportResolution,
   };
 };
 
 const mapDispatchToProps = {
   setMapInteraction,
+  postMessage,
 };
 
 const MapInteractionsBar = connect(

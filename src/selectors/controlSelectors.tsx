@@ -833,6 +833,7 @@ function getOlXYZSource(
     //   level at minZoom when zooming out!
     // minZoom: tileLevelMin,
     maxZoom: tileLevelMax,
+    crossOrigin: "Anonymous",
   });
 }
 

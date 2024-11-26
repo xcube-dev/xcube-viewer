@@ -33,10 +33,12 @@ export type ExportFormat = keyof typeof converters;
 
 export interface ExportOptions {
   format?: ExportFormat;
-  width?: number;
-  height?: number;
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
+  width?: number;
+  height?: number;
+  controlDiv?: HTMLElement | null;
+  zoomDiv?: HTMLElement | null;
 }
 
 /**
@@ -71,30 +73,58 @@ async function _exportElement(
   element: HTMLElement,
   options: ExportOptions = {},
 ): Promise<void> {
-  const chartElement = element;
-  const format = options.format || "png";
-  if (!(format in converters)) {
-    throw new Error(`Image format '${format}' is unknown or not supported.`);
-  }
-  const dataUrl = await converters[format](chartElement, {
-    backgroundColor: "#00000000",
-    canvasWidth:
-      options.width ||
-      ((options.height || chartElement.clientHeight) *
-        chartElement.clientWidth) /
-        chartElement.clientHeight,
-    canvasHeight:
-      options.height ||
-      ((options.width || chartElement.clientWidth) *
-        chartElement.clientHeight) /
-        chartElement.clientWidth,
-  });
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
+  try {
+    const format = options.format || "png";
+    if (!(format in converters)) {
+      throw new Error(`Image format '${format}' is unknown or not supported.`);
+    }
+    const scaledWidth = options.width || element.clientWidth;
+    const scaledHeight = options.height || element.clientHeight;
+    const controlDiv = options.controlDiv;
+    const zoomDiv = options.zoomDiv;
+    if (controlDiv) controlDiv.style.display = "none";
+    if (zoomDiv) zoomDiv.hidden = true;
+    const offScreenCanvas = document.createElement("canvas");
+    offScreenCanvas.width = scaledWidth;
+    offScreenCanvas.height = scaledHeight;
+    const context = offScreenCanvas.getContext("2d");
+    if (!context) {
+      throw new Error("Failed to get canvas context.");
+    }
 
-  await navigator.clipboard.write([
-    new ClipboardItem({
-      "image/png": blob,
-    }),
-  ]);
+    const dataUrl = await converters[format](element, {
+      backgroundColor: "#ffffff",
+      width: scaledWidth,
+      height: scaledHeight,
+    });
+    const image = new Image();
+    image.src = dataUrl;
+
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = (error) => reject(error);
+    });
+    context.drawImage(image, 0, 0, scaledWidth, scaledHeight);
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      offScreenCanvas.toBlob((blob) => {
+        if (blob === null) {
+          reject(new Error("Failed to create a blob from the canvas."));
+        } else {
+          resolve(blob);
+        }
+      }, `image/${format}`);
+    });
+
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [`image/${format}`]: blob,
+      }),
+    ]);
+
+    if (controlDiv) controlDiv.style.display = "block";
+    if (zoomDiv) zoomDiv.hidden = false;
+  } catch (error) {
+    console.error("Error during export:", error);
+    throw error;
+  }
 }
