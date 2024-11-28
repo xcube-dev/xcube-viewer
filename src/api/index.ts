@@ -31,4 +31,6 @@ export { getTimeSeriesForGeometry } from "./getTimeSeries";
 export { getStatistics } from "./getStatistics";
 export { getPointValue } from "./getPointValue";
 export { updateResources } from "./updateResources";
+export { getViewerState } from "./getViewerState";
+export { putViewerState } from "./putViewerState";
 export { HTTPError } from "./errors";

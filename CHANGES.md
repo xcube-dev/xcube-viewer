@@ -1,5 +1,17 @@
 ## Changes in version 1.4.0 (in development)
 
+### Enhancements
+
+* Added a new "share" action to the app bar.
+  It creates a permalink URL to restore the view state 
+  and copies it to the clipboard. (#447)
+  
+  The restored state includes
+  - Selected map region, zoom level, and overlays.
+  - User places including the selected place.
+  - Opened panels, active tabs, and any selected options.
+  - Other UI-specific states such as selected items, filters, or toggle states.
+
 ### Other changes
 
 * Updated dependencies, development dependencies and updated TypeScript code base accordingly.
