@@ -2,6 +2,16 @@
 
 ### New Features
 
+* Added a new "share" action to the app bar.
+  It creates a permalink URL to restore the view state
+  and copies it to the clipboard. (#447)
+
+  The restored state includes
+  - Selected map region, zoom level, and overlays.
+  - User places including the selected place.
+  - Opened panels, active tabs, and any selected options.
+  - Other UI-specific states such as selected items, filters, or toggle states.
+
 * Starting with xcube Server 1.8 and xcube Viewer 1.4 it is possible to enhance
   the viewer UI by _server-side contributions_ programmed in Python.
   For this to work, service providers can now configure xcube Server to load

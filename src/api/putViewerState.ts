@@ -22,24 +22,31 @@
  * SOFTWARE.
  */
 
-function _getBaseUrl(): URL {
-  const url = new URL(window.location.href);
-  const pathComponents = url.pathname.split("/");
-  const numPathComponents = pathComponents.length;
-  if (numPathComponents > 0) {
-    const lastComponent = pathComponents[numPathComponents - 1];
-    if (lastComponent === "index.html") {
-      return new URL(
-        pathComponents.slice(0, numPathComponents - 1).join("/"),
-        window.location.origin,
-      );
-    } else {
-      return new URL(url.pathname, window.location.origin);
-    }
+import { PersistedState } from "@/states/persistedState";
+import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
+
+export function putViewerState(
+  apiServerUrl: string,
+  accessToken: string | null,
+  state: PersistedState,
+): Promise<string | undefined> {
+  const url = makeRequestUrl(`${apiServerUrl}/viewer/state`, []);
+  const init = {
+    ...makeRequestInit(accessToken),
+    method: "PUT",
+    body: JSON.stringify(state),
+  };
+  try {
+    return callJsonApi<{ key: string }>(url, init)
+      .then((result) => {
+        return result.key;
+      })
+      .catch((error) => {
+        console.error(error);
+        return undefined;
+      });
+  } catch (error) {
+    console.error(error);
+    return Promise.resolve(undefined);
   }
-  return new URL(window.location.origin);
 }
-
-const baseUrl = _getBaseUrl();
-
-export default baseUrl;

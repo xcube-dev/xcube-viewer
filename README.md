@@ -162,3 +162,30 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+
+## Documentation
+
+The `xcube-viewer` documentation is built using the [mkdocs](https://www.mkdocs.org/) tool.
+
+Create a Python environment and install the following packages:
+- ``mkdocs``
+- ``mkdocs-material``
+- ``mkdocs-autorefs``
+
+
+#With repository root as current working directory:
+
+To test local
+```bash
+mkdocs serve
+```
+
+To deploy on GitHub Pages
+
+```bash
+git checkout main
+git pull 
+
+mkdocs gh-deploy
+```

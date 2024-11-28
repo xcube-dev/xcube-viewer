@@ -29,6 +29,7 @@ import { saveAs } from "file-saver";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
+import { appParams } from "@/config";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { Dataset, getDatasetUserVariables } from "@/model/dataset";
@@ -92,6 +93,9 @@ import {
   SetSidebarPanelId,
   setSidebarPanelId,
 } from "./controlActions";
+import baseUrl from "@/util/baseurl";
+import { newPersistentAppState, PersistedState } from "@/states/persistedState";
+import { applyPersistentState } from "@/actions/otherActions";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -130,6 +134,43 @@ export function updateServerInfo() {
 
 export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
   return { type: UPDATE_SERVER_INFO, serverInfo };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+const SHARE_STATE_PERMALINK = "SHARE_STATE_PERMALINK";
+
+export function shareStatePermalink() {
+  return (
+    dispatch: Dispatch<AddActivity | RemoveActivity | MessageLogAction>,
+    getState: () => AppState,
+  ) => {
+    const apiServer = selectedServerSelector(getState());
+    dispatch(
+      addActivity(SHARE_STATE_PERMALINK, i18n.get("Creating permalink")),
+    );
+    api
+      .putViewerState(
+        apiServer.url,
+        getState().userAuthState.accessToken,
+        newPersistentAppState(getState()),
+      )
+      .then((stateKey) => {
+        if (stateKey) {
+          const viewerUrl = `${baseUrl.origin}?stateKey=${stateKey}`;
+          navigator.clipboard.writeText(viewerUrl).then(() => {
+            dispatch(
+              postMessage("success", i18n.get("Permalink copied to clipboard")),
+            );
+          });
+        } else {
+          dispatch(
+            postMessage("error", i18n.get("Failed to create permalink")),
+          );
+        }
+      })
+      .finally(() => dispatch(removeActivity(SHARE_STATE_PERMALINK)));
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -806,13 +847,83 @@ export function _configureServers(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function syncWithServer(store: Store) {
-  return (dispatch: Dispatch) => {
+export function syncWithServer(store: Store, init: boolean = false) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
     dispatch(initializeExtensions(store) as unknown as Action);
+
+    const stateKey = appParams.get("stateKey");
+    if (stateKey && init) {
+      const serverUrl = selectedServerSelector(store.getState()).url;
+      api
+        .getViewerState(
+          serverUrl,
+          getState().userAuthState.accessToken,
+          stateKey,
+        )
+        .then((stateResult) => {
+          if (typeof stateResult === "object") {
+            const persistedState = stateResult as PersistedState;
+            const { apiUrl } = persistedState as PersistedState;
+            if (apiUrl === serverUrl) {
+              dispatch(
+                applyPersistentState(persistedState) as unknown as Action,
+              );
+            } else {
+              dispatch(
+                postMessage(
+                  "warning",
+                  "Failed to restore state, backend mismatch",
+                ),
+              );
+            }
+          } else {
+            dispatch(postMessage("warning", stateResult));
+          }
+        });
+    }
+  };
+}
+
+function newHostStore(store: Store): StoreApi<AppState> & {
+  _initialState: AppState;
+  _prevState: AppState;
+} {
+  return {
+    _initialState: store.getState(),
+    getInitialState(): AppState {
+      // noinspection JSPotentiallyInvalidUsageOfThis
+      return this._initialState;
+    },
+    getState(): AppState {
+      return store.getState();
+    },
+    setState(
+      _state:
+        | AppState
+        | Partial<AppState>
+        | ((state: AppState) => AppState | Partial<AppState>),
+      _replace?: boolean,
+    ): void {
+      throw new Error(
+        "Changing the host state from contributions is not yet supported",
+      );
+    },
+    _prevState: store.getState(),
+    subscribe(
+      listener: (store: AppState, prevState: AppState) => void,
+    ): () => void {
+      return store.subscribe(() => {
+        const state = store.getState();
+        if (state !== this._prevState) {
+          listener(state, this._prevState);
+          this._prevState = state;
+        }
+      });
+    },
   };
 }
 

@@ -35,6 +35,7 @@ import Typography from "@mui/material/Typography";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import ShareIcon from "@mui/icons-material/Share";
 import PolicyIcon from "@mui/icons-material/Policy";
 import { deepOrange } from "@mui/material/colors";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
@@ -48,13 +49,17 @@ import { openDialog } from "@/actions/controlActions";
 import { updateResources } from "@/actions/dataActions";
 import DevRefPage from "@/components/DevRefPage";
 import ImprintPage from "@/components/ImprintPage";
+import { shareStatePermalink, updateResources } from "@/actions/dataActions";
+import MarkdownPage from "@/components/MarkdownPage";
 import UserControl from "./UserControl";
 
 interface AppBarProps extends WithLocale {
   appName: string;
   openDialog: (dialogId: string) => unknown;
   allowRefresh?: boolean;
+  allowSharing?: boolean;
   updateResources: () => unknown;
+  shareStatePermalink: () => unknown;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -63,6 +68,7 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     appName: Config.instance.branding.appBarTitle,
     allowRefresh: Config.instance.branding.allowRefresh,
+    allowSharing: Config.instance.branding.allowRefresh,
   };
 };
 
@@ -70,6 +76,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   openDialog,
   updateResources,
+  shareStatePermalink,
 };
 
 const appBarStyle: Record<string, SxProps<Theme>> = {
@@ -135,6 +142,8 @@ const _AppBar: React.FC<AppBarProps> = ({
   openDialog,
   allowRefresh,
   updateResources,
+  allowSharing,
+  shareStatePermalink,
 }: AppBarProps) => {
   const [imprintOpen, setImprintOpen] = React.useState(false);
   const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
@@ -206,6 +215,17 @@ const _AppBar: React.FC<AppBarProps> = ({
               sx={styles.iconButton}
             >
               <RefreshIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        {allowSharing && (
+          <Tooltip arrow title={i18n.get("Share")}>
+            <IconButton
+              onClick={shareStatePermalink}
+              size="small"
+              sx={styles.iconButton}
+            >
+              <ShareIcon />
             </IconButton>
           </Tooltip>
         )}

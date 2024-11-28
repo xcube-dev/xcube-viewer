@@ -45,6 +45,9 @@ import {
 import { syncWithServer } from "@/actions/dataActions";
 import { appReducer } from "@/reducers/appReducer";
 import { AppState } from "@/states/appState";
+import baseUrl from "@/util/baseurl";
+
+console.debug("baseUrl:", baseUrl);
 
 Config.load().then(() => {
   const actionFilter = (_getState: () => AppState, action: Action) =>
@@ -62,7 +65,7 @@ Config.load().then(() => {
   dispatch(changeLocale(store.getState().controlState.locale));
   dispatch(updateUserColorBarsImageData() as unknown as Action);
   if (store.getState().controlState.privacyNoticeAccepted) {
-    dispatch(syncWithServer(store) as unknown as Action);
+    dispatch(syncWithServer(store, true) as unknown as Action);
   }
 
   ReactDOM.createRoot(document.getElementById("root")!).render(
