@@ -42,12 +42,12 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { Config } from "@/config";
-import { getDerivedStateMarkdown } from "@/ext/store";
 import { AppState } from "@/states/appState";
 import { WithLocale } from "@/util/lang";
 import { openDialog } from "@/actions/controlActions";
 import { updateResources } from "@/actions/dataActions";
-import MarkdownPage from "@/components/MarkdownPage";
+import DevRefPage from "@/components/DevRefPage";
+import ImprintPage from "@/components/ImprintPage";
 import UserControl from "./UserControl";
 
 interface AppBarProps extends WithLocale {
@@ -66,10 +66,12 @@ const mapStateToProps = (state: AppState) => {
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
   openDialog,
   updateResources,
 };
+
 const appBarStyle: Record<string, SxProps<Theme>> = {
   appBar: (theme: Theme) => ({
     zIndex: theme.zIndex.drawer + 1,
@@ -113,10 +115,6 @@ const styles = makeStyles({
     color: "#fff",
     backgroundColor: deepOrange[300],
   },
-  signInWrapper: (theme) => ({
-    margin: theme.spacing(1),
-    position: "relative",
-  }),
   signInProgress: {
     color: deepOrange[300],
     position: "absolute",
@@ -142,10 +140,6 @@ const _AppBar: React.FC<AppBarProps> = ({
   const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
   const helpButtonEl = React.useRef<HTMLButtonElement | null>(null);
-  const derivedStateMarkdown = React.useMemo(
-    () => getDerivedStateMarkdown(),
-    [],
-  );
 
   const handleSettingsButtonClicked = () => {
     openDialog("settings");
@@ -255,19 +249,8 @@ const _AppBar: React.FC<AppBarProps> = ({
           </IconButton>
         </Tooltip>
       </Toolbar>
-      <MarkdownPage
-        title={i18n.get("Imprint")}
-        href="docs/imprint.md"
-        open={imprintOpen}
-        onClose={handleCloseImprint}
-      />
-      <MarkdownPage
-        title={i18n.get("Developer Reference")}
-        href={i18n.get("docs/dev-reference.en.md")}
-        text={derivedStateMarkdown}
-        open={devRefOpen}
-        onClose={handleCloseDevRef}
-      />
+      <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
+      <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
       <Menu
         anchorEl={helpButtonEl.current}
         open={helpMenuOpen}

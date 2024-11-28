@@ -11,13 +11,13 @@ import {
   selectedVariableNameSelector,
 } from "@/selectors/controlSelectors";
 
-export interface DerivedProperty {
+export interface DerivedStateProperty {
   type: string;
   description: string;
   selector: (state: AppState) => unknown;
 }
 
-export const derivedProperties: Record<string, DerivedProperty> = {
+export const derivedStateProperties: Record<string, DerivedStateProperty> = {
   selectedDatasetId: {
     type: "str | None",
     description: "The identifier of the currently selected dataset.",
@@ -59,23 +59,10 @@ export function newDerivedStore(store: Store<AppState>): HostStore {
       return store.subscribe(listener);
     },
     get(propertyName: string): unknown {
-      const derivedProperty = derivedProperties[propertyName];
+      const derivedProperty = derivedStateProperties[propertyName];
       if (derivedProperty) {
         return derivedProperty.selector(store.getState());
       }
     },
   };
-}
-
-export function getDerivedStateMarkdown() {
-  const lines: string[] = [];
-  Object.getOwnPropertyNames(derivedProperties).forEach(
-    (propertyName: string) => {
-      const derivedProperty = derivedProperties[propertyName];
-      lines.push(
-        `- \`${propertyName}\`: **${derivedProperty.type}**    ${derivedProperty.description}`,
-      );
-    },
-  );
-  return lines.join("\n\n");
 }
