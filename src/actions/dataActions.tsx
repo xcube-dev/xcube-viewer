@@ -848,7 +848,7 @@ export function _configureServers(
 ////////////////////////////////////////////////////////////////////////////////
 
 export function syncWithServer(store: Store, init: boolean = false) {
-  return (dispatch: Dispatch, getState: () => AppState) => {
+  return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
@@ -857,73 +857,34 @@ export function syncWithServer(store: Store, init: boolean = false) {
 
     const stateKey = appParams.get("stateKey");
     if (stateKey && init) {
-      const serverUrl = selectedServerSelector(store.getState()).url;
-      api
-        .getViewerState(
-          serverUrl,
-          getState().userAuthState.accessToken,
-          stateKey,
-        )
-        .then((stateResult) => {
-          if (typeof stateResult === "object") {
-            const persistedState = stateResult as PersistedState;
-            const { apiUrl } = persistedState as PersistedState;
-            if (apiUrl === serverUrl) {
-              dispatch(
-                applyPersistentState(persistedState) as unknown as Action,
-              );
-            } else {
-              dispatch(
-                postMessage(
-                  "warning",
-                  "Failed to restore state, backend mismatch",
-                ),
-              );
-            }
-          } else {
-            dispatch(postMessage("warning", stateResult));
-          }
-        });
+      dispatch(restorePersistedState(store, stateKey) as unknown as Action);
     }
   };
 }
 
-function newHostStore(store: Store): StoreApi<AppState> & {
-  _initialState: AppState;
-  _prevState: AppState;
-} {
-  return {
-    _initialState: store.getState(),
-    getInitialState(): AppState {
-      // noinspection JSPotentiallyInvalidUsageOfThis
-      return this._initialState;
-    },
-    getState(): AppState {
-      return store.getState();
-    },
-    setState(
-      _state:
-        | AppState
-        | Partial<AppState>
-        | ((state: AppState) => AppState | Partial<AppState>),
-      _replace?: boolean,
-    ): void {
-      throw new Error(
-        "Changing the host state from contributions is not yet supported",
-      );
-    },
-    _prevState: store.getState(),
-    subscribe(
-      listener: (store: AppState, prevState: AppState) => void,
-    ): () => void {
-      return store.subscribe(() => {
-        const state = store.getState();
-        if (state !== this._prevState) {
-          listener(state, this._prevState);
-          this._prevState = state;
+function restorePersistedState(store: Store, stateKey: string) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    const serverUrl = selectedServerSelector(store.getState()).url;
+    api
+      .getViewerState(serverUrl, getState().userAuthState.accessToken, stateKey)
+      .then((stateResult) => {
+        if (typeof stateResult === "object") {
+          const persistedState = stateResult as PersistedState;
+          const { apiUrl } = persistedState as PersistedState;
+          if (apiUrl === serverUrl) {
+            dispatch(applyPersistentState(persistedState) as unknown as Action);
+          } else {
+            dispatch(
+              postMessage(
+                "warning",
+                "Failed to restore state, backend mismatch",
+              ),
+            );
+          }
+        } else {
+          dispatch(postMessage("warning", stateResult));
         }
       });
-    },
   };
 }
 

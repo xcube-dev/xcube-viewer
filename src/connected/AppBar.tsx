@@ -46,11 +46,9 @@ import { Config } from "@/config";
 import { AppState } from "@/states/appState";
 import { WithLocale } from "@/util/lang";
 import { openDialog } from "@/actions/controlActions";
-import { updateResources } from "@/actions/dataActions";
+import { shareStatePermalink, updateResources } from "@/actions/dataActions";
 import DevRefPage from "@/components/DevRefPage";
 import ImprintPage from "@/components/ImprintPage";
-import { shareStatePermalink, updateResources } from "@/actions/dataActions";
-import MarkdownPage from "@/components/MarkdownPage";
 import UserControl from "./UserControl";
 
 interface AppBarProps extends WithLocale {
