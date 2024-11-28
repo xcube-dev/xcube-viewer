@@ -2,7 +2,7 @@
 
 ### New Features
 
-* Starting with xcube Server 1.8 and xcube Viewer it is possible to enhance
+* Starting with xcube Server 1.8 and xcube Viewer 1.4 it is possible to enhance
   the viewer UI by _server-side contributions_ programmed in Python.
   For this to work, service providers can now configure xcube Server to load
   one or more Python modules that provide UI-contributions of type
