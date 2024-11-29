@@ -34,13 +34,15 @@ import Slide from "@mui/material/Slide";
 import DialogContent from "@mui/material/DialogContent";
 import { TransitionProps } from "@mui/material/transitions";
 
-import useFetchText from "@/hooks/useFetchText";
 import { makeStyles } from "@/util/styles";
 import { styled } from "@mui/system";
 
 const styles = makeStyles({
   dialog: (theme) => ({
-    backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200],
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.grey[800]
+        : theme.palette.grey[200],
   }),
   appBar: {
     position: "relative",
@@ -65,8 +67,7 @@ const Transition = React.forwardRef(function Transition(
 
 interface MarkdownPageProps {
   title: string;
-  text?: string;
-  href?: string;
+  text: string;
   open: boolean;
   onClose: () => void;
 }
@@ -74,18 +75,9 @@ interface MarkdownPageProps {
 const MarkdownPage: React.FC<MarkdownPageProps> = ({
   title,
   text,
-  href,
   open,
   onClose,
 }) => {
-  let markdownText = useFetchText(href);
-
-  if (markdownText && text) {
-    markdownText = markdownText.replace("${text}", text);
-  } else if (!markdownText) {
-    markdownText = text;
-  }
-
   return (
     <Dialog
       fullScreen
@@ -112,7 +104,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
       </AppBar>
       <DialogContent sx={styles.dialog}>
         <StyledDiv>
-          <Markdown children={markdownText || ""} linkTarget="_blank" />
+          <Markdown children={text} linkTarget="_blank" />
         </StyledDiv>
       </DialogContent>
     </Dialog>
