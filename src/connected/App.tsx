@@ -47,7 +47,6 @@ import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
 
-
 interface AppProps {
   compact: boolean;
   themeMode: string;
@@ -64,16 +63,19 @@ const mapStateToProps = (_state: AppState) => {
 const mapDispatchToProps = {};
 
 const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
-  const systemMode = useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light";
+  const systemMode = useMediaQuery("(prefers-color-scheme: dark)")
+    ? "dark"
+    : "light";
 
   // Validate and fallback for themeMode
-  const validatedThemeMode: "light" | "dark" | "system" =
+  const validatedThemeMode =
     themeMode === "light" || themeMode === "dark" || themeMode === "system"
       ? themeMode
-      : "light"; // Default fallback
+      : "dark";
 
   const theme = React.useMemo(() => {
-    const mode: "light" | "dark" = validatedThemeMode === "system" ? systemMode : validatedThemeMode;
+    const mode =
+      validatedThemeMode === "system" ? systemMode : validatedThemeMode;
 
     return createTheme({
       typography: {

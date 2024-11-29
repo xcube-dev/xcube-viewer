@@ -42,8 +42,8 @@ import {
   LocateMode,
   TimeSeriesChartType,
   TimeAnimationInterval,
-  APPLICATION_THEMES,
-  ApplicationThemes,
+  THEME_LABELS,
+  ThemeName,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import {
@@ -245,7 +245,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
-      themeMode: event.target.value as ApplicationThemes,
+      themeMode: event.target.value as ThemeName,
     });
   }
   const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
@@ -289,9 +289,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 ))}
               </TextField>
             </SettingsSubPanel>
-            <SettingsSubPanel
-              label={i18n.get("Change application theme")}
-            >
+            <SettingsSubPanel label={i18n.get("Appearance mode")}>
               <TextField
                 variant="standard"
                 select
@@ -300,7 +298,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 onChange={handleApplicationThemeChange}
                 margin="normal"
               >
-                {APPLICATION_THEMES.map(([value, label]) => (
+                {THEME_LABELS.map(([value, label]) => (
                   <MenuItem key={value} value={value}>
                     {i18n.get(label)}
                   </MenuItem>
