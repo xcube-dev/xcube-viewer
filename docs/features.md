@@ -718,7 +718,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
-## Sidebar
+## Show/Hide Sidebar
 
 ## Metadata
 

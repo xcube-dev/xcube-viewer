@@ -36,6 +36,25 @@ User Base Maps and User Overlays can also be added here.
 
 ---
 
+## Sidebar
+
+![Sidepanel](../assets/images/sidepanel2.png)
+
+The sidebar provides access to various panels. The selection of available panels is configurable and may vary depending on the deployment. The feature can be shown or hidden using the button located in the top-right corner.
+
+**Always Available Panels**
+
+- **Info:** Displays [metadata](#metadata) and relevant information.
+- **Time Series:** Provides time series visualizations.
+- **Statistics:** Offers statistical insights.
+
+**Optional Panels**
+
+- **Volume:** Provides 3D visualization of cubes.
+- **User-Defined Panels:** This feature will be introduced in future versions of xcube-viewer.
+
+---
+
 ## Metadata
 
 ![Metadata](../assets/images/datamanagement_meta.png){ align=left }
