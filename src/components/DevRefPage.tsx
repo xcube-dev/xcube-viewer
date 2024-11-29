@@ -53,7 +53,7 @@ export const DevRefPage = ({ open, onClose }: DevRefPageProps) => {
   return (
     <MarkdownPage
       title={i18n.get("Developer Reference")}
-      text={text}
+      text={text || ""}
       open={open}
       onClose={onClose}
     />

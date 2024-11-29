@@ -23,7 +23,6 @@
  */
 
 import React from "react";
-import Markdown from "react-markdown";
 import Dialog from "@mui/material/Dialog";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -36,6 +35,7 @@ import { TransitionProps } from "@mui/material/transitions";
 
 import { makeStyles } from "@/util/styles";
 import { styled } from "@mui/system";
+import Markdown from "@/components/Markdown";
 
 const styles = makeStyles({
   dialog: (theme) => ({
@@ -104,7 +104,7 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
       </AppBar>
       <DialogContent sx={styles.dialog}>
         <StyledDiv>
-          <Markdown children={text} linkTarget="_blank" />
+          <Markdown text={text} />
         </StyledDiv>
       </DialogContent>
     </Dialog>

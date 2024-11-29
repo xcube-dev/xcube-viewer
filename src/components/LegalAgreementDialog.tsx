@@ -25,7 +25,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Store } from "redux";
 import { ReactReduxContext } from "react-redux";
-import Markdown from "react-markdown";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -36,8 +35,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import CheckIcon from "@mui/icons-material/Check";
 
 import i18n from "@/i18n";
-import { ControlState } from "@/states/controlState";
 import { makeStyles } from "@/util/styles";
+import { ControlState } from "@/states/controlState";
+import Markdown from "@/components/Markdown";
 
 const styles = makeStyles({
   icon: (theme) => ({
@@ -108,7 +108,7 @@ export default function LegalAgreementDialog({
           {markdownText === null ? (
             <CircularProgress />
           ) : (
-            <Markdown children={markdownText} linkTarget="_blank" />
+            <Markdown text={markdownText} />
           )}
         </DialogContentText>
       </DialogContent>

@@ -22,40 +22,46 @@
  * SOFTWARE.
  */
 
-import Popover from "@mui/material/Popover";
-import Paper from "@mui/material/Paper";
+import { useMemo } from "react";
+import { useTheme } from "@mui/material";
+import OriginalMarkdown from "react-markdown";
 
-import Markdown from "@/components/Markdown";
-
-interface MarkdownPopoverProps {
-  anchorEl: HTMLElement | null;
-  open: boolean;
-  onClose?: () => void;
-  markdownText?: string;
+interface MarkdownProps {
+  text?: string;
 }
 
-export default function MarkdownPopover({
-  anchorEl,
-  markdownText,
-  open,
-  onClose,
-}: MarkdownPopoverProps) {
-  if (!markdownText) {
+export default function Markdown({ text }: MarkdownProps) {
+  const theme = useTheme();
+  const components = useMemo(
+    () => ({
+      a: (props: Record<string, unknown>) => {
+        const { node: _, ...rest } = props;
+        return (
+          <a
+            {...rest}
+            style={{
+              color: theme.palette.mode === "dark" ? "#90caf9" : "#1e90ff",
+            }}
+          />
+        );
+      },
+      code: (props: Record<string, unknown>) => {
+        const { node: _, ...rest } = props;
+        return <code {...rest} style={{ color: "grey" }} />;
+      },
+    }),
+    [theme],
+  );
+
+  if (!text) {
     return null;
   }
+
   return (
-    <Popover anchorEl={anchorEl} open={open} onClose={onClose}>
-      <Paper
-        sx={{
-          width: "32em",
-          overflowY: "auto",
-          fontSize: "smaller",
-          paddingLeft: 2,
-          paddingRight: 2,
-        }}
-      >
-        <Markdown text={markdownText} />
-      </Paper>
-    </Popover>
+    <OriginalMarkdown
+      children={text}
+      components={components}
+      linkTarget="_blank"
+    />
   );
 }
