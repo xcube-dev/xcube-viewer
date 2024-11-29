@@ -38,6 +38,7 @@ import {
 } from "@/model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
+import { PaletteMode } from "@mui/material";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -100,9 +101,9 @@ export const sidebarPanelIds: SidebarPanelId[] = [
   "volume",
 ];
 
-export const THEME_NAMES = ["light", "dark", "system"] as const;
-export type ThemeName = (typeof THEME_NAMES)[number];
-export const THEME_LABELS: [ThemeName, string][] = [
+export type ThemeMode = PaletteMode | "system";
+export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
+export const THEME_LABELS: [ThemeMode, string][] = [
   ["light", "Light"],
   ["dark", "Dark"],
   ["system", "System"],
@@ -168,7 +169,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
-  themeMode: "light" | "dark" | "system";
+  themeMode: ThemeMode;
 }
 
 export function newControlState(): ControlState {
@@ -249,12 +250,27 @@ export function newControlState(): ControlState {
   return loadUserSettings(state);
 }
 
-function getInitialThemeMode() {
-  const themeName = Config.instance.branding.themeName;
-  if (themeName && ["light", "dark", "system"].includes(themeName)) {
-    return themeName;
+function getInitialThemeMode(): ThemeMode {
+  const themeMode = Config.instance.branding.themeMode;
+  if (themeMode && THEME_NAMES.includes(themeMode)) {
+    return themeMode;
   }
   return "system";
+}
+
+export function getPaletteMode(
+  themeMode: ThemeMode,
+  defaultPaletteMode?: PaletteMode,
+): PaletteMode {
+  if (!defaultPaletteMode) {
+    defaultPaletteMode = window.matchMedia("(prefers-color-scheme: dark)")
+      .matches
+      ? "dark"
+      : "light";
+  }
+  return themeMode && THEME_NAMES.includes(themeMode) && themeMode !== "system"
+    ? themeMode
+    : defaultPaletteMode;
 }
 
 // We cannot keep "MAP_OBJECTS" in control state object, because these

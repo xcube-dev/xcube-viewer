@@ -80,7 +80,7 @@ export interface Branding {
   windowTitle: string;
   windowIcon: string | null;
   compact: boolean;
-  themeName?: PaletteMode | "system";
+  themeMode?: PaletteMode | "system";
   primaryColor: PaletteColorOptions;
   secondaryColor: PaletteColorOptions;
   headerBackgroundColor?: string;

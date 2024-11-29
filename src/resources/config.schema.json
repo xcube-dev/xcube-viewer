@@ -115,10 +115,10 @@
           "type": ["string", "null"],
           "examples": ["images/favicon.ico"]
         },
-        "themeName": {
+        "themeMode": {
           "type": "string",
           "examples": ["light"],
-          "enum": ["dark", "light"]
+          "enum": ["dark", "light", "system"]
         },
         "primaryColor": { "$ref": "#/definitions/ColorSchema" },
         "secondaryColor": { "$ref": "#/definitions/ColorSchema" },

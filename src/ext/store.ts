@@ -10,6 +10,7 @@ import {
   selectedVariable2NameSelector,
   selectedVariableNameSelector,
 } from "@/selectors/controlSelectors";
+import { getPaletteMode } from "@/states/controlState";
 
 export interface DerivedStateProperty {
   type: string;
@@ -50,6 +51,12 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     type: "str | None",
     description: "The currently selected UTC time using ISO format.",
     selector: selectedDatasetTimeLabelSelector,
+  },
+  themeMode: {
+    type: "str",
+    description: 'The appearance mode of the UI. Either "light" or "dark".',
+    selector: (appState: AppState) =>
+      getPaletteMode(appState.controlState.themeMode),
   },
 };
 

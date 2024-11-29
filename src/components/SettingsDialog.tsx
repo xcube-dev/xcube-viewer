@@ -43,7 +43,7 @@ import {
   TimeSeriesChartType,
   TimeAnimationInterval,
   THEME_LABELS,
-  ThemeName,
+  ThemeMode,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import {
@@ -241,11 +241,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     openDialog("userOverlays");
   };
 
-  function handleApplicationThemeChange(
+  function handleThemeModeChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
-      themeMode: event.target.value as ThemeName,
+      themeMode: event.target.value as ThemeMode,
     });
   }
   const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
@@ -294,8 +294,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 variant="standard"
                 select
                 sx={styles.textField}
-                value={theme.palette.mode}
-                onChange={handleApplicationThemeChange}
+                value={settings.themeMode || theme.palette.mode}
+                onChange={handleThemeModeChange}
                 margin="normal"
               >
                 {THEME_LABELS.map(([value, label]) => (

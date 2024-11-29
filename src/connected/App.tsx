@@ -25,6 +25,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import {
+  type PaletteMode,
   createTheme,
   CssBaseline,
   StyledEngineProvider,
@@ -34,6 +35,7 @@ import {
 
 import { Config } from "@/config";
 import { AppState } from "@/states/appState";
+import { getPaletteMode, ThemeMode } from "@/states/controlState";
 import AuthWrapper from "@/components/AuthWrapper";
 import AppBar from "./AppBar";
 import AppPane from "./AppPane";
@@ -49,33 +51,26 @@ import UserVariablesDialog from "./UserVariablesDialog";
 
 interface AppProps {
   compact: boolean;
-  themeMode: string;
+  themeMode: ThemeMode;
 }
 
 // noinspection JSUnusedLocalSymbols
-const mapStateToProps = (_state: AppState) => {
+const mapStateToProps = (state: AppState) => {
   return {
     compact: Config.instance.branding.compact,
-    themeMode: _state.controlState.themeMode,
+    themeMode: state.controlState.themeMode,
   };
 };
 
 const mapDispatchToProps = {};
 
 const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
-  const systemMode = useMediaQuery("(prefers-color-scheme: dark)")
+  const systemThemeMode = useMediaQuery("(prefers-color-scheme: dark)")
     ? "dark"
     : "light";
 
-  // Validate and fallback for themeMode
-  const validatedThemeMode =
-    themeMode === "light" || themeMode === "dark" || themeMode === "system"
-      ? themeMode
-      : "dark";
-
   const theme = React.useMemo(() => {
-    const mode =
-      validatedThemeMode === "system" ? systemMode : validatedThemeMode;
+    const mode: PaletteMode = getPaletteMode(themeMode, systemThemeMode);
 
     return createTheme({
       typography: {
@@ -88,7 +83,7 @@ const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
         secondary: Config.instance.branding.secondaryColor,
       },
     });
-  }, [validatedThemeMode, systemMode]);
+  }, [themeMode, systemThemeMode]);
 
   return (
     <AuthWrapper>
