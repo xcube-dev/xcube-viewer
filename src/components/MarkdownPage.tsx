@@ -65,18 +65,26 @@ const Transition = React.forwardRef(function Transition(
 
 interface MarkdownPageProps {
   title: string;
-  href: string;
+  text?: string;
+  href?: string;
   open: boolean;
   onClose: () => void;
 }
 
 const MarkdownPage: React.FC<MarkdownPageProps> = ({
   title,
+  text,
   href,
   open,
   onClose,
 }) => {
-  const markdownText = useFetchText(href);
+  let markdownText = useFetchText(href);
+
+  if (markdownText && text) {
+    markdownText = markdownText.replace("${text}", text);
+  } else if (!markdownText) {
+    markdownText = text;
+  }
 
   return (
     <Dialog

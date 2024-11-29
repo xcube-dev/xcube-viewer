@@ -30,7 +30,6 @@ import ControlBarComponent from "@/components/ControlBar";
 import { WithLocale } from "@/util/lang";
 import DatasetSelect from "./DatasetSelect";
 import VariableSelect from "./VariableSelect";
-// import RgbSwitch from "./RgbSwitch";
 import PlaceGroupsSelect from "./PlaceGroupsSelect";
 import PlaceSelect from "./PlaceSelect";
 import MapInteractionsBar from "./MapInteractionsBar";
@@ -60,7 +59,6 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
     <ControlBarComponent>
       <DatasetSelect />
       <VariableSelect />
-      {/*<RgbSwitch />*/}
       <PlaceGroupsSelect />
       <PlaceSelect />
       <MapInteractionsBar />

@@ -22,6 +22,26 @@
  * SOFTWARE.
  */
 
-import ContributedPanel from "./ContributedPanel";
+import i18n from "@/i18n";
+import { type WithLocale } from "@/util/lang";
+import MarkdownPage from "@/components/MarkdownPage";
+import useFetchText from "@/hooks/useFetchText";
 
-export default ContributedPanel;
+interface ImprintPageProps extends WithLocale {
+  open: boolean;
+  onClose: () => void;
+}
+
+const ImprintPage = ({ open, onClose }: ImprintPageProps) => {
+  const text = useFetchText(i18n.get("docs/imprint.md"));
+  return (
+    <MarkdownPage
+      title={i18n.get("Imprint")}
+      text={text}
+      open={open}
+      onClose={onClose}
+    />
+  );
+};
+
+export default ImprintPage;

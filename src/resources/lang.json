@@ -1264,6 +1264,11 @@
       "en": "docs/user-variables.en.md",
       "de": "docs/user-variables.de.md",
       "se": "docs/user-variables.se.md"
+    },
+    {
+      "en": "docs/dev-reference.en.md",
+      "de": "docs/dev-reference.en.md",
+      "se": "docs/dev-reference.en.md"
     }
   ]
 }

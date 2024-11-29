@@ -26,8 +26,6 @@ import { Action, Dispatch, Store } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { initializeContributions } from "chartlets";
-import type { StoreApi } from "zustand/vanilla";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
@@ -49,23 +47,24 @@ import {
   TimeSeriesGroup,
   timeSeriesGroupsToTable,
 } from "@/model/timeSeries";
+import { initializeExtensions } from "@/ext/actions";
 import {
   mapProjectionSelector,
   selectedDatasetSelector,
   selectedDatasetTimeDimensionSelector,
-  selectedVariableSelector,
+  selectedDatasetTimeLabelSelector,
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
+  selectedPlaceInfoSelector,
   selectedPlaceSelector,
   selectedServerSelector,
   selectedTimeChunkSizeSelector,
+  selectedVariableSelector,
   userPlacesFormatNameSelector,
   userPlacesFormatOptionsCsvSelector,
   userPlacesFormatOptionsGeoJsonSelector,
   userPlacesFormatOptionsWktSelector,
-  selectedDatasetTimeLabelSelector,
-  selectedPlaceInfoSelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -76,7 +75,7 @@ import { AppState } from "@/states/appState";
 import { VolumeRenderMode } from "@/states/controlState";
 import { ColorBarNorm } from "@/model/variable";
 import { StatisticsRecord } from "@/model/statistics";
-import { UserVariable, ExpressionCapabilities } from "@/model/userVariable";
+import { ExpressionCapabilities, UserVariable } from "@/model/userVariable";
 import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer, restyleUserPlaceInLayer } from "./mapActions";
@@ -849,88 +848,43 @@ export function _configureServers(
 ////////////////////////////////////////////////////////////////////////////////
 
 export function syncWithServer(store: Store, init: boolean = false) {
-  return (dispatch: Dispatch, getState: () => AppState) => {
+  return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateDatasets() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
-
-    const apiServer = selectedServerSelector(getState());
-    initializeContributions({
-      hostStore: newHostStore(store),
-      logging: { enabled: import.meta.env.DEV },
-      api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
-    });
+    dispatch(initializeExtensions(store) as unknown as Action);
 
     const stateKey = appParams.get("stateKey");
     if (stateKey && init) {
-      const serverUrl = selectedServerSelector(store.getState()).url;
-      api
-        .getViewerState(
-          serverUrl,
-          getState().userAuthState.accessToken,
-          stateKey,
-        )
-        .then((stateResult) => {
-          if (typeof stateResult === "object") {
-            const persistedState = stateResult as PersistedState;
-            const { apiUrl } = persistedState as PersistedState;
-            if (apiUrl === serverUrl) {
-              dispatch(
-                applyPersistentState(persistedState) as unknown as Action,
-              );
-            } else {
-              dispatch(
-                postMessage(
-                  "warning",
-                  "Failed to restore state, backend mismatch",
-                ),
-              );
-            }
-          } else {
-            dispatch(postMessage("warning", stateResult));
-          }
-        });
+      dispatch(restorePersistedState(store, stateKey) as unknown as Action);
     }
   };
 }
 
-function newHostStore(store: Store): StoreApi<AppState> & {
-  _initialState: AppState;
-  _prevState: AppState;
-} {
-  return {
-    _initialState: store.getState(),
-    getInitialState(): AppState {
-      // noinspection JSPotentiallyInvalidUsageOfThis
-      return this._initialState;
-    },
-    getState(): AppState {
-      return store.getState();
-    },
-    setState(
-      _state:
-        | AppState
-        | Partial<AppState>
-        | ((state: AppState) => AppState | Partial<AppState>),
-      _replace?: boolean,
-    ): void {
-      throw new Error(
-        "Changing the host state from contributions is not yet supported",
-      );
-    },
-    _prevState: store.getState(),
-    subscribe(
-      listener: (store: AppState, prevState: AppState) => void,
-    ): () => void {
-      return store.subscribe(() => {
-        const state = store.getState();
-        if (state !== this._prevState) {
-          listener(state, this._prevState);
-          this._prevState = state;
+function restorePersistedState(store: Store, stateKey: string) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    const serverUrl = selectedServerSelector(store.getState()).url;
+    api
+      .getViewerState(serverUrl, getState().userAuthState.accessToken, stateKey)
+      .then((stateResult) => {
+        if (typeof stateResult === "object") {
+          const persistedState = stateResult as PersistedState;
+          const { apiUrl } = persistedState as PersistedState;
+          if (apiUrl === serverUrl) {
+            dispatch(applyPersistentState(persistedState) as unknown as Action);
+          } else {
+            dispatch(
+              postMessage(
+                "warning",
+                "Failed to restore state, backend mismatch",
+              ),
+            );
+          }
+        } else {
+          dispatch(postMessage("warning", stateResult));
         }
       });
-    },
   };
 }
 
