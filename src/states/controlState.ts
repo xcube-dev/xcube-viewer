@@ -100,16 +100,18 @@ export const sidebarPanelIds: SidebarPanelId[] = [
   "volume",
 ];
 
-export const APPLICATION_THEMES: [ApplicationThemes, string][] = [
+export const THEME_NAMES = ["light", "dark", "system"] as const;
+export type ThemeName = (typeof THEME_NAMES)[number];
+export const THEME_LABELS: [ThemeName, string][] = [
   ["light", "Light"],
   ["dark", "Dark"],
   ["system", "System"],
 ];
+
 export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
 export type VolumeState = { status: VolumeStatus; message?: string };
 export type VolumeStates = { [volumeId: string]: VolumeState };
-export type ApplicationThemes = "light" | "dark" | "system";
 
 export interface ControlState {
   selectedDatasetId: string | null;
@@ -166,7 +168,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
-  themeMode: string;
+  themeMode: "light" | "dark" | "system";
 }
 
 export function newControlState(): ControlState {
@@ -242,11 +244,17 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
-    themeMode: Config.instance.branding.themeName
-      ? Config.instance.branding.themeName
-      : "system",
+    themeMode: getInitialThemeMode(),
   };
   return loadUserSettings(state);
+}
+
+function getInitialThemeMode() {
+  const themeName = Config.instance.branding.themeName;
+  if (themeName && ["light", "dark", "system"].includes(themeName)) {
+    return themeName;
+  }
+  return "system";
 }
 
 // We cannot keep "MAP_OBJECTS" in control state object, because these

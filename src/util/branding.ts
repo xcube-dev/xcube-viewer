@@ -46,6 +46,7 @@ import {
 } from "@mui/material/colors";
 import { ColorPartial } from "@mui/material/styles/createPalette";
 import { PaletteColorOptions } from "@mui/material/styles";
+import { PaletteMode } from "@mui/material";
 import baseUrl from "./baseurl";
 import { buildPath } from "./path";
 
@@ -79,7 +80,7 @@ export interface Branding {
   windowTitle: string;
   windowIcon: string | null;
   compact: boolean;
-  themeName: "light";
+  themeName?: PaletteMode | "system";
   primaryColor: PaletteColorOptions;
   secondaryColor: PaletteColorOptions;
   headerBackgroundColor?: string;
