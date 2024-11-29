@@ -40,7 +40,7 @@ import { styled } from "@mui/system";
 
 const styles = makeStyles({
   dialog: (theme) => ({
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200],
   }),
   appBar: {
     position: "relative",

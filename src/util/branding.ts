@@ -79,7 +79,7 @@ export interface Branding {
   windowTitle: string;
   windowIcon: string | null;
   compact: boolean;
-  themeName: "dark" | "light";
+  themeName: "light";
   primaryColor: PaletteColorOptions;
   secondaryColor: PaletteColorOptions;
   headerBackgroundColor?: string;

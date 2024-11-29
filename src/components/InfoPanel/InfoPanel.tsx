@@ -52,7 +52,6 @@ import { python } from "@codemirror/lang-python";
 import { Extension } from "@codemirror/state";
 
 import i18n from "@/i18n";
-import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { utcTimeToIsoDateTimeString } from "@/util/time";
 import { Dataset } from "@/model/dataset";
@@ -64,6 +63,7 @@ import { ApiServerConfig } from "@/model/apiServer";
 import { commonStyles } from "@/components/common-styles";
 import { makeStyles } from "@/util/styles";
 import { isUserVariable } from "@/model/userVariable";
+import { useTheme } from "@mui/material";
 
 type ViewMode = "text" | "list" | "code" | "python";
 const styles = makeStyles({
@@ -661,10 +661,11 @@ interface CodeContentProps extends CodeContentBaseProps {
 }
 
 const CodeContent: React.FC<CodeContentProps> = ({ code, extension }) => {
+  const themeMode = useTheme();
   return (
     <CardContent2>
       <CodeMirror
-        theme={Config.instance.branding.themeName || "light"}
+        theme={themeMode.palette.mode}
         height="320px"
         extensions={[extension]}
         value={code}

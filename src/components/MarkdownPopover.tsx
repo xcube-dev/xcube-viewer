@@ -25,6 +25,7 @@
 import Markdown from "react-markdown";
 import Popover from "@mui/material/Popover";
 import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material";
 
 interface MarkdownPopoverProps {
   anchorEl: HTMLElement | null;
@@ -39,11 +40,23 @@ export default function MarkdownPopover({
   open,
   onClose,
 }: MarkdownPopoverProps) {
+  const theme = useTheme();
   if (!markdownText) {
     return null;
   }
 
   const components = {
+    a: (props: Record<string, unknown>) => {
+      const { node: _, ...rest } = props;
+      return (
+        <a
+          {...rest}
+          style={{
+            color: theme.palette.mode === "dark" ? "#90caf9" : "#1e90ff",
+          }}
+        />
+      );
+    },
     code: (props: Record<string, unknown>) => {
       const { node: _, ...rest } = props;
       return <code {...rest} style={{ color: "green" }} />;

@@ -32,7 +32,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { SxProps } from "@mui/system";
-import { Theme } from "@mui/material";
+import { Theme, useTheme } from "@mui/material";
 
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
@@ -42,6 +42,8 @@ import {
   LocateMode,
   TimeSeriesChartType,
   TimeAnimationInterval,
+  APPLICATION_THEMES,
+  ApplicationThemes,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import {
@@ -120,6 +122,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
   );
+  const theme = useTheme();
 
   React.useEffect(() => {
     const newTimeChunkSize = parseInt(timeChunkSize);
@@ -238,6 +241,13 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     openDialog("userOverlays");
   };
 
+  function handleApplicationThemeChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      themeMode: event.target.value as ApplicationThemes,
+    });
+  }
   const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
   const overlayLabel = getLayerTitle(overlayLayer);
 
@@ -279,8 +289,25 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 ))}
               </TextField>
             </SettingsSubPanel>
+            <SettingsSubPanel
+              label={i18n.get("Change application theme")}
+            >
+              <TextField
+                variant="standard"
+                select
+                sx={styles.textField}
+                value={theme.palette.mode}
+                onChange={handleApplicationThemeChange}
+                margin="normal"
+              >
+                {APPLICATION_THEMES.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {i18n.get(label)}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </SettingsSubPanel>
           </SettingsPanel>
-
           <SettingsPanel title={i18n.get("Time-Series")}>
             <SettingsSubPanel
               label={i18n.get("Show chart after adding a place")}

@@ -29,6 +29,7 @@ import {
   CssBaseline,
   StyledEngineProvider,
   ThemeProvider,
+  useMediaQuery,
 } from "@mui/material";
 
 import { Config } from "@/config";
@@ -46,52 +47,64 @@ import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
 
+
 interface AppProps {
   compact: boolean;
+  themeMode: string;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (_state: AppState) => {
   return {
     compact: Config.instance.branding.compact,
+    themeMode: _state.controlState.themeMode,
   };
 };
 
 const mapDispatchToProps = {};
 
-const newTheme = () =>
-  createTheme({
-    typography: {
-      fontSize: 12,
-      htmlFontSize: 14,
-    },
-    palette: {
-      mode: Config.instance.branding.themeName,
-      primary: Config.instance.branding.primaryColor,
-      secondary: Config.instance.branding.secondaryColor,
-    },
-  });
+const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
+  const systemMode = useMediaQuery("(prefers-color-scheme: dark)") ? "dark" : "light";
 
-const _App: React.FC<AppProps> = ({ compact }) => {
+  // Validate and fallback for themeMode
+  const validatedThemeMode: "light" | "dark" | "system" =
+    themeMode === "light" || themeMode === "dark" || themeMode === "system"
+      ? themeMode
+      : "light"; // Default fallback
+
+  const theme = React.useMemo(() => {
+    const mode: "light" | "dark" = validatedThemeMode === "system" ? systemMode : validatedThemeMode;
+
+    return createTheme({
+      typography: {
+        fontSize: 12,
+        htmlFontSize: 14,
+      },
+      palette: {
+        mode,
+        primary: Config.instance.branding.primaryColor,
+        secondary: Config.instance.branding.secondaryColor,
+      },
+    });
+  }, [validatedThemeMode, systemMode]);
+
   return (
     <AuthWrapper>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={newTheme()}>
+        <ThemeProvider theme={theme}>
           <CssBaseline />
           {!compact && <AppBar />}
           <AppPane />
-          <>
-            <LoadingDialog />
-            <ServerDialog />
-            <SettingsDialog />
-            <UserLayersDialog key="userOverlays" dialogId="userOverlays" />
-            <UserLayersDialog key="userBaseMaps" dialogId="userBaseMaps" />
-            <UserVariablesDialog />
-            <UserPlacesDialog />
-            <ExportDialog />
-            <LegalAgreementDialog />
-            <MessageLog />
-          </>
+          <LoadingDialog />
+          <ServerDialog />
+          <SettingsDialog />
+          <UserLayersDialog key="userOverlays" dialogId="userOverlays" />
+          <UserLayersDialog key="userBaseMaps" dialogId="userBaseMaps" />
+          <UserVariablesDialog />
+          <UserPlacesDialog />
+          <ExportDialog />
+          <LegalAgreementDialog />
+          <MessageLog />
         </ThemeProvider>
       </StyledEngineProvider>
     </AuthWrapper>

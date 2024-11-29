@@ -38,6 +38,10 @@
 
 ## Changes in version 1.3.1
 
+### New Features 
+
+* Users can now change the application theme from light, dark or system mode from settings.
+  
 ### Fixes
 
 * The `<Time>` parameter is now no longer required to calculate the statistics 
