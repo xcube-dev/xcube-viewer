@@ -152,7 +152,131 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
----
+### Show/Hide Sidebar
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="../assets/images/sidebar_button.png" alt="Sidebar button" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Show/Hide Sidebar</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>Button, highlighted when feature is enabled</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Shows or hides the
+				<a href="#sidebar" rel="noopener noreferrer">Sidebar</a>.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Provides access to the
+				<a href="#sidebar" rel="noopener noreferrer">Sidebar</a>.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="../user_guide/getting_started/#sidebar"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Sidebar
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="../assets/images/sidebar_highlighted.png" alt="Sidebar" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Sidebar</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A resizable window located at the right edge of the screen, which slides
+				out when activated. At the top, a tab bar displays all available panels.
+			</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the sidebar by clicking the
+				<a href="#showhide-sidebar" rel="noopener noreferrer"
+					>corresponding button</a
+				>, then select the panel of interest. The available panels depend on the
+				specific deployment configuration. <br /><br />
+				<strong>Always Available Panels:</strong>
+				<ul>
+					<li>
+						<strong>Info:</strong> Shows metadata and contextual information
+						about datasets, variables, and places.
+					</li>
+					<li>
+						<strong>Time Series:</strong> Allows visualization of time series
+						data for selected variables and locations.
+					</li>
+					<li>
+						<strong>Statistics:</strong> Provides statistical insights for
+						datasets and places.
+					</li>
+				</ul>
+				<strong>Optional Panels:</strong>
+				<ul>
+					<li>
+						<strong>Volume:</strong> Visualizes 3D volumetric data (if enabled).
+					</li>
+					<li>
+						<strong>User-Defined Panels:</strong> A planned feature for future
+						versions of <em>xcube-viewer</em>, enabling user customization of
+						panels.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Provide an interactive space to explore, analyse, and visualise data
+				through (configurable) panels.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="../user_guide/getting_started/#sidebar"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 ### Show/Hide Layer Panel
 
@@ -360,6 +484,65 @@ A list of all the features that the viewer contains will be created here, in whi
 			</td>
 		</tr>
 	</tbody>
+</table>
+
+### Share Permalink
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/permalink_button.png"
+					alt="Permalink Button" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Sidebar</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button located in the header.</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Click the button to generate a permalink and copy it to the clipboard.
+				When using the feature, a pop-up window appears at the bottom of the
+				viewer, indicating whether the permalink was created successfully.
+				<br /><br /> 
+				This link can be shared with others to restore the current state of the
+    			viewer, including:
+    			<ul>
+    				<li>The selected map region, zoom level, and overlays.</li>
+    				<li>User-defined places, including the currently selected place.</li>
+    				<li>Opened panels, active tabs, and any selected options.</li>
+    				<li>
+    					Other UI-specific states such as selected items, filters, or toggle
+    					states.
+    				</li>
+    			</ul>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td><b>Aim</b></td>
+    		<td>To share the state of the viewer.</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2">
+    			Link to feature mentioned in
+    			<a
+    				href="../user_guide/getting_started/#share-state-of-viewer"
+    				rel="noopener noreferrer"
+    				>User Guide</a
+    			>.
+    		</td>
+    	</tr>
+    </tbody>
 </table>
 
 ## Compare Variables
@@ -717,8 +900,6 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 	</tbody>
 </table>
-
-## Show/Hide Sidebar
 
 ## Metadata
 
