@@ -38,6 +38,8 @@ User Base Maps and User Overlays can also be added here.
 
 ## Share State of Viewer
 
+![Permalink Button](../assets/images/permalink_button.png)
+
 Create a permalink to share a state of the Viewer. If this link can be shared with others depends on the deployment.
 A restored state holds:
 
