@@ -37,7 +37,7 @@ const ImprintPage = ({ open, onClose }: ImprintPageProps) => {
   return (
     <MarkdownPage
       title={i18n.get("Imprint")}
-      text={text}
+      text={text ?? ""}
       open={open}
       onClose={onClose}
     />
