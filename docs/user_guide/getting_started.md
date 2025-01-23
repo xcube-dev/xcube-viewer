@@ -36,6 +36,40 @@ User Base Maps and User Overlays can also be added here.
 
 ---
 
+## Share State of Viewer
+
+![Share permalink ](../assets/videos/share_link.gif)
+
+Create a permalink to share a state of the Viewer. If this link can be shared with others depends on the deployment.
+
+A restored state holds:
+
+- Selected map region, zoom level, and overlays.
+- User places including the selected place.
+- Opened panels, active tabs, and any selected options.
+- Other UI-specific states such as selected items, filters, or toggle states.
+
+---
+
+## Sidebar
+
+![Sidepanel](../assets/images/sidebar_highlighted.png)
+
+The sidebar provides access to various panels. The selection of available panels is configurable and may vary depending on the deployment. The feature can be shown or hidden using the button located in the top-right corner.
+
+**Always Available Panels**
+
+- **Info:** Displays [metadata](#metadata) and relevant information.
+- **Time Series:** Provides [time series](analyse.md/#time-series) visualizations.
+- **Statistics:** Offers [statistical](analyse.md/#statistics) insights.
+
+**Optional Panels**
+
+- **Volume:** Provides 3D visualization of cubes.
+- **User-Defined Panels:** This feature will be introduced in future versions of xcube-viewer.
+
+---
+
 ## Metadata
 
 ![Metadata](../assets/images/datamanagement_meta.png){ align=left }
