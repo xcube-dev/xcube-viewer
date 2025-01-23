@@ -557,9 +557,9 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
               size="small"
               sx={commonStyles.toggleButton}
             >
-            <Tooltip arrow title={i18n.get("Textual format")}>
-              <TextFieldsIcon />
-            </Tooltip>
+              <Tooltip arrow title={i18n.get("Textual format")}>
+                <TextFieldsIcon />
+              </Tooltip>
             </ToggleButton>
             <ToggleButton
               key={1}
@@ -567,9 +567,9 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
               size="small"
               sx={commonStyles.toggleButton}
             >
-            <Tooltip arrow title={i18n.get("Tabular format")}>
-              <ListAltIcon />
-            </Tooltip>
+              <Tooltip arrow title={i18n.get("Tabular format")}>
+                <ListAltIcon />
+              </Tooltip>
             </ToggleButton>
             <ToggleButton
               key={2}
@@ -577,9 +577,9 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
               size="small"
               sx={commonStyles.toggleButton}
             >
-            <Tooltip arrow title={i18n.get("JSON format")}>
-              <JsonIcon />
-            </Tooltip>
+              <Tooltip arrow title={i18n.get("JSON format")}>
+                <JsonIcon />
+              </Tooltip>
             </ToggleButton>
             {hasPython && (
               <ToggleButton

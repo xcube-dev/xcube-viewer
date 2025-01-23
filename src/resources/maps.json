@@ -16,8 +16,7 @@
         "endpoint": "https://a.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png"
       }
     ],
-    "overlays": [
-    ]
+    "overlays": []
   },
   {
     "name": "ESRI",
@@ -153,8 +152,7 @@
         "endpoint": "https://tile.stamen.com/watercolor/{z}/{x}/{y}.png"
       }
     ],
-    "overlays": [
-    ]
+    "overlays": []
   },
   {
     "name": "Mapbox",
@@ -201,7 +199,6 @@
         "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-blue/{z}/{x}/{y}.png"
       }
     ],
-    "overlays": [
-    ]
+    "overlays": []
   }
 ]

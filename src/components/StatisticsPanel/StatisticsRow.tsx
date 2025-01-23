@@ -83,7 +83,9 @@ export default function StatisticsRow({
   ) : (
     <Missing phrase="Variable" />
   );
-  const isTimeDimensionAvailable = dataset?.dimensions.some((data: { name: string; }) => data.name == "time")
+  const isTimeDimensionAvailable = dataset?.dimensions.some(
+    (data: { name: string }) => data.name == "time",
+  );
   const timeLabel = time ? (
     isoDateTimeStringToLabel(time)
   ) : isTimeDimensionAvailable ? (
@@ -95,7 +97,7 @@ export default function StatisticsRow({
       <Box sx={styles.header}>
         <Typography fontSize="small">
           {datasetLabel} / {variableLabel}
-          {timeLabel &&`, ${timeLabel}`}, {placeLabel}
+          {timeLabel && `, ${timeLabel}`}, {placeLabel}
         </Typography>
         <Box sx={styles.actions}>{actions}</Box>
       </Box>
