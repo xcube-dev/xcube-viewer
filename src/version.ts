@@ -23,6 +23,6 @@
  */
 
 // Important: use semantic versioning (https://semver.org/)
-const version = "1.4.0-dev.1";
+const version = "1.4.0";
 
 export default version;
