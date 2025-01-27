@@ -50,7 +50,7 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     selector: selectedPlaceGeometrySelector,
   },
   selectedPlaceId: {
-    type: "dict[str, Any] | None",
+    type: "str | None",
     description:
       "The identifier of the currently selected place.",
     selector: selectedPlaceIdSelector,
@@ -58,7 +58,7 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
   selectedPlaceGroup: {
     type: "dict[str, Any] | None",
     description:
-      "The identifier of the currently selected place.",
+      "The list of dataset place group and user place groups.",
     selector: selectedDatasetAndUserPlaceGroupsSelector,
   },
   selectedTimeLabel: {
