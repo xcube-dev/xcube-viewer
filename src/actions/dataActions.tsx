@@ -93,7 +93,6 @@ import {
   SetSidebarPanelId,
   setSidebarPanelId,
 } from "./controlActions";
-import baseUrl from "@/util/baseurl";
 import { newPersistentAppState, PersistedState } from "@/states/persistedState";
 import { applyPersistentState } from "@/actions/otherActions";
 
