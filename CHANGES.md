@@ -1,3 +1,7 @@
+## Changes in version 1.4.1 (in development)
+
+* Fixed issue with the new Share-Feature. (#460)
+
 ## Changes in version 1.4.0
 
 ### New Features
