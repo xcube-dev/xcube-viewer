@@ -66,7 +66,7 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     appName: Config.instance.branding.appBarTitle,
     allowRefresh: Config.instance.branding.allowRefresh,
-    allowSharing: Config.instance.branding.allowRefresh,
+    allowSharing: Config.instance.branding.allowSharing,
   };
 };
 
