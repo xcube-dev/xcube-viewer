@@ -45,7 +45,9 @@ const styles = makeStyles({
     borderWidth: "1px",
     borderStyle: "solid",
     borderColor: "#00000020",
-    backgroundColor: "#FFFFFFAA",
+    backgroundColor: "#FFFFFFD0",
+    boxShadow:
+      "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
     color: "black",
     maxWidth: `${COLOR_BAR_ITEM_WIDTH + 20}px`,
     paddingLeft: theme.spacing(1.5),
@@ -53,19 +55,30 @@ const styles = makeStyles({
     paddingBottom: theme.spacing(0.5),
     paddingTop: theme.spacing(0.5),
   }),
-  title: (theme) => ({
-    fontSize: "small",
-    fontWeight: "bold",
+  header: {
     width: "100%",
     display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    paddingBottom: 0.5,
+  },
+  title: {
+    fontSize: "0.8em",
+    fontWeight: "normal",
     wordBreak: "break-word",
     wordWrap: "break-word",
-    justifyContent: "center",
-    paddingBottom: theme.spacing(0.5),
-  }),
+  },
+  subTitle: {
+    color: "dimgray",
+    fontSize: "0.7em",
+    fontWeight: "lighter",
+    wordBreak: "break-word",
+    wordWrap: "break-word",
+  },
 });
 
 interface ColorBarLegendProps {
+  datasetTitle: string | null;
   variableName: string | null;
   variableTitle: string | null;
   variableUnits: string;
@@ -95,6 +108,7 @@ export default function ColorBarLegend(
   props: Omit<ColorBarLegendProps, "onOpenColorBarEditor">,
 ) {
   const {
+    datasetTitle,
     variableName,
     variableTitle,
     variableUnits,
@@ -125,7 +139,12 @@ export default function ColorBarLegend(
 
   return (
     <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
-      <Typography sx={styles.title}>{variableTitleWithUnits}</Typography>
+      <Box sx={styles.header}>
+        <Typography sx={styles.title}>{variableTitleWithUnits}</Typography>
+        {datasetTitle && (
+          <Typography sx={styles.subTitle}>{datasetTitle}</Typography>
+        )}
+      </Box>
       {variableColorBar.type === "categorical" ? (
         <ColorBarLegendCategorical
           categories={variableColorBar.colorRecords}
