@@ -36,6 +36,7 @@ import {
   selectedVariableColorBarSelector,
   colorBarsSelector,
   userColorBarsSelector,
+  selectedDatasetTitleSelector,
 } from "@/selectors/controlSelectors";
 import { updateVariableColorBar } from "@/actions/dataActions";
 import {
@@ -49,6 +50,7 @@ import _ColorBarLegend from "@/components/ColorBarLegend";
 
 const mapStateToProps = (state: AppState) => {
   return {
+    datasetTitle: selectedDatasetTitleSelector(state),
     variableName: selectedVariableNameSelector(state),
     variableTitle: selectedVariableTitleSelector(state),
     variableUnits: selectedVariableUnitsSelector(state),

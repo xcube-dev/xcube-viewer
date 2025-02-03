@@ -26,15 +26,16 @@ import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
 import {
+  colorBarsSelector,
+  selectedDatasetTitle2Selector,
+  selectedVariable2ColorBarMinMaxSelector,
+  selectedVariable2ColorBarNameSelector,
+  selectedVariable2ColorBarNormSelector,
+  selectedVariable2ColorBarSelector,
   selectedVariable2NameSelector,
+  selectedVariable2OpacitySelector,
   selectedVariable2TitleSelector,
   selectedVariable2UnitsSelector,
-  selectedVariable2ColorBarNameSelector,
-  selectedVariable2ColorBarMinMaxSelector,
-  selectedVariable2ColorBarNormSelector,
-  selectedVariable2OpacitySelector,
-  selectedVariable2ColorBarSelector,
-  colorBarsSelector,
   userColorBarsSelector,
 } from "@/selectors/controlSelectors";
 import { updateVariable2ColorBar } from "@/actions/dataActions";
@@ -50,6 +51,7 @@ import _ColorBarLegend from "@/components/ColorBarLegend";
 const mapStateToProps = (state: AppState) => {
   const splitPos = state.controlState.variableSplitPos;
   return {
+    datasetTitle: selectedDatasetTitle2Selector(state),
     variableName: splitPos ? selectedVariable2NameSelector(state) : null,
     variableTitle: selectedVariable2TitleSelector(state),
     variableUnits: selectedVariable2UnitsSelector(state),
