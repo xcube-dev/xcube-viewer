@@ -37,13 +37,19 @@ export function isJsonPrimitive(value: unknown): value is JsonPrimitive {
   return value === null || primitiveTypes.has(typeof value);
 }
 
-export function isJsonArray(value: unknown): value is JsonValue {
-  return Array.isArray(value) && value.every((v) => isJsonValue(v));
+export function isJsonArray(value: unknown): value is JsonArray {
+  return (
+    Array.isArray(value) &&
+    value.every((v) => v === undefined || isJsonValue(v))
+  );
 }
 
 export function isJsonObject(value: unknown): value is JsonObject {
   return (
-    isRecord(value) && Object.keys(value).every((k) => isJsonValue(value[k]))
+    isRecord(value) &&
+    Object.getOwnPropertyNames(value).every(
+      (k) => value[k] === undefined || isJsonValue(value[k]),
+    )
   );
 }
 
