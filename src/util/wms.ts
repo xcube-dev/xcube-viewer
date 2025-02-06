@@ -24,6 +24,7 @@
 
 import WMSCapabilities from "ol/format/WMSCapabilities";
 import { HTTPError } from "@/api";
+import { isJsonObject, type JsonObject } from "./json";
 
 const parser = new WMSCapabilities();
 
@@ -32,8 +33,6 @@ export interface WmsLayerDefinition {
   title: string;
   attribution?: string;
 }
-
-type JsonObject = Record<string, unknown>;
 
 export async function fetchWmsLayers(
   url: string,
@@ -143,8 +142,4 @@ function mergeLayerObjects(
       : childTitle || parentTitle;
 
   return { ...parentLayer, ...childLayer, Title: title };
-}
-
-function isJsonObject(value: unknown): value is JsonObject {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

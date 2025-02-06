@@ -23,12 +23,12 @@
  */
 
 import { assertArrayNotEmpty, assertDefinedAndNotNull } from "@/util/assert";
-import { PlaceGroup } from "./place";
-import { TimeRange } from "./timeSeries";
-import { Variable } from "./variable";
 import { isString } from "@/util/types";
-import { UserVariable } from "@/model/userVariable";
-import { ReactNode } from "react";
+import { type UserVariable } from "@/model/userVariable";
+import { type JsonPrimitive } from "@/util/json";
+import { type PlaceGroup } from "./place";
+import { type TimeRange } from "./timeSeries";
+import { type Variable } from "./variable";
 
 export interface Dimension {
   name: string;
@@ -75,7 +75,7 @@ export interface Dataset {
   variables: Variable[];
   placeGroups?: PlaceGroup[];
   attributions?: string[];
-  attrs: Record<string, ReactNode>;
+  attrs: Record<string, JsonPrimitive | JsonPrimitive[]>;
   rgbSchema?: RgbSchema;
 }
 

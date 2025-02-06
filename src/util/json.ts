@@ -22,32 +22,37 @@
  * SOFTWARE.
  */
 
-import { type VolumeRenderMode } from "@/states/controlState";
-import { type JsonPrimitive } from "@/util/json";
+export type JsonPrimitive = null | boolean | number | string;
+export type JsonArray = JsonValue[];
+export type JsonObject = { [key: string]: JsonValue };
+export type JsonValue = JsonPrimitive | JsonArray | JsonObject;
 
-export type ColorBarNorm = "lin" | "log";
+const primitiveTypes = new Set(["boolean", "number", "string"]);
 
-export interface Variable {
-  id: string;
-  name: string;
-  dims: string[];
-  shape: number[];
-  dtype: string;
-  units: string;
-  title: string;
-  expression?: string; // user-defined variables only
-  timeChunkSize: number | null;
-  // The following are new since xcube 0.11
-  tileLevelMin?: number;
-  tileLevelMax?: number;
-  // colorBarName may be prefixed by "_alpha" and/or "_r" (reversed)
-  colorBarName: string;
-  colorBarMin: number;
-  colorBarMax: number;
-  colorBarNorm?: ColorBarNorm;
-  opacity?: number;
-  volumeRenderMode?: VolumeRenderMode;
-  volumeIsoThreshold?: number;
-  htmlRepr?: string;
-  attrs: Record<string, JsonPrimitive | JsonPrimitive[]>;
+export function isJsonValue(value: unknown): value is JsonValue {
+  return isJsonPrimitive(value) || isJsonArray(value) || isJsonObject(value);
+}
+
+export function isJsonPrimitive(value: unknown): value is JsonPrimitive {
+  return value === null || primitiveTypes.has(typeof value);
+}
+
+export function isJsonArray(value: unknown): value is JsonArray {
+  return (
+    Array.isArray(value) &&
+    value.every((v) => v === undefined || isJsonValue(v))
+  );
+}
+
+export function isJsonObject(value: unknown): value is JsonObject {
+  return (
+    isRecord(value) &&
+    Object.getOwnPropertyNames(value).every(
+      (k) => value[k] === undefined || isJsonValue(value[k]),
+    )
+  );
+}
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
