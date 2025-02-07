@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { ReactNode } from "react";
 import Paper from "@mui/material/Paper";
 
 import i18n from "@/i18n";
@@ -39,6 +39,7 @@ import PythonCodeContent from "./common/PythonCodeContent";
 import InfoCardContent from "./common/InfoCardContent";
 
 import { makeStyles } from "@/util/styles";
+import Markdown from "@/components/Markdown";
 
 const styles = makeStyles({
   variableHtmlReprContainer: (theme) => ({
@@ -68,8 +69,9 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   serverConfig,
   hasPython,
 }) => {
-  let content;
-  let htmlReprPaper;
+  let content: ReactNode = undefined;
+  let descriptionPaper: ReactNode = undefined;
+  let htmlReprPaper: ReactNode = undefined;
   if (viewMode === "code") {
     const jsonVariable = selectObj(variable, [
       "id",
@@ -136,6 +138,16 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
         <KeyValueTable data={data} />
       </CardContent2>
     );
+    const descriptionText: unknown =
+      variable.description ||
+      variable.attrs["description"] ||
+      variable.attrs["abstract"] ||
+      variable.attrs["comment"];
+    descriptionPaper = typeof descriptionText === "string" && (
+      <CardContent2>
+        <Markdown text={descriptionText} />
+      </CardContent2>
+    );
   } else if (viewMode === "python") {
     content = (
       <PythonCodeContent
@@ -152,6 +164,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       setViewMode={setViewMode}
       hasPython={hasPython}
     >
+      {descriptionPaper}
       {htmlReprPaper}
       {content}
     </InfoCardContent>

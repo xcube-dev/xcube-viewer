@@ -35,6 +35,7 @@ export interface Variable {
   dtype: string;
   units: string;
   title: string;
+  description?: string;
   expression?: string; // user-defined variables only
   timeChunkSize: number | null;
   // The following are new since xcube 0.11

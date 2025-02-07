@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 import i18n from "@/i18n";
 import { type Dataset } from "@/model/dataset";
@@ -35,6 +35,8 @@ import PythonCodeContent from "./common/PythonCodeContent";
 import { getDatasetPythonCode, selectObj } from "./common/utils";
 import JsonCodeContent from "./common/JsonCodeContent";
 import InfoCardContent from "./common/InfoCardContent";
+import { getLabelForValue } from "@/util/label";
+import Markdown from "@/components/Markdown";
 
 interface DatasetInfoContentProps {
   isIn: boolean;
@@ -54,7 +56,8 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
   hasPython,
 }) => {
   // const classes = useStyles();
-  let content;
+  let content: ReactNode = undefined;
+  let descriptionPaper: ReactNode = undefined;
   if (viewMode === "code") {
     const jsonDimensions = dataset.dimensions.map((dim) =>
       selectObj(dim, ["name", "size", "dtype"]),
@@ -89,13 +92,23 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
       ],
       [
         i18n.get("Geographical extent") + " (x1, y1, x2, y2)",
-        dataset.bbox.map((x) => x + "").join(", "),
+        dataset.bbox.map((x) => getLabelForValue(x, 3)).join(", "),
       ],
       [i18n.get("Spatial reference system"), dataset.spatialRef],
     ];
     content = (
       <CardContent2>
         <KeyValueTable data={data} />
+      </CardContent2>
+    );
+    const descriptionText: unknown =
+      dataset.description ||
+      dataset.attrs["description"] ||
+      dataset.attrs["abstract"] ||
+      dataset.attrs["comment"];
+    descriptionPaper = typeof descriptionText === "string" && (
+      <CardContent2>
+        <Markdown text={descriptionText} />
       </CardContent2>
     );
   } else if (viewMode === "python") {
@@ -112,6 +125,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
       setViewMode={setViewMode}
       hasPython={hasPython}
     >
+      {descriptionPaper}
       {content}
     </InfoCardContent>
   );

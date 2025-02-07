@@ -63,6 +63,7 @@ export interface RgbSchema {
 export interface Dataset {
   id: string;
   title: string;
+  description?: string;
   groupTitle?: string;
   tags?: string[];
   bbox: [number, number, number, number];
