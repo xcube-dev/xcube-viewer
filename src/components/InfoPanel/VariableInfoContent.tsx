@@ -154,7 +154,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   return (
     <InfoCardContent
       title={variable.title || `<${i18n.get("No Title")}>`}
-      subheader={`${i18n.get("Variable name")}: ${variable.name}`}
+      subheader={`${i18n.get("Variable Name")}: ${variable.name}`}
       isIn={isIn}
       viewMode={viewMode}
       setViewMode={setViewMode}
