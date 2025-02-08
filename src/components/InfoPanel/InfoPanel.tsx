@@ -23,7 +23,6 @@
  */
 
 import React from "react";
-import Card from "@mui/material/Card";
 
 import { WithLocale } from "@/util/lang";
 import { Dataset } from "@/model/dataset";
@@ -31,7 +30,6 @@ import { PlaceInfo } from "@/model/place";
 import { Time } from "@/model/timeSeries";
 import { Variable } from "@/model/variable";
 import { ApiServerConfig } from "@/model/apiServer";
-import { commonSx } from "./common/styles";
 import { ViewMode } from "./common/types";
 import DatasetInfoContent from "./DatasetInfoContent";
 import VariableInfoContent from "./VariableInfoContent";
@@ -101,7 +99,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
     updateInfoCardElementViewMode("dataset", viewMode);
 
   return (
-    <Card sx={commonSx.card}>
+    <div>
       <DatasetInfoContent
         expanded={visibleInfoCardElements.includes("dataset")}
         onExpandedStateChange={setDatasetInfoExpandedState}
@@ -128,7 +126,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
         setViewMode={setPlaceInfoViewMode}
         placeInfo={selectedPlaceInfo}
       />
-    </Card>
+    </div>
   );
 };
 
