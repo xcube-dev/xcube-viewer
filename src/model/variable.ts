@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import { VolumeRenderMode } from "@/states/controlState";
-import React from "react";
+import { type VolumeRenderMode } from "@/states/controlState";
+import { type JsonPrimitive } from "@/util/json";
 
 export type ColorBarNorm = "lin" | "log";
 
@@ -50,5 +50,5 @@ export interface Variable {
   volumeRenderMode?: VolumeRenderMode;
   volumeIsoThreshold?: number;
   htmlRepr?: string;
-  attrs: Record<string, React.ReactNode>;
+  attrs: Record<string, JsonPrimitive | JsonPrimitive[]>;
 }

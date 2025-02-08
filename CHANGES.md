@@ -1,3 +1,12 @@
+## Changes in version 1.4.2 (in development)
+
+* Now displaying dataset titles in the map legend. (#419) 
+
+## Changes in version 1.4.1 
+
+* Fixed issues with the Share feature introduced in
+  version 1.4.0. (#460) (#462)
+
 ## Changes in version 1.4.0
 
 ### New Features

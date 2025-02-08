@@ -93,7 +93,6 @@ import {
   SetSidebarPanelId,
   setSidebarPanelId,
 } from "./controlActions";
-import baseUrl from "@/util/baseurl";
 import { newPersistentAppState, PersistedState } from "@/states/persistedState";
 import { applyPersistentState } from "@/actions/otherActions";
 
@@ -157,8 +156,10 @@ export function shareStatePermalink() {
       )
       .then((stateKey) => {
         if (stateKey) {
-          const viewerUrl = `${baseUrl.origin}?stateKey=${stateKey}`;
-          navigator.clipboard.writeText(viewerUrl).then(() => {
+          const location = window.location;
+          const viewerUrl = location.origin + location.pathname;
+          const stateUrl = `${viewerUrl}?stateKey=${stateKey}`;
+          navigator.clipboard.writeText(stateUrl).then(() => {
             dispatch(
               postMessage("success", i18n.get("Permalink copied to clipboard")),
             );

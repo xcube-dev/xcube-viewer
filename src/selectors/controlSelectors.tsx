@@ -200,6 +200,19 @@ export const selectedDataset2Selector = createSelector(
   findDataset,
 );
 
+export const getDatasetTitle = (dataset: Dataset | null) =>
+  dataset && (dataset.title || dataset.id) ? dataset.title : null;
+
+export const selectedDatasetTitleSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetTitle,
+);
+
+export const selectedDatasetTitle2Selector = createSelector(
+  selectedDataset2Selector,
+  getDatasetTitle,
+);
+
 export const selectedVariablesSelector = createSelector(
   selectedDatasetSelector,
   (dataset: Dataset | null): Variable[] => {
