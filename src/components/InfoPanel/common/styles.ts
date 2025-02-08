@@ -30,6 +30,12 @@ export const commonSx: Record<string, CSSProperties> = {
     marginBottom: 1,
     marginRight: 1,
   },
+  cardHeader: {
+    padding: "8px",
+  },
+  cardContent: {
+    padding: "4px 8px 4px 8px",
+  },
   info: {
     marginRight: 1,
   },
@@ -39,9 +45,6 @@ export const commonSx: Record<string, CSSProperties> = {
   table: {},
   media: {
     height: 200,
-  },
-  cardContent: {
-    padding: "8px",
   },
   code: {
     fontFamily: "Monospace",

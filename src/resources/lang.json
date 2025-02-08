@@ -366,6 +366,21 @@
       "se": "Rumsligt referenssystem"
     },
     {
+      "en": "No Title",
+      "de": "Kein Titel",
+      "se": "Ingen Titel"
+    },
+    {
+      "en": "Dataset ID",
+      "de": "Datensatz ID",
+      "se": "Dataset ID"
+    },
+    {
+      "en": "Variable Name",
+      "de": "Variablen-Name",
+      "se": "Variabel Namn"
+    },
+    {
       "en": "Name",
       "de": "Name",
       "se": "Namn"

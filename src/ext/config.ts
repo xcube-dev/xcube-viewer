@@ -22,50 +22,5 @@
  * SOFTWARE.
  */
 
-import { useMemo } from "react";
-import { useTheme } from "@mui/material";
-import OriginalMarkdown from "react-markdown";
-
-interface MarkdownProps {
-  text?: string;
-}
-
-export default function Markdown({ text }: MarkdownProps) {
-  const theme = useTheme();
-  const components = useMemo(
-    () => ({
-      p: (props: Record<string, unknown>) => {
-        const { node: _, ...rest } = props;
-        return <p {...rest} style={{ padding: 0, margin: 0 }} />;
-      },
-      a: (props: Record<string, unknown>) => {
-        const { node: _, ...rest } = props;
-        return (
-          <a
-            {...rest}
-            style={{
-              color: theme.palette.mode === "dark" ? "#90caf9" : "#1e90ff",
-            }}
-          />
-        );
-      },
-      code: (props: Record<string, unknown>) => {
-        const { node: _, ...rest } = props;
-        return <code {...rest} style={{ color: "grey" }} />;
-      },
-    }),
-    [theme],
-  );
-
-  if (!text) {
-    return null;
-  }
-
-  return (
-    <OriginalMarkdown
-      children={text}
-      components={components}
-      linkTarget="_blank"
-    />
-  );
-}
+// export const loggingEnabled = import.meta.env.DEV;
+export const loggingEnabled = false;

@@ -43,6 +43,7 @@ const styles = makeStyles({
       theme.palette.mode === "dark"
         ? theme.palette.grey[800]
         : theme.palette.grey[200],
+    padding: 2,
   }),
   appBar: {
     position: "relative",

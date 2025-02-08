@@ -35,7 +35,8 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import i18n from "@/i18n";
 import pythonLogo from "@/resources/python-bw.png";
 import { commonStyles } from "@/components/common-styles";
-import { ViewMode } from "@/components/InfoPanel/common/types";
+import { commonSx } from "./styles";
+import { ViewMode } from "./types";
 
 interface InfoCardContentProps {
   isIn: boolean;
@@ -68,7 +69,9 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
       <CardHeader
         title={title}
         subheader={subheader}
+        sx={commonSx.cardHeader}
         titleTypographyProps={{ fontSize: "1.1em" }}
+        subheaderTypographyProps={{ fontSize: "0.8em" }}
         action={
           <ToggleButtonGroup
             key={0}

@@ -45,8 +45,6 @@ const styles = makeStyles({
   variableHtmlReprContainer: (theme) => ({
     background: theme.palette.divider,
     padding: 1,
-    marginTop: 1,
-    marginBottom: 1,
   }),
 });
 
@@ -70,7 +68,7 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   hasPython,
 }) => {
   let content: ReactNode = undefined;
-  let descriptionPaper: ReactNode = undefined;
+  let descriptionMarkdown: ReactNode = undefined;
   let htmlReprPaper: ReactNode = undefined;
   if (viewMode === "code") {
     const jsonVariable = selectObj(variable, [
@@ -100,6 +98,18 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
         />
       </CardContent2>
     );
+  } else if (viewMode === "text") {
+    const descriptionText =
+      variable.description ||
+      variable.attrs["description"] ||
+      variable.attrs["abstract"] ||
+      variable.attrs["comment"];
+    descriptionMarkdown = typeof descriptionText === "string" && (
+      <CardContent2>
+        <Markdown text={descriptionText} />
+      </CardContent2>
+    );
+
     if (variable.htmlRepr) {
       const handleRef = (element: HTMLDivElement | null) => {
         if (element && variable.htmlRepr) {
@@ -112,12 +122,8 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
         </CardContent2>
       );
     }
-  } else if (viewMode === "text") {
-    let data: KeyValue[] = [
-      [i18n.get("Name"), variable.name],
-      [i18n.get("Title"), variable.title],
-      [i18n.get("Units"), variable.units],
-    ];
+
+    let data: KeyValue[] = [[i18n.get("Units"), variable.units]];
     if (isUserVariable(variable)) {
       data.push([i18n.get("Expression"), variable.expression]);
     } else {
@@ -138,16 +144,6 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
         <KeyValueTable data={data} />
       </CardContent2>
     );
-    const descriptionText: unknown =
-      variable.description ||
-      variable.attrs["description"] ||
-      variable.attrs["abstract"] ||
-      variable.attrs["comment"];
-    descriptionPaper = typeof descriptionText === "string" && (
-      <CardContent2>
-        <Markdown text={descriptionText} />
-      </CardContent2>
-    );
   } else if (viewMode === "python") {
     content = (
       <PythonCodeContent
@@ -157,16 +153,16 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   }
   return (
     <InfoCardContent
-      title={variable.title || variable.name}
-      subheader={`${i18n.get("Name")}: ${variable.name}`}
+      title={variable.title || `<${i18n.get("No Title")}>`}
+      subheader={`${i18n.get("Variable name")}: ${variable.name}`}
       isIn={isIn}
       viewMode={viewMode}
       setViewMode={setViewMode}
       hasPython={hasPython}
     >
-      {descriptionPaper}
-      {htmlReprPaper}
+      {descriptionMarkdown}
       {content}
+      {htmlReprPaper}
     </InfoCardContent>
   );
 };

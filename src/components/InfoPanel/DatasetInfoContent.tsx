@@ -25,18 +25,18 @@
 import React, { ReactNode } from "react";
 
 import i18n from "@/i18n";
+import Markdown from "@/components/Markdown";
 import { type Dataset } from "@/model/dataset";
 import { type ApiServerConfig } from "@/model/apiServer";
+import { getLabelForValue } from "@/util/label";
 import { type ViewMode } from "./common/types";
 import { type KeyValue } from "./common/KeyValueTable";
 import KeyValueTable from "./common/KeyValueTable";
-import CardContent2 from "./common/CardContent2";
 import PythonCodeContent from "./common/PythonCodeContent";
 import { getDatasetPythonCode, selectObj } from "./common/utils";
 import JsonCodeContent from "./common/JsonCodeContent";
 import InfoCardContent from "./common/InfoCardContent";
-import { getLabelForValue } from "@/util/label";
-import Markdown from "@/components/Markdown";
+import CardContent2 from "./common/CardContent2";
 
 interface DatasetInfoContentProps {
   isIn: boolean;
@@ -57,7 +57,7 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
 }) => {
   // const classes = useStyles();
   let content: ReactNode = undefined;
-  let descriptionPaper: ReactNode = undefined;
+  let descriptionMarkdown: ReactNode = undefined;
   if (viewMode === "code") {
     const jsonDimensions = dataset.dimensions.map((dim) =>
       selectObj(dim, ["name", "size", "dtype"]),
@@ -77,18 +77,29 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
       </CardContent2>
     );
   } else if (viewMode === "text") {
+    const descriptionText: unknown =
+      dataset.description ||
+      dataset.attrs["description"] ||
+      dataset.attrs["abstract"] ||
+      dataset.attrs["comment"];
+    descriptionMarkdown = typeof descriptionText === "string" && (
+      <CardContent2>
+        <Markdown text={descriptionText} />
+      </CardContent2>
+    );
+
     const data: KeyValue[] = [
       [
         i18n.get("Dimension names"),
         dataset.dimensions.map((d) => d.name).join(", "),
       ],
       [
-        i18n.get("Dimension data types"),
-        dataset.dimensions.map((d) => d.dtype).join(", "),
-      ],
-      [
         i18n.get("Dimension lengths"),
         dataset.dimensions.map((d) => d.size).join(", "),
+      ],
+      [
+        i18n.get("Dimension data types"),
+        dataset.dimensions.map((d) => d.dtype).join(", "),
       ],
       [
         i18n.get("Geographical extent") + " (x1, y1, x2, y2)",
@@ -101,16 +112,6 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
         <KeyValueTable data={data} />
       </CardContent2>
     );
-    const descriptionText: unknown =
-      dataset.description ||
-      dataset.attrs["description"] ||
-      dataset.attrs["abstract"] ||
-      dataset.attrs["comment"];
-    descriptionPaper = typeof descriptionText === "string" && (
-      <CardContent2>
-        <Markdown text={descriptionText} />
-      </CardContent2>
-    );
   } else if (viewMode === "python") {
     content = (
       <PythonCodeContent code={getDatasetPythonCode(serverConfig, dataset)} />
@@ -118,14 +119,14 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
   }
   return (
     <InfoCardContent
-      title={dataset.title || "?"}
-      subheader={dataset.title && `ID: ${dataset.id}`}
+      title={dataset.title || `<${i18n.get("No Title")}>`}
+      subheader={`${i18n.get("Dataset ID")}: ${dataset.id}`}
       isIn={isIn}
       viewMode={viewMode}
       setViewMode={setViewMode}
       hasPython={hasPython}
     >
-      {descriptionPaper}
+      {descriptionMarkdown}
       {content}
     </InfoCardContent>
   );
