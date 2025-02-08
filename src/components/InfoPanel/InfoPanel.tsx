@@ -23,6 +23,7 @@
  */
 
 import React from "react";
+import Box from "@mui/material/Box";
 
 import { WithLocale } from "@/util/lang";
 import { Dataset } from "@/model/dataset";
@@ -34,6 +35,7 @@ import { ViewMode } from "./common/types";
 import DatasetInfoContent from "./DatasetInfoContent";
 import VariableInfoContent from "./VariableInfoContent";
 import PlaceInfoContent from "./PlaceInfoContent";
+import { commonSx } from "@/components/InfoPanel/common/styles";
 
 interface InfoPanelProps extends WithLocale {
   visibleInfoCardElements: string[];
@@ -77,12 +79,6 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
     setVisibleInfoCardElements([...elementTypeSet]);
   };
 
-  console.log("visibleInfoCardElements:", visibleInfoCardElements);
-  console.log("infoCardElementViewModes:", infoCardElementViewModes);
-  console.log("selectedDataset:", selectedDataset);
-  console.log("selectedVariable:", selectedVariable);
-  console.log("selectedPlaceInfo:", selectedPlaceInfo);
-
   const setPlaceInfoExpandedState = (expanded: boolean) =>
     _setVisibleElementType("place", expanded);
   const setPlaceInfoViewMode = (viewMode: ViewMode) =>
@@ -99,7 +95,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
     updateInfoCardElementViewMode("dataset", viewMode);
 
   return (
-    <div>
+    <Box sx={commonSx.card}>
       <DatasetInfoContent
         expanded={visibleInfoCardElements.includes("dataset")}
         onExpandedStateChange={setDatasetInfoExpandedState}
@@ -126,7 +122,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
         setViewMode={setPlaceInfoViewMode}
         placeInfo={selectedPlaceInfo}
       />
-    </div>
+    </Box>
   );
 };
 

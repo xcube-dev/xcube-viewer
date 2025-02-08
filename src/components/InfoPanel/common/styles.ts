@@ -25,6 +25,10 @@
 import { CSSProperties } from "react";
 
 export const commonSx: Record<string, CSSProperties> = {
+  card: {
+    maxWidth: "100%",
+    marginRight: 1,
+  },
   cardHeader: {
     padding: 0,
   },
