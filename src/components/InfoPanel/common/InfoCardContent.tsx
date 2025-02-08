@@ -23,15 +23,14 @@
  */
 
 import React from "react";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import CardHeader from "@mui/material/CardHeader";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-import { commonStyles } from "@/components/common-styles";
 import { commonSx } from "./styles";
 import { ViewMode } from "./types";
 import InfoCardActions from "./InfoCardActions";
@@ -41,7 +40,7 @@ interface InfoCardContentProps {
   onExpandedStateChange: (expanded: boolean) => void;
   title: React.ReactNode;
   subheader?: React.ReactNode;
-  icon?: React.ReactNode;
+  icon: React.ReactElement;
   tooltipText: string;
   viewMode: ViewMode;
   setViewMode: (viewMode: ViewMode) => void;
@@ -62,44 +61,41 @@ const InfoCardContent: React.FC<InfoCardContentProps> = ({
   children,
 }) => {
   return (
-    <Box>
-      <CardHeader
-        title={
-          <Tooltip arrow title={tooltipText}>
+    <Accordion
+      expanded={expanded}
+      onChange={(_, expanded) => onExpandedStateChange(expanded)}
+    >
+      <AccordionSummary expandIcon={<ExpandMore />} sx={{ padding: "0 8px" }}>
+        <CardHeader
+          title={
             <Box sx={{ display: "flex", gap: 1 }}>
-              {icon}
+              <Tooltip title={tooltipText}>{icon}</Tooltip>
               {title}
             </Box>
-          </Tooltip>
-        }
-        subheader={subheader}
-        sx={commonSx.cardHeader}
-        titleTypographyProps={{ fontSize: "1.1em" }}
-        subheaderTypographyProps={{ fontSize: "0.8em" }}
-        action={
-          <Box sx={{ display: "flex", gap: 0.3 }}>
-            {expanded && (
-              <InfoCardActions
-                viewMode={viewMode}
-                setViewMode={setViewMode}
-                hasPython={hasPython}
-              />
-            )}
-            <IconButton
-              onClick={() => onExpandedStateChange(!expanded)}
-              value="code"
-              size="small"
-              sx={commonStyles.toggleButton}
-            >
-              {expanded ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
-          </Box>
-        }
-      />
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        {children}
-      </Collapse>
-    </Box>
+          }
+          subheader={subheader}
+          sx={{ ...commonSx.cardHeader }}
+          titleTypographyProps={{ fontSize: "1.1em" }}
+          subheaderTypographyProps={{ fontSize: "0.8em" }}
+        />
+      </AccordionSummary>
+      <AccordionDetails sx={{ padding: "0 8px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+          }}
+        >
+          <InfoCardActions
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            hasPython={hasPython}
+          />
+          {children}
+        </Box>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 

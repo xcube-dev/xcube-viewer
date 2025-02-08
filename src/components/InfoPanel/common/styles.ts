@@ -31,10 +31,10 @@ export const commonSx: Record<string, CSSProperties> = {
     marginRight: 1,
   },
   cardHeader: {
-    padding: "8px",
+    padding: 0,
   },
   cardContent: {
-    padding: "4px 8px 4px 8px",
+    padding: "4px 0",
   },
   info: {
     marginRight: 1,

@@ -35,6 +35,7 @@ import KeyValueTable, { type KeyValue } from "./common/KeyValueTable";
 import { type ViewMode } from "./common/types";
 import InfoCardContent from "./common/InfoCardContent";
 import CardContent2 from "./common/CardContent2";
+import Markdown from "@/components/Markdown";
 
 interface PlaceInfoContentProps {
   expanded: boolean;
@@ -92,7 +93,16 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
     if (placeInfo.description) {
       description = (
         <CardContent2>
-          <Typography>{placeInfo.description}</Typography>
+          <Markdown text={placeInfo.description} />
+        </CardContent2>
+      );
+    }
+    if (!image && !description) {
+      content = (
+        <CardContent2>
+          <Typography>
+            {i18n.get("There is no information available for this location.")}
+          </Typography>
         </CardContent2>
       );
     }
