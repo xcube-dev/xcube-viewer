@@ -25,6 +25,7 @@
 import React from "react";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+import PlaceIcon from "@mui/icons-material/Place";
 
 import i18n from "@/i18n";
 import { type PlaceInfo } from "@/model/place";
@@ -36,18 +37,23 @@ import InfoCardContent from "./common/InfoCardContent";
 import CardContent2 from "./common/CardContent2";
 
 interface PlaceInfoContentProps {
-  isIn: boolean;
+  expanded: boolean;
+  onExpandedStateChange: (expanded: boolean) => void;
   viewMode: ViewMode;
   setViewMode: (viewMode: ViewMode) => void;
-  placeInfo: PlaceInfo;
+  placeInfo: PlaceInfo | null | undefined;
 }
 
 const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
-  isIn,
+  expanded,
+  onExpandedStateChange,
   viewMode,
   setViewMode,
   placeInfo,
 }) => {
+  if (!placeInfo) {
+    return null;
+  }
   const place = placeInfo.place;
   let content;
   let image;
@@ -93,9 +99,12 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
   }
   return (
     <InfoCardContent
+      expanded={expanded}
+      onExpandedStateChange={onExpandedStateChange}
       title={placeInfo.label}
       subheader={`${i18n.get("Geometry type")}: ${i18n.get(place.geometry.type)}`}
-      isIn={isIn}
+      tooltipText={i18n.get("Place information")}
+      icon={<PlaceIcon />}
       viewMode={viewMode}
       setViewMode={setViewMode}
     >

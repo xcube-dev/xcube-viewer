@@ -37,24 +37,30 @@ import { getDatasetPythonCode, selectObj } from "./common/utils";
 import JsonCodeContent from "./common/JsonCodeContent";
 import InfoCardContent from "./common/InfoCardContent";
 import CardContent2 from "./common/CardContent2";
+import WidgetsIcon from "@mui/icons-material/Widgets";
 
 interface DatasetInfoContentProps {
-  isIn: boolean;
+  expanded: boolean;
+  onExpandedStateChange: (expanded: boolean) => void;
   viewMode: ViewMode;
   setViewMode: (viewMode: ViewMode) => void;
-  dataset: Dataset;
+  dataset: Dataset | null | undefined;
   serverConfig: ApiServerConfig;
   hasPython: boolean;
 }
 
 const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
-  isIn,
+  expanded,
+  onExpandedStateChange,
   viewMode,
   setViewMode,
   dataset,
   serverConfig,
   hasPython,
 }) => {
+  if (!dataset) {
+    return null;
+  }
   // const classes = useStyles();
   let content: ReactNode = undefined;
   let descriptionMarkdown: ReactNode = undefined;
@@ -119,9 +125,12 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
   }
   return (
     <InfoCardContent
+      expanded={expanded}
+      onExpandedStateChange={onExpandedStateChange}
       title={dataset.title || `<${i18n.get("No Title")}>`}
       subheader={`${i18n.get("Dataset ID")}: ${dataset.id}`}
-      isIn={isIn}
+      tooltipText={i18n.get("Dataset information")}
+      icon={<WidgetsIcon />}
       viewMode={viewMode}
       setViewMode={setViewMode}
       hasPython={hasPython}

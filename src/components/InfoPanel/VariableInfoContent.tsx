@@ -40,6 +40,7 @@ import InfoCardContent from "./common/InfoCardContent";
 
 import { makeStyles } from "@/util/styles";
 import Markdown from "@/components/Markdown";
+import LayersIcon from "@mui/icons-material/Layers";
 
 const styles = makeStyles({
   variableHtmlReprContainer: (theme) => ({
@@ -49,17 +50,19 @@ const styles = makeStyles({
 });
 
 interface VariableInfoContentProps {
-  isIn: boolean;
+  expanded: boolean;
+  onExpandedStateChange: (expanded: boolean) => void;
   viewMode: ViewMode;
   setViewMode: (viewMode: ViewMode) => void;
-  variable: Variable;
+  variable: Variable | null | undefined;
   time: Time | null;
   serverConfig: ApiServerConfig;
   hasPython: boolean;
 }
 
 const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
-  isIn,
+  expanded,
+  onExpandedStateChange,
   viewMode,
   setViewMode,
   variable,
@@ -67,6 +70,9 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   serverConfig,
   hasPython,
 }) => {
+  if (!variable) {
+    return null;
+  }
   let content: ReactNode = undefined;
   let descriptionMarkdown: ReactNode = undefined;
   let htmlReprPaper: ReactNode = undefined;
@@ -153,9 +159,12 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
   }
   return (
     <InfoCardContent
+      expanded={expanded}
+      onExpandedStateChange={onExpandedStateChange}
       title={variable.title || `<${i18n.get("No Title")}>`}
       subheader={`${i18n.get("Variable Name")}: ${variable.name}`}
-      isIn={isIn}
+      tooltipText={i18n.get("Variable information")}
+      icon={<LayersIcon />}
       viewMode={viewMode}
       setViewMode={setViewMode}
       hasPython={hasPython}

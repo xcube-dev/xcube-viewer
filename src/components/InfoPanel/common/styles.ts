@@ -49,4 +49,7 @@ export const commonSx: Record<string, CSSProperties> = {
   code: {
     fontFamily: "Monospace",
   },
+  toggleButton: {
+    //width: "12px",
+  },
 };

@@ -24,22 +24,13 @@
 
 import React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import Tooltip from "@mui/material/Tooltip";
-import LayersIcon from "@mui/icons-material/Layers";
-import PlaceIcon from "@mui/icons-material/Place";
-import WidgetsIcon from "@mui/icons-material/Widgets";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { Dataset } from "@/model/dataset";
 import { PlaceInfo } from "@/model/place";
 import { Time } from "@/model/timeSeries";
 import { Variable } from "@/model/variable";
 import { ApiServerConfig } from "@/model/apiServer";
-import { commonStyles } from "@/components/common-styles";
 import { commonSx } from "./common/styles";
 import { ViewMode } from "./common/types";
 import DatasetInfoContent from "./DatasetInfoContent";
@@ -74,114 +65,69 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
   serverConfig,
   allowViewModePython,
 }) => {
-  const handleInfoElementsChanges = (
-    _event: React.MouseEvent<HTMLElement>,
-    visibleElementTypes: string[],
+  const _setVisibleElementType = (
+    visibleElementType: string,
+    expanded: boolean,
   ) => {
-    setVisibleInfoCardElements(visibleElementTypes);
+    const elementTypeSet = new Set(visibleInfoCardElements);
+    if (!expanded && elementTypeSet.has(visibleElementType)) {
+      elementTypeSet.delete(visibleElementType);
+    }
+    if (expanded && !elementTypeSet.has(visibleElementType)) {
+      elementTypeSet.add(visibleElementType);
+    }
+    setVisibleInfoCardElements([...elementTypeSet]);
   };
 
-  let datasetInfoContent;
-  let variableInfoContent;
-  let placeInfoContent;
-  if (selectedDataset) {
-    const elementType = "dataset";
-    const viewMode = infoCardElementViewModes[elementType];
-    const setViewMode = (viewMode: ViewMode) =>
-      updateInfoCardElementViewMode(elementType, viewMode);
-    const isVisible = visibleInfoCardElements.includes(elementType);
-    datasetInfoContent = (
+  console.log("visibleInfoCardElements:", visibleInfoCardElements);
+  console.log("infoCardElementViewModes:", infoCardElementViewModes);
+  console.log("selectedDataset:", selectedDataset);
+  console.log("selectedVariable:", selectedVariable);
+  console.log("selectedPlaceInfo:", selectedPlaceInfo);
+
+  const setPlaceInfoExpandedState = (expanded: boolean) =>
+    _setVisibleElementType("place", expanded);
+  const setPlaceInfoViewMode = (viewMode: ViewMode) =>
+    updateInfoCardElementViewMode("place", viewMode);
+
+  const setVariableInfoExpendedState = (expanded: boolean) =>
+    _setVisibleElementType("variable", expanded);
+  const setVariableInfoViewMode = (viewMode: ViewMode) =>
+    updateInfoCardElementViewMode("variable", viewMode);
+
+  const setDatasetInfoExpandedState = (expanded: boolean) =>
+    _setVisibleElementType("dataset", expanded);
+  const setDatasetInfoViewMode = (viewMode: ViewMode) =>
+    updateInfoCardElementViewMode("dataset", viewMode);
+
+  return (
+    <Card sx={commonSx.card}>
       <DatasetInfoContent
-        isIn={isVisible}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
+        expanded={visibleInfoCardElements.includes("dataset")}
+        onExpandedStateChange={setDatasetInfoExpandedState}
+        viewMode={infoCardElementViewModes["dataset"]}
+        setViewMode={setDatasetInfoViewMode}
         dataset={selectedDataset}
         serverConfig={serverConfig}
         hasPython={allowViewModePython}
       />
-    );
-  }
-  if (selectedDataset && selectedVariable) {
-    const elementType = "variable";
-    const viewMode = infoCardElementViewModes[elementType];
-    const setViewMode = (viewMode: ViewMode) =>
-      updateInfoCardElementViewMode(elementType, viewMode);
-    const isVisible = visibleInfoCardElements.includes(elementType);
-    variableInfoContent = (
       <VariableInfoContent
-        isIn={isVisible}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
+        expanded={visibleInfoCardElements.includes("variable")}
+        onExpandedStateChange={setVariableInfoExpendedState}
+        viewMode={infoCardElementViewModes["variable"]}
+        setViewMode={setVariableInfoViewMode}
         variable={selectedVariable}
         time={selectedTime}
         serverConfig={serverConfig}
         hasPython={allowViewModePython}
       />
-    );
-  }
-  if (selectedPlaceInfo) {
-    const elementType = "place";
-    const viewMode = infoCardElementViewModes[elementType];
-    const setViewMode = (viewMode: ViewMode) =>
-      updateInfoCardElementViewMode(elementType, viewMode);
-    const isVisible = visibleInfoCardElements.includes(elementType);
-    placeInfoContent = (
       <PlaceInfoContent
-        isIn={isVisible}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
+        expanded={visibleInfoCardElements.includes("place")}
+        onExpandedStateChange={setPlaceInfoExpandedState}
+        viewMode={infoCardElementViewModes["place"]}
+        setViewMode={setPlaceInfoViewMode}
         placeInfo={selectedPlaceInfo}
       />
-    );
-  }
-
-  return (
-    <Card sx={commonSx.card}>
-      <CardActions disableSpacing>
-        <ToggleButtonGroup
-          key={0}
-          size="small"
-          value={visibleInfoCardElements}
-          onChange={handleInfoElementsChanges}
-        >
-          <ToggleButton
-            key={0}
-            value="dataset"
-            disabled={selectedDataset === null}
-            size="small"
-            sx={commonStyles.toggleButton}
-          >
-            <Tooltip arrow title={i18n.get("Dataset information")}>
-              <WidgetsIcon />
-            </Tooltip>
-          </ToggleButton>
-          <ToggleButton
-            key={1}
-            value="variable"
-            disabled={selectedVariable === null}
-            size="small"
-            sx={commonStyles.toggleButton}
-          >
-            <Tooltip arrow title={i18n.get("Variable information")}>
-              <LayersIcon />
-            </Tooltip>
-          </ToggleButton>
-          <ToggleButton
-            key={2}
-            value="place"
-            disabled={selectedPlaceInfo === null}
-            size="small"
-            sx={commonStyles.toggleButton}
-          >
-            <Tooltip arrow title={i18n.get("Place information")}>
-              <PlaceIcon />
-            </Tooltip>
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </CardActions>
-      {datasetInfoContent}
-      {variableInfoContent}
-      {placeInfoContent}
     </Card>
   );
 };

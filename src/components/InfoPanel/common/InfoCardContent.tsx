@@ -23,25 +23,26 @@
  */
 
 import React from "react";
+import Box from "@mui/material/Box";
 import CardHeader from "@mui/material/CardHeader";
 import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import JsonIcon from "@mui/icons-material/DataObject";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import TextFieldsIcon from "@mui/icons-material/TextFields";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
-import i18n from "@/i18n";
-import pythonLogo from "@/resources/python-bw.png";
 import { commonStyles } from "@/components/common-styles";
 import { commonSx } from "./styles";
 import { ViewMode } from "./types";
+import InfoCardActions from "./InfoCardActions";
 
 interface InfoCardContentProps {
-  isIn: boolean;
+  expanded: boolean;
+  onExpandedStateChange: (expanded: boolean) => void;
   title: React.ReactNode;
   subheader?: React.ReactNode;
+  icon?: React.ReactNode;
+  tooltipText: string;
   viewMode: ViewMode;
   setViewMode: (viewMode: ViewMode) => void;
   hasPython?: boolean;
@@ -49,82 +50,56 @@ interface InfoCardContentProps {
 }
 
 const InfoCardContent: React.FC<InfoCardContentProps> = ({
-  isIn,
+  expanded,
+  onExpandedStateChange,
   title,
   subheader,
+  icon,
+  tooltipText,
   viewMode,
   setViewMode,
   hasPython,
   children,
 }) => {
-  const handleViewModeChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    viewMode: ViewMode,
-  ) => {
-    setViewMode(viewMode);
-  };
-
   return (
-    <Collapse in={isIn} timeout="auto" unmountOnExit>
+    <Box>
       <CardHeader
-        title={title}
+        title={
+          <Tooltip arrow title={tooltipText}>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {icon}
+              {title}
+            </Box>
+          </Tooltip>
+        }
         subheader={subheader}
         sx={commonSx.cardHeader}
         titleTypographyProps={{ fontSize: "1.1em" }}
         subheaderTypographyProps={{ fontSize: "0.8em" }}
         action={
-          <ToggleButtonGroup
-            key={0}
-            size="small"
-            value={viewMode}
-            exclusive={true}
-            onChange={handleViewModeChange}
-          >
-            <ToggleButton
-              key={0}
-              value="text"
-              size="small"
-              sx={commonStyles.toggleButton}
-            >
-              <Tooltip arrow title={i18n.get("Textual format")}>
-                <TextFieldsIcon />
-              </Tooltip>
-            </ToggleButton>
-            <ToggleButton
-              key={1}
-              value="list"
-              size="small"
-              sx={commonStyles.toggleButton}
-            >
-              <Tooltip arrow title={i18n.get("Tabular format")}>
-                <ListAltIcon />
-              </Tooltip>
-            </ToggleButton>
-            <ToggleButton
-              key={2}
+          <Box sx={{ display: "flex", gap: 0.3 }}>
+            {expanded && (
+              <InfoCardActions
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                hasPython={hasPython}
+              />
+            )}
+            <IconButton
+              onClick={() => onExpandedStateChange(!expanded)}
               value="code"
               size="small"
               sx={commonStyles.toggleButton}
             >
-              <Tooltip arrow title={i18n.get("JSON format")}>
-                <JsonIcon />
-              </Tooltip>
-            </ToggleButton>
-            {hasPython && (
-              <ToggleButton
-                key={3}
-                value="python"
-                size="small"
-                sx={{ ...commonStyles.toggleButton, width: "30px" }}
-              >
-                <img src={pythonLogo} width={16} alt="python logo" />
-              </ToggleButton>
-            )}
-          </ToggleButtonGroup>
+              {expanded ? <ExpandLess /> : <ExpandMore />}
+            </IconButton>
+          </Box>
         }
       />
-      {children}
-    </Collapse>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        {children}
+      </Collapse>
+    </Box>
   );
 };
 
