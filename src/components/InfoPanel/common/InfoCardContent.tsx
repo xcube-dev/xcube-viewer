@@ -23,80 +23,16 @@
  */
 
 import React from "react";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Box from "@mui/material/Box";
-import CardHeader from "@mui/material/CardHeader";
-import Tooltip from "@mui/material/Tooltip";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+import MuiCardContent from "@mui/material/CardContent";
 
 import { commonSx } from "./styles";
-import { ViewMode } from "./types";
-import InfoCardActions from "./InfoCardActions";
 
 interface InfoCardContentProps {
-  expanded: boolean;
-  onExpandedStateChange: (expanded: boolean) => void;
-  title: React.ReactNode;
-  subheader?: React.ReactNode;
-  icon: React.ReactElement;
-  tooltipText: string;
-  viewMode: ViewMode;
-  setViewMode: (viewMode: ViewMode) => void;
-  hasPython?: boolean;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const InfoCardContent: React.FC<InfoCardContentProps> = ({
-  expanded,
-  onExpandedStateChange,
-  title,
-  subheader,
-  icon,
-  tooltipText,
-  viewMode,
-  setViewMode,
-  hasPython,
-  children,
-}) => {
-  return (
-    <Accordion
-      expanded={expanded}
-      onChange={(_, expanded) => onExpandedStateChange(expanded)}
-    >
-      <AccordionSummary expandIcon={<ExpandMore />} sx={{ padding: "0 8px" }}>
-        <CardHeader
-          title={
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <Tooltip title={tooltipText}>{icon}</Tooltip>
-              {title}
-            </Box>
-          }
-          subheader={subheader}
-          sx={{ ...commonSx.cardHeader }}
-          titleTypographyProps={{ fontSize: "1.1em" }}
-          subheaderTypographyProps={{ fontSize: "0.8em" }}
-        />
-      </AccordionSummary>
-      <AccordionDetails sx={{ padding: "0 8px" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-          }}
-        >
-          <InfoCardActions
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            hasPython={hasPython}
-          />
-          {children}
-        </Box>
-      </AccordionDetails>
-    </Accordion>
-  );
+const InfoCardContent: React.FC<InfoCardContentProps> = ({ children }) => {
+  return <MuiCardContent sx={commonSx.cardContent}>{children}</MuiCardContent>;
 };
 
 export default InfoCardContent;

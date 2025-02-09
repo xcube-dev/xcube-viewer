@@ -32,7 +32,7 @@ import TextFieldsIcon from "@mui/icons-material/TextFields";
 
 import i18n from "@/i18n";
 import pythonLogo from "@/resources/python-bw.png";
-import { ViewMode } from "./types";
+import { type ViewMode } from "./types";
 import { commonSx } from "./styles";
 
 interface InfoCardActionsProps {

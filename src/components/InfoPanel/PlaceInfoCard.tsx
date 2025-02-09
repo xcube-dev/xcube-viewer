@@ -31,10 +31,10 @@ import i18n from "@/i18n";
 import { type PlaceInfo } from "@/model/place";
 import { commonSx } from "./common/styles";
 import JsonCodeContent from "./common/JsonCodeContent";
-import KeyValueTable, { type KeyValue } from "./common/KeyValueTable";
+import KeyValueContent, { type KeyValue } from "./common/KeyValueContent";
 import { type ViewMode } from "./common/types";
+import InfoCard from "./common/InfoCard";
 import InfoCardContent from "./common/InfoCardContent";
-import CardContent2 from "./common/CardContent2";
 import Markdown from "@/components/Markdown";
 
 interface PlaceInfoContentProps {
@@ -45,7 +45,7 @@ interface PlaceInfoContentProps {
   placeInfo: PlaceInfo | null | undefined;
 }
 
-const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
+const PlaceInfoCard: React.FC<PlaceInfoContentProps> = ({
   expanded,
   onExpandedStateChange,
   viewMode,
@@ -67,17 +67,17 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
         (name: string) => [name, place.properties![name]],
       );
       content = (
-        <CardContent2>
-          <KeyValueTable data={data} />
-        </CardContent2>
+        <InfoCardContent>
+          <KeyValueContent data={data} />
+        </InfoCardContent>
       );
     } else {
       content = (
-        <CardContent2>
+        <InfoCardContent>
           <Typography>
             {i18n.get("There is no information available for this location.")}
           </Typography>
-        </CardContent2>
+        </InfoCardContent>
       );
     }
   } else {
@@ -92,28 +92,28 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
     }
     if (placeInfo.description) {
       description = (
-        <CardContent2>
+        <InfoCardContent>
           <Markdown text={placeInfo.description} />
-        </CardContent2>
+        </InfoCardContent>
       );
     }
     if (!image && !description) {
       content = (
-        <CardContent2>
+        <InfoCardContent>
           <Typography>
             {i18n.get("There is no information available for this location.")}
           </Typography>
-        </CardContent2>
+        </InfoCardContent>
       );
     }
   }
   return (
-    <InfoCardContent
+    <InfoCard
       expanded={expanded}
       onExpandedStateChange={onExpandedStateChange}
       title={placeInfo.label}
       subheader={`${i18n.get("Geometry type")}: ${i18n.get(place.geometry.type)}`}
-      tooltipText={i18n.get("Place information")}
+      tooltipText={i18n.get("Information about the selected place")}
       icon={<PlaceIcon />}
       viewMode={viewMode}
       setViewMode={setViewMode}
@@ -121,8 +121,8 @@ const PlaceInfoContent: React.FC<PlaceInfoContentProps> = ({
       {image}
       {description}
       {content}
-    </InfoCardContent>
+    </InfoCard>
   );
 };
 
-export default PlaceInfoContent;
+export default PlaceInfoCard;

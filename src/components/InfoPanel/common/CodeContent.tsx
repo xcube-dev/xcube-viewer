@@ -24,10 +24,10 @@
 
 import React from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { Extension } from "@codemirror/state";
+import { type Extension } from "@codemirror/state";
 
 import { useTheme } from "@mui/material";
-import CardContent2 from "./CardContent2";
+import InfoCardContent from "./InfoCardContent";
 
 export interface CodeContentBaseProps {
   code: string;
@@ -40,7 +40,7 @@ export interface CodeContentProps extends CodeContentBaseProps {
 const CodeContent: React.FC<CodeContentProps> = ({ code, extension }) => {
   const themeMode = useTheme();
   return (
-    <CardContent2>
+    <InfoCardContent>
       <CodeMirror
         theme={themeMode.palette.mode}
         height="320px"
@@ -48,7 +48,7 @@ const CodeContent: React.FC<CodeContentProps> = ({ code, extension }) => {
         value={code}
         readOnly={true}
       />
-    </CardContent2>
+    </InfoCardContent>
   );
 };
 

@@ -42,11 +42,11 @@ const styles = makeStyles({
 
 export type KeyValue = [string, React.ReactNode];
 
-interface KeyValueTableProps {
+interface KeyValueContentProps {
   data: KeyValue[];
 }
 
-const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
+const KeyValueContent: React.FC<KeyValueContentProps> = ({ data }) => {
   return (
     <TableContainer component={Paper} sx={styles.keyValueTableContainer}>
       <Table sx={commonSx.table} size="small">
@@ -80,4 +80,4 @@ const KeyValueTable: React.FC<KeyValueTableProps> = ({ data }) => {
   );
 };
 
-export default KeyValueTable;
+export default KeyValueContent;

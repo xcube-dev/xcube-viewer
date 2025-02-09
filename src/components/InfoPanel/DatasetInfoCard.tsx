@@ -30,13 +30,13 @@ import { type Dataset } from "@/model/dataset";
 import { type ApiServerConfig } from "@/model/apiServer";
 import { getLabelForValue } from "@/util/label";
 import { type ViewMode } from "./common/types";
-import { type KeyValue } from "./common/KeyValueTable";
-import KeyValueTable from "./common/KeyValueTable";
+import { type KeyValue } from "./common/KeyValueContent";
+import KeyValueContent from "./common/KeyValueContent";
 import PythonCodeContent from "./common/PythonCodeContent";
 import { getDatasetPythonCode, selectObj } from "./common/utils";
 import JsonCodeContent from "./common/JsonCodeContent";
+import InfoCard from "./common/InfoCard";
 import InfoCardContent from "./common/InfoCardContent";
-import CardContent2 from "./common/CardContent2";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 
 interface DatasetInfoContentProps {
@@ -49,7 +49,7 @@ interface DatasetInfoContentProps {
   hasPython: boolean;
 }
 
-const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
+const DatasetInfoCard: React.FC<DatasetInfoContentProps> = ({
   expanded,
   onExpandedStateChange,
   viewMode,
@@ -73,14 +73,14 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
     content = <JsonCodeContent code={JSON.stringify(jsonDataset, null, 2)} />;
   } else if (viewMode === "list") {
     content = (
-      <CardContent2>
-        <KeyValueTable
+      <InfoCardContent>
+        <KeyValueContent
           data={Object.getOwnPropertyNames(dataset.attrs || {}).map((name) => [
             name,
             dataset.attrs[name],
           ])}
         />
-      </CardContent2>
+      </InfoCardContent>
     );
   } else if (viewMode === "text") {
     const descriptionText: unknown =
@@ -89,9 +89,9 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
       dataset.attrs["abstract"] ||
       dataset.attrs["comment"];
     descriptionMarkdown = typeof descriptionText === "string" && (
-      <CardContent2>
+      <InfoCardContent>
         <Markdown text={descriptionText} />
-      </CardContent2>
+      </InfoCardContent>
     );
 
     const data: KeyValue[] = [
@@ -114,9 +114,9 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
       [i18n.get("Spatial reference system"), dataset.spatialRef],
     ];
     content = (
-      <CardContent2>
-        <KeyValueTable data={data} />
-      </CardContent2>
+      <InfoCardContent>
+        <KeyValueContent data={data} />
+      </InfoCardContent>
     );
   } else if (viewMode === "python") {
     content = (
@@ -124,12 +124,12 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
     );
   }
   return (
-    <InfoCardContent
+    <InfoCard
       expanded={expanded}
       onExpandedStateChange={onExpandedStateChange}
       title={dataset.title || `<${i18n.get("No Title")}>`}
-      subheader={`${i18n.get("Dataset ID")}: ${dataset.id}`}
-      tooltipText={i18n.get("Dataset information")}
+      subheader={`${i18n.get("ID")}: ${dataset.id}`}
+      tooltipText={i18n.get("Information about the selected dataset")}
       icon={<WidgetsIcon />}
       viewMode={viewMode}
       setViewMode={setViewMode}
@@ -137,8 +137,8 @@ const DatasetInfoContent: React.FC<DatasetInfoContentProps> = ({
     >
       {descriptionMarkdown}
       {content}
-    </InfoCardContent>
+    </InfoCard>
   );
 };
 
-export default DatasetInfoContent;
+export default DatasetInfoCard;

@@ -23,16 +23,39 @@
  */
 
 import React from "react";
-import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
+import CardHeader from "@mui/material/CardHeader";
+import Tooltip from "@mui/material/Tooltip";
 
 import { commonSx } from "./styles";
 
-interface CardContent2Props {
-  children: React.ReactNode;
+interface InfoCardHeaderProps {
+  title: React.ReactNode;
+  subheader?: React.ReactNode;
+  icon: React.ReactElement;
+  tooltipText: string;
 }
 
-const CardContent2: React.FC<CardContent2Props> = ({ children }) => {
-  return <CardContent sx={commonSx.cardContent}>{children}</CardContent>;
+const InfoCardHeader: React.FC<InfoCardHeaderProps> = ({
+  title,
+  subheader,
+  icon,
+  tooltipText,
+}) => {
+  return (
+    <CardHeader
+      title={
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <Tooltip title={tooltipText}>{icon}</Tooltip>
+          {title}
+        </Box>
+      }
+      subheader={subheader}
+      sx={{ ...commonSx.cardHeader }}
+      titleTypographyProps={{ fontSize: "1.1em" }}
+      subheaderTypographyProps={{ fontSize: "0.8em" }}
+    />
+  );
 };
 
-export default CardContent2;
+export default InfoCardHeader;

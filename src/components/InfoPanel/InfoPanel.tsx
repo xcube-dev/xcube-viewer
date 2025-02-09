@@ -25,16 +25,16 @@
 import React from "react";
 import Box from "@mui/material/Box";
 
-import { WithLocale } from "@/util/lang";
-import { Dataset } from "@/model/dataset";
-import { PlaceInfo } from "@/model/place";
-import { Time } from "@/model/timeSeries";
-import { Variable } from "@/model/variable";
-import { ApiServerConfig } from "@/model/apiServer";
-import { ViewMode } from "./common/types";
-import DatasetInfoContent from "./DatasetInfoContent";
-import VariableInfoContent from "./VariableInfoContent";
-import PlaceInfoContent from "./PlaceInfoContent";
+import { type WithLocale } from "@/util/lang";
+import { type Dataset } from "@/model/dataset";
+import { type PlaceInfo } from "@/model/place";
+import { type Time } from "@/model/timeSeries";
+import { type Variable } from "@/model/variable";
+import { type ApiServerConfig } from "@/model/apiServer";
+import { type ViewMode } from "./common/types";
+import DatasetInfoCard from "./DatasetInfoCard";
+import VariableInfoCard from "./VariableInfoCard";
+import PlaceInfoCard from "./PlaceInfoCard";
 import { commonSx } from "@/components/InfoPanel/common/styles";
 
 interface InfoPanelProps extends WithLocale {
@@ -96,7 +96,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
 
   return (
     <Box sx={commonSx.card}>
-      <DatasetInfoContent
+      <DatasetInfoCard
         expanded={visibleInfoCardElements.includes("dataset")}
         onExpandedStateChange={setDatasetInfoExpandedState}
         viewMode={infoCardElementViewModes["dataset"]}
@@ -105,7 +105,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
         serverConfig={serverConfig}
         hasPython={allowViewModePython}
       />
-      <VariableInfoContent
+      <VariableInfoCard
         expanded={visibleInfoCardElements.includes("variable")}
         onExpandedStateChange={setVariableInfoExpendedState}
         viewMode={infoCardElementViewModes["variable"]}
@@ -115,7 +115,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
         serverConfig={serverConfig}
         hasPython={allowViewModePython}
       />
-      <PlaceInfoContent
+      <PlaceInfoCard
         expanded={visibleInfoCardElements.includes("place")}
         onExpandedStateChange={setPlaceInfoExpandedState}
         viewMode={infoCardElementViewModes["place"]}

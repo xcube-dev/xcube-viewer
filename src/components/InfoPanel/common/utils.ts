@@ -23,10 +23,10 @@
  */
 
 import { utcTimeToIsoDateTimeString } from "@/util/time";
-import { Dataset } from "@/model/dataset";
-import { Time } from "@/model/timeSeries";
-import { Variable } from "@/model/variable";
-import { ApiServerConfig } from "@/model/apiServer";
+import { type Dataset } from "@/model/dataset";
+import { type Time } from "@/model/timeSeries";
+import { type Variable } from "@/model/variable";
+import { type ApiServerConfig } from "@/model/apiServer";
 import { isUserVariable } from "@/model/userVariable";
 
 export function selectObj<T extends object>(

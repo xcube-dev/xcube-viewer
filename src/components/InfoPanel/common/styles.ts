@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { CSSProperties } from "react";
+import { type CSSProperties } from "react";
 
 export const commonSx: Record<string, CSSProperties> = {
   card: {
@@ -34,6 +34,7 @@ export const commonSx: Record<string, CSSProperties> = {
   },
   cardContent: {
     padding: "4px 0",
+    width: "100%",
   },
   info: {
     marginRight: 1,

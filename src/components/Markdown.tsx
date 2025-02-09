@@ -53,6 +53,10 @@ export default function Markdown({ text }: MarkdownProps) {
         const { node: _, ...rest } = props;
         return <code {...rest} style={{ color: "grey" }} />;
       },
+      img: (props: Record<string, unknown>) => {
+        const { node: _, ...rest } = props;
+        return <img style={{ maxWidth: "100%" }} {...rest} />;
+      },
     }),
     [theme],
   );

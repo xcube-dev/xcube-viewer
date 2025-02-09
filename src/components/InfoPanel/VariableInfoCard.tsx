@@ -26,17 +26,17 @@ import React, { ReactNode } from "react";
 import Paper from "@mui/material/Paper";
 
 import i18n from "@/i18n";
-import { Time } from "@/model/timeSeries";
-import { Variable } from "@/model/variable";
-import { ApiServerConfig } from "@/model/apiServer";
+import { type Time } from "@/model/timeSeries";
+import { type Variable } from "@/model/variable";
+import { type ApiServerConfig } from "@/model/apiServer";
 import { isUserVariable } from "@/model/userVariable";
-import { ViewMode } from "@/components/InfoPanel/common/types";
+import { type ViewMode } from "./common/types";
 import { getVariablePythonCode, selectObj } from "./common/utils";
 import JsonCodeContent from "./common/JsonCodeContent";
-import CardContent2 from "./common/CardContent2";
-import KeyValueTable, { KeyValue } from "./common/KeyValueTable";
-import PythonCodeContent from "./common/PythonCodeContent";
 import InfoCardContent from "./common/InfoCardContent";
+import KeyValueContent, { type KeyValue } from "./common/KeyValueContent";
+import PythonCodeContent from "./common/PythonCodeContent";
+import InfoCard from "./common/InfoCard";
 
 import { makeStyles } from "@/util/styles";
 import Markdown from "@/components/Markdown";
@@ -60,7 +60,7 @@ interface VariableInfoContentProps {
   hasPython: boolean;
 }
 
-const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
+const VariableInfoCard: React.FC<VariableInfoContentProps> = ({
   expanded,
   onExpandedStateChange,
   viewMode,
@@ -95,14 +95,14 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
     content = <JsonCodeContent code={JSON.stringify(jsonVariable, null, 2)} />;
   } else if (viewMode === "list") {
     content = (
-      <CardContent2>
-        <KeyValueTable
+      <InfoCardContent>
+        <KeyValueContent
           data={Object.getOwnPropertyNames(variable.attrs || {}).map((name) => [
             name,
             variable.attrs[name],
           ])}
         />
-      </CardContent2>
+      </InfoCardContent>
     );
   } else if (viewMode === "text") {
     const descriptionText =
@@ -111,9 +111,9 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       variable.attrs["abstract"] ||
       variable.attrs["comment"];
     descriptionMarkdown = typeof descriptionText === "string" && (
-      <CardContent2>
+      <InfoCardContent>
         <Markdown text={descriptionText} />
-      </CardContent2>
+      </InfoCardContent>
     );
 
     if (variable.htmlRepr) {
@@ -123,9 +123,9 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
         }
       };
       htmlReprPaper = (
-        <CardContent2>
+        <InfoCardContent>
           <Paper ref={handleRef} sx={styles.variableHtmlReprContainer} />
-        </CardContent2>
+        </InfoCardContent>
       );
     }
 
@@ -146,9 +146,9 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
     }
 
     content = (
-      <CardContent2>
-        <KeyValueTable data={data} />
-      </CardContent2>
+      <InfoCardContent>
+        <KeyValueContent data={data} />
+      </InfoCardContent>
     );
   } else if (viewMode === "python") {
     content = (
@@ -158,12 +158,12 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
     );
   }
   return (
-    <InfoCardContent
+    <InfoCard
       expanded={expanded}
       onExpandedStateChange={onExpandedStateChange}
       title={variable.title || `<${i18n.get("No Title")}>`}
-      subheader={`${i18n.get("Variable Name")}: ${variable.name}`}
-      tooltipText={i18n.get("Variable information")}
+      subheader={`${i18n.get("Name")}: ${variable.name}`}
+      tooltipText={i18n.get("Information about the selected variable")}
       icon={<LayersIcon />}
       viewMode={viewMode}
       setViewMode={setViewMode}
@@ -172,8 +172,8 @@ const VariableInfoContent: React.FC<VariableInfoContentProps> = ({
       {descriptionMarkdown}
       {content}
       {htmlReprPaper}
-    </InfoCardContent>
+    </InfoCard>
   );
 };
 
-export default VariableInfoContent;
+export default VariableInfoCard;
