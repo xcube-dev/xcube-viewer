@@ -1,5 +1,11 @@
 ## Changes in version 1.4.2 (in development)
 
+* We now render the new `description` markdown properties received from
+  xcube Server (see https://github.com/xcube-dev/xcube/issues/1122)
+  in the info panel. (#454)
+
+* Rearranged the info-panel for improved clarity and ease of use.
+
 * Now displaying dataset titles in the map legend. (#419) 
 
 ## Changes in version 1.4.1 
