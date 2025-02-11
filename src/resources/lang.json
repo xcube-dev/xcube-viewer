@@ -321,19 +321,19 @@
       "se": "Andra"
     },
     {
-      "en": "Dataset information",
-      "de": "Informationen zum Datensatz",
-      "se": "Information om dataset"
+      "en": "Information about the selected dataset",
+      "de": "Informationen über den ausgewählten Datensatz",
+      "se": "Information om den valda datamängden"
     },
     {
-      "en": "Variable information",
-      "de": "Informationen zur Variablen",
-      "se": "Information om variabeln"
+      "en": "Information about the selected variable",
+      "de": "Informationen über die ausgewählte Variable",
+      "se": "Information om den valda variabeln"
     },
     {
-      "en": "Place information",
-      "de": "Informationen zum Ort",
-      "se": "Platsinformation"
+      "en": "Information about the selected place",
+      "de": "Informationen über den ausgewählten Ort",
+      "se": "Information om vald plats"
     },
     {
       "en": "Dimension names",
@@ -364,6 +364,11 @@
       "en": "Spatial reference system",
       "de": "Räumliches Bezugssystem",
       "se": "Rumsligt referenssystem"
+    },
+    {
+      "en": "No Title",
+      "de": "Kein Titel",
+      "se": "Ingen Titel"
     },
     {
       "en": "Name",

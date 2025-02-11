@@ -22,22 +22,40 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
+import React from "react";
+import Box from "@mui/material/Box";
+import CardHeader from "@mui/material/CardHeader";
+import Tooltip from "@mui/material/Tooltip";
+
+import { commonSx } from "./styles";
+
+interface InfoCardHeaderProps {
+  title: React.ReactNode;
+  subheader?: React.ReactNode;
+  icon: React.ReactElement;
+  tooltipText: string;
 }
 
-export function isString(value: unknown): value is string {
-  return typeof value === "string";
-}
-
-export function isFunction(
-  value: unknown,
-): value is (...args: unknown[]) => unknown {
-  return typeof value === "function";
-}
-
-export function isObject(value: unknown): value is Record<string, unknown> {
+const InfoCardHeader: React.FC<InfoCardHeaderProps> = ({
+  title,
+  subheader,
+  icon,
+  tooltipText,
+}) => {
   return (
-    value !== null && typeof value === "object" && value.constructor === Object
+    <CardHeader
+      title={
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <Tooltip title={tooltipText}>{icon}</Tooltip>
+          {title}
+        </Box>
+      }
+      subheader={subheader}
+      sx={{ ...commonSx.cardHeader }}
+      titleTypographyProps={{ fontSize: "1.1em" }}
+      subheaderTypographyProps={{ fontSize: "0.8em" }}
+    />
   );
-}
+};
+
+export default InfoCardHeader;

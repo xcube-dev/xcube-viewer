@@ -22,54 +22,34 @@
  * SOFTWARE.
  */
 
-import { useMemo } from "react";
+import React from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { type Extension } from "@codemirror/state";
+
 import { useTheme } from "@mui/material";
-import OriginalMarkdown from "react-markdown";
+import InfoCardContent from "./InfoCardContent";
 
-interface MarkdownProps {
-  text?: string;
+export interface CodeContentBaseProps {
+  code: string;
 }
 
-export default function Markdown({ text }: MarkdownProps) {
-  const theme = useTheme();
-  const components = useMemo(
-    () => ({
-      p: (props: Record<string, unknown>) => {
-        const { node: _, ...rest } = props;
-        return <p {...rest} style={{ padding: 0, margin: 0 }} />;
-      },
-      a: (props: Record<string, unknown>) => {
-        const { node: _, ...rest } = props;
-        return (
-          <a
-            {...rest}
-            style={{
-              color: theme.palette.mode === "dark" ? "#90caf9" : "#1e90ff",
-            }}
-          />
-        );
-      },
-      code: (props: Record<string, unknown>) => {
-        const { node: _, ...rest } = props;
-        return <code {...rest} style={{ color: "grey" }} />;
-      },
-      img: (props: Record<string, unknown>) => {
-        const { node: _, ...rest } = props;
-        return <img style={{ maxWidth: "100%" }} {...rest} />;
-      },
-    }),
-    [theme],
-  );
+export interface CodeContentProps extends CodeContentBaseProps {
+  extension: Extension;
+}
 
-  if (!text) {
-    return null;
-  }
-
+const CodeContent: React.FC<CodeContentProps> = ({ code, extension }) => {
+  const themeMode = useTheme();
   return (
-    <OriginalMarkdown
-      children={text}
-      components={components}
-      linkTarget="_blank"
-    />
+    <InfoCardContent>
+      <CodeMirror
+        theme={themeMode.palette.mode}
+        height="320px"
+        extensions={[extension]}
+        value={code}
+        readOnly={true}
+      />
+    </InfoCardContent>
   );
-}
+};
+
+export default CodeContent;

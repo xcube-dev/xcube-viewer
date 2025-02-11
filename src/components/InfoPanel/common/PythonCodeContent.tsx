@@ -22,22 +22,14 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
-}
+import React from "react";
+import { python } from "@codemirror/lang-python";
 
-export function isString(value: unknown): value is string {
-  return typeof value === "string";
-}
+import type { CodeContentBaseProps } from "./CodeContent";
+import CodeContent from "./CodeContent";
 
-export function isFunction(
-  value: unknown,
-): value is (...args: unknown[]) => unknown {
-  return typeof value === "function";
-}
+const PythonCodeContent: React.FC<CodeContentBaseProps> = ({ code }) => {
+  return <CodeContent code={code} extension={python()} />;
+};
 
-export function isObject(value: unknown): value is Record<string, unknown> {
-  return (
-    value !== null && typeof value === "object" && value.constructor === Object
-  );
-}
+export default PythonCodeContent;

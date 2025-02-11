@@ -22,22 +22,34 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
-}
+import { type CSSProperties } from "react";
 
-export function isString(value: unknown): value is string {
-  return typeof value === "string";
-}
-
-export function isFunction(
-  value: unknown,
-): value is (...args: unknown[]) => unknown {
-  return typeof value === "function";
-}
-
-export function isObject(value: unknown): value is Record<string, unknown> {
-  return (
-    value !== null && typeof value === "object" && value.constructor === Object
-  );
-}
+export const commonSx: Record<string, CSSProperties> = {
+  card: {
+    maxWidth: "100%",
+    marginRight: 1,
+  },
+  cardHeader: {
+    padding: 0,
+  },
+  cardContent: {
+    padding: "4px 0",
+    width: "100%",
+  },
+  info: {
+    marginRight: 1,
+  },
+  close: {
+    marginLeft: "auto",
+  },
+  table: {},
+  media: {
+    height: 200,
+  },
+  code: {
+    fontFamily: "Monospace",
+  },
+  toggleButton: {
+    //width: "12px",
+  },
+};

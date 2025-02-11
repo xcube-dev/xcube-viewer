@@ -22,22 +22,17 @@
  * SOFTWARE.
  */
 
-export function isNumber(value: unknown): value is number {
-  return typeof value === "number";
+import React from "react";
+import MuiCardContent from "@mui/material/CardContent";
+
+import { commonSx } from "./styles";
+
+interface InfoCardContentProps {
+  children: React.ReactNode;
 }
 
-export function isString(value: unknown): value is string {
-  return typeof value === "string";
-}
+const InfoCardContent: React.FC<InfoCardContentProps> = ({ children }) => {
+  return <MuiCardContent sx={commonSx.cardContent}>{children}</MuiCardContent>;
+};
 
-export function isFunction(
-  value: unknown,
-): value is (...args: unknown[]) => unknown {
-  return typeof value === "function";
-}
-
-export function isObject(value: unknown): value is Record<string, unknown> {
-  return (
-    value !== null && typeof value === "object" && value.constructor === Object
-  );
-}
+export default InfoCardContent;

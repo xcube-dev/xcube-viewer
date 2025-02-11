@@ -24,7 +24,8 @@
 
 import WMSCapabilities from "ol/format/WMSCapabilities";
 import { HTTPError } from "@/api";
-import { isJsonObject, type JsonObject } from "./json";
+import { type JsonObject } from "./json";
+import { isObject } from "./types";
 
 const parser = new WMSCapabilities();
 
@@ -68,29 +69,31 @@ export function parseWmsLayers(capsXml: string): WmsLayerDefinition[] {
   return parseWmsLayerObjects(capsXml).map((layer): WmsLayerDefinition => {
     const name = layer["Name"] as string;
     const title = (layer["Title"] || name) as string;
-    let attribution: string | undefined = undefined;
-    const Attribution = layer["Attribution"];
-    if (isJsonObject(Attribution)) {
-      const attributionTitle = Attribution["Title"];
-      const attributionUrl = Attribution["OnlineResource"];
+    let attributionHtml: string | undefined = undefined;
+    const attribution = layer["Attribution"];
+    if (isObject(attribution)) {
+      const attributionTitle = attribution["Title"];
+      const attributionUrl = attribution["OnlineResource"];
       if (attributionTitle && attributionUrl) {
-        attribution = `&copy; <a href=&quot;${attributionUrl}&quot;>${attributionTitle}</a>`;
+        attributionHtml = `&copy; <a href=&quot;${attributionUrl}&quot;>${attributionTitle}</a>`;
       } else if (attributionUrl) {
-        attribution = `${attributionUrl}`;
+        attributionHtml = `${attributionUrl}`;
       } else if (attributionTitle) {
-        attribution = `${attributionTitle}`;
+        attributionHtml = `${attributionTitle}`;
       }
     }
-    return { name, title, attribution };
+    return { name, title, attribution: attributionHtml };
   });
 }
 
 export function parseWmsLayerObjects(capsXml: string): JsonObject[] {
   const capsObj = parser.read(capsXml);
-  if (isJsonObject(capsObj)) {
+  // We assume, the result of parsing XML code is always
+  // a JSON-serializable object.
+  if (isObject(capsObj)) {
     const capObj = capsObj["Capability"];
-    if (isJsonObject(capObj)) {
-      return flattenLayerObjects(capObj, true);
+    if (isObject(capObj)) {
+      return flattenLayerObjects(capObj as JsonObject, true);
     }
   }
   throw new Error("invalid WMSCapabilities object");
@@ -112,8 +115,8 @@ function flattenLayerObjects(
   let childLayers: JsonObject[];
   if (Array.isArray(childLayer)) {
     childLayers = childLayer.flatMap((l) => flattenLayerObjects(l));
-  } else if (isJsonObject(childLayer)) {
-    childLayers = flattenLayerObjects(childLayer);
+  } else if (isObject(childLayer)) {
+    childLayers = flattenLayerObjects(childLayer as JsonObject);
   } else {
     childLayers = [{}];
   }

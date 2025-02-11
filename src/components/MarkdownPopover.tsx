@@ -50,8 +50,7 @@ export default function MarkdownPopover({
           width: "32em",
           overflowY: "auto",
           fontSize: "smaller",
-          paddingLeft: 2,
-          paddingRight: 2,
+          padding: 2,
         }}
       >
         <Markdown text={markdownText} />
