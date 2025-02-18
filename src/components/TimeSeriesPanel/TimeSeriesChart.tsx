@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { MouseEvent, useMemo, useRef, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart,
   CartesianGrid,
@@ -202,6 +202,8 @@ export default function TimeSeriesChart({
     [timeSeriesGroup],
   );
 
+  useEffect(updateLegendWrapperRef, []);
+
   const progress =
     completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
   const loading = progress > 0 && progress < 1;
@@ -339,8 +341,7 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleChartResize = (w: number, h: number) => {
-    chartSize.current = [w, h];
+  function updateLegendWrapperRef() {
     if (chartContainerRef.current) {
       // Hack: get the recharts legend wrapper div, so we can use its height
       // to compute cartesian chart coordinates
@@ -351,6 +352,11 @@ export default function TimeSeriesChart({
         legendWrapperRef.current = elements.item(0) as HTMLDivElement;
       }
     }
+  }
+
+  const handleChartResize = (w: number, h: number) => {
+    chartSize.current = [w, h];
+    updateLegendWrapperRef();
   };
 
   const getXDomain = ([dataMin, dataMax]: [number, number]) => {
@@ -382,19 +388,9 @@ export default function TimeSeriesChart({
     chartX: number,
     chartY: number,
   ): [number, number] | undefined => {
-    const legendWrapperEl = legendWrapperRef.current;
-    if (
-      !chartSize.current ||
-      !xDomain.current ||
-      !yDomain.current ||
-      !legendWrapperEl
-    ) {
+    if (!chartSize.current || !xDomain.current || !yDomain.current) {
       return undefined;
     }
-    const [xMin, xMax] = xDomain.current;
-    const [yMin, yMax] = yDomain.current;
-    const [chartWidth, chartHeight] = chartSize.current;
-    const legendHeight = legendWrapperEl.clientHeight;
     // WARNING: There is no recharts API to retrieve margin values of
     // the cartesian grid SVG group.
     // They have been found by manual analysis and may change for any
@@ -403,6 +399,15 @@ export default function TimeSeriesChart({
     const MARGIN_TOP = 5;
     const MARGIN_RIGHT = 5;
     const MARGIN_BOTTOM = 38;
+    const ONE_ROW_LEGEND_HEIGHT = 20;
+    //
+    const [xMin, xMax] = xDomain.current;
+    const [yMin, yMax] = yDomain.current;
+    const [chartWidth, chartHeight] = chartSize.current;
+    const legendWrapperEl = legendWrapperRef.current;
+    const legendHeight = legendWrapperEl
+      ? legendWrapperEl.clientHeight
+      : ONE_ROW_LEGEND_HEIGHT;
     const cartesianGridWidth = chartWidth - MARGIN_LEFT - MARGIN_RIGHT;
     const cartesianGridHeight =
       chartHeight - MARGIN_TOP - MARGIN_BOTTOM - legendHeight;
