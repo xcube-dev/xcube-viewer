@@ -22,28 +22,16 @@
  * SOFTWARE.
  */
 
-import { Dispatch, Store } from "redux";
-import { initializeContributions } from "chartlets";
-import mui from "chartlets/plugins/mui";
-import vega from "chartlets/plugins/vega";
+import { ComponentType } from "react";
+import type { Plugin, ComponentProps } from "chartlets";
 
-import { AppState } from "@/states/appState";
-import { selectedServerSelector } from "@/selectors/controlSelectors";
-import { newDerivedStore } from "./store";
-import { loggingEnabled } from "./config";
-import xc_viewer from "./plugin";
+import Markdown from "@/components/Markdown";
 
-export function initializeExtensions(store: Store) {
-  return (_dispatch: Dispatch, getState: () => AppState) => {
-    const apiServer = selectedServerSelector(getState());
-    initializeContributions({
-      plugins: [mui(), vega(), xc_viewer()],
-      hostStore: newDerivedStore(store),
-      logging: { enabled: loggingEnabled },
-      api: {
-        serverUrl: apiServer.url,
-        endpointName: "viewer/ext",
-      },
-    });
+export default function xc_viewer(): Plugin {
+  return {
+    // TODO: the following type cast is not acceptable, but there is
+    //  no reason why component props must implement ComponentProps
+    //  from chartlets. This need to be fixed in chartlets!
+    components: [["Markdown", Markdown as ComponentType<ComponentProps>]],
   };
 }
