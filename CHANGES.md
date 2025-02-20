@@ -1,5 +1,8 @@
 ## Changes in version 1.4.2 (in development)
 
+* The new "share" button no longer appears if the xcube Server has no 
+  respective API configuration. (#470)
+
 * Fixed regression when zooming into time-series charts. (#468)
 
 * We now render the new `description` markdown properties received from

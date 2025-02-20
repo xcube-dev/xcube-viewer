@@ -46,6 +46,7 @@ import { Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
 import { isNumber } from "./util/types";
+import { hasViewerStateApi } from "@/api/hasViewerStateApi";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -96,6 +97,13 @@ export class Config {
     );
     branding = decodeBrandingFlag(branding, "allowUserVariables");
     branding = decodeBrandingFlag(branding, "allow3D");
+    branding = decodeBrandingFlag(branding, "allowSharing");
+    if (branding.allowSharing) {
+      const hasStateApi = await hasViewerStateApi(server.url);
+      if (!hasStateApi) {
+        branding = { ...branding, allowSharing: false };
+      }
+    }
     Config._instance = new Config(name, server, branding, authClient);
     if (import.meta.env.DEV) {
       console.debug("Configuration:", Config._instance);
