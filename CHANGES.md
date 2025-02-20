@@ -13,6 +13,9 @@
 
 * Now displaying dataset titles in the map legend. (#419) 
 
+* Added `Markdown` component to be used in server-side extensions.
+  It has a single `text` property that takes the markdown text.
+
 ## Changes in version 1.4.1 
 
 * Fixed issues with the Share feature introduced in
