@@ -3,6 +3,8 @@
 * The new "share" button no longer appears if the xcube Server has no 
   respective API configuration. (#470)
 
+* Fixed regression when zooming into time-series charts. (#468)
+
 * We now render the new `description` markdown properties received from
   xcube Server (see https://github.com/xcube-dev/xcube/issues/1122)
   in the info panel. (#454)
