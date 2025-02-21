@@ -1,6 +1,6 @@
 {
   "name": "xcube-viewer",
-  "version": "1.4.2-dev.0",
+  "version": "1.4.2",
   "private": true,
   "type": "module",
   "scripts": {

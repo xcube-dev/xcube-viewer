@@ -1,4 +1,4 @@
-## Changes in version 1.4.2 (in development)
+## Changes in version 1.4.2
 
 ### New features
 
