@@ -1,20 +1,24 @@
 ## Changes in version 1.4.2 (in development)
 
-* The new "share" button no longer appears if the xcube Server has no 
-  respective API configuration. (#470)
+### New features
 
-* Fixed regression when zooming into time-series charts. (#468)
-
+* Added `Markdown` component to be used in server-side extensions.
+  It has a single `text` property that takes the markdown text.
 * We now render the new `description` markdown properties received from
   xcube Server (see https://github.com/xcube-dev/xcube/issues/1122)
   in the info panel. (#454)
 
+### Improvements
+
 * Rearranged the info-panel for improved clarity and ease of use.
+* Now displaying dataset titles in the map legend. (#419)
 
-* Now displaying dataset titles in the map legend. (#419) 
+### Fixes and other Changes
 
-* Added `Markdown` component to be used in server-side extensions.
-  It has a single `text` property that takes the markdown text.
+* The new "share" button no longer appears if the xcube Server has no
+  respective API configuration. (#470)
+* Fixed regression when zooming into time-series charts. (#468)
+* Updated copyright headers in source files.
 
 ## Changes in version 1.4.1 
 
