@@ -24,3 +24,5 @@ logs
 *.njsproj
 *.sln
 *.sw?
+
+*storybook.log

@@ -29,6 +29,11 @@ export default defineConfig({
   build: {
     // Adjust chunk size warning limit (in kbs).
     chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      input: {
+        main: "src/index.tsx",
+      },
+    },
   },
   test: {
     environment: "jsdom",
