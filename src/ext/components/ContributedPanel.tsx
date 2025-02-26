@@ -7,11 +7,19 @@
 import React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import { Component, ContributionState, handleComponentChange } from "chartlets";
+import {
+  type ContributionState,
+  Component,
+  handleComponentChange,
+} from "chartlets";
 
-interface ContributedPanelState {
+export interface ContributedPanelState {
   title: string;
   visible?: boolean;
+  icon?: string;
+  position?: number;
+  after?: number | string;
+  before?: number | string;
 }
 
 interface ContributedPanelProps {

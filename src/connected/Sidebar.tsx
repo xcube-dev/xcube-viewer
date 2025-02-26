@@ -21,16 +21,23 @@ import {
   useContributionsRecord,
 } from "chartlets";
 
-import { AppState } from "@/states/appState";
+import { type AppState } from "@/states/appState";
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { setSidebarPanelId } from "@/actions/controlActions";
-import { SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
-import ContributedPanel from "@/ext/components/ContributedPanel";
+import { type SidebarPanelId, sidebarPanelIds } from "@/states/controlState";
+import ContributedPanel, {
+  type ContributedPanelState,
+} from "@/ext/components/ContributedPanel";
 import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
+
+interface PanelInfo extends ContributedPanelState {
+  id: string;
+  icon?: ReactElement;
+}
 
 const sidebarPanelIcons: Record<SidebarPanelId, ReactElement> = {
   info: <InfoIcon fontSize="inherit" />,
@@ -64,11 +71,6 @@ const styles = makeStyles({
   },
 });
 
-interface SidebarPanelContributionProps {
-  title: string;
-  visible?: boolean;
-}
-
 interface SidebarProps {
   sidebarPanelId: SidebarPanelId | string;
   setSidebarPanelId: (sidebarPanelId: SidebarPanelId | string) => void;
@@ -90,7 +92,7 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
   const panelContributions = useMemo(
     () =>
       (contributionsRecord["panels"] ||
-        []) as ContributionState<SidebarPanelContributionProps>[],
+        []) as ContributionState<ContributedPanelState>[],
     [contributionsRecord],
   );
 
@@ -115,6 +117,27 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
     },
     [contributionIndexes, setSidebarPanelId],
   );
+
+  const panelInfos = useMemo(() => {
+    const map = new Map<string, PanelInfo>();
+    map.set("info", <InfoPanel />);
+    map.set("stats", <StatisticsPanel />);
+    map.set("timeSeries", <TimeSeriesPanel />);
+    map.set("volume", <VolumePanel />);
+    {
+      panelContributions.map(
+        (contribution, panelIndex) =>
+          sidebarPanelId === contribution.name && (
+            <ContributedPanel
+              key={contribution.name}
+              contribution={contribution}
+              panelIndex={panelIndex}
+            />
+          ),
+      );
+    }
+    return map;
+  }, []);
 
   return (
     <Box sx={{ width: "100%" }}>
