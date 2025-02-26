@@ -11,7 +11,7 @@ import { Action, Dispatch } from "redux";
 import * as ReduxLogger from "redux-logger";
 import thunk from "redux-thunk";
 
-import "@fontsource/material-icons";
+import "@fontsource/material-icons/latin-400.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
