@@ -7,17 +7,11 @@
 import { Theme, styled } from "@mui/system";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import ToggleButton from "@mui/material/ToggleButton";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import ShareIcon from "@mui/icons-material/Share";
-import SettingsIcon from "@mui/icons-material/Settings";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 
 import i18n from "@/i18n";
-import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
 
@@ -46,12 +40,6 @@ export default function ControlBarActions({
   visible,
   sidebarOpen,
   setSidebarOpen,
-  openDialog,
-  allowRefresh,
-  updateResources,
-  allowSharing,
-  shareStatePermalink,
-  compact,
 }: ControlBarActionsProps) {
   if (!visible) {
     return null;
@@ -71,54 +59,9 @@ export default function ControlBarActions({
     </ToggleButton>
   );
 
-  let refreshButton;
-  let shareButton;
-  let downloadButton;
-  let settingsButton;
-
-  if (compact) {
-    refreshButton = allowRefresh && (
-      <IconButton onClick={updateResources} size="small">
-        <Tooltip arrow title={i18n.get("Refresh")}>
-          <RefreshIcon />
-        </Tooltip>
-      </IconButton>
-    );
-
-    shareButton = allowSharing && (
-      <IconButton onClick={shareStatePermalink} size="small">
-        <Tooltip arrow title={i18n.get("Share")}>
-          <ShareIcon />
-        </Tooltip>
-      </IconButton>
-    );
-
-    downloadButton = Config.instance.branding.allowDownloads && (
-      <IconButton onClick={() => openDialog("export")} size="small">
-        <Tooltip arrow title={i18n.get("Export data")}>
-          {<CloudDownloadIcon />}
-        </Tooltip>
-      </IconButton>
-    );
-
-    settingsButton = (
-      <IconButton onClick={() => openDialog("settings")} size="small">
-        <Tooltip arrow title={i18n.get("Settings")}>
-          <SettingsIcon />
-        </Tooltip>
-      </IconButton>
-    );
-  }
-
   return (
     <StyledFormControl variant="standard">
-      <Box>
-        {refreshButton}
-        {shareButton}
-        {downloadButton}
-        {settingsButton}
-        {sidebarButton}
-      </Box>
+      <Box>{sidebarButton}</Box>
     </StyledFormControl>
   );
 }
