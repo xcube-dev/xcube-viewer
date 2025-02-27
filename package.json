@@ -60,9 +60,10 @@
     "zustand": "^5.0.1"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^3.2.4",
+    "@chromatic-com/storybook": "^3.2.5",
     "@storybook/addon-essentials": "^8.6.0",
     "@storybook/addon-interactions": "^8.6.0",
+    "@storybook/addon-links": "^8.6.0",
     "@storybook/addon-onboarding": "^8.6.0",
     "@storybook/blocks": "^8.6.0",
     "@storybook/react": "^8.6.0",
@@ -100,6 +101,7 @@
     "microdiff": "^1.4.0",
     "prettier": "^3.2.5",
     "storybook": "^8.6.0",
+    "storybook-dark-mode": "^4.0.2",
     "typescript": "5.1.6",
     "vite": "^6.2.0",
     "vitest": "^3.0.7"
