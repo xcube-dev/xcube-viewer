@@ -6,6 +6,7 @@ dist
 dist-ssr
 *.local
 coverage
+site
 
 # Logs
 logs
