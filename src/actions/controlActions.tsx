@@ -34,7 +34,6 @@ import {
   ControlState,
   LayerVisibilities,
   MapInteraction,
-  SidebarPanelId,
   TimeAnimationInterval,
   ViewMode,
   VolumeRenderMode,
@@ -533,11 +532,11 @@ export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
 
 export interface SetSidebarPanelId {
   type: typeof SET_SIDEBAR_PANEL_ID;
-  sidebarPanelId: SidebarPanelId | string;
+  sidebarPanelId: string;
 }
 
 export function setSidebarPanelId(
-  sidebarPanelId: SidebarPanelId | string,
+  sidebarPanelId: string | null,
 ): SetSidebarPanelId {
   return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
 }

@@ -4,30 +4,23 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import React from "react";
+import { FC } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
+
 import {
   type ContributionState,
   Component,
   handleComponentChange,
 } from "chartlets";
-
-export interface ContributedPanelState {
-  title: string;
-  visible?: boolean;
-  icon?: string;
-  position?: number;
-  after?: number | string;
-  before?: number | string;
-}
+import type { PanelModel } from "@/components/SidePanel";
 
 interface ContributedPanelProps {
-  contribution: ContributionState<ContributedPanelState>;
+  contribution: ContributionState<PanelModel>;
   panelIndex: number;
 }
 
-const ContributedPanel: React.FC<ContributedPanelProps> = ({
+const ContributedPanel: FC<ContributedPanelProps> = ({
   contribution,
   panelIndex,
 }) => {

@@ -31,7 +31,7 @@ export function getEffectivePanelModels(
 }
 
 export function isPanelModelRenderable(panelModel: PanelModel): boolean {
-  return !!(panelModel.visible && panelModel.content);
+  return !!panelModel.content;
 }
 
 export function normalizePanelModel(panelModel: PanelModel, position: number) {

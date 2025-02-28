@@ -22,12 +22,15 @@ const styles = makeStyles({
   panelContent: {
     paddingTop: 0.5,
     paddingRight: 0.5,
+    overflowY: "auto",
   },
   panelHeader: (theme: Theme) => ({
     paddingTop: 0.5,
     paddingBottom: 0.5,
     borderBottom: "1px solid",
     borderBottomColor: theme.palette.divider,
+    borderTop: "1px solid",
+    borderTopColor: theme.palette.divider,
   }),
   sidebarContainer: (theme: Theme) => ({
     display: "flex",
@@ -36,12 +39,15 @@ const styles = makeStyles({
     padding: 0.5,
     borderLeft: "1px solid",
     borderLeftColor: theme.palette.divider,
+    borderTop: "1px solid",
+    borderTopColor: theme.palette.divider,
   }),
   sidebarButton: {},
   sidebarButtonSelected: (theme: Theme) => {
     return {
       background: theme.palette.action.selected,
       color: theme.palette.primary.main,
+      // color: "green",
     };
   },
 });
