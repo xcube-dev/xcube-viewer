@@ -9,12 +9,12 @@ import {
 } from "@mui/material/styles";
 
 // Same CSS imports as in src/index.ts
+//
 import "@fontsource/material-icons/latin-400.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import "../src/index.css";
 
 // We synchronize Storybook layout area's background colors
 // (not the Storybook UI theme!)

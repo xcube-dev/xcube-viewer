@@ -5,7 +5,7 @@
  */
 
 import { FC, MouseEvent, ReactElement } from "react";
-import type { SxProps } from "@mui/material";
+import type { SxProps, Theme } from "@mui/system";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -20,9 +20,9 @@ const styles = makeStyles({
 });
 
 interface ToolButtonProps {
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   className?: string;
-  icon: ReactElement | string;
+  icon?: ReactElement | string;
   size?: "small" | "medium" | "large";
   onClick: (
     event: MouseEvent<HTMLButtonElement | HTMLElement>,

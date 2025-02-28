@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-export type { PanelModel } from "./panel";
+export type { PanelModel } from "./panelModel";
 
 import SidePanel from "./SidePanel";
 export default SidePanel;

@@ -18,7 +18,7 @@ export const ModelData = {
       icon: "info",
       visible: true,
       position: 0,
-      content: <div>{generateParagraph(20)}</div>,
+      content: <>{generateParagraph(20)}</>,
     },
     {
       id: "timeSeries",
@@ -26,7 +26,7 @@ export const ModelData = {
       icon: "show_chart",
       visible: true,
       position: 10,
-      content: <div>{generateParagraph(20)}</div>,
+      content: <>{generateParagraph(20)}</>,
     },
     {
       id: "statistics",
@@ -34,7 +34,7 @@ export const ModelData = {
       icon: "functions",
       visible: true,
       position: 20,
-      content: <div>{generateParagraph(20)}</div>,
+      content: <>{generateParagraph(20)}</>,
     },
     {
       id: "analytics",
@@ -42,7 +42,7 @@ export const ModelData = {
       icon: "analytics",
       visible: true,
       position: 30,
-      content: <div>{generateParagraph(20)}</div>,
+      content: <>{generateParagraph(20)}</>,
     },
   ],
 };

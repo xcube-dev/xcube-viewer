@@ -42,6 +42,7 @@ type Story = StoryObj<typeof meta>;
 export const NoneSelected: Story = {
   args: {
     selectedPanelId: null,
+    width: 350,
   },
 };
 
@@ -49,5 +50,6 @@ export const NoneSelected: Story = {
 export const OneSelected: Story = {
   args: {
     selectedPanelId: "statistics",
+    width: 350,
   },
 };
