@@ -4,41 +4,31 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { type ReactElement, useMemo } from "react";
+import { useMemo } from "react";
 import type { SxProps, Theme } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import { isNumber, isString } from "@/util/types";
 import ToolButton from "@/components/ToolButton";
+import { comparePanelModels, PanelModel } from "./panel";
 
-export interface PanelInfo {
-  id: string;
-  title: string;
-  disabled?: boolean;
-  visible?: boolean;
-  icon: ReactElement | string;
-  tooltip?: string;
-  position?: number;
-  after?: number | string;
-  before?: number | string;
-}
-
-export interface SidepanelProps {
+export interface SidebarProps {
   hidden?: boolean;
-  panelInfos?: PanelInfo[];
+  panels?: PanelModel[];
   selectedPanelId?: string | null;
   setSelectedPanelId: (panelId: string | null) => void;
 }
 
-function Sidepanel({
+function Sidebar({
   hidden,
-  panelInfos,
+  panels,
   selectedPanelId,
   setSelectedPanelId,
-}: SidepanelProps) {
-  const effectivePanelInfos = useMemo(() => {
-    return (panelInfos || []).filter((p) => p.visible).sort(comparePanelInfos);
-  }, [panelInfos]);
+}: SidebarProps) {
+  const effectivePanels = useMemo(() => {
+    return (panels || [])
+      .filter((p) => p.visible && p.content)
+      .sort(comparePanelModels);
+  }, [panels]);
 
   if (hidden) {
     return null;
@@ -52,7 +42,7 @@ function Sidepanel({
         height: "100%",
       }}
     >
-      {effectivePanelInfos.map((p) => (
+      {effectivePanels.map((p) => (
         <ToolButton
           key={p.id}
           sx={
@@ -82,27 +72,4 @@ function Sidepanel({
   );
 }
 
-export default Sidepanel;
-
-function comparePanelInfos(p1: PanelInfo, p2: PanelInfo): number {
-  if (isString(p1.before) && p1.before === p2.id) {
-    return 1;
-  }
-  if (isString(p2.before) && p2.before === p1.id) {
-    return -1;
-  }
-  if (isString(p2.after) && p2.after === p1.id) {
-    return 1;
-  }
-  if (isString(p1.after) && p1.after === p2.id) {
-    return -1;
-  }
-  if (isNumber(p1.position) && isNumber(p2.position)) {
-    const value = p1.position - p2.position;
-    if (value !== 0) {
-      return value;
-    }
-  }
-  const value = p1.title.localeCompare(p2.title);
-  return value === 0 ? p1.id.localeCompare(p2.id) : value;
-}
+export default Sidebar;
