@@ -5,6 +5,7 @@
  */
 
 import type { Theme } from "@mui/system";
+
 import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
@@ -36,14 +37,11 @@ const styles = makeStyles({
     borderLeft: "1px solid",
     borderLeftColor: theme.palette.divider,
   }),
-  sidebarButton: (theme: Theme) => {
-    return {
-      color: theme.palette.text.primary,
-    };
-  },
+  sidebarButton: {},
   sidebarButtonSelected: (theme: Theme) => {
     return {
       background: theme.palette.action.selected,
+      color: theme.palette.primary.main,
     };
   },
 });
