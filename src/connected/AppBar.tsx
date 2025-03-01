@@ -33,7 +33,7 @@ import DevRefPage from "@/components/DevRefPage";
 import ImprintPage from "@/components/ImprintPage";
 import UserControl from "./UserControl";
 
-interface AppBarProps extends WithLocale {
+interface AppBarImplProps extends WithLocale {
   appName: string;
   openDialog: (dialogId: string) => unknown;
   allowRefresh?: boolean;
@@ -117,14 +117,14 @@ const styles = makeStyles({
   }),
 });
 
-const _AppBar: React.FC<AppBarProps> = ({
+const AppBarImpl: React.FC<AppBarImplProps> = ({
   appName,
   openDialog,
   allowRefresh,
   updateResources,
   allowSharing,
   shareStatePermalink,
-}: AppBarProps) => {
+}: AppBarImplProps) => {
   const [imprintOpen, setImprintOpen] = React.useState(false);
   const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
@@ -263,5 +263,5 @@ const _AppBar: React.FC<AppBarProps> = ({
   );
 };
 
-const AppBar = connect(mapStateToProps, mapDispatchToProps)(_AppBar);
+const AppBar = connect(mapStateToProps, mapDispatchToProps)(AppBarImpl);
 export default AppBar;

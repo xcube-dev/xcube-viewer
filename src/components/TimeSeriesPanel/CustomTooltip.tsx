@@ -33,7 +33,7 @@ const styles = makeStyles({
 const INVISIBLE_LINE_COLOR = "#00000000";
 const SUBSTITUTE_LABEL_COLOR = "#FAFFDD";
 
-interface CustomTooltipProps extends TooltipProps<number, string> {}
+type CustomTooltipProps = TooltipProps<number, string>;
 
 export default function CustomTooltip({
   active,

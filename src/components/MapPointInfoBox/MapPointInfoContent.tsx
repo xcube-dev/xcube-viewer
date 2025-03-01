@@ -25,7 +25,7 @@ const styles = makeStyles({
   },
 });
 
-interface MapPointInfoContentProps extends MapPointInfo {}
+type MapPointInfoContentProps = MapPointInfo;
 
 export default function MapPointInfoContent({
   location,

@@ -31,7 +31,7 @@ import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
 
-interface AppProps {
+interface AppImplProps {
   compact: boolean;
   themeMode: ThemeMode;
 }
@@ -46,7 +46,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
+const AppImpl: React.FC<AppImplProps> = ({ compact, themeMode }) => {
   const systemThemeMode = useMediaQuery("(prefers-color-scheme: dark)")
     ? "dark"
     : "light";
@@ -90,5 +90,5 @@ const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
   );
 };
 
-const App = connect(mapStateToProps, mapDispatchToProps)(_App);
+const App = connect(mapStateToProps, mapDispatchToProps)(AppImpl);
 export default App;

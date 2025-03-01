@@ -157,7 +157,7 @@ export function getUserPlacesFromCsv(
       if (typeof wkt === "string") {
         try {
           geometry = wktFormat.readGeometry(text);
-        } catch (e) {
+        } catch (_e) {
           // will handle error below
         }
       }

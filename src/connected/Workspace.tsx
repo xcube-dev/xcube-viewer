@@ -57,7 +57,7 @@ const styles: Record<string, CSSProperties> = {
   },
 };
 
-interface WorkspaceProps {
+interface WorkspaceImplProps {
   sidebarOpen: boolean;
   sidebarPosition: number;
   setSidebarPosition: (sidebarPos: number) => void;
@@ -80,11 +80,11 @@ const getLayout = (): Layout => {
   return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
 };
 
-function _Workspace({
+function WorkspaceImpl({
   sidebarOpen,
   sidebarPosition,
   setSidebarPosition,
-}: WorkspaceProps) {
+}: WorkspaceImplProps) {
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
   const resizeObserver = useRef<ResizeObserver | null>(null);
@@ -137,5 +137,5 @@ function _Workspace({
   }
 }
 
-const Workspace = connect(mapStateToProps, mapDispatchToProps)(_Workspace);
+const Workspace = connect(mapStateToProps, mapDispatchToProps)(WorkspaceImpl);
 export default Workspace;
