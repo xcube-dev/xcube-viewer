@@ -4,31 +4,25 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, FC, MouseEvent, ReactElement } from "react";
-import type { SxProps } from "@mui/material";
-import { useTheme } from "@mui/material";
+import { FC, MouseEvent, ReactElement } from "react";
+import type { SxProps, Theme } from "@mui/system";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
 
-const MATERIAL_ICON_STYLE: CSSProperties = {
-  fontFamily: "Material Icons",
-};
-const MATERIAL_ICON_INVERTED_STYLE: CSSProperties = {
-  ...MATERIAL_ICON_STYLE,
-  filter: "invert(1)",
-};
+import { makeStyles } from "@/util/styles";
 
-const useIsDarkMode = () => {
-  const theme = useTheme();
-  return theme.palette.mode === "dark";
-};
+const styles = makeStyles({
+  materialIcon: {
+    fontFamily: "Material Icons",
+  },
+});
 
 interface ToolButtonProps {
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   className?: string;
-  icon: ReactElement | string;
+  icon?: ReactElement | string;
   size?: "small" | "medium" | "large";
   onClick: (
     event: MouseEvent<HTMLButtonElement | HTMLElement>,
@@ -53,7 +47,7 @@ const ToolButton: FC<ToolButtonProps> = ({
   value,
   selected,
 }) => {
-  const isDarkMode = useIsDarkMode();
+  // const isDarkMode = useIsDarkMode();
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     if (toggle) {
@@ -65,11 +59,7 @@ const ToolButton: FC<ToolButtonProps> = ({
 
   const iconElement =
     !icon || typeof icon === "string" ? (
-      <Icon
-        sx={isDarkMode ? MATERIAL_ICON_INVERTED_STYLE : MATERIAL_ICON_STYLE}
-      >
-        {icon || "star"}
-      </Icon>
+      <Icon sx={styles.materialIcon}>{icon || "star"}</Icon>
     ) : (
       icon
     );
