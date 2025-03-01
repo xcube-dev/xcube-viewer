@@ -25,7 +25,7 @@ import PlaceStyleEditor from "@/components/PlaceStyleEditor";
 // noinspection JSUnusedLocalSymbols
 const styles: Record<string, SxProps> = {
   select: {
-    minWidth: "5em",
+    minWidth: "4rem",
   },
 };
 

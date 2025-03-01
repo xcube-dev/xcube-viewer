@@ -42,16 +42,12 @@ const styles = makeStyles({
   cardContent: {
     padding: 8,
   },
-  isoEditor: {
-    display: "flex",
-    flexDirection: "row",
-  },
   isoTextField: {
-    minWidth: "16em",
-    marginLeft: "1em",
+    marginLeft: 1,
+    flexGrow: 1,
   },
   isoSlider: {
-    minWidth: 200,
+    minWidth: 100,
   },
 });
 

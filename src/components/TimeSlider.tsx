@@ -29,10 +29,6 @@ const styles = makeStyles({
     marginRight: theme.spacing(HOR_MARGIN),
     minWidth: 200,
   }),
-  label: {
-    color: "grey",
-    fontSize: "1em",
-  },
 });
 
 interface TimeSliderProps {

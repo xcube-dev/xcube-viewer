@@ -27,7 +27,7 @@ const styles = makeStyles({
     borderWidth: "1px",
     borderStyle: "solid",
     borderColor: "#00000020",
-    backgroundColor: "#FFFFFFD0",
+    backgroundColor: "#FFFFFFF0",
     boxShadow:
       "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
     color: "black",
@@ -45,14 +45,14 @@ const styles = makeStyles({
     paddingBottom: 0.5,
   },
   title: {
-    fontSize: "0.8em",
+    fontSize: "0.8rem",
     fontWeight: "normal",
     wordBreak: "break-word",
     wordWrap: "break-word",
   },
   subTitle: {
     color: "dimgray",
-    fontSize: "0.7em",
+    fontSize: "0.7rem",
     fontWeight: "lighter",
     wordBreak: "break-word",
     wordWrap: "break-word",

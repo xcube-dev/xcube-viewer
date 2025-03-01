@@ -57,7 +57,6 @@ const AppImpl: React.FC<AppImplProps> = ({ compact, themeMode }) => {
     return createTheme({
       typography: {
         fontSize: 12,
-        htmlFontSize: 14,
       },
       palette: {
         mode,
