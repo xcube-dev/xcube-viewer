@@ -4,6 +4,12 @@
   two components (e.g., two layers in map view, or map view and side panels) 
   created a drift while dragging.
 
+* Updated development tools. Now using 
+  - `vite 6.2` 
+  - `eslint 9.21`
+  - `storybook 8.6`
+
+
 ## Changes in version 1.4.2
 
 ### New features
