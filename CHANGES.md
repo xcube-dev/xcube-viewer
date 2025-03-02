@@ -1,3 +1,9 @@
+## Changes in version 1.4.3 (in development)
+
+* Fixed a problem where mouse splitters used to resize 
+  two components (e.g., two layers in map view, or map view and side panels) 
+  created a drift while dragging.
+
 ## Changes in version 1.4.2
 
 ### New features
