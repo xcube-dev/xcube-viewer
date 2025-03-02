@@ -19,7 +19,7 @@ const mapStateToProps = (state: AppState) => {
       state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
     ),
     sidebarOpen: state.controlState.sidebarOpen,
-    compact: Config.instance.branding.compact,
+    compact: !!Config.instance.branding.compact,
     allowRefresh: Config.instance.branding.allowRefresh,
     allowSharing: Config.instance.branding.allowSharing,
   };

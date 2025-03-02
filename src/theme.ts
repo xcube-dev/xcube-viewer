@@ -4,9 +4,16 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { createTheme } from "@mui/material";
+import { createTheme, type Theme } from "@mui/material";
 
-export const lightTheme = createTheme({
+const baseTheme = {
+  typography: {
+    fontSize: 12,
+  },
+};
+
+export const lightTheme: Theme = createTheme({
+  ...baseTheme,
   palette: {
     mode: "light",
     primary: { main: "#1976d2" },
@@ -15,7 +22,8 @@ export const lightTheme = createTheme({
   },
 });
 
-export const darkTheme = createTheme({
+export const darkTheme: Theme = createTheme({
+  ...baseTheme,
   palette: {
     mode: "dark",
     primary: { main: "#39a6f2" },

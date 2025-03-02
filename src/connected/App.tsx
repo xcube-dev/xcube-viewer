@@ -14,10 +14,12 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
+import { PaletteColor } from "@mui/material/styles/createPalette";
 
 import { Config } from "@/config";
-import { AppState } from "@/states/appState";
-import { getPaletteMode, ThemeMode } from "@/states/controlState";
+import { lightTheme, darkTheme } from "@/theme";
+import { type AppState } from "@/states/appState";
+import { getPaletteMode, type ThemeMode } from "@/states/controlState";
 import AuthWrapper from "@/components/AuthWrapper";
 import AppBar from "./AppBar";
 import AppPane from "./AppPane";
@@ -39,7 +41,7 @@ interface AppImplProps {
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
   return {
-    compact: Config.instance.branding.compact,
+    compact: !!Config.instance.branding.compact,
     themeMode: state.controlState.themeMode,
   };
 };
@@ -54,16 +56,30 @@ const AppImpl: React.FC<AppImplProps> = ({ compact, themeMode }) => {
   const theme = React.useMemo(() => {
     const mode: PaletteMode = getPaletteMode(themeMode, systemThemeMode);
 
-    return createTheme({
-      typography: {
-        fontSize: 12,
-      },
-      palette: {
-        mode,
-        primary: Config.instance.branding.primaryColor,
-        secondary: Config.instance.branding.secondaryColor,
-      },
-    });
+    let baseTheme = mode === "dark" ? darkTheme : lightTheme;
+
+    const primaryColor = Config.instance.branding.primaryColor;
+    const secondaryColor = Config.instance.branding.secondaryColor;
+    if (primaryColor) {
+      baseTheme = {
+        ...baseTheme,
+        palette: {
+          ...baseTheme.palette,
+          primary: { ...primaryColor } as PaletteColor,
+        },
+      };
+    }
+    if (secondaryColor) {
+      baseTheme = {
+        ...baseTheme,
+        palette: {
+          ...baseTheme.palette,
+          secondary: { ...secondaryColor } as PaletteColor,
+        },
+      };
+    }
+
+    return createTheme({ ...baseTheme });
   }, [themeMode, systemThemeMode]);
 
   return (
