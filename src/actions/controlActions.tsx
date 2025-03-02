@@ -532,7 +532,7 @@ export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
 
 export interface SetSidebarPanelId {
   type: typeof SET_SIDEBAR_PANEL_ID;
-  sidebarPanelId: string;
+  sidebarPanelId: string | null;
 }
 
 export function setSidebarPanelId(

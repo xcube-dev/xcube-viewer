@@ -28,12 +28,6 @@ interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
   sidebarOpen: boolean;
   setSidebarOpen: (sideBarOpen: boolean) => void;
-  openDialog: (dialogId: string) => void;
-  allowRefresh?: boolean;
-  updateResources: () => void;
-  allowSharing?: boolean;
-  shareStatePermalink: () => void;
-  compact: boolean;
 }
 
 export default function ControlBarActions({

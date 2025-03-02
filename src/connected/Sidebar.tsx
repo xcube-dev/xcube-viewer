@@ -28,6 +28,7 @@ import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
+import { WithLocale } from "@/util/lang";
 
 const basePanels: PanelModel[] = [
   {
@@ -60,7 +61,7 @@ const basePanels: PanelModel[] = [
   },
 ];
 
-interface SidebarImplProps {
+interface SidebarImplProps extends WithLocale {
   sidebarPanelId: string | null;
   setSidebarPanelId: (sidebarPanelId: string | null) => void;
 }
@@ -68,6 +69,7 @@ interface SidebarImplProps {
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
   return {
+    locale: state.controlState.locale,
     sidebarPanelId: state.controlState.sidebarPanelId,
   };
 };
