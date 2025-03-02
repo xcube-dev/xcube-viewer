@@ -23,15 +23,11 @@ const HOR_MARGIN = 5;
 
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
-  box: (theme) => ({
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(HOR_MARGIN),
-    marginRight: theme.spacing(HOR_MARGIN),
-    minWidth: 200,
-  }),
-  label: {
-    color: "grey",
-    fontSize: "1em",
+  box: {
+    marginLeft: HOR_MARGIN,
+    marginRight: HOR_MARGIN,
+    minWidth: "10rem",
+    height: "3rem",
   },
 });
 

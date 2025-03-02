@@ -28,30 +28,20 @@ import VolumeCanvas from "./VolumeCanvas";
 import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
-  card: (theme) => ({
+  card: {
     maxWidth: "100%",
-    marginBottom: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  }),
-  info: (theme) => ({
-    marginRight: theme.spacing(1),
-  }),
-  close: {
-    marginLeft: "auto",
+    marginBottom: 1,
+    marginRight: 1,
   },
   cardContent: {
-    padding: 8,
-  },
-  isoEditor: {
-    display: "flex",
-    flexDirection: "row",
+    padding: 0.1,
   },
   isoTextField: {
-    minWidth: "16em",
-    marginLeft: "1em",
+    marginLeft: 1,
+    flexGrow: 1,
   },
   isoSlider: {
-    minWidth: 200,
+    minWidth: 100,
   },
 });
 

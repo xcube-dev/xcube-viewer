@@ -14,10 +14,12 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
+import { PaletteColor } from "@mui/material/styles/createPalette";
 
 import { Config } from "@/config";
-import { AppState } from "@/states/appState";
-import { getPaletteMode, ThemeMode } from "@/states/controlState";
+import { lightTheme, darkTheme } from "@/theme";
+import { type AppState } from "@/states/appState";
+import { getPaletteMode, type ThemeMode } from "@/states/controlState";
 import AuthWrapper from "@/components/AuthWrapper";
 import AppBar from "./AppBar";
 import AppPane from "./AppPane";
@@ -31,7 +33,7 @@ import UserPlacesDialog from "./UserPlacesDialog";
 import UserLayersDialog from "./UserLayersDialog";
 import UserVariablesDialog from "./UserVariablesDialog";
 
-interface AppProps {
+interface AppImplProps {
   compact: boolean;
   themeMode: ThemeMode;
 }
@@ -39,14 +41,14 @@ interface AppProps {
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
   return {
-    compact: Config.instance.branding.compact,
+    compact: !!Config.instance.branding.compact,
     themeMode: state.controlState.themeMode,
   };
 };
 
 const mapDispatchToProps = {};
 
-const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
+const AppImpl: React.FC<AppImplProps> = ({ compact, themeMode }) => {
   const systemThemeMode = useMediaQuery("(prefers-color-scheme: dark)")
     ? "dark"
     : "light";
@@ -54,17 +56,30 @@ const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
   const theme = React.useMemo(() => {
     const mode: PaletteMode = getPaletteMode(themeMode, systemThemeMode);
 
-    return createTheme({
-      typography: {
-        fontSize: 12,
-        htmlFontSize: 14,
-      },
-      palette: {
-        mode,
-        primary: Config.instance.branding.primaryColor,
-        secondary: Config.instance.branding.secondaryColor,
-      },
-    });
+    let baseTheme = mode === "dark" ? darkTheme : lightTheme;
+
+    const primaryColor = Config.instance.branding.primaryColor;
+    const secondaryColor = Config.instance.branding.secondaryColor;
+    if (primaryColor) {
+      baseTheme = {
+        ...baseTheme,
+        palette: {
+          ...baseTheme.palette,
+          primary: { ...primaryColor } as PaletteColor,
+        },
+      };
+    }
+    if (secondaryColor) {
+      baseTheme = {
+        ...baseTheme,
+        palette: {
+          ...baseTheme.palette,
+          secondary: { ...secondaryColor } as PaletteColor,
+        },
+      };
+    }
+
+    return createTheme({ ...baseTheme });
   }, [themeMode, systemThemeMode]);
 
   return (
@@ -90,5 +105,5 @@ const _App: React.FC<AppProps> = ({ compact, themeMode }) => {
   );
 };
 
-const App = connect(mapStateToProps, mapDispatchToProps)(_App);
+const App = connect(mapStateToProps, mapDispatchToProps)(AppImpl);
 export default App;

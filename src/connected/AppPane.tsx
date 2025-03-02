@@ -25,7 +25,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
     hasConsent: state.controlState.privacyNoticeAccepted,
-    compact: Config.instance.branding.compact,
+    compact: !!Config.instance.branding.compact,
   };
 };
 

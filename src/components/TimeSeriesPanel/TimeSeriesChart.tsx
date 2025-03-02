@@ -444,7 +444,7 @@ export default function TimeSeriesChart({
           onMouseLeave={handleMouseLeave}
           // onClick={handleClick}
           syncId="anyId"
-          style={{ color: labelTextColor, fontSize: "0.8em" }}
+          style={{ color: labelTextColor, fontSize: "0.7rem" }}
           data={data}
           barGap={1}
           barSize={30}

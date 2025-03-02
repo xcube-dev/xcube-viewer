@@ -59,12 +59,12 @@ const COLOR_NAMES: { [name: string]: ColorPartial } = {
 // - resources/config.schema.json
 export interface Branding {
   appBarTitle: string;
-  windowTitle: string;
-  windowIcon: string | null;
-  compact: boolean;
+  windowTitle?: string;
+  windowIcon?: string;
+  compact?: boolean;
   themeMode?: PaletteMode | "system";
-  primaryColor: PaletteColorOptions;
-  secondaryColor: PaletteColorOptions;
+  primaryColor?: PaletteColorOptions;
+  secondaryColor?: PaletteColorOptions;
   headerBackgroundColor?: string;
   headerTitleStyle?: CSSProperties;
   headerIconStyle?: CSSProperties;
@@ -83,7 +83,7 @@ export interface Branding {
   allow3D?: boolean;
 }
 
-function setBrandingColor(
+function setBrandingPaletteColor(
   brandingConfig: Record<string, unknown>,
   key: keyof Branding,
 ) {
@@ -106,7 +106,7 @@ function setBrandingColor(
   if (color !== null) {
     brandingConfig[key] = color;
   } else {
-    throw new Error(`Value of branding.${key} is invalid: ${rawColor}`);
+    brandingConfig[key] = undefined;
   }
 }
 
@@ -126,8 +126,8 @@ export function parseBranding(
   configPath: string,
 ): Branding {
   brandingConfig = { ...brandingConfig };
-  setBrandingColor(brandingConfig, "primaryColor");
-  setBrandingColor(brandingConfig, "secondaryColor");
+  setBrandingPaletteColor(brandingConfig, "primaryColor");
+  setBrandingPaletteColor(brandingConfig, "secondaryColor");
   setBrandingImage(brandingConfig, "logoImage", configPath);
   return brandingConfig as unknown as Branding;
 }

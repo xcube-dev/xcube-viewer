@@ -98,7 +98,7 @@ export default function HistogramChart({
       <AreaChart
         data={data}
         margin={{ top: 0, right: showBrush ? 30 : 5, bottom: 1, left: 2 }}
-        style={{ color: labelTextColor, fontSize: "0.8em" }}
+        style={{ color: labelTextColor, fontSize: "0.8rem" }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis

@@ -72,11 +72,11 @@ export function getUserPlacesFromGeoJson(
   let features: OlFeature[];
   try {
     features = geoJsonFormat.readFeatures(text);
-  } catch (e) {
+  } catch (_e) {
     try {
       const geometry = geoJsonFormat.readGeometry(text);
       features = [new OlFeature(geometry)];
-    } catch (e) {
+    } catch (_e) {
       throw new Error(i18n.get(`Invalid GeoJSON`));
     }
   }

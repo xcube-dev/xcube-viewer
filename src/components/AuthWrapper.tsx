@@ -12,7 +12,7 @@ import { Config } from "@/config";
 import baseUrl from "@/util/baseurl";
 import ErrorBoundary from "./ErrorBoundary";
 
-interface AuthWrapperProps {}
+type AuthWrapperProps = object;
 
 const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({
   children,

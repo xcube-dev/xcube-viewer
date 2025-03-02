@@ -49,7 +49,7 @@ const MESSAGE_STYLE: React.CSSProperties = {
   width: "100%",
   display: "flex",
   justifyContent: "center",
-  margin: "1em",
+  margin: "1rem",
   flexDirection: "column",
   alignItems: "center",
 };
