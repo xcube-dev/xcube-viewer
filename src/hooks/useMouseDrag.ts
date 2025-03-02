@@ -14,10 +14,10 @@ export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
   const handleMouseMove = useRef((event: MouseEvent) => {
     if (event.buttons === 1 && lastPosition.current !== null) {
       event.preventDefault();
-      const { screenX, screenY } = event;
+      const { clientX, clientY } = event;
       const [lastScreenX, lastScreenY] = lastPosition.current;
-      const delta: Point = [screenX - lastScreenX, screenY - lastScreenY];
-      lastPosition.current = [screenX, screenY];
+      const delta: Point = [clientX - lastScreenX, clientY - lastScreenY];
+      lastPosition.current = [clientX, clientY];
       onMouseDrag(delta);
     }
   });
@@ -29,7 +29,7 @@ export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
       document.body.addEventListener("mousemove", handleMouseMove.current);
       document.body.addEventListener("mouseup", handleEndDrag.current);
       document.body.addEventListener("onmouseleave", handleEndDrag.current);
-      lastPosition.current = [event.screenX, event.screenY];
+      lastPosition.current = [event.clientX, event.clientY];
     }
   });
 
