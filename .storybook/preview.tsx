@@ -28,8 +28,6 @@ const preview: Preview = {
     },
   },
   decorators: [
-    // Custom decorator to change MUI theme
-    // when Storybook background changes.
     (Story, context) => {
       // Get the currently selected background in Storybook
       const background = context.globals.backgrounds?.value;
@@ -45,7 +43,7 @@ const preview: Preview = {
       return (
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Story {...context} />
+          <Story />
         </ThemeProvider>
       );
     },

@@ -17,7 +17,6 @@ const styles: Record<string, CSSProperties> = {
     flex: "auto", // same as "flex: 1 1 auto;"
   },
   ver: {
-    // width: "100%",
     height: "100%",
     display: "flex",
     flexFlow: "column nowrap",
@@ -65,8 +64,13 @@ export default function SplitPane({
     dir === "hor" ? { width: splitPosition } : { height: splitPosition };
 
   const handleSplitChange = (delta: number) => {
-    if (child1Ref.current && isNumber(child1Ref.current.clientWidth)) {
-      setSplitPosition(child1Ref.current.clientWidth + delta);
+    const divElement = child1Ref.current;
+    if (divElement) {
+      if (dir === "hor" && isNumber(divElement.clientWidth)) {
+        setSplitPosition(divElement.clientWidth + delta);
+      } else if (dir === "ver" && isNumber(divElement.clientHeight)) {
+        setSplitPosition(divElement.clientHeight + delta);
+      }
     }
   };
 

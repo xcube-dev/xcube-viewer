@@ -29,7 +29,7 @@ export default function MarkdownPopover({
     <Popover anchorEl={anchorEl} open={open} onClose={onClose}>
       <Paper
         sx={{
-          width: "32em",
+          width: "24rem",
           overflowY: "auto",
           fontSize: "smaller",
           padding: 2,

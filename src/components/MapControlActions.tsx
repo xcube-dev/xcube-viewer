@@ -14,6 +14,7 @@ import MapButtonGroup from "@/components/Viewer/MapButtonGroup";
 import MapButton from "@/components/Viewer/MapButton";
 
 const GROUP_STYLE: CSSProperties = {
+  // Same sizes as for OpenLayers
   left: "0.5em",
   top: 65,
 };

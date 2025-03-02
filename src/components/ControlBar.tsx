@@ -16,7 +16,7 @@ const ControlBarForm = styled("form")(({ theme }: { theme: Theme }) => ({
   flexGrow: 0,
 }));
 
-interface ControlBarProps {}
+type ControlBarProps = object;
 
 export default function ControlBar({
   children,

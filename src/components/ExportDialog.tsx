@@ -24,7 +24,7 @@ const styles: Record<string, SxProps<Theme>> = {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     fontSize: theme.typography.fontSize / 2,
-    maxWidth: "6em",
+    maxWidth: "5rem",
   }),
   fileNameTextField: (theme) => ({
     marginLeft: theme.spacing(1),

@@ -28,7 +28,7 @@ function _getStorage(
     storage.setItem(x, x);
     storage.removeItem(x);
     return new Storage(storage as NativeStorage, brandingName);
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

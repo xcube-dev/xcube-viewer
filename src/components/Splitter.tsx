@@ -10,30 +10,30 @@ import { makeStyles } from "@/util/styles";
 import useMouseDrag, { Point } from "@/hooks/useMouseDrag";
 
 const styles = makeStyles({
-  hor: (theme) => ({
+  hor: {
     flex: "none",
     border: "none",
     outline: "none",
+    position: "relative",
+    top: 0,
     width: "8px",
     minHeight: "100%",
     maxHeight: "100%",
     cursor: "col-resize",
-
-    backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
     opacity: 0.0,
-  }),
-  ver: (theme) => ({
+  },
+  ver: {
     flex: "none",
     border: "none",
     outline: "none",
+    position: "relative",
     height: "8px",
+    left: 0,
     minWidth: "100%",
     maxWidth: "100%",
     cursor: "row-resize",
-
-    backgroundColor: theme.palette.mode === "dark" ? "white" : "black",
     opacity: 0.0,
-  }),
+  },
 });
 
 export type SplitDir = "hor" | "ver";
@@ -53,8 +53,8 @@ interface SplitterProps {
  * if direction is "ver".
  */
 export default function Splitter({ dir, onChange }: SplitterProps) {
-  const handleDrag = ([deltaX, _]: Point) => {
-    onChange(deltaX);
+  const handleDrag = ([deltaX, deltaY]: Point) => {
+    onChange(dir === "hor" ? deltaX : deltaY);
   };
   const handleMouseDown = useMouseDrag(handleDrag);
   return (

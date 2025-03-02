@@ -6,4 +6,4 @@
 
 import { UserManagerSettings } from "oidc-client-ts";
 
-export interface AuthClientConfig extends UserManagerSettings {}
+export type AuthClientConfig = UserManagerSettings;

@@ -60,7 +60,7 @@ const basePanels: PanelModel[] = [
   },
 ];
 
-interface SidebarProps {
+interface SidebarImplProps {
   sidebarPanelId: string | null;
   setSidebarPanelId: (sidebarPanelId: string | null) => void;
 }

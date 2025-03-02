@@ -81,7 +81,7 @@ export function getUserPlacesFromWkt(
     }
     const places = [newUserPlace(geometry, geoJsonProps)];
     return [newUserPlaceGroup(group, places)];
-  } catch (e) {
+  } catch (_e) {
     throw new Error(i18n.get(`Invalid Geometry WKT`));
   }
 }
