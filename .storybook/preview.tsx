@@ -1,32 +1,16 @@
+import { useMemo } from "react";
 import type { Preview } from "@storybook/react";
-import { useGlobals } from "@storybook/preview-api";
-import CssBaseline from "@mui/material/CssBaseline";
-import {
-  ThemeProvider,
-  createTheme,
-  type Theme,
-  type ThemeOptions,
-} from "@mui/material/styles";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 
-// Same CSS imports as in src/index.ts
-//
-import "@fontsource/material-icons/latin-400.css";
+import { lightTheme, darkTheme } from "../src/theme";
+
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import "@fontsource/material-icons";
 
-// We synchronize Storybook layout area's background colors
-// (not the Storybook UI theme!)
-// with background colors from MUI theme modes.
-//
-const lightThemeOptions: ThemeOptions = { palette: { mode: "light" } };
-const darkThemeOptions: ThemeOptions = { palette: { mode: "dark" } };
-const lightTheme: Theme = createTheme(lightThemeOptions);
-const darkTheme: Theme = createTheme(darkThemeOptions);
-const lightBackground = lightTheme.palette.background.default;
-const darkBackground = darkTheme.palette.background.default;
-
+// noinspection JSUnusedGlobalSymbols
 const preview: Preview = {
   parameters: {
     controls: {
@@ -36,10 +20,10 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: "light", // Start-background
+      default: "light",
       values: [
-        { name: "light", value: lightBackground },
-        { name: "dark", value: darkBackground },
+        { name: "light", value: lightTheme.palette.background.default },
+        { name: "dark", value: darkTheme.palette.background.default },
       ],
     },
   },
@@ -47,10 +31,19 @@ const preview: Preview = {
     // Custom decorator to change MUI theme
     // when Storybook background changes.
     (Story, context) => {
-      const [{ backgrounds }] = useGlobals();
-      const isDark: boolean = backgrounds?.value === darkBackground;
+      // Get the currently selected background in Storybook
+      const background = context.globals.backgrounds?.value;
+
+      // Determine the theme based on the Storybook background
+      const theme = useMemo(() => {
+        if (background === darkTheme.palette.background.default) {
+          return darkTheme;
+        }
+        return lightTheme;
+      }, [background]);
+
       return (
-        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <ThemeProvider theme={theme}>
           <CssBaseline />
           <Story {...context} />
         </ThemeProvider>

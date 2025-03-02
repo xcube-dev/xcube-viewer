@@ -76,9 +76,8 @@ const mapDispatchToProps = {
   setSidebarPanelId,
 };
 
-function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
+function SidebarImpl({ sidebarPanelId, setSidebarPanelId }: SidebarImplProps) {
   const contributionsRecord = useContributionsRecord();
-
   const panelContributions = useMemo(
     () =>
       (contributionsRecord["panels"] || []) as ContributionState<PanelModel>[],
@@ -135,5 +134,5 @@ function _Sidebar({ sidebarPanelId, setSidebarPanelId }: SidebarProps) {
   );
 }
 
-const Sidebar = connect(mapStateToProps, mapDispatchToProps)(_Sidebar);
+const Sidebar = connect(mapStateToProps, mapDispatchToProps)(SidebarImpl);
 export default Sidebar;

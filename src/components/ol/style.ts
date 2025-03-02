@@ -30,7 +30,7 @@ export function setFeatureStyle(
   } else {
     fillOpacity = typeof fillOpacity === "number" ? fillOpacity : 0.25;
     let fillColorRgba = rgba(color);
-    if (Array.isArray(fillColorRgba)) {
+    if (Array.isArray(fillColorRgba) && fillColorRgba.length === 4) {
       fillColorRgba = [
         fillColorRgba[0],
         fillColorRgba[1],

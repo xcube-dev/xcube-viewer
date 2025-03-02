@@ -219,7 +219,7 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
           );
         })}
         {!editing && (
-          <ListItem sx={{ minHeight: "3em" }}>
+          <ListItem sx={{ minHeight: "2rem" }}>
             <ListItemSecondaryAction>
               <Box sx={{ display: "flex", gap: 2, paddingTop: 2 }}>
                 <Tooltip title={i18n.get("Add layer from a Web Map Service")}>

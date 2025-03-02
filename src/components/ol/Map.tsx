@@ -40,7 +40,7 @@ interface MapProps extends OlMapOptions {
   onDropFiles?: (files: File[]) => void;
 }
 
-interface MapState {}
+type MapState = object;
 
 const DEFAULT_CONTAINER_STYLE: React.CSSProperties = {
   position: "relative",
