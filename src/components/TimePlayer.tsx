@@ -24,11 +24,11 @@ import { makeStyles } from "@/util/styles";
 
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
-  formControl: (theme) => ({
-    marginTop: theme.spacing(2.5),
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  }),
+  formControl: {
+    marginLeft: 1,
+    marginRight: 1,
+    marginTop: 2,
+  },
   iconButton: {
     padding: "2px",
   },

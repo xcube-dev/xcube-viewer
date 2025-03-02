@@ -28,19 +28,13 @@ import VolumeCanvas from "./VolumeCanvas";
 import { makeStyles } from "@/util/styles";
 
 const styles = makeStyles({
-  card: (theme) => ({
+  card: {
     maxWidth: "100%",
-    marginBottom: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  }),
-  info: (theme) => ({
-    marginRight: theme.spacing(1),
-  }),
-  close: {
-    marginLeft: "auto",
+    marginBottom: 1,
+    marginRight: 1,
   },
   cardContent: {
-    padding: 8,
+    padding: 0.1,
   },
   isoTextField: {
     marginLeft: 1,
