@@ -7,19 +7,18 @@
 import { Theme, styled } from "@mui/system";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
-import Tooltip from "@mui/material/Tooltip";
-import ToggleButton from "@mui/material/ToggleButton";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { commonStyles } from "@/components/common-styles";
+import ToolButton from "@/components/ToolButton";
 
 // noinspection JSUnusedLocalSymbols
 const StyledFormControl = styled(FormControl)(
   ({ theme }: { theme: Theme }) => ({
     marginTop: theme.spacing(2),
-    marginRight: theme.spacing(0.5),
+    marginRight: 0,
     marginLeft: "auto",
   }),
 );
@@ -40,17 +39,15 @@ export default function ControlBarActions({
   }
 
   const sidebarButton = (
-    <ToggleButton
-      value={"sidebar"}
-      selected={sidebarOpen}
-      onClick={() => setSidebarOpen(!sidebarOpen)}
-      size="small"
+    <ToolButton
       sx={commonStyles.toggleButton}
-    >
-      <Tooltip arrow title={i18n.get("Show or hide sidebar")}>
-        {<ViewSidebarIcon />}
-      </Tooltip>
-    </ToggleButton>
+      toggle={true}
+      selected={sidebarOpen}
+      value={"sidebar"}
+      onClick={() => setSidebarOpen(!sidebarOpen)}
+      tooltipText={i18n.get("Show or hide sidebar")}
+      icon={<ViewSidebarIcon />}
+    />
   );
 
   return (

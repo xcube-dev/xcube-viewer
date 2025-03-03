@@ -7,5 +7,5 @@
 import { makeStyles } from "@/util/styles";
 
 export const commonStyles = makeStyles({
-  toggleButton: { padding: 0.3 },
+  toggleButton: { padding: 0.5 },
 });
