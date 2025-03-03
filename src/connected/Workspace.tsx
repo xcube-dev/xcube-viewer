@@ -4,18 +4,17 @@
  * https://opensource.org/licenses/MIT.
  */
 
-// noinspection JSUnusedLocalSymbols
-
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
+import { useTheme } from "@mui/material";
+import Box from "@mui/material/Box";
 
 import { AppState } from "@/states/appState";
 import { setSidebarPosition } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import Sidebar from "./Sidebar";
-import { useTheme } from "@mui/material";
 
 // Adjust for debugging split pane style
 const styles: Record<string, CSSProperties> = {
@@ -50,6 +49,15 @@ const styles: Record<string, CSSProperties> = {
     overflow: "hidden",
   },
 
+  noSplitHor: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  noSplitVer: {
+    display: "flex",
+    flexDirection: "column",
+  },
+
   viewer: {
     overflow: "hidden",
     width: "100%",
@@ -59,6 +67,7 @@ const styles: Record<string, CSSProperties> = {
 
 interface WorkspaceImplProps {
   sidebarOpen: boolean;
+  sidebarPanelId: string | null;
   sidebarPosition: number;
   setSidebarPosition: (sidebarPos: number) => void;
 }
@@ -67,10 +76,12 @@ interface WorkspaceImplProps {
 const mapStateToProps = (state: AppState) => {
   return {
     sidebarOpen: state.controlState.sidebarOpen,
+    sidebarPanelId: state.controlState.sidebarPanelId,
     sidebarPosition: state.controlState.sidebarPosition,
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
   setSidebarPosition,
 };
@@ -82,6 +93,7 @@ const getLayout = (): Layout => {
 
 function WorkspaceImpl({
   sidebarOpen,
+  sidebarPanelId,
   sidebarPosition,
   setSidebarPosition,
 }: WorkspaceImplProps) {
@@ -115,19 +127,28 @@ function WorkspaceImpl({
   const dirSuffix = layout === "hor" ? "Hor" : "Ver";
 
   if (sidebarOpen) {
-    return (
-      <SplitPane
-        dir={layout}
-        splitPosition={sidebarPosition}
-        setSplitPosition={setSidebarPosition}
-        style={styles["container" + dirSuffix]}
-        child1Style={styles["viewer" + dirSuffix]}
-        child2Style={styles["sidebar" + dirSuffix]}
-      >
-        <Viewer onMapRef={setMap} theme={theme} />
-        <Sidebar />
-      </SplitPane>
-    );
+    if (sidebarPanelId) {
+      return (
+        <SplitPane
+          dir={layout}
+          splitPosition={sidebarPosition}
+          setSplitPosition={setSidebarPosition}
+          style={styles["container" + dirSuffix]}
+          child1Style={styles["viewer" + dirSuffix]}
+          child2Style={styles["sidebar" + dirSuffix]}
+        >
+          <Viewer onMapRef={setMap} theme={theme} />
+          <Sidebar />
+        </SplitPane>
+      );
+    } else {
+      return (
+        <Box sx={layout === "hor" ? styles.noSplitHor : styles.noSplitVer}>
+          <Viewer onMapRef={setMap} theme={theme} />
+          <Sidebar />
+        </Box>
+      );
+    }
   } else {
     return (
       <div style={styles.viewer}>
