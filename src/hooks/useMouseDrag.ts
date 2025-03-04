@@ -29,10 +29,10 @@ export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
   const handleMouseDown = useRef((event: React.MouseEvent) => {
     if (event.buttons === 1) {
       event.preventDefault();
+      lastPosition.current = [event.screenX, event.screenY];
       document.body.addEventListener("mousemove", handleMouseMove.current);
       document.body.addEventListener("mouseup", handleEndDrag.current);
       document.body.addEventListener("onmouseleave", handleEndDrag.current);
-      lastPosition.current = [event.clientX, event.clientY];
     }
   });
 

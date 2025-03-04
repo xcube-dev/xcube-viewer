@@ -3,8 +3,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import SplitPane from "./SplitPane";
 
-const meta = {
-  component: SplitPane,
+type StoryProps = object;
+
+const meta: Meta<StoryProps> = {
+  //component: SplitPane,
   title: "SplitPane",
   parameters: {
     // Optional parameter to center the component in the Canvas.
@@ -16,14 +18,15 @@ const meta = {
   tags: ["autodocs"],
   //👇 Our exports that end in "Data" are not stories.
   excludeStories: /.*Data$/,
-} satisfies Meta<typeof SplitPane>;
+};
 
 // noinspection JSUnusedGlobalSymbols
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const SimpleHorizontal: Story = {
+// noinspection JSUnusedGlobalSymbols
+export const Horizontal: Story = {
   render: (_args) => {
     const [splitPosition, setSplitPosition] = useState<number>(100); // Controlled state
     return (
@@ -33,39 +36,39 @@ export const SimpleHorizontal: Story = {
         setSplitPosition={setSplitPosition}
         style={{
           width: 400,
-          height: 200,
+          height: 300,
           border: "2px solid red",
-          padding: 4,
-          display: "flex",
-          flexDirection: "row",
+          padding: 10,
         }}
+        debug
       >
-        <div
-          style={{
-            height: "100%",
-            border: "2px solid blue",
-            padding: 4,
-          }}
-        >
-          Pane 1
-        </div>
-        <div
-          style={{
-            flexGrow: 1,
-            height: "100%",
-            border: "2px solid green",
-            padding: 4,
-          }}
-        >
-          Pane 2
-        </div>
+        <div style={{ height: "100%" }}>Pane 1</div>
+        <div style={{ height: "100%" }}>Pane 2</div>
       </SplitPane>
     );
   },
-  args: {
-    dir: "hor",
-    splitPosition: 0,
-    setSplitPosition: () => {},
-    children: [],
+};
+
+// noinspection JSUnusedGlobalSymbols
+export const Vertical: Story = {
+  render: (_args) => {
+    const [splitPosition, setSplitPosition] = useState<number>(100); // Controlled state
+    return (
+      <SplitPane
+        dir="ver"
+        splitPosition={splitPosition}
+        setSplitPosition={setSplitPosition}
+        style={{
+          width: 300,
+          height: 400,
+          border: "2px solid red",
+          padding: 10,
+        }}
+        debug
+      >
+        <div style={{ width: "100%" }}>Pane 1</div>
+        <div style={{ width: "100%" }}>Pane 2</div>
+      </SplitPane>
+    );
   },
 };
