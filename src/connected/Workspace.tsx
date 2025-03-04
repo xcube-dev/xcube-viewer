@@ -14,7 +14,7 @@ import { AppState } from "@/states/appState";
 import { setSidebarPosition } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
-import Sidebar from "./Sidebar";
+import SidePanel from "./SidePanel";
 
 // Adjust for debugging split pane style
 const styles: Record<string, CSSProperties> = {
@@ -26,17 +26,6 @@ const styles: Record<string, CSSProperties> = {
     flexGrow: 1,
     overflowX: "hidden",
     overflowY: "auto",
-  },
-
-  viewerHor: {
-    height: "100%",
-    overflow: "hidden",
-    padding: 0,
-  },
-  viewerVer: {
-    width: "100%",
-    overflow: "hidden",
-    padding: 0,
   },
 
   sidebarHor: {
@@ -52,10 +41,24 @@ const styles: Record<string, CSSProperties> = {
   noSplitHor: {
     display: "flex",
     flexDirection: "row",
+    height: "100%",
   },
   noSplitVer: {
     display: "flex",
     flexDirection: "column",
+  },
+
+  viewerHor: {
+    flexGrow: 1,
+    height: "100%",
+    overflow: "hidden",
+    padding: 0,
+  },
+  viewerVer: {
+    flexGrow: 1,
+    width: "100%",
+    overflow: "hidden",
+    padding: 0,
   },
 
   viewer: {
@@ -138,14 +141,16 @@ function WorkspaceImpl({
           child2Style={styles["sidebar" + dirSuffix]}
         >
           <Viewer onMapRef={setMap} theme={theme} />
-          <Sidebar />
+          <SidePanel />
         </SplitPane>
       );
     } else {
       return (
         <Box sx={layout === "hor" ? styles.noSplitHor : styles.noSplitVer}>
-          <Viewer onMapRef={setMap} theme={theme} />
-          <Sidebar />
+          <div style={layout === "hor" ? styles.viewerHor : styles.viewerVer}>
+            <Viewer onMapRef={setMap} theme={theme} />
+          </div>
+          <SidePanel />
         </Box>
       );
     }

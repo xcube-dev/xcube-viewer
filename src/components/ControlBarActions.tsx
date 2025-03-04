@@ -4,24 +4,24 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { Theme, styled } from "@mui/system";
-import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
+import { makeStyles } from "@/util/styles";
 import { commonStyles } from "@/components/common-styles";
 import ToolButton from "@/components/ToolButton";
 
 // noinspection JSUnusedLocalSymbols
-const StyledFormControl = styled(FormControl)(
-  ({ theme }: { theme: Theme }) => ({
-    marginTop: theme.spacing(2),
-    marginRight: 0,
+const styles = makeStyles({
+  formControl: {
     marginLeft: "auto",
-  }),
-);
+    marginRight: 1,
+    marginTop: 2,
+    marginBottom: 0,
+  },
+});
 
 interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
@@ -51,8 +51,8 @@ export default function ControlBarActions({
   );
 
   return (
-    <StyledFormControl variant="standard">
-      <Box>{sidebarButton}</Box>
-    </StyledFormControl>
+    <FormControl sx={styles.formControl} variant={"standard"}>
+      {sidebarButton}
+    </FormControl>
   );
 }

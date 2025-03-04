@@ -61,7 +61,7 @@ const basePanels: PanelModel[] = [
   },
 ];
 
-interface SidebarImplProps extends WithLocale {
+interface SidePanelImplProps extends WithLocale {
   sidebarPanelId: string | null;
   setSidebarPanelId: (sidebarPanelId: string | null) => void;
 }
@@ -78,7 +78,10 @@ const mapDispatchToProps = {
   setSidebarPanelId,
 };
 
-function SidebarImpl({ sidebarPanelId, setSidebarPanelId }: SidebarImplProps) {
+function SidePanelImpl({
+  sidebarPanelId,
+  setSidebarPanelId,
+}: SidePanelImplProps) {
   const contributionsRecord = useContributionsRecord();
   const panelContributions = useMemo(
     () =>
@@ -136,5 +139,8 @@ function SidebarImpl({ sidebarPanelId, setSidebarPanelId }: SidebarImplProps) {
   );
 }
 
-const Sidebar = connect(mapStateToProps, mapDispatchToProps)(SidebarImpl);
-export default Sidebar;
+const SidePanelConnected = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SidePanelImpl);
+export default SidePanelConnected;
