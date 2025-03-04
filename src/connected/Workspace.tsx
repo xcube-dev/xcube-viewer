@@ -28,16 +28,6 @@ const styles: Record<string, CSSProperties> = {
     overflowY: "auto",
   },
 
-  sidebarHor: {
-    flex: "auto",
-    overflowX: "hidden",
-    overflowY: "auto",
-  },
-  sidebarVer: {
-    width: "100%",
-    overflow: "hidden",
-  },
-
   noSplitHor: {
     display: "flex",
     flexDirection: "row",
@@ -46,19 +36,6 @@ const styles: Record<string, CSSProperties> = {
   noSplitVer: {
     display: "flex",
     flexDirection: "column",
-  },
-
-  viewerHor: {
-    flexGrow: 1,
-    height: "100%",
-    overflow: "hidden",
-    padding: 0,
-  },
-  viewerVer: {
-    flexGrow: 1,
-    width: "100%",
-    overflow: "hidden",
-    padding: 0,
   },
 
   viewer: {
@@ -137,8 +114,6 @@ function WorkspaceImpl({
           splitPosition={sidebarPosition}
           setSplitPosition={setSidebarPosition}
           style={styles["container" + dirSuffix]}
-          child1Style={styles["viewer" + dirSuffix]}
-          child2Style={styles["sidebar" + dirSuffix]}
         >
           <Viewer onMapRef={setMap} theme={theme} />
           <SidePanel />
