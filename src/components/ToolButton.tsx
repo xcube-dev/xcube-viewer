@@ -8,7 +8,7 @@ import { FC, MouseEvent, ReactElement } from "react";
 import type { SxProps, Theme } from "@mui/system";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip, { type TooltipProps } from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
 
 import { makeStyles } from "@/util/styles";
@@ -30,6 +30,7 @@ interface ToolButtonProps {
   ) => void;
   disabled?: boolean;
   tooltipText?: string;
+  tooltipPlacement?: TooltipProps["placement"];
   toggle?: boolean;
   value?: string; // required for toggle buttons
   selected?: boolean;
@@ -43,6 +44,7 @@ const ToolButton: FC<ToolButtonProps> = ({
   onClick,
   icon,
   tooltipText,
+  tooltipPlacement,
   toggle,
   value,
   selected,
@@ -65,7 +67,13 @@ const ToolButton: FC<ToolButtonProps> = ({
     );
 
   const iconWithTooltip = tooltipText ? (
-    <Tooltip arrow title={tooltipText}>
+    <Tooltip
+      arrow
+      title={tooltipText}
+      enterDelay={600}
+      leaveDelay={100}
+      placement={tooltipPlacement}
+    >
       {iconElement}
     </Tooltip>
   ) : (

@@ -8,6 +8,14 @@ import type { Theme } from "@mui/system";
 
 import { makeStyles } from "@/util/styles";
 
+const sidebarContainer = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 1,
+  padding: 1,
+  borderTop: "1px solid",
+};
+
 const styles = makeStyles({
   mainContainer: {
     display: "flex",
@@ -32,14 +40,14 @@ const styles = makeStyles({
     borderTop: "1px solid",
     borderTopColor: theme.palette.divider,
   }),
-  sidebarContainer: (theme: Theme) => ({
-    display: "flex",
-    flexDirection: "column",
-    gap: 0.5,
-    padding: 0.5,
+  sidebarContainerSelected: (theme: Theme) => ({
+    ...sidebarContainer,
+    borderTopColor: theme.palette.divider,
     borderLeft: "1px solid",
     borderLeftColor: theme.palette.divider,
-    borderTop: "1px solid",
+  }),
+  sidebarContainer: (theme: Theme) => ({
+    ...sidebarContainer,
     borderTopColor: theme.palette.divider,
   }),
   sidebarButton: {},

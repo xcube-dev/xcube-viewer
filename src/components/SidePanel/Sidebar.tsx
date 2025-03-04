@@ -32,7 +32,13 @@ function Sidebar({
     return null;
   }
   return (
-    <Box sx={styles.sidebarContainer}>
+    <Box
+      sx={
+        selectedPanelId
+          ? styles.sidebarContainerSelected
+          : styles.sidebarContainer
+      }
+    >
       {effectivePanels.map((p) => (
         <ToolButton
           key={p.id}
@@ -44,6 +50,7 @@ function Sidebar({
           disabled={p.disabled}
           icon={p.icon}
           tooltipText={p.tooltip || p.title}
+          tooltipPlacement={"left"}
           selected={p.id === selectedPanelId}
           onClick={() =>
             setSelectedPanelId(p.id !== selectedPanelId ? p.id : null)
