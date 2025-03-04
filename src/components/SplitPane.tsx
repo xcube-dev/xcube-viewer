@@ -6,7 +6,6 @@
 
 import React, { CSSProperties, PropsWithChildren, useRef } from "react";
 
-import { isNumber } from "@/util/types";
 import Splitter, { SplitDir } from "./Splitter";
 
 // noinspection JSUnusedLocalSymbols
@@ -15,12 +14,14 @@ const styles: Record<string, CSSProperties> = {
     display: "flex",
     flexFlow: "row nowrap",
     flex: "auto", // same as "flex: 1 1 auto;"
+    boxSizing: "border-box",
   },
   ver: {
     height: "100%",
     display: "flex",
     flexFlow: "column nowrap",
     flex: "auto", // same as "flex: 1 1 auto;"
+    boxSizing: "border-box",
   },
   childHor: {
     flex: "none",
@@ -66,11 +67,10 @@ export default function SplitPane({
   const handleSplitChange = (delta: number) => {
     const divElement = child1Ref.current;
     if (divElement) {
-      if (dir === "hor" && isNumber(divElement.clientWidth)) {
-        setSplitPosition(divElement.clientWidth + delta);
-      } else if (dir === "ver" && isNumber(divElement.clientHeight)) {
-        setSplitPosition(divElement.clientHeight + delta);
-      }
+      const clientRect = divElement.getBoundingClientRect();
+      const oldSplitPosition =
+        dir === "hor" ? clientRect.width : clientRect.height;
+      setSplitPosition(oldSplitPosition + delta);
     }
   };
 

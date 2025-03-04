@@ -5,22 +5,25 @@
  */
 
 import React, { useRef } from "react";
+import { throttleWithRAF } from "@/util/throttle";
 
 export type Point = [number, number];
 
 export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
   const lastPosition = useRef<Point | null>(null);
 
-  const handleMouseMove = useRef((event: MouseEvent) => {
-    if (event.buttons === 1 && lastPosition.current !== null) {
-      event.preventDefault();
-      const { clientX, clientY } = event;
-      const [lastScreenX, lastScreenY] = lastPosition.current;
-      const delta: Point = [clientX - lastScreenX, clientY - lastScreenY];
-      lastPosition.current = [clientX, clientY];
-      onMouseDrag(delta);
-    }
-  });
+  const handleMouseMove = useRef(
+    throttleWithRAF((event: MouseEvent) => {
+      if (event.buttons === 1 && lastPosition.current !== null) {
+        event.preventDefault();
+        const { screenX, screenY } = event;
+        const [lastScreenX, lastScreenY] = lastPosition.current;
+        const delta: Point = [screenX - lastScreenX, screenY - lastScreenY];
+        lastPosition.current = [screenX, screenY];
+        onMouseDrag(delta);
+      }
+    }),
+  );
 
   // Return value
   const handleMouseDown = useRef((event: React.MouseEvent) => {
