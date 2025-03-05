@@ -5,7 +5,8 @@
  */
 
 import FormControl from "@mui/material/FormControl";
-import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
@@ -41,12 +42,10 @@ export default function ControlBarActions({
   const sidebarButton = (
     <ToolButton
       sx={commonStyles.toggleButton}
-      toggle={true}
-      selected={sidebarOpen}
       value={"sidebar"}
       onClick={() => setSidebarOpen(!sidebarOpen)}
-      tooltipText={i18n.get("Show or hide sidebar")}
-      icon={<ViewSidebarIcon />}
+      tooltipText={i18n.get(sidebarOpen ? "Hide sidebar" : "Show sidebar")}
+      icon={sidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
     />
   );
 

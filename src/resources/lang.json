@@ -841,9 +841,14 @@
       "se": "Slå på eller av informationsrutan"
     },
     {
-      "en": "Show or hide sidebar",
-      "de": "Seitenleiste ein- oder ausblenden",
-      "se": "Visa eller dölja sidofält"
+      "en": "Show sidebar",
+      "de": "Seitenleiste einblenden",
+      "se": "Visa sidofältet"
+    },
+    {
+      "en": "Hide sidebar",
+      "de": "Seitenleiste ausblenden",
+      "se": "Dölj sidofältet"
     },
     {
       "en": "Unknown color bar",
