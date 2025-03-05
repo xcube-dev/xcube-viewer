@@ -6,11 +6,12 @@
 
 import { useMemo } from "react";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 
 import type { PanelModel } from "./panelModel";
 import styles from "./styles";
 import Sidebar from "./Sidebar";
+import SidePanelHeader from "./SidePanelHeader";
+import SidePanelContent from "./SidePanelContent";
 
 export interface SidePanelProps {
   hidden?: boolean;
@@ -37,16 +38,8 @@ function SidePanel({
     <Box width={width} height="100%" sx={styles.mainContainer}>
       {selectedPanel && (
         <Box sx={styles.panelContainer}>
-          <Box sx={styles.panelHeader}>
-            <Typography
-              variant="subtitle1"
-              color="textSecondary"
-              sx={{ fontWeight: "bold" }}
-            >
-              {selectedPanel.title}
-            </Typography>
-          </Box>
-          <Box sx={styles.panelContent}>{selectedPanel.content}</Box>
+          <SidePanelHeader selectedPanel={selectedPanel} />
+          <SidePanelContent selectedPanel={selectedPanel} />
         </Box>
       )}
       <Sidebar

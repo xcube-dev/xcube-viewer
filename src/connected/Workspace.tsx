@@ -122,9 +122,7 @@ function WorkspaceImpl({
     } else {
       return (
         <Box sx={layout === "hor" ? styles.noSplitHor : styles.noSplitVer}>
-          <div style={layout === "hor" ? styles.viewerHor : styles.viewerVer}>
-            <Viewer onMapRef={setMap} theme={theme} />
-          </div>
+          <Viewer onMapRef={setMap} theme={theme} />
           <SidePanel />
         </Box>
       );

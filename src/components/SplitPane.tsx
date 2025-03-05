@@ -78,8 +78,6 @@ export default function SplitPane({
     splitSize = "66%";
   }
 
-  console.log("splitSize:", splitSize);
-
   const child1SizeStyle: CSSProperties =
     dir === "hor" ? { width: splitSize } : { height: splitSize };
 
@@ -87,8 +85,6 @@ export default function SplitPane({
     const divElement = child1Ref.current;
     if (divElement) {
       const clientRect = divElement.getBoundingClientRect();
-      console.log("clientRect:", clientRect);
-      console.log("delta:", delta);
       const oldSplitPosition =
         dir === "hor" ? clientRect.width : clientRect.height;
       setSplitPosition(oldSplitPosition + delta);
