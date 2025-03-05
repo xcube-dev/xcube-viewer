@@ -41,9 +41,9 @@ export default function MapSplitter({
   onPositionChange,
 }: MapSplitterProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
-  const handleDrag = useRef(([deltaX, _]: Point) => {
+  const handleDrag = useRef(([offsetX, _]: Point) => {
     if (divRef.current !== null) {
-      onPositionChange(divRef.current.offsetLeft + deltaX);
+      onPositionChange(offsetX);
     }
   });
   const handleMouseDown = useMouseDrag(handleDrag.current);

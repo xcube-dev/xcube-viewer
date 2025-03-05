@@ -6,6 +6,7 @@
 
 import Box from "@mui/material/Box";
 
+import { useCallback } from "react";
 import { makeStyles } from "@/util/styles";
 import useMouseDrag, { Point } from "@/hooks/useMouseDrag";
 
@@ -53,9 +54,12 @@ interface SplitterProps {
  * if direction is "ver".
  */
 export default function Splitter({ dir, onChange }: SplitterProps) {
-  const handleDrag = ([deltaX, deltaY]: Point) => {
-    onChange(dir === "hor" ? deltaX : deltaY);
-  };
+  const handleDrag = useCallback(
+    ([offsetX, offsetY]: Point) => {
+      onChange(dir === "hor" ? offsetX : offsetY);
+    },
+    [dir, onChange],
+  );
   const handleMouseDown = useMouseDrag(handleDrag);
   return (
     <Box

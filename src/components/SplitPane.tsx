@@ -4,7 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import React, { CSSProperties, PropsWithChildren, useRef } from "react";
+import React, {
+  CSSProperties,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 
 import Splitter, { SplitDir } from "./Splitter";
 import { isNumber, isString } from "@/util/types";
@@ -64,9 +70,6 @@ export default function SplitPane({
 }: PropsWithChildren<SplitPaneProps>) {
   const child1Ref = useRef<HTMLDivElement | null>(null);
 
-  if (!children || !Array.isArray(children) || children.length !== 2) {
-    return null;
-  }
   const styles = dir === "hor" ? stylesHor : stylesVer;
 
   let splitSize: string | number;
@@ -78,18 +81,24 @@ export default function SplitPane({
     splitSize = "66%";
   }
 
-  const child1SizeStyle: CSSProperties =
-    dir === "hor" ? { width: splitSize } : { height: splitSize };
+  const child1SizeStyle: CSSProperties = useMemo(
+    () => (dir === "hor" ? { width: splitSize } : { height: splitSize }),
+    [dir, splitSize],
+  );
 
-  const handleSplitChange = (delta: number) => {
-    const divElement = child1Ref.current;
-    if (divElement) {
-      const clientRect = divElement.getBoundingClientRect();
-      const oldSplitPosition =
-        dir === "hor" ? clientRect.width : clientRect.height;
-      setSplitPosition(oldSplitPosition + delta);
-    }
-  };
+  const handleSplitChange = useCallback(
+    (splitPosition: number) => {
+      const divElement = child1Ref.current;
+      if (divElement) {
+        setSplitPosition(splitPosition);
+      }
+    },
+    [setSplitPosition],
+  );
+
+  if (!children || !Array.isArray(children) || children.length !== 2) {
+    return null;
+  }
 
   return (
     <div id="SplitPane" style={{ ...styles.container, ...style }}>

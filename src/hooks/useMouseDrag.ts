@@ -4,16 +4,29 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import React, { useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { throttleWithRAF } from "@/util/throttle";
 
 export type Point = [number, number];
 
+/**
+ * A hook that takes an `onMouseDrag` handler that reports resize events
+ * and returns an `onMouseDown(e: React.MouseEvent) => void` handler which
+ * can be attached to components.
+ *
+ * @param onMouseDrag A mouse drag handler, typically memoized.
+ * @returns onMouseDown A mouse handler, stable with respect to `onMouseDrag`.
+ */
 export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
+  const onMouseDragRef = useRef(onMouseDrag);
+  useEffect(() => {
+    onMouseDragRef.current = onMouseDrag;
+  }, [onMouseDrag]);
+
   const lastPosition = useRef<Point | null>(null);
 
-  const handleMouseMove = useRef(
-    throttleWithRAF((event: MouseEvent) => {
+  const _handleMouseMove = useCallback(
+    (event: MouseEvent) => {
       if (event.buttons === 1 && lastPosition.current !== null) {
         event.preventDefault();
         const { screenX, screenY } = event;
@@ -22,29 +35,48 @@ export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
         lastPosition.current = [screenX, screenY];
         onMouseDrag(delta);
       }
-    }),
+    },
+    [onMouseDrag],
+  );
+
+  const handleMouseMove = useMemo(
+    () => throttleWithRAF(_handleMouseMove),
+    [_handleMouseMove],
   );
 
   // Return value
-  const handleMouseDown = useRef((event: React.MouseEvent) => {
-    if (event.buttons === 1) {
-      event.preventDefault();
-      lastPosition.current = [event.screenX, event.screenY];
-      document.body.addEventListener("mousemove", handleMouseMove.current);
-      document.body.addEventListener("mouseup", handleEndDrag.current);
-      document.body.addEventListener("onmouseleave", handleEndDrag.current);
-    }
-  });
+  const handleMouseDown = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.buttons === 1) {
+        event.preventDefault();
+        lastPosition.current = [event.screenX, event.screenY];
+        const handleEndDrag = handleEndDragRef.current;
+        document.body.addEventListener("mousemove", handleMouseMove);
+        document.body.addEventListener("mouseup", handleEndDrag);
+        document.body.addEventListener("onmouseleave", handleEndDrag);
+      }
+    },
+    [handleMouseMove],
+  );
 
-  const handleEndDrag = useRef((event: Event) => {
-    if (lastPosition.current !== null) {
-      event.preventDefault();
-      lastPosition.current = null;
-      document.body.removeEventListener("mousemove", handleMouseMove.current);
-      document.body.removeEventListener("mouseup", handleEndDrag.current);
-      document.body.removeEventListener("onmouseleave", handleEndDrag.current);
-    }
-  });
+  const handleEndDrag = useCallback(
+    (event: Event) => {
+      if (lastPosition.current !== null) {
+        event.preventDefault();
+        lastPosition.current = null;
+        const handleEndDrag = handleEndDragRef.current;
+        document.body.removeEventListener("mousemove", handleMouseMove);
+        document.body.removeEventListener("mouseup", handleEndDrag);
+        document.body.removeEventListener("onmouseleave", handleEndDrag);
+      }
+    },
+    [handleMouseMove],
+  );
 
-  return handleMouseDown.current;
+  const handleEndDragRef = useRef<(event: Event) => void>(() => {});
+  useEffect(() => {
+    handleEndDragRef.current = handleEndDrag;
+  }, [handleEndDrag]);
+
+  return handleMouseDown;
 }
