@@ -32,6 +32,8 @@ export const DevRefPage = ({ open, onClose }: DevRefPageProps) => {
     }
   }, [templateText, contributionPoints]);
 
+  console.log(text);
+
   return (
     <MarkdownPage
       title={i18n.get("Developer Reference")}
@@ -61,14 +63,20 @@ function getExtensionsMarkdown(
 }
 
 function getDerivedStateMarkdown() {
-  const lines: string[] = [];
+  const lines: string[] = [
+    "",
+    "",
+    "| <property> | Python type   | Description   |",
+    "|------------|---------------|---------------|",
+  ];
   Object.getOwnPropertyNames(derivedStateProperties).forEach(
     (propertyName: string) => {
       const derivedProperty = derivedStateProperties[propertyName];
       lines.push(
-        `- \`${propertyName}\`: **${derivedProperty.type}**    ${derivedProperty.description}`,
+        `| \`${propertyName}\` | **${derivedProperty.type.replace("|", "\\|")}** | ${derivedProperty.description} |`,
       );
     },
   );
+  lines.push("");
   return lines.join("\n");
 }
