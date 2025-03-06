@@ -7,6 +7,7 @@
 import { CSSProperties, useCallback, useMemo } from "react";
 import useMouseDrag from "@/hooks/useMouseDrag";
 import { isNumber } from "@/util/types";
+import { makeCssStyles } from "@/util/styles";
 
 const defaultHandleSize = "8px";
 
@@ -19,7 +20,7 @@ const containerStyle: CSSProperties = {
   zIndex: 999,
 };
 
-const styles: Record<string, CSSProperties> = {
+const styles = makeCssStyles({
   hor: {
     ...containerStyle,
     top: 0,
@@ -34,7 +35,7 @@ const styles: Record<string, CSSProperties> = {
     height: defaultHandleSize,
     cursor: "row-resize",
   },
-};
+});
 
 export type SplitDir = "hor" | "ver";
 

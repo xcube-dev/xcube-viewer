@@ -4,9 +4,9 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { type CSSProperties } from "react";
+import { makeCssStyles } from "@/util/styles";
 
-export const commonSx: Record<string, CSSProperties> = {
+export const commonSx = makeCssStyles({
   accordion: {
     border: "none",
     background: "none",
@@ -36,4 +36,4 @@ export const commonSx: Record<string, CSSProperties> = {
     fontFamily: "Monospace",
   },
   toggleButton: {},
-};
+});

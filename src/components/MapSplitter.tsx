@@ -4,12 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { isNumber } from "@/util/types";
 import useMouseDrag from "@/hooks/useMouseDrag";
+import { makeCssStyles } from "@/util/styles";
 
-const styles: Record<string, CSSProperties> = {
+const styles = makeCssStyles({
   splitter: {
     position: "absolute",
     top: 0,
@@ -23,7 +24,7 @@ const styles: Record<string, CSSProperties> = {
     cursor: "col-resize",
     boxShadow: "0px 0px 1px 0px black",
   },
-};
+});
 
 type Point = [number, number];
 

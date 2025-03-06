@@ -14,6 +14,7 @@ import React, {
 
 import Splitter, { SplitDir } from "./Splitter";
 import { isNumber } from "@/util/types";
+import { makeCssStyles } from "@/util/styles";
 
 const defaultSplitPosition = "66%";
 
@@ -24,7 +25,7 @@ const containerStyle: CSSProperties = {
 };
 
 // noinspection JSUnusedLocalSymbols
-const stylesHor: Record<string, CSSProperties> = {
+const stylesHor = makeCssStyles({
   container: {
     ...containerStyle,
     flexFlow: "row nowrap",
@@ -34,9 +35,9 @@ const stylesHor: Record<string, CSSProperties> = {
   child2: {
     flex: 1,
   },
-};
+});
 
-const stylesVer: Record<string, CSSProperties> = {
+const stylesVer = makeCssStyles({
   container: {
     ...containerStyle,
     flexFlow: "column nowrap",
@@ -46,7 +47,7 @@ const stylesVer: Record<string, CSSProperties> = {
   child2: {
     flex: 1,
   },
-};
+});
 
 export interface SplitPaneProps {
   dir: SplitDir;

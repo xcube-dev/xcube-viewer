@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { useEffect, useRef, MouseEvent, CSSProperties } from "react";
+import { useEffect, useRef, MouseEvent } from "react";
 
 import i18n from "@/i18n";
 import { ColorBar, renderColorBar } from "@/model/colorBar";
@@ -13,11 +13,12 @@ import {
   COLOR_BAR_ITEM_HEIGHT,
   COLOR_BAR_ITEM_WIDTH,
 } from "@/components/ColorBarLegend/constants";
+import { makeCssStyles } from "@/util/styles";
 
-const styles: Record<string, CSSProperties> = {
+const styles = makeCssStyles({
   nominal: { cursor: "pointer" },
   error: { cursor: "pointer", border: "0.5px solid red" },
-};
+});
 
 interface ColorBarCanvasProps {
   colorBar: ColorBar;

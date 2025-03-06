@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
 import { useTheme } from "@mui/material";
@@ -15,9 +15,10 @@ import { setSidebarPosition } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import SidePanel from "./SidePanel";
+import { makeCssStyles } from "@/util/styles";
 
 // Adjust for debugging split pane style
-const styles: Record<string, CSSProperties> = {
+const styles = makeCssStyles({
   containerHor: {
     flexGrow: 1,
     overflow: "hidden",
@@ -43,7 +44,7 @@ const styles: Record<string, CSSProperties> = {
     width: "100%",
     height: "100%",
   },
-};
+});
 
 interface WorkspaceImplProps {
   sidebarOpen: boolean;
@@ -104,8 +105,6 @@ function WorkspaceImpl({
     setLayout(getLayout());
   };
 
-  const dirSuffix = layout === "hor" ? "Hor" : "Ver";
-
   if (sidebarOpen) {
     if (sidebarPanelId) {
       return (
@@ -113,7 +112,7 @@ function WorkspaceImpl({
           dir={layout}
           splitPosition={sidebarPosition}
           setSplitPosition={setSidebarPosition}
-          style={styles["container" + dirSuffix]}
+          style={layout === "hor" ? styles.containerHor : styles.containerVer}
         >
           <Viewer onMapRef={setMap} theme={theme} />
           <SidePanel />
@@ -123,7 +122,9 @@ function WorkspaceImpl({
       return (
         <Box sx={layout === "hor" ? styles.noSplitHor : styles.noSplitVer}>
           <Viewer onMapRef={setMap} theme={theme} />
-          <SidePanel />
+          <div style={{ flexGrow: 0 }}>
+            <SidePanel />
+          </div>
         </Box>
       );
     }

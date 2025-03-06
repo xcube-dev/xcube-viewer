@@ -5,6 +5,7 @@
  */
 
 import { SxProps, Theme } from "@mui/system";
+import { CSSProperties } from "react";
 
 type RawStyles<S, T extends Theme = Theme> = Record<keyof S, SxProps<T>>;
 type Styles<S extends object, T extends Theme = Theme> = {
@@ -20,5 +21,15 @@ type Styles<S extends object, T extends Theme = Theme> = {
 export function makeStyles<S extends object, T extends Theme = Theme>(
   rawStyles: RawStyles<S, T>,
 ): Styles<S, T> {
+  return rawStyles;
+}
+
+type CssStyles<S extends object> = {
+  [P in keyof S]: CSSProperties;
+};
+
+export function makeCssStyles<S extends object>(
+  rawStyles: CssStyles<S>,
+): CssStyles<S> {
   return rawStyles;
 }
