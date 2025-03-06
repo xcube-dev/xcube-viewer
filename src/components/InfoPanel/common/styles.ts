@@ -7,31 +7,33 @@
 import { type CSSProperties } from "react";
 
 export const commonSx: Record<string, CSSProperties> = {
-  card: {
-    maxWidth: "100%",
-    marginRight: 1,
+  accordion: {
+    border: "none",
+    background: "none",
+  },
+  accordionSummary: {
+    padding: "0 4px",
+  },
+  accordionDetails: {
+    padding: "0 4px",
   },
   cardHeader: {
     padding: 0,
   },
+  cardTitle: {
+    display: "flex",
+    gap: 1,
+    fontSize: "1rem",
+  },
   cardContent: {
     padding: "4px 0",
-    width: "100%",
-  },
-  info: {
-    marginRight: 1,
-  },
-  close: {
-    marginLeft: "auto",
   },
   table: {},
   media: {
-    height: 200,
+    maxHeight: 200,
   },
   code: {
     fontFamily: "Monospace",
   },
-  toggleButton: {
-    //width: "12px",
-  },
+  toggleButton: {},
 };

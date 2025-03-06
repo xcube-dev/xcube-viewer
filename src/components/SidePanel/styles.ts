@@ -49,18 +49,17 @@ const styles = makeStyles({
     flexDirection: "column",
     width: "100%",
   },
-  panelContent: {
-    paddingTop: 0.5,
-    paddingRight: 0.5,
-    overflowY: "auto",
-  },
   panelHeader: (theme: Theme) => ({
-    padding: 0.5,
+    padding: 1,
     borderBottom: "1px solid",
     borderBottomColor: getBorderColor(theme),
     borderTop: "1px solid",
     borderTopColor: getBorderColor(theme),
   }),
+  panelContent: {
+    padding: 1,
+    overflow: "auto",
+  },
   sidebarContainerSelected: (theme: Theme) => ({
     ...sidebarContainer,
     borderTopColor: getBorderColor(theme),

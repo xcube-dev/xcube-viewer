@@ -27,13 +27,13 @@ const InfoCardHeader: React.FC<InfoCardHeaderProps> = ({
   return (
     <CardHeader
       title={
-        <Box sx={{ display: "flex", gap: 1, fontSize: "1rem" }}>
+        <Box sx={commonSx.cardTitle}>
           <Tooltip title={tooltipText}>{icon}</Tooltip>
           {title}
         </Box>
       }
       subheader={subheader}
-      sx={{ ...commonSx.cardHeader }}
+      sx={commonSx.cardHeader}
     />
   );
 };
