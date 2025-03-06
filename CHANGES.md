@@ -9,6 +9,8 @@
   - `eslint 9.21`
   - `storybook 8.6`
 
+* Added some missing language translations.
+
 
 ## Changes in version 1.4.2
 
