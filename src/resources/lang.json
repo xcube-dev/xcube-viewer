@@ -951,9 +951,14 @@
       "se": "Lagerattribution"
     },
     {
-      "en": "Info",
-      "de": "Info",
-      "se": "Info"
+      "en": "ID",
+      "de": "ID",
+      "se": "ID"
+    },
+    {
+      "en": "Details",
+      "de": "Details",
+      "se": "Detaljer"
     },
     {
       "en": "Charts",

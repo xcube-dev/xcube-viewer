@@ -199,7 +199,7 @@ export function newControlState(): ControlState {
     layerMenuOpen: false,
     sidebarPosition: (2 * Math.max(window.innerWidth, window.innerHeight)) / 3,
     sidebarOpen: false,
-    sidebarPanelId: "info",
+    sidebarPanelId: "details",
     volumeRenderMode: "mip",
     volumeStates: {},
     infoCardElementStates: {

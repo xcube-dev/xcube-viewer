@@ -8,7 +8,7 @@
 
 import { useCallback, useMemo } from "react";
 import { connect } from "react-redux";
-import InfoIcon from "@mui/icons-material/Info";
+import DetailsIcon from "@mui/icons-material/Details";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import StackedLineChartIcon from "@mui/icons-material/StackedLineChart";
 import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
@@ -30,11 +30,11 @@ import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
 import { WithLocale } from "@/util/lang";
 
-const basePanels: PanelModel[] = [
+const getBasePanels = (_locale?: string): PanelModel[] => [
   {
-    id: "info",
-    title: i18n.get("Info"),
-    icon: <InfoIcon />,
+    id: "details",
+    title: i18n.get("Details"),
+    icon: <DetailsIcon />,
     content: <InfoPanel />,
     visible: true,
   },
@@ -74,11 +74,13 @@ const mapStateToProps = (state: AppState) => {
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
   setSidebarPanelId,
 };
 
 function SidePanelImpl({
+  locale,
   sidebarPanelId,
   setSidebarPanelId,
 }: SidePanelImplProps) {
@@ -126,9 +128,13 @@ function SidePanelImpl({
     [contributedPanelsMap, setSidebarPanelId],
   );
 
+  const basePanels = useMemo((): PanelModel[] => {
+    return getBasePanels(locale);
+  }, [locale]);
+
   const panels = useMemo((): PanelModel[] => {
     return [...basePanels, ...contributedPanels];
-  }, [contributedPanels]);
+  }, [basePanels, contributedPanels]);
 
   return (
     <SidePanel

@@ -13,9 +13,9 @@ import Sidebar from "./Sidebar";
 export const ModelData = {
   panels: [
     {
-      id: "info",
-      title: "Info",
-      icon: "info",
+      id: "details",
+      title: "Details",
+      icon: "details",
       visible: true,
       position: 0,
       content: <>{generateParagraph(20)}</>,
@@ -78,6 +78,6 @@ type Story = StoryObj<typeof meta>;
 // noinspection JSUnusedGlobalSymbols
 export const Default: Story = {
   args: {
-    selectedPanelId: "info",
+    selectedPanelId: "details",
   },
 };
