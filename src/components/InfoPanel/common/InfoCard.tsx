@@ -8,7 +8,6 @@ import React from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Box from "@mui/material/Box";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { ViewMode } from "./types";
@@ -62,20 +61,12 @@ const InfoCard: React.FC<InfoCardProps> = ({
         />
       </AccordionSummary>
       <AccordionDetails sx={commonSx.accordionDetails}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-          }}
-        >
-          <InfoCardActions
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            hasPython={hasPython}
-          />
-          {children}
-        </Box>
+        <InfoCardActions
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          hasPython={hasPython}
+        />
+        {children}
       </AccordionDetails>
     </Accordion>
   );

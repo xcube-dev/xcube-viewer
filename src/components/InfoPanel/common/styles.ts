@@ -4,9 +4,9 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { makeCssStyles } from "@/util/styles";
+import { makeStyles } from "@/util/styles";
 
-export const commonSx = makeCssStyles({
+export const commonSx = makeStyles({
   accordion: {
     border: "none",
     background: "none",
@@ -16,6 +16,9 @@ export const commonSx = makeCssStyles({
   },
   accordionDetails: {
     padding: "0 4px",
+    display: "flex",
+    flexDirection: "column",
+    gap: 1,
   },
   cardHeader: {
     padding: 0,
@@ -28,7 +31,7 @@ export const commonSx = makeCssStyles({
   cardContent: {
     padding: "4px 0",
   },
-  table: {},
+  table: { borderRadius: 0 },
   media: {
     maxHeight: 200,
   },
@@ -36,4 +39,10 @@ export const commonSx = makeCssStyles({
     fontFamily: "Monospace",
   },
   toggleButton: {},
+  htmlContent: (theme) => ({
+    background: theme.palette.mode === "dark" ? "#383838" : "#e0e0e0",
+    padding: 1,
+    fontFamily: "Roboto",
+    fontSize: "0.75rem",
+  }),
 });

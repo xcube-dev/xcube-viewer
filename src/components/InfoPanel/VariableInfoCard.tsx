@@ -5,13 +5,14 @@
  */
 
 import React, { ReactNode } from "react";
-import Paper from "@mui/material/Paper";
+import LayersIcon from "@mui/icons-material/Layers";
 
 import i18n from "@/i18n";
 import { type Time } from "@/model/timeSeries";
 import { type Variable } from "@/model/variable";
 import { type ApiServerConfig } from "@/model/apiServer";
 import { isUserVariable } from "@/model/userVariable";
+import Markdown from "@/components/Markdown";
 import { type ViewMode } from "./common/types";
 import { getVariablePythonCode, selectObj } from "./common/utils";
 import JsonCodeContent from "./common/JsonCodeContent";
@@ -19,17 +20,7 @@ import InfoCardContent from "./common/InfoCardContent";
 import KeyValueContent, { type KeyValue } from "./common/KeyValueContent";
 import PythonCodeContent from "./common/PythonCodeContent";
 import InfoCard from "./common/InfoCard";
-
-import { makeStyles } from "@/util/styles";
-import Markdown from "@/components/Markdown";
-import LayersIcon from "@mui/icons-material/Layers";
-
-const styles = makeStyles({
-  variableHtmlReprContainer: (theme) => ({
-    background: theme.palette.divider,
-    padding: 1,
-  }),
-});
+import HtmlContent from "./common/HtmlContent";
 
 interface VariableInfoContentProps {
   expanded: boolean;
@@ -57,7 +48,7 @@ const VariableInfoCard: React.FC<VariableInfoContentProps> = ({
   }
   let content: ReactNode = undefined;
   let descriptionMarkdown: ReactNode = undefined;
-  let htmlReprPaper: ReactNode = undefined;
+  let htmlReprContent: ReactNode = undefined;
   if (viewMode === "code") {
     const jsonVariable = selectObj(variable, [
       "id",
@@ -98,18 +89,9 @@ const VariableInfoCard: React.FC<VariableInfoContentProps> = ({
       </InfoCardContent>
     );
 
-    if (variable.htmlRepr) {
-      const handleRef = (element: HTMLDivElement | null) => {
-        if (element && variable.htmlRepr) {
-          element.innerHTML = variable.htmlRepr;
-        }
-      };
-      htmlReprPaper = (
-        <InfoCardContent>
-          <Paper ref={handleRef} sx={styles.variableHtmlReprContainer} />
-        </InfoCardContent>
-      );
-    }
+    htmlReprContent = variable.htmlRepr && (
+      <HtmlContent innerHTML={variable.htmlRepr} />
+    );
 
     let data: KeyValue[] = [[i18n.get("Units"), variable.units]];
     if (isUserVariable(variable)) {
@@ -153,7 +135,7 @@ const VariableInfoCard: React.FC<VariableInfoContentProps> = ({
     >
       {descriptionMarkdown}
       {content}
-      {htmlReprPaper}
+      {htmlReprContent}
     </InfoCard>
   );
 };

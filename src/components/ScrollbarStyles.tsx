@@ -13,13 +13,13 @@ const scrollbarTheme = {
 };
 
 const stylesDark = {
-  trackColor: "#181818",
+  trackColor: "#1f1f1f",
   thumbColor: "#666",
   thumbColorHover: "#444",
 };
 
 const stylesLight = {
-  trackColor: "#f0f0f0",
+  trackColor: "#fff",
   thumbColor: "#ccc",
   thumbColorHover: "#aaa",
 };
