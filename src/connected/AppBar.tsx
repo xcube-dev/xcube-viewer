@@ -82,9 +82,6 @@ const styles = makeStyles({
     backgroundColor: Config.instance.branding.headerBackgroundColor,
     paddingRight: theme.spacing(1),
   }),
-  logo: (theme) => ({
-    marginLeft: theme.spacing(1),
-  }),
   title: (theme) => ({
     flexGrow: 1,
     marginLeft: theme.spacing(1),
@@ -256,8 +253,12 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
         open={helpMenuOpen}
         onClose={handleCloseHelpMenu}
       >
-        <MenuItem onClick={handleOpenManual}>Documentation</MenuItem>
-        <MenuItem onClick={handleOpenDevRef}>Developer Reference</MenuItem>
+        <MenuItem onClick={handleOpenManual}>
+          {i18n.get("Documentation")}
+        </MenuItem>
+        <MenuItem onClick={handleOpenDevRef}>
+          {i18n.get("Developer Reference")}
+        </MenuItem>
       </Menu>
     </AppBarComponent>
   );

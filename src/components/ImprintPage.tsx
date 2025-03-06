@@ -15,7 +15,7 @@ interface ImprintPageProps extends WithLocale {
 }
 
 const ImprintPage = ({ open, onClose }: ImprintPageProps) => {
-  const text = useFetchText(i18n.get("docs/imprint.md"));
+  const text = useFetchText(i18n.get("docs/imprint.en.md"));
   return (
     <MarkdownPage
       title={i18n.get("Imprint")}

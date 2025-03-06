@@ -471,6 +471,21 @@
       "se": "Hjälp"
     },
     {
+      "en": "Documentation",
+      "de": "Dokumentation",
+      "se": "Dokumentation"
+    },
+    {
+      "en": "Developer Reference",
+      "de": "Entwickler Referenz",
+      "se": "Utvecklarreferens"
+    },
+    {
+      "en": "Share",
+      "de": "Teilen",
+      "se": "Dela"
+    },
+    {
       "en": "Copy snapshot of chart to clipboard",
       "de": "Schnappschuss des Diagramms in die Zwischenablage kopieren",
       "se": "Kopiera ögonblicksbild av diagrammet till urklipp"
@@ -1244,6 +1259,11 @@
       "en": "JSON format",
       "de": "JSON-Format",
       "se": "JSON-format"
+    },
+    {
+      "en": "docs/imprint.en.md",
+      "de": "docs/imprint.en.md",
+      "se": "docs/imprint.en.md"
     },
     {
       "en": "docs/privacy-note.en.md",
