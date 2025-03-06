@@ -78,7 +78,6 @@ const styles = makeStyles({
   sidebarButtonSelected: (theme: Theme) => {
     return {
       background: theme.palette.action.selected,
-      color: theme.palette.primary.main,
     };
   },
 });
