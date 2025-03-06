@@ -4,9 +4,21 @@
  * https://opensource.org/licenses/MIT.
  */
 
-export function throttleWithDelay<
-  T extends (...args: Parameters<T>) => ReturnType<T>,
->(callback: T, delay: number): T {
+import { isNumber } from "@/util/types";
+
+export function throttle<T extends (...args: Parameters<T>) => ReturnType<T>>(
+  callback: T,
+  delay?: number,
+): T {
+  return isNumber(delay) && delay > 0
+    ? throttleWithDelay(callback, delay)
+    : throttleWithRAF(callback);
+}
+
+function throttleWithDelay<T extends (...args: Parameters<T>) => ReturnType<T>>(
+  callback: T,
+  delay: number,
+): T {
   let lastExecutionTime = 0;
   let lastResult: ReturnType<T>;
   return ((...args: Parameters<T>) => {
@@ -19,9 +31,9 @@ export function throttleWithDelay<
   }) as T;
 }
 
-export function throttleWithRAF<
-  T extends (...args: Parameters<T>) => ReturnType<T>,
->(callback: T): T {
+function throttleWithRAF<T extends (...args: Parameters<T>) => ReturnType<T>>(
+  callback: T,
+): T {
   let isThrottled = false;
   return ((...args: Parameters<T>) => {
     if (!isThrottled) {

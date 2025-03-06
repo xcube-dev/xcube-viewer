@@ -5,7 +5,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-// import { throttleWithRAF } from "@/util/throttle";
+import { throttle } from "@/util/throttle";
 
 /**
  * A hook that takes an `onMouseDrag` handler that reports resize events
@@ -38,8 +38,7 @@ export default function useMouseDrag(
   );
 
   const handleMouseMove = useMemo(
-    // () => throttleWithRAF(_handleMouseMove),
-    () => _handleMouseMove,
+    () => throttle(_handleMouseMove),
     [_handleMouseMove],
   );
 
