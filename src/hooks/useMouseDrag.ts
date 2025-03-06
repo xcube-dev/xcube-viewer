@@ -5,9 +5,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { throttleWithRAF } from "@/util/throttle";
-
-export type Point = [number, number];
+// import { throttleWithRAF } from "@/util/throttle";
 
 /**
  * A hook that takes an `onMouseDrag` handler that reports resize events
@@ -17,30 +15,31 @@ export type Point = [number, number];
  * @param onMouseDrag A mouse drag handler, typically memoized.
  * @returns onMouseDown A mouse handler, stable with respect to `onMouseDrag`.
  */
-export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
+export default function useMouseDrag(
+  onMouseDrag: (offset: [number, number]) => void,
+) {
   const onMouseDragRef = useRef(onMouseDrag);
   useEffect(() => {
     onMouseDragRef.current = onMouseDrag;
   }, [onMouseDrag]);
 
-  const lastPosition = useRef<Point | null>(null);
+  const firstPosRef = useRef<[number, number] | null>(null);
 
   const _handleMouseMove = useCallback(
     (event: MouseEvent) => {
-      if (event.buttons === 1 && lastPosition.current !== null) {
+      if (event.buttons === 1 && firstPosRef.current !== null) {
         event.preventDefault();
-        const { screenX, screenY } = event;
-        const [lastScreenX, lastScreenY] = lastPosition.current;
-        const delta: Point = [screenX - lastScreenX, screenY - lastScreenY];
-        lastPosition.current = [screenX, screenY];
-        onMouseDrag(delta);
+        const { clientX, clientY } = event;
+        const [firstPosX, firstPosY] = firstPosRef.current;
+        onMouseDrag([clientX - firstPosX, clientY - firstPosY]);
       }
     },
     [onMouseDrag],
   );
 
   const handleMouseMove = useMemo(
-    () => throttleWithRAF(_handleMouseMove),
+    // () => throttleWithRAF(_handleMouseMove),
+    () => _handleMouseMove,
     [_handleMouseMove],
   );
 
@@ -49,7 +48,7 @@ export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
     (event: React.MouseEvent) => {
       if (event.buttons === 1) {
         event.preventDefault();
-        lastPosition.current = [event.screenX, event.screenY];
+        firstPosRef.current = [event.clientX, event.clientY];
         const handleEndDrag = handleEndDragRef.current;
         document.body.addEventListener("mousemove", handleMouseMove);
         document.body.addEventListener("mouseup", handleEndDrag);
@@ -61,9 +60,9 @@ export default function useMouseDrag(onMouseDrag: (delta: Point) => void) {
 
   const handleEndDrag = useCallback(
     (event: Event) => {
-      if (lastPosition.current !== null) {
+      if (firstPosRef.current !== null) {
         event.preventDefault();
-        lastPosition.current = null;
+        firstPosRef.current = null;
         const handleEndDrag = handleEndDragRef.current;
         document.body.removeEventListener("mousemove", handleMouseMove);
         document.body.removeEventListener("mouseup", handleEndDrag);

@@ -15,7 +15,6 @@ import SidePanelContent from "./SidePanelContent";
 
 export interface SidePanelProps {
   hidden?: boolean;
-  width?: number;
   panels?: PanelModel[];
   selectedPanelId?: string | null;
   setSelectedPanelId: (panelId: string | null) => void;
@@ -23,7 +22,6 @@ export interface SidePanelProps {
 
 function SidePanel({
   hidden,
-  width,
   panels,
   selectedPanelId,
   setSelectedPanelId,
@@ -35,7 +33,7 @@ function SidePanel({
     return null;
   }
   return (
-    <Box width={width} height="100%" sx={styles.mainContainer}>
+    <Box width="100%" height="100%" sx={styles.mainContainer}>
       {selectedPanel && (
         <Box sx={styles.panelContainer}>
           <SidePanelHeader selectedPanel={selectedPanel} />

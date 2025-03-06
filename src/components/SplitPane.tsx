@@ -7,25 +7,30 @@
 import React, {
   CSSProperties,
   PropsWithChildren,
-  useCallback,
+  useEffect,
   useMemo,
   useRef,
 } from "react";
 
 import Splitter, { SplitDir } from "./Splitter";
-import { isNumber, isString } from "@/util/types";
+import { isNumber } from "@/util/types";
+
+const defaultSplitPosition = "66%";
+
+const containerStyle: CSSProperties = {
+  // Important, because Splitter uses "absolute"
+  position: "relative",
+  display: "flex",
+};
 
 // noinspection JSUnusedLocalSymbols
 const stylesHor: Record<string, CSSProperties> = {
   container: {
-    display: "flex",
+    ...containerStyle,
     flexFlow: "row nowrap",
     height: "100%",
-    boxSizing: "border-box",
   },
-  child1: {
-    width: "50%",
-  },
+  child1: {},
   child2: {
     flex: 1,
   },
@@ -33,14 +38,11 @@ const stylesHor: Record<string, CSSProperties> = {
 
 const stylesVer: Record<string, CSSProperties> = {
   container: {
-    display: "flex",
+    ...containerStyle,
     flexFlow: "column nowrap",
     width: "100%",
-    boxSizing: "border-box",
   },
-  child1: {
-    height: "50%",
-  },
+  child1: {},
   child2: {
     flex: 1,
   },
@@ -50,10 +52,8 @@ export interface SplitPaneProps {
   dir: SplitDir;
   splitPosition?: number | null;
   setSplitPosition: (splitPosition: number) => void;
-  defaultSplitPosition?: number | string;
   style?: CSSProperties;
   children: React.ReactNode[];
-  debug?: boolean;
 }
 
 /**
@@ -63,64 +63,47 @@ export default function SplitPane({
   dir,
   splitPosition,
   setSplitPosition,
-  defaultSplitPosition,
   children,
   style,
-  debug,
 }: PropsWithChildren<SplitPaneProps>) {
-  const child1Ref = useRef<HTMLDivElement | null>(null);
-
-  const styles = dir === "hor" ? stylesHor : stylesVer;
-
-  let splitSize: string | number;
-  if (isNumber(splitPosition)) {
-    splitSize = splitPosition;
-  } else if (isNumber(defaultSplitPosition) || isString(defaultSplitPosition)) {
-    splitSize = defaultSplitPosition;
-  } else {
-    splitSize = "66%";
-  }
-
-  const child1SizeStyle: CSSProperties = useMemo(
-    () => (dir === "hor" ? { width: splitSize } : { height: splitSize }),
-    [dir, splitSize],
-  );
-
-  const handleSplitChange = useCallback(
-    (splitPosition: number) => {
-      const divElement = child1Ref.current;
-      if (divElement) {
-        setSplitPosition(splitPosition);
-      }
-    },
-    [setSplitPosition],
-  );
-
+  const child1Ref = useRef<HTMLDivElement>(null);
+  const splitPos = isNumber(splitPosition)
+    ? splitPosition
+    : defaultSplitPosition;
+  useEffect(() => {
+    if (!isNumber(splitPosition) && child1Ref.current !== null) {
+      const clientRect = child1Ref.current.getBoundingClientRect();
+      setSplitPosition(dir === "hor" ? clientRect.width : clientRect.height);
+    }
+  }, [dir, splitPosition, setSplitPosition]);
+  const computedStyles = useMemo(() => {
+    const styles = dir === "hor" ? stylesHor : stylesVer;
+    return {
+      container: { ...styles.container, ...style },
+      child1: {
+        ...styles.child1,
+        ...(dir === "hor" ? { width: splitPos } : { height: splitPos }),
+      },
+      child2: {
+        ...styles.child2,
+        //...(dir === "hor"
+        //  ? { width: `calc(100% - ${splitPos}px)` }
+        //  : { height: `calc(100% - ${splitPos}px)` }),
+      },
+    };
+  }, [style, dir, splitPos]);
   if (!children || !Array.isArray(children) || children.length !== 2) {
     return null;
   }
-
   return (
-    <div id="SplitPane" style={{ ...styles.container, ...style }}>
-      <div
-        ref={child1Ref}
-        id="SplitPane-Child-1"
-        style={{
-          background: debug ? "lightblue" : undefined,
-          ...styles.child1,
-          ...child1SizeStyle,
-        }}
-      >
+    <div id="SplitPane" style={computedStyles.container}>
+      <div id="SplitPane-Child-1" style={computedStyles.child1} ref={child1Ref}>
         {children[0]}
       </div>
-      <Splitter dir={dir} onChange={handleSplitChange} />
-      <div
-        id="SplitPane-Child-2"
-        style={{
-          background: debug ? "lightcoral" : undefined,
-          ...styles.child2,
-        }}
-      >
+      {isNumber(splitPos) && (
+        <Splitter dir={dir} splitPos={splitPos} onChange={setSplitPosition} />
+      )}
+      <div id="SplitPane-Child-2" style={computedStyles.child2}>
         {children[1]}
       </div>
     </div>

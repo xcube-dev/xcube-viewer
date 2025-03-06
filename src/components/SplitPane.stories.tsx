@@ -28,22 +28,22 @@ type Story = StoryObj<typeof meta>;
 // noinspection JSUnusedGlobalSymbols
 export const Horizontal: Story = {
   render: (_args) => {
-    const [splitPosition, setSplitPosition] = useState<number>(100); // Controlled state
+    const [splitPosition, setSplitPosition] = useState<number>(300); // Controlled state
     return (
       <SplitPane
         dir="hor"
         splitPosition={splitPosition}
         setSplitPosition={setSplitPosition}
-        style={{
-          width: 400,
-          height: 300,
-          border: "2px solid red",
-          padding: 10,
-        }}
-        debug
+        style={{ width: 400, height: 300 }}
       >
-        <div style={{ height: "100%" }}>Pane 1</div>
-        <div style={{ height: "100%" }}>Pane 2</div>
+        <div style={{ width: "100%", height: "100%", background: "lightblue" }}>
+          Pane 1
+        </div>
+        <div
+          style={{ width: "100%", height: "100%", background: "lightcoral" }}
+        >
+          Pane 2
+        </div>
       </SplitPane>
     );
   },
@@ -58,16 +58,16 @@ export const Vertical: Story = {
         dir="ver"
         splitPosition={splitPosition}
         setSplitPosition={setSplitPosition}
-        style={{
-          width: 300,
-          height: 400,
-          border: "2px solid red",
-          padding: 10,
-        }}
-        debug
+        style={{ width: 300, height: 400 }}
       >
-        <div style={{ width: "100%" }}>Pane 1</div>
-        <div style={{ width: "100%" }}>Pane 2</div>
+        <div style={{ width: "100%", height: "100%", background: "lightblue" }}>
+          Pane 1
+        </div>
+        <div
+          style={{ width: "100%", height: "100%", background: "lightcoral" }}
+        >
+          Pane 2
+        </div>
       </SplitPane>
     );
   },

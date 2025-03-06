@@ -42,7 +42,6 @@ const styles = makeStyles({
   mainContainer: (theme) => ({
     display: "flex",
     flexDirection: "row",
-    height: "100%",
     backgroundColor: getBackgroundColor(theme),
   }),
   panelContainer: {
