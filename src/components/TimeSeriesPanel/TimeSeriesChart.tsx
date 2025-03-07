@@ -110,6 +110,7 @@ interface TimeSeriesChartProps extends WithLocale {
     timeSeries: TimeSeries,
   ) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  selectedDataset: string | null;
 }
 
 export default function TimeSeriesChart({
@@ -130,6 +131,7 @@ export default function TimeSeriesChart({
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
   postMessage,
+  selectedDataset,
 }: TimeSeriesChartProps) {
   const theme = useTheme();
 
@@ -474,9 +476,17 @@ export default function TimeSeriesChart({
           )}
           <Legend
             content={
-              <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
+              <CustomLegend
+                removeTimeSeries={handleRemoveTimeSeriesClick}
+                dataset={selectedDataset}
+              />
             }
           />
+          {/*<Legend*/}
+          {/*  content={(props) => (*/}
+          {/*    <CustomLegend {...props} dataset={myExtraData} />*/}
+          {/*  )}*/}
+          {/*/>*/}
           {timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>
             // Note, we cannot render TimeSeriesLine as JSX node, because
             // recharts won't recognize the resulting higher-order component as
