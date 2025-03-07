@@ -44,6 +44,10 @@ const styles = makeCssStyles({
     width: "100%",
     height: "100%",
   },
+
+  sidebarAlone: {
+    flexGrow: 0,
+  },
 });
 
 interface WorkspaceImplProps {
@@ -107,6 +111,7 @@ function WorkspaceImpl({
 
   if (sidebarOpen) {
     if (sidebarPanelId) {
+      // Viewer & Panel & Sidebar
       return (
         <SplitPane
           dir={layout}
@@ -119,16 +124,18 @@ function WorkspaceImpl({
         </SplitPane>
       );
     } else {
+      // Viewer & Sidebar - no Panel
       return (
         <Box sx={layout === "hor" ? styles.noSplitHor : styles.noSplitVer}>
           <Viewer onMapRef={setMap} theme={theme} />
-          <div style={{ flexGrow: 0 }}>
+          <div style={styles.sidebarAlone}>
             <SidePanel />
           </div>
         </Box>
       );
     }
   } else {
+    // Viewer alone - no Panel, no Sidebar
     return (
       <div style={styles.viewer}>
         <Viewer onMapRef={setMap} theme={theme} />
