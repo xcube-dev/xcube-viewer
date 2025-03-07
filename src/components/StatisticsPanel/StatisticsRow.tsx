@@ -18,7 +18,7 @@ import { isoDateTimeStringToLabel } from "@/util/time";
 
 const styles = makeStyles({
   container: {
-    padding: 1,
+    padding: 0,
     width: "100%",
   },
   header: {

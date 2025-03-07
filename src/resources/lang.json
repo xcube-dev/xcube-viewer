@@ -856,9 +856,14 @@
       "se": "Slå på eller av informationsrutan"
     },
     {
-      "en": "Show or hide sidebar",
-      "de": "Seitenleiste ein- oder ausblenden",
-      "se": "Visa eller dölja sidofält"
+      "en": "Show sidebar",
+      "de": "Seitenleiste einblenden",
+      "se": "Visa sidofältet"
+    },
+    {
+      "en": "Hide sidebar",
+      "de": "Seitenleiste ausblenden",
+      "se": "Dölj sidofältet"
     },
     {
       "en": "Unknown color bar",
@@ -946,9 +951,14 @@
       "se": "Lagerattribution"
     },
     {
-      "en": "Info",
-      "de": "Info",
-      "se": "Info"
+      "en": "ID",
+      "de": "ID",
+      "se": "ID"
+    },
+    {
+      "en": "Details",
+      "de": "Details",
+      "se": "Detaljer"
     },
     {
       "en": "Charts",

@@ -75,13 +75,6 @@ export interface ExportSettings {
   multiFile: boolean;
   zipArchive: boolean;
 }
-export type SidebarPanelId = "info" | "timeSeries" | "stats" | "volume";
-export const sidebarPanelIds: SidebarPanelId[] = [
-  "info",
-  "timeSeries",
-  "stats",
-  "volume",
-];
 
 export type ThemeMode = PaletteMode | "system";
 export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
@@ -128,7 +121,7 @@ export interface ControlState {
   layerMenuOpen: boolean;
   sidebarPosition: number;
   sidebarOpen: boolean;
-  sidebarPanelId: SidebarPanelId | string;
+  sidebarPanelId: string | null;
   volumeRenderMode: VolumeRenderMode;
   volumeStates: VolumeStates;
   infoCardElementStates: InfoCardElementStates;
@@ -206,7 +199,7 @@ export function newControlState(): ControlState {
     layerMenuOpen: false,
     sidebarPosition: (2 * Math.max(window.innerWidth, window.innerHeight)) / 3,
     sidebarOpen: false,
-    sidebarPanelId: "info",
+    sidebarPanelId: "details",
     volumeRenderMode: "mip",
     volumeStates: {},
     infoCardElementStates: {
