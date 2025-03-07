@@ -14,9 +14,9 @@ const defaultHandleSize = "8px";
 const containerStyle: CSSProperties = {
   // Important: requires a parent with position: "relative"
   position: "absolute",
-  // background: "yellow",
-  // opacity: 0.5,
-  opacity: 0.0,
+  background: "yellow",
+  opacity: 0.5,
+  //opacity: 0.0,
   zIndex: 999,
 };
 

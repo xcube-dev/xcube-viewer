@@ -67,23 +67,37 @@ export default function SplitPane({
   children,
   style,
 }: PropsWithChildren<SplitPaneProps>) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const child1Ref = useRef<HTMLDivElement>(null);
   const splitPos = isNumber(splitPosition)
     ? splitPosition
     : defaultSplitPosition;
   useEffect(() => {
-    if (!isNumber(splitPosition) && child1Ref.current !== null) {
-      const clientRect = child1Ref.current.getBoundingClientRect();
+    const child1Element = child1Ref.current;
+    if (!isNumber(splitPosition) && child1Element !== null) {
+      const clientRect = child1Element.getBoundingClientRect();
       setSplitPosition(dir === "hor" ? clientRect.width : clientRect.height);
     }
   }, [dir, splitPosition, setSplitPosition]);
   const computedStyles = useMemo(() => {
     const styles = dir === "hor" ? stylesHor : stylesVer;
+    const containerElement = containerRef.current;
+    let splitSize: number | string = splitPos;
+    if (containerElement && isNumber(splitPos)) {
+      const clientRect = containerElement.getBoundingClientRect();
+      const percent =
+        100 *
+        (dir === "hor"
+          ? splitPos / clientRect.width
+          : splitPos / clientRect.height);
+      splitSize = `${percent}%`;
+    }
+    console.log("splitSize:", splitSize);
     return {
       container: { ...styles.container, ...style },
       child1: {
         ...styles.child1,
-        ...(dir === "hor" ? { width: splitPos } : { height: splitPos }),
+        ...(dir === "hor" ? { width: splitSize } : { height: splitSize }),
       },
       child2: {
         ...styles.child2,
@@ -97,7 +111,7 @@ export default function SplitPane({
     return null;
   }
   return (
-    <div id="SplitPane" style={computedStyles.container}>
+    <div id="SplitPane" style={computedStyles.container} ref={containerRef}>
       <div id="SplitPane-Child-1" style={computedStyles.child1} ref={child1Ref}>
         {children[0]}
       </div>
