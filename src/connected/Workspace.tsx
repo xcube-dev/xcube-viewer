@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
 import { useTheme } from "@mui/material";
@@ -16,6 +16,7 @@ import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import SidePanel from "./SidePanel";
 import { makeCssStyles } from "@/util/styles";
+import useResizeObserver from "@/hooks/useResizeObserver";
 
 // Adjust for debugging split pane style
 const styles = makeCssStyles({
@@ -84,20 +85,15 @@ function WorkspaceImpl({
 }: WorkspaceImplProps) {
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
-  const resizeObserver = useRef<ResizeObserver | null>(null);
   const theme = useTheme();
 
   useEffect(() => {
     updateLayout();
-    resizeObserver.current = new ResizeObserver(updateLayout);
-    resizeObserver.current.observe(document.documentElement);
-
-    return () => {
-      if (resizeObserver.current) {
-        resizeObserver.current.disconnect();
-      }
-    };
   }, []);
+
+  useResizeObserver(() => {
+    updateLayout();
+  });
 
   useEffect(() => {
     if (map) {
