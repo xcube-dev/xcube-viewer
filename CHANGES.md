@@ -1,5 +1,12 @@
 ## Changes in version 1.4.3 (in development)
 
+### Improvements
+
+* Added a `Divider` to provide a visual separation of control bar items for
+  better clarity to the users. (#487)
+
+### Fixes and other Changes
+
 * Fixed a problem where mouse splitters used to resize 
   two components (e.g., two layers in map view, or map view and side panels) 
   created a drift while dragging.
@@ -10,6 +17,7 @@
   - `storybook 8.6`
 
 * Added some missing language translations.
+
 
 
 ## Changes in version 1.4.2

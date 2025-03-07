@@ -5,7 +5,7 @@
  */
 
 import * as React from "react";
-import { Theme, styled } from "@mui/system";
+import { Theme, styled, SxProps } from "@mui/system";
 import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
 
@@ -13,21 +13,24 @@ import { WithLocale } from "@/util/lang";
 
 const StyledForm = styled(FormControl)(({ theme }: { theme: Theme }) => ({
   marginRight: theme.spacing(1),
+  marginLeft: theme.spacing(2),
 }));
 
 interface ControlBarItemProps extends WithLocale {
   label: React.ReactNode;
   control: React.ReactNode;
   actions?: React.ReactNode | null;
+  sx?: SxProps;
 }
 
 export default function ControlBarItem({
   label,
   control,
   actions,
+  sx,
 }: ControlBarItemProps) {
   return (
-    <StyledForm variant="standard">
+    <StyledForm variant="standard" sx={sx}>
       <Box>
         {label}
         {control}
