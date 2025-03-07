@@ -32,7 +32,7 @@ export default function MapPointInfoContent({
   payload,
   payload2,
 }: MapPointInfoContentProps) {
-  let payload_label = "";
+  let payload_label: string;
   if (payload2) {
     payload_label = "(R) ".concat(formatLabel(payload));
   } else {
