@@ -32,6 +32,12 @@ export default function MapPointInfoContent({
   payload,
   payload2,
 }: MapPointInfoContentProps) {
+  let payload_label = "";
+  if (payload2) {
+    payload_label = "(R) ".concat(formatLabel(payload));
+  } else {
+    payload_label = formatLabel(payload);
+  }
   return (
     <Box sx={styles.container}>
       <Box sx={styles.labelItem}>{"Longitude"}</Box>
@@ -39,9 +45,11 @@ export default function MapPointInfoContent({
       <Box sx={styles.labelItem}>{"Latitude"}</Box>
       <Box sx={styles.valueItem}>{getLabelForValue(location.lat, 4)}</Box>
 
-      <Box sx={styles.labelItem}>{formatLabel(payload)}</Box>
+      <Box sx={styles.labelItem}>{payload_label}</Box>
       <Box sx={styles.valueItem}>{formatValue(payload)}</Box>
-      {payload2 && <Box sx={styles.labelItem}>{formatLabel(payload2)}</Box>}
+      {payload2 && (
+        <Box sx={styles.labelItem}>{"(L) " + formatLabel(payload2)}</Box>
+      )}
       {payload2 && <Box sx={styles.valueItem}>{formatValue(payload2)}</Box>}
     </Box>
   );
