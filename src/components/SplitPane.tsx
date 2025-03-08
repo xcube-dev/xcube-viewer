@@ -8,7 +8,6 @@ import React, {
   type CSSProperties,
   type PropsWithChildren,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
 } from "react";
@@ -16,7 +15,6 @@ import React, {
 import { isNumber } from "@/util/types";
 import { makeCssStyles } from "@/util/styles";
 import useMouseDrag from "@/hooks/useMouseDrag";
-import useResizeObserver, { type Size } from "@/hooks/useResizeObserver";
 
 const defaultChild1Size = 66;
 
@@ -24,20 +22,17 @@ const containerStyle: CSSProperties = {
   display: "flex",
 };
 
-const child1Style: CSSProperties = {
-  //flexGrow: 0,
-};
+const child1Style: CSSProperties = {};
 
 const child2Style: CSSProperties = {
   // Important, because resize handle uses "absolute"
   position: "relative",
-  //flexGrow: 1,
 };
 
 const resizeHandleSize = "8px";
 
 const resizeHandleStyle: CSSProperties = {
-  // Important: requires a parent with position: "relative"
+  // Important: requires a child 2 with position: "relative"
   position: "absolute",
   background: "yellow",
   opacity: 0.5,
@@ -108,50 +103,57 @@ export default function SplitPane({
   children,
   style,
 }: PropsWithChildren<SplitPaneProps>) {
-  const containerSizeRef = useRef<Size | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const child1Ref = useRef<HTMLDivElement>(null);
 
-  // If the container resizes, save the last size so we
-  // can use it when dragging starts
-  useResizeObserver((containerSize) => {
-    // console.log("containerSize", containerSize);
-    containerSizeRef.current = containerSize;
-  }, containerRef);
-
-  // Make sure we receive splitPosition as a number
-  useEffect(() => {
-    const child1Element = child1Ref.current;
-    if (!isNumber(splitPosition) && child1Element) {
-      const clientRect = child1Element.getBoundingClientRect();
-      setSplitPosition(dir === "hor" ? clientRect.width : clientRect.height);
+  // The handler for drag-start events
+  const onDragStart = useCallback(() => {
+    if (child1Ref.current) {
+      const rect = child1Ref.current.getBoundingClientRect();
+      const newSplitPosition = dir === "hor" ? rect.width : rect.height;
+      setSplitPosition(newSplitPosition);
+      console.info("onDragStart", newSplitPosition);
     }
-  }, [dir, splitPosition, setSplitPosition]);
+  }, [dir, setSplitPosition]);
+
+  // The handler for drag-move events
+  const onDragMove = useCallback(
+    (_sizeDelta: [number, number]) => {
+      const sizeDelta = dir === "hor" ? _sizeDelta[0] : _sizeDelta[1];
+      if (isNumber(splitPosition) && sizeDelta !== 0) {
+        const newSplitPosition = splitPosition + sizeDelta;
+        setSplitPosition(newSplitPosition);
+        console.info("onDragMove", newSplitPosition);
+      }
+    },
+    [dir, splitPosition, setSplitPosition],
+  );
+
+  // The handler for a mouse-down event
+  const handleMouseDown = useMouseDrag({ onDragStart, onDragMove });
 
   // Use splitPosition or defaults to set child sizes
   const computedStyles = useMemo(() => {
     const styles = dir === "hor" ? stylesHor : stylesVer;
-    let child1Size: number | string;
-    let child2Size: number | string;
+    let child1Size: string;
+    let child2Size: string;
     if (isNumber(splitPosition)) {
       const containerElement = containerRef.current;
       if (containerElement) {
-        const containerSize =
-          dir === "hor"
-            ? containerElement.clientWidth
-            : containerElement.clientWidth;
-        const percent = 100 * (splitPosition / containerSize);
+        const rect = containerElement.getBoundingClientRect();
+        const containerSize = dir === "hor" ? rect.width : rect.height;
+        const percent = 100 * crop(splitPosition / containerSize);
         child1Size = `${percent}%`;
         child2Size = `${100 - percent}%`;
       } else {
         child1Size = `${splitPosition}px`;
-        child2Size = `calc(100% - ${child1Size})`;
+        child2Size = `calc(100% - ${splitPosition}px)`;
       }
     } else {
       child1Size = `${defaultChild1Size}%`;
       child2Size = `${100 - defaultChild1Size}%`;
     }
-    containerSizeRef.current = null;
+    console.info("computed sizes:", child1Size, child2Size);
     return {
       ...styles,
       container: { ...styles.container, ...style },
@@ -165,28 +167,7 @@ export default function SplitPane({
       },
     };
   }, [style, dir, splitPosition]);
-  console.log("computedStyles", computedStyles);
-
-  // The handler for mouse-drag events
-  const handleMouseDrag = useCallback(
-    (offset: [number, number]) => {
-      const sizeDelta = dir === "hor" ? offset[0] : offset[1];
-      if (containerSizeRef.current) {
-        const containerSize =
-          dir === "hor"
-            ? containerSizeRef.current.width
-            : containerSizeRef.current.height;
-        containerSizeRef.current = null;
-        setSplitPosition(containerSize + sizeDelta);
-      } else if (isNumber(splitPosition)) {
-        setSplitPosition(splitPosition + sizeDelta);
-      }
-    },
-    [dir, splitPosition, setSplitPosition],
-  );
-
-  // The handler for a mouse-down event
-  const handleMouseDown = useMouseDrag(handleMouseDrag);
+  //console.log("computedStyles", computedStyles);
 
   // Render only 2 children
   if (!children || !Array.isArray(children) || children.length !== 2) {
@@ -212,4 +193,8 @@ export default function SplitPane({
       </div>
     </div>
   );
+}
+
+function crop(x: number, min = 0, max = 1) {
+  return x < min ? min : x > max ? max : x;
 }

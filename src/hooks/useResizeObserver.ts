@@ -24,17 +24,20 @@ export default function useResizeObserver<T extends HTMLElement>(
         if (entry.contentRect) {
           const width = entry.contentRect.width;
           const height = entry.contentRect.height;
+          const prevSize = sizeRef.current;
           if (
-            !sizeRef.current ||
-            sizeRef.current.width !== width ||
-            sizeRef.current.height !== height
+            !prevSize ||
+            prevSize.width !== width ||
+            prevSize.height !== height
           ) {
             const size = {
               width: width,
               height: height,
             };
             sizeRef.current = size;
-            callback(size);
+            if (prevSize) {
+              callback(size);
+            }
           }
         }
       }

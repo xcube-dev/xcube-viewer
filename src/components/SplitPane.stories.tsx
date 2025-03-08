@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 // noinspection JSUnusedGlobalSymbols
 export const Horizontal: Story = {
   render: (_args) => {
-    const [splitPosition, setSplitPosition] = useState<number>(300); // Controlled state
+    const [splitPosition, setSplitPosition] = useState<number>(100); // Controlled state
     return (
       <SplitPane
         dir="hor"

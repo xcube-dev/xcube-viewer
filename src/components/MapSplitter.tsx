@@ -48,7 +48,7 @@ export default function MapSplitter({
     },
     [position, onPositionChange],
   );
-  const handleMouseDown = useMouseDrag(handleDrag);
+  const handleMouseDown = useMouseDrag({ onDragMove: handleDrag });
 
   useEffect(() => {
     if (
