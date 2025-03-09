@@ -72,8 +72,9 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("timeSeriesUseMedian", settings);
       storage.setPrimitiveProperty("timeAnimationInterval", settings);
       storage.setPrimitiveProperty("timeChunkSize", settings);
-      storage.setPrimitiveProperty("sidebarOpen", settings);
-      storage.setPrimitiveProperty("sidebarPanelId", settings);
+      storage.setPrimitiveProperty("sidePanelOpen", settings);
+      storage.setPrimitiveProperty("sidePanelId", settings);
+      storage.setPrimitiveProperty("sidePanelSize", settings);
       storage.setPrimitiveProperty("volumeRenderMode", settings);
       storage.setObjectProperty("infoCardElementStates", settings);
       storage.setPrimitiveProperty("imageSmoothingEnabled", settings);
@@ -141,8 +142,9 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getIntProperty("timeChunkSize", settings, defaultSettings);
-      storage.getBooleanProperty("sidebarOpen", settings, defaultSettings);
-      storage.getStringProperty("sidebarPanelId", settings, defaultSettings);
+      storage.getBooleanProperty("sidePanelOpen", settings, defaultSettings);
+      storage.getStringProperty("sidePanelId", settings, defaultSettings);
+      storage.getIntProperty("sidePanelSize", settings, defaultSettings);
       storage.getStringProperty("volumeRenderMode", settings, defaultSettings);
       storage.getObjectProperty(
         "infoCardElementStates",

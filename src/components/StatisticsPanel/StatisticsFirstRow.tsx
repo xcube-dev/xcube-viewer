@@ -56,7 +56,7 @@ export default function StatisticsFirstRow({
             onClick={addStatistics}
             color={"primary"}
           >
-            <AddCircleOutlineIcon fontSize="inherit" />
+            <AddCircleOutlineIcon />
           </IconButton>
         )
       }
