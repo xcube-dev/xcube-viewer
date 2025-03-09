@@ -111,6 +111,7 @@ function WorkspaceImpl({
       return (
         <SplitPane
           dir={layout}
+          childPos={"last"}
           childSize={sidebarPosition}
           setChildSize={setSidebarPosition}
           style={layout === "hor" ? styles.containerHor : styles.containerVer}

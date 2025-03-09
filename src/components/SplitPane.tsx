@@ -31,8 +31,7 @@ const resizeHandleSize = "8px";
 const resizeHandleStyle: CSSProperties = {
   // Important: requires a child 2 with position: "relative"
   position: "absolute",
-  background: "yellow",
-  opacity: 0.5,
+  opacity: 0.0,
   zIndex: 999,
   top: 0,
   left: 0,
