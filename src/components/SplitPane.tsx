@@ -112,7 +112,6 @@ export default function SplitPane({
       const sizeDelta = dir === "hor" ? deltaX : deltaY;
       const newChildSize = childSize + (isFirst ? sizeDelta : -sizeDelta);
       setChildSize(newChildSize);
-      // console.info("onDragMove", newSplitPosition);
     },
     [dir, isFirst, childSize, setChildSize],
   );
@@ -140,7 +139,6 @@ export default function SplitPane({
       },
     };
   }, [style, dir, isFirst, childSize]);
-  //console.log("computedStyles", computedStyles);
 
   // Render only 2 children
   if (!children || !Array.isArray(children) || children.length !== 2) {
