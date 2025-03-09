@@ -19,16 +19,16 @@ import {
 } from "chartlets";
 
 import i18n from "@/i18n";
+import { isNumber } from "@/util/types";
+import { WithLocale } from "@/util/lang";
 import { type AppState } from "@/states/appState";
-import { setSidebarPanelId } from "@/actions/controlActions";
+import { setSidePanelId } from "@/actions/controlActions";
 import ContributedPanel from "@/ext/components/ContributedPanel";
 import SidePanel, { type PanelModel } from "@/components/SidePanel";
-import { isNumber } from "@/util/types";
 import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
-import { WithLocale } from "@/util/lang";
 
 const getBasePanels = (_locale?: string): PanelModel[] => [
   {
@@ -70,13 +70,13 @@ interface SidePanelImplProps extends WithLocale {
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
-    sidebarPanelId: state.controlState.sidebarPanelId,
+    sidebarPanelId: state.controlState.sidePanelId,
   };
 };
 
 // noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
-  setSidebarPanelId,
+  setSidebarPanelId: setSidePanelId,
 };
 
 function SidePanelImpl({

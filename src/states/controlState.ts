@@ -119,9 +119,9 @@ export interface ControlState {
   mapInteraction: MapInteraction;
   lastMapInteraction: MapInteraction;
   layerMenuOpen: boolean;
-  sidebarPosition: number;
-  sidebarOpen: boolean;
-  sidebarPanelId: string | null;
+  sidePanelOpen: boolean;
+  sidePanelSize: number;
+  sidePanelId: string | null;
   volumeRenderMode: VolumeRenderMode;
   volumeStates: VolumeStates;
   infoCardElementStates: InfoCardElementStates;
@@ -197,9 +197,9 @@ export function newControlState(): ControlState {
     datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
     layerMenuOpen: false,
-    sidebarPosition: (2 * Math.max(window.innerWidth, window.innerHeight)) / 3,
-    sidebarOpen: false,
-    sidebarPanelId: "details",
+    sidePanelOpen: false,
+    sidePanelId: "details",
+    sidePanelSize: Math.max(window.innerWidth, window.innerHeight) / 3,
     volumeRenderMode: "mip",
     volumeStates: {},
     infoCardElementStates: {

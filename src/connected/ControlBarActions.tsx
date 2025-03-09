@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 
 import { type AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
-import { setSidebarOpen } from "@/actions/controlActions";
+import { setSidePanelOpen } from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -16,12 +16,13 @@ const mapStateToProps = (state: AppState) => {
     visible: !!(
       state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
     ),
-    sidebarOpen: state.controlState.sidebarOpen,
+    sidePanelOpen: state.controlState.sidePanelOpen,
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
-  setSidebarOpen,
+  setSidePanelOpen,
 };
 
 const ControlBarActions = connect(

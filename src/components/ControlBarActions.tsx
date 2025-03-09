@@ -26,14 +26,14 @@ const styles = makeStyles({
 
 interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
-  sidebarOpen: boolean;
-  setSidebarOpen: (sideBarOpen: boolean) => void;
+  sidePanelOpen: boolean;
+  setSidePanelOpen: (sideBarOpen: boolean) => void;
 }
 
 export default function ControlBarActions({
   visible,
-  sidebarOpen,
-  setSidebarOpen,
+  sidePanelOpen,
+  setSidePanelOpen,
 }: ControlBarActionsProps) {
   if (!visible) {
     return null;
@@ -43,9 +43,9 @@ export default function ControlBarActions({
     <ToolButton
       sx={commonStyles.toggleButton}
       value={"sidebar"}
-      onClick={() => setSidebarOpen(!sidebarOpen)}
-      tooltipText={i18n.get(sidebarOpen ? "Hide sidebar" : "Show sidebar")}
-      icon={sidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+      onClick={() => setSidePanelOpen(!sidePanelOpen)}
+      tooltipText={i18n.get(sidePanelOpen ? "Hide sidebar" : "Show sidebar")}
+      icon={sidePanelOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
     />
   );
 

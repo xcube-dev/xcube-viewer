@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 
 import { AppState } from "@/states/appState";
-import { setSidebarPosition } from "@/actions/controlActions";
+import { setSidePanelSize } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import SidePanel from "./SidePanel";
@@ -52,24 +52,24 @@ const styles = makeCssStyles({
 });
 
 interface WorkspaceImplProps {
-  sidebarOpen: boolean;
-  sidebarPanelId: string | null;
-  sidebarPosition: number;
-  setSidebarPosition: (sidebarPos: number) => void;
+  sidePanelOpen: boolean;
+  sidePanelId: string | null;
+  sidePanelSize: number;
+  setSidePanelSize: (sidebarPos: number) => void;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
   return {
-    sidebarOpen: state.controlState.sidebarOpen,
-    sidebarPanelId: state.controlState.sidebarPanelId,
-    sidebarPosition: state.controlState.sidebarPosition,
+    sidePanelOpen: state.controlState.sidePanelOpen,
+    sidePanelId: state.controlState.sidePanelId,
+    sidePanelSize: state.controlState.sidePanelSize,
   };
 };
 
 // noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
-  setSidebarPosition,
+  setSidePanelSize,
 };
 
 type Layout = "hor" | "ver";
@@ -78,10 +78,10 @@ const getLayout = (): Layout => {
 };
 
 function WorkspaceImpl({
-  sidebarOpen,
-  sidebarPanelId,
-  sidebarPosition,
-  setSidebarPosition,
+  sidePanelOpen,
+  sidePanelId,
+  sidePanelSize,
+  setSidePanelSize,
 }: WorkspaceImplProps) {
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
@@ -99,21 +99,21 @@ function WorkspaceImpl({
     if (map) {
       map.updateSize();
     }
-  }, [map, sidebarPosition]);
+  }, [map, sidePanelSize]);
 
   const updateLayout = () => {
     setLayout(getLayout());
   };
 
-  if (sidebarOpen) {
-    if (sidebarPanelId) {
+  if (sidePanelOpen) {
+    if (sidePanelId) {
       // Viewer & Panel & Sidebar
       return (
         <SplitPane
           dir={layout}
           childPos={"last"}
-          childSize={sidebarPosition}
-          setChildSize={setSidebarPosition}
+          childSize={sidePanelSize}
+          setChildSize={setSidePanelSize}
           style={layout === "hor" ? styles.containerHor : styles.containerVer}
         >
           <Viewer onMapRef={setMap} theme={theme} />
