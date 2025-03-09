@@ -32,8 +32,8 @@ export const Horizontal: Story = {
     return (
       <SplitPane
         dir="hor"
-        splitPosition={splitPosition}
-        setSplitPosition={setSplitPosition}
+        childSize={splitPosition}
+        setChildSize={setSplitPosition}
         style={{ width: 400, height: 300 }}
       >
         <div style={{ width: "100%", height: "100%", background: "lightblue" }}>
@@ -56,8 +56,8 @@ export const Vertical: Story = {
     return (
       <SplitPane
         dir="ver"
-        splitPosition={splitPosition}
-        setSplitPosition={setSplitPosition}
+        childSize={splitPosition}
+        setChildSize={setSplitPosition}
         style={{ width: 300, height: 400 }}
       >
         <div style={{ width: "100%", height: "100%", background: "lightblue" }}>

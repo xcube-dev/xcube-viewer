@@ -111,8 +111,8 @@ function WorkspaceImpl({
       return (
         <SplitPane
           dir={layout}
-          splitPosition={sidebarPosition}
-          setSplitPosition={setSidebarPosition}
+          childSize={sidebarPosition}
+          setChildSize={setSidebarPosition}
           style={layout === "hor" ? styles.containerHor : styles.containerVer}
         >
           <Viewer onMapRef={setMap} theme={theme} />

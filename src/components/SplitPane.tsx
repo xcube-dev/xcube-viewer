@@ -12,11 +12,8 @@ import React, {
   useRef,
 } from "react";
 
-import { isNumber } from "@/util/types";
 import { makeCssStyles } from "@/util/styles";
 import useMouseDrag from "@/hooks/useMouseDrag";
-
-const defaultChild1Size = 66;
 
 const containerStyle: CSSProperties = {
   display: "flex",
@@ -86,8 +83,9 @@ const stylesVer = makeCssStyles({
 
 export interface SplitPaneProps {
   dir: "hor" | "ver";
-  splitPosition?: number | null;
-  setSplitPosition: (splitPosition: number) => void;
+  childPos?: "first" | "last";
+  childSize: number;
+  setChildSize: (childSize: number) => void;
   style?: CSSProperties;
   children: React.ReactNode[];
 }
@@ -98,62 +96,38 @@ export interface SplitPaneProps {
  */
 export default function SplitPane({
   dir,
-  splitPosition,
-  setSplitPosition,
+  childPos,
+  childSize,
+  setChildSize,
   children,
   style,
 }: PropsWithChildren<SplitPaneProps>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const child1Ref = useRef<HTMLDivElement>(null);
 
-  // The handler for drag-start events
-  const onDragStart = useCallback(() => {
-    if (child1Ref.current) {
-      const rect = child1Ref.current.getBoundingClientRect();
-      const newSplitPosition = dir === "hor" ? rect.width : rect.height;
-      setSplitPosition(newSplitPosition);
-      console.info("onDragStart", newSplitPosition);
-    }
-  }, [dir, setSplitPosition]);
+  const isFirst = !childPos || childPos === "first";
 
   // The handler for drag-move events
   const onDragMove = useCallback(
-    (_sizeDelta: [number, number]) => {
-      const sizeDelta = dir === "hor" ? _sizeDelta[0] : _sizeDelta[1];
-      if (isNumber(splitPosition) && sizeDelta !== 0) {
-        const newSplitPosition = splitPosition + sizeDelta;
-        setSplitPosition(newSplitPosition);
-        console.info("onDragMove", newSplitPosition);
-      }
+    ([deltaX, deltaY]: [number, number]) => {
+      const sizeDelta = dir === "hor" ? deltaX : deltaY;
+      const newChildSize = childSize + (isFirst ? sizeDelta : -sizeDelta);
+      setChildSize(newChildSize);
+      // console.info("onDragMove", newSplitPosition);
     },
-    [dir, splitPosition, setSplitPosition],
+    [dir, isFirst, childSize, setChildSize],
   );
 
   // The handler for a mouse-down event
-  const handleMouseDown = useMouseDrag({ onDragStart, onDragMove });
+  const handleMouseDown = useMouseDrag({ onDragMove });
 
   // Use splitPosition or defaults to set child sizes
   const computedStyles = useMemo(() => {
     const styles = dir === "hor" ? stylesHor : stylesVer;
-    let child1Size: string;
-    let child2Size: string;
-    if (isNumber(splitPosition)) {
-      const containerElement = containerRef.current;
-      if (containerElement) {
-        const rect = containerElement.getBoundingClientRect();
-        const containerSize = dir === "hor" ? rect.width : rect.height;
-        const percent = 100 * crop(splitPosition / containerSize);
-        child1Size = `${percent}%`;
-        child2Size = `${100 - percent}%`;
-      } else {
-        child1Size = `${splitPosition}px`;
-        child2Size = `calc(100% - ${splitPosition}px)`;
-      }
-    } else {
-      child1Size = `${defaultChild1Size}%`;
-      child2Size = `${100 - defaultChild1Size}%`;
-    }
-    console.info("computed sizes:", child1Size, child2Size);
+    const size1 = `${childSize}px`;
+    const size2 = `calc(100% - ${childSize}px)`;
+    const child1Size = isFirst ? size1 : size2;
+    const child2Size = isFirst ? size2 : size1;
     return {
       ...styles,
       container: { ...styles.container, ...style },
@@ -166,7 +140,7 @@ export default function SplitPane({
         ...(dir === "hor" ? { width: child2Size } : { height: child2Size }),
       },
     };
-  }, [style, dir, splitPosition]);
+  }, [style, dir, isFirst, childSize]);
   //console.log("computedStyles", computedStyles);
 
   // Render only 2 children
@@ -193,8 +167,4 @@ export default function SplitPane({
       </div>
     </div>
   );
-}
-
-function crop(x: number, min = 0, max = 1) {
-  return x < min ? min : x > max ? max : x;
 }
