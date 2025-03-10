@@ -8,18 +8,18 @@ import React from "react";
 import { useTheme, GlobalStyles } from "@mui/material";
 
 const scrollbarTheme = {
-  width: "0.5rem",
+  size: "0.5rem",
   borderRadius: 0,
 };
 
 const stylesDark = {
-  trackColor: "#1f1f1f",
+  trackColor: "#222",
   thumbColor: "#666",
   thumbColorHover: "#444",
 };
 
 const stylesLight = {
-  trackColor: "#fff",
+  trackColor: "#eee",
   thumbColor: "#ccc",
   thumbColorHover: "#aaa",
 };
@@ -32,7 +32,8 @@ const ScrollbarStyles: React.FC = () => {
     <GlobalStyles
       styles={{
         "::-webkit-scrollbar": {
-          width: scrollbarTheme.width,
+          width: scrollbarTheme.size,
+          height: scrollbarTheme.size,
         },
         "::-webkit-scrollbar-track": {
           backgroundColor: scrollbarStyles.trackColor,
@@ -44,6 +45,9 @@ const ScrollbarStyles: React.FC = () => {
           "&:hover": {
             backgroundColor: scrollbarStyles.thumbColorHover,
           },
+        },
+        "::-webkit-scrollbar-corner": {
+          backgroundColor: scrollbarStyles.trackColor,
         },
       }}
     />
