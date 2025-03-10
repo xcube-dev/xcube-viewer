@@ -8,6 +8,8 @@
 * Added a `Divider` to provide a visual separation of control bar items for
   better clarity to the users. (#487)
 
+* Improved _Developer Reference_ documentation.
+
 ### Fixes and other Changes
 
 * Fixed a problem where mouse splitters used to resize 
