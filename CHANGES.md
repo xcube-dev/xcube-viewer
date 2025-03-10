@@ -1,23 +1,37 @@
 ## Changes in version 1.4.3 (in development)
 
-* Fixed a problem where drag bars used to resize 
-  two components (e.g., two layers in map view, or map view and side panels) 
-  created a drift while dragging.
-
-* Added some missing language translations.
+### Improvements
 
 * Redesigned the right side panel: (#477)
   - Replaced the tabs by a sidebar comprising panel icons;
     extension panels can now be positioned and can have own icons. (#477)
-  - Restyled many panels
+  - Restyled many side panels
+
+* Variable layer legends are now styled according to the 
+  current theme mode. (#491)
+
+* Added a `Divider` to provide a visual separation of control bar items for
+  better clarity to the users. (#487)
 
 * Various style adjustments with respect the current theme modes 
   _Dark_ and _Light_.
   
 * Renamed "Info" panel into "Details"; using new icon too.
 
-* Updated development tools. Now using
-  - `vite 6.2`
+* Improved _Developer Reference_ documentation.
+
+### Fixes
+
+* Fixed a problem where mouse splitters used to resize 
+  two components (e.g., two layers in map view, or map view and side panels) 
+  created a drift while dragging.
+
+* Added some missing language translations.
+
+### Other Changes
+
+* Updated development tools. Now using 
+  - `vite 6.2` 
   - `eslint 9.21`
   - `storybook 8.6`
 

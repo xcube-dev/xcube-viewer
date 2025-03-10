@@ -7,6 +7,7 @@
 import { useMemo } from "react";
 import { useTheme } from "@mui/material";
 import OriginalMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface MarkdownProps {
   text?: string;
@@ -33,7 +34,14 @@ export default function Markdown({ text }: MarkdownProps) {
       },
       code: (props: Record<string, unknown>) => {
         const { node: _, ...rest } = props;
-        return <code {...rest} style={{ color: "grey" }} />;
+        return (
+          <code
+            {...rest}
+            style={{
+              color: theme.palette.mode === "dark" ? "#bbb" : "#666",
+            }}
+          />
+        );
       },
       img: (props: Record<string, unknown>) => {
         const { node: _, ...rest } = props;
@@ -52,6 +60,7 @@ export default function Markdown({ text }: MarkdownProps) {
       children={text}
       components={components}
       linkTarget="_blank"
+      remarkPlugins={[remarkGfm]}
     />
   );
 }

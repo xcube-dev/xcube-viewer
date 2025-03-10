@@ -118,6 +118,7 @@ export default function DatasetSelect({
       label={datasetSelectLabel}
       control={datasetSelect}
       actions={locateDatasetButton}
+      sx={{ marginLeft: 0 }}
     />
   );
 }
