@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { useEffect, useRef, MouseEvent, CSSProperties } from "react";
+import { useEffect, useRef, MouseEvent } from "react";
 import { styled, Theme } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 
