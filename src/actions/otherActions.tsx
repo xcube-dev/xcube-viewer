@@ -39,7 +39,7 @@ function _applyPersistentState(
 
 function restoreMapView(mapState: PersistedMapState) {
   if (MAP_OBJECTS["map"]) {
-    console.log("Restoring map:", mapState);
+    console.debug("Restoring map:", mapState);
     const map = MAP_OBJECTS["map"] as OlMap;
     map.setView(new OlView(mapState.view));
   }

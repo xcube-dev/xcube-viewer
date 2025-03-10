@@ -48,7 +48,7 @@ export default function useMapPointInfo(
           time,
           null,
         );
-        console.info(variable.name, "=", result);
+        // console.info(variable.name, "=", result);
         setPayload({ dataset, variable, result: { value: result.value } });
       } catch (error) {
         setPayload({ dataset, variable, result: { error } });

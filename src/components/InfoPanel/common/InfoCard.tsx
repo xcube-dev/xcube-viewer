@@ -8,12 +8,12 @@ import React from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Box from "@mui/material/Box";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { ViewMode } from "./types";
 import InfoCardActions from "./InfoCardActions";
 import InfoCardHeader from "./InfoCardHeader";
+import { commonSx } from "./styles";
 
 interface InfoCardProps {
   expanded: boolean;
@@ -42,10 +42,17 @@ const InfoCard: React.FC<InfoCardProps> = ({
 }) => {
   return (
     <Accordion
+      disableGutters
+      elevation={0}
+      square
       expanded={expanded}
       onChange={(_, expanded) => onExpandedStateChange(expanded)}
+      sx={commonSx.accordion}
     >
-      <AccordionSummary expandIcon={<ExpandMore />} sx={{ padding: "0 8px" }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        sx={commonSx.accordionSummary}
+      >
         <InfoCardHeader
           title={title}
           icon={icon}
@@ -53,21 +60,13 @@ const InfoCard: React.FC<InfoCardProps> = ({
           tooltipText={tooltipText}
         />
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: "0 8px" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-          }}
-        >
-          <InfoCardActions
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            hasPython={hasPython}
-          />
-          {children}
-        </Box>
+      <AccordionDetails sx={commonSx.accordionDetails}>
+        <InfoCardActions
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          hasPython={hasPython}
+        />
+        {children}
       </AccordionDetails>
     </Accordion>
   );

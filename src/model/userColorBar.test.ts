@@ -41,7 +41,7 @@ describe("Assert that colorBar.getUserColorBarRgbaArray()", () => {
       10,
     );
     expect(data).toBeInstanceOf(Uint8ClampedArray);
-    console.log("data:", data);
+    // console.log("data:", data);
     expect([...data]).toEqual([
       35, 255, 82, 255, 35, 255, 82, 255, 35, 255, 82, 255, 35, 255, 82, 255,
       255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 120, 30, 255, 255, 120,
