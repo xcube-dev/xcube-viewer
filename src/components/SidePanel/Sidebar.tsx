@@ -32,13 +32,7 @@ function Sidebar({
     return null;
   }
   return (
-    <Box
-      sx={
-        selectedPanelId
-          ? styles.sidebarContainerSelected
-          : styles.sidebarContainer
-      }
-    >
+    <Box sx={styles.sidebarContainer}>
       {effectivePanels.map((p) => (
         <ToolButton
           key={p.id}

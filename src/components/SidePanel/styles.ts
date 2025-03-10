@@ -30,56 +30,49 @@ const getBorderColor = (theme: Theme) =>
   (theme.palette.mode === "dark" ? sidePanelThemeDark : sidePanelThemeLight)
     .borderColor;
 
-const sidebarContainer = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 1,
-  padding: 1,
-  borderTop: "1px solid",
-};
-
 const styles = makeStyles({
   mainContainer: (theme) => ({
     display: "flex",
     flexDirection: "row",
     backgroundColor: getBackgroundColor(theme),
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
   }),
   panelContainer: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
+    flex: "1 1 auto",
+    overflow: "hidden",
   },
   panelHeader: (theme: Theme) => ({
     padding: 1,
-    borderBottom: "1px solid",
-    borderBottomColor: getBorderColor(theme),
-    borderTop: "1px solid",
-    borderTopColor: getBorderColor(theme),
+    borderTop: `1px solid ${getBorderColor(theme)}`,
+    borderRight: `1px solid ${getBorderColor(theme)}`,
+    borderBottom: `1px solid ${getBorderColor(theme)}`,
+    flex: "0 0 auto",
   }),
-  panelContent: {
+  panelContent: (theme: Theme) => ({
     padding: 1,
+    borderRight: `1px solid ${getBorderColor(theme)}`,
+    flex: "1 1 auto",
     overflow: "auto",
-  },
-  sidebarContainerSelected: (theme: Theme) => ({
-    ...sidebarContainer,
-    borderTopColor: getBorderColor(theme),
-    borderLeft: "1px solid",
-    borderLeftColor: getBorderColor(theme),
-    backgroundColor: getSidebarColor(theme),
   }),
   sidebarContainer: (theme: Theme) => ({
-    ...sidebarContainer,
-    borderTopColor: getBorderColor(theme),
+    display: "flex",
+    flexDirection: "column",
+    gap: 1,
+    padding: 1,
+    borderTop: `1px solid ${getBorderColor(theme)}`,
     backgroundColor: getSidebarColor(theme),
+    flex: "0 0 auto",
   }),
   sidebarButton: (theme) => ({
     color: theme.palette.text.secondary,
   }),
-  sidebarButtonSelected: (theme: Theme) => {
-    return {
-      background: theme.palette.action.selected,
-    };
-  },
+  sidebarButtonSelected: (theme: Theme) => ({
+    background: theme.palette.action.selected,
+  }),
 });
 
 export default styles;
