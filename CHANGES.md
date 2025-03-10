@@ -5,18 +5,23 @@
 * Variable layer legends are now styled according to the 
   current theme mode. (#491)
 
-### Fixes
+* Added a `Divider` to provide a visual separation of control bar items for
+  better clarity to the users. (#487)
+
+### Fixes and other Changes
 
 * Fixed a problem where mouse splitters used to resize 
   two components (e.g., two layers in map view, or map view and side panels) 
   created a drift while dragging.
 
+* Added some missing language translations.
+
+### Other Changes
+
 * Updated development tools. Now using 
   - `vite 6.2` 
   - `eslint 9.21`
   - `storybook 8.6`
-
-* Added some missing language translations.
 
 
 ## Changes in version 1.4.2
