@@ -5,18 +5,22 @@
  */
 
 import { useEffect, useRef, MouseEvent, CSSProperties } from "react";
+import { styled, Theme } from "@mui/system";
+import Tooltip from "@mui/material/Tooltip";
 
 import i18n from "@/i18n";
 import { ColorBar, renderColorBar } from "@/model/colorBar";
-import Tooltip from "@mui/material/Tooltip";
-import {
-  COLOR_BAR_ITEM_HEIGHT,
-  COLOR_BAR_ITEM_WIDTH,
-} from "@/components/ColorBarLegend/constants";
+import { COLOR_BAR_ITEM_HEIGHT, COLOR_BAR_ITEM_WIDTH } from "./constants";
+import { getBorderStyle } from "./style";
+
+const StyledCanvas = styled("canvas")(({ theme }: { theme: Theme }) => ({
+  border: getBorderStyle(theme),
+  cursor: "pointer",
+}));
 
 const styles: Record<string, CSSProperties> = {
-  nominal: { cursor: "pointer" },
-  error: { cursor: "pointer", border: "0.5px solid red" },
+  nominal: {},
+  error: { border: "1px solid red" },
 };
 
 interface ColorBarCanvasProps {
@@ -50,9 +54,9 @@ export default function ColorBarCanvas({
 
   return (
     <Tooltip title={tooltipTitle}>
-      <canvas
+      <StyledCanvas
         ref={canvasRef}
-        width={width || COLOR_BAR_ITEM_WIDTH}
+        width={width || COLOR_BAR_ITEM_WIDTH - 4}
         height={height || COLOR_BAR_ITEM_HEIGHT + 4}
         onClick={onClick}
         style={!imageData ? styles.error : styles.nominal}

@@ -1,5 +1,12 @@
 ## Changes in version 1.4.3 (in development)
 
+### Improvements
+
+* Variable layer legends are now styled according to the 
+  current theme mode. (#491)
+
+### Fixes
+
 * Fixed a problem where mouse splitters used to resize 
   two components (e.g., two layers in map view, or map view and side panels) 
   created a drift while dragging.
