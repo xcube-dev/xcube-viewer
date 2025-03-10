@@ -32,20 +32,27 @@ const styles = makeStyles({
 
 interface CustomLegendProps {
   removeTimeSeries?: (index: number) => void;
+  dataset?: string | null;
 }
 
 export default function CustomLegend({
   payload,
   removeTimeSeries,
+  dataset,
 }: CustomLegendProps & LegendProps) {
   if (!payload || payload.length === 0) {
+    return null;
+  }
+  if (!dataset) {
     return null;
   }
   return (
     <Box sx={styles.legendContainer}>
       {payload.map((pl: LegendPayload, index: number) => (
         <Box key={pl.value} sx={{ ...styles.legendItem, color: pl.color }}>
-          <span>{pl.value}</span>
+          <span>
+            {dataset}:{pl.value}
+          </span>
           {removeTimeSeries && (
             <Box
               component="span"

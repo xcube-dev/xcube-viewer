@@ -41,6 +41,7 @@ const mapStateToProps = (state: AppState) => {
     places: selectedPlaceGroupPlacesSelector(state),
     placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
     canAddTimeSeries: canAddTimeSeriesSelector(state),
+    selectedDataset: state.controlState.selectedDatasetId,
   };
 };
 
