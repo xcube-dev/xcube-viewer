@@ -20,7 +20,7 @@ const styles = makeStyles({
     cursor: "pointer",
   },
   label: {
-    fontSize: "0.8rem",
+    fontSize: "0.7rem",
     fontWeight: "normal",
   },
 });
