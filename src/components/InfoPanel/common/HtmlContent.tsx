@@ -26,10 +26,10 @@ const HtmlContent = ({ innerHTML }: HtmlContentProps) => {
     const svgTextElements = document.querySelectorAll(
       ".svg-container svg text",
     );
-    console.log("svgTextElements:", svgTextElements);
     svgTextElements.forEach((el) => {
       const svgTextElement = el as SVGTextElement;
       svgTextElement.setAttribute("font-size", "11px");
+      // The following didn't work:
       // svgTextElement.setAttribute("font-weight", "400");
       // svgTextElement.setAttribute("fill", "grey");
     });

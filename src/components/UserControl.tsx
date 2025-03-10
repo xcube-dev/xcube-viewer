@@ -76,7 +76,7 @@ const UserControlContent: React.FC<UserControlProps> = ({
 
   React.useEffect(() => {
     if (import.meta.env.DEV) {
-      console.log("User changed:", auth.user);
+      console.debug("User changed:", auth.user);
     }
     if (auth.user && auth.user.access_token) {
       updateAccessToken(auth.user.access_token);

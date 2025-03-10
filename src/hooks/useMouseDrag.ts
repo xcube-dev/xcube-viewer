@@ -63,7 +63,7 @@ export default function useMouseDrag({
   const handleMouseDown = useCallback(
     (event: React.MouseEvent) => {
       if (event.buttons === 1) {
-        console.info("handleMouseDown!");
+        // console.info("handleMouseDown!");
         event.preventDefault();
         firstPosRef.current = [event.clientX, event.clientY];
         const _handleEndDrag = handleEndDragRef.current;
@@ -80,7 +80,7 @@ export default function useMouseDrag({
   const handleEndDrag = useCallback(
     (event: MouseEvent) => {
       if (firstPosRef.current !== null) {
-        console.info("handleEndDrag!");
+        // console.info("handleEndDrag!");
         event.preventDefault();
         firstPosRef.current = null;
         const _handleEndDrag = handleEndDragRef.current;
