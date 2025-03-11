@@ -4,14 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { useEffect, useRef } from "react";
-import Box from "@mui/material/Box";
+import { useCallback, useEffect, useRef } from "react";
 
 import { isNumber } from "@/util/types";
-import { makeStyles } from "@/util/styles";
 import useMouseDrag from "@/hooks/useMouseDrag";
+import { makeCssStyles } from "@/util/styles";
 
-const styles = makeStyles({
+const styles = makeCssStyles({
   splitter: {
     position: "absolute",
     top: 0,
@@ -41,12 +40,15 @@ export default function MapSplitter({
   onPositionChange,
 }: MapSplitterProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
-  const handleDrag = useRef(([deltaX, _]: Point) => {
-    if (divRef.current !== null) {
-      onPositionChange(divRef.current.offsetLeft + deltaX);
-    }
-  });
-  const handleMouseDown = useMouseDrag(handleDrag.current);
+  const handleDrag = useCallback(
+    ([offsetX, _]: Point) => {
+      if (isNumber(position) && divRef.current !== null) {
+        onPositionChange(position + offsetX);
+      }
+    },
+    [position, onPositionChange],
+  );
+  const handleMouseDown = useMouseDrag({ onDragMove: handleDrag });
 
   useEffect(() => {
     if (
@@ -66,11 +68,13 @@ export default function MapSplitter({
   }
 
   return (
-    <Box
+    <div
       id={"MapSplitter"}
       ref={divRef}
-      sx={styles.splitter}
-      style={{ left: isNumber(position) ? position : "50%" }}
+      style={{
+        ...styles.splitter,
+        left: isNumber(position) ? position : "50%",
+      }}
       onMouseDown={handleMouseDown}
     />
   );

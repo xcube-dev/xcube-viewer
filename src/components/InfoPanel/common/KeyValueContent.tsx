@@ -6,7 +6,6 @@
 
 import React from "react";
 import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,7 +17,7 @@ import { commonSx } from "./styles";
 
 const styles = makeStyles({
   keyValueTableContainer: (theme) => ({
-    background: theme.palette.divider,
+    background: theme.palette.mode === "dark" ? "#181818" : "#f0f0f0",
   }),
 });
 
@@ -30,7 +29,7 @@ interface KeyValueContentProps {
 
 const KeyValueContent: React.FC<KeyValueContentProps> = ({ data }) => {
   return (
-    <TableContainer component={Paper} sx={styles.keyValueTableContainer}>
+    <TableContainer sx={styles.keyValueTableContainer}>
       <Table sx={commonSx.table} size="small">
         <TableBody>
           {data.map((kv, index) => {

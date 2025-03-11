@@ -4,11 +4,12 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { useEffect, useRef, MouseEvent, CSSProperties } from "react";
+import { useEffect, useRef, MouseEvent } from "react";
 import { styled, Theme } from "@mui/system";
 import Tooltip from "@mui/material/Tooltip";
 
 import i18n from "@/i18n";
+import { makeCssStyles } from "@/util/styles";
 import { ColorBar, renderColorBar } from "@/model/colorBar";
 import { COLOR_BAR_ITEM_HEIGHT, COLOR_BAR_ITEM_WIDTH } from "./constants";
 import { getBorderStyle } from "./style";
@@ -18,10 +19,10 @@ const StyledCanvas = styled("canvas")(({ theme }: { theme: Theme }) => ({
   cursor: "pointer",
 }));
 
-const styles: Record<string, CSSProperties> = {
+const styles = makeCssStyles({
   nominal: {},
   error: { border: "1px solid red" },
-};
+});
 
 interface ColorBarCanvasProps {
   colorBar: ColorBar;

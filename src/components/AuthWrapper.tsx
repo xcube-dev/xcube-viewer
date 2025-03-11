@@ -23,12 +23,12 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({
   }
 
   const handleSigninCallback = (_user: User | void): void => {
-    console.info("handleSigninCallback:", _user);
+    console.debug("handleSigninCallback:", _user);
     window.history.replaceState({}, document.title, window.location.pathname);
   };
 
   const handleRemoveUser = (): void => {
-    console.info("handleRemoveUser");
+    console.debug("handleRemoveUser");
     // go home after logout
     window.location.pathname = "/";
   };

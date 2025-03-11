@@ -70,10 +70,10 @@ import {
   SelectDataset,
   selectDataset,
   selectPlace,
-  SetSidebarOpen,
-  setSidebarOpen,
-  SetSidebarPanelId,
-  setSidebarPanelId,
+  SetSidePanelOpen,
+  setSidePanelOpen,
+  SetSidePanelId,
+  setSidePanelId,
 } from "./controlActions";
 import { newPersistentAppState, PersistedState } from "@/states/persistedState";
 import { applyPersistentState } from "@/actions/otherActions";
@@ -543,7 +543,7 @@ export function removeUserPlaceGroup(
 export function addStatistics() {
   return (
     dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | AddStatistics | MessageLogAction
+      SetSidePanelOpen | SetSidePanelId | AddStatistics | MessageLogAction
     >,
     getState: () => AppState,
   ) => {
@@ -553,18 +553,18 @@ export function addStatistics() {
     const selectedVariable = selectedVariableSelector(getState());
     const selectedPlaceInfo = selectedPlaceInfoSelector(getState());
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
-    const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const sidePanelOpen = getState().controlState.sidePanelOpen;
+    const sidePanelId = getState().controlState.sidePanelId;
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
 
-    if (sidebarPanelId !== "stats") {
-      dispatch(setSidebarPanelId("stats"));
+    if (sidePanelId !== "stats") {
+      dispatch(setSidePanelId("stats"));
     }
-    if (!sidebarOpen) {
-      dispatch(setSidebarOpen(true));
+    if (!sidePanelOpen) {
+      dispatch(setSidePanelOpen(true));
     }
     dispatch(_addStatistics(null));
     api
@@ -614,7 +614,7 @@ export function removeStatistics(index: number): RemoveStatistics {
 export function addTimeSeries() {
   return (
     dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | UpdateTimeSeries | MessageLogAction
+      SetSidePanelOpen | SetSidePanelId | UpdateTimeSeries | MessageLogAction
     >,
     getState: () => AppState,
   ) => {
@@ -630,8 +630,8 @@ export function addTimeSeries() {
     const useMedian = getState().controlState.timeSeriesUseMedian;
     const includeStdev = getState().controlState.timeSeriesIncludeStdev;
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
-    const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const sidebarOpen = getState().controlState.sidePanelOpen;
+    const sidebarPanelId = getState().controlState.sidePanelId;
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -642,10 +642,10 @@ export function addTimeSeries() {
       selectedDatasetTimeDim
     ) {
       if (sidebarPanelId !== "timeSeries") {
-        dispatch(setSidebarPanelId("timeSeries"));
+        dispatch(setSidePanelId("timeSeries"));
       }
       if (!sidebarOpen) {
-        dispatch(setSidebarOpen(true));
+        dispatch(setSidePanelOpen(true));
       }
 
       const timeLabels = selectedDatasetTimeDim.labels;

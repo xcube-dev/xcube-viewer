@@ -11,8 +11,9 @@ const ControlBarForm = styled("form")(({ theme }: { theme: Theme }) => ({
   display: "flex",
   flexWrap: "wrap",
   paddingTop: theme.spacing(1),
-  paddingLeft: theme.spacing(1),
-  paddingRight: theme.spacing(1),
+  paddingLeft: theme.spacing(0.5),
+  paddingRight: theme.spacing(0),
+  paddingBottom: theme.spacing(0.25),
   flexGrow: 0,
 }));
 

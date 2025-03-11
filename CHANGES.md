@@ -2,15 +2,26 @@
 
 ### Improvements
 
+* Redesigned the right side panel: (#477)
+  - Replaced the tabs by a sidebar comprising panel icons;
+    extension panels can now be positioned and can have own icons. (#477)
+  - Restyled many side panels
+
 * Variable layer legends are now styled according to the 
   current theme mode. (#491)
 
 * Added a `Divider` to provide a visual separation of control bar items for
   better clarity to the users. (#487)
 
+* Various style adjustments with respect to the current theme modes 
+
+  _Dark_ and _Light_.
+  
+* Renamed "Info" panel into "Details"; using new icon too.
+
 * Improved _Developer Reference_ documentation.
 
-### Fixes and other Changes
+### Fixes
 
 * Fixed a problem where mouse splitters used to resize 
   two components (e.g., two layers in map view, or map view and side panels) 

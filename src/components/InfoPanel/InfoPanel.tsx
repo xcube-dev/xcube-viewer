@@ -5,7 +5,6 @@
  */
 
 import React from "react";
-import Box from "@mui/material/Box";
 
 import { type WithLocale } from "@/util/lang";
 import { type Dataset } from "@/model/dataset";
@@ -17,7 +16,6 @@ import { type ViewMode } from "./common/types";
 import DatasetInfoCard from "./DatasetInfoCard";
 import VariableInfoCard from "./VariableInfoCard";
 import PlaceInfoCard from "./PlaceInfoCard";
-import { commonSx } from "@/components/InfoPanel/common/styles";
 
 interface InfoPanelProps extends WithLocale {
   visibleInfoCardElements: string[];
@@ -77,7 +75,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
     updateInfoCardElementViewMode("dataset", viewMode);
 
   return (
-    <Box sx={commonSx.card}>
+    <div>
       <DatasetInfoCard
         expanded={visibleInfoCardElements.includes("dataset")}
         onExpandedStateChange={setDatasetInfoExpandedState}
@@ -104,7 +102,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({
         setViewMode={setPlaceInfoViewMode}
         placeInfo={selectedPlaceInfo}
       />
-    </Box>
+    </div>
   );
 };
 

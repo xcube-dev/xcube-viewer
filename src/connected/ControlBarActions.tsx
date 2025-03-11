@@ -6,11 +6,9 @@
 
 import { connect } from "react-redux";
 
-import { AppState } from "@/states/appState";
+import { type AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
-import { openDialog, setSidebarOpen } from "@/actions/controlActions";
-import { Config } from "@/config";
-import { shareStatePermalink, updateResources } from "@/actions/dataActions";
+import { setSidePanelOpen } from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -18,18 +16,13 @@ const mapStateToProps = (state: AppState) => {
     visible: !!(
       state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
     ),
-    sidebarOpen: state.controlState.sidebarOpen,
-    compact: !!Config.instance.branding.compact,
-    allowRefresh: Config.instance.branding.allowRefresh,
-    allowSharing: Config.instance.branding.allowSharing,
+    sidePanelOpen: state.controlState.sidePanelOpen,
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
-  setSidebarOpen,
-  openDialog,
-  updateResources,
-  shareStatePermalink,
+  setSidePanelOpen,
 };
 
 const ControlBarActions = connect(

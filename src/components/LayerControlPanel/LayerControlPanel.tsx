@@ -73,7 +73,7 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
     return null;
   }
 
-  console.log("layerProps", layerProps);
+  // console.log("layerProps", layerProps);
 
   const handleUserOverlays = () => {
     openDialog("userOverlays");

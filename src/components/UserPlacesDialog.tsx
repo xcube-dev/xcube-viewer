@@ -161,7 +161,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
   };
 
   const handleCodePaste = () => {
-    console.info("PASTE!", text);
+    console.debug("pasted text:", text);
   };
 
   const handleCodeChange = (value: string) => {
