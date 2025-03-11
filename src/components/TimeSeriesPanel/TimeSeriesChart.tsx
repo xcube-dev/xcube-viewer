@@ -482,11 +482,6 @@ export default function TimeSeriesChart({
               />
             }
           />
-          {/*<Legend*/}
-          {/*  content={(props) => (*/}
-          {/*    <CustomLegend {...props} dataset={myExtraData} />*/}
-          {/*  )}*/}
-          {/*/>*/}
           {timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>
             // Note, we cannot render TimeSeriesLine as JSX node, because
             // recharts won't recognize the resulting higher-order component as
