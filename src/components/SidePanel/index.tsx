@@ -4,8 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { makeStyles } from "@/util/styles";
+export type { PanelModel } from "./panelModel";
 
-export const commonStyles = makeStyles({
-  toggleButton: { padding: 0.5 },
-});
+import SidePanel from "./SidePanel";
+export default SidePanel;

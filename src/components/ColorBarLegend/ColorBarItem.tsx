@@ -10,19 +10,18 @@ import Tooltip from "@mui/material/Tooltip";
 import { makeStyles } from "@/util/styles";
 
 import { COLOR_BAR_ITEM_GAP, COLOR_BAR_ITEM_WIDTH } from "./constants";
+import { getBorderStyle } from "./style";
 
 const colorBarItemStyle = (theme: Theme) => ({
   marginTop: theme.spacing(COLOR_BAR_ITEM_GAP),
   height: 20,
-  borderWidth: 1,
-  borderStyle: "solid",
+  border: getBorderStyle(theme),
   cursor: "pointer",
 });
 
 const styles = makeStyles({
   colorBarItem: (theme: Theme) => ({
     ...colorBarItemStyle(theme),
-    borderColor: theme.palette.mode === "dark" ? "lightgray" : "darkgray",
   }),
   colorBarItemSelected: (theme: Theme) => ({
     ...colorBarItemStyle(theme),

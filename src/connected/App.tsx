@@ -21,6 +21,7 @@ import { lightTheme, darkTheme } from "@/theme";
 import { type AppState } from "@/states/appState";
 import { getPaletteMode, type ThemeMode } from "@/states/controlState";
 import AuthWrapper from "@/components/AuthWrapper";
+import ScrollbarStyles from "@/components/ScrollbarStyles";
 import AppBar from "./AppBar";
 import AppPane from "./AppPane";
 import LegalAgreementDialog from "./LegalAgreementDialog";
@@ -87,6 +88,7 @@ const AppImpl: React.FC<AppImplProps> = ({ compact, themeMode }) => {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <ScrollbarStyles />
           {!compact && <AppBar />}
           <AppPane />
           <LoadingDialog />

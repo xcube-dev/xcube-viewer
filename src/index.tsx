@@ -22,6 +22,7 @@ import App from "@/connected/App";
 import { Config } from "@/config";
 import {
   changeLocale,
+  SET_SIDE_PANEL_SIZE,
   SET_VARIABLE_SPLIT_POS,
   updateUserColorBarsImageData,
 } from "@/actions/controlActions";
@@ -34,7 +35,8 @@ console.debug("baseUrl:", baseUrl);
 
 Config.load().then(() => {
   const actionFilter = (_getState: () => AppState, action: Action) =>
-    action.type !== SET_VARIABLE_SPLIT_POS;
+    action.type !== SET_VARIABLE_SPLIT_POS &&
+    action.type !== SET_SIDE_PANEL_SIZE;
   const logger = ReduxLogger.createLogger({
     collapsed: true,
     diff: false,

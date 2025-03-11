@@ -50,4 +50,5 @@ const preview: Preview = {
   ],
 };
 
+// noinspection JSUnusedGlobalSymbols
 export default preview;

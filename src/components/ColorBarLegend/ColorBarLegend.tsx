@@ -7,30 +7,28 @@
 import { CSSProperties, MouseEvent, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
 
 import { makeStyles } from "@/util/styles";
-import { ColorBar, ColorBars } from "@/model/colorBar";
-import { UserColorBar } from "@/model/userColorBar";
-import { ColorBarNorm } from "@/model/variable";
+import type { ColorBar, ColorBars } from "@/model/colorBar";
+import type { UserColorBar } from "@/model/userColorBar";
+import type { ColorBarNorm } from "@/model/variable";
+import { COLOR_BAR_ITEM_WIDTH } from "./constants";
+import { getBorderStyle } from "./style";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
 import ColorBarLegendScalable from "./ColorBarLegendScalable";
 import ColorBarColorEditor from "./ColorBarColorEditor";
-import Typography from "@mui/material/Typography";
-import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
 
 const styles = makeStyles({
   container: (theme) => ({
     position: "absolute",
     zIndex: 1000,
     top: 10,
+    border: getBorderStyle(theme),
     borderRadius: "5px",
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderColor: "#00000020",
-    backgroundColor: "#FFFFFFF0",
     boxShadow:
       "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
-    color: "black",
+    backgroundColor: theme.palette.background.default,
     maxWidth: `${COLOR_BAR_ITEM_WIDTH + 20}px`,
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
@@ -51,7 +49,6 @@ const styles = makeStyles({
     wordWrap: "break-word",
   },
   subTitle: {
-    color: "dimgray",
     fontSize: "0.7rem",
     fontWeight: "lighter",
     wordBreak: "break-word",
@@ -122,9 +119,17 @@ export default function ColorBarLegend(
   return (
     <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
       <Box sx={styles.header}>
-        <Typography sx={styles.title}>{variableTitleWithUnits}</Typography>
+        <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
+          {variableTitleWithUnits}
+        </Typography>
         {datasetTitle && (
-          <Typography sx={styles.subTitle}>{datasetTitle}</Typography>
+          <Typography
+            sx={styles.subTitle}
+            variant="subtitle2"
+            color="textSecondary"
+          >
+            {datasetTitle}
+          </Typography>
         )}
       </Box>
       {variableColorBar.type === "categorical" ? (

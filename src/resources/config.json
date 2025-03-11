@@ -8,7 +8,7 @@
   "branding": {
     "appBarTitle": "xcube Viewer",
     "windowTitle": "xcube Viewer",
-    "headerBackgroundColor": "grey",
+    "headerBackgroundColor": "#606060",
     "themeMode": "system",
     "compact": false,
     "organisationUrl": "https://xcube.readthedocs.io/",

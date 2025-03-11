@@ -923,7 +923,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				Positioned in the sidebar, the metadata for the
 				<strong>selected dataset, variable, or place</strong> is located under
-				the "Info"-Tab. The <strong>display can be enabled</strong> using the
+				the "Details"-Tab. The <strong>display can be enabled</strong> using the
 				buttons at the top left. When a display is enabled, the button's
 				background appears highlighted in gray. 
 				<br /><br />
@@ -936,7 +936,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Open the sidebar and navigate to the "Info" tab to view the metadata.
+				Open the sidebar and navigate to the "Details" tab to view the metadata.
 				Enable the display for the object of interest: <strong>dataset, selected
 				variable, or selected place</strong>. If no place is currently selected, the most
 				recently selected place will be used. Then, choose the relevant metadata
