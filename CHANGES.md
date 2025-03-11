@@ -21,6 +21,10 @@
 
 * Improved _Developer Reference_ documentation.
 
+* Improved UX by making the dataset of a variable now identifiable in
+  * Infobox when in SplitPane mode
+  * Time Series chart
+
 ### Fixes
 
 * Fixed a problem where mouse splitters used to resize 
