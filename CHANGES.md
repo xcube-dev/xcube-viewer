@@ -1,3 +1,11 @@
+## Changes in version 1.4.3 (in development)
+
+### Other changes
+
+* Added `selectedPlace` and `selectedPlaceGroup` to the list 
+  of available State Properties.
+
+
 ## Changes in version 1.4.0
 
 ### New Features
