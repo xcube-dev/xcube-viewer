@@ -13,7 +13,8 @@
 * Added a `Divider` to provide a visual separation of control bar items for
   better clarity to the users. (#487)
 
-* Various style adjustments with respect the current theme modes 
+* Various style adjustments with respect to the current theme modes 
+
   _Dark_ and _Light_.
   
 * Renamed "Info" panel into "Details"; using new icon too.
