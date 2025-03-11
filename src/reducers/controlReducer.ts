@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import {
@@ -44,9 +26,9 @@ import {
   SET_LAYER_MENU_OPEN,
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
-  SET_SIDEBAR_OPEN,
-  SET_SIDEBAR_PANEL_ID,
-  SET_SIDEBAR_POSITION,
+  SET_SIDE_PANEL_OPEN,
+  SET_SIDE_PANEL_ID,
+  SET_SIDE_PANEL_SIZE,
   SET_MAP_POINT_INFO_BOX_ENABLED,
   SET_VARIABLE_COMPARE_MODE,
   SET_VARIABLE_SPLIT_POS,
@@ -427,21 +409,21 @@ export function controlReducer(
       storeUserSettings(state);
       return state;
     }
-    case SET_SIDEBAR_POSITION: {
-      const { sidebarPosition } = action;
-      state = { ...state, sidebarPosition };
-      return state;
-    }
-    case SET_SIDEBAR_OPEN: {
-      const { sidebarOpen } = action;
-      state = { ...state, sidebarOpen };
+    case SET_SIDE_PANEL_OPEN: {
+      const { sidePanelOpen } = action;
+      state = { ...state, sidePanelOpen };
       storeUserSettings(state);
       return state;
     }
-    case SET_SIDEBAR_PANEL_ID: {
-      const { sidebarPanelId } = action;
-      state = { ...state, sidebarPanelId };
+    case SET_SIDE_PANEL_ID: {
+      const { sidePanelId } = action;
+      state = { ...state, sidePanelId };
       storeUserSettings(state);
+      return state;
+    }
+    case SET_SIDE_PANEL_SIZE: {
+      const { sidePanelSize } = action;
+      state = { ...state, sidePanelSize };
       return state;
     }
     case SET_VOLUME_RENDER_MODE: {

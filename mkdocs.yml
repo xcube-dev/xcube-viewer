@@ -2,7 +2,7 @@ site_name: xcube Viewer
 repo_url: https://github.com/xcube-dev/xcube-viewer
 repo_name: xcube-dev/xcube-viewer
 
-copyright: Copyright &copy; 2024 Brockmann Consult
+copyright: Copyright &copy; 2025 Brockmann Consult
 
 nav:
   - About: index.md

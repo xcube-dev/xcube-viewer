@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { Action, Dispatch } from "redux";
@@ -52,7 +34,6 @@ import {
   ControlState,
   LayerVisibilities,
   MapInteraction,
-  SidebarPanelId,
   TimeAnimationInterval,
   ViewMode,
   VolumeRenderMode,
@@ -519,45 +500,41 @@ export function setLayerMenuOpen(layerMenuOpen: boolean): SetLayerMenuOpen {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_SIDEBAR_POSITION = "SET_SIDEBAR_POSITION";
+export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 
-export interface SetSidebarPosition {
-  type: typeof SET_SIDEBAR_POSITION;
-  sidebarPosition: number;
+export interface SetSidePanelOpen {
+  type: typeof SET_SIDE_PANEL_OPEN;
+  sidePanelOpen: boolean;
 }
 
-export function setSidebarPosition(
-  sidebarPosition: number,
-): SetSidebarPosition {
-  return { type: SET_SIDEBAR_POSITION, sidebarPosition };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export const SET_SIDEBAR_OPEN = "SET_SIDEBAR_OPEN";
-
-export interface SetSidebarOpen {
-  type: typeof SET_SIDEBAR_OPEN;
-  sidebarOpen: boolean;
-}
-
-export function setSidebarOpen(sidebarOpen: boolean): SetSidebarOpen {
-  return { type: SET_SIDEBAR_OPEN, sidebarOpen };
+export function setSidePanelOpen(sidePanelOpen: boolean): SetSidePanelOpen {
+  return { type: SET_SIDE_PANEL_OPEN, sidePanelOpen };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
+export const SET_SIDE_PANEL_ID = "SET_SIDE_PANEL_ID";
 
-export interface SetSidebarPanelId {
-  type: typeof SET_SIDEBAR_PANEL_ID;
-  sidebarPanelId: SidebarPanelId | string;
+export interface SetSidePanelId {
+  type: typeof SET_SIDE_PANEL_ID;
+  sidePanelId: string | null;
 }
 
-export function setSidebarPanelId(
-  sidebarPanelId: SidebarPanelId | string,
-): SetSidebarPanelId {
-  return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
+export function setSidePanelId(sidePanelId: string | null): SetSidePanelId {
+  return { type: SET_SIDE_PANEL_ID, sidePanelId };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_SIDE_PANEL_SIZE = "SET_SIDE_PANEL_SIZE";
+
+export interface SetSidePanelSize {
+  type: typeof SET_SIDE_PANEL_SIZE;
+  sidePanelSize: number;
+}
+
+export function setSidePanelSize(sidePanelSize: number): SetSidePanelSize {
+  return { type: SET_SIDE_PANEL_SIZE, sidePanelSize };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -840,9 +817,9 @@ export type ControlAction =
   | OpenDialog
   | CloseDialog
   | SetLayerMenuOpen
-  | SetSidebarPosition
-  | SetSidebarOpen
-  | SetSidebarPanelId
+  | SetSidePanelSize
+  | SetSidePanelOpen
+  | SetSidePanelId
   | SetVolumeRenderMode
   | UpdateVolumeState
   | SetVisibleInfoCardElements

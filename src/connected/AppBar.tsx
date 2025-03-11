@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import * as React from "react";
@@ -51,7 +33,7 @@ import DevRefPage from "@/components/DevRefPage";
 import ImprintPage from "@/components/ImprintPage";
 import UserControl from "./UserControl";
 
-interface AppBarProps extends WithLocale {
+interface AppBarImplProps extends WithLocale {
   appName: string;
   openDialog: (dialogId: string) => unknown;
   allowRefresh?: boolean;
@@ -66,7 +48,7 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     appName: Config.instance.branding.appBarTitle,
     allowRefresh: Config.instance.branding.allowRefresh,
-    allowSharing: Config.instance.branding.allowRefresh,
+    allowSharing: Config.instance.branding.allowSharing,
   };
 };
 
@@ -100,9 +82,6 @@ const styles = makeStyles({
     backgroundColor: Config.instance.branding.headerBackgroundColor,
     paddingRight: theme.spacing(1),
   }),
-  logo: (theme) => ({
-    marginLeft: theme.spacing(1),
-  }),
   title: (theme) => ({
     flexGrow: 1,
     marginLeft: theme.spacing(1),
@@ -135,14 +114,14 @@ const styles = makeStyles({
   }),
 });
 
-const _AppBar: React.FC<AppBarProps> = ({
+const AppBarImpl: React.FC<AppBarImplProps> = ({
   appName,
   openDialog,
   allowRefresh,
   updateResources,
   allowSharing,
   shareStatePermalink,
-}: AppBarProps) => {
+}: AppBarImplProps) => {
   const [imprintOpen, setImprintOpen] = React.useState(false);
   const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
@@ -274,12 +253,16 @@ const _AppBar: React.FC<AppBarProps> = ({
         open={helpMenuOpen}
         onClose={handleCloseHelpMenu}
       >
-        <MenuItem onClick={handleOpenManual}>Documentation</MenuItem>
-        <MenuItem onClick={handleOpenDevRef}>Developer Reference</MenuItem>
+        <MenuItem onClick={handleOpenManual}>
+          {i18n.get("Documentation")}
+        </MenuItem>
+        <MenuItem onClick={handleOpenDevRef}>
+          {i18n.get("Developer Reference")}
+        </MenuItem>
       </Menu>
     </AppBarComponent>
   );
 };
 
-const AppBar = connect(mapStateToProps, mapDispatchToProps)(_AppBar);
+const AppBar = connect(mapStateToProps, mapDispatchToProps)(AppBarImpl);
 export default AppBar;

@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { Action, Dispatch, Store } from "redux";
@@ -88,12 +70,11 @@ import {
   SelectDataset,
   selectDataset,
   selectPlace,
-  SetSidebarOpen,
-  setSidebarOpen,
-  SetSidebarPanelId,
-  setSidebarPanelId,
+  SetSidePanelOpen,
+  setSidePanelOpen,
+  SetSidePanelId,
+  setSidePanelId,
 } from "./controlActions";
-import baseUrl from "@/util/baseurl";
 import { newPersistentAppState, PersistedState } from "@/states/persistedState";
 import { applyPersistentState } from "@/actions/otherActions";
 
@@ -157,8 +138,10 @@ export function shareStatePermalink() {
       )
       .then((stateKey) => {
         if (stateKey) {
-          const viewerUrl = `${baseUrl.origin}?stateKey=${stateKey}`;
-          navigator.clipboard.writeText(viewerUrl).then(() => {
+          const location = window.location;
+          const viewerUrl = location.origin + location.pathname;
+          const stateUrl = `${viewerUrl}?stateKey=${stateKey}`;
+          navigator.clipboard.writeText(stateUrl).then(() => {
             dispatch(
               postMessage("success", i18n.get("Permalink copied to clipboard")),
             );
@@ -560,7 +543,7 @@ export function removeUserPlaceGroup(
 export function addStatistics() {
   return (
     dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | AddStatistics | MessageLogAction
+      SetSidePanelOpen | SetSidePanelId | AddStatistics | MessageLogAction
     >,
     getState: () => AppState,
   ) => {
@@ -570,18 +553,18 @@ export function addStatistics() {
     const selectedVariable = selectedVariableSelector(getState());
     const selectedPlaceInfo = selectedPlaceInfoSelector(getState());
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
-    const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const sidePanelOpen = getState().controlState.sidePanelOpen;
+    const sidePanelId = getState().controlState.sidePanelId;
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
 
-    if (sidebarPanelId !== "stats") {
-      dispatch(setSidebarPanelId("stats"));
+    if (sidePanelId !== "stats") {
+      dispatch(setSidePanelId("stats"));
     }
-    if (!sidebarOpen) {
-      dispatch(setSidebarOpen(true));
+    if (!sidePanelOpen) {
+      dispatch(setSidePanelOpen(true));
     }
     dispatch(_addStatistics(null));
     api
@@ -631,7 +614,7 @@ export function removeStatistics(index: number): RemoveStatistics {
 export function addTimeSeries() {
   return (
     dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | UpdateTimeSeries | MessageLogAction
+      SetSidePanelOpen | SetSidePanelId | UpdateTimeSeries | MessageLogAction
     >,
     getState: () => AppState,
   ) => {
@@ -647,8 +630,8 @@ export function addTimeSeries() {
     const useMedian = getState().controlState.timeSeriesUseMedian;
     const includeStdev = getState().controlState.timeSeriesIncludeStdev;
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
-    const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const sidebarOpen = getState().controlState.sidePanelOpen;
+    const sidebarPanelId = getState().controlState.sidePanelId;
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -659,10 +642,10 @@ export function addTimeSeries() {
       selectedDatasetTimeDim
     ) {
       if (sidebarPanelId !== "timeSeries") {
-        dispatch(setSidebarPanelId("timeSeries"));
+        dispatch(setSidePanelId("timeSeries"));
       }
       if (!sidebarOpen) {
-        dispatch(setSidebarOpen(true));
+        dispatch(setSidePanelOpen(true));
       }
 
       const timeLabels = selectedDatasetTimeDim.labels;
