@@ -9,6 +9,7 @@ import MapPointInfo, { Payload } from "./MapPointInfo";
 import Box from "@mui/material/Box";
 import { makeStyles } from "@/util/styles";
 import { isNumber } from "@/util/types";
+import { useMemo } from "react";
 
 const styles = makeStyles({
   container: {
@@ -32,12 +33,10 @@ export default function MapPointInfoContent({
   payload,
   payload2,
 }: MapPointInfoContentProps) {
-  let payload_label: string;
-  if (payload2) {
-    payload_label = "(R) ".concat(formatLabel(payload));
-  } else {
-    payload_label = formatLabel(payload);
-  }
+  const payloadLabel = useMemo(() => {
+    return payload2 ? "(R) " + formatLabel(payload) : formatLabel(payload);
+  }, [payload, payload2]);
+
   return (
     <Box sx={styles.container}>
       <Box sx={styles.labelItem}>{"Longitude"}</Box>
@@ -45,7 +44,7 @@ export default function MapPointInfoContent({
       <Box sx={styles.labelItem}>{"Latitude"}</Box>
       <Box sx={styles.valueItem}>{getLabelForValue(location.lat, 4)}</Box>
 
-      <Box sx={styles.labelItem}>{payload_label}</Box>
+      <Box sx={styles.labelItem}>{payloadLabel}</Box>
       <Box sx={styles.valueItem}>{formatValue(payload)}</Box>
       {payload2 && (
         <Box sx={styles.labelItem}>{"(L) " + formatLabel(payload2)}</Box>
