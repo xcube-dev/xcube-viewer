@@ -33,7 +33,7 @@ export default function useMapPointInfo(
     if (!dataset2 && !variable2) {
       setPayload2(undefined);
     }
-  }, [dataset2, variable]);
+  }, [dataset2, variable2]);
 
   const fetchPointValue = useCallback(
     async (
