@@ -37,7 +37,8 @@
   - `storybook 8.6`
 
 * Added `selectedPlace` and `selectedPlaceGroup` to the list 
-  of available State Properties.
+  of available state properties. (#455)
+
 
 
 ## Changes in version 1.4.2
