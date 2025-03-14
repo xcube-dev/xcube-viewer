@@ -21,9 +21,12 @@
 
 * Improved _Developer Reference_ documentation.
 
-* Improved UX by making the dataset of a variable now identifiable in
-  * Infobox when in SplitPane mode
-  * Time Series chart
+* Improved UX as users can now easily identify which dataset a variable belongs 
+  to in variable comparison mode on the map. The infobox (when enabled and 
+  hovered) marks variables with `(R)` and `(L)`, clarifying their dataset 
+  origins when the same variable appears from different datasets. 
+
+* Users can now also identify the datasets in the Time Series chart.
 
 ### Fixes
 
