@@ -21,6 +21,13 @@
 
 * Improved _Developer Reference_ documentation.
 
+* Improved UX as users can now easily identify which dataset a variable belongs 
+  to in variable comparison mode on the map. The infobox (when enabled and 
+  hovered) marks variables with `(R)` and `(L)`, clarifying their dataset 
+  origins when the same variable appears from different datasets. 
+
+* Users can now also identify the datasets in the Time Series chart.
+
 ### Fixes
 
 * Fixed a problem where mouse splitters used to resize 
@@ -28,6 +35,10 @@
   created a drift while dragging.
 
 * Added some missing language translations.
+
+* Fixed the map's infobox as it now correctly removes the second variable when the 
+
+  user disables variable comparison mode.
 
 ### Other Changes
 

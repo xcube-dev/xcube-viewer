@@ -29,6 +29,12 @@ export default function useMapPointInfo(
   const [payload, setPayload] = useState<Payload>();
   const [payload2, setPayload2] = useState<Payload>();
 
+  useEffect(() => {
+    if (!dataset2 && !variable2) {
+      setPayload2(undefined);
+    }
+  }, [dataset2, variable2]);
+
   const fetchPointValue = useCallback(
     async (
       dataset: Dataset,
