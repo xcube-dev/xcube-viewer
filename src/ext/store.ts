@@ -62,7 +62,7 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     selector: selectedPlaceIdSelector,
   },
   selectedPlaceGroup: {
-    type: "dict[str, Any] | None",
+    type: "list[dict[str, Any]]",
     description:
       "The list of dataset place group and user place groups.",
     selector: selectedDatasetAndUserPlaceGroupsSelector,
