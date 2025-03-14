@@ -33,7 +33,8 @@
 
 * Added some missing language translations.
 
-* Fixed the infobox as it now correctly removes the second variable when the 
+* Fixed the map's infobox as it now correctly removes the second variable when the 
+
   user disables variable comparison mode.
 
 ### Other Changes
