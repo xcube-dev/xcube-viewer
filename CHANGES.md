@@ -4,8 +4,10 @@
 
 * Redesigned the right side panel: (#477)
   - Replaced the tabs by a sidebar comprising panel icons;
-    extension panels can now be positioned and can have own icons. (#477)
+    extension panels can now be positioned and can have own icons. 
   - Restyled many side panels
+  - The panel's resize handle now provides visual feedback 
+    when hovering over it.
 
 * Variable layer legends are now styled according to the 
   current theme mode. (#491)
