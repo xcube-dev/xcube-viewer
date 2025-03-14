@@ -13,6 +13,8 @@ import {
   selectedDatasetIdSelector,
   selectedDatasetTimeLabelSelector,
   selectedPlaceGeometrySelector,
+  selectedPlaceIdSelector,
+  selectedDatasetAndUserPlaceGroupsSelector,
   selectedVariable2NameSelector,
   selectedVariableNameSelector,
 } from "@/selectors/controlSelectors";
@@ -52,6 +54,18 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     description:
       "The geometry of the currently selected place in GeoJSON format.",
     selector: selectedPlaceGeometrySelector,
+  },
+  selectedPlaceId: {
+    type: "str | None",
+    description:
+      "The identifier of the currently selected place.",
+    selector: selectedPlaceIdSelector,
+  },
+  selectedPlaceGroup: {
+    type: "list[dict[str, Any]]",
+    description:
+      "The list of dataset place group and user place groups.",
+    selector: selectedDatasetAndUserPlaceGroupsSelector,
   },
   selectedTimeLabel: {
     type: "str | None",
