@@ -69,7 +69,7 @@ interface TimeSeriesPanelProps extends WithLocale {
   canAddTimeSeries: boolean;
   addTimeSeries: () => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  selectedDataset: string | null;
+  selectedDatasetTitle: string | null;
 }
 
 export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
@@ -80,7 +80,7 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
     selectTimeRange,
     canAddTimeSeries,
     addTimeSeries,
-    selectedDataset,
+    selectedDatasetTitle,
     ...chartProps
   } = props;
 
@@ -108,7 +108,7 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
             dataTimeRange={dataTimeRange}
             selectedTimeRange={selectedTimeRange}
             selectTimeRange={selectTimeRange}
-            selectedDataset={selectedDataset}
+            selectedDatasetTitle={selectedDatasetTitle}
             {...chartProps}
           />
         );

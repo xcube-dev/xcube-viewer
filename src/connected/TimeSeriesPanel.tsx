@@ -23,6 +23,7 @@ import { postMessage } from "@/actions/messageLogActions";
 import {
   canAddTimeSeriesSelector,
   selectedDatasetTimeRangeSelector,
+  selectedDatasetTitleSelector,
   selectedPlaceGroupPlacesSelector,
   timeSeriesPlaceInfosSelector,
 } from "@/selectors/controlSelectors";
@@ -41,7 +42,7 @@ const mapStateToProps = (state: AppState) => {
     places: selectedPlaceGroupPlacesSelector(state),
     placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
     canAddTimeSeries: canAddTimeSeriesSelector(state),
-    selectedDataset: state.controlState.selectedDatasetId,
+    selectedDatasetTitle: selectedDatasetTitleSelector(state),
   };
 };
 
