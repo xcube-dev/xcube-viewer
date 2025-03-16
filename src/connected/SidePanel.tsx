@@ -4,9 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-// noinspection JSUnusedLocalSymbols
-
-import { useCallback, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import DetailsIcon from "@mui/icons-material/Details";
 import FunctionsIcon from "@mui/icons-material/Functions";
@@ -19,7 +17,6 @@ import {
 } from "chartlets";
 
 import i18n from "@/i18n";
-import { isNumber } from "@/util/types";
 import { WithLocale } from "@/util/lang";
 import { type AppState } from "@/states/appState";
 import { setSidePanelId } from "@/actions/controlActions";
@@ -113,20 +110,17 @@ function SidePanelImpl({
     return panelMap;
   }, [contributedPanels]);
 
-  const _setSidebarPanelId = useCallback(
-    (value: string | null) => {
-      setSidebarPanelId(value);
-      if (value !== null) {
-        const contribIndex = contributedPanelsMap.get(value);
-        if (isNumber(contribIndex)) {
-          updateContributionContainer("panels", contribIndex, {
-            visible: true,
-          });
-        }
+  useEffect(() => {
+    if (sidebarPanelId && contributedPanelsMap.has(sidebarPanelId)) {
+      const contribIndex = contributedPanelsMap.get(sidebarPanelId)!;
+      const panelModel = contributedPanels[contribIndex];
+      if (!panelModel.visible) {
+        updateContributionContainer("panels", contribIndex, {
+          visible: true,
+        });
       }
-    },
-    [contributedPanelsMap, setSidebarPanelId],
-  );
+    }
+  }, [sidebarPanelId, contributedPanels, contributedPanelsMap]);
 
   const basePanels = useMemo((): PanelModel[] => {
     return getBasePanels(locale);
@@ -140,7 +134,7 @@ function SidePanelImpl({
     <SidePanel
       panels={panels}
       selectedPanelId={sidebarPanelId}
-      setSelectedPanelId={_setSidebarPanelId}
+      setSelectedPanelId={setSidebarPanelId}
     />
   );
 }
