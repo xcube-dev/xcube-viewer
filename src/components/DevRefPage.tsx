@@ -32,8 +32,6 @@ export const DevRefPage = ({ open, onClose }: DevRefPageProps) => {
     }
   }, [templateText, contributionPoints]);
 
-  console.log(text);
-
   return (
     <MarkdownPage
       title={i18n.get("Developer Reference")}
