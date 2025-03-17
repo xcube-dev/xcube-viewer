@@ -31,6 +31,7 @@ import { WithLocale } from "@/util/lang";
 import { makeStyles } from "@/util/styles";
 import { TimeSeriesChartType } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
+import HoverVisibleBox from "@/components/HoverVisibleBox";
 import SnapshotButton from "@/components/SnapshotButton";
 import TimeSeriesAddButton from "./TimeSeriesAddButton";
 import ValueRangeEditor from "./ValueRangeEditor";
@@ -147,104 +148,109 @@ export default function TimeSeriesChartHeader({
   return (
     <Box sx={styles.headerContainer}>
       <Box sx={styles.actionsContainer}>
-        {zoomed && (
-          <Tooltip arrow title={i18n.get("Zoom to full range")}>
-            <IconButton
-              key={"zoomOutButton"}
-              sx={styles.actionButton}
-              onClick={resetZoom}
+        <HoverVisibleBox sx={styles.actionsContainer} initialOpacity={0.05}>
+          {zoomed && (
+            <Tooltip arrow title={i18n.get("Zoom to full range")}>
+              <IconButton
+                key={"zoomOutButton"}
+                sx={styles.actionButton}
+                onClick={resetZoom}
+                size="small"
+              >
+                <FitScreenIcon fontSize={"inherit"} />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          <Tooltip
+            arrow
+            title={i18n.get("Toggle zoom mode (or press CTRL key)")}
+          >
+            <ToggleButton
+              value={"zoomMode"}
+              selected={zoomMode}
+              onClick={() => setZoomMode(!zoomMode)}
               size="small"
             >
-              <FitScreenIcon fontSize={"inherit"} />
-            </IconButton>
+              <AspectRatioIcon fontSize="inherit" />
+            </ToggleButton>
           </Tooltip>
-        )}
 
-        <Tooltip arrow title={i18n.get("Toggle zoom mode (or press CTRL key)")}>
-          <ToggleButton
-            value={"zoomMode"}
-            selected={zoomMode}
-            onClick={() => setZoomMode(!zoomMode)}
-            size="small"
-          >
-            <AspectRatioIcon fontSize="inherit" />
-          </ToggleButton>
-        </Tooltip>
+          <ValueRangeEditor
+            anchorEl={valueRangeEditorOpen ? valueRangeEl.current : null}
+            valueRange={valueRange}
+            setValueRange={handleValueRangeChange}
+          />
 
-        <ValueRangeEditor
-          anchorEl={valueRangeEditorOpen ? valueRangeEl.current : null}
-          valueRange={valueRange}
-          setValueRange={handleValueRangeChange}
-        />
-
-        <Tooltip arrow title={i18n.get("Enter fixed y-range")}>
-          {/*
+          <Tooltip arrow title={i18n.get("Enter fixed y-range")}>
+            {/*
             Note, it is actually not ok to use toggle button here as it
             just opens a popup. However, we should use the toggle button
             to indicate that a fixed y-range is active.
           */}
-          <ToggleButton
-            ref={valueRangeEl}
-            value={"valueRange"}
-            selected={valueRangeEditorOpen}
-            onClick={handleToggleValueRangeEditor}
-            size="small"
-          >
-            <ExpandIcon fontSize="inherit" />
-          </ToggleButton>
-        </Tooltip>
-
-        <Tooltip arrow title={i18n.get("Toggle showing info popup on hover")}>
-          <ToggleButton
-            value={"showTooltips"}
-            selected={showTooltips}
-            onClick={() => setShowTooltips(!showTooltips)}
-            size="small"
-          >
-            <CommentIcon fontSize="inherit" />
-          </ToggleButton>
-        </Tooltip>
-
-        <ToggleButtonGroup
-          value={stdevBars ? [chartType, SHOW_DEV_VALUE] : [chartType]}
-          onChange={handleChartTypeChange}
-          size="small"
-          sx={styles.chartTypes}
-        >
-          <Tooltip arrow title={i18n.get("Show points")}>
-            <ToggleButton value="point" size="small">
-              <ScatterPlotIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip arrow title={i18n.get("Show lines")}>
-            <ToggleButton value="line" size="small">
-              <ShowChartIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip arrow title={i18n.get("Show bars")}>
-            <ToggleButton value="bar" size="small">
-              <BarChartIcon fontSize="inherit" />
-            </ToggleButton>
-          </Tooltip>
-          <Tooltip arrow title={i18n.get("Show standard deviation (if any)")}>
             <ToggleButton
-              value={SHOW_DEV_VALUE}
+              ref={valueRangeEl}
+              value={"valueRange"}
+              selected={valueRangeEditorOpen}
+              onClick={handleToggleValueRangeEditor}
               size="small"
-              disabled={stdevBarsDisabled}
             >
-              <IsoIcon fontSize="inherit" />
+              <ExpandIcon fontSize="inherit" />
             </ToggleButton>
           </Tooltip>
-        </ToggleButtonGroup>
 
-        <SnapshotButton elementRef={chartElement} postMessage={postMessage} />
+          <Tooltip arrow title={i18n.get("Toggle showing info popup on hover")}>
+            <ToggleButton
+              value={"showTooltips"}
+              selected={showTooltips}
+              onClick={() => setShowTooltips(!showTooltips)}
+              size="small"
+            >
+              <CommentIcon fontSize="inherit" />
+            </ToggleButton>
+          </Tooltip>
 
-        <TimeSeriesAddButton
-          sx={styles.actionButton}
-          timeSeriesGroupId={timeSeriesGroup.id}
-          placeGroupTimeSeries={placeGroupTimeSeries}
-          addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
-        />
+          <ToggleButtonGroup
+            value={stdevBars ? [chartType, SHOW_DEV_VALUE] : [chartType]}
+            onChange={handleChartTypeChange}
+            size="small"
+            sx={styles.chartTypes}
+          >
+            <Tooltip arrow title={i18n.get("Show points")}>
+              <ToggleButton value="point" size="small">
+                <ScatterPlotIcon fontSize="inherit" />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip arrow title={i18n.get("Show lines")}>
+              <ToggleButton value="line" size="small">
+                <ShowChartIcon fontSize="inherit" />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip arrow title={i18n.get("Show bars")}>
+              <ToggleButton value="bar" size="small">
+                <BarChartIcon fontSize="inherit" />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip arrow title={i18n.get("Show standard deviation (if any)")}>
+              <ToggleButton
+                value={SHOW_DEV_VALUE}
+                size="small"
+                disabled={stdevBarsDisabled}
+              >
+                <IsoIcon fontSize="inherit" />
+              </ToggleButton>
+            </Tooltip>
+          </ToggleButtonGroup>
+
+          <SnapshotButton elementRef={chartElement} postMessage={postMessage} />
+
+          <TimeSeriesAddButton
+            sx={styles.actionButton}
+            timeSeriesGroupId={timeSeriesGroup.id}
+            placeGroupTimeSeries={placeGroupTimeSeries}
+            addPlaceGroupTimeSeries={addPlaceGroupTimeSeries}
+          />
+        </HoverVisibleBox>
 
         {loading ? (
           // Note, we show progress instead of the close button,
