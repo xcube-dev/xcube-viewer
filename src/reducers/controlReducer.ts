@@ -26,17 +26,17 @@ import {
   SET_LAYER_MENU_OPEN,
   SET_LAYER_VISIBILITY,
   SET_MAP_INTERACTION,
-  SET_SIDE_PANEL_OPEN,
-  SET_SIDE_PANEL_ID,
-  SET_SIDE_PANEL_SIZE,
   SET_MAP_POINT_INFO_BOX_ENABLED,
+  SET_SIDE_PANEL_ID,
+  SET_SIDE_PANEL_OPEN,
   SET_VARIABLE_COMPARE_MODE,
-  SET_VARIABLE_SPLIT_POS,
+  UPDATE_VARIABLE_SPLIT_POS,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
   STORE_SETTINGS,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
+  UPDATE_SIDE_PANEL_SIZE,
   UPDATE_TIME_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
@@ -57,13 +57,14 @@ import {
   getDatasetTimeRange,
 } from "@/model/dataset";
 import {
-  selectedDatasetTimeIndexSelector,
   selectedDatasetTimeCoordinatesSelector,
+  selectedDatasetTimeIndexSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
 import { ControlState, newControlState } from "@/states/controlState";
 import { storeUserSettings } from "@/states/userSettings";
 import { findIndexCloseTo } from "@/util/find";
+import { isNumber } from "@/util/types";
 import { appParams } from "@/config";
 import { USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/userColorBar";
@@ -212,9 +213,14 @@ export function controlReducer(
       const { variableCompareMode } = action;
       return { ...state, variableCompareMode, variableSplitPos: undefined };
     }
-    case SET_VARIABLE_SPLIT_POS: {
-      const { variableSplitPos } = action;
-      return { ...state, variableSplitPos };
+    case UPDATE_VARIABLE_SPLIT_POS: {
+      const { size, isDelta } = action;
+      if (!isDelta && state.variableSplitPos !== size) {
+        return { ...state, variableSplitPos: size };
+      } else if (isNumber(state.variableSplitPos) && size !== 0) {
+        return { ...state, variableSplitPos: state.variableSplitPos + size };
+      }
+      return state;
     }
     case SELECT_TIME: {
       let { selectedTime } = action;
@@ -421,10 +427,11 @@ export function controlReducer(
       storeUserSettings(state);
       return state;
     }
-    case SET_SIDE_PANEL_SIZE: {
-      const { sidePanelSize } = action;
-      state = { ...state, sidePanelSize };
-      return state;
+    case UPDATE_SIDE_PANEL_SIZE: {
+      const { sizeDelta } = action;
+      return sizeDelta
+        ? { ...state, sidePanelSize: state.sidePanelSize + sizeDelta }
+        : state;
     }
     case SET_VOLUME_RENDER_MODE: {
       state = {
