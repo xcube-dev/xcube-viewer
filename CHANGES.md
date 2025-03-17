@@ -28,6 +28,9 @@
 
 * Users can now also identify the datasets in the Time Series chart.
 
+* Toolbars on time-series charts now fade into the background until you hover 
+  over them, reducing visual clutter and improving focus on the data.
+
 ### Fixes
 
 * Fixed a problem where mouse splitters used to resize 
