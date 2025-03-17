@@ -17,8 +17,8 @@ import {
 } from "chartlets";
 
 import i18n from "@/i18n";
-import { WithLocale } from "@/util/lang";
-import { type AppState } from "@/states/appState";
+import type { WithLocale } from "@/util/lang";
+import type { AppState } from "@/states/appState";
 import { setSidePanelId } from "@/actions/controlActions";
 import ContributedPanel from "@/ext/components/ContributedPanel";
 import SidePanel, { type PanelModel } from "@/components/SidePanel";
@@ -33,28 +33,24 @@ const getBasePanels = (_locale?: string): PanelModel[] => [
     title: i18n.get("Details"),
     icon: <DetailsIcon />,
     content: <InfoPanel />,
-    visible: true,
   },
   {
     id: "timeSeries",
     title: i18n.get("Time-Series"),
     icon: <StackedLineChartIcon />,
     content: <TimeSeriesPanel />,
-    visible: true,
   },
   {
     id: "stats",
     title: i18n.get("Statistics"),
     icon: <FunctionsIcon />,
     content: <StatisticsPanel />,
-    visible: true,
   },
   {
     id: "volume",
     title: i18n.get("Volume"),
     icon: <ThreeDRotationIcon />,
     content: <VolumePanel />,
-    visible: true,
   },
 ];
 
@@ -102,6 +98,7 @@ function SidePanelImpl({
     }));
   }, [panelContributions]);
 
+  // Get a mapping from panel ID to index into the array of server-side panels.
   const contributedPanelsMap = useMemo(() => {
     const panelMap = new Map<string, number>();
     contributedPanels.forEach((panel: PanelModel, panelIndex) => {
@@ -110,22 +107,32 @@ function SidePanelImpl({
     return panelMap;
   }, [contributedPanels]);
 
+  // Load the panel's user interface
   useEffect(() => {
     if (sidebarPanelId && contributedPanelsMap.has(sidebarPanelId)) {
       const contribIndex = contributedPanelsMap.get(sidebarPanelId)!;
       const panelModel = contributedPanels[contribIndex];
-      if (!panelModel.visible) {
-        updateContributionContainer("panels", contribIndex, {
-          visible: true,
-        });
+      if (!panelModel.componentRequested) {
+        // This will trigger loading the server-side
+        // UI component from endpoint /viewer/ext/layout
+        updateContributionContainer<PanelModel>(
+          "panels",
+          contribIndex,
+          {
+            componentRequested: true,
+          },
+          /*requireComponent =*/ true,
+        );
       }
     }
   }, [sidebarPanelId, contributedPanels, contributedPanelsMap]);
 
+  // Get the viewer's internationalized base panels.
   const basePanels = useMemo((): PanelModel[] => {
     return getBasePanels(locale);
   }, [locale]);
 
+  // Get the combined base panels and server-side panels.
   const panels = useMemo((): PanelModel[] => {
     return [...basePanels, ...contributedPanels];
   }, [basePanels, contributedPanels]);

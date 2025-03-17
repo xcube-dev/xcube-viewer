@@ -14,7 +14,6 @@ import SidePanelHeader from "./SidePanelHeader";
 import SidePanelContent from "./SidePanelContent";
 
 export interface SidePanelProps {
-  hidden?: boolean;
   width?: number | string;
   height?: number | string;
   panels?: PanelModel[];
@@ -23,7 +22,6 @@ export interface SidePanelProps {
 }
 
 function SidePanel({
-  hidden,
   width,
   height,
   panels,
@@ -31,18 +29,15 @@ function SidePanel({
   setSelectedPanelId,
 }: SidePanelProps) {
   const selectedPanel = useMemo(() => {
-    return (panels && panels.find((p) => p.id === selectedPanelId)) || null;
+    return panels && panels.find((p) => p.id === selectedPanelId);
   }, [panels, selectedPanelId]);
-  if (hidden) {
-    return null;
-  }
   return (
     <Box
       width={width || "100%"}
       height={height || "100%"}
       sx={styles.mainContainer}
     >
-      {selectedPanel && (
+      {selectedPanelId && (
         <Box sx={styles.panelContainer}>
           <SidePanelHeader selectedPanel={selectedPanel} />
           <SidePanelContent selectedPanel={selectedPanel} />

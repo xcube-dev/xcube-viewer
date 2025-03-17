@@ -11,7 +11,7 @@ import type { PanelModel } from "./panelModel";
 import styles from "./styles";
 
 export interface SidePanelHeaderProps {
-  selectedPanel: PanelModel;
+  selectedPanel?: PanelModel;
 }
 
 function SidePanelHeader({ selectedPanel }: SidePanelHeaderProps) {
@@ -22,7 +22,7 @@ function SidePanelHeader({ selectedPanel }: SidePanelHeaderProps) {
         color="textSecondary"
         sx={{ textTransform: "uppercase", fontWeight: "normal" }}
       >
-        {selectedPanel.title}
+        {selectedPanel?.title}
       </Typography>
     </Box>
   );
