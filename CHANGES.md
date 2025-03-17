@@ -4,8 +4,10 @@
 
 * Redesigned the right side panel: (#477)
   - Replaced the tabs by a sidebar comprising panel icons;
-    extension panels can now be positioned and can have own icons. (#477)
+    extension panels can now be positioned and can have own icons. 
   - Restyled many side panels
+  - The panel's resize handle now provides visual feedback 
+    when hovering over it.
 
 * Variable layer legends are now styled according to the 
   current theme mode. (#491)
@@ -27,6 +29,10 @@
   origins when the same variable appears from different datasets. 
 
 * Users can now also identify the datasets in the Time Series chart.
+
+* Toolbars on time-series and statistics charts now fade into the background 
+  until you hover over them, reducing visual clutter and improving focus on the 
+  data.
 
 ### Fixes
 

@@ -11,71 +11,81 @@ import React, {
   useMemo,
   useRef,
 } from "react";
+import type { SystemStyleObject, Theme } from "@mui/system";
+import Box from "@mui/material/Box";
 
-import { makeCssStyles } from "@/util/styles";
+import { makeStyles } from "@/util/styles";
 import useMouseDrag from "@/hooks/useMouseDrag";
-
-const containerStyle: CSSProperties = {
-  display: "flex",
-};
-
-const child1Style: CSSProperties = {};
-
-const child2Style: CSSProperties = {
-  // Important, because resize handle uses "absolute"
-  position: "relative",
-};
 
 const resizeHandleSize = "8px";
 
-const resizeHandleStyle: CSSProperties = {
-  // Important: requires a child 2 with position: "relative"
-  position: "absolute",
-  opacity: 0.0,
-  zIndex: 999,
-  top: 0,
-  left: 0,
-};
+const commonStyles = makeStyles({
+  container: {
+    display: "flex",
+  },
+  resizeHandle: (theme) => ({
+    // Important: requires a child 2 with position: "relative"
+    position: "absolute",
+    opacity: 0.0,
+    zIndex: 999,
+    top: 0,
+    left: 0,
+    transition: "background 0.3s ease, opacity 0.3s ease",
+    "&:hover": {
+      background: theme.palette.mode === "dark" ? "#FFF" : "#000",
+      opacity: 0.25,
+    },
+  }),
+  child1: {},
+  child2: {
+    // Important, because resize handle uses "absolute"
+    position: "relative",
+  },
+});
 
 // noinspection JSUnusedLocalSymbols
-const stylesHor = makeCssStyles({
+const stylesHor = makeStyles({
   container: {
-    ...containerStyle,
+    ...commonStyles.container,
     flexFlow: "row nowrap",
   },
-  resizeHandle: {
-    ...resizeHandleStyle,
+  resizeHandle: (theme: Theme) => ({
+    ...(
+      commonStyles.resizeHandle as (theme: Theme) => SystemStyleObject<Theme>
+    )(theme),
     width: resizeHandleSize,
     height: "100%",
     cursor: "col-resize",
-  },
+  }),
   child1: {
-    ...child1Style,
+    ...commonStyles.child1,
     height: "100%",
   },
   child2: {
-    ...child2Style,
+    ...commonStyles.child2,
     height: "100%",
   },
 });
 
-const stylesVer = makeCssStyles({
+const stylesVer = makeStyles({
   container: {
-    ...containerStyle,
+    ...commonStyles.container,
     flexFlow: "column nowrap",
   },
-  resizeHandle: {
-    ...resizeHandleStyle,
+  resizeHandle: (theme: Theme) => ({
+    ...(
+      commonStyles.resizeHandle as (theme: Theme) => SystemStyleObject<Theme>
+    )(theme),
     width: "100%",
     height: resizeHandleSize,
     cursor: "row-resize",
-  },
+  }),
   child1: {
-    ...child1Style,
+    ...commonStyles.child1,
     width: "100%",
   },
   child2: {
-    ...child2Style,
+    ...commonStyles.child2,
     width: "100%",
   },
 });
@@ -125,9 +135,9 @@ export default function SplitPane({
     const size2 = `calc(100% - ${childSize}px)`;
     const child1Size = isFirst ? size1 : size2;
     const child2Size = isFirst ? size2 : size1;
-    return {
+    return makeStyles({
       ...styles,
-      container: { ...styles.container, ...style },
+      container: styles.container,
       child1: {
         ...styles.child1,
         ...(dir === "hor" ? { width: child1Size } : { height: child1Size }),
@@ -136,8 +146,8 @@ export default function SplitPane({
         ...styles.child2,
         ...(dir === "hor" ? { width: child2Size } : { height: child2Size }),
       },
-    };
-  }, [style, dir, isFirst, childSize]);
+    });
+  }, [dir, isFirst, childSize]);
 
   // Render only 2 children
   if (!children || !Array.isArray(children) || children.length !== 2) {
@@ -145,22 +155,23 @@ export default function SplitPane({
   }
 
   return (
-    <div
+    <Box
       id="SplitPane-Container"
-      style={computedStyles.container}
+      sx={computedStyles.container}
       ref={containerRef}
+      style={style}
     >
-      <div id="SplitPane-Child1" style={computedStyles.child1} ref={child1Ref}>
+      <Box id="SplitPane-Child1" sx={computedStyles.child1} ref={child1Ref}>
         {children[0]}
-      </div>
-      <div id="SplitPane-Child2" style={computedStyles.child2}>
-        <div
+      </Box>
+      <Box id="SplitPane-Child2" sx={computedStyles.child2}>
+        <Box
           id="SplitPane-ResizeHandle"
-          style={computedStyles.resizeHandle}
+          sx={computedStyles.resizeHandle}
           onMouseDown={handleMouseDown}
         />
         {children[1]}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

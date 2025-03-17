@@ -18,6 +18,7 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
+import HoverVisibleBox from "@/components/HoverVisibleBox";
 import SnapshotButton from "@/components/SnapshotButton";
 import StatisticsTable from "./StatisticsTable";
 import HistogramChart from "./HistogramChart";
@@ -30,6 +31,10 @@ const styles = makeStyles({
   },
   chart: {
     flexGrow: 1,
+  },
+  hoverVisibleBox: {
+    display: "flex",
+    gap: 0.1,
   },
 });
 
@@ -70,41 +75,42 @@ export default function StatisticsDataRow({
       containerRef={containerRef}
       actions={
         <>
-          {hasHistogram && (
-            <ToggleButtonGroup size="small">
-              <Tooltip arrow title={i18n.get("Toggle adjustable x-range")}>
-                <ToggleButton
-                  selected={brush}
-                  onClick={handleToggleBrush}
-                  value="brush"
-                  size="small"
+          <HoverVisibleBox sx={styles.hoverVisibleBox} initialOpacity={0.05}>
+            {hasHistogram && (
+              <ToggleButtonGroup size="small">
+                <Tooltip arrow title={i18n.get("Toggle adjustable x-range")}>
+                  <ToggleButton
+                    selected={brush}
+                    onClick={handleToggleBrush}
+                    value="brush"
+                    size="small"
+                  >
+                    <TransformIcon fontSize="inherit" />
+                  </ToggleButton>
+                </Tooltip>
+                <Tooltip
+                  arrow
+                  title={i18n.get("Show standard deviation (if any)")}
                 >
-                  <TransformIcon fontSize="inherit" />
-                </ToggleButton>
-              </Tooltip>
-              <Tooltip
-                arrow
-                title={i18n.get("Show standard deviation (if any)")}
-              >
-                <ToggleButton
-                  selected={details}
-                  onClick={handleToggleDetails}
-                  value="details"
-                  size="small"
-                >
-                  <IsoIcon fontSize="inherit" />
-                </ToggleButton>
-              </Tooltip>
-            </ToggleButtonGroup>
-          )}
+                  <ToggleButton
+                    selected={details}
+                    onClick={handleToggleDetails}
+                    value="details"
+                    size="small"
+                  >
+                    <IsoIcon fontSize="inherit" />
+                  </ToggleButton>
+                </Tooltip>
+              </ToggleButtonGroup>
+            )}
 
-          {hasHistogram && (
-            <SnapshotButton
-              elementRef={containerRef}
-              postMessage={postMessage}
-            />
-          )}
-
+            {hasHistogram && (
+              <SnapshotButton
+                elementRef={containerRef}
+                postMessage={postMessage}
+              />
+            )}
+          </HoverVisibleBox>
           <IconButton size="small" onClick={handleRemoveStatistics}>
             <CloseIcon fontSize="inherit" />
           </IconButton>
