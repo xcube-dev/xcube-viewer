@@ -6,6 +6,7 @@
 
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react-swc";
+import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
@@ -14,7 +15,38 @@ export default defineConfig({
   // the viewer build embedded in xcube server and published
   // via the "/viewer" endpoint
   base: "",
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: "autoUpdate", // Automatically updates SW on new releases
+      manifest: {
+        name: "xcube Viewer",
+        short_name: "xc-viewer",
+        description: "Data cube toolbox",
+        theme_color: "#ffffff",
+        icons: [
+          {
+            src: "/images/logo192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/images/logo512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
+      devOptions: {
+        enabled: true, // 👈 Allows service workers during development
+      },
+      workbox: {
+        // the app is already 4.2 MB (way too large)
+        // https://vite-pwa-org.netlify.app/guide/faq.html#missing-assets-from-sw-precache-manifest
+        maximumFileSizeToCacheInBytes: 4500000,
+      },
+    }),
+  ],
   optimizeDeps: {
     // Added this because I got
     // "Uncaught TypeError: styled_default is not a function", see
