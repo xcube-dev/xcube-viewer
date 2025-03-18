@@ -36,15 +36,17 @@
 
 ### Fixes
 
+* Fixed the problem where a server-side side panel was not rendered 
+  after app start, if it was the initially selected one. (#476)
+
 * Fixed a problem where mouse splitters used to resize 
   two components (e.g., two layers in map view, or map view and side panels) 
   created a drift while dragging.
 
 * Added some missing language translations.
 
-* Fixed the map's infobox as it now correctly removes the second variable when the 
-
-  user disables variable comparison mode.
+* Fixed the map's infobox so that it now correctly removes the second 
+  variable when the user disables the variable comparison mode.
 
 ### Other Changes
 
