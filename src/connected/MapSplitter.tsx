@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
 import _MapSplitter from "@/components/MapSplitter";
-import { setVariableSplitPos } from "@/actions/controlActions";
+import { updateVariableSplitPos } from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -18,7 +18,7 @@ const mapStateToProps = (state: AppState) => {
 };
 
 const mapDispatchToProps = {
-  onPositionChange: setVariableSplitPos,
+  updatePosition: updateVariableSplitPos,
 };
 
 const MapSplitter = connect(mapStateToProps, mapDispatchToProps)(_MapSplitter);

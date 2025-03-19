@@ -94,7 +94,7 @@ export interface SplitPaneProps {
   dir: "hor" | "ver";
   childPos?: "first" | "last";
   childSize: number;
-  setChildSize: (childSize: number) => void;
+  updateChildSize: (childSize: number) => void;
   style?: CSSProperties;
   children: React.ReactNode[];
 }
@@ -107,7 +107,7 @@ export default function SplitPane({
   dir,
   childPos,
   childSize,
-  setChildSize,
+  updateChildSize,
   children,
   style,
 }: PropsWithChildren<SplitPaneProps>) {
@@ -120,10 +120,9 @@ export default function SplitPane({
   const onDragMove = useCallback(
     ([deltaX, deltaY]: [number, number]) => {
       const sizeDelta = dir === "hor" ? deltaX : deltaY;
-      const newChildSize = childSize + (isFirst ? sizeDelta : -sizeDelta);
-      setChildSize(newChildSize);
+      updateChildSize(isFirst ? sizeDelta : -sizeDelta);
     },
-    [dir, isFirst, childSize, setChildSize],
+    [dir, isFirst, updateChildSize],
   );
 
   // The handler for a mouse-down event

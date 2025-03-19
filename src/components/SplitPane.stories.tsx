@@ -5,7 +5,7 @@ import SplitPane, { SplitPaneProps } from "./SplitPane";
 
 type SplitPaneDemoProps = Omit<
   SplitPaneProps,
-  "style" | "childSize" | "setChildSize"
+  "style" | "childSize" | "updateChildSize"
 >;
 
 function SplitPaneDemo(props: SplitPaneDemoProps) {
@@ -13,7 +13,7 @@ function SplitPaneDemo(props: SplitPaneDemoProps) {
   return (
     <SplitPane
       childSize={childSize}
-      setChildSize={setChildSize}
+      updateChildSize={(delta) => setChildSize(childSize + delta)}
       {...props}
       style={{ width: 400, height: 300 }}
     >

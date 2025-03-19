@@ -31,24 +31,22 @@ type Point = [number, number];
 interface MapSplitterProps {
   hidden?: boolean;
   position?: number;
-  onPositionChange: (position: number) => void;
+  updatePosition: (size: number, isDelta?: boolean) => void;
 }
 
 export default function MapSplitter({
   hidden,
   position,
-  onPositionChange,
+  updatePosition,
 }: MapSplitterProps) {
   const divRef = useRef<HTMLDivElement | null>(null);
-  const handleDrag = useCallback(
+  const onDragMove = useCallback(
     ([offsetX, _]: Point) => {
-      if (isNumber(position) && divRef.current !== null) {
-        onPositionChange(position + offsetX);
-      }
+      updatePosition(offsetX, true);
     },
-    [position, onPositionChange],
+    [updatePosition],
   );
-  const handleMouseDown = useMouseDrag({ onDragMove: handleDrag });
+  const handleMouseDown = useMouseDrag({ onDragMove });
 
   useEffect(() => {
     if (
@@ -57,11 +55,9 @@ export default function MapSplitter({
       divRef.current !== null &&
       divRef.current!.parentElement !== null
     ) {
-      onPositionChange(
-        Math.round(divRef.current.parentElement.clientWidth / 2),
-      );
+      updatePosition(Math.round(divRef.current.parentElement.clientWidth / 2));
     }
-  }, [hidden, position, onPositionChange]);
+  }, [hidden, position, updatePosition]);
 
   if (hidden) {
     return null;
