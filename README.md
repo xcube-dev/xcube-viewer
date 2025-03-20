@@ -115,7 +115,7 @@ const styles = makeStyles({
     flexDirection: "column",
   },
   ...
-}
+})
 ```
 
 and use its properties in components
@@ -123,6 +123,48 @@ and use its properties in components
 ```typescript
 <Box sx={styles.container}>...</Box>
 ```
+
+### Installing Local Chartlets for Testing and Development
+
+To install and integrate local **Chartlets** into the **xcube-viewer** for testing and 
+development, follow these steps:
+
+#### Step 1: Build and Link Chartlets
+Navigate to the `chartlets/chartlets.js/packages/lib` directory and run:
+```shell
+  npm run build
+  npm link
+```
+
+#### Step 2: Link Chartlets in xcube-viewer
+In the **xcube-viewer** directory, link the local Chartlets package:
+```shell
+  npm link chartlets
+```
+
+
+#### Step 3: Resolve React Dependency
+Back in the **Chartlets** directory, ensure compatibility by linking React
+from xcube-viewer:
+```shell
+  npm link ../../../../xcube-viewer/node_modules/react
+```
+**NOTE**: The command above assumes that you have **chartlets** and **xcube-viewer**
+installed at the same level in your filesystem. If not, please adjust the `../`.
+
+#### Step 4: Using Local Chartlets in xcube-viewer
+Now, the local **Chartlets** package should be installed and available in your 
+local **xcube-viewer** instance.
+
+
+#### Step 5: Reflecting Changes
+Whenever you make changes to Chartlets, rebuild the package for updates to 
+take effect:
+```shell
+  npm run build
+```
+
+This setup ensures smooth integration and quick iteration during development.
 
 ## More
 
