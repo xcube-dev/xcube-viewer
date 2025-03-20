@@ -22,6 +22,7 @@ import { type AppState } from "@/states/appState";
 import { getPaletteMode, type ThemeMode } from "@/states/controlState";
 import AuthWrapper from "@/components/AuthWrapper";
 import ScrollbarStyles from "@/components/ScrollbarStyles";
+import useServiceWorker from "@/hooks/useServiceWorker";
 import AppBar from "./AppBar";
 import AppPane from "./AppPane";
 import LegalAgreementDialog from "./LegalAgreementDialog";
@@ -53,6 +54,9 @@ const AppImpl: React.FC<AppImplProps> = ({ compact, themeMode }) => {
   const systemThemeMode = useMediaQuery("(prefers-color-scheme: dark)")
     ? "dark"
     : "light";
+
+  // Register PWA
+  useServiceWorker();
 
   const theme = React.useMemo(() => {
     const mode: PaletteMode = getPaletteMode(themeMode, systemThemeMode);
