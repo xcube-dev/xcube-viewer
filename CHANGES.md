@@ -1,4 +1,4 @@
-## Changes in version 1.4.3 (in development)
+## Changes in version 1.5.0
 
 ### Improvements
 
@@ -15,8 +15,7 @@
 * Added a `Divider` to provide a visual separation of control bar items for
   better clarity to the users. (#487)
 
-* Various style adjustments with respect to the current theme modes 
-
+* Various style adjustments with respect to the current theme modes
   _Dark_ and _Light_.
   
 * Renamed "Info" panel into "Details"; using new icon too.
@@ -33,6 +32,9 @@
 * Toolbars on time-series and statistics charts now fade into the background 
   until you hover over them, reducing visual clutter and improving focus on the 
   data.
+
+* Now supporting `DataGrid` component in server-side extensions.
+  (Added dependency `@mui/x-data-grid`.)
 
 ### Fixes
 
