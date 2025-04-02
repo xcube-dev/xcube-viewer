@@ -192,7 +192,7 @@ export const UPDATE_DATASETS = "UPDATE_DATASETS";
 export interface UpdateDatasets {
   type: typeof UPDATE_DATASETS;
   datasets: Dataset[];
-  entrypoint_dataset_id?: string;
+  entrypointDatasetId?: string;
 }
 
 export function updateDatasets() {
@@ -206,7 +206,7 @@ export function updateDatasets() {
       .then((ds_response: DatasetsResponse) => {
         // Add user variables from local storage
         let datasets = ds_response.datasets;
-        const entrypoint_dataset_id = ds_response.entrypoint_dataset_id;
+        const entrypointDatasetId = ds_response.entrypointDatasetId;
         const userVariables = loadUserVariables();
         if (datasets && datasets.length > 0) {
           datasets = datasets.map((ds) => ({
@@ -214,11 +214,11 @@ export function updateDatasets() {
             variables: [...ds.variables, ...(userVariables[ds.id] || [])],
           }));
           // Dispatch updated dataset
-          dispatch(_updateDatasets(datasets, entrypoint_dataset_id));
+          dispatch(_updateDatasets(datasets, entrypointDatasetId));
           // Adjust selection state
           const selectedDatasetId =
             getState().controlState.selectedDatasetId ||
-            entrypoint_dataset_id ||
+            entrypointDatasetId ||
             datasets[0].id;
           dispatch(
             selectDataset(
@@ -242,9 +242,9 @@ export function updateDatasets() {
 
 export function _updateDatasets(
   datasets: Dataset[],
-  entrypoint_dataset_id?: string,
+  entrypointDatasetId?: string,
 ): UpdateDatasets {
-  return { type: UPDATE_DATASETS, datasets, entrypoint_dataset_id };
+  return { type: UPDATE_DATASETS, datasets, entrypointDatasetId };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

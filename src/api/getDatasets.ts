@@ -9,17 +9,12 @@ import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
 
 interface RawDatasetsResponse {
   datasets?: Dataset[];
-  entrypoint_dataset_id?: string;
-}
-
-interface RawDatasetsResponse {
-  datasets?: Dataset[];
-  entrypoint_dataset_id?: string;
+  entrypointDatasetId?: string;
 }
 
 export interface DatasetsResponse {
   datasets?: Dataset[];
-  entrypoint_dataset_id?: string;
+  entrypointDatasetId?: string;
 }
 
 export function getDatasets(
@@ -38,7 +33,7 @@ function adjustTimeDimensionsForDatasets(
     datasets: (raw_ds_response.datasets || []).map(
       adjustTimeDimensionsForDataset,
     ),
-    entrypoint_dataset_id: raw_ds_response.entrypoint_dataset_id,
+    entrypointDatasetId: raw_ds_response.entrypointDatasetId,
   };
 }
 
