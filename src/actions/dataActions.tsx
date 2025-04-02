@@ -77,6 +77,7 @@ import {
 } from "./controlActions";
 import { newPersistentAppState, PersistedState } from "@/states/persistedState";
 import { applyPersistentState } from "@/actions/otherActions";
+import { DatasetsResponse } from "@/api/getDatasets";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -191,6 +192,7 @@ export const UPDATE_DATASETS = "UPDATE_DATASETS";
 export interface UpdateDatasets {
   type: typeof UPDATE_DATASETS;
   datasets: Dataset[];
+  entrypoint_dataset_id?: string;
 }
 
 export function updateDatasets() {
@@ -201,19 +203,22 @@ export function updateDatasets() {
 
     api
       .getDatasets(apiServer.url, getState().userAuthState.accessToken)
-      .then((datasets: Dataset[]) => {
+      .then((ds_response: DatasetsResponse) => {
         // Add user variables from local storage
+        let { datasets, entrypoint_dataset_id } = ds_response;
         const userVariables = loadUserVariables();
         datasets = datasets.map((ds) => ({
           ...ds,
           variables: [...ds.variables, ...(userVariables[ds.id] || [])],
         }));
         // Dispatch updated dataset
-        dispatch(_updateDatasets(datasets));
+        dispatch(_updateDatasets(datasets, entrypoint_dataset_id));
         // Adjust selection state
         if (datasets.length > 0) {
           const selectedDatasetId =
-            getState().controlState.selectedDatasetId || datasets[0].id;
+            getState().controlState.selectedDatasetId ||
+            entrypoint_dataset_id ||
+            datasets[0].id;
           dispatch(
             selectDataset(
               selectedDatasetId,
@@ -234,8 +239,11 @@ export function updateDatasets() {
   };
 }
 
-export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
-  return { type: UPDATE_DATASETS, datasets };
+export function _updateDatasets(
+  datasets: Dataset[],
+  entrypoint_dataset_id: string,
+): UpdateDatasets {
+  return { type: UPDATE_DATASETS, datasets, entrypoint_dataset_id };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -7,21 +7,39 @@
 import { Dataset, Dimension, TimeDimension } from "@/model/dataset";
 import { callJsonApi, makeRequestInit, makeRequestUrl } from "./callApi";
 
-interface RawDatasets {
+interface RawDatasetsResponse {
   datasets?: Dataset[];
+  entrypoint_dataset_id?: string;
+}
+
+interface RawDatasetsResponse {
+  datasets?: Dataset[];
+  entrypoint_dataset_id?: string;
+}
+
+export interface DatasetsResponse {
+  datasets?: Dataset[];
+  entrypoint_dataset_id?: string;
 }
 
 export function getDatasets(
   apiServerUrl: string,
   accessToken: string | null,
-): Promise<Dataset[]> {
+): Promise<RawDatasetsResponse> {
   const url = makeRequestUrl(`${apiServerUrl}/datasets`, [["details", "1"]]);
   const init = makeRequestInit(accessToken);
   return callJsonApi(url, init, adjustTimeDimensionsForDatasets);
 }
 
-function adjustTimeDimensionsForDatasets(datasets: RawDatasets): Dataset[] {
-  return (datasets.datasets || []).map(adjustTimeDimensionsForDataset);
+function adjustTimeDimensionsForDatasets(
+  raw_ds_response: RawDatasetsResponse,
+): DatasetsResponse {
+  return {
+    datasets: (raw_ds_response.datasets || []).map(
+      adjustTimeDimensionsForDataset,
+    ),
+    entrypoint_dataset_id: raw_ds_response.entrypoint_dataset_id,
+  };
 }
 
 function adjustTimeDimensionsForDataset(dataset: Dataset): Dataset {

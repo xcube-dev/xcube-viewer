@@ -122,7 +122,17 @@ export function controlReducer(
       } else {
         selectedDatasetId = null;
         selectedVariableName = null;
-        selectedDataset = action.datasets.length ? action.datasets[0] : null;
+        if (action.entrypoint_dataset_id) {
+          selectedDataset = findDataset(
+            action.datasets,
+            action.entrypoint_dataset_id,
+          );
+        }
+        selectedDataset = action.datasets.length
+          ? selectedDataset
+            ? selectedDataset
+            : action.datasets[0]
+          : null;
         if (selectedDataset) {
           selectedDatasetId = selectedDataset.id;
           if (selectedDataset.variables.length > 0) {
