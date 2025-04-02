@@ -44,6 +44,9 @@ export default function DatasetSelect({
       if (delta !== 0) {
         return delta;
       }
+      if (dataset1.sortValue && dataset2.sortValue) {
+        return dataset1.sortValue - dataset2.sortValue;
+      }
       return dataset1.title.localeCompare(dataset2.title);
     });
   }, [datasets]);
