@@ -4,6 +4,9 @@
 
 * The viewer application now respects the server-configured initial dataset.
 
+* Updated the dataset selector to use `sortValue` from the server configuration 
+ for sorting datasets within groups if provided.
+
 ## Changes in version 1.5.0
 
 ### Improvements
