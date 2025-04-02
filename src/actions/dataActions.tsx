@@ -205,7 +205,8 @@ export function updateDatasets() {
       .getDatasets(apiServer.url, getState().userAuthState.accessToken)
       .then((ds_response: DatasetsResponse) => {
         // Add user variables from local storage
-        let { datasets, entrypoint_dataset_id } = ds_response;
+        let datasets = ds_response.datasets;
+        const entrypoint_dataset_id = ds_response.entrypoint_dataset_id;
         const userVariables = loadUserVariables();
         datasets = datasets.map((ds) => ({
           ...ds,
