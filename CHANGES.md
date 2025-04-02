@@ -1,3 +1,9 @@
+## Changes in version 1.5.1 (in development)
+
+### Improvements
+
+* The viewer application now respects the server-configured initial dataset.
+
 ## Changes in version 1.5.0
 
 ### Improvements
