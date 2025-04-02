@@ -208,14 +208,14 @@ export function updateDatasets() {
         let datasets = ds_response.datasets;
         const entrypoint_dataset_id = ds_response.entrypoint_dataset_id;
         const userVariables = loadUserVariables();
-        datasets = datasets.map((ds) => ({
-          ...ds,
-          variables: [...ds.variables, ...(userVariables[ds.id] || [])],
-        }));
-        // Dispatch updated dataset
-        dispatch(_updateDatasets(datasets, entrypoint_dataset_id));
-        // Adjust selection state
-        if (datasets.length > 0) {
+        if (datasets && datasets.length > 0) {
+          datasets = datasets.map((ds) => ({
+            ...ds,
+            variables: [...ds.variables, ...(userVariables[ds.id] || [])],
+          }));
+          // Dispatch updated dataset
+          dispatch(_updateDatasets(datasets, entrypoint_dataset_id));
+          // Adjust selection state
           const selectedDatasetId =
             getState().controlState.selectedDatasetId ||
             entrypoint_dataset_id ||
@@ -242,7 +242,7 @@ export function updateDatasets() {
 
 export function _updateDatasets(
   datasets: Dataset[],
-  entrypoint_dataset_id: string,
+  entrypoint_dataset_id?: string,
 ): UpdateDatasets {
   return { type: UPDATE_DATASETS, datasets, entrypoint_dataset_id };
 }
