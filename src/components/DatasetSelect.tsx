@@ -38,7 +38,6 @@ export default function DatasetSelect({
 }: DatasetSelectProps) {
   const sortedDatasets = useMemo(() => {
     return datasets.sort((dataset1: Dataset, dataset2: Dataset) => {
-      console.log(dataset1.sortValue, dataset2.sortValue);
       const groupTitle1 = dataset1.groupTitle || "zzz";
       const groupTitle2 = dataset2.groupTitle || "zzz";
       const delta = groupTitle1.localeCompare(groupTitle2);
