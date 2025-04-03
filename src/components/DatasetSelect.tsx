@@ -44,7 +44,21 @@ export default function DatasetSelect({
       if (delta !== 0) {
         return delta;
       }
-      return dataset1.title.localeCompare(dataset2.title);
+      const sortValue1 = dataset1.sortValue;
+      const sortValue2 = dataset2.sortValue;
+
+      // Handles when both sortValue are available
+      if (sortValue1 !== undefined && sortValue2 !== undefined) {
+        return sortValue1 - sortValue2;
+      }
+
+      // Handles when no sortValue is available
+      if (sortValue1 === undefined && sortValue2 === undefined) {
+        return dataset1.title.localeCompare(dataset2.title);
+      }
+
+      // Handles when only one sortValue is available
+      return sortValue1 !== undefined ? -1 : 1;
     });
   }, [datasets]);
 
