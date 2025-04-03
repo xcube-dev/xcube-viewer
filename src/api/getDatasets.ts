@@ -27,13 +27,13 @@ export function getDatasets(
 }
 
 function adjustTimeDimensionsForDatasets(
-  raw_ds_response: RawDatasetsResponse,
+  rawDatasetsResponse: RawDatasetsResponse,
 ): DatasetsResponse {
   return {
-    datasets: (raw_ds_response.datasets || []).map(
+    datasets: (rawDatasetsResponse.datasets || []).map(
       adjustTimeDimensionsForDataset,
     ),
-    entrypointDatasetId: raw_ds_response.entrypointDatasetId,
+    entrypointDatasetId: rawDatasetsResponse.entrypointDatasetId,
   };
 }
 

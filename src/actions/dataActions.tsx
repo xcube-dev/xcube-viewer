@@ -203,10 +203,10 @@ export function updateDatasets() {
 
     api
       .getDatasets(apiServer.url, getState().userAuthState.accessToken)
-      .then((ds_response: DatasetsResponse) => {
+      .then((datasetsResponse: DatasetsResponse) => {
         // Add user variables from local storage
-        let datasets = ds_response.datasets;
-        const entrypointDatasetId = ds_response.entrypointDatasetId;
+        let datasets = datasetsResponse.datasets;
+        const entrypointDatasetId = datasetsResponse.entrypointDatasetId;
         const userVariables = loadUserVariables();
         if (datasets && datasets.length > 0) {
           datasets = datasets.map((ds) => ({
