@@ -38,16 +38,28 @@ export default function DatasetSelect({
 }: DatasetSelectProps) {
   const sortedDatasets = useMemo(() => {
     return datasets.sort((dataset1: Dataset, dataset2: Dataset) => {
+      console.log(dataset1.sortValue, dataset2.sortValue);
       const groupTitle1 = dataset1.groupTitle || "zzz";
       const groupTitle2 = dataset2.groupTitle || "zzz";
       const delta = groupTitle1.localeCompare(groupTitle2);
       if (delta !== 0) {
         return delta;
       }
-      if (dataset1.sortValue && dataset2.sortValue) {
-        return dataset1.sortValue - dataset2.sortValue;
+      const sortValue1 = dataset1.sortValue;
+      const sortValue2 = dataset2.sortValue;
+
+      // Handles when both sortValue are available
+      if (sortValue1 !== undefined && sortValue2 !== undefined) {
+        return sortValue1 - sortValue2;
       }
-      return dataset1.title.localeCompare(dataset2.title);
+
+      // Handles when no sortValue is available
+      if (sortValue1 === undefined && sortValue2 === undefined) {
+        return dataset1.title.localeCompare(dataset2.title);
+      }
+
+      // Handles when only one sortValue is available
+      return sortValue1 !== undefined ? -1 : 1;
     });
   }, [datasets]);
 
