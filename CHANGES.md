@@ -3,9 +3,12 @@
 ### Improvements
 
 * The viewer application now respects the server-configured initial dataset.
+   See https://github.com/xcube-dev/xcube/issues/1135.
 
 * Updated the dataset selector to use `sortValue` from the server configuration 
- for sorting datasets within groups if provided.
+  for sorting datasets within groups if provided.
+  See https://github.com/xcube-dev/xcube/issues/1135.
+
 
 ## Changes in version 1.5.0
 
