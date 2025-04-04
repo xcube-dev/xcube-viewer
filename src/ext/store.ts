@@ -17,6 +17,8 @@ import {
   selectedDatasetAndUserPlaceGroupsSelector,
   selectedVariable2NameSelector,
   selectedVariableNameSelector,
+  selectedDatasetTitleSelector,
+  selectedDatasetTitle2Selector,
 } from "@/selectors/controlSelectors";
 import { getPaletteMode } from "@/states/controlState";
 
@@ -32,6 +34,11 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     description: "The identifier of the currently selected dataset.",
     selector: selectedDatasetIdSelector,
   },
+  selectedDatasetTitle: {
+    type: "str | None",
+    description: "The title of the currently selected dataset.",
+    selector: selectedDatasetTitleSelector,
+  },
   selectedVariableName: {
     type: "str | None",
     description:
@@ -43,6 +50,11 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     description:
       "The identifier of the dataset that contains the pinned variable.",
     selector: selectedDataset2IdSelector,
+  },
+  selectedDataset2Title: {
+    type: "str | None",
+    description: "The title of the dataset that contains the pinned variable.",
+    selector: selectedDatasetTitle2Selector,
   },
   selectedVariable2Name: {
     type: "str | None",
@@ -57,14 +69,12 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
   },
   selectedPlaceId: {
     type: "str | None",
-    description:
-      "The identifier of the currently selected place.",
+    description: "The identifier of the currently selected place.",
     selector: selectedPlaceIdSelector,
   },
   selectedPlaceGroup: {
     type: "list[dict[str, Any]]",
-    description:
-      "The list of dataset place group and user place groups.",
+    description: "The list of dataset place group and user place groups.",
     selector: selectedDatasetAndUserPlaceGroupsSelector,
   },
   selectedTimeLabel: {
