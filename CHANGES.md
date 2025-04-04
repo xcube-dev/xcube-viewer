@@ -9,6 +9,11 @@
   for sorting datasets within groups if provided.
   See https://github.com/xcube-dev/xcube/issues/1135.
 
+### Other Changes
+
+* Added `selectedDatasetTitle` and `selectedDataset2Title` to the list
+  of available state properties.
+  See https://github.com/xcube-dev/xcube/issues/1134
 
 ## Changes in version 1.5.0
 
