@@ -74,6 +74,7 @@ const VariableInfoCard: React.FC<VariableInfoContentProps> = ({
             name,
             variable.attrs[name],
           ])}
+          types
         />
       </InfoCardContent>
     );

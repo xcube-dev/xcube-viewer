@@ -14,6 +14,7 @@ import TableRow from "@mui/material/TableRow";
 
 import { makeStyles } from "@/util/styles";
 import { commonSx } from "./styles";
+import { getRenderedMetadataValue } from "./utils";
 
 const styles = makeStyles({
   keyValueTableContainer: (theme) => ({
@@ -25,33 +26,36 @@ export type KeyValue = [string, React.ReactNode];
 
 interface KeyValueContentProps {
   data: KeyValue[];
+  types?: boolean;
 }
 
-const KeyValueContent: React.FC<KeyValueContentProps> = ({ data }) => {
+const KeyValueContent: React.FC<KeyValueContentProps> = ({ data, types }) => {
   return (
     <TableContainer sx={styles.keyValueTableContainer}>
       <Table sx={commonSx.table} size="small">
         <TableBody>
           {data.map((kv, index) => {
             const [key, value] = kv;
-            let renderedValue = value;
-            // noinspection HttpUrlsUsage
-            if (
-              typeof value === "string" &&
-              (value.startsWith("http://") || value.startsWith("https://"))
-            ) {
-              renderedValue = (
-                <Link href={value} target="_blank" rel="noreferrer">
-                  {value}
-                </Link>
-              );
-            } else if (Array.isArray(value)) {
-              renderedValue = "[" + value.map((v) => v + "").join(", ") + "]";
-            }
+            const renderedValue = getRenderedMetadataValue(value);
+            const isLink =
+              typeof value === "string" && renderedValue.startsWith("https://");
             return (
               <TableRow key={index}>
                 <TableCell>{key}</TableCell>
-                <TableCell align="right">{renderedValue}</TableCell>
+                {types && (
+                  <TableCell>
+                    {Array.isArray(value) ? "array" : typeof value}
+                  </TableCell>
+                )}
+                <TableCell align="right">
+                  {isLink ? (
+                    <Link href={renderedValue} target="_blank" rel="noreferrer">
+                      {renderedValue}
+                    </Link>
+                  ) : (
+                    renderedValue
+                  )}
+                </TableCell>
               </TableRow>
             );
           })}
