@@ -61,6 +61,7 @@ const DatasetInfoCard: React.FC<DatasetInfoContentProps> = ({
             name,
             dataset.attrs[name],
           ])}
+          types
         />
       </InfoCardContent>
     );
