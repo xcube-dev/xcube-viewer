@@ -2,12 +2,21 @@
 
 ### Improvements
 
-* The viewer application now respects the server-configured initial dataset.
-   See https://github.com/xcube-dev/xcube/issues/1135.
+* Now using an entrypoint dataset that is initially shown 
+  if none has been previously selected.
+  See https://github.com/xcube-dev/xcube/issues/1135.
 
 * Updated the dataset selector to use `sortValue` from the server configuration 
   for sorting datasets within groups if provided.
   See https://github.com/xcube-dev/xcube/issues/1135.
+
+* Added a type column to the metadata attribute tables displayed 
+  in the "details" panel when in list mode.
+
+# Fixes
+
+* Fixed application crash caused by metadata attributes that are (JSON) 
+  objects. Now attributes values of any type are rendered.
 
 ### Other Changes
 
