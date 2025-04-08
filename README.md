@@ -126,8 +126,15 @@ and use its properties in components
 
 ### Installing Local Chartlets for Testing and Development
 
-To install and integrate local **Chartlets** into the **xcube-viewer** for testing and 
-development, follow these steps:
+[Chartlets](https://github.com/bcdev/chartlets) is a software framework that 
+allows websites developed with React to be extended by server-side UI 
+contributions programmed in Python or other programming languages.
+
+It is currently used in xcube-viewer to allow users to create and integrate
+their own personalized UI contributions into the application.
+
+To install and integrate local **Chartlets** into the **xcube-viewer** for 
+testing and development, follow these steps:
 
 #### Step 1: Build and Link Chartlets
 Navigate to the `chartlets/chartlets.js/packages/lib` directory and run:
@@ -149,12 +156,16 @@ from xcube-viewer:
 ```shell
   npm link ../../../../xcube-viewer/node_modules/react
 ```
-**NOTE**: The command above assumes that you have **chartlets** and **xcube-viewer**
-installed at the same level in your filesystem. If not, please adjust the `../`.
+**NOTE**: The command above assumes that you have **chartlets** and 
+**xcube-viewer**installed at the same level in your filesystem. 
+If not, please adjust the `../`.
 
 #### Step 4: Using Local Chartlets in xcube-viewer
 Now, the local **Chartlets** package should be installed and available in your 
 local **xcube-viewer** instance.
+
+Make sure to remove the `chartlets: "^..."` dependency from `package.json` 
+(which you can revert after you are done testing it locally)
 
 
 #### Step 5: Reflecting Changes
@@ -164,7 +175,24 @@ take effect:
   npm run build
 ```
 
-This setup ensures smooth integration and quick iteration during development.
+#### Step 6: Cleanup
+When you're done testing, it's a good idea to unlink the packages to restore 
+the original setup:
+```shell
+  cd xcube-viewer
+  npm unlink chartlets
+  cd ../chartlets/chartlets.js/packages/lib
+  npm unlink chartlets
+ ```
+
+Unlinking helps prevent potential conflicts or unexpected behavior when
+switching back to the regular (non-linked) versions of the packages.
+
+Now, you can revert your changes to `package.json` to bring back the `chartlets` 
+dependency.
+
+This setup above ensures smooth integration and quick iteration during 
+development.
 
 ## More
 
