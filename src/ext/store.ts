@@ -54,7 +54,7 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
   selectedDataset2Title: {
     type: "str | None",
     description: "The title of the dataset that contains the pinned variable.",
-    selector: selectedDatasetTitle2Selector,
+    selector: selectedDataset2TitleSelector,
   },
   selectedVariable2Name: {
     type: "str | None",
