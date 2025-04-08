@@ -18,7 +18,7 @@ import {
   selectedVariable2NameSelector,
   selectedVariableNameSelector,
   selectedDatasetTitleSelector,
-  selectedDatasetTitle2Selector,
+  selectedDataset2TitleSelector,
 } from "@/selectors/controlSelectors";
 import { getPaletteMode } from "@/states/controlState";
 
