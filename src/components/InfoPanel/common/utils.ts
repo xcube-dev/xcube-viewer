@@ -94,3 +94,13 @@ function splitExt(name: string): [string, string] {
     return [name, ""];
   }
 }
+
+export function getRenderedMetadataValue(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  } else if (typeof value === "object") {
+    return JSON.stringify(value);
+  } else {
+    return `${value}`;
+  }
+}

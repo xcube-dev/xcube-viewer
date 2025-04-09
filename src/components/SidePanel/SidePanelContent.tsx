@@ -10,11 +10,11 @@ import type { PanelModel } from "./panelModel";
 import styles from "./styles";
 
 export interface SidePanelContentProps {
-  selectedPanel: PanelModel;
+  selectedPanel?: PanelModel;
 }
 
 function SidePanelContent({ selectedPanel }: SidePanelContentProps) {
-  return <Box sx={styles.panelContent}>{selectedPanel.content}</Box>;
+  return <Box sx={styles.panelContent}>{selectedPanel?.content}</Box>;
 }
 
 export default SidePanelContent;

@@ -50,7 +50,7 @@ const PlaceInfoCard: React.FC<PlaceInfoContentProps> = ({
       );
       content = (
         <InfoCardContent>
-          <KeyValueContent data={data} />
+          <KeyValueContent data={data} types />
         </InfoCardContent>
       );
     } else {

@@ -11,7 +11,7 @@ import { useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 
 import { AppState } from "@/states/appState";
-import { setSidePanelSize } from "@/actions/controlActions";
+import { updateSidePanelSize } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
 import SidePanel from "./SidePanel";
@@ -55,7 +55,7 @@ interface WorkspaceImplProps {
   sidePanelOpen: boolean;
   sidePanelId: string | null;
   sidePanelSize: number;
-  setSidePanelSize: (sidebarPos: number) => void;
+  updateSidePanelSize: (sizeDelta: number) => void;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -69,7 +69,7 @@ const mapStateToProps = (state: AppState) => {
 
 // noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
-  setSidePanelSize,
+  updateSidePanelSize,
 };
 
 type Layout = "hor" | "ver";
@@ -81,7 +81,7 @@ function WorkspaceImpl({
   sidePanelOpen,
   sidePanelId,
   sidePanelSize,
-  setSidePanelSize,
+  updateSidePanelSize,
 }: WorkspaceImplProps) {
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
@@ -113,7 +113,7 @@ function WorkspaceImpl({
           dir={layout}
           childPos={"last"}
           childSize={sidePanelSize}
-          setChildSize={setSidePanelSize}
+          updateChildSize={updateSidePanelSize}
           style={layout === "hor" ? styles.containerHor : styles.containerVer}
         >
           <Viewer onMapRef={setMap} theme={theme} />

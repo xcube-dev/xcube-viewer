@@ -336,19 +336,22 @@ export function setVariableCompareMode(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_VARIABLE_SPLIT_POS = "SET_VARIABLE_SPLIT_POS";
+export const UPDATE_VARIABLE_SPLIT_POS = "UPDATE_VARIABLE_SPLIT_POS";
 
-export interface SetVariableSplitPos {
-  type: typeof SET_VARIABLE_SPLIT_POS;
-  variableSplitPos: number | undefined;
+export interface UpdateVariableSplitPos {
+  type: typeof UPDATE_VARIABLE_SPLIT_POS;
+  size: number;
+  isDelta?: boolean;
 }
 
-export function setVariableSplitPos(
-  variableSplitPos: number | undefined,
-): SetVariableSplitPos {
+export function updateVariableSplitPos(
+  size: number,
+  isDelta?: boolean,
+): UpdateVariableSplitPos {
   return {
-    type: SET_VARIABLE_SPLIT_POS,
-    variableSplitPos,
+    type: UPDATE_VARIABLE_SPLIT_POS,
+    size,
+    isDelta,
   };
 }
 
@@ -526,15 +529,15 @@ export function setSidePanelId(sidePanelId: string | null): SetSidePanelId {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_SIDE_PANEL_SIZE = "SET_SIDE_PANEL_SIZE";
+export const UPDATE_SIDE_PANEL_SIZE = "UPDATE_SIDE_PANEL_SIZE";
 
-export interface SetSidePanelSize {
-  type: typeof SET_SIDE_PANEL_SIZE;
-  sidePanelSize: number;
+export interface UpdateSidePanelSize {
+  type: typeof UPDATE_SIDE_PANEL_SIZE;
+  sizeDelta: number;
 }
 
-export function setSidePanelSize(sidePanelSize: number): SetSidePanelSize {
-  return { type: SET_SIDE_PANEL_SIZE, sidePanelSize };
+export function updateSidePanelSize(sizeDelta: number): UpdateSidePanelSize {
+  return { type: UPDATE_SIDE_PANEL_SIZE, sizeDelta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -817,7 +820,7 @@ export type ControlAction =
   | OpenDialog
   | CloseDialog
   | SetLayerMenuOpen
-  | SetSidePanelSize
+  | UpdateSidePanelSize
   | SetSidePanelOpen
   | SetSidePanelId
   | SetVolumeRenderMode
@@ -827,5 +830,5 @@ export type ControlAction =
   | SelectVariable2
   | SetMapPointInfoBoxEnabled
   | SetVariableCompareMode
-  | SetVariableSplitPos
+  | UpdateVariableSplitPos
   | FlyTo;

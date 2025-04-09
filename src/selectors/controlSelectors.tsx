@@ -190,7 +190,7 @@ export const selectedDatasetTitleSelector = createSelector(
   getDatasetTitle,
 );
 
-export const selectedDatasetTitle2Selector = createSelector(
+export const selectedDataset2TitleSelector = createSelector(
   selectedDataset2Selector,
   getDatasetTitle,
 );

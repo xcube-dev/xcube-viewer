@@ -57,12 +57,14 @@ export default defineConfig({
     alias: {
       "@": resolve(__dirname, "src"),
     },
+    dedupe: ["@mui/material"],
   },
   build: {
     // Adjust chunk size warning limit (in kbs).
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: {
+        html: "index.html",
         main: "src/index.tsx",
       },
     },
