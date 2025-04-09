@@ -18,6 +18,12 @@
 * Fixed application crash caused by metadata attributes that are (JSON) 
   objects. Now attributes values of any type are rendered.
 
+### Other Changes
+
+* Added `selectedDatasetTitle` and `selectedDataset2Title` to the list
+  of available state properties.
+  See https://github.com/xcube-dev/xcube/issues/1134
+
 ## Changes in version 1.5.0
 
 ### Improvements
