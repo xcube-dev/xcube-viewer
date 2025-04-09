@@ -1,4 +1,30 @@
-## Changes in version 1.4.3 (in development)
+## Changes in version 1.5.1 (in development)
+
+### Improvements
+
+* Now using an entrypoint dataset that is initially shown 
+  if none has been previously selected.
+  See https://github.com/xcube-dev/xcube/issues/1135.
+
+* Updated the dataset selector to use `sortValue` from the server configuration 
+  for sorting datasets within groups if provided.
+  See https://github.com/xcube-dev/xcube/issues/1135.
+
+* Added a type column to the metadata attribute tables displayed 
+  in the "details" panel when in list mode.
+
+# Fixes
+
+* Fixed application crash caused by metadata attributes that are (JSON) 
+  objects. Now attributes values of any type are rendered.
+
+### Other Changes
+
+* Added `selectedDatasetTitle` and `selectedDataset2Title` to the list
+  of available state properties.
+  See https://github.com/xcube-dev/xcube/issues/1134
+
+## Changes in version 1.5.0
 
 ### Improvements
 
@@ -15,8 +41,7 @@
 * Added a `Divider` to provide a visual separation of control bar items for
   better clarity to the users. (#487)
 
-* Various style adjustments with respect to the current theme modes 
-
+* Various style adjustments with respect to the current theme modes
   _Dark_ and _Light_.
   
 * Renamed "Info" panel into "Details"; using new icon too.
@@ -34,7 +59,13 @@
   until you hover over them, reducing visual clutter and improving focus on the 
   data.
 
+* Now supporting `DataGrid` component in server-side extensions.
+  (Added dependency `@mui/x-data-grid`.)
+
 ### Fixes
+
+* Fixed the problem where a server-side side panel was not rendered 
+  after app start, if it was the initially selected one. (#476)
 
 * Fixed a problem where mouse splitters used to resize 
   two components (e.g., two layers in map view, or map view and side panels) 
@@ -42,9 +73,8 @@
 
 * Added some missing language translations.
 
-* Fixed the map's infobox as it now correctly removes the second variable when the 
-
-  user disables variable comparison mode.
+* Fixed the map's infobox so that it now correctly removes the second 
+  variable when the user disables the variable comparison mode.
 
 ### Other Changes
 

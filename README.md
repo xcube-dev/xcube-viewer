@@ -115,7 +115,7 @@ const styles = makeStyles({
     flexDirection: "column",
   },
   ...
-}
+})
 ```
 
 and use its properties in components
@@ -123,6 +123,76 @@ and use its properties in components
 ```typescript
 <Box sx={styles.container}>...</Box>
 ```
+
+### Installing Local Chartlets for Testing and Development
+
+[Chartlets](https://github.com/bcdev/chartlets) is a software framework that 
+allows websites developed with React to be extended by server-side UI 
+contributions programmed in Python or other programming languages.
+
+It is currently used in xcube-viewer to allow users to create and integrate
+their own personalized UI contributions into the application.
+
+To install and integrate local **Chartlets** into the **xcube-viewer** for 
+testing and development, follow these steps:
+
+#### Step 1: Build and Link Chartlets
+Navigate to the `chartlets/chartlets.js/packages/lib` directory and run:
+```shell
+  npm run build
+  npm link
+```
+
+#### Step 2: Link Chartlets in xcube-viewer
+In the **xcube-viewer** directory, link the local Chartlets package:
+```shell
+  npm link chartlets
+```
+
+
+#### Step 3: Resolve React Dependency
+Back in the **Chartlets** directory, ensure compatibility by linking React
+from xcube-viewer:
+```shell
+  npm link ../../../../xcube-viewer/node_modules/react
+```
+**NOTE**: The command above assumes that you have **chartlets** and 
+**xcube-viewer**installed at the same level in your filesystem. 
+If not, please adjust the `../`.
+
+#### Step 4: Using Local Chartlets in xcube-viewer
+Now, the local **Chartlets** package should be installed and available in your 
+local **xcube-viewer** instance.
+
+Make sure to remove the `chartlets: "^..."` dependency from `package.json` 
+(which you can revert after you are done testing it locally)
+
+
+#### Step 5: Reflecting Changes
+Whenever you make changes to Chartlets, rebuild the package for updates to 
+take effect:
+```shell
+  npm run build
+```
+
+#### Step 6: Cleanup
+When you're done testing, it's a good idea to unlink the packages to restore 
+the original setup:
+```shell
+  cd xcube-viewer
+  npm unlink chartlets
+  cd ../chartlets/chartlets.js/packages/lib
+  npm unlink chartlets
+ ```
+
+Unlinking helps prevent potential conflicts or unexpected behavior when
+switching back to the regular (non-linked) versions of the packages.
+
+Now, you can revert your changes to `package.json` to bring back the `chartlets` 
+dependency.
+
+This setup above ensures smooth integration and quick iteration during 
+development.
 
 ## More
 

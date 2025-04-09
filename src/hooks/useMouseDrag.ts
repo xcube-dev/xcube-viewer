@@ -33,21 +33,17 @@ export default function useMouseDrag({
   onDragMove,
   onDragEnd,
 }: DragOptions) {
-  const firstPosRef = useRef<[number, number] | null>(null);
-
-  const onDragMoveRef = useRef(onDragMove);
-  useEffect(() => {
-    onDragMoveRef.current = onDragMove;
-  }, [onDragMove]);
+  const lastPosRef = useRef<[number, number] | null>(null);
 
   const _handleMouseMove = useCallback(
     (event: MouseEvent) => {
-      if (event.buttons === 1 && firstPosRef.current !== null) {
+      if (event.buttons === 1 && lastPosRef.current !== null) {
         event.preventDefault();
         if (onDragMove) {
           const { clientX, clientY } = event;
-          const [firstPosX, firstPosY] = firstPosRef.current;
-          onDragMove([clientX - firstPosX, clientY - firstPosY], event);
+          const [lastPosX, lastPosY] = lastPosRef.current;
+          lastPosRef.current = [clientX, clientY];
+          onDragMove([clientX - lastPosX, clientY - lastPosY], event);
         }
       }
     },
@@ -65,7 +61,7 @@ export default function useMouseDrag({
       if (event.buttons === 1) {
         // console.info("handleMouseDown!");
         event.preventDefault();
-        firstPosRef.current = [event.clientX, event.clientY];
+        lastPosRef.current = [event.clientX, event.clientY];
         const _handleEndDrag = handleEndDragRef.current;
         document.body.addEventListener("mousemove", handleMouseMove);
         document.body.addEventListener("mouseup", _handleEndDrag);
@@ -79,10 +75,10 @@ export default function useMouseDrag({
 
   const handleEndDrag = useCallback(
     (event: MouseEvent) => {
-      if (firstPosRef.current !== null) {
+      if (lastPosRef.current !== null) {
         // console.info("handleEndDrag!");
         event.preventDefault();
-        firstPosRef.current = null;
+        lastPosRef.current = null;
         const _handleEndDrag = handleEndDragRef.current;
         document.body.removeEventListener("mousemove", handleMouseMove);
         document.body.removeEventListener("mouseup", _handleEndDrag);

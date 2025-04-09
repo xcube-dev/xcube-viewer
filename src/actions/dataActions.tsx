@@ -77,6 +77,7 @@ import {
 } from "./controlActions";
 import { newPersistentAppState, PersistedState } from "@/states/persistedState";
 import { applyPersistentState } from "@/actions/otherActions";
+import { DatasetsResponse } from "@/api/getDatasets";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -191,6 +192,7 @@ export const UPDATE_DATASETS = "UPDATE_DATASETS";
 export interface UpdateDatasets {
   type: typeof UPDATE_DATASETS;
   datasets: Dataset[];
+  entrypointDatasetId?: string;
 }
 
 export function updateDatasets() {
@@ -201,19 +203,23 @@ export function updateDatasets() {
 
     api
       .getDatasets(apiServer.url, getState().userAuthState.accessToken)
-      .then((datasets: Dataset[]) => {
+      .then((datasetsResponse: DatasetsResponse) => {
         // Add user variables from local storage
+        let datasets = datasetsResponse.datasets;
+        const entrypointDatasetId = datasetsResponse.entrypointDatasetId;
         const userVariables = loadUserVariables();
-        datasets = datasets.map((ds) => ({
-          ...ds,
-          variables: [...ds.variables, ...(userVariables[ds.id] || [])],
-        }));
-        // Dispatch updated dataset
-        dispatch(_updateDatasets(datasets));
-        // Adjust selection state
-        if (datasets.length > 0) {
+        if (datasets && datasets.length > 0) {
+          datasets = datasets.map((ds) => ({
+            ...ds,
+            variables: [...ds.variables, ...(userVariables[ds.id] || [])],
+          }));
+          // Dispatch updated dataset
+          dispatch(_updateDatasets(datasets, entrypointDatasetId));
+          // Adjust selection state
           const selectedDatasetId =
-            getState().controlState.selectedDatasetId || datasets[0].id;
+            getState().controlState.selectedDatasetId ||
+            entrypointDatasetId ||
+            datasets[0].id;
           dispatch(
             selectDataset(
               selectedDatasetId,
@@ -234,8 +240,11 @@ export function updateDatasets() {
   };
 }
 
-export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
-  return { type: UPDATE_DATASETS, datasets };
+export function _updateDatasets(
+  datasets: Dataset[],
+  entrypointDatasetId?: string,
+): UpdateDatasets {
+  return { type: UPDATE_DATASETS, datasets, entrypointDatasetId };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

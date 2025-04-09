@@ -47,6 +47,7 @@ export interface Dataset {
   title: string;
   description?: string;
   groupTitle?: string;
+  sortValue?: number;
   tags?: string[];
   bbox: [number, number, number, number];
   geometry: {

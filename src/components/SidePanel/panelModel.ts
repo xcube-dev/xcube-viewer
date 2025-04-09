@@ -7,15 +7,46 @@
 import type { ReactElement, ReactNode } from "react";
 import { isNumber } from "@/util/types";
 
+/**
+ * The data model for side panel.
+ */
 export interface PanelModel {
+  /**
+   * Panel identifier.
+   */
   id: string;
+  /**
+   * Panel title.
+   */
   title: string;
+  /**
+   * Whether the panel is disabled
+   */
   disabled?: boolean;
-  visible?: boolean;
+  /**
+   * The name of the panel's tool button icon.
+   * Must be the name of a Material Design icon.
+   */
   icon?: ReactElement | string;
+  /**
+   * The name of the panel's tooltip text.
+   */
   tooltip?: string;
+  /**
+   * The position of the panel's tool button.
+   */
   position?: number;
+  /**
+   * The panel's content container.
+   */
   content?: ReactNode;
+  /**
+   * Whether the panel's (remote) component has been requested.
+   * Defined and valid for server-side panels only.
+   * The component is created from the return value of the
+   * API endpoint /viewer/ext/layout.
+   */
+  componentRequested?: boolean;
 }
 
 export function getEffectivePanelModels(
