@@ -19,6 +19,7 @@ export interface SidePanelProps {
   panels?: PanelModel[];
   selectedPanelId?: string | null;
   setSelectedPanelId: (panelId: string | null) => void;
+  allow3D: boolean;
 }
 
 function SidePanel({
@@ -27,6 +28,7 @@ function SidePanel({
   panels,
   selectedPanelId,
   setSelectedPanelId,
+  allow3D,
 }: SidePanelProps) {
   const selectedPanel = useMemo(() => {
     return panels && panels.find((p) => p.id === selectedPanelId);
@@ -47,6 +49,7 @@ function SidePanel({
         panels={panels}
         selectedPanelId={selectedPanelId}
         setSelectedPanelId={setSelectedPanelId}
+        allow3D={allow3D}
       />
     </Box>
   );

@@ -51,18 +51,28 @@ export interface PanelModel {
 
 export function getEffectivePanelModels(
   panelModels: PanelModel[],
+  allow3D: boolean,
 ): PanelModel[] {
   return (
     panelModels
-      .filter(isPanelModelRenderable)
+      .filter((model) => isPanelModelRenderable(model, allow3D))
       .map(normalizePanelModel)
       // sort() is in-place, but filter() and map() create new instances
       .sort(comparePanelModels)
   );
 }
 
-export function isPanelModelRenderable(panelModel: PanelModel): boolean {
-  return !!panelModel.content;
+export function isPanelModelRenderable(
+  panelModel: PanelModel,
+  allow3D: boolean,
+): boolean {
+  if (!panelModel.content) {
+    return false;
+  }
+  if (panelModel.id === "volume") {
+    return allow3D;
+  }
+  return true;
 }
 
 export function normalizePanelModel(panelModel: PanelModel, position: number) {

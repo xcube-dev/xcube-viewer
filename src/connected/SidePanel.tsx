@@ -26,6 +26,7 @@ import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
+import { Config } from "@/config";
 
 const getBasePanels = (_locale?: string): PanelModel[] => [
   {
@@ -57,6 +58,7 @@ const getBasePanels = (_locale?: string): PanelModel[] => [
 interface SidePanelImplProps extends WithLocale {
   sidebarPanelId: string | null;
   setSidebarPanelId: (sidebarPanelId: string | null) => void;
+  allow3D?: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
@@ -64,6 +66,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
     sidebarPanelId: state.controlState.sidePanelId,
+    allow3D: Config.instance.branding.allow3D,
   };
 };
 
@@ -76,6 +79,7 @@ function SidePanelImpl({
   locale,
   sidebarPanelId,
   setSidebarPanelId,
+  allow3D,
 }: SidePanelImplProps) {
   const contributionsRecord = useContributionsRecord();
   const panelContributions = useMemo(
@@ -142,6 +146,7 @@ function SidePanelImpl({
       panels={panels}
       selectedPanelId={sidebarPanelId}
       setSelectedPanelId={setSidebarPanelId}
+      allow3D={allow3D ?? true}
     />
   );
 }

@@ -16,6 +16,7 @@ export interface SidebarProps {
   panels?: PanelModel[];
   selectedPanelId?: string | null;
   setSelectedPanelId: (panelId: string | null) => void;
+  allow3D: boolean;
 }
 
 function Sidebar({
@@ -23,10 +24,11 @@ function Sidebar({
   panels,
   selectedPanelId,
   setSelectedPanelId,
+  allow3D,
 }: SidebarProps) {
   const effectivePanels = useMemo(() => {
-    return getEffectivePanelModels(panels || []);
-  }, [panels]);
+    return getEffectivePanelModels(panels || [], allow3D);
+  }, [allow3D, panels]);
 
   if (hidden) {
     return null;
