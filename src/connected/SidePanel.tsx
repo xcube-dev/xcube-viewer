@@ -146,7 +146,7 @@ function SidePanelImpl({
       panels={panels}
       selectedPanelId={sidebarPanelId}
       setSelectedPanelId={setSidebarPanelId}
-      allow3D={allow3D ?? true}
+      allow3D={allow3D}
     />
   );
 }

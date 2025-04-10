@@ -19,7 +19,7 @@ export interface SidePanelProps {
   panels?: PanelModel[];
   selectedPanelId?: string | null;
   setSelectedPanelId: (panelId: string | null) => void;
-  allow3D: boolean;
+  allow3D?: boolean;
 }
 
 function SidePanel({

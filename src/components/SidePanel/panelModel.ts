@@ -51,11 +51,11 @@ export interface PanelModel {
 
 export function getEffectivePanelModels(
   panelModels: PanelModel[],
-  allow3D: boolean,
+  is3DAllowed: boolean,
 ): PanelModel[] {
   return (
     panelModels
-      .filter((model) => isPanelModelRenderable(model, allow3D))
+      .filter((model) => isPanelModelRenderable(model, is3DAllowed))
       .map(normalizePanelModel)
       // sort() is in-place, but filter() and map() create new instances
       .sort(comparePanelModels)
@@ -64,13 +64,13 @@ export function getEffectivePanelModels(
 
 export function isPanelModelRenderable(
   panelModel: PanelModel,
-  allow3D: boolean,
+  is3DAllowed: boolean,
 ): boolean {
   if (!panelModel.content) {
     return false;
   }
   if (panelModel.id === "volume") {
-    return allow3D;
+    return is3DAllowed;
   }
   return true;
 }
