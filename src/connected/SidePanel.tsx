@@ -57,7 +57,6 @@ const getBasePanels = (_locale?: string): PanelModel[] => [
 interface SidePanelImplProps extends WithLocale {
   sidebarPanelId: string | null;
   setSidebarPanelId: (sidebarPanelId: string | null) => void;
-  allow3D?: boolean;
 }
 
 // noinspection JSUnusedLocalSymbols
