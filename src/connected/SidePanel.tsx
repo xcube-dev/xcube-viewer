@@ -29,7 +29,7 @@ import VolumePanel from "./VolumePanel";
 import { Config } from "@/config";
 
 const getBasePanels = (_locale?: string): PanelModel[] => {
-  const hidden = !Config.instance.branding.allow3D || false;
+  const hidden = Config.instance.branding.allow3D === false;
   return [
     {
       id: "details",
