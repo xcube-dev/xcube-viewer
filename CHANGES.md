@@ -18,8 +18,9 @@
 * Fixed application crash caused by metadata attributes that are (JSON) 
   objects. Now attributes values of any type are rendered.
 
-* `allow3D` in the viewer config now hides the `Volume` tab in the side panel
-   when set to `false`. Default is `true`.
+* Parameter `allow3D` in the viewer branding configuration now hides the  
+  `Volume` tab in the side panel when set to `false`. Default is `true`.
+
 
 ### Other Changes
 
