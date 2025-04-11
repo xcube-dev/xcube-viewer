@@ -29,8 +29,7 @@ import VolumePanel from "./VolumePanel";
 import { Config } from "@/config";
 
 const getBasePanels = (_locale?: string): PanelModel[] => {
-  const allow3D = Config.instance.branding.allow3D;
-
+  const hidden = !Config.instance.branding.allow3D || false;
   return [
     {
       id: "details",
@@ -55,7 +54,7 @@ const getBasePanels = (_locale?: string): PanelModel[] => {
       title: i18n.get("Volume"),
       icon: <ThreeDRotationIcon />,
       content: <VolumePanel />,
-      hidden: !allow3D,
+      hidden: hidden,
     },
   ];
 };
