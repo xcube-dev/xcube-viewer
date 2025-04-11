@@ -22,19 +22,19 @@ const styles = makeStyles({
   },
 });
 
-interface ItemManagerProps<V extends JsonValue, S extends JsonValue> {
-  selectedSource: S;
+export interface ItemManagerProps<V extends JsonValue, S extends JsonValue> {
+  selectedSource: S | null;
   itemLoading: boolean;
   itemRecords: ItemRecord<V, S>[];
   canAddItem: boolean;
-  addItem: () => void;
+  addItem: (selectedSource: S) => void;
   removeItem: (itemIndex: number, itemRecord: ItemRecord<V, S>) => void;
   renderItem: (itemIndex: number, itemRecord: ItemRecord<V, S>) => ReactNode;
   renderActions?: (
     itemIndex: number,
     itemRecord: ItemRecord<V, S>,
   ) => ReactNode;
-  renderSource: (source: S) => ReactNode;
+  renderSource: (source: S | null) => ReactNode;
 }
 
 export default function ItemManager<V extends JsonValue, S extends JsonValue>({

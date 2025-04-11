@@ -21,11 +21,11 @@ const styles = makeStyles({
 });
 
 interface ItemAddRowProps<S extends JsonValue> extends WithLocale {
-  selectedSource: S;
+  selectedSource: S | null;
   canAddItem: boolean;
   addItem: (selectedSource: S) => void;
   itemLoading: boolean;
-  renderSource: (source: S) => ReactNode;
+  renderSource: (source: S | null) => ReactNode;
 }
 
 export default function ItemAddRow<S extends JsonValue>({
@@ -44,8 +44,8 @@ export default function ItemAddRow<S extends JsonValue>({
         ) : (
           <IconButton
             size="small"
-            disabled={!canAddItem}
-            onClick={() => addItem(selectedSource)}
+            disabled={!canAddItem || !selectedSource}
+            onClick={() => addItem(selectedSource!)}
             color={"primary"}
           >
             <AddCircleOutlineIcon />
