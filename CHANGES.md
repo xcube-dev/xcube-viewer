@@ -18,8 +18,7 @@
 * Fixed application crash caused by metadata attributes that are (JSON) 
   objects. Now attributes values of any type are rendered.
 
-* Colormaps are now preserved when sharing the viewer's current state.
-  See: https://github.com/xcube-dev/xcube-viewer/issues/465
+* Colormaps are now preserved when sharing the viewer's current state. (#465)
 
 ### Other Changes
 
