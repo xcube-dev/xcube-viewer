@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { AppState } from "@/states/appState";
 import {
   colorBarsSelector,
-  selectedDatasetTitle2Selector,
+  selectedDataset2TitleSelector,
   selectedVariable2ColorBarMinMaxSelector,
   selectedVariable2ColorBarNameSelector,
   selectedVariable2ColorBarNormSelector,
@@ -33,7 +33,7 @@ import _ColorBarLegend from "@/components/ColorBarLegend";
 const mapStateToProps = (state: AppState) => {
   const splitPos = state.controlState.variableSplitPos;
   return {
-    datasetTitle: selectedDatasetTitle2Selector(state),
+    datasetTitle: selectedDataset2TitleSelector(state),
     variableName: splitPos ? selectedVariable2NameSelector(state) : null,
     variableTitle: selectedVariable2TitleSelector(state),
     variableUnits: selectedVariable2UnitsSelector(state),

@@ -21,6 +21,12 @@
 * Colormaps are now preserved when sharing the viewer's current state.
   See: https://github.com/xcube-dev/xcube-viewer/issues/465
 
+### Other Changes
+
+* Added `selectedDatasetTitle` and `selectedDataset2Title` to the list
+  of available state properties.
+  See https://github.com/xcube-dev/xcube/issues/1134
+
 ## Changes in version 1.5.0
 
 ### Improvements
