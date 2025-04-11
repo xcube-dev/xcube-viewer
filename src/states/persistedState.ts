@@ -16,6 +16,7 @@ const dataStateProps: readonly (keyof DataState)[] = [
   "userPlaceGroups",
   "timeSeriesGroups",
   "statistics",
+  "datasets",
 ];
 
 const controlStateProps: readonly (keyof ControlState)[] = [
