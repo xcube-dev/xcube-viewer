@@ -20,9 +20,13 @@ export interface PanelModel {
    */
   title: string;
   /**
-   * Whether the panel is disabled
+   * Whether the panel is disabled.
    */
   disabled?: boolean;
+  /**
+   * Whether the panel is hidden.
+   */
+  hidden?: boolean;
   /**
    * The name of the panel's tool button icon.
    * Must be the name of a Material Design icon.
@@ -62,7 +66,7 @@ export function getEffectivePanelModels(
 }
 
 export function isPanelModelRenderable(panelModel: PanelModel): boolean {
-  return !!panelModel.content;
+  return !!panelModel.content && !panelModel.hidden;
 }
 
 export function normalizePanelModel(panelModel: PanelModel, position: number) {

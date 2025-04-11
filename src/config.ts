@@ -308,6 +308,6 @@ function decodeBrandingFlag(
   const _flagValue = appParams.get(flagName);
   const flagValue: boolean = _flagValue
     ? !!parseInt(_flagValue)
-    : !!branding[flagName];
+    : branding[flagName] !== false;
   return { ...branding, [flagName]: flagValue };
 }
