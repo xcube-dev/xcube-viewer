@@ -18,6 +18,8 @@
 * Fixed application crash caused by metadata attributes that are (JSON) 
   objects. Now attributes values of any type are rendered.
 
+* Colormaps are now preserved when sharing the viewer's current state. (#465)
+
 ### Other Changes
 
 * Added `selectedDatasetTitle` and `selectedDataset2Title` to the list

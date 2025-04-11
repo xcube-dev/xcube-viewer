@@ -842,7 +842,6 @@ export function _configureServers(
 export function syncWithServer(store: Store, init: boolean = false) {
   return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
-    dispatch(updateDatasets() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
     dispatch(initializeExtensions(store) as unknown as Action);
@@ -850,6 +849,8 @@ export function syncWithServer(store: Store, init: boolean = false) {
     const stateKey = appParams.get("stateKey");
     if (stateKey && init) {
       dispatch(restorePersistedState(store, stateKey) as unknown as Action);
+    } else {
+      dispatch(updateDatasets() as unknown as Action);
     }
   };
 }
