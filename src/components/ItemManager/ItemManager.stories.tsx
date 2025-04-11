@@ -4,52 +4,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import type { ReactNode } from "react";
-import { create } from "zustand";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ItemManagerProps } from "@/components/ItemManager/ItemManager";
-import type { ItemRecord } from "@/components/ItemManager/types";
-import ItemManager from "@/components/ItemManager/index";
-
-type SampleManagerState = ItemManagerProps<string, string>;
-type SampleRecord = ItemRecord<string, string>;
-
-export const useStore = create<SampleManagerState>((set) => ({
-  selectedSource: null,
-  itemLoading: false,
-  itemRecords: [],
-  canAddItem: true,
-  addItem: (source: string) => {
-    set((state) => ({
-      itemRecords: [
-        ...state.itemRecords,
-        {
-          source,
-          value: `Item #${state.itemRecords.length + 1}`,
-        },
-      ],
-    }));
-  },
-  removeItem: (itemIndex: number, _itemRecord: SampleRecord) => {
-    set((state) => ({
-      itemRecords: [
-        ...state.itemRecords.slice(0, itemIndex),
-        ...state.itemRecords.slice(itemIndex + 1),
-      ],
-    }));
-  },
-  renderItem: (_itemIndex: number, itemRecord: SampleRecord): ReactNode => {
-    return (
-      <p>
-        {itemRecord.source}: {itemRecord.value}
-      </p>
-    );
-  },
-  renderSource: (source: string | null): ReactNode => {
-    return <p>{source || "Source?"}</p>;
-  },
-}));
+import ItemManager from "./ItemManager";
+import { useStore } from "./ItemManager.stories.helpers";
 
 const SampleManager = () => {
   const {
@@ -64,7 +22,7 @@ const SampleManager = () => {
     renderActions,
   } = useStore((state) => state);
   return (
-    <div style={{ width: 400, height: 400 }}>
+    <div style={{ width: 320, height: 320 }}>
       <ItemManager
         selectedSource={selectedSource}
         itemRecords={itemRecords}
