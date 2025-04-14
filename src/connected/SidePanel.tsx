@@ -26,33 +26,38 @@ import InfoPanel from "./InfoPanel";
 import TimeSeriesPanel from "./TimeSeriesPanel";
 import StatisticsPanel from "./StatisticsPanel";
 import VolumePanel from "./VolumePanel";
+import { Config } from "@/config";
 
-const getBasePanels = (_locale?: string): PanelModel[] => [
-  {
-    id: "details",
-    title: i18n.get("Details"),
-    icon: <DetailsIcon />,
-    content: <InfoPanel />,
-  },
-  {
-    id: "timeSeries",
-    title: i18n.get("Time-Series"),
-    icon: <StackedLineChartIcon />,
-    content: <TimeSeriesPanel />,
-  },
-  {
-    id: "stats",
-    title: i18n.get("Statistics"),
-    icon: <FunctionsIcon />,
-    content: <StatisticsPanel />,
-  },
-  {
-    id: "volume",
-    title: i18n.get("Volume"),
-    icon: <ThreeDRotationIcon />,
-    content: <VolumePanel />,
-  },
-];
+const getBasePanels = (_locale?: string): PanelModel[] => {
+  const hidden = Config.instance.branding.allow3D === false;
+  return [
+    {
+      id: "details",
+      title: i18n.get("Details"),
+      icon: <DetailsIcon />,
+      content: <InfoPanel />,
+    },
+    {
+      id: "timeSeries",
+      title: i18n.get("Time-Series"),
+      icon: <StackedLineChartIcon />,
+      content: <TimeSeriesPanel />,
+    },
+    {
+      id: "stats",
+      title: i18n.get("Statistics"),
+      icon: <FunctionsIcon />,
+      content: <StatisticsPanel />,
+    },
+    {
+      id: "volume",
+      title: i18n.get("Volume"),
+      icon: <ThreeDRotationIcon />,
+      content: <VolumePanel />,
+      hidden: hidden,
+    },
+  ];
+};
 
 interface SidePanelImplProps extends WithLocale {
   sidebarPanelId: string | null;

@@ -20,6 +20,9 @@
 
 * Colormaps are now preserved when sharing the viewer's current state. (#465)
 
+* Parameter `allow3D` in the viewer branding configuration now hides the  
+  `Volume` tab in the side panel when set to `false`. Default is `true`.
+
 ### Other Changes
 
 * Added `selectedDatasetTitle` and `selectedDataset2Title` to the list
