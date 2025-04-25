@@ -13,12 +13,17 @@
 * Added a type column to the metadata attribute tables displayed 
   in the "details" panel when in list mode.
 
+* Variable units are no longer shown in the color legend
+  if the units are either missing in the variable metadata or
+  if it is a no-unit value like `-`, `1`, or an empty string. (#511)
+
 # Fixes
+
+* Assigned color bars are now preserved when sharing the viewer's
+  current state. (#465)
 
 * Fixed application crash caused by metadata attributes that are (JSON) 
   objects. Now attributes values of any type are rendered.
-
-* Colormaps are now preserved when sharing the viewer's current state. (#465)
 
 * Parameter `allow3D` in the viewer branding configuration now hides the  
   `Volume` tab in the side panel when set to `false`. Default is `true`.
