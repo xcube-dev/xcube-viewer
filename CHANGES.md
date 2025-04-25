@@ -13,6 +13,9 @@
 * Added a type column to the metadata attribute tables displayed 
   in the "details" panel when in list mode.
 
+* Current layer visibilities are now persisted in permalinks and in
+  the browser's storage.
+
 # Fixes
 
 * Fixed application crash caused by metadata attributes that are (JSON) 

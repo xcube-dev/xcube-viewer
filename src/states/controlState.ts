@@ -185,6 +185,7 @@ export function newControlState(): ControlState {
     layerVisibilities: {
       baseMap: true,
       datasetRgb: false,
+      datasetRgb2: false,
       datasetVariable: true,
       datasetVariable2: true,
       datasetBoundary: false,
