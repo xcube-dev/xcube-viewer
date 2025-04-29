@@ -18,10 +18,10 @@
   if it is a no-unit value like `-`, `1`, or an empty string. (#511)
 
 * Dataset groups in the dataset selector are now sorted according to the 
-  `groupOrder` defined in the server-side configuration.
+  `groupOrder` defined in the server-side configuration. (#521)
 
 * Added tooltips to dataset group titles in the selector, displaying the 
-  `groupDescription` provided by the server.
+  `groupDescription` provided by the server. (#521)
 
 # Fixes
 
