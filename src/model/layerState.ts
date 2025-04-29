@@ -5,6 +5,7 @@
  */
 
 export interface LayerState {
+  id: string;
   title: string;
   subTitle?: string;
   disabled?: boolean;

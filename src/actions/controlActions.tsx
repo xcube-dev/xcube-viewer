@@ -32,7 +32,6 @@ import { datasetsSelector } from "@/selectors/dataSelectors";
 import { AppState } from "@/states/appState";
 import {
   ControlState,
-  LayerVisibilities,
   MapInteraction,
   TimeAnimationInterval,
   ViewMode,
@@ -287,12 +286,12 @@ export const SET_LAYER_VISIBILITY = "SET_LAYER_VISIBILITY";
 
 export interface SetLayerVisibility {
   type: typeof SET_LAYER_VISIBILITY;
-  layerId: keyof LayerVisibilities;
+  layerId: string;
   visible: boolean;
 }
 
 export function setLayerVisibility(
-  layerId: keyof LayerVisibilities,
+  layerId: string,
   visible: boolean,
 ): SetLayerVisibility {
   return { type: SET_LAYER_VISIBILITY, layerId, visible };

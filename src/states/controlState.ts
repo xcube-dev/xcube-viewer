@@ -21,6 +21,7 @@ import {
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
 import { PaletteMode } from "@mui/material";
+import { LayerState } from "@/model/layerState";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -56,18 +57,19 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
-export type BaseMapVisibilities = {
-  [K in `baseMap-${Capitalize<string>}`]: boolean;
-};
+export interface LayerStates {
+  datasetRgb: LayerState;
+  datasetRgb2: LayerState;
+  datasetVariable: LayerState;
+  datasetVariable2: LayerState;
+  datasetBoundary: LayerState;
+  datasetPlaces: LayerState;
+  userPlaces: LayerState;
+  overlays: LayerState[];
+  baseMaps: LayerState[];
+}
 
-export type OverlayVisibilities = {
-  [K in `overlay-${Capitalize<string>}`]: boolean;
-};
-
-export interface LayerVisibilities
-  extends BaseMapVisibilities,
-    OverlayVisibilities {
-  baseMap?: boolean;
+export interface LayerVisibilities {
   datasetRgb?: boolean;
   datasetRgb2?: boolean;
   datasetVariable?: boolean;
@@ -75,7 +77,8 @@ export interface LayerVisibilities
   datasetBoundary?: boolean;
   datasetPlaces?: boolean;
   userPlaces?: boolean;
-  overlay?: boolean;
+  overlays: Record<string, boolean>;
+  baseMaps: Record<string, boolean>;
 }
 
 // TODO: check if really unused
@@ -193,14 +196,14 @@ export function newControlState(): ControlState {
     mapInteraction: "Select",
     lastMapInteraction: "Select",
     layerVisibilities: {
-      baseMap: true,
       datasetRgb: false,
       datasetVariable: true,
       datasetVariable2: true,
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
-      overlay: true,
+      overlays: {},
+      baseMaps: {},
     },
     variableCompareMode: false,
     mapPointInfoBoxEnabled: false,

@@ -23,6 +23,7 @@ const mapStateToProps = (state: AppState) => {
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
   openDialog,
   setLayerMenuOpen,

@@ -14,7 +14,7 @@ export const maps = _maps as MapGroup[];
 export interface MapGroup {
   name: string;
   link: string;
-  datasets: MapSource[];
+  baseMaps: MapSource[];
   overlays: MapSource[];
 }
 
