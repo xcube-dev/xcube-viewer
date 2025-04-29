@@ -79,6 +79,8 @@ import {
   UserColorBar,
 } from "@/model/userColorBar";
 import {
+  configBaseMapLayers,
+  configOverlayLayers,
   defaultBaseMapLayers,
   defaultOverlayLayers,
   findLayer,
@@ -1274,14 +1276,14 @@ export const activityMessagesSelector = createSelector(
 export const baseMapsSelector = createSelector(
   userBaseMapsSelector,
   (userBaseMaps): LayerDefinition[] => {
-    return [...userBaseMaps, ...defaultBaseMapLayers];
+    return [...userBaseMaps, ...configBaseMapLayers, ...defaultBaseMapLayers];
   },
 );
 
 export const overlaysSelector = createSelector(
   userOverlaysSelector,
   (userOverlays): LayerDefinition[] => {
-    return [...userOverlays, ...defaultOverlayLayers];
+    return [...userOverlays, ...configOverlayLayers, ...defaultOverlayLayers];
   },
 );
 

@@ -5,6 +5,7 @@
  */
 
 import { maps } from "@/util/maps";
+import { Config } from "@/config";
 
 export const USER_GROUP_NAME = "User";
 
@@ -28,7 +29,7 @@ export function findLayer(
   return layerDefs.find((layer) => layer.id === layerId) || null;
 }
 
-function getDefaultLayers(key: "datasets" | "overlays" = "datasets") {
+function getDefaultLayers(key: "datasets" | "overlays") {
   const layerDefs: LayerDefinition[] = [];
   maps.forEach((mapGroup) => {
     mapGroup[key].forEach((mapSource) => {
@@ -44,9 +45,23 @@ function getDefaultLayers(key: "datasets" | "overlays" = "datasets") {
   return layerDefs;
 }
 
-export const defaultBaseMapLayers: LayerDefinition[] =
-  getDefaultLayers("datasets");
+function getConfigLayers(key: "overlays" | "baseMaps") {
+  const layers = Config.instance.layers;
+  return ((layers && layers[key]) || []).map(({ id, ...rest }) => ({
+    ...rest,
+    id: `${key}-${id}`,
+    group: key,
+  }));
+}
+
 export const defaultOverlayLayers: LayerDefinition[] =
   getDefaultLayers("overlays");
+export const defaultBaseMapLayers: LayerDefinition[] =
+  getDefaultLayers("datasets");
+
+export const configOverlayLayers: LayerDefinition[] =
+  getConfigLayers("overlays");
+export const configBaseMapLayers: LayerDefinition[] =
+  getConfigLayers("baseMaps");
 
 export const defaultBaseMapId = defaultBaseMapLayers[0].id;

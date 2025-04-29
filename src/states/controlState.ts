@@ -56,7 +56,17 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
-export interface LayerVisibilities {
+export type BaseMapVisibilities = {
+  [K in `baseMap-${Capitalize<string>}`]: boolean;
+};
+
+export type OverlayVisibilities = {
+  [K in `overlay-${Capitalize<string>}`]: boolean;
+};
+
+export interface LayerVisibilities
+  extends BaseMapVisibilities,
+    OverlayVisibilities {
   baseMap?: boolean;
   datasetRgb?: boolean;
   datasetRgb2?: boolean;
