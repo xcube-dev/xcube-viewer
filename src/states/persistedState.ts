@@ -30,6 +30,7 @@ const controlStateProps: readonly (keyof ControlState)[] = [
   "selectedPlaceId",
   "selectedPlaceGroupIds",
   "layerMenuOpen",
+  "layerVisibilities",
   "sidePanelOpen",
   "sidePanelId",
   "sidePanelSize",

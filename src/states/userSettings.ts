@@ -76,6 +76,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("sidePanelId", settings);
       storage.setPrimitiveProperty("sidePanelSize", settings);
       storage.setPrimitiveProperty("volumeRenderMode", settings);
+      storage.setObjectProperty("layerVisibilities", settings);
       storage.setObjectProperty("infoCardElementStates", settings);
       storage.setPrimitiveProperty("imageSmoothingEnabled", settings);
       storage.setPrimitiveProperty("mapProjection", settings);
@@ -149,6 +150,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         settings,
         defaultSettings,
       );
+      storage.getObjectProperty("layerVisibilities", settings, defaultSettings);
       storage.getBooleanProperty(
         "imageSmoothingEnabled",
         settings,

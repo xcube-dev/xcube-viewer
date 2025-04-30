@@ -199,6 +199,7 @@ export function newControlState(): ControlState {
     lastMapInteraction: "Select",
     layerVisibilities: {
       datasetRgb: false,
+      datasetRgb2: false,
       datasetVariable: true,
       datasetVariable2: true,
       datasetBoundary: false,

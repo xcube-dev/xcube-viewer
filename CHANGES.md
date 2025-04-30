@@ -13,6 +13,9 @@
 * Added a type column to the metadata attribute tables displayed 
   in the "details" panel when in list mode.
 
+* Current layer visibilities are now persisted in permalinks and in
+  the browser's storage.
+
 * Variable units are no longer shown in the color legend
   if the units are either missing in the variable metadata or
   if it is a no-unit value like `-`, `1`, or an empty string. (#511)
