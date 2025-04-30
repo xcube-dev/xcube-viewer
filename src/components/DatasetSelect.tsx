@@ -92,7 +92,7 @@ export default function DatasetSelect({
     if (hasGroups) {
       const groupTitle = dataset.groupTitle || i18n.get("Others");
       const groupDescription =
-        dataset.groupDescription || i18n.get("No" + " Description provided");
+        dataset.groupDescription || i18n.get("No Description provided");
       if (groupTitle !== lastGroupTitle) {
         items.push(
           <Tooltip arrow title={groupDescription}>
