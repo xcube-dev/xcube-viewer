@@ -91,17 +91,23 @@ export default function DatasetSelect({
   sortedDatasets.forEach((dataset) => {
     if (hasGroups) {
       const groupTitle = dataset.groupTitle || i18n.get("Others");
-      const groupDescription =
-        dataset.groupDescription || i18n.get("No Description provided");
+      const groupDescription = dataset.groupDescription;
       if (groupTitle !== lastGroupTitle) {
+        const content = (
+          <Divider key={groupTitle}>
+            <Typography fontSize="small" color="text.secondary">
+              {groupTitle}
+            </Typography>
+          </Divider>
+        );
         items.push(
-          <Tooltip arrow title={groupDescription}>
-            <Divider key={groupTitle}>
-              <Typography fontSize="small" color="text.secondary">
-                {groupTitle}
-              </Typography>
-            </Divider>
-          </Tooltip>,
+          groupDescription ? (
+            <Tooltip arrow title={groupDescription}>
+              {content}
+            </Tooltip>
+          ) : (
+            content
+          ),
         );
       }
       lastGroupTitle = groupTitle;
