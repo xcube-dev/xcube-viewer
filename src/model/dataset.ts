@@ -47,6 +47,9 @@ export interface Dataset {
   title: string;
   description?: string;
   groupTitle?: string;
+  groupId?: string;
+  groupOrder?: number;
+  groupDescription?: string;
   sortValue?: number;
   tags?: string[];
   bbox: [number, number, number, number];

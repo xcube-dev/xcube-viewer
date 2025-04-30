@@ -18,6 +18,7 @@ import ControlBarItem from "./ControlBarItem";
 import { ReactElement, useMemo } from "react";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import { Tooltip } from "@mui/material";
 
 interface DatasetSelectProps extends WithLocale {
   selectedDatasetId: string | null;
@@ -38,6 +39,13 @@ export default function DatasetSelect({
 }: DatasetSelectProps) {
   const sortedDatasets = useMemo(() => {
     return datasets.sort((dataset1: Dataset, dataset2: Dataset) => {
+      const groupOrder1 = dataset1.groupOrder ?? Infinity;
+      const groupOrder2 = dataset2.groupOrder ?? Infinity;
+
+      if (groupOrder1 !== groupOrder2) {
+        return groupOrder1 - groupOrder2;
+      }
+
       const groupTitle1 = dataset1.groupTitle || "zzz";
       const groupTitle2 = dataset2.groupTitle || "zzz";
       const delta = groupTitle1.localeCompare(groupTitle2);
@@ -83,13 +91,23 @@ export default function DatasetSelect({
   sortedDatasets.forEach((dataset) => {
     if (hasGroups) {
       const groupTitle = dataset.groupTitle || i18n.get("Others");
+      const groupDescription = dataset.groupDescription;
       if (groupTitle !== lastGroupTitle) {
-        items.push(
+        const content = (
           <Divider key={groupTitle}>
             <Typography fontSize="small" color="text.secondary">
               {groupTitle}
             </Typography>
-          </Divider>,
+          </Divider>
+        );
+        items.push(
+          groupDescription ? (
+            <Tooltip arrow title={groupDescription}>
+              {content}
+            </Tooltip>
+          ) : (
+            content
+          ),
         );
       }
       lastGroupTitle = groupTitle;
