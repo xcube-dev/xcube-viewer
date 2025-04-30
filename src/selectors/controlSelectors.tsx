@@ -1286,11 +1286,10 @@ export const overlaysSelector = createSelector(
 const getLayersFromLayerDefinition = (
   layerDefs: LayerDefinition[],
   layerVisibilities: LayerVisibilities,
-  key: "overlays" | "baseMaps",
   zIndex: number,
 ): JSX.Element[] => {
   return layerDefs
-    .filter((layerDef) => layerVisibilities[key][layerDef.id])
+    .filter((layerDef) => layerVisibilities[layerDef.id])
     .map((layerDef) => getLayerFromLayerDefinition(layerDef, zIndex));
 };
 
@@ -1331,7 +1330,6 @@ const getLayerFromLayerDefinition = (
 export const baseMapLayersSelector = createSelector(
   baseMapsSelector,
   layerVisibilitiesSelector,
-  (): "baseMaps" => "baseMaps",
   () => 0,
   getLayersFromLayerDefinition,
 );
@@ -1339,7 +1337,6 @@ export const baseMapLayersSelector = createSelector(
 export const overlayLayersSelector = createSelector(
   overlaysSelector,
   layerVisibilitiesSelector,
-  (): "overlays" => "overlays",
   () => 20,
   getLayersFromLayerDefinition,
 );
@@ -1418,12 +1415,12 @@ export const layerStatesSelector = createSelector(
       baseMaps: baseMapLayers.map((layer: LayerDefinition) => ({
         id: layer.id,
         title: layer.title,
-        visible: !!visibilities.baseMaps[layer.id],
+        visible: visibilities[layer.id],
       })),
       overlays: overlayLayers.map((layer: LayerDefinition) => ({
         id: layer.id,
         title: layer.title,
-        visible: !!visibilities.overlays[layer.id],
+        visible: visibilities[layer.id],
       })),
     };
   },

@@ -69,7 +69,7 @@ export interface LayerStates {
   baseMaps: LayerState[];
 }
 
-export interface LayerVisibilities {
+export type LayerVisibilities = {
   datasetRgb?: boolean;
   datasetRgb2?: boolean;
   datasetVariable?: boolean;
@@ -77,9 +77,9 @@ export interface LayerVisibilities {
   datasetBoundary?: boolean;
   datasetPlaces?: boolean;
   userPlaces?: boolean;
-  overlays: Record<string, boolean>;
-  baseMaps: Record<string, boolean>;
-}
+} & {
+  [key: string]: boolean;
+};
 
 // TODO: check if really unused
 // noinspection JSUnusedGlobalSymbols
@@ -144,7 +144,9 @@ export interface ControlState {
   variableCompareMode: boolean;
   variableSplitPos?: number;
   mapPointInfoBoxEnabled: boolean;
+  // TODO: #526 remove selectedBaseMapId
   selectedBaseMapId: string | null;
+  // TODO: #526 remove selectedOverlayId
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
   userOverlays: LayerDefinition[];
@@ -202,8 +204,8 @@ export function newControlState(): ControlState {
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
-      overlays: {},
-      baseMaps: {},
+      // TODO: #526 set configured initial base map!
+      [defaultBaseMapId]: true,
     },
     variableCompareMode: false,
     mapPointInfoBoxEnabled: false,
@@ -222,7 +224,9 @@ export function newControlState(): ControlState {
     },
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
+    // TODO: #526 remove selectedBaseMapId
     selectedBaseMapId: defaultBaseMapId,
+    // TODO: #526 remove selectedOverlayId
     selectedOverlayId: null,
     userBaseMaps: [],
     userOverlays: [],
