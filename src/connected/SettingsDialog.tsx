@@ -14,9 +14,9 @@ import {
 } from "@/actions/controlActions";
 import _SettingsDialog from "@/components/SettingsDialog";
 import {
-  baseMapsSelector,
-  overlaysSelector,
   selectedServerSelector,
+  userBaseMapsSelector,
+  userOverlaysSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
 import version from "@/version";
@@ -26,14 +26,15 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     open: state.controlState.dialogOpen["settings"],
     settings: state.controlState,
-    baseMapLayers: baseMapsSelector(state),
-    overlayLayers: overlaysSelector(state),
+    userBaseMapLayers: userBaseMapsSelector(state),
+    userOverlayLayers: userOverlaysSelector(state),
     selectedServer: selectedServerSelector(state),
     viewerVersion: version,
     serverInfo: state.dataState.serverInfo,
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
   closeDialog,
   updateSettings,

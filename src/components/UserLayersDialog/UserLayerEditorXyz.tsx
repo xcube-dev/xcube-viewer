@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
 import i18n from "@/i18n";
-import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
+import { LayerDefinition } from "@/model/layerDefinition";
 import DoneCancel from "@/components/DoneCancel";
 
 interface UserLayerEditorXyzProps {
@@ -44,7 +44,6 @@ const UserLayerEditorXyz: React.FC<UserLayerEditorXyzProps> = ({
   const handleUserLayerChange = () =>
     onChange({
       ...userLayer,
-      group: USER_GROUP_NAME,
       title: title.trim(),
       url: url.trim(),
       attribution: attribution.trim(),

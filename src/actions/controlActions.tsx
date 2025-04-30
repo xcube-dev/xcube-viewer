@@ -283,19 +283,17 @@ function _selectPlace(placeId: string | null, places: Place[]): SelectPlace {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_LAYER_VISIBILITY = "SET_LAYER_VISIBILITY";
+export const SET_LAYER_VISIBILITIES = "SET_LAYER_VISIBILITIES";
 
-export interface SetLayerVisibility {
-  type: typeof SET_LAYER_VISIBILITY;
-  layerId: keyof LayerVisibilities;
-  visible: boolean;
+export interface SetLayerVisibilities {
+  type: typeof SET_LAYER_VISIBILITIES;
+  layerVisibilities: LayerVisibilities;
 }
 
-export function setLayerVisibility(
-  layerId: keyof LayerVisibilities,
-  visible: boolean,
-): SetLayerVisibility {
-  return { type: SET_LAYER_VISIBILITY, layerId, visible };
+export function setLayerVisibilities(
+  layerVisibilities: LayerVisibilities,
+): SetLayerVisibilities {
+  return { type: SET_LAYER_VISIBILITIES, layerVisibilities };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -803,7 +801,7 @@ export type ControlAction =
   | SelectPlaceGroups
   | SelectPlace
   | SelectTime
-  | SetLayerVisibility
+  | SetLayerVisibilities
   | IncSelectedTime
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode

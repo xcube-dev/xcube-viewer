@@ -173,6 +173,55 @@
         }
       },
       "additionalProperties": false
+    },
+
+    "Layer": {
+      "type": "object",
+      "required": [
+        "id", "type", "title", "url"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "attribution": {
+          "type": "string"
+        },
+        "wms": {
+          "type": "object",
+          "required": [
+            "layerName"
+          ],
+          "properties": {
+            "layerName": {
+              "type": "string"
+            },
+            "styleName": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+
+    "Layers": {
+      "type": "object",
+      "properties": {
+        "overlays": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Layer"}
+        },
+        "baseMaps": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Layer"}
+        }
+      }
     }
   },
 
@@ -182,7 +231,8 @@
     "name": { "type": "string" },
     "authClient": { "$ref": "#/definitions/AuthClientConfig" },
     "server": { "$ref": "#/definitions/ApiServerConfig" },
-    "branding": { "$ref": "#/definitions/Branding" }
+    "branding": { "$ref": "#/definitions/Branding" },
+    "layers": { "$ref": "#/definitions/Layers" }
   },
 
   "required": ["name", "server", "branding"],

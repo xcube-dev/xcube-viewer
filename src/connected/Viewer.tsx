@@ -9,8 +9,8 @@ import { default as OlMap } from "ol/Map";
 
 import { AppState } from "@/states/appState";
 import {
-  baseMapLayerSelector,
-  overlayLayerSelector,
+  baseMapLayersSelector,
+  overlayLayersSelector,
   imageSmoothingSelector,
   mapProjectionSelector,
   selectedDatasetBoundaryLayerSelector,
@@ -63,14 +63,15 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     mapProjection: mapProjectionSelector(state),
     selectedPlaceId: state.controlState.selectedPlaceId,
     places: selectedPlaceGroupPlacesSelector(state),
-    baseMapLayer: baseMapLayerSelector(state),
-    overlayLayer: overlayLayerSelector(state),
+    baseMapLayers: baseMapLayersSelector(state),
+    overlayLayers: overlayLayersSelector(state),
     imageSmoothing: imageSmoothingSelector(state),
     variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
   addDrawnUserPlace,
   importUserPlacesFromText,

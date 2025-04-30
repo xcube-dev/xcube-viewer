@@ -21,6 +21,7 @@ import {
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
 import { PaletteMode } from "@mui/material";
+import { LayerState } from "@/model/layerState";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -56,17 +57,8 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
-export interface LayerVisibilities {
-  baseMap?: boolean;
-  datasetRgb?: boolean;
-  datasetRgb2?: boolean;
-  datasetVariable?: boolean;
-  datasetVariable2?: boolean;
-  datasetBoundary?: boolean;
-  datasetPlaces?: boolean;
-  userPlaces?: boolean;
-  overlay?: boolean;
-}
+export type LayerStates = Record<string, LayerState>;
+export type LayerVisibilities = Record<string, boolean>;
 
 // TODO: check if really unused
 // noinspection JSUnusedGlobalSymbols
@@ -131,8 +123,6 @@ export interface ControlState {
   variableCompareMode: boolean;
   variableSplitPos?: number;
   mapPointInfoBoxEnabled: boolean;
-  selectedBaseMapId: string | null;
-  selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
   userOverlays: LayerDefinition[];
   userColorBars: UserColorBar[];
@@ -183,14 +173,15 @@ export function newControlState(): ControlState {
     mapInteraction: "Select",
     lastMapInteraction: "Select",
     layerVisibilities: {
-      baseMap: true,
       datasetRgb: false,
+      datasetRgb2: false,
       datasetVariable: true,
       datasetVariable2: true,
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
-      overlay: true,
+      // TODO: #526 set configured initial base map!
+      [defaultBaseMapId]: true,
     },
     variableCompareMode: false,
     mapPointInfoBoxEnabled: false,
@@ -209,8 +200,6 @@ export function newControlState(): ControlState {
     },
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
-    selectedBaseMapId: defaultBaseMapId,
-    selectedOverlayId: null,
     userBaseMaps: [],
     userOverlays: [],
     userColorBars: [],

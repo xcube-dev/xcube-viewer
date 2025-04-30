@@ -28,12 +28,7 @@ import {
   ThemeMode,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
-import {
-  findLayer,
-  getLayerTitle,
-  LayerDefinition,
-} from "@/model/layerDefinition";
-import LayerSelectMenu from "@/components/LayerSelectMenu";
+import { LayerDefinition } from "@/model/layerDefinition";
 import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
@@ -74,8 +69,8 @@ interface SettingsDialogProps {
   settings: ControlState;
   selectedServer: ApiServerConfig;
   viewerVersion: string;
-  baseMapLayers: LayerDefinition[];
-  overlayLayers: LayerDefinition[];
+  userBaseMapLayers: LayerDefinition[];
+  userOverlayLayers: LayerDefinition[];
   updateSettings: (settings: Partial<ControlState>) => void;
   changeLocale: (locale: string) => void;
   openDialog: (dialogId: string) => void;
@@ -87,8 +82,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   closeDialog,
   settings,
   selectedServer,
-  baseMapLayers,
-  overlayLayers,
+  userBaseMapLayers,
+  userOverlayLayers,
   updateSettings,
   changeLocale,
   openDialog,
@@ -96,10 +91,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   serverInfo,
 }) => {
   const [languageMenuAnchor, setLanguageMenuAnchor] =
-    React.useState<Element | null>(null);
-  const [baseMapMenuAnchor, setBaseMapMenuAnchor] =
-    React.useState<Element | null>(null);
-  const [overlayMenuAnchor, setOverlayMenuAnchor] =
     React.useState<Element | null>(null);
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
@@ -194,29 +185,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     setLanguageMenuAnchor(null);
   }
 
-  function handleBaseMapMenuOpen(event: React.MouseEvent) {
-    setBaseMapMenuAnchor(event.currentTarget);
-  }
-
-  function handleBaseMapMenuClose() {
-    setBaseMapMenuAnchor(null);
-  }
-
   const handleManageUserBaseMaps = (event: React.MouseEvent) => {
     event.stopPropagation();
     openDialog("userBaseMaps");
   };
-
-  const baseMapLayer = findLayer(baseMapLayers, settings.selectedBaseMapId);
-  const baseMapLabel = getLayerTitle(baseMapLayer);
-
-  function handleOverlayMenuOpen(event: React.MouseEvent) {
-    setOverlayMenuAnchor(event.currentTarget);
-  }
-
-  function handleOverlayMenuClose() {
-    setOverlayMenuAnchor(null);
-  }
 
   const handleManageUserOverlays = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -230,8 +202,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       themeMode: event.target.value as ThemeMode,
     });
   }
-  const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
-  const overlayLabel = getLayerTitle(overlayLayer);
 
   return (
     <div>
@@ -355,23 +325,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
           <SettingsPanel title={i18n.get("Map")}>
             <SettingsSubPanel
-              label={i18n.get("Base map")}
-              value={baseMapLabel}
-              onClick={handleBaseMapMenuOpen}
-            >
-              <Button onClick={handleManageUserBaseMaps}>
-                {i18n.get("User Base Maps") + "..."}
-              </Button>
-            </SettingsSubPanel>
+              label={i18n.get("User Base Maps") + "..."}
+              value={`${userBaseMapLayers.length} ${i18n.get("defined")}`}
+              onClick={handleManageUserBaseMaps}
+            />
             <SettingsSubPanel
-              label={i18n.get("Overlay")}
-              value={overlayLabel}
-              onClick={handleOverlayMenuOpen}
-            >
-              <Button onClick={handleManageUserOverlays}>
-                {i18n.get("User Overlays") + "..."}
-              </Button>
-            </SettingsSubPanel>
+              label={i18n.get("User Overlays") + "..."}
+              value={`${userOverlayLayers.length} ${i18n.get("defined")}`}
+              onClick={handleManageUserOverlays}
+            />
             <SettingsSubPanel label={i18n.get("Projection")}>
               <RadioSetting
                 propertyName={"mapProjection"}
@@ -469,26 +431,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       >
         {localeMenuItems}
       </Menu>
-
-      <LayerSelectMenu
-        anchorElement={baseMapMenuAnchor}
-        layers={baseMapLayers}
-        selectedLayerId={settings.selectedBaseMapId}
-        setSelectedLayerId={(selectedBaseMapId) =>
-          updateSettings({ selectedBaseMapId })
-        }
-        onClose={handleBaseMapMenuClose}
-      />
-
-      <LayerSelectMenu
-        anchorElement={overlayMenuAnchor}
-        layers={overlayLayers}
-        selectedLayerId={settings.selectedOverlayId}
-        setSelectedLayerId={(selectedOverlayId) =>
-          updateSettings({ selectedOverlayId })
-        }
-        onClose={handleOverlayMenuClose}
-      />
     </div>
   );
 };
