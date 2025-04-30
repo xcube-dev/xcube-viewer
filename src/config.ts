@@ -29,6 +29,7 @@ import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
 import { isNumber } from "./util/types";
 import { hasViewerStateApi } from "@/api/hasViewerStateApi";
+import { LayerDefinition } from "@/model/layerDefinition";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -38,10 +39,16 @@ interface AuthClient {
   audience?: string;
 }
 
+interface Layers {
+  overlays?: Omit<LayerDefinition, "group">[];
+  baseMaps?: Omit<LayerDefinition, "group">[];
+}
+
 export class Config {
   readonly name: string;
   readonly server: ApiServerConfig;
   readonly branding: Branding;
+  readonly layers?: Layers;
   readonly authClient?: AuthClientConfig;
   private static _instance: Config;
 

@@ -21,6 +21,7 @@ import {
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
 import { PaletteMode } from "@mui/material";
+import { LayerState } from "@/model/layerState";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -56,8 +57,19 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
-export interface LayerVisibilities {
-  baseMap?: boolean;
+export interface LayerStates {
+  datasetRgb: LayerState;
+  datasetRgb2: LayerState;
+  datasetVariable: LayerState;
+  datasetVariable2: LayerState;
+  datasetBoundary: LayerState;
+  datasetPlaces: LayerState;
+  userPlaces: LayerState;
+  overlays: LayerState[];
+  baseMaps: LayerState[];
+}
+
+export type LayerVisibilities = {
   datasetRgb?: boolean;
   datasetRgb2?: boolean;
   datasetVariable?: boolean;
@@ -65,8 +77,9 @@ export interface LayerVisibilities {
   datasetBoundary?: boolean;
   datasetPlaces?: boolean;
   userPlaces?: boolean;
-  overlay?: boolean;
-}
+} & {
+  [key: string]: boolean;
+};
 
 // TODO: check if really unused
 // noinspection JSUnusedGlobalSymbols
@@ -131,7 +144,9 @@ export interface ControlState {
   variableCompareMode: boolean;
   variableSplitPos?: number;
   mapPointInfoBoxEnabled: boolean;
+  // TODO: #526 remove selectedBaseMapId
   selectedBaseMapId: string | null;
+  // TODO: #526 remove selectedOverlayId
   selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
   userOverlays: LayerDefinition[];
@@ -183,7 +198,6 @@ export function newControlState(): ControlState {
     mapInteraction: "Select",
     lastMapInteraction: "Select",
     layerVisibilities: {
-      baseMap: true,
       datasetRgb: false,
       datasetRgb2: false,
       datasetVariable: true,
@@ -191,7 +205,8 @@ export function newControlState(): ControlState {
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
-      overlay: true,
+      // TODO: #526 set configured initial base map!
+      [defaultBaseMapId]: true,
     },
     variableCompareMode: false,
     mapPointInfoBoxEnabled: false,
@@ -210,7 +225,9 @@ export function newControlState(): ControlState {
     },
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
+    // TODO: #526 remove selectedBaseMapId
     selectedBaseMapId: defaultBaseMapId,
+    // TODO: #526 remove selectedOverlayId
     selectedOverlayId: null,
     userBaseMaps: [],
     userOverlays: [],

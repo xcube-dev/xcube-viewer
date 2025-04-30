@@ -14,6 +14,7 @@ import { ResizableBox, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
 import { Theme } from "@mui/system";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
@@ -23,9 +24,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
-import { LayerVisibilities } from "@/states/controlState";
+import { LayerStates } from "@/states/controlState";
 import LayerItem from "./LayerItem";
-import { LayerState } from "@/model/layerState";
 
 const initialPos: ControlPosition = { x: 48, y: 128 };
 const initialSize = { width: 320, height: 520 };
@@ -56,18 +56,21 @@ interface LayerControlPanelProps extends WithLocale {
   layerMenuOpen: boolean;
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
-  layerStates: Record<keyof LayerVisibilities, LayerState>;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
+  layerStates: LayerStates;
+  setLayerVisibility: (layerId: string, visible: boolean) => void;
 }
 
 export default function LayerControlPanel(props: LayerControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
   const [size, setSize] = useState(initialSize);
 
-  const { layerMenuOpen, setLayerMenuOpen, openDialog, ...layerProps } = props;
+  const {
+    layerStates,
+    layerMenuOpen,
+    setLayerMenuOpen,
+    openDialog,
+    ...layerProps
+  } = props;
 
   if (!layerMenuOpen) {
     return null;
@@ -118,16 +121,42 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
           </Box>
           <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
             <MenuList dense>
-              {/*<Divider />*/}
-              <LayerItem layerId="overlay" {...layerProps} />
-              <LayerItem layerId="userPlaces" {...layerProps} />
-              <LayerItem layerId="datasetPlaces" {...layerProps} />
-              <LayerItem layerId="datasetBoundary" {...layerProps} />
-              <LayerItem layerId="datasetVariable" {...layerProps} />
-              <LayerItem layerId="datasetVariable2" {...layerProps} />
-              <LayerItem layerId="datasetRgb" {...layerProps} />
-              <LayerItem layerId="datasetRgb2" {...layerProps} />
-              <LayerItem layerId="baseMap" {...layerProps} last={true} />
+              {layerStates.overlays.map((layerState) => (
+                <LayerItem
+                  key={layerState.id}
+                  layerState={layerState}
+                  {...layerProps}
+                />
+              ))}
+              {layerStates.overlays.length && <Divider />}
+              <LayerItem layerState={layerStates.userPlaces} {...layerProps} />
+              <LayerItem
+                layerState={layerStates.datasetPlaces}
+                {...layerProps}
+              />
+              <LayerItem
+                layerState={layerStates.datasetBoundary}
+                {...layerProps}
+              />
+              <LayerItem
+                layerState={layerStates.datasetVariable}
+                {...layerProps}
+              />
+              <LayerItem
+                layerState={layerStates.datasetVariable2}
+                {...layerProps}
+              />
+              <LayerItem layerState={layerStates.datasetRgb} {...layerProps} />
+              <LayerItem layerState={layerStates.datasetRgb2} {...layerProps} />
+              {layerStates.baseMaps.length && <Divider />}
+              {layerStates.baseMaps.map((layerState) => (
+                <LayerItem
+                  key={layerState.id}
+                  layerState={layerState}
+                  {...layerProps}
+                />
+              ))}
+              <Divider />
               <MenuItem onClick={handleUserBaseMaps}>
                 {i18n.get("User Base Maps") + "..."}
               </MenuItem>

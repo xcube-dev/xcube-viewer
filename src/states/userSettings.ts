@@ -80,8 +80,6 @@ export function storeUserSettings(settings: ControlState) {
       storage.setObjectProperty("infoCardElementStates", settings);
       storage.setPrimitiveProperty("imageSmoothingEnabled", settings);
       storage.setPrimitiveProperty("mapProjection", settings);
-      storage.setPrimitiveProperty("selectedBaseMapId", settings);
-      storage.setPrimitiveProperty("selectedOverlayId", settings);
       storage.setArrayProperty("userBaseMaps", settings);
       storage.setArrayProperty("userOverlays", settings);
       storage.setArrayProperty("userColorBars", settings);
@@ -159,8 +157,6 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getStringProperty("mapProjection", settings, defaultSettings);
-      storage.getStringProperty("selectedBaseMapId", settings, defaultSettings);
-      storage.getStringProperty("selectedOverlayId", settings, defaultSettings);
       storage.getArrayProperty("userBaseMaps", settings, defaultSettings);
       storage.getArrayProperty("userOverlays", settings, defaultSettings);
       storage.getArrayProperty(

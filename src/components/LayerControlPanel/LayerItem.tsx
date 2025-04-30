@@ -8,27 +8,18 @@ import Divider from "@mui/material/Divider";
 import PushPinIcon from "@mui/icons-material/PushPin";
 
 import i18n from "@/i18n";
-import { LayerVisibilities } from "@/states/controlState";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
 import { LayerState } from "@/model/layerState";
 
 interface LayerItemProps {
-  layerId: keyof LayerVisibilities;
-  layerStates: Record<keyof LayerVisibilities, LayerState>;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
-  last?: boolean;
+  layerState: LayerState;
+  setLayerVisibility: (layerId: string, visible: boolean) => void;
 }
 
 export default function LayerItem({
-  layerId,
-  layerStates,
+  layerState,
   setLayerVisibility,
-  last,
 }: LayerItemProps) {
-  const layerState = layerStates[layerId];
   if (layerState.disabled) {
     return null;
   }
@@ -41,17 +32,13 @@ export default function LayerItem({
         secondaryIcon={
           layerState.pinned && <PushPinIcon fontSize="small" color="disabled" />
         }
-        onClick={() => setLayerVisibility(layerId, !layerState.visible)}
+        onClick={() => setLayerVisibility(layerState.id, !layerState.visible)}
       />
-      {last ? (
-        <Divider />
-      ) : (
-        <Divider
-          variant="inset"
-          component="li"
-          style={{ margin: "0 0 0 52px" }}
-        />
-      )}
+      <Divider
+        variant="inset"
+        component="li"
+        style={{ margin: "0 0 0 52px" }}
+      />
     </>
   );
 }

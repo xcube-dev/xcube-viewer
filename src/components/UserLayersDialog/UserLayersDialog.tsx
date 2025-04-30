@@ -50,11 +50,13 @@ const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
     updateSettings({ userOverlays });
   };
 
+  // TODO: #526 remove settings.selectedBaseMapId
   const selectedBaseMapId = settings.selectedBaseMapId;
   const setSelectedBaseMapId = (selectedBaseMapId: string | null) => {
     updateSettings({ selectedBaseMapId });
   };
 
+  // TODO: #526 remove settings.selectedOverlayId
   const selectedOverlayId = settings.selectedOverlayId;
   const setSelectedOverlayId = (selectedOverlayId: string | null) => {
     updateSettings({ selectedOverlayId });

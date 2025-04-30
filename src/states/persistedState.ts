@@ -36,8 +36,6 @@ const controlStateProps: readonly (keyof ControlState)[] = [
   "sidePanelSize",
   "variableSplitPos",
   "variableCompareMode",
-  "selectedBaseMapId",
-  "selectedOverlayId",
   "userBaseMaps",
   "userOverlays",
   "userColorBars",

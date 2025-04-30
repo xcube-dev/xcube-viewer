@@ -2,7 +2,7 @@
   {
     "name": "OpenStreetMap",
     "link": "https://openstreetmap.org",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "OSM Mapnik",
         "endpoint": "https://a.tile.osm.org/{z}/{x}/{y}.png"
@@ -21,7 +21,7 @@
   {
     "name": "ESRI",
     "link": "https://services.arcgisonline.com/arcgis/rest/services",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "Dark Gray Base",
         "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
@@ -105,7 +105,7 @@
   {
     "name": "CartoDB",
     "link": "https://cartodb.com/basemaps/",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "Positron",
         "endpoint": "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
@@ -137,7 +137,7 @@
   {
     "name": "Stamen",
     "link": "https://maps.stamen.com",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "Toner",
         "endpoint": "https://tile.stamen.com/toner/{z}/{x}/{y}.png",
@@ -157,7 +157,7 @@
   {
     "name": "Mapbox",
     "link": "https://a.tiles.mapbox.com/v3/mapbox/maps.html",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "Blue Marble (January)",
         "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jan/{z}/{x}/{y}.png"

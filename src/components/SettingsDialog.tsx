@@ -207,6 +207,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     openDialog("userBaseMaps");
   };
 
+  // TODO: #526 remove settings.selectedBaseMapId
   const baseMapLayer = findLayer(baseMapLayers, settings.selectedBaseMapId);
   const baseMapLabel = getLayerTitle(baseMapLayer);
 
@@ -230,6 +231,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       themeMode: event.target.value as ThemeMode,
     });
   }
+
+  // TODO: #526 remove settings.selectedOverlayId
   const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
   const overlayLabel = getLayerTitle(overlayLayer);
 
@@ -473,6 +476,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       <LayerSelectMenu
         anchorElement={baseMapMenuAnchor}
         layers={baseMapLayers}
+        // TODO: #526 remove settings.selectedBaseMapId
         selectedLayerId={settings.selectedBaseMapId}
         setSelectedLayerId={(selectedBaseMapId) =>
           updateSettings({ selectedBaseMapId })
@@ -483,6 +487,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       <LayerSelectMenu
         anchorElement={overlayMenuAnchor}
         layers={overlayLayers}
+        // TODO: #526 remove settings.selectedOverlayId
         selectedLayerId={settings.selectedOverlayId}
         setSelectedLayerId={(selectedOverlayId) =>
           updateSettings({ selectedOverlayId })

@@ -111,16 +111,19 @@ export default function ColorBarLegend(
     return null;
   }
 
-  const variableTitleWithUnits =
-    variableColorBar.type === "categorical"
+  const effectiveVariableTitle =
+    variableColorBar.type === "categorical" ||
+    !variableUnits ||
+    variableUnits === "1" ||
+    variableUnits === "-"
       ? variableTitle || variableName
-      : `${variableTitle || variableName} (${variableUnits || "-"})`;
+      : `${variableTitle || variableName} (${variableUnits})`;
 
   return (
     <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
       <Box sx={styles.header}>
         <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
-          {variableTitleWithUnits}
+          {effectiveVariableTitle}
         </Typography>
         {datasetTitle && (
           <Typography
