@@ -1271,6 +1271,11 @@
       "se": "JSON-format"
     },
     {
+      "en": "defined",
+      "de": "definiert",
+      "se": "definierad"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"

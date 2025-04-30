@@ -2,6 +2,17 @@
 
 ### Improvements
 
+* Improved management and selection of overlay and base map layers
+  in various ways: 
+  * The selectable base map and overlay layers are now configurable. If no 
+    base maps and overlays are configured, a default set is used. (#456)
+  * Selectable overlays and base maps are now found in the layer manager 
+    window. It is no longer possible to select a base map and overlay 
+    from the settings window.
+  * It is now possible to select multiple overlays.
+  * Current layer visibilities are now persisted in permalinks and in
+    the browser's storage.
+
 * Now using an entrypoint dataset that is initially shown 
   if none has been previously selected.
   See https://github.com/xcube-dev/xcube/issues/1135.
@@ -12,9 +23,6 @@
 
 * Added a type column to the metadata attribute tables displayed 
   in the "details" panel when in list mode.
-
-* Current layer visibilities are now persisted in permalinks and in
-  the browser's storage.
 
 * Variable units are no longer shown in the color legend
   if the units are either missing in the variable metadata or

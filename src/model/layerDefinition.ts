@@ -7,52 +7,41 @@
 import { maps } from "@/util/maps";
 import { Config } from "@/config";
 
-export const USER_GROUP_NAME = "User";
-
-export type LayerType = "overlays" | "baseMaps";
+export type LayerGroup = "overlays" | "baseMaps";
 
 export interface LayerDefinition {
   id: string;
   title: string;
-  group: string;
   url: string;
   attribution?: string;
   wms?: { layerName: string; styleName?: string };
+  /**
+   * Whether the layer can only be exclusively selected in its group.
+   */
+  exclusive?: boolean;
 }
 
-export function getLayerTitle(layerDef: LayerDefinition | null): string {
-  return layerDef ? `${layerDef.group}: ${layerDef.title}` : "-";
-}
-
-export function findLayer(
-  layerDefs: LayerDefinition[],
-  layerId: string | null,
-): LayerDefinition | null {
-  return layerDefs.find((layer) => layer.id === layerId) || null;
-}
-
-function getDefaultLayers(layerType: LayerType) {
+function getDefaultLayers(layerGroup: LayerGroup) {
   const layerDefs: LayerDefinition[] = [];
   maps.forEach((mapGroup) => {
-    mapGroup[layerType].forEach((mapSource) => {
+    mapGroup[layerGroup].forEach((mapSource) => {
       layerDefs.push({
-        id: `${mapGroup.name}-${mapSource.name}`,
-        group: mapGroup.name,
+        id: `${layerGroup}-${mapSource.name}`,
         attribution: mapGroup.link,
-        title: mapSource.name,
+        title: `${mapGroup.name} - ${mapSource.name}`,
         url: mapSource.endpoint,
+        exclusive: layerGroup === "baseMaps",
       });
     });
   });
   return layerDefs;
 }
 
-export function getConfigLayers(key: LayerType) {
+export function getConfigLayers(layerGroup: LayerGroup) {
   const layers = Config.instance.layers;
-  return ((layers && layers[key]) || []).map(({ id, ...rest }) => ({
+  return ((layers && layers[layerGroup]) || []).map(({ id, ...rest }) => ({
     ...rest,
-    id: `${key}-${id}`,
-    group: key,
+    id: `${layerGroup}-${id}`,
   }));
 }
 

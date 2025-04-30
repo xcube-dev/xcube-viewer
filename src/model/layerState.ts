@@ -6,9 +6,11 @@
 
 export interface LayerState {
   id: string;
+  type?: string;
   title: string;
   subTitle?: string;
   disabled?: boolean;
   visible?: boolean;
   pinned?: boolean;
+  exclusive?: boolean;
 }

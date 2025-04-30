@@ -40,8 +40,8 @@ interface AuthClient {
 }
 
 interface Layers {
-  overlays?: Omit<LayerDefinition, "group">[];
-  baseMaps?: Omit<LayerDefinition, "group">[];
+  overlays?: LayerDefinition[];
+  baseMaps?: LayerDefinition[];
 }
 
 export class Config {
@@ -238,11 +238,6 @@ export class Config {
   }
 }
 
-interface TileAccess {
-  param: string;
-  token: string;
-}
-
 // Array of user place colors in stable order (see #153)
 export const userPlaceColorsArray: [string, Color][] = [
   ["red", red],
@@ -293,19 +288,6 @@ export function getUserPlaceFillOpacity(opacity?: number): number {
     opacity = Config.instance.branding.polygonFillOpacity;
   }
   return isNumber(opacity) ? opacity : 0.25;
-}
-
-// See resources/maps.json
-const tileAccess: { [name: string]: TileAccess } = {
-  Mapbox: {
-    param: "access_token",
-    token:
-      "pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg",
-  },
-};
-
-export function getTileAccess(groupName: string) {
-  return tileAccess[groupName];
 }
 
 function decodeBrandingFlag(

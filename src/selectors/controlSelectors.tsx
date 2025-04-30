@@ -21,7 +21,7 @@ import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
 import { transformExtent as olTransformExtent } from "ol/proj";
 
-import { Config, getTileAccess, getUserPlaceFillOpacity } from "@/config";
+import { Config, getUserPlaceFillOpacity } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
 import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
@@ -62,6 +62,7 @@ import {
 } from "./dataSelectors";
 import { makeRequestUrl } from "@/api/callApi";
 import {
+  LayerStates,
   LayerVisibilities,
   MAP_OBJECTS,
   ViewMode,
@@ -83,11 +84,13 @@ import {
   defaultOverlayLayers,
   getConfigLayers,
   LayerDefinition,
+  LayerGroup,
 } from "@/model/layerDefinition";
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { StatisticsRecord } from "@/model/statistics";
 import { Geometry } from "geojson";
+import { LayerState } from "@/model/layerState";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
   state.controlState.selectedDatasetId;
@@ -116,19 +119,19 @@ export const userBaseMapsSelector = (state: AppState) =>
 export const userOverlaysSelector = (state: AppState) =>
   state.controlState.userOverlays;
 export const showDatasetBoundaryLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetBoundary;
+  state.controlState.layerVisibilities.datasetBoundary;
 export const selectedVariableVisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetVariable;
+  state.controlState.layerVisibilities.datasetVariable;
 export const selectedVariable2VisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetVariable2;
+  state.controlState.layerVisibilities.datasetVariable2;
 export const datasetRgbVisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetRgb;
+  state.controlState.layerVisibilities.datasetRgb;
 export const datasetRgb2VisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetRgb2;
+  state.controlState.layerVisibilities.datasetRgb2;
 export const showDatasetPlacesLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetPlaces;
+  state.controlState.layerVisibilities.datasetPlaces;
 export const showUserPlacesLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.userPlaces;
+  state.controlState.layerVisibilities.userPlaces;
 export const layerVisibilitiesSelector = (state: AppState) =>
   state.controlState.layerVisibilities;
 export const infoCardElementStatesSelector = (state: AppState) =>
@@ -1271,7 +1274,10 @@ export const baseMapsSelector = createSelector(
   userBaseMapsSelector,
   configBaseMapsSelector,
   (userBaseMaps, configBaseMaps): LayerDefinition[] => {
-    return [...userBaseMaps, ...configBaseMaps, ...defaultBaseMapLayers];
+    return [
+      ...userBaseMaps,
+      ...(configBaseMaps.length ? configBaseMaps : defaultBaseMapLayers),
+    ];
   },
 );
 
@@ -1279,7 +1285,10 @@ export const overlaysSelector = createSelector(
   userOverlaysSelector,
   configOverlaysSelector,
   (userOverlays, configOverlays): LayerDefinition[] => {
-    return [...userOverlays, ...configOverlays, ...defaultOverlayLayers];
+    return [
+      ...userOverlays,
+      ...(configOverlays.length ? configOverlays : defaultOverlayLayers),
+    ];
   },
 );
 
@@ -1298,11 +1307,12 @@ const getLayerFromLayerDefinition = (
   zIndex: number,
 ): JSX.Element => {
   let attributions = layerDef.attribution;
+  // noinspection HttpUrlsUsage
   if (
     attributions &&
     (attributions.startsWith("http://") || attributions.startsWith("https://"))
   ) {
-    attributions = `&copy; <a href=&quot;${layerDef.attribution}&quot;>${layerDef.group}</a>`;
+    attributions = `&copy; <a href=&quot;${layerDef.attribution}&quot;>${layerDef.title}</a>`;
   }
   let source: OlTileWMSSource | OlXYZSource;
   if (layerDef.wms) {
@@ -1317,9 +1327,8 @@ const getLayerFromLayerDefinition = (
       attributionsCollapsible: true,
     });
   } else {
-    const access = getTileAccess(layerDef.group);
     source = new OlXYZSource({
-      url: layerDef.url + (access ? `?${access.param}=${access.token}` : ""),
+      url: layerDef.url,
       attributions,
       attributionsCollapsible: true,
     });
@@ -1358,7 +1367,7 @@ export const layerStatesSelector = createSelector(
     overlayLayers,
     visibilities,
   ) => {
-    return {
+    const layerStates: LayerStates = {
       datasetRgb: {
         id: "datasetRgb",
         title: "Dataset RGB",
@@ -1412,16 +1421,35 @@ export const layerStatesSelector = createSelector(
         title: "User Places",
         visible: visibilities.userPlaces,
       },
-      baseMaps: baseMapLayers.map((layer: LayerDefinition) => ({
-        id: layer.id,
-        title: layer.title,
-        visible: visibilities[layer.id],
-      })),
-      overlays: overlayLayers.map((layer: LayerDefinition) => ({
-        id: layer.id,
-        title: layer.title,
-        visible: visibilities[layer.id],
-      })),
     };
+    baseMapLayers.forEach((layerDef: LayerDefinition) => {
+      layerStates[layerDef.id] = newLayerStateFromLayerDef(
+        layerDef,
+        "baseMaps",
+        visibilities[layerDef.id],
+      );
+    });
+    overlayLayers.forEach((layerDef: LayerDefinition) => {
+      layerStates[layerDef.id] = newLayerStateFromLayerDef(
+        layerDef,
+        "overlays",
+        visibilities[layerDef.id],
+      );
+    });
+    return layerStates;
   },
 );
+
+function newLayerStateFromLayerDef(
+  layer: LayerDefinition,
+  type: LayerGroup,
+  visible: boolean | undefined,
+): LayerState {
+  return {
+    id: layer.id,
+    title: layer.title,
+    exclusive: layer.exclusive,
+    type,
+    visible,
+  };
+}

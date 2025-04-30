@@ -11,7 +11,7 @@ import _LayerControlPanel from "@/components/LayerControlPanel";
 import {
   openDialog,
   setLayerMenuOpen,
-  setLayerVisibility,
+  setLayerVisibilities,
 } from "@/actions/controlActions";
 import { layerStatesSelector } from "@/selectors/controlSelectors";
 
@@ -27,7 +27,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   openDialog,
   setLayerMenuOpen,
-  setLayerVisibility,
+  setLayerVisibilities,
 };
 
 const LayerControlPanel = connect(

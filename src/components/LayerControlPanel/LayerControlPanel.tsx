@@ -4,7 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, SyntheticEvent, useState } from "react";
+import {
+  CSSProperties,
+  SyntheticEvent,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import Draggable, {
   ControlPosition,
   DraggableData,
@@ -24,8 +30,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
-import { LayerStates } from "@/states/controlState";
+import { LayerStates, LayerVisibilities } from "@/states/controlState";
 import LayerItem from "./LayerItem";
+import { LayerGroup } from "@/model/layerDefinition";
+import { LayerState } from "@/model/layerState";
 
 const initialPos: ControlPosition = { x: 48, y: 128 };
 const initialSize = { width: 320, height: 520 };
@@ -57,7 +65,7 @@ interface LayerControlPanelProps extends WithLocale {
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
   layerStates: LayerStates;
-  setLayerVisibility: (layerId: string, visible: boolean) => void;
+  setLayerVisibilities: (layerVisibilities: LayerVisibilities) => void;
 }
 
 export default function LayerControlPanel(props: LayerControlPanelProps) {
@@ -69,8 +77,43 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
     layerMenuOpen,
     setLayerMenuOpen,
     openDialog,
+    setLayerVisibilities,
     ...layerProps
   } = props;
+
+  const setLayerVisibility = useCallback(
+    (layerId: string, visible: boolean) => {
+      const layerVisibilities: LayerVisibilities = { [layerId]: visible };
+      if (visible) {
+        const layer = layerStates[layerId];
+        if (layer && layer.type && layer.exclusive) {
+          Object.keys(layerStates).forEach((otherLayerId) => {
+            const otherLayer = layerStates[otherLayerId];
+            if (
+              otherLayer &&
+              otherLayer.type === layer.type &&
+              otherLayer.exclusive &&
+              otherLayer.visible
+            ) {
+              layerVisibilities[otherLayerId] = false;
+            }
+          });
+        }
+      }
+      setLayerVisibilities(layerVisibilities);
+    },
+    [layerStates, setLayerVisibilities],
+  );
+
+  const overlays = useMemo(
+    () => filterLayerStates(layerStates, "overlays"),
+    [layerStates],
+  );
+
+  const baseMaps = useMemo(
+    () => filterLayerStates(layerStates, "baseMaps"),
+    [layerStates],
+  );
 
   if (!layerMenuOpen) {
     return null;
@@ -121,38 +164,56 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
           </Box>
           <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
             <MenuList dense>
-              {layerStates.overlays.map((layerState) => (
+              {overlays.map((layerState) => (
                 <LayerItem
                   key={layerState.id}
                   layerState={layerState}
+                  setLayerVisibility={setLayerVisibility}
                   {...layerProps}
                 />
               ))}
-              {layerStates.overlays.length && <Divider />}
-              <LayerItem layerState={layerStates.userPlaces} {...layerProps} />
+              {overlays.length && <Divider />}
+              <LayerItem
+                layerState={layerStates.userPlaces}
+                setLayerVisibility={setLayerVisibility}
+                {...layerProps}
+              />
               <LayerItem
                 layerState={layerStates.datasetPlaces}
+                setLayerVisibility={setLayerVisibility}
                 {...layerProps}
               />
               <LayerItem
                 layerState={layerStates.datasetBoundary}
+                setLayerVisibility={setLayerVisibility}
                 {...layerProps}
               />
               <LayerItem
                 layerState={layerStates.datasetVariable}
+                setLayerVisibility={setLayerVisibility}
                 {...layerProps}
               />
               <LayerItem
                 layerState={layerStates.datasetVariable2}
+                setLayerVisibility={setLayerVisibility}
                 {...layerProps}
               />
-              <LayerItem layerState={layerStates.datasetRgb} {...layerProps} />
-              <LayerItem layerState={layerStates.datasetRgb2} {...layerProps} />
-              {layerStates.baseMaps.length && <Divider />}
-              {layerStates.baseMaps.map((layerState) => (
+              <LayerItem
+                layerState={layerStates.datasetRgb}
+                setLayerVisibility={setLayerVisibility}
+                {...layerProps}
+              />
+              <LayerItem
+                layerState={layerStates.datasetRgb2}
+                setLayerVisibility={setLayerVisibility}
+                {...layerProps}
+              />
+              {baseMaps.length && <Divider />}
+              {baseMaps.map((layerState) => (
                 <LayerItem
                   key={layerState.id}
                   layerState={layerState}
+                  setLayerVisibility={setLayerVisibility}
                   {...layerProps}
                 />
               ))}
@@ -169,4 +230,14 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
       </ResizableBox>
     </Draggable>
   );
+}
+
+function filterLayerStates(
+  layerStates: LayerStates,
+  layerType: LayerGroup,
+): LayerState[] {
+  return Object.keys(layerStates)
+    .filter((k) => layerStates[k].type === layerType)
+    .map((k) => layerStates[k])
+    .sort((s1, s2) => s1.title.localeCompare(s2.title));
 }

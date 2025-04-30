@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
 import i18n from "@/i18n";
-import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
+import { LayerDefinition } from "@/model/layerDefinition";
 import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms";
 import DoneCancel from "@/components/DoneCancel";
 
@@ -56,7 +56,6 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
     if (wmsLayers && wmsLayerIndex !== -1) {
       onChange({
         ...userLayer,
-        group: USER_GROUP_NAME,
         title: wmsLayers[wmsLayerIndex].title,
         url: wmsUrl.trim(),
         attribution: wmsLayers[wmsLayerIndex].attribution,

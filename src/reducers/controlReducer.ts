@@ -24,7 +24,7 @@ import {
   SELECT_VARIABLE,
   SELECT_VARIABLE_2,
   SET_LAYER_MENU_OPEN,
-  SET_LAYER_VISIBILITY,
+  SET_LAYER_VISIBILITIES,
   SET_MAP_INTERACTION,
   SET_MAP_POINT_INFO_BOX_ENABLED,
   SET_SIDE_PANEL_ID,
@@ -206,12 +206,12 @@ export function controlReducer(
         selectedVariableName: action.selectedVariableName,
       };
     }
-    case SET_LAYER_VISIBILITY: {
+    case SET_LAYER_VISIBILITIES: {
       return {
         ...state,
         layerVisibilities: {
           ...state.layerVisibilities,
-          [action.layerId]: action.visible,
+          ...action.layerVisibilities,
         },
       };
     }

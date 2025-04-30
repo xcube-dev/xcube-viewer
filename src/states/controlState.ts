@@ -57,29 +57,8 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
-export interface LayerStates {
-  datasetRgb: LayerState;
-  datasetRgb2: LayerState;
-  datasetVariable: LayerState;
-  datasetVariable2: LayerState;
-  datasetBoundary: LayerState;
-  datasetPlaces: LayerState;
-  userPlaces: LayerState;
-  overlays: LayerState[];
-  baseMaps: LayerState[];
-}
-
-export type LayerVisibilities = {
-  datasetRgb?: boolean;
-  datasetRgb2?: boolean;
-  datasetVariable?: boolean;
-  datasetVariable2?: boolean;
-  datasetBoundary?: boolean;
-  datasetPlaces?: boolean;
-  userPlaces?: boolean;
-} & {
-  [key: string]: boolean;
-};
+export type LayerStates = Record<string, LayerState>;
+export type LayerVisibilities = Record<string, boolean>;
 
 // TODO: check if really unused
 // noinspection JSUnusedGlobalSymbols
@@ -144,10 +123,6 @@ export interface ControlState {
   variableCompareMode: boolean;
   variableSplitPos?: number;
   mapPointInfoBoxEnabled: boolean;
-  // TODO: #526 remove selectedBaseMapId
-  selectedBaseMapId: string | null;
-  // TODO: #526 remove selectedOverlayId
-  selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
   userOverlays: LayerDefinition[];
   userColorBars: UserColorBar[];
@@ -225,10 +200,6 @@ export function newControlState(): ControlState {
     },
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
-    // TODO: #526 remove selectedBaseMapId
-    selectedBaseMapId: defaultBaseMapId,
-    // TODO: #526 remove selectedOverlayId
-    selectedOverlayId: null,
     userBaseMaps: [],
     userOverlays: [],
     userColorBars: [],
