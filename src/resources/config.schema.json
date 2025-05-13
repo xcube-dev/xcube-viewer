@@ -125,11 +125,23 @@
         "headerBackgroundColor": { "type": "string", "examples": ["#fafafa"] },
         "logoImage": { "type": "string", "examples": ["images/logo.png"] },
         "logoWidth": { "type": "integer", "examples": [32], "minimum": 0 },
-        "baseMapUrl": {
-          "type": "string",
-          "format": "uri-template",
+        "layerVisibilities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          },
           "examples": [
-            "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            {
+              "datasetRgb": false,
+              "datasetRgb2": false,
+              "datasetVariable": true,
+              "datasetVariable2": true,
+              "datasetBoundary": false,
+              "datasetPlaces": true,
+              "userPlaces": true,
+              "baseMaps.CartoDB.Dark Matter (No Labels)": true,
+              "overlays.CartoDB.Dark Matter Labels": true
+            }
           ]
         },
         "defaultAgg": {

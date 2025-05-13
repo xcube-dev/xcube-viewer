@@ -31,6 +31,7 @@ import { PaletteColorOptions } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
 import baseUrl from "./baseurl";
 import { buildPath } from "./path";
+import { LayerVisibilities } from "@/states/controlState";
 
 const COLOR_NAMES: { [name: string]: ColorPartial } = {
   amber,
@@ -71,7 +72,7 @@ export interface Branding {
   organisationUrl?: string;
   logoImage: string;
   logoWidth: number;
-  baseMapUrl?: string;
+  layerVisibilities?: LayerVisibilities;
   defaultAgg?: "median" | "mean";
   polygonFillOpacity?: number;
   mapProjection?: string;

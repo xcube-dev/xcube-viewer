@@ -9,24 +9,28 @@ import { Config } from "@/config";
 
 export type LayerGroup = "overlays" | "baseMaps";
 
+/** Definition of system or custom layer. */
 export interface LayerDefinition {
+  /** Layer identifier. */
   id: string;
+  /** Layer display name. */
   title: string;
+  /** Layer URL, should have tile server (XYZ) or WMS style. */
   url: string;
-  attribution?: string;
+  /** For WMS layers only: layer and style names . */
   wms?: { layerName: string; styleName?: string };
-  /**
-   * Whether the layer can only be exclusively selected in its group.
-   */
+  /** Layer attribution text or URL. */
+  attribution?: string;
+  /** Whether the layer can only be exclusively selected in its group. */
   exclusive?: boolean;
 }
 
-function getDefaultLayers(layerGroup: LayerGroup) {
+function getDefaultLayers(layerGroup: LayerGroup): LayerDefinition[] {
   const layerDefs: LayerDefinition[] = [];
   maps.forEach((mapGroup) => {
     mapGroup[layerGroup].forEach((mapSource) => {
       layerDefs.push({
-        id: `${layerGroup}-${mapSource.name}`,
+        id: `${layerGroup}.${mapGroup.name}.${mapSource.name}`,
         attribution: mapGroup.link,
         title: `${mapGroup.name} - ${mapSource.name}`,
         url: mapSource.endpoint,
@@ -37,11 +41,11 @@ function getDefaultLayers(layerGroup: LayerGroup) {
   return layerDefs;
 }
 
-export function getConfigLayers(layerGroup: LayerGroup) {
+export function getConfigLayers(layerGroup: LayerGroup): LayerDefinition[] {
   const layers = Config.instance.layers;
   return ((layers && layers[layerGroup]) || []).map(({ id, ...rest }) => ({
     ...rest,
-    id: `${layerGroup}-${id}`,
+    id: `${layerGroup}.${id}`,
   }));
 }
 

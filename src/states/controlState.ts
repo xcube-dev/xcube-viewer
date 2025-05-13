@@ -60,14 +60,6 @@ export interface UserPlacesFormatOptions {
 export type LayerStates = Record<string, LayerState>;
 export type LayerVisibilities = Record<string, boolean>;
 
-// TODO: check if really unused
-// noinspection JSUnusedGlobalSymbols
-export interface ExportSettings {
-  format: "GeoJSON" | "CSV";
-  multiFile: boolean;
-  zipArchive: boolean;
-}
-
 export type ThemeMode = PaletteMode | "system";
 export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
 export const THEME_LABELS: [ThemeMode, string][] = [
@@ -180,8 +172,8 @@ export function newControlState(): ControlState {
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
-      // TODO: #526 set configured initial base map!
       [defaultBaseMapId]: true,
+      ...branding.layerVisibilities,
     },
     variableCompareMode: false,
     mapPointInfoBoxEnabled: false,

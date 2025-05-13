@@ -4,8 +4,37 @@
 
 * Improved management and selection of overlay and base map layers
   in various ways: 
-  * The selectable base map and overlay layers are now configurable. If no 
-    base maps and overlays are configured, a default set is used. (#456)
+  * The selectable base map and overlay layers are now configurable using
+    the new branding property `layers`:
+    ```typescript
+    export interface Branding {
+      // ...
+      layers: {
+        baseMaps?: LayerDefinition[];
+        overlays?: LayerDefinition[];
+      }
+    }
+    ```
+    Its two properties `baseMaps` and `overlays` are arrays of layer 
+    definitions: 
+    ```typescript
+    /** Definition of system or custom layer. */
+    export interface LayerDefinition {
+      /** Layer identifier. */
+      id: string;
+      /** Layer display name. */
+      title: string;
+      /** Layer URL, should have tile server (XYZ) or WMS style. */
+      url: string;
+      /** For WMS layers only: layer and style names . */
+      wms?: { layerName: string; styleName?: string };
+      /** Layer attribution text or URL. */
+      attribution?: string;
+      /** Whether the layer can only be exclusively selected in its group. */
+      exclusive?: boolean;
+    }
+    ```
+    If no base maps and overlays are configured, a default set is used. (#456)
   * Selectable overlays and base maps are now found in the layer manager 
     window. It is no longer possible to select a base map and overlay 
     from the settings window.
