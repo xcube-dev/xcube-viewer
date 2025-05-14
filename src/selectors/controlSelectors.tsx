@@ -1333,7 +1333,9 @@ const getLayerFromLayerDefinition = (
       attributionsCollapsible: true,
     });
   }
-  return <Tile id={layerDef.id} source={source} zIndex={zIndex} />;
+  return (
+    <Tile key={layerDef.id} id={layerDef.id} source={source} zIndex={zIndex} />
+  );
 };
 
 export const baseMapLayersSelector = createSelector(
