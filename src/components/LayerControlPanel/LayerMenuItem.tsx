@@ -13,11 +13,13 @@ import { LayerState } from "@/model/layerState";
 interface LayerMenuItemProps {
   layerState: LayerState;
   setLayerVisibility: (layerId: string, visible: boolean) => void;
+  disableI18n?: boolean;
 }
 
 export default function LayerMenuItem({
   layerState,
   setLayerVisibility,
+  disableI18n,
 }: LayerMenuItemProps) {
   if (layerState.disabled) {
     return null;
@@ -25,7 +27,7 @@ export default function LayerMenuItem({
   return (
     <>
       <SelectableMenuItem
-        title={i18n.get(layerState.title)}
+        title={disableI18n ? layerState.title : i18n.get(layerState.title)}
         subtitle={layerState.subTitle}
         selected={!!layerState.visible}
         secondaryIcon={

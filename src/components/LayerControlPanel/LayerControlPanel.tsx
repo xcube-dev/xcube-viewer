@@ -268,6 +268,7 @@ export default function LayerControlPanel({
                       {i18n.get("User Overlays") + "..."}
                     </MenuItem>
                   }
+                  disableI18n
                 />
               </AccordionDetails>
             </Accordion>
@@ -305,6 +306,7 @@ export default function LayerControlPanel({
                       {i18n.get("User Base Maps") + "..."}
                     </MenuItem>
                   }
+                  disableI18n
                 />
               </AccordionDetails>
             </Accordion>

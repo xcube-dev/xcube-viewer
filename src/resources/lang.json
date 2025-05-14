@@ -271,9 +271,24 @@
       "se": "Visa datauppsättningsgränser"
     },
     {
+      "en": "Overlays",
+      "de": "Overlays",
+      "se": "Överlagringar"
+    },
+    {
+      "en": "Predefined",
+      "de": "Vordefiniert",
+      "se": "Fördefinierad"
+    },
+    {
+      "en": "Base maps",
+      "de": "Basiskarten",
+      "se": "Baskartor"
+    },
+    {
       "en": "Base map",
       "de": "Basiskarte",
-      "se": "Grundkarta"
+      "se": "Baskarta"
     },
     {
       "en": "Hide small values",
@@ -892,8 +907,8 @@
     },
     {
       "en": "User Base Maps",
-      "de": "Nutzer Basiskarte",
-      "se": "Användare Grundkarta"
+      "de": "Nutzer Basiskarten",
+      "se": "Användare Baskartor"
     },
     {
       "en": "Overlay",
@@ -902,8 +917,8 @@
     },
     {
       "en": "User Overlays",
-      "de": "Nutzer Overlay",
-      "se": "Användare Overlay"
+      "de": "Nutzer Overlays",
+      "se": "Användare Överlagringar"
     },
     {
       "en": "On dataset selection",

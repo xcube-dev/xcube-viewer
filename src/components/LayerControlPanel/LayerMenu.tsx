@@ -15,14 +15,15 @@ import LayerMenuItem from "./LayerMenuItem";
 interface LayerMenuProps extends WithLocale {
   layerStates: LayerState[];
   setLayerVisibility: (layerId: string, visible: boolean) => void;
+  disableI18n?: boolean;
   extraItems?: ReactNode;
 }
 
 export default function LayerMenu({
   layerStates,
   setLayerVisibility,
+  disableI18n,
   extraItems,
-  ...layerProps
 }: LayerMenuProps) {
   return (
     <MenuList dense disablePadding>
@@ -31,7 +32,7 @@ export default function LayerMenu({
           key={layerState.id}
           layerState={layerState}
           setLayerVisibility={setLayerVisibility}
-          {...layerProps}
+          disableI18n={disableI18n}
         />
       ))}
       {layerStates.length && extraItems && <Divider style={{ margin: 0 }} />}
