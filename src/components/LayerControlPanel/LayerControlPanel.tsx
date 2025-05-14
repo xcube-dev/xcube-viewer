@@ -5,35 +5,46 @@
  */
 
 import {
-  CSSProperties,
-  SyntheticEvent,
+  type CSSProperties,
+  type SyntheticEvent,
   useCallback,
   useMemo,
   useState,
 } from "react";
 import Draggable, {
-  ControlPosition,
-  DraggableData,
-  DraggableEvent,
+  type ControlPosition,
+  type DraggableData,
+  type DraggableEvent,
 } from "react-draggable";
-import { ResizableBox, ResizeCallbackData } from "react-resizable";
+import { ResizableBox, type ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
-import { Theme } from "@mui/system";
+import { styled } from "@mui/material/styles";
+import type { Theme } from "@mui/system";
+import MuiAccordion, { type AccordionProps } from "@mui/material/Accordion";
+import MuiAccordionSummary, {
+  type AccordionSummaryProps,
+  accordionSummaryClasses,
+} from "@mui/material/AccordionSummary";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
-import { WithLocale } from "@/util/lang";
-import { LayerStates, LayerVisibilities } from "@/states/controlState";
-import LayerItem from "./LayerItem";
-import { LayerGroup } from "@/model/layerDefinition";
-import { LayerState } from "@/model/layerState";
+import type { WithLocale } from "@/util/lang";
+import {
+  LayerGroupStates,
+  LayerStates,
+  LayerVisibilities,
+} from "@/states/controlState";
+import type { LayerGroup } from "@/model/layerDefinition";
+import type { LayerState } from "@/model/layerState";
+import LayerMenu from "@/components/LayerControlPanel/LayerMenu";
 
 const initialPos: ControlPosition = { x: 48, y: 128 };
 const initialSize = { width: 320, height: 520 };
@@ -52,7 +63,6 @@ const styles = makeStyles({
     alignItems: "center",
     cursor: "move",
     padding: 1,
-    marginBottom: "2px",
     borderBottom: `1px solid ${theme.palette.mode === "dark" ? "#FFFFFF3F" : "#0000003F"}`,
   }),
   windowTitle: {
@@ -60,26 +70,70 @@ const styles = makeStyles({
   },
 });
 
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  "&:not(:last-child)": {
+    borderBottom: 0,
+  },
+  "&::before": {
+    display: "none",
+  },
+}));
+
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  backgroundColor: "rgba(0, 0, 0, .03)",
+  minHeight: 32,
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  flexDirection: "row-reverse",
+  [`& .${accordionSummaryClasses.expandIconWrapper}.${accordionSummaryClasses.expanded}`]:
+    {
+      transform: "rotate(90deg)",
+    },
+  [`& .${accordionSummaryClasses.content}`]: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(0),
+    marginRight: theme.spacing(0),
+  },
+  ...theme.applyStyles("dark", {
+    backgroundColor: "rgba(255, 255, 255, .05)",
+  }),
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme: _ }) => ({
+  padding: 0,
+  borderTop: "1px solid rgba(0, 0, 0, .125)",
+}));
+
 interface LayerControlPanelProps extends WithLocale {
   layerMenuOpen: boolean;
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
   layerStates: LayerStates;
   setLayerVisibilities: (layerVisibilities: LayerVisibilities) => void;
+  layerGroupStates: LayerGroupStates;
+  setLayerGroupStates: (layerGroupStates: Partial<LayerGroupStates>) => void;
 }
 
-export default function LayerControlPanel(props: LayerControlPanelProps) {
+export default function LayerControlPanel({
+  layerStates,
+  layerMenuOpen,
+  setLayerMenuOpen,
+  openDialog,
+  setLayerVisibilities,
+  layerGroupStates,
+  setLayerGroupStates,
+}: LayerControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
   const [size, setSize] = useState(initialSize);
-
-  const {
-    layerStates,
-    layerMenuOpen,
-    setLayerMenuOpen,
-    openDialog,
-    setLayerVisibilities,
-    ...layerProps
-  } = props;
 
   const setLayerVisibility = useCallback(
     (layerId: string, visible: boolean) => {
@@ -105,6 +159,27 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
     [layerStates, setLayerVisibilities],
   );
 
+  const handleOverlaysStateChange = useCallback(
+    (_event: SyntheticEvent, newExpanded: boolean) => {
+      setLayerGroupStates({ overlays: newExpanded });
+    },
+    [setLayerGroupStates],
+  );
+
+  const handleBaseMapsStateChange = useCallback(
+    (_event: SyntheticEvent, newExpanded: boolean) => {
+      setLayerGroupStates({ baseMaps: newExpanded });
+    },
+    [setLayerGroupStates],
+  );
+
+  const handlePredefinedStateChange = useCallback(
+    (_event: SyntheticEvent, newExpanded: boolean) => {
+      setLayerGroupStates({ predefined: newExpanded });
+    },
+    [setLayerGroupStates],
+  );
+
   const overlays = useMemo(
     () => filterLayerStates(layerStates, "overlays"),
     [layerStates],
@@ -112,6 +187,20 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
 
   const baseMaps = useMemo(
     () => filterLayerStates(layerStates, "baseMaps"),
+    [layerStates],
+  );
+
+  const predefined = useMemo(
+    () =>
+      [
+        layerStates.userPlaces,
+        layerStates.datasetPlaces,
+        layerStates.datasetBoundary,
+        layerStates.datasetVariable,
+        layerStates.datasetVariable2,
+        layerStates.datasetRgb,
+        layerStates.datasetRgb2,
+      ].filter((layerState) => !!layerState),
     [layerStates],
   );
 
@@ -163,68 +252,62 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
             </IconButton>
           </Box>
           <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
-            <MenuList dense>
-              {overlays.map((layerState) => (
-                <LayerItem
-                  key={layerState.id}
-                  layerState={layerState}
+            <Accordion
+              expanded={layerGroupStates.overlays}
+              onChange={handleOverlaysStateChange}
+            >
+              <AccordionSummary id="overlays">
+                <Typography component="span">{i18n.get("Overlays")}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <LayerMenu
+                  layerStates={overlays}
                   setLayerVisibility={setLayerVisibility}
-                  {...layerProps}
+                  extraItems={
+                    <MenuItem onClick={handleUserOverlays}>
+                      {i18n.get("User Overlays") + "..."}
+                    </MenuItem>
+                  }
                 />
-              ))}
-              {overlays.length && <Divider />}
-              <LayerItem
-                layerState={layerStates.userPlaces}
-                setLayerVisibility={setLayerVisibility}
-                {...layerProps}
-              />
-              <LayerItem
-                layerState={layerStates.datasetPlaces}
-                setLayerVisibility={setLayerVisibility}
-                {...layerProps}
-              />
-              <LayerItem
-                layerState={layerStates.datasetBoundary}
-                setLayerVisibility={setLayerVisibility}
-                {...layerProps}
-              />
-              <LayerItem
-                layerState={layerStates.datasetVariable}
-                setLayerVisibility={setLayerVisibility}
-                {...layerProps}
-              />
-              <LayerItem
-                layerState={layerStates.datasetVariable2}
-                setLayerVisibility={setLayerVisibility}
-                {...layerProps}
-              />
-              <LayerItem
-                layerState={layerStates.datasetRgb}
-                setLayerVisibility={setLayerVisibility}
-                {...layerProps}
-              />
-              <LayerItem
-                layerState={layerStates.datasetRgb2}
-                setLayerVisibility={setLayerVisibility}
-                {...layerProps}
-              />
-              {baseMaps.length && <Divider />}
-              {baseMaps.map((layerState) => (
-                <LayerItem
-                  key={layerState.id}
-                  layerState={layerState}
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={layerGroupStates.predefined}
+              onChange={handlePredefinedStateChange}
+            >
+              <AccordionSummary id="predefines">
+                <Typography component="span">
+                  {i18n.get("Predefined")}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <LayerMenu
+                  layerStates={predefined}
                   setLayerVisibility={setLayerVisibility}
-                  {...layerProps}
                 />
-              ))}
-              <Divider />
-              <MenuItem onClick={handleUserBaseMaps}>
-                {i18n.get("User Base Maps") + "..."}
-              </MenuItem>
-              <MenuItem onClick={handleUserOverlays}>
-                {i18n.get("User Overlays") + "..."}
-              </MenuItem>
-            </MenuList>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={layerGroupStates.baseMaps}
+              onChange={handleBaseMapsStateChange}
+            >
+              <AccordionSummary id="baseMaps">
+                <Typography component="span">
+                  {i18n.get("Base maps")}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <LayerMenu
+                  layerStates={baseMaps}
+                  setLayerVisibility={setLayerVisibility}
+                  extraItems={
+                    <MenuItem onClick={handleUserBaseMaps}>
+                      {i18n.get("User Base Maps") + "..."}
+                    </MenuItem>
+                  }
+                />
+              </AccordionDetails>
+            </Accordion>
           </Box>
         </Paper>
       </ResizableBox>

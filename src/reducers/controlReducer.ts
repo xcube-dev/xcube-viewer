@@ -40,6 +40,7 @@ import {
   UPDATE_TIME_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
+  SET_LAYER_GROUP_STATES,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -212,6 +213,15 @@ export function controlReducer(
         layerVisibilities: {
           ...state.layerVisibilities,
           ...action.layerVisibilities,
+        },
+      };
+    }
+    case SET_LAYER_GROUP_STATES: {
+      return {
+        ...state,
+        layerGroupStates: {
+          ...state.layerGroupStates,
+          ...action.layerGroupStates,
         },
       };
     }

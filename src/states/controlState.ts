@@ -60,6 +60,12 @@ export interface UserPlacesFormatOptions {
 export type LayerStates = Record<string, LayerState>;
 export type LayerVisibilities = Record<string, boolean>;
 
+export type LayerGroupStates = {
+  overlays?: boolean;
+  predefined?: boolean;
+  baseMaps?: boolean;
+};
+
 export type ThemeMode = PaletteMode | "system";
 export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
 export const THEME_LABELS: [ThemeMode, string][] = [
@@ -103,6 +109,8 @@ export interface ControlState {
   mapInteraction: MapInteraction;
   lastMapInteraction: MapInteraction;
   layerMenuOpen: boolean;
+  layerVisibilities: LayerVisibilities;
+  layerGroupStates: LayerGroupStates;
   sidePanelOpen: boolean;
   sidePanelSize: number;
   sidePanelId: string | null;
@@ -111,7 +119,6 @@ export interface ControlState {
   infoCardElementStates: InfoCardElementStates;
   mapProjection: string;
   imageSmoothingEnabled: boolean;
-  layerVisibilities: LayerVisibilities;
   variableCompareMode: boolean;
   variableSplitPos?: number;
   mapPointInfoBoxEnabled: boolean;
@@ -164,6 +171,7 @@ export function newControlState(): ControlState {
     privacyNoticeAccepted: false,
     mapInteraction: "Select",
     lastMapInteraction: "Select",
+    layerMenuOpen: false,
     layerVisibilities: {
       datasetRgb: false,
       datasetRgb2: false,
@@ -175,11 +183,15 @@ export function newControlState(): ControlState {
       [defaultBaseMapId]: true,
       ...branding.layerVisibilities,
     },
+    layerGroupStates: {
+      overlays: false,
+      predefined: true,
+      baseMaps: false,
+    },
     variableCompareMode: false,
     mapPointInfoBoxEnabled: false,
     datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
-    layerMenuOpen: false,
     sidePanelOpen: false,
     sidePanelId: "details",
     sidePanelSize: Math.max(window.innerWidth, window.innerHeight) / 3,

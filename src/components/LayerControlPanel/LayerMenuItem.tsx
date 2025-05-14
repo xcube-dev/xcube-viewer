@@ -4,22 +4,21 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import Divider from "@mui/material/Divider";
 import PushPinIcon from "@mui/icons-material/PushPin";
 
 import i18n from "@/i18n";
 import SelectableMenuItem from "@/components/SelectableMenuItem";
 import { LayerState } from "@/model/layerState";
 
-interface LayerItemProps {
+interface LayerMenuItemProps {
   layerState: LayerState;
   setLayerVisibility: (layerId: string, visible: boolean) => void;
 }
 
-export default function LayerItem({
+export default function LayerMenuItem({
   layerState,
   setLayerVisibility,
-}: LayerItemProps) {
+}: LayerMenuItemProps) {
   if (layerState.disabled) {
     return null;
   }
@@ -33,11 +32,7 @@ export default function LayerItem({
           layerState.pinned && <PushPinIcon fontSize="small" color="disabled" />
         }
         onClick={() => setLayerVisibility(layerState.id, !layerState.visible)}
-      />
-      <Divider
-        variant="inset"
-        component="li"
-        style={{ margin: "0 0 0 52px" }}
+        dense
       />
     </>
   );

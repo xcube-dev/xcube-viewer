@@ -4,10 +4,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { Action, Dispatch } from "redux";
-import { Extent as OlExtent } from "ol/extent";
+import type { Action, Dispatch } from "redux";
+import type { Extent as OlExtent } from "ol/extent";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
-import { Geometry as OlGeometry } from "ol/geom";
+import type { Geometry as OlGeometry } from "ol/geom";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
@@ -15,10 +15,10 @@ import { Dataset, findDataset } from "@/model/dataset";
 import {
   findPlaceInPlaceGroups,
   isValidPlaceGroup,
-  Place,
-  PlaceGroup,
+  type Place,
+  type PlaceGroup,
 } from "@/model/place";
-import { Time, TimeRange } from "@/model/timeSeries";
+import type { Time, TimeRange } from "@/model/timeSeries";
 import { renderUserColorBarAsBase64, UserColorBar } from "@/model/userColorBar";
 import {
   selectedDatasetIdSelector,
@@ -29,10 +29,11 @@ import {
   selectedServerSelector,
 } from "@/selectors/controlSelectors";
 import { datasetsSelector } from "@/selectors/dataSelectors";
-import { AppState } from "@/states/appState";
-import {
+import type { AppState } from "@/states/appState";
+import type {
   ControlState,
   LayerVisibilities,
+  LayerGroupStates,
   MapInteraction,
   TimeAnimationInterval,
   ViewMode,
@@ -45,7 +46,7 @@ import {
   updateDatasetPlaceGroup,
   UpdateDatasetPlaceGroup,
 } from "./dataActions";
-import { MessageLogAction, postMessage } from "./messageLogActions";
+import { type MessageLogAction, postMessage } from "./messageLogActions";
 import { locateInMap } from "./mapActions";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -294,6 +295,21 @@ export function setLayerVisibilities(
   layerVisibilities: LayerVisibilities,
 ): SetLayerVisibilities {
   return { type: SET_LAYER_VISIBILITIES, layerVisibilities };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_LAYER_GROUP_STATES = "SET_LAYER_GROUP_STATES";
+
+export interface SetLayerGroupStates {
+  type: typeof SET_LAYER_GROUP_STATES;
+  layerGroupStates: Partial<LayerGroupStates>;
+}
+
+export function setLayerGroupStates(
+  layerGroupStates: Partial<LayerGroupStates>,
+): SetLayerGroupStates {
+  return { type: SET_LAYER_GROUP_STATES, layerGroupStates };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -802,6 +818,7 @@ export type ControlAction =
   | SelectPlace
   | SelectTime
   | SetLayerVisibilities
+  | SetLayerGroupStates
   | IncSelectedTime
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode
