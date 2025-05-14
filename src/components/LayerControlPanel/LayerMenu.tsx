@@ -25,7 +25,7 @@ export default function LayerMenu({
   ...layerProps
 }: LayerMenuProps) {
   return (
-    <MenuList dense>
+    <MenuList dense disablePadding>
       {layerStates.map((layerState) => (
         <LayerMenuItem
           key={layerState.id}
