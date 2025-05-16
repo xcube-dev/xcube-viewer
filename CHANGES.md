@@ -41,6 +41,10 @@
   * It is now possible to select multiple overlays.
   * Current layer visibilities are now persisted in permalinks and in
     the browser's storage.
+  * Added a toggle button named "RGB" next to the dataset selector.
+    The button is available only if a dataset is selected that has RGB
+    configured. It toggles between RGB layer on / variable layer off and
+    RGB layer off / variable layer on.
 
 * Now using an entrypoint dataset that is initially shown 
   if none has been previously selected.

@@ -284,6 +284,19 @@ function _selectPlace(placeId: string | null, places: Place[]): SelectPlace {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const TOGGLE_DATASET_RGB_LAYER = "TOGGLE_DATASET_RGB_LAYER";
+
+export interface ToggleDatasetRgbLayer {
+  type: typeof TOGGLE_DATASET_RGB_LAYER;
+  visible: boolean;
+}
+
+export function toggleDatasetRgbLayer(visible: boolean): ToggleDatasetRgbLayer {
+  return { type: TOGGLE_DATASET_RGB_LAYER, visible };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SET_LAYER_VISIBILITIES = "SET_LAYER_VISIBILITIES";
 
 export interface SetLayerVisibilities {
@@ -817,6 +830,7 @@ export type ControlAction =
   | SelectPlaceGroups
   | SelectPlace
   | SelectTime
+  | ToggleDatasetRgbLayer
   | SetLayerVisibilities
   | SetLayerGroupStates
   | IncSelectedTime

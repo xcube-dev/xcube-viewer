@@ -10,19 +10,23 @@ import _DatasetSelect from "@/components/DatasetSelect";
 import { AppState } from "@/states/appState";
 import {
   selectDataset,
+  toggleDatasetRgbLayer,
   locateSelectedDatasetInMap,
 } from "@/actions/controlActions";
+import { selectedDatasetSelector } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
-    selectedDatasetId: state.controlState.selectedDatasetId,
+    selectedDataset: selectedDatasetSelector(state),
     datasets: state.dataState.datasets,
+    layerVisibilities: state.controlState.layerVisibilities,
   };
 };
 
 const mapDispatchToProps = {
   selectDataset,
+  toggleDatasetRgbLayer,
   locateSelectedDataset: locateSelectedDatasetInMap,
 };
 
