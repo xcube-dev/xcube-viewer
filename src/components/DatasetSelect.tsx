@@ -10,16 +10,17 @@ import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 import i18n from "@/i18n";
-import { Dataset } from "@/model/dataset";
+import type { Dataset } from "@/model/dataset";
 import { WithLocale } from "@/util/lang";
+import type { LayerVisibilities } from "@/states/controlState";
 import ToolButton from "@/components/ToolButton";
-import ControlBarItem from "./ControlBarItem";
-import { LayerVisibilities } from "@/states/controlState";
 import { commonStyles } from "@/components/common-styles";
+import ControlBarItem from "./ControlBarItem";
 
 interface DatasetSelectProps extends WithLocale {
   selectedDataset: Dataset | null;
@@ -44,6 +45,13 @@ export default function DatasetSelect({
 }: DatasetSelectProps) {
   const sortedDatasets = useMemo(() => {
     return datasets.sort((dataset1: Dataset, dataset2: Dataset) => {
+      const groupOrder1 = dataset1.groupOrder ?? Infinity;
+      const groupOrder2 = dataset2.groupOrder ?? Infinity;
+
+      if (groupOrder1 !== groupOrder2) {
+        return groupOrder1 - groupOrder2;
+      }
+
       const groupTitle1 = dataset1.groupTitle || "zzz";
       const groupTitle2 = dataset2.groupTitle || "zzz";
       const delta = groupTitle1.localeCompare(groupTitle2);
@@ -89,13 +97,23 @@ export default function DatasetSelect({
   sortedDatasets.forEach((dataset) => {
     if (hasGroups) {
       const groupTitle = dataset.groupTitle || i18n.get("Others");
+      const groupDescription = dataset.groupDescription;
       if (groupTitle !== lastGroupTitle) {
-        items.push(
+        const content = (
           <Divider key={groupTitle}>
             <Typography fontSize="small" color="text.secondary">
               {groupTitle}
             </Typography>
-          </Divider>,
+          </Divider>
+        );
+        items.push(
+          groupDescription ? (
+            <Tooltip arrow title={groupDescription}>
+              {content}
+            </Tooltip>
+          ) : (
+            content
+          ),
         );
       }
       lastGroupTitle = groupTitle;
