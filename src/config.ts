@@ -29,6 +29,7 @@ import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
 import { isNumber } from "./util/types";
 import { hasViewerStateApi } from "@/api/hasViewerStateApi";
+import { LayerDefinition } from "@/model/layerDefinition";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -38,10 +39,16 @@ interface AuthClient {
   audience?: string;
 }
 
+interface Layers {
+  overlays?: LayerDefinition[];
+  baseMaps?: LayerDefinition[];
+}
+
 export class Config {
   readonly name: string;
   readonly server: ApiServerConfig;
   readonly branding: Branding;
+  readonly layers?: Layers;
   readonly authClient?: AuthClientConfig;
   private static _instance: Config;
 
@@ -231,11 +238,6 @@ export class Config {
   }
 }
 
-interface TileAccess {
-  param: string;
-  token: string;
-}
-
 // Array of user place colors in stable order (see #153)
 export const userPlaceColorsArray: [string, Color][] = [
   ["red", red],
@@ -286,19 +288,6 @@ export function getUserPlaceFillOpacity(opacity?: number): number {
     opacity = Config.instance.branding.polygonFillOpacity;
   }
   return isNumber(opacity) ? opacity : 0.25;
-}
-
-// See resources/maps.json
-const tileAccess: { [name: string]: TileAccess } = {
-  Mapbox: {
-    param: "access_token",
-    token:
-      "pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg",
-  },
-};
-
-export function getTileAccess(groupName: string) {
-  return tileAccess[groupName];
 }
 
 function decodeBrandingFlag(

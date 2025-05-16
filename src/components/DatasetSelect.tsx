@@ -4,37 +4,43 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import { ReactElement, useMemo } from "react";
+import Divider from "@mui/material/Divider";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 import i18n from "@/i18n";
-import { Dataset } from "@/model/dataset";
+import type { Dataset } from "@/model/dataset";
 import { WithLocale } from "@/util/lang";
+import type { LayerVisibilities } from "@/states/controlState";
 import ToolButton from "@/components/ToolButton";
+import { commonStyles } from "@/components/common-styles";
 import ControlBarItem from "./ControlBarItem";
-import { ReactElement, useMemo } from "react";
-import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
-import { Tooltip } from "@mui/material";
 
 interface DatasetSelectProps extends WithLocale {
-  selectedDatasetId: string | null;
+  selectedDataset: Dataset | null;
   datasets: Dataset[];
   selectDataset: (
     datasetId: string | null,
     datasets: Dataset[],
     showInMap: boolean,
   ) => void;
+  layerVisibilities: LayerVisibilities;
+  toggleDatasetRgbLayer: (visible: boolean) => void;
   locateSelectedDataset: () => void;
 }
 
 export default function DatasetSelect({
-  selectedDatasetId,
+  selectedDataset,
   datasets,
   selectDataset,
+  layerVisibilities,
+  toggleDatasetRgbLayer,
   locateSelectedDataset,
 }: DatasetSelectProps) {
   const sortedDatasets = useMemo(() => {
@@ -77,7 +83,7 @@ export default function DatasetSelect({
     selectDataset(datasetId, datasets, true);
   };
 
-  selectedDatasetId = selectedDatasetId || "";
+  const selectedDatasetId = selectedDataset ? selectedDataset.id : "";
   datasets = datasets || [];
 
   const datasetSelectLabel = (
@@ -137,19 +143,40 @@ export default function DatasetSelect({
     </Select>
   );
 
-  const locateDatasetButton = (
-    <ToolButton
-      onClick={locateSelectedDataset}
-      tooltipText={i18n.get("Locate dataset in map")}
-      icon={<TravelExploreIcon />}
-    />
-  );
+  const rgbVisible =
+    layerVisibilities.datasetRgb && !layerVisibilities.datasetVariable;
 
   return (
     <ControlBarItem
       label={datasetSelectLabel}
       control={datasetSelect}
-      actions={locateDatasetButton}
+      actions={
+        <>
+          {selectedDataset?.rgbSchema && (
+            <ToolButton
+              onClick={() => toggleDatasetRgbLayer(!rgbVisible)}
+              tooltipText={i18n.get(
+                "Switch between dataset RGB layer and variable layer",
+              )}
+              sx={{
+                ...commonStyles.toggleButton,
+                width: "26.42px",
+                height: "26.42px",
+                marginLeft: 0.4,
+              }}
+              icon={<Typography fontSize={9}>RGB</Typography>}
+              toggle
+              value="rgb"
+              selected={rgbVisible}
+            />
+          )}
+          <ToolButton
+            onClick={locateSelectedDataset}
+            tooltipText={i18n.get("Locate dataset in map")}
+            icon={<TravelExploreIcon />}
+          />
+        </>
+      }
       sx={{ marginLeft: 0 }}
     />
   );

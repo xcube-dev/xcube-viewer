@@ -2,6 +2,50 @@
 
 ### Improvements
 
+* Improved management and selection of overlay and base map layers
+  in various ways: 
+  * The selectable base map and overlay layers are now configurable using
+    the new branding property `layers`:
+    ```typescript
+    export interface Branding {
+      // ...
+      layers: {
+        baseMaps?: LayerDefinition[];
+        overlays?: LayerDefinition[];
+      }
+    }
+    ```
+    Its two properties `baseMaps` and `overlays` are arrays of layer 
+    definitions: 
+    ```typescript
+    /** Definition of system or custom layer. */
+    export interface LayerDefinition {
+      /** Layer identifier. */
+      id: string;
+      /** Layer display name. */
+      title: string;
+      /** Layer URL, should have tile server (XYZ) or WMS style. */
+      url: string;
+      /** For WMS layers only: layer and style names . */
+      wms?: { layerName: string; styleName?: string };
+      /** Layer attribution text or URL. */
+      attribution?: string;
+      /** Whether the layer can only be exclusively selected in its group. */
+      exclusive?: boolean;
+    }
+    ```
+    If no base maps and overlays are configured, a default set is used. (#456)
+  * Selectable overlays and base maps are now found in the layer manager 
+    window. It is no longer possible to select a base map and overlay 
+    from the settings window.
+  * It is now possible to select multiple overlays.
+  * Current layer visibilities are now persisted in permalinks and in
+    the browser's storage.
+  * Added a toggle button named "RGB" next to the dataset selector.
+    The button is available only if a dataset is selected that has RGB
+    configured. It toggles between RGB layer on / variable layer off and
+    RGB layer off / variable layer on.
+
 * Now using an entrypoint dataset that is initially shown 
   if none has been previously selected.
   See https://github.com/xcube-dev/xcube/issues/1135.

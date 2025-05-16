@@ -91,13 +91,13 @@ interface ViewerProps {
   mapId: string;
   mapInteraction: MapInteraction;
   mapProjection: string;
-  baseMapLayer?: MapElement;
+  baseMapLayers?: MapElement[];
+  overlayLayers?: MapElement[];
   rgb2Layer?: MapElement;
   rgbLayer?: MapElement;
   variable2Layer?: MapElement;
   variableLayer?: MapElement;
   datasetBoundaryLayer?: MapElement;
-  overlayLayer?: MapElement;
   placeGroupLayers?: MapElement;
   colorBarLegend?: MapElement;
   colorBarLegend2?: MapElement;
@@ -133,14 +133,14 @@ export default function Viewer({
   mapId,
   mapInteraction,
   mapProjection,
-  baseMapLayer,
+  baseMapLayers,
+  overlayLayers,
   rgb2Layer,
   rgbLayer,
   variable2Layer,
   variableLayer,
   datasetBoundaryLayer,
   placeGroupLayers,
-  overlayLayer,
   colorBarLegend,
   colorBarLegend2,
   mapSplitter,
@@ -363,12 +363,12 @@ export default function Viewer({
       >
         <View id="view" projection={mapProjection} />
         <Layers>
-          {baseMapLayer}
+          {<>{baseMapLayers}</>}
           {rgb2Layer}
           {rgbLayer}
           {variable2Layer}
           {variableLayer}
-          {overlayLayer}
+          {<>{overlayLayers}</>}
           {datasetBoundaryLayer}
           <Vector
             id={SELECTION_LAYER_ID}
