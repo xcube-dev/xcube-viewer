@@ -6,12 +6,13 @@
 
 import { type ReactNode, useRef } from "react";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import { makeStyles } from "@/util/styles";
 import type { WithLocale } from "@/util/lang";
 import type { JsonValue } from "@/util/json";
 import HoverVisibleBox from "@/components/HoverVisibleBox";
+import { commonStyles } from "@/components/common-styles";
 import ItemRow from "./ItemRow";
 import type { ItemRecord } from "./types";
 
@@ -67,8 +68,12 @@ export default function ItemRecordRow<
               {renderActions(itemIndex, itemRecord)}
             </HoverVisibleBox>
           )}
-          <IconButton size="small" onClick={handleRemoveItem}>
-            <CloseIcon fontSize="inherit" />
+          <IconButton
+            size="small"
+            sx={commonStyles.toggleButton}
+            onClick={handleRemoveItem}
+          >
+            <RemoveCircleOutlineIcon />
           </IconButton>
         </>
       }

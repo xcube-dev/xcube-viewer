@@ -12,11 +12,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { makeStyles } from "@/util/styles";
 import type { WithLocale } from "@/util/lang";
 import type { JsonValue } from "@/util/json";
+import { commonStyles } from "@/components/common-styles";
 import ItemRow from "./ItemRow";
 
 const styles = makeStyles({
   progress: {
     color: "primary",
+    ...commonStyles.toggleButton,
   },
 });
 
@@ -44,6 +46,7 @@ export default function ItemAddRow<S extends JsonValue>({
         ) : (
           <IconButton
             size="small"
+            sx={commonStyles.toggleButton}
             disabled={!canAddItem || !selectedSource}
             onClick={() => addItem(selectedSource!)}
             color={"primary"}
