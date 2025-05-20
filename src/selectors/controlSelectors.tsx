@@ -1375,14 +1375,14 @@ export const layerStatesSelector = createSelector(
         title: "Dataset RGB",
         subTitle: dataset ? dataset.title : undefined,
         visible: visibilities.datasetRgb,
-        disabled: !dataset,
+        disabled: !(dataset && dataset.rgbSchema),
       },
       datasetRgb2: {
         id: "datasetRgb2",
         title: "Dataset RGB",
         subTitle: dataset2 ? dataset2.title : undefined,
         visible: visibilities.datasetRgb2,
-        disabled: !dataset2,
+        disabled: !(dataset2 && dataset2.rgbSchema),
         pinned: true,
       },
       datasetVariable: {
