@@ -42,7 +42,7 @@ function getDefaultLayers(layerGroup: LayerGroup): LayerDefinition[] {
 }
 
 export function getConfigLayers(layerGroup: LayerGroup): LayerDefinition[] {
-  const layers = Config.instance.layers;
+  const layers = Config.instance.branding.layers;
   return ((layers && layers[layerGroup]) || []).map(({ id, ...rest }) => ({
     ...rest,
     id: `${layerGroup}.${id}`,

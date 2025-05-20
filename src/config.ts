@@ -21,15 +21,14 @@ import {
   yellow,
 } from "@mui/material/colors";
 
-import { ApiServerConfig } from "@/model/apiServer";
+import { type ApiServerConfig } from "@/model/apiServer";
 import rawDefaultConfig from "@/resources/config.json";
-import { AuthClientConfig } from "@/util/auth";
-import { Branding, parseBranding } from "@/util/branding";
+import { type AuthClientConfig } from "@/util/auth";
+import { type Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
 import { isNumber } from "./util/types";
 import { hasViewerStateApi } from "@/api/hasViewerStateApi";
-import { LayerDefinition } from "@/model/layerDefinition";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -39,16 +38,10 @@ interface AuthClient {
   audience?: string;
 }
 
-interface Layers {
-  overlays?: LayerDefinition[];
-  baseMaps?: LayerDefinition[];
-}
-
 export class Config {
   readonly name: string;
   readonly server: ApiServerConfig;
   readonly branding: Branding;
-  readonly layers?: Layers;
   readonly authClient?: AuthClientConfig;
   private static _instance: Config;
 

@@ -106,87 +106,6 @@
       ]
     },
 
-    "Branding": {
-      "type": "object",
-      "properties": {
-        "appBarTitle": { "type": "string", "examples": ["xcube Viewer"] },
-        "windowTitle": { "type": "string", "examples": ["xcube Viewer"] },
-        "windowIcon": {
-          "type": ["string", "null"],
-          "examples": ["images/favicon.ico"]
-        },
-        "themeMode": {
-          "type": "string",
-          "examples": ["light"],
-          "enum": ["dark", "light", "system"]
-        },
-        "primaryColor": { "$ref": "#/definitions/ColorSchema" },
-        "secondaryColor": { "$ref": "#/definitions/ColorSchema" },
-        "headerBackgroundColor": { "type": "string", "examples": ["#fafafa"] },
-        "logoImage": { "type": "string", "examples": ["images/logo.png"] },
-        "logoWidth": { "type": "integer", "examples": [32], "minimum": 0 },
-        "layerVisibilities": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "boolean"
-          },
-          "examples": [
-            {
-              "datasetRgb": false,
-              "datasetRgb2": false,
-              "datasetVariable": true,
-              "datasetVariable2": true,
-              "datasetBoundary": false,
-              "datasetPlaces": true,
-              "userPlaces": true,
-              "baseMaps.CartoDB.Dark Matter (No Labels)": true,
-              "overlays.CartoDB.Dark Matter Labels": true
-            }
-          ]
-        },
-        "defaultAgg": {
-          "type": "string",
-          "examples": ["mean"],
-          "enum": ["mean", "median", "min", "max"]
-        },
-        "polygonFillOpacity": {
-          "type": "number",
-          "minimum": 0.0,
-          "maximum": 1.0,
-          "examples": [0.025]
-        },
-        "mapProjection": {
-          "enum": ["EPSG:4326", "EPSG:3857"],
-          "default": "EPSG:3857"
-        },
-        "allowDownloads": {
-          "type": "boolean",
-          "default": true
-        },
-        "allowRefresh": {
-          "type": "boolean",
-          "default": true
-        },
-        "allowSharing": {
-          "type": "boolean",
-          "default": true
-        },
-        "allowViewModePython": {
-          "type": "boolean",
-          "default": true
-        },
-        "allowUserVariables": {
-          "type": "boolean",
-          "default": true
-        },
-        "allow3D": {
-          "type": "boolean",
-          "default": true
-        }
-      },
-      "additionalProperties": false
-    },
-
     "Layer": {
       "type": "object",
       "required": [
@@ -233,7 +152,109 @@
           "type": "array",
           "items": { "$ref": "#/definitions/Layer"}
         }
-      }
+      },
+      "examples": [
+        {
+          "overlays": [
+            {
+              "id": "darkMatterLabels",
+              "title": "Dark Matter Labels",
+              "url": "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
+            }
+          ],
+          "baseMaps": [
+            {
+              "id": "darkMatterNoLabels",
+              "title": "Dark Matter (No Labels)",
+              "url": "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
+            }
+          ]
+        }
+      ]
+    },
+
+    "LayerVisibilities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "examples": [
+        {
+          "datasetRgb": false,
+          "datasetRgb2": false,
+          "datasetVariable": true,
+          "datasetVariable2": true,
+          "datasetBoundary": false,
+          "datasetPlaces": true,
+          "userPlaces": true,
+          "overlays.darkMatterLabels": true,
+          "baseMaps.darkMatterNoLabels": true
+        }
+      ]
+    },
+
+    "Branding": {
+      "type": "object",
+      "properties": {
+        "appBarTitle": { "type": "string", "examples": ["xcube Viewer"] },
+        "windowTitle": { "type": "string", "examples": ["xcube Viewer"] },
+        "windowIcon": {
+          "type": ["string", "null"],
+          "examples": ["images/favicon.ico"]
+        },
+        "themeMode": {
+          "type": "string",
+          "examples": ["light"],
+          "enum": ["dark", "light", "system"]
+        },
+        "primaryColor": { "$ref": "#/definitions/ColorSchema" },
+        "secondaryColor": { "$ref": "#/definitions/ColorSchema" },
+        "headerBackgroundColor": { "type": "string", "examples": ["#fafafa"] },
+        "logoImage": { "type": "string", "examples": ["images/logo.png"] },
+        "logoWidth": { "type": "integer", "examples": [32], "minimum": 0 },
+        "layers": { "$ref": "#/definitions/Layers" },
+        "layerVisibilities": { "$ref": "#/definitions/LayerVisibilities" },
+        "defaultAgg": {
+          "type": "string",
+          "examples": ["mean"],
+          "enum": ["mean", "median", "min", "max"]
+        },
+        "polygonFillOpacity": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "examples": [0.025]
+        },
+        "mapProjection": {
+          "enum": ["EPSG:4326", "EPSG:3857"],
+          "default": "EPSG:3857"
+        },
+        "allowDownloads": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowRefresh": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowSharing": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowViewModePython": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowUserVariables": {
+          "type": "boolean",
+          "default": true
+        },
+        "allow3D": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
     }
   },
 
@@ -244,7 +265,6 @@
     "authClient": { "$ref": "#/definitions/AuthClientConfig" },
     "server": { "$ref": "#/definitions/ApiServerConfig" },
     "branding": { "$ref": "#/definitions/Branding" },
-    "layers": { "$ref": "#/definitions/Layers" }
   },
 
   "required": ["name", "server", "branding"],
