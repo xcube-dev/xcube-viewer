@@ -271,9 +271,24 @@
       "se": "Visa datauppsättningsgränser"
     },
     {
+      "en": "Overlays",
+      "de": "Overlays",
+      "se": "Överlagringar"
+    },
+    {
+      "en": "Predefined",
+      "de": "Vordefiniert",
+      "se": "Fördefinierad"
+    },
+    {
+      "en": "Base maps",
+      "de": "Basiskarten",
+      "se": "Baskartor"
+    },
+    {
       "en": "Base map",
       "de": "Basiskarte",
-      "se": "Grundkarta"
+      "se": "Baskarta"
     },
     {
       "en": "Hide small values",
@@ -892,8 +907,13 @@
     },
     {
       "en": "User Base Maps",
-      "de": "Nutzer Basiskarte",
-      "se": "Användare Grundkarta"
+      "de": "Nutzer Basiskarten",
+      "se": "Användare Baskartor"
+    },
+    {
+      "en": "Switch between RGB layer and variable layer",
+      "de": "Zwischen RGB-Layer und Variablen-Layer wechseln",
+      "se": "Växla mellan RGB-lager och variabellager"
     },
     {
       "en": "Overlay",
@@ -902,8 +922,8 @@
     },
     {
       "en": "User Overlays",
-      "de": "Nutzer Overlay",
-      "se": "Användare Overlay"
+      "de": "Nutzer Overlays",
+      "se": "Användare Överlagringar"
     },
     {
       "en": "On dataset selection",
@@ -1269,6 +1289,11 @@
       "en": "JSON format",
       "de": "JSON-Format",
       "se": "JSON-format"
+    },
+    {
+      "en": "defined",
+      "de": "definiert",
+      "se": "definierad"
     },
     {
       "en": "docs/imprint.en.md",

@@ -23,7 +23,7 @@ import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
 
 import i18n from "@/i18n";
 import { newId } from "@/util/id";
-import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
+import { LayerDefinition } from "@/model/layerDefinition";
 import UserLayerEditorWms from "./UserLayerEditorWms";
 import UserLayerEditorXyz from "./UserLayerEditorXyz";
 import useUndo from "@/hooks/useUndo";
@@ -112,7 +112,6 @@ const UserLayersPanel: React.FC<UserLayersPanelProps> = ({
       // TODO: I18N
       {
         id,
-        group: USER_GROUP_NAME,
         title: "",
         url: "",
         attribution: "",

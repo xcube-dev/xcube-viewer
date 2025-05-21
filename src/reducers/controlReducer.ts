@@ -24,7 +24,7 @@ import {
   SELECT_VARIABLE,
   SELECT_VARIABLE_2,
   SET_LAYER_MENU_OPEN,
-  SET_LAYER_VISIBILITY,
+  SET_LAYER_VISIBILITIES,
   SET_MAP_INTERACTION,
   SET_MAP_POINT_INFO_BOX_ENABLED,
   SET_SIDE_PANEL_ID,
@@ -40,6 +40,8 @@ import {
   UPDATE_TIME_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
+  SET_LAYER_GROUP_STATES,
+  TOGGLE_DATASET_RGB_LAYER,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -206,12 +208,31 @@ export function controlReducer(
         selectedVariableName: action.selectedVariableName,
       };
     }
-    case SET_LAYER_VISIBILITY: {
+    case TOGGLE_DATASET_RGB_LAYER: {
       return {
         ...state,
         layerVisibilities: {
           ...state.layerVisibilities,
-          [action.layerId]: action.visible,
+          datasetVariable: !action.visible,
+          datasetRgb: action.visible,
+        },
+      };
+    }
+    case SET_LAYER_VISIBILITIES: {
+      return {
+        ...state,
+        layerVisibilities: {
+          ...state.layerVisibilities,
+          ...action.layerVisibilities,
+        },
+      };
+    }
+    case SET_LAYER_GROUP_STATES: {
+      return {
+        ...state,
+        layerGroupStates: {
+          ...state.layerGroupStates,
+          ...action.layerGroupStates,
         },
       };
     }

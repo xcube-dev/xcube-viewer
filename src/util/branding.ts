@@ -31,6 +31,8 @@ import { PaletteColorOptions } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
 import baseUrl from "./baseurl";
 import { buildPath } from "./path";
+import { LayerVisibilities } from "@/states/controlState";
+import { LayerDefinition } from "@/model/layerDefinition";
 
 const COLOR_NAMES: { [name: string]: ColorPartial } = {
   amber,
@@ -54,6 +56,11 @@ const COLOR_NAMES: { [name: string]: ColorPartial } = {
   yellow,
 };
 
+export interface Layers {
+  overlays?: LayerDefinition[];
+  baseMaps?: LayerDefinition[];
+}
+
 // Align any changes made here with
 // - resources/config.json
 // - resources/config.schema.json
@@ -71,7 +78,8 @@ export interface Branding {
   organisationUrl?: string;
   logoImage: string;
   logoWidth: number;
-  baseMapUrl?: string;
+  layers?: Layers;
+  layerVisibilities?: LayerVisibilities;
   defaultAgg?: "median" | "mean";
   polygonFillOpacity?: number;
   mapProjection?: string;

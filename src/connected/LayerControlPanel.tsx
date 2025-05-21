@@ -10,8 +10,9 @@ import { AppState } from "@/states/appState";
 import _LayerControlPanel from "@/components/LayerControlPanel";
 import {
   openDialog,
+  setLayerGroupStates,
   setLayerMenuOpen,
-  setLayerVisibility,
+  setLayerVisibilities,
 } from "@/actions/controlActions";
 import { layerStatesSelector } from "@/selectors/controlSelectors";
 
@@ -20,13 +21,16 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     layerMenuOpen: state.controlState.layerMenuOpen,
     layerStates: layerStatesSelector(state),
+    layerGroupStates: state.controlState.layerGroupStates,
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
   openDialog,
   setLayerMenuOpen,
-  setLayerVisibility,
+  setLayerVisibilities,
+  setLayerGroupStates,
 };
 
 const LayerControlPanel = connect(

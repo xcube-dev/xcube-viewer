@@ -106,6 +106,93 @@
       ]
     },
 
+    "Layer": {
+      "type": "object",
+      "required": [
+        "id", "type", "title", "url"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "attribution": {
+          "type": "string"
+        },
+        "wms": {
+          "type": "object",
+          "required": [
+            "layerName"
+          ],
+          "properties": {
+            "layerName": {
+              "type": "string"
+            },
+            "styleName": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+
+    "Layers": {
+      "type": "object",
+      "properties": {
+        "overlays": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Layer"}
+        },
+        "baseMaps": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Layer"}
+        }
+      },
+      "examples": [
+        {
+          "overlays": [
+            {
+              "id": "darkMatterLabels",
+              "title": "Dark Matter Labels",
+              "url": "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
+            }
+          ],
+          "baseMaps": [
+            {
+              "id": "darkMatterNoLabels",
+              "title": "Dark Matter (No Labels)",
+              "url": "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
+            }
+          ]
+        }
+      ]
+    },
+
+    "LayerVisibilities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "examples": [
+        {
+          "datasetRgb": false,
+          "datasetRgb2": false,
+          "datasetVariable": true,
+          "datasetVariable2": true,
+          "datasetBoundary": false,
+          "datasetPlaces": true,
+          "userPlaces": true,
+          "overlays.darkMatterLabels": true,
+          "baseMaps.darkMatterNoLabels": true
+        }
+      ]
+    },
+
     "Branding": {
       "type": "object",
       "properties": {
@@ -125,13 +212,8 @@
         "headerBackgroundColor": { "type": "string", "examples": ["#fafafa"] },
         "logoImage": { "type": "string", "examples": ["images/logo.png"] },
         "logoWidth": { "type": "integer", "examples": [32], "minimum": 0 },
-        "baseMapUrl": {
-          "type": "string",
-          "format": "uri-template",
-          "examples": [
-            "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          ]
-        },
+        "layers": { "$ref": "#/definitions/Layers" },
+        "layerVisibilities": { "$ref": "#/definitions/LayerVisibilities" },
         "defaultAgg": {
           "type": "string",
           "examples": ["mean"],
@@ -182,7 +264,7 @@
     "name": { "type": "string" },
     "authClient": { "$ref": "#/definitions/AuthClientConfig" },
     "server": { "$ref": "#/definitions/ApiServerConfig" },
-    "branding": { "$ref": "#/definitions/Branding" }
+    "branding": { "$ref": "#/definitions/Branding" },
   },
 
   "required": ["name", "server", "branding"],
