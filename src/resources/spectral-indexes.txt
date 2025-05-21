@@ -1,0 +1,4 @@
+# Frequently used Sentinel-2 indexes
+moisture_index = where((SCL >= 2) & (SCL <= 7), (B08 - B11) / (B08 + B11), nan)
+vegetation_index = where(SCL == 6, (B08 - B04) / (B08 + B04), nan)
+chlorophyll_index = where(SCL == 6, (B05 - B04) - 0.52 * (B06 - B04), nan)
