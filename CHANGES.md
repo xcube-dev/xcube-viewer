@@ -3,6 +3,9 @@
 * Slightly updated default logo image (to have a background and hence can be 
   used for light and dark theme mode).
 
+*  Pinned `vega-lite` and `vega` versions to ensure compatibility and prevent peer
+   dependency conflicts during installation (#531).
+
 ## Changes in version 1.6.0
 
 Improved management and selection of overlay and base map layers
