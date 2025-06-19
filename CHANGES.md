@@ -1,3 +1,6 @@
+## Changes in version 1.6.2 (in development) 
+
+
 ## Changes in version 1.6.1
 
 * Slightly updated default logo image (to have a background and hence can be 
