@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { Extent as OlExtent } from "ol/extent";
@@ -38,6 +20,8 @@ import {
 } from "@/model/user-place/geojson";
 import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
+import { PaletteMode } from "@mui/material";
+import { LayerState } from "@/model/layerState";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -74,31 +58,21 @@ export interface UserPlacesFormatOptions {
   wkt: WktOptions;
 }
 
-export interface LayerVisibilities {
-  baseMap?: boolean;
-  datasetRgb?: boolean;
-  datasetRgb2?: boolean;
-  datasetVariable?: boolean;
-  datasetVariable2?: boolean;
-  datasetBoundary?: boolean;
-  datasetPlaces?: boolean;
-  userPlaces?: boolean;
-  overlay?: boolean;
-}
+export type LayerStates = Record<string, LayerState>;
+export type LayerVisibilities = Record<string, boolean>;
 
-// TODO: check if really unused
-// noinspection JSUnusedGlobalSymbols
-export interface ExportSettings {
-  format: "GeoJSON" | "CSV";
-  multiFile: boolean;
-  zipArchive: boolean;
-}
-export type SidebarPanelId = "info" | "timeSeries" | "stats" | "volume";
-export const sidebarPanelIds: SidebarPanelId[] = [
-  "info",
-  "timeSeries",
-  "stats",
-  "volume",
+export type LayerGroupStates = {
+  overlays?: boolean;
+  predefined?: boolean;
+  baseMaps?: boolean;
+};
+
+export type ThemeMode = PaletteMode | "system";
+export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
+export const THEME_LABELS: [ThemeMode, string][] = [
+  ["light", "Light"],
+  ["dark", "Dark"],
+  ["system", "System"],
 ];
 
 export type VolumeRenderMode = "mip" | "aip" | "iso";
@@ -136,20 +110,19 @@ export interface ControlState {
   mapInteraction: MapInteraction;
   lastMapInteraction: MapInteraction;
   layerMenuOpen: boolean;
-  sidebarPosition: number;
-  sidebarOpen: boolean;
-  sidebarPanelId: SidebarPanelId | string;
+  layerVisibilities: LayerVisibilities;
+  layerGroupStates: LayerGroupStates;
+  sidePanelOpen: boolean;
+  sidePanelSize: number;
+  sidePanelId: string | null;
   volumeRenderMode: VolumeRenderMode;
   volumeStates: VolumeStates;
   infoCardElementStates: InfoCardElementStates;
   mapProjection: string;
   imageSmoothingEnabled: boolean;
-  layerVisibilities: LayerVisibilities;
   variableCompareMode: boolean;
   variableSplitPos?: number;
   mapPointInfoBoxEnabled: boolean;
-  selectedBaseMapId: string | null;
-  selectedOverlayId: string | null;
   userBaseMaps: LayerDefinition[];
   userOverlays: LayerDefinition[];
   userColorBars: UserColorBar[];
@@ -161,6 +134,7 @@ export interface ControlState {
   exportPlacesAsCollection: boolean;
   exportZipArchive: boolean;
   exportFileName: string;
+  themeMode: ThemeMode;
 }
 
 export function newControlState(): ControlState {
@@ -198,24 +172,30 @@ export function newControlState(): ControlState {
     privacyNoticeAccepted: false,
     mapInteraction: "Select",
     lastMapInteraction: "Select",
+    layerMenuOpen: false,
     layerVisibilities: {
-      baseMap: true,
       datasetRgb: false,
+      datasetRgb2: false,
       datasetVariable: true,
       datasetVariable2: true,
       datasetBoundary: false,
       datasetPlaces: true,
       userPlaces: true,
-      overlay: true,
+      [defaultBaseMapId]: true,
+      ...branding.layerVisibilities,
+    },
+    layerGroupStates: {
+      overlays: false,
+      predefined: true,
+      baseMaps: false,
     },
     variableCompareMode: false,
     mapPointInfoBoxEnabled: false,
     datasetLocateMode: "panAndZoom",
     placeLocateMode: "panAndZoom",
-    layerMenuOpen: false,
-    sidebarPosition: (2 * Math.max(window.innerWidth, window.innerHeight)) / 3,
-    sidebarOpen: false,
-    sidebarPanelId: "info",
+    sidePanelOpen: false,
+    sidePanelId: "details",
+    sidePanelSize: Math.max(window.innerWidth, window.innerHeight) / 3,
     volumeRenderMode: "mip",
     volumeStates: {},
     infoCardElementStates: {
@@ -225,8 +205,6 @@ export function newControlState(): ControlState {
     },
     mapProjection: branding.mapProjection || DEFAULT_MAP_CRS,
     imageSmoothingEnabled: false,
-    selectedBaseMapId: defaultBaseMapId,
-    selectedOverlayId: null,
     userBaseMaps: [],
     userOverlays: [],
     userColorBars: [],
@@ -236,8 +214,32 @@ export function newControlState(): ControlState {
     exportPlacesAsCollection: true,
     exportZipArchive: true,
     exportFileName: "export",
+    themeMode: getInitialThemeMode(),
   };
   return loadUserSettings(state);
+}
+
+function getInitialThemeMode(): ThemeMode {
+  const themeMode = Config.instance.branding.themeMode;
+  if (themeMode && THEME_NAMES.includes(themeMode)) {
+    return themeMode;
+  }
+  return "system";
+}
+
+export function getPaletteMode(
+  themeMode: ThemeMode,
+  defaultPaletteMode?: PaletteMode,
+): PaletteMode {
+  if (!defaultPaletteMode) {
+    defaultPaletteMode = window.matchMedia("(prefers-color-scheme: dark)")
+      .matches
+      ? "dark"
+      : "light";
+  }
+  return themeMode && THEME_NAMES.includes(themeMode) && themeMode !== "system"
+    ? themeMode
+    : defaultPaletteMode;
 }
 
 // We cannot keep "MAP_OBJECTS" in control state object, because these

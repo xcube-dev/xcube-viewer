@@ -1,127 +1,57 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
-import { Theme, styled } from "@mui/system";
-import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import ToggleButton from "@mui/material/ToggleButton";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import i18n from "@/i18n";
-import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
+import { makeStyles } from "@/util/styles";
 import { commonStyles } from "@/components/common-styles";
+import ToolButton from "@/components/ToolButton";
 
 // noinspection JSUnusedLocalSymbols
-const StyledFormControl = styled(FormControl)(
-  ({ theme }: { theme: Theme }) => ({
-    marginTop: theme.spacing(2),
-    marginRight: theme.spacing(0.5),
+const styles = makeStyles({
+  formControl: {
     marginLeft: "auto",
-  }),
-);
+    marginRight: 1,
+    marginTop: 2,
+    marginBottom: 0,
+  },
+});
 
 interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
-  sidebarOpen: boolean;
-  setSidebarOpen: (sideBarOpen: boolean) => void;
-  openDialog: (dialogId: string) => void;
-  allowRefresh?: boolean;
-  updateResources: () => void;
-  compact: boolean;
+  sidePanelOpen: boolean;
+  setSidePanelOpen: (sideBarOpen: boolean) => void;
 }
 
 export default function ControlBarActions({
   visible,
-  sidebarOpen,
-  setSidebarOpen,
-  openDialog,
-  allowRefresh,
-  updateResources,
-  compact,
+  sidePanelOpen,
+  setSidePanelOpen,
 }: ControlBarActionsProps) {
   if (!visible) {
     return null;
   }
 
   const sidebarButton = (
-    <ToggleButton
-      value={"sidebar"}
-      selected={sidebarOpen}
-      onClick={() => setSidebarOpen(!sidebarOpen)}
-      size="small"
+    <ToolButton
       sx={commonStyles.toggleButton}
-    >
-      <Tooltip arrow title={i18n.get("Show or hide sidebar")}>
-        {<ViewSidebarIcon />}
-      </Tooltip>
-    </ToggleButton>
+      value={"sidebar"}
+      onClick={() => setSidePanelOpen(!sidePanelOpen)}
+      tooltipText={i18n.get(sidePanelOpen ? "Hide sidebar" : "Show sidebar")}
+      icon={sidePanelOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+    />
   );
 
-  let refreshButton;
-  let downloadButton;
-  let settingsButton;
-
-  if (compact) {
-    refreshButton = allowRefresh && (
-      <IconButton onClick={updateResources} size="small">
-        <Tooltip arrow title={i18n.get("Refresh")}>
-          <RefreshIcon />
-        </Tooltip>
-      </IconButton>
-    );
-
-    downloadButton = Config.instance.branding.allowDownloads && (
-      <IconButton onClick={() => openDialog("export")} size="small">
-        <Tooltip arrow title={i18n.get("Export data")}>
-          {<CloudDownloadIcon />}
-        </Tooltip>
-      </IconButton>
-    );
-
-    settingsButton = (
-      <IconButton onClick={() => openDialog("settings")} size="small">
-        <Tooltip arrow title={i18n.get("Settings")}>
-          <SettingsIcon />
-        </Tooltip>
-      </IconButton>
-    );
-  }
-
   return (
-    <StyledFormControl variant="standard">
-      <Box>
-        {refreshButton}
-        {downloadButton}
-        {settingsButton}
-        {sidebarButton}
-      </Box>
-    </StyledFormControl>
+    <FormControl sx={styles.formControl} variant={"standard"}>
+      {sidebarButton}
+    </FormControl>
   );
 }

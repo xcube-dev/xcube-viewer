@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import * as React from "react";
@@ -30,7 +12,6 @@ import ControlBarComponent from "@/components/ControlBar";
 import { WithLocale } from "@/util/lang";
 import DatasetSelect from "./DatasetSelect";
 import VariableSelect from "./VariableSelect";
-// import RgbSwitch from "./RgbSwitch";
 import PlaceGroupsSelect from "./PlaceGroupsSelect";
 import PlaceSelect from "./PlaceSelect";
 import MapInteractionsBar from "./MapInteractionsBar";
@@ -38,6 +19,7 @@ import TimeSelect from "./TimeSelect";
 import TimeSlider from "./TimeSlider";
 import TimePlayer from "./TimePlayer";
 import ControlBarActions from "./ControlBarActions";
+import Divider from "@mui/material/Divider";
 
 interface ControlBarProps extends WithLocale {
   show: boolean;
@@ -59,11 +41,13 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
   return (
     <ControlBarComponent>
       <DatasetSelect />
+      <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <VariableSelect />
-      {/*<RgbSwitch />*/}
+      <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <PlaceGroupsSelect />
       <PlaceSelect />
       <MapInteractionsBar />
+      <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <TimeSelect />
       <TimePlayer />
       <TimeSlider />

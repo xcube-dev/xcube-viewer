@@ -1,4 +1,226 @@
-## Changes in version 1.4.0 (in development)
+## Changes in version 1.6.2 (in development) 
+
+
+## Changes in version 1.6.1
+
+* Slightly updated default logo image (to have a background and hence can be 
+  used for light and dark theme mode).
+
+*  Pinned `vega-lite` and `vega` versions to ensure compatibility and prevent peer
+   dependency conflicts during installation (#531).
+
+## Changes in version 1.6.0
+
+Improved management and selection of overlay and base map layers
+in various ways: (#456)
+
+* The selectable base map and overlay layers are now configurable using the new 
+  branding property `layers`:
+
+  ```typescript
+  export interface Branding {
+    // ...
+    layers: {
+      baseMaps?: LayerDefinition[];
+      overlays?: LayerDefinition[];
+    }
+  }
+  ```
+  
+  Its two properties `baseMaps` and `overlays` are arrays of layer definitions: 
+  
+  ```typescript
+  /** Definition of system or custom layer. */
+  export interface LayerDefinition {
+    /** Layer identifier. */
+    id: string;
+    /** Layer display name. */
+    title: string;
+    /** Layer URL, should have tile server (XYZ) or WMS style. */
+    url: string;
+    /** For WMS layers only: layer and style names . */
+    wms?: { layerName: string; styleName?: string };
+    /** Layer attribution text or URL. */
+    attribution?: string;
+    /** Whether the layer can only be exclusively selected in its group. */
+    exclusive?: boolean;
+  }
+  ```
+  If no base maps and overlays are configured, a default set is used. 
+
+* Selectable overlays and base maps are now found in the layer manager 
+  window. It is no longer possible to select a base map and overlay 
+  from the settings window.
+
+* It is now possible to select multiple overlays.
+
+* Current layer visibilities are now persisted in permalinks and in
+  the browser's storage.
+
+* Added a toggle button named "RGB" next to the dataset selector.
+  The button is available only if a dataset is selected that has RGB
+  configured. It toggles between RGB layer on / variable layer off and
+  RGB layer off / variable layer on.
+
+## Changes in version 1.5.1
+
+### Improvements
+
+* Now using an entrypoint dataset that is initially shown 
+  if none has been previously selected.
+  See https://github.com/xcube-dev/xcube/issues/1135.
+
+* Updated the dataset selector to use `sortValue` from the server configuration 
+  for sorting datasets within groups if provided.
+  See https://github.com/xcube-dev/xcube/issues/1135.
+
+* Added a type column to the metadata attribute tables displayed 
+  in the "details" panel when in list mode.
+
+* Variable units are no longer shown in the color legend
+  if the units are either missing in the variable metadata or
+  if it is a no-unit value like `-`, `1`, or an empty string. (#511)
+
+* Dataset groups in the dataset selector are now sorted according to the 
+  `groupOrder` defined in the server-side configuration. (#521)
+
+* Added tooltips to dataset group titles in the selector, displaying the 
+  `groupDescription` provided by the server. (#521)
+
+# Fixes
+
+* Assigned color bars are now preserved when sharing the viewer's
+  current state. (#465)
+
+* Fixed application crash caused by metadata attributes that are (JSON) 
+  objects. Now attributes values of any type are rendered.
+
+* Parameter `allow3D` in the viewer branding configuration now hides the  
+  `Volume` tab in the side panel when set to `false`. Default is `true`.
+
+### Other Changes
+
+* Added `selectedDatasetTitle` and `selectedDataset2Title` to the list
+  of available state properties.
+  See https://github.com/xcube-dev/xcube/issues/1134
+
+## Changes in version 1.5.0
+
+### Improvements
+
+* Redesigned the right side panel: (#477)
+  - Replaced the tabs by a sidebar comprising panel icons;
+    extension panels can now be positioned and can have own icons. 
+  - Restyled many side panels
+  - The panel's resize handle now provides visual feedback 
+    when hovering over it.
+
+* Variable layer legends are now styled according to the 
+  current theme mode. (#491)
+
+* Added a `Divider` to provide a visual separation of control bar items for
+  better clarity to the users. (#487)
+
+* Various style adjustments with respect to the current theme modes
+  _Dark_ and _Light_.
+  
+* Renamed "Info" panel into "Details"; using new icon too.
+
+* Improved _Developer Reference_ documentation.
+
+* Improved UX as users can now easily identify which dataset a variable belongs 
+  to in variable comparison mode on the map. The infobox (when enabled and 
+  hovered) marks variables with `(R)` and `(L)`, clarifying their dataset 
+  origins when the same variable appears from different datasets. 
+
+* Users can now also identify the datasets in the Time Series chart.
+
+* Toolbars on time-series and statistics charts now fade into the background 
+  until you hover over them, reducing visual clutter and improving focus on the 
+  data.
+
+* Now supporting `DataGrid` component in server-side extensions.
+  (Added dependency `@mui/x-data-grid`.)
+
+### Fixes
+
+* Fixed the problem where a server-side side panel was not rendered 
+  after app start, if it was the initially selected one. (#476)
+
+* Fixed a problem where mouse splitters used to resize 
+  two components (e.g., two layers in map view, or map view and side panels) 
+  created a drift while dragging.
+
+* Added some missing language translations.
+
+* Fixed the map's infobox so that it now correctly removes the second 
+  variable when the user disables the variable comparison mode.
+
+### Other Changes
+
+* Updated development tools. Now using 
+  - `vite 6.2` 
+  - `eslint 9.21`
+  - `storybook 8.6`
+
+* Added `selectedPlace` and `selectedPlaceGroup` to the list 
+  of available state properties. (#455)
+
+
+
+## Changes in version 1.4.2
+
+### New features
+
+* Added `Markdown` component to be used in server-side extensions.
+  It has a single `text` property that takes the markdown text.
+* We now render the new `description` markdown properties received from
+  xcube Server (see https://github.com/xcube-dev/xcube/issues/1122)
+  in the info panel. (#454)
+
+### Improvements
+
+* Rearranged the info-panel for improved clarity and ease of use.
+* Now displaying dataset titles in the map legend. (#419)
+
+### Fixes and other Changes
+
+* The new "share" button no longer appears if the xcube Server has no
+  respective API configuration. (#470)
+* Fixed regression when zooming into time-series charts. (#468)
+* Updated copyright headers in source files.
+
+## Changes in version 1.4.1 
+
+* Fixed issues with the Share feature introduced in
+  version 1.4.0. (#460) (#462)
+
+## Changes in version 1.4.0
+
+### New Features
+
+* Added a new "share" action to the app bar.
+  It creates a permalink URL to restore the view state
+  and copies it to the clipboard. (#447)
+
+  The restored state includes
+  - Selected map region, zoom level, and overlays.
+  - User places including the selected place.
+  - Opened panels, active tabs, and any selected options.
+  - Other UI-specific states such as selected items, filters, or toggle states.
+
+* Starting with xcube Server 1.8 and xcube Viewer 1.4 it is possible to enhance
+  the viewer UI by _server-side contributions_ programmed in Python.
+  For this to work, service providers can now configure xcube Server to load
+  one or more Python modules that provide UI-contributions of type
+  `xcube.webapi.viewer.contrib.Panel`.
+  Users can create `Panel` objects and use the two decorators
+  `layout()` and `callback()` to implement the UI and the interaction
+  behaviour, respectively. The new functionality is provided by the
+  [Chartlets](https://bcdev.github.io/chartlets/) Python library.
+
+  A working example can be found in the
+  [xcube repository](https://github.com/xcube-dev/xcube/tree/5ebf4c76fdccebdd3b65f4e04218e112410f561b/examples/serve/panels-demo).
 
 ### New Features 
 
@@ -13,11 +235,15 @@
     - `mui` from v5 to v6
     - `testing-library/react` from v12 to v16
 
-* Tooltips (incl. translation) have been added to the toogle buttons that 
+* Tooltips (incl. translation) have been added to the toggle buttons that 
   control the format of the metadata information in the sidebar.
 
 ## Changes in version 1.3.1
 
+### New Features 
+
+* Users can now change the application theme from light, dark or system mode from settings.
+  
 ### Fixes
 
 * The `<Time>` parameter is now no longer required to calculate the statistics 

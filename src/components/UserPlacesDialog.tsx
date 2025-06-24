@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import * as React from "react";
@@ -42,7 +24,6 @@ import { json } from "@codemirror/lang-json";
 import { styled } from "@mui/system";
 
 import i18n from "@/i18n";
-import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
 import { FileUpload } from "./FileUpload";
 import {
@@ -59,6 +40,7 @@ import { geoJsonFormat, GeoJsonOptions } from "@/model/user-place/geojson";
 import { wktFormat, WktOptions } from "@/model/user-place/wkt";
 import { detectFormatName, Format } from "@/model/user-place/common";
 import { makeStyles } from "@/util/styles";
+import { useTheme } from "@mui/material";
 
 interface FormatWithCodeExt extends Format {
   codeExt: Extension[];
@@ -125,6 +107,8 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
     userPlacesFormatOptions,
   );
 
+  const themeMode = useTheme();
+
   React.useEffect(() => {
     setUserPlacesFormatName(userPlacesFormatName);
   }, [userPlacesFormatName]);
@@ -177,7 +161,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
   };
 
   const handleCodePaste = () => {
-    console.info("PASTE!", text);
+    console.debug("pasted text:", text);
   };
 
   const handleCodeChange = (value: string) => {
@@ -285,7 +269,7 @@ const UserPlacesDialog: React.FC<UserPlacesDialogProps> = ({
           />
         </RadioGroup>
         <CodeMirror
-          theme={Config.instance.branding.themeName || "light"}
+          theme={themeMode.palette.mode}
           placeholder={i18n.get("Enter text or drag & drop a text file.")}
           autoFocus
           height="400px"

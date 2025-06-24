@@ -1,28 +1,11 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { SxProps, Theme } from "@mui/system";
+import { CSSProperties } from "react";
 
 type RawStyles<S, T extends Theme = Theme> = Record<keyof S, SxProps<T>>;
 type Styles<S extends object, T extends Theme = Theme> = {
@@ -38,5 +21,15 @@ type Styles<S extends object, T extends Theme = Theme> = {
 export function makeStyles<S extends object, T extends Theme = Theme>(
   rawStyles: RawStyles<S, T>,
 ): Styles<S, T> {
+  return rawStyles;
+}
+
+type CssStyles<S extends object> = {
+  [P in keyof S]: CSSProperties;
+};
+
+export function makeCssStyles<S extends object>(
+  rawStyles: CssStyles<S>,
+): CssStyles<S> {
   return rawStyles;
 }

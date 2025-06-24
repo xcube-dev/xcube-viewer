@@ -1,5 +1,12 @@
+/*
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import { RefObject } from "react";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { MessageType } from "@/states/messageLogState";

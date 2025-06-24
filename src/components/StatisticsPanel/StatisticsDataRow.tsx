@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { useRef, useState } from "react";
@@ -36,6 +18,7 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { isAreaStatistics, StatisticsRecord } from "@/model/statistics";
+import HoverVisibleBox from "@/components/HoverVisibleBox";
 import SnapshotButton from "@/components/SnapshotButton";
 import StatisticsTable from "./StatisticsTable";
 import HistogramChart from "./HistogramChart";
@@ -48,6 +31,10 @@ const styles = makeStyles({
   },
   chart: {
     flexGrow: 1,
+  },
+  hoverVisibleBox: {
+    display: "flex",
+    gap: 0.1,
   },
 });
 
@@ -88,41 +75,42 @@ export default function StatisticsDataRow({
       containerRef={containerRef}
       actions={
         <>
-          {hasHistogram && (
-            <ToggleButtonGroup size="small">
-              <Tooltip arrow title={i18n.get("Toggle adjustable x-range")}>
-                <ToggleButton
-                  selected={brush}
-                  onClick={handleToggleBrush}
-                  value="brush"
-                  size="small"
+          <HoverVisibleBox sx={styles.hoverVisibleBox} initialOpacity={0.05}>
+            {hasHistogram && (
+              <ToggleButtonGroup size="small">
+                <Tooltip arrow title={i18n.get("Toggle adjustable x-range")}>
+                  <ToggleButton
+                    selected={brush}
+                    onClick={handleToggleBrush}
+                    value="brush"
+                    size="small"
+                  >
+                    <TransformIcon fontSize="inherit" />
+                  </ToggleButton>
+                </Tooltip>
+                <Tooltip
+                  arrow
+                  title={i18n.get("Show standard deviation (if any)")}
                 >
-                  <TransformIcon fontSize="inherit" />
-                </ToggleButton>
-              </Tooltip>
-              <Tooltip
-                arrow
-                title={i18n.get("Show standard deviation (if any)")}
-              >
-                <ToggleButton
-                  selected={details}
-                  onClick={handleToggleDetails}
-                  value="details"
-                  size="small"
-                >
-                  <IsoIcon fontSize="inherit" />
-                </ToggleButton>
-              </Tooltip>
-            </ToggleButtonGroup>
-          )}
+                  <ToggleButton
+                    selected={details}
+                    onClick={handleToggleDetails}
+                    value="details"
+                    size="small"
+                  >
+                    <IsoIcon fontSize="inherit" />
+                  </ToggleButton>
+                </Tooltip>
+              </ToggleButtonGroup>
+            )}
 
-          {hasHistogram && (
-            <SnapshotButton
-              elementRef={containerRef}
-              postMessage={postMessage}
-            />
-          )}
-
+            {hasHistogram && (
+              <SnapshotButton
+                elementRef={containerRef}
+                postMessage={postMessage}
+              />
+            )}
+          </HoverVisibleBox>
           <IconButton size="small" onClick={handleRemoveStatistics}>
             <CloseIcon fontSize="inherit" />
           </IconButton>

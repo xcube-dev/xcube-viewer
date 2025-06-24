@@ -1,36 +1,17 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { Action, Dispatch, Store } from "redux";
 import * as geojson from "geojson";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { initializeContributions } from "chartlets";
-import type { StoreApi } from "zustand/vanilla";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
+import { appParams } from "@/config";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { Dataset, getDatasetUserVariables } from "@/model/dataset";
@@ -48,23 +29,24 @@ import {
   TimeSeriesGroup,
   timeSeriesGroupsToTable,
 } from "@/model/timeSeries";
+import { initializeExtensions } from "@/ext/actions";
 import {
   mapProjectionSelector,
   selectedDatasetSelector,
   selectedDatasetTimeDimensionSelector,
-  selectedVariableSelector,
+  selectedDatasetTimeLabelSelector,
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
+  selectedPlaceInfoSelector,
   selectedPlaceSelector,
   selectedServerSelector,
   selectedTimeChunkSizeSelector,
+  selectedVariableSelector,
   userPlacesFormatNameSelector,
   userPlacesFormatOptionsCsvSelector,
   userPlacesFormatOptionsGeoJsonSelector,
   userPlacesFormatOptionsWktSelector,
-  selectedDatasetTimeLabelSelector,
-  selectedPlaceInfoSelector,
 } from "@/selectors/controlSelectors";
 import {
   datasetsSelector,
@@ -75,7 +57,7 @@ import { AppState } from "@/states/appState";
 import { VolumeRenderMode } from "@/states/controlState";
 import { ColorBarNorm } from "@/model/variable";
 import { StatisticsRecord } from "@/model/statistics";
-import { UserVariable, ExpressionCapabilities } from "@/model/userVariable";
+import { ExpressionCapabilities, UserVariable } from "@/model/userVariable";
 import { loadUserVariables, storeUserVariables } from "@/states/userSettings";
 import { MessageLogAction, postMessage } from "./messageLogActions";
 import { renameUserPlaceInLayer, restyleUserPlaceInLayer } from "./mapActions";
@@ -88,11 +70,14 @@ import {
   SelectDataset,
   selectDataset,
   selectPlace,
-  SetSidebarOpen,
-  setSidebarOpen,
-  SetSidebarPanelId,
-  setSidebarPanelId,
+  SetSidePanelOpen,
+  setSidePanelOpen,
+  SetSidePanelId,
+  setSidePanelId,
 } from "./controlActions";
+import { newPersistentAppState, PersistedState } from "@/states/persistedState";
+import { applyPersistentState } from "@/actions/otherActions";
+import { DatasetsResponse } from "@/api/getDatasets";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -135,6 +120,45 @@ export function _updateServerInfo(serverInfo: ApiServerInfo): UpdateServerInfo {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+const SHARE_STATE_PERMALINK = "SHARE_STATE_PERMALINK";
+
+export function shareStatePermalink() {
+  return (
+    dispatch: Dispatch<AddActivity | RemoveActivity | MessageLogAction>,
+    getState: () => AppState,
+  ) => {
+    const apiServer = selectedServerSelector(getState());
+    dispatch(
+      addActivity(SHARE_STATE_PERMALINK, i18n.get("Creating permalink")),
+    );
+    api
+      .putViewerState(
+        apiServer.url,
+        getState().userAuthState.accessToken,
+        newPersistentAppState(getState()),
+      )
+      .then((stateKey) => {
+        if (stateKey) {
+          const location = window.location;
+          const viewerUrl = location.origin + location.pathname;
+          const stateUrl = `${viewerUrl}?stateKey=${stateKey}`;
+          navigator.clipboard.writeText(stateUrl).then(() => {
+            dispatch(
+              postMessage("success", i18n.get("Permalink copied to clipboard")),
+            );
+          });
+        } else {
+          dispatch(
+            postMessage("error", i18n.get("Failed to create permalink")),
+          );
+        }
+      })
+      .finally(() => dispatch(removeActivity(SHARE_STATE_PERMALINK)));
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const UPDATE_RESOURCES = "UPDATE_RESOURCES";
 
 export function updateResources() {
@@ -168,6 +192,7 @@ export const UPDATE_DATASETS = "UPDATE_DATASETS";
 export interface UpdateDatasets {
   type: typeof UPDATE_DATASETS;
   datasets: Dataset[];
+  entrypointDatasetId?: string;
 }
 
 export function updateDatasets() {
@@ -178,19 +203,23 @@ export function updateDatasets() {
 
     api
       .getDatasets(apiServer.url, getState().userAuthState.accessToken)
-      .then((datasets: Dataset[]) => {
+      .then((datasetsResponse: DatasetsResponse) => {
         // Add user variables from local storage
+        let datasets = datasetsResponse.datasets;
+        const entrypointDatasetId = datasetsResponse.entrypointDatasetId;
         const userVariables = loadUserVariables();
-        datasets = datasets.map((ds) => ({
-          ...ds,
-          variables: [...ds.variables, ...(userVariables[ds.id] || [])],
-        }));
-        // Dispatch updated dataset
-        dispatch(_updateDatasets(datasets));
-        // Adjust selection state
-        if (datasets.length > 0) {
+        if (datasets && datasets.length > 0) {
+          datasets = datasets.map((ds) => ({
+            ...ds,
+            variables: [...ds.variables, ...(userVariables[ds.id] || [])],
+          }));
+          // Dispatch updated dataset
+          dispatch(_updateDatasets(datasets, entrypointDatasetId));
+          // Adjust selection state
           const selectedDatasetId =
-            getState().controlState.selectedDatasetId || datasets[0].id;
+            getState().controlState.selectedDatasetId ||
+            entrypointDatasetId ||
+            datasets[0].id;
           dispatch(
             selectDataset(
               selectedDatasetId,
@@ -211,8 +240,11 @@ export function updateDatasets() {
   };
 }
 
-export function _updateDatasets(datasets: Dataset[]): UpdateDatasets {
-  return { type: UPDATE_DATASETS, datasets };
+export function _updateDatasets(
+  datasets: Dataset[],
+  entrypointDatasetId?: string,
+): UpdateDatasets {
+  return { type: UPDATE_DATASETS, datasets, entrypointDatasetId };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -520,7 +552,7 @@ export function removeUserPlaceGroup(
 export function addStatistics() {
   return (
     dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | AddStatistics | MessageLogAction
+      SetSidePanelOpen | SetSidePanelId | AddStatistics | MessageLogAction
     >,
     getState: () => AppState,
   ) => {
@@ -530,18 +562,18 @@ export function addStatistics() {
     const selectedVariable = selectedVariableSelector(getState());
     const selectedPlaceInfo = selectedPlaceInfoSelector(getState());
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
-    const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const sidePanelOpen = getState().controlState.sidePanelOpen;
+    const sidePanelId = getState().controlState.sidePanelId;
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
 
-    if (sidebarPanelId !== "stats") {
-      dispatch(setSidebarPanelId("stats"));
+    if (sidePanelId !== "stats") {
+      dispatch(setSidePanelId("stats"));
     }
-    if (!sidebarOpen) {
-      dispatch(setSidebarOpen(true));
+    if (!sidePanelOpen) {
+      dispatch(setSidePanelOpen(true));
     }
     dispatch(_addStatistics(null));
     api
@@ -591,7 +623,7 @@ export function removeStatistics(index: number): RemoveStatistics {
 export function addTimeSeries() {
   return (
     dispatch: Dispatch<
-      SetSidebarOpen | SetSidebarPanelId | UpdateTimeSeries | MessageLogAction
+      SetSidePanelOpen | SetSidePanelId | UpdateTimeSeries | MessageLogAction
     >,
     getState: () => AppState,
   ) => {
@@ -607,8 +639,8 @@ export function addTimeSeries() {
     const useMedian = getState().controlState.timeSeriesUseMedian;
     const includeStdev = getState().controlState.timeSeriesIncludeStdev;
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
-    const sidebarOpen = getState().controlState.sidebarOpen;
-    const sidebarPanelId = getState().controlState.sidebarPanelId;
+    const sidebarOpen = getState().controlState.sidePanelOpen;
+    const sidebarPanelId = getState().controlState.sidePanelId;
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -619,10 +651,10 @@ export function addTimeSeries() {
       selectedDatasetTimeDim
     ) {
       if (sidebarPanelId !== "timeSeries") {
-        dispatch(setSidebarPanelId("timeSeries"));
+        dispatch(setSidePanelId("timeSeries"));
       }
       if (!sidebarOpen) {
-        dispatch(setSidebarOpen(true));
+        dispatch(setSidePanelOpen(true));
       }
 
       const timeLabels = selectedDatasetTimeDim.labels;
@@ -807,58 +839,45 @@ export function _configureServers(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export function syncWithServer(store: Store) {
-  return (dispatch: Dispatch, getState: () => AppState) => {
+export function syncWithServer(store: Store, init: boolean = false) {
+  return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
-    dispatch(updateDatasets() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
+    dispatch(initializeExtensions(store) as unknown as Action);
 
-    const apiServer = selectedServerSelector(getState());
-    initializeContributions({
-      hostStore: newHostStore(store),
-      logging: { enabled: import.meta.env.DEV },
-      api: { serverUrl: apiServer.url, endpointName: "viewer/ext" },
-    });
+    const stateKey = appParams.get("stateKey");
+    if (stateKey && init) {
+      dispatch(restorePersistedState(store, stateKey) as unknown as Action);
+    } else {
+      dispatch(updateDatasets() as unknown as Action);
+    }
   };
 }
 
-function newHostStore(store: Store): StoreApi<AppState> & {
-  _initialState: AppState;
-  _prevState: AppState;
-} {
-  return {
-    _initialState: store.getState(),
-    getInitialState(): AppState {
-      // noinspection JSPotentiallyInvalidUsageOfThis
-      return this._initialState;
-    },
-    getState(): AppState {
-      return store.getState();
-    },
-    setState(
-      _state:
-        | AppState
-        | Partial<AppState>
-        | ((state: AppState) => AppState | Partial<AppState>),
-      _replace?: boolean,
-    ): void {
-      throw new Error(
-        "Changing the host state from contributions is not yet supported",
-      );
-    },
-    _prevState: store.getState(),
-    subscribe(
-      listener: (store: AppState, prevState: AppState) => void,
-    ): () => void {
-      return store.subscribe(() => {
-        const state = store.getState();
-        if (state !== this._prevState) {
-          listener(state, this._prevState);
-          this._prevState = state;
+function restorePersistedState(store: Store, stateKey: string) {
+  return (dispatch: Dispatch, getState: () => AppState) => {
+    const serverUrl = selectedServerSelector(store.getState()).url;
+    api
+      .getViewerState(serverUrl, getState().userAuthState.accessToken, stateKey)
+      .then((stateResult) => {
+        if (typeof stateResult === "object") {
+          const persistedState = stateResult as PersistedState;
+          const { apiUrl } = persistedState as PersistedState;
+          if (apiUrl === serverUrl) {
+            dispatch(applyPersistentState(persistedState) as unknown as Action);
+          } else {
+            dispatch(
+              postMessage(
+                "warning",
+                "Failed to restore state, backend mismatch",
+              ),
+            );
+          }
+        } else {
+          dispatch(postMessage("warning", stateResult));
         }
       });
-    },
   };
 }
 

@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import React, { useState, useEffect } from "react";
@@ -30,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
 import i18n from "@/i18n";
-import { LayerDefinition, USER_GROUP_NAME } from "@/model/layerDefinition";
+import { LayerDefinition } from "@/model/layerDefinition";
 import { WmsLayerDefinition, fetchWmsLayers } from "@/util/wms";
 import DoneCancel from "@/components/DoneCancel";
 
@@ -74,7 +56,6 @@ const UserLayerEditorWms: React.FC<UserLayerEditorWmsProps> = ({
     if (wmsLayers && wmsLayerIndex !== -1) {
       onChange({
         ...userLayer,
-        group: USER_GROUP_NAME,
         title: wmsLayers[wmsLayerIndex].title,
         url: wmsUrl.trim(),
         attribution: wmsLayers[wmsLayerIndex].attribution,

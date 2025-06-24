@@ -1,41 +1,28 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
-import { useEffect, useRef, MouseEvent, CSSProperties } from "react";
+import { useEffect, useRef, MouseEvent } from "react";
+import { styled, Theme } from "@mui/system";
+import Tooltip from "@mui/material/Tooltip";
 
 import i18n from "@/i18n";
+import { makeCssStyles } from "@/util/styles";
 import { ColorBar, renderColorBar } from "@/model/colorBar";
-import Tooltip from "@mui/material/Tooltip";
-import {
-  COLOR_BAR_ITEM_HEIGHT,
-  COLOR_BAR_ITEM_WIDTH,
-} from "@/components/ColorBarLegend/constants";
+import { COLOR_BAR_ITEM_HEIGHT, COLOR_BAR_ITEM_WIDTH } from "./constants";
+import { getBorderStyle } from "./style";
 
-const styles: Record<string, CSSProperties> = {
-  nominal: { cursor: "pointer" },
-  error: { cursor: "pointer", border: "0.5px solid red" },
-};
+const StyledCanvas = styled("canvas")(({ theme }: { theme: Theme }) => ({
+  border: getBorderStyle(theme),
+  cursor: "pointer",
+}));
+
+const styles = makeCssStyles({
+  nominal: {},
+  error: { border: "1px solid red" },
+});
 
 interface ColorBarCanvasProps {
   colorBar: ColorBar;
@@ -68,9 +55,9 @@ export default function ColorBarCanvas({
 
   return (
     <Tooltip title={tooltipTitle}>
-      <canvas
+      <StyledCanvas
         ref={canvasRef}
-        width={width || COLOR_BAR_ITEM_WIDTH}
+        width={width || COLOR_BAR_ITEM_WIDTH - 4}
         height={height || COLOR_BAR_ITEM_HEIGHT + 4}
         onClick={onClick}
         style={!imageData ? styles.error : styles.nominal}

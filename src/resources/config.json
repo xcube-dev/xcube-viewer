@@ -8,21 +8,26 @@
   "branding": {
     "appBarTitle": "xcube Viewer",
     "windowTitle": "xcube Viewer",
-    "windowIcon": null,
+    "headerBackgroundColor": "#606060",
+    "themeMode": "system",
     "compact": false,
-    "themeName": "light",
-    "primaryColor": "blue",
-    "secondaryColor": "pink",
     "organisationUrl": "https://xcube.readthedocs.io/",
     "logoImage": "images/logo.png",
     "logoWidth": 32,
+    "headerTitleStyle": {
+      "fontFamily": "Arial",
+      "fontStyle": "italic",
+      "fontSize": "1.2rem"
+    },
     "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     "defaultAgg": "mean",
     "polygonFillOpacity": 0.2,
     "mapProjection": "EPSG:3857",
     "allowDownloads": true,
     "allowRefresh": true,
+    "allowSharing": true,
     "allowUserVariables": true,
+    "allowViewModePython": true,
     "allow3D": true
   }
 }

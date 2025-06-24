@@ -1,31 +1,13 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
-import { Action, Dispatch } from "redux";
-import { Extent as OlExtent } from "ol/extent";
+import type { Action, Dispatch } from "redux";
+import type { Extent as OlExtent } from "ol/extent";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
-import { Geometry as OlGeometry } from "ol/geom";
+import type { Geometry as OlGeometry } from "ol/geom";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
@@ -33,10 +15,10 @@ import { Dataset, findDataset } from "@/model/dataset";
 import {
   findPlaceInPlaceGroups,
   isValidPlaceGroup,
-  Place,
-  PlaceGroup,
+  type Place,
+  type PlaceGroup,
 } from "@/model/place";
-import { Time, TimeRange } from "@/model/timeSeries";
+import type { Time, TimeRange } from "@/model/timeSeries";
 import { renderUserColorBarAsBase64, UserColorBar } from "@/model/userColorBar";
 import {
   selectedDatasetIdSelector,
@@ -47,12 +29,12 @@ import {
   selectedServerSelector,
 } from "@/selectors/controlSelectors";
 import { datasetsSelector } from "@/selectors/dataSelectors";
-import { AppState } from "@/states/appState";
-import {
+import type { AppState } from "@/states/appState";
+import type {
   ControlState,
   LayerVisibilities,
+  LayerGroupStates,
   MapInteraction,
-  SidebarPanelId,
   TimeAnimationInterval,
   ViewMode,
   VolumeRenderMode,
@@ -64,7 +46,7 @@ import {
   updateDatasetPlaceGroup,
   UpdateDatasetPlaceGroup,
 } from "./dataActions";
-import { MessageLogAction, postMessage } from "./messageLogActions";
+import { type MessageLogAction, postMessage } from "./messageLogActions";
 import { locateInMap } from "./mapActions";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -302,19 +284,45 @@ function _selectPlace(placeId: string | null, places: Place[]): SelectPlace {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_LAYER_VISIBILITY = "SET_LAYER_VISIBILITY";
+export const TOGGLE_DATASET_RGB_LAYER = "TOGGLE_DATASET_RGB_LAYER";
 
-export interface SetLayerVisibility {
-  type: typeof SET_LAYER_VISIBILITY;
-  layerId: keyof LayerVisibilities;
+export interface ToggleDatasetRgbLayer {
+  type: typeof TOGGLE_DATASET_RGB_LAYER;
   visible: boolean;
 }
 
-export function setLayerVisibility(
-  layerId: keyof LayerVisibilities,
-  visible: boolean,
-): SetLayerVisibility {
-  return { type: SET_LAYER_VISIBILITY, layerId, visible };
+export function toggleDatasetRgbLayer(visible: boolean): ToggleDatasetRgbLayer {
+  return { type: TOGGLE_DATASET_RGB_LAYER, visible };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_LAYER_VISIBILITIES = "SET_LAYER_VISIBILITIES";
+
+export interface SetLayerVisibilities {
+  type: typeof SET_LAYER_VISIBILITIES;
+  layerVisibilities: LayerVisibilities;
+}
+
+export function setLayerVisibilities(
+  layerVisibilities: LayerVisibilities,
+): SetLayerVisibilities {
+  return { type: SET_LAYER_VISIBILITIES, layerVisibilities };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_LAYER_GROUP_STATES = "SET_LAYER_GROUP_STATES";
+
+export interface SetLayerGroupStates {
+  type: typeof SET_LAYER_GROUP_STATES;
+  layerGroupStates: Partial<LayerGroupStates>;
+}
+
+export function setLayerGroupStates(
+  layerGroupStates: Partial<LayerGroupStates>,
+): SetLayerGroupStates {
+  return { type: SET_LAYER_GROUP_STATES, layerGroupStates };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -355,19 +363,22 @@ export function setVariableCompareMode(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_VARIABLE_SPLIT_POS = "SET_VARIABLE_SPLIT_POS";
+export const UPDATE_VARIABLE_SPLIT_POS = "UPDATE_VARIABLE_SPLIT_POS";
 
-export interface SetVariableSplitPos {
-  type: typeof SET_VARIABLE_SPLIT_POS;
-  variableSplitPos: number | undefined;
+export interface UpdateVariableSplitPos {
+  type: typeof UPDATE_VARIABLE_SPLIT_POS;
+  size: number;
+  isDelta?: boolean;
 }
 
-export function setVariableSplitPos(
-  variableSplitPos: number | undefined,
-): SetVariableSplitPos {
+export function updateVariableSplitPos(
+  size: number,
+  isDelta?: boolean,
+): UpdateVariableSplitPos {
   return {
-    type: SET_VARIABLE_SPLIT_POS,
-    variableSplitPos,
+    type: UPDATE_VARIABLE_SPLIT_POS,
+    size,
+    isDelta,
   };
 }
 
@@ -519,45 +530,41 @@ export function setLayerMenuOpen(layerMenuOpen: boolean): SetLayerMenuOpen {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_SIDEBAR_POSITION = "SET_SIDEBAR_POSITION";
+export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 
-export interface SetSidebarPosition {
-  type: typeof SET_SIDEBAR_POSITION;
-  sidebarPosition: number;
+export interface SetSidePanelOpen {
+  type: typeof SET_SIDE_PANEL_OPEN;
+  sidePanelOpen: boolean;
 }
 
-export function setSidebarPosition(
-  sidebarPosition: number,
-): SetSidebarPosition {
-  return { type: SET_SIDEBAR_POSITION, sidebarPosition };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export const SET_SIDEBAR_OPEN = "SET_SIDEBAR_OPEN";
-
-export interface SetSidebarOpen {
-  type: typeof SET_SIDEBAR_OPEN;
-  sidebarOpen: boolean;
-}
-
-export function setSidebarOpen(sidebarOpen: boolean): SetSidebarOpen {
-  return { type: SET_SIDEBAR_OPEN, sidebarOpen };
+export function setSidePanelOpen(sidePanelOpen: boolean): SetSidePanelOpen {
+  return { type: SET_SIDE_PANEL_OPEN, sidePanelOpen };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SET_SIDEBAR_PANEL_ID = "SET_SIDEBAR_PANEL_ID";
+export const SET_SIDE_PANEL_ID = "SET_SIDE_PANEL_ID";
 
-export interface SetSidebarPanelId {
-  type: typeof SET_SIDEBAR_PANEL_ID;
-  sidebarPanelId: SidebarPanelId | string;
+export interface SetSidePanelId {
+  type: typeof SET_SIDE_PANEL_ID;
+  sidePanelId: string | null;
 }
 
-export function setSidebarPanelId(
-  sidebarPanelId: SidebarPanelId | string,
-): SetSidebarPanelId {
-  return { type: SET_SIDEBAR_PANEL_ID, sidebarPanelId };
+export function setSidePanelId(sidePanelId: string | null): SetSidePanelId {
+  return { type: SET_SIDE_PANEL_ID, sidePanelId };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_SIDE_PANEL_SIZE = "UPDATE_SIDE_PANEL_SIZE";
+
+export interface UpdateSidePanelSize {
+  type: typeof UPDATE_SIDE_PANEL_SIZE;
+  sizeDelta: number;
+}
+
+export function updateSidePanelSize(sizeDelta: number): UpdateSidePanelSize {
+  return { type: UPDATE_SIDE_PANEL_SIZE, sizeDelta };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -823,7 +830,9 @@ export type ControlAction =
   | SelectPlaceGroups
   | SelectPlace
   | SelectTime
-  | SetLayerVisibility
+  | ToggleDatasetRgbLayer
+  | SetLayerVisibilities
+  | SetLayerGroupStates
   | IncSelectedTime
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode
@@ -840,9 +849,9 @@ export type ControlAction =
   | OpenDialog
   | CloseDialog
   | SetLayerMenuOpen
-  | SetSidebarPosition
-  | SetSidebarOpen
-  | SetSidebarPanelId
+  | UpdateSidePanelSize
+  | SetSidePanelOpen
+  | SetSidePanelId
   | SetVolumeRenderMode
   | UpdateVolumeState
   | SetVisibleInfoCardElements
@@ -850,5 +859,5 @@ export type ControlAction =
   | SelectVariable2
   | SetMapPointInfoBoxEnabled
   | SetVariableCompareMode
-  | SetVariableSplitPos
+  | UpdateVariableSplitPos
   | FlyTo;

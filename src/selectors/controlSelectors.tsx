@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { JSX } from "react";
@@ -39,7 +21,7 @@ import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
 import { transformExtent as olTransformExtent } from "ol/proj";
 
-import { Config, getTileAccess, getUserPlaceFillOpacity } from "@/config";
+import { Config, getUserPlaceFillOpacity } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
 import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
@@ -80,6 +62,7 @@ import {
 } from "./dataSelectors";
 import { makeRequestUrl } from "@/api/callApi";
 import {
+  LayerStates,
   LayerVisibilities,
   MAP_OBJECTS,
   ViewMode,
@@ -99,13 +82,14 @@ import {
 import {
   defaultBaseMapLayers,
   defaultOverlayLayers,
-  findLayer,
-  getLayerTitle,
+  getConfigLayers,
   LayerDefinition,
+  LayerGroup,
 } from "@/model/layerDefinition";
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { StatisticsRecord } from "@/model/statistics";
+import { Geometry } from "geojson";
 import { LayerState } from "@/model/layerState";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
@@ -134,28 +118,20 @@ export const userBaseMapsSelector = (state: AppState) =>
   state.controlState.userBaseMaps;
 export const userOverlaysSelector = (state: AppState) =>
   state.controlState.userOverlays;
-export const selectedBaseMapIdSelector = (state: AppState) =>
-  state.controlState.selectedBaseMapId;
-export const selectedOverlayIdSelector = (state: AppState) =>
-  state.controlState.selectedOverlayId;
-export const showBaseMapLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.baseMap;
 export const showDatasetBoundaryLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetBoundary;
+  state.controlState.layerVisibilities.datasetBoundary;
 export const selectedVariableVisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetVariable;
+  state.controlState.layerVisibilities.datasetVariable;
 export const selectedVariable2VisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetVariable2;
+  state.controlState.layerVisibilities.datasetVariable2;
 export const datasetRgbVisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetRgb;
+  state.controlState.layerVisibilities.datasetRgb;
 export const datasetRgb2VisibilitySelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetRgb2;
+  state.controlState.layerVisibilities.datasetRgb2;
 export const showDatasetPlacesLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.datasetPlaces;
+  state.controlState.layerVisibilities.datasetPlaces;
 export const showUserPlacesLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.userPlaces;
-export const showOverlayLayerSelector = (state: AppState) =>
-  !!state.controlState.layerVisibilities.overlay;
+  state.controlState.layerVisibilities.userPlaces;
 export const layerVisibilitiesSelector = (state: AppState) =>
   state.controlState.layerVisibilities;
 export const infoCardElementStatesSelector = (state: AppState) =>
@@ -197,6 +173,19 @@ export const selectedDataset2Selector = createSelector(
   datasetsSelector,
   selectedDataset2IdSelector,
   findDataset,
+);
+
+export const getDatasetTitle = (dataset: Dataset | null) =>
+  dataset && (dataset.title || dataset.id) ? dataset.title : null;
+
+export const selectedDatasetTitleSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetTitle,
+);
+
+export const selectedDataset2TitleSelector = createSelector(
+  selectedDataset2Selector,
+  getDatasetTitle,
 );
 
 export const selectedVariablesSelector = createSelector(
@@ -532,6 +521,13 @@ export const selectedPlaceSelector = createSelector(
   selectedPlaceIdSelector,
   (places: Place[], placeId: string | null): Place | null => {
     return places.find((place) => place.id === placeId) || null;
+  },
+);
+
+export const selectedPlaceGeometrySelector = createSelector(
+  selectedPlaceSelector,
+  (place: Place | null): Geometry | null => {
+    return place?.geometry || null;
   },
 );
 
@@ -1273,39 +1269,55 @@ export const activityMessagesSelector = createSelector(
   },
 );
 
+export const configBaseMapsSelector = (_state: AppState) =>
+  getConfigLayers("baseMaps");
+
+export const configOverlaysSelector = (_state: AppState) =>
+  getConfigLayers("overlays");
+
 export const baseMapsSelector = createSelector(
   userBaseMapsSelector,
-  (userBaseMaps): LayerDefinition[] => {
-    return [...userBaseMaps, ...defaultBaseMapLayers];
+  configBaseMapsSelector,
+  (userBaseMaps, configBaseMaps): LayerDefinition[] => {
+    return [
+      ...userBaseMaps,
+      ...(configBaseMaps.length ? configBaseMaps : defaultBaseMapLayers),
+    ];
   },
 );
 
 export const overlaysSelector = createSelector(
   userOverlaysSelector,
-  (userOverlays): LayerDefinition[] => {
-    return [...userOverlays, ...defaultOverlayLayers];
+  configOverlaysSelector,
+  (userOverlays, configOverlays): LayerDefinition[] => {
+    return [
+      ...userOverlays,
+      ...(configOverlays.length ? configOverlays : defaultOverlayLayers),
+    ];
   },
 );
 
-const getLayerFromLayerDefinition = (
+const getLayersFromLayerDefinition = (
   layerDefs: LayerDefinition[],
-  layerId: string | null,
-  showLayer: boolean,
+  layerVisibilities: LayerVisibilities,
   zIndex: number,
-): JSX.Element | null => {
-  if (!showLayer || !layerId) {
-    return null;
-  }
-  const layerDef = findLayer(layerDefs, layerId);
-  if (!layerDef) {
-    return null;
-  }
+): JSX.Element[] => {
+  return layerDefs
+    .filter((layerDef) => layerVisibilities[layerDef.id])
+    .map((layerDef) => getLayerFromLayerDefinition(layerDef, zIndex));
+};
+
+const getLayerFromLayerDefinition = (
+  layerDef: LayerDefinition,
+  zIndex: number,
+): JSX.Element => {
   let attributions = layerDef.attribution;
+  // noinspection HttpUrlsUsage
   if (
     attributions &&
     (attributions.startsWith("http://") || attributions.startsWith("https://"))
   ) {
-    attributions = `&copy; <a href=&quot;${layerDef.attribution}&quot;>${layerDef.group}</a>`;
+    attributions = `&copy; <a href=&quot;${layerDef.attribution}&quot;>${layerDef.title}</a>`;
   }
   let source: OlTileWMSSource | OlXYZSource;
   if (layerDef.wms) {
@@ -1320,97 +1332,66 @@ const getLayerFromLayerDefinition = (
       attributionsCollapsible: true,
     });
   } else {
-    const access = getTileAccess(layerDef.group);
     source = new OlXYZSource({
-      url: layerDef.url + (access ? `?${access.param}=${access.token}` : ""),
+      url: layerDef.url,
       attributions,
       attributionsCollapsible: true,
     });
   }
-  return <Tile id={layerDef.id} source={source} zIndex={zIndex} />;
+  return (
+    <Tile key={layerDef.id} id={layerDef.id} source={source} zIndex={zIndex} />
+  );
 };
 
-export const baseMapLayerSelector = createSelector(
+export const baseMapLayersSelector = createSelector(
   baseMapsSelector,
-  selectedBaseMapIdSelector,
-  showBaseMapLayerSelector,
+  layerVisibilitiesSelector,
   () => 0,
-  getLayerFromLayerDefinition,
+  getLayersFromLayerDefinition,
 );
 
-export const overlayLayerSelector = createSelector(
+export const overlayLayersSelector = createSelector(
   overlaysSelector,
-  selectedOverlayIdSelector,
-  showOverlayLayerSelector,
+  layerVisibilitiesSelector,
   () => 20,
-  getLayerFromLayerDefinition,
-);
-
-const _getLayerTitle = (layers: LayerDefinition[], layerId: string | null) => {
-  const layer = findLayer(layers, layerId);
-  return layer ? getLayerTitle(layer) : null;
-};
-
-export const selectedBaseMapTitleSelector = createSelector(
-  baseMapsSelector,
-  selectedBaseMapIdSelector,
-  _getLayerTitle,
-);
-
-export const selectedOverlayTitleSelector = createSelector(
-  overlaysSelector,
-  selectedOverlayIdSelector,
-  _getLayerTitle,
+  getLayersFromLayerDefinition,
 );
 
 export const layerStatesSelector = createSelector(
-  selectedBaseMapTitleSelector,
-  selectedOverlayTitleSelector,
-  selectedBaseMapIdSelector,
-  selectedOverlayIdSelector,
   selectedDatasetSelector,
   selectedDataset2Selector,
   selectedVariableSelector,
   selectedVariable2Selector,
+  baseMapsSelector,
+  overlaysSelector,
   layerVisibilitiesSelector,
   (
-    basemapTitle,
-    overlayTitle,
-    baseMapId,
-    overlayId,
     dataset,
     dataset2,
     variable,
     variable2,
+    baseMapLayers,
+    overlayLayers,
     visibilities,
-  ) =>
-    ({
-      baseMap: {
-        title: "Base Map",
-        subTitle: basemapTitle || undefined,
-        visible: visibilities.baseMap,
-        disabled: !baseMapId,
-      },
-      overlay: {
-        title: "Overlay",
-        subTitle: overlayTitle || undefined,
-        visible: visibilities.overlay,
-        disabled: !overlayId,
-      },
+  ) => {
+    const layerStates: LayerStates = {
       datasetRgb: {
+        id: "datasetRgb",
         title: "Dataset RGB",
         subTitle: dataset ? dataset.title : undefined,
         visible: visibilities.datasetRgb,
-        disabled: !dataset,
+        disabled: !(dataset && dataset.rgbSchema),
       },
       datasetRgb2: {
+        id: "datasetRgb2",
         title: "Dataset RGB",
         subTitle: dataset2 ? dataset2.title : undefined,
         visible: visibilities.datasetRgb2,
-        disabled: !dataset2,
+        disabled: !(dataset2 && dataset2.rgbSchema),
         pinned: true,
       },
       datasetVariable: {
+        id: "datasetVariable",
         title: "Dataset Variable",
         subTitle:
           dataset && variable
@@ -1420,6 +1401,7 @@ export const layerStatesSelector = createSelector(
         disabled: !(dataset && variable),
       },
       datasetVariable2: {
+        id: "datasetVariable2",
         title: "Dataset Variable",
         subTitle:
           dataset2 && variable2
@@ -1430,18 +1412,51 @@ export const layerStatesSelector = createSelector(
         pinned: true,
       },
       datasetBoundary: {
+        id: "datasetBoundary",
         title: "Dataset Boundary",
         subTitle: dataset ? dataset.title : undefined,
         visible: visibilities.datasetBoundary,
         disabled: !dataset,
       },
       datasetPlaces: {
+        id: "datasetPlaces",
         title: "Dataset Places",
         visible: visibilities.datasetPlaces,
       },
       userPlaces: {
+        id: "userPlaces",
         title: "User Places",
         visible: visibilities.userPlaces,
       },
-    }) as Record<keyof LayerVisibilities, LayerState>,
+    };
+    baseMapLayers.forEach((layerDef: LayerDefinition) => {
+      layerStates[layerDef.id] = newLayerStateFromLayerDef(
+        layerDef,
+        "baseMaps",
+        visibilities[layerDef.id],
+      );
+    });
+    overlayLayers.forEach((layerDef: LayerDefinition) => {
+      layerStates[layerDef.id] = newLayerStateFromLayerDef(
+        layerDef,
+        "overlays",
+        visibilities[layerDef.id],
+      );
+    });
+    return layerStates;
+  },
 );
+
+function newLayerStateFromLayerDef(
+  layer: LayerDefinition,
+  type: LayerGroup,
+  visible: boolean | undefined,
+): LayerState {
+  return {
+    id: layer.id,
+    title: layer.title,
+    exclusive: layer.exclusive,
+    type,
+    visible,
+  };
+}

@@ -1,42 +1,25 @@
-// noinspection JSUnusedLocalSymbols
-
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
+import { useTheme } from "@mui/material";
+import Box from "@mui/material/Box";
 
 import { AppState } from "@/states/appState";
-import { setSidebarPosition } from "@/actions/controlActions";
+import { updateSidePanelSize } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
 import Viewer from "./Viewer";
-import Sidebar from "./Sidebar";
-import { useTheme } from "@mui/material";
+import SidePanel from "./SidePanel";
+import { makeCssStyles } from "@/util/styles";
+import useResizeObserver from "@/hooks/useResizeObserver";
 
 // Adjust for debugging split pane style
-const styles: Record<string, CSSProperties> = {
+const styles = makeCssStyles({
   containerHor: {
     flexGrow: 1,
     overflow: "hidden",
@@ -47,25 +30,14 @@ const styles: Record<string, CSSProperties> = {
     overflowY: "auto",
   },
 
-  viewerHor: {
+  noSplitHor: {
+    display: "flex",
+    flexDirection: "row",
     height: "100%",
-    overflow: "hidden",
-    padding: 0,
   },
-  viewerVer: {
-    width: "100%",
-    overflow: "hidden",
-    padding: 0,
-  },
-
-  sidebarHor: {
-    flex: "auto",
-    overflowX: "hidden",
-    overflowY: "auto",
-  },
-  sidebarVer: {
-    width: "100%",
-    overflow: "hidden",
+  noSplitVer: {
+    display: "flex",
+    flexDirection: "column",
   },
 
   viewer: {
@@ -73,24 +45,31 @@ const styles: Record<string, CSSProperties> = {
     width: "100%",
     height: "100%",
   },
-};
 
-interface WorkspaceProps {
-  sidebarOpen: boolean;
-  sidebarPosition: number;
-  setSidebarPosition: (sidebarPos: number) => void;
+  sidebarAlone: {
+    flexGrow: 0,
+  },
+});
+
+interface WorkspaceImplProps {
+  sidePanelOpen: boolean;
+  sidePanelId: string | null;
+  sidePanelSize: number;
+  updateSidePanelSize: (sizeDelta: number) => void;
 }
 
 // noinspection JSUnusedLocalSymbols
 const mapStateToProps = (state: AppState) => {
   return {
-    sidebarOpen: state.controlState.sidebarOpen,
-    sidebarPosition: state.controlState.sidebarPosition,
+    sidePanelOpen: state.controlState.sidePanelOpen,
+    sidePanelId: state.controlState.sidePanelId,
+    sidePanelSize: state.controlState.sidePanelSize,
   };
 };
 
+// noinspection JSUnusedGlobalSymbols
 const mapDispatchToProps = {
-  setSidebarPosition,
+  updateSidePanelSize,
 };
 
 type Layout = "hor" | "ver";
@@ -98,55 +77,62 @@ const getLayout = (): Layout => {
   return window.innerWidth / window.innerHeight >= 1 ? "hor" : "ver";
 };
 
-function _Workspace({
-  sidebarOpen,
-  sidebarPosition,
-  setSidebarPosition,
-}: WorkspaceProps) {
+function WorkspaceImpl({
+  sidePanelOpen,
+  sidePanelId,
+  sidePanelSize,
+  updateSidePanelSize,
+}: WorkspaceImplProps) {
   const [map, setMap] = useState<OlMap | null>(null);
   const [layout, setLayout] = useState<Layout>(getLayout());
-  const resizeObserver = useRef<ResizeObserver | null>(null);
   const theme = useTheme();
 
   useEffect(() => {
     updateLayout();
-    resizeObserver.current = new ResizeObserver(updateLayout);
-    resizeObserver.current.observe(document.documentElement);
-
-    return () => {
-      if (resizeObserver.current) {
-        resizeObserver.current.disconnect();
-      }
-    };
   }, []);
+
+  useResizeObserver(() => {
+    updateLayout();
+  });
 
   useEffect(() => {
     if (map) {
       map.updateSize();
     }
-  }, [map, sidebarPosition]);
+  }, [map, sidePanelSize]);
 
   const updateLayout = () => {
     setLayout(getLayout());
   };
 
-  const dirSuffix = layout === "hor" ? "Hor" : "Ver";
-
-  if (sidebarOpen) {
-    return (
-      <SplitPane
-        dir={layout}
-        splitPosition={sidebarPosition}
-        setSplitPosition={setSidebarPosition}
-        style={styles["container" + dirSuffix]}
-        child1Style={styles["viewer" + dirSuffix]}
-        child2Style={styles["sidebar" + dirSuffix]}
-      >
-        <Viewer onMapRef={setMap} theme={theme} />
-        <Sidebar />
-      </SplitPane>
-    );
+  if (sidePanelOpen) {
+    if (sidePanelId) {
+      // Viewer & Panel & Sidebar
+      return (
+        <SplitPane
+          dir={layout}
+          childPos={"last"}
+          childSize={sidePanelSize}
+          updateChildSize={updateSidePanelSize}
+          style={layout === "hor" ? styles.containerHor : styles.containerVer}
+        >
+          <Viewer onMapRef={setMap} theme={theme} />
+          <SidePanel />
+        </SplitPane>
+      );
+    } else {
+      // Viewer & Sidebar - no Panel
+      return (
+        <Box sx={layout === "hor" ? styles.noSplitHor : styles.noSplitVer}>
+          <Viewer onMapRef={setMap} theme={theme} />
+          <div style={styles.sidebarAlone}>
+            <SidePanel />
+          </div>
+        </Box>
+      );
+    }
   } else {
+    // Viewer alone - no Panel, no Sidebar
     return (
       <div style={styles.viewer}>
         <Viewer onMapRef={setMap} theme={theme} />
@@ -155,5 +141,5 @@ function _Workspace({
   }
 }
 
-const Workspace = connect(mapStateToProps, mapDispatchToProps)(_Workspace);
+const Workspace = connect(mapStateToProps, mapDispatchToProps)(WorkspaceImpl);
 export default Workspace;

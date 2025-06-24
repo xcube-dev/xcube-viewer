@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import ReactDOM from "react-dom/client";
@@ -33,22 +15,28 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import "@fontsource/material-icons";
 import "./index.css";
 
 import App from "@/connected/App";
 import { Config } from "@/config";
 import {
   changeLocale,
-  SET_VARIABLE_SPLIT_POS,
+  UPDATE_SIDE_PANEL_SIZE,
+  UPDATE_VARIABLE_SPLIT_POS,
   updateUserColorBarsImageData,
 } from "@/actions/controlActions";
 import { syncWithServer } from "@/actions/dataActions";
 import { appReducer } from "@/reducers/appReducer";
 import { AppState } from "@/states/appState";
+import baseUrl from "@/util/baseurl";
+
+console.debug("baseUrl:", baseUrl);
 
 Config.load().then(() => {
   const actionFilter = (_getState: () => AppState, action: Action) =>
-    action.type !== SET_VARIABLE_SPLIT_POS;
+    action.type !== UPDATE_VARIABLE_SPLIT_POS &&
+    action.type !== UPDATE_SIDE_PANEL_SIZE;
   const logger = ReduxLogger.createLogger({
     collapsed: true,
     diff: false,
@@ -62,7 +50,7 @@ Config.load().then(() => {
   dispatch(changeLocale(store.getState().controlState.locale));
   dispatch(updateUserColorBarsImageData() as unknown as Action);
   if (store.getState().controlState.privacyNoticeAccepted) {
-    dispatch(syncWithServer(store) as unknown as Action);
+    dispatch(syncWithServer(store, true) as unknown as Action);
   }
 
   ReactDOM.createRoot(document.getElementById("root")!).render(

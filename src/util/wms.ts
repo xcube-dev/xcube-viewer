@@ -1,29 +1,13 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import WMSCapabilities from "ol/format/WMSCapabilities";
 import { HTTPError } from "@/api";
+import { type JsonObject } from "./json";
+import { isObject } from "./types";
 
 const parser = new WMSCapabilities();
 
@@ -32,8 +16,6 @@ export interface WmsLayerDefinition {
   title: string;
   attribution?: string;
 }
-
-type JsonObject = Record<string, unknown>;
 
 export async function fetchWmsLayers(
   url: string,
@@ -69,29 +51,31 @@ export function parseWmsLayers(capsXml: string): WmsLayerDefinition[] {
   return parseWmsLayerObjects(capsXml).map((layer): WmsLayerDefinition => {
     const name = layer["Name"] as string;
     const title = (layer["Title"] || name) as string;
-    let attribution: string | undefined = undefined;
-    const Attribution = layer["Attribution"];
-    if (isJsonObject(Attribution)) {
-      const attributionTitle = Attribution["Title"];
-      const attributionUrl = Attribution["OnlineResource"];
+    let attributionHtml: string | undefined = undefined;
+    const attribution = layer["Attribution"];
+    if (isObject(attribution)) {
+      const attributionTitle = attribution["Title"];
+      const attributionUrl = attribution["OnlineResource"];
       if (attributionTitle && attributionUrl) {
-        attribution = `&copy; <a href=&quot;${attributionUrl}&quot;>${attributionTitle}</a>`;
+        attributionHtml = `&copy; <a href=&quot;${attributionUrl}&quot;>${attributionTitle}</a>`;
       } else if (attributionUrl) {
-        attribution = `${attributionUrl}`;
+        attributionHtml = `${attributionUrl}`;
       } else if (attributionTitle) {
-        attribution = `${attributionTitle}`;
+        attributionHtml = `${attributionTitle}`;
       }
     }
-    return { name, title, attribution };
+    return { name, title, attribution: attributionHtml };
   });
 }
 
 export function parseWmsLayerObjects(capsXml: string): JsonObject[] {
   const capsObj = parser.read(capsXml);
-  if (isJsonObject(capsObj)) {
+  // We assume, the result of parsing XML code is always
+  // a JSON-serializable object.
+  if (isObject(capsObj)) {
     const capObj = capsObj["Capability"];
-    if (isJsonObject(capObj)) {
-      return flattenLayerObjects(capObj, true);
+    if (isObject(capObj)) {
+      return flattenLayerObjects(capObj as JsonObject, true);
     }
   }
   throw new Error("invalid WMSCapabilities object");
@@ -113,8 +97,8 @@ function flattenLayerObjects(
   let childLayers: JsonObject[];
   if (Array.isArray(childLayer)) {
     childLayers = childLayer.flatMap((l) => flattenLayerObjects(l));
-  } else if (isJsonObject(childLayer)) {
-    childLayers = flattenLayerObjects(childLayer);
+  } else if (isObject(childLayer)) {
+    childLayers = flattenLayerObjects(childLayer as JsonObject);
   } else {
     childLayers = [{}];
   }
@@ -143,8 +127,4 @@ function mergeLayerObjects(
       : childTitle || parentTitle;
 
   return { ...parentLayer, ...childLayer, Title: title };
-}
-
-function isJsonObject(value: unknown): value is JsonObject {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
 }

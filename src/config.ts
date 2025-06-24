@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { Color, PaletteMode } from "@mui/material";
@@ -39,13 +21,14 @@ import {
   yellow,
 } from "@mui/material/colors";
 
-import { ApiServerConfig } from "@/model/apiServer";
+import { type ApiServerConfig } from "@/model/apiServer";
 import rawDefaultConfig from "@/resources/config.json";
-import { AuthClientConfig } from "@/util/auth";
-import { Branding, parseBranding } from "@/util/branding";
+import { type AuthClientConfig } from "@/util/auth";
+import { type Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
 import { isNumber } from "./util/types";
+import { hasViewerStateApi } from "@/api/hasViewerStateApi";
 
 export const appParams = new URLSearchParams(window.location.search);
 
@@ -96,6 +79,13 @@ export class Config {
     );
     branding = decodeBrandingFlag(branding, "allowUserVariables");
     branding = decodeBrandingFlag(branding, "allow3D");
+    branding = decodeBrandingFlag(branding, "allowSharing");
+    if (branding.allowSharing) {
+      const hasStateApi = await hasViewerStateApi(server.url);
+      if (!hasStateApi) {
+        branding = { ...branding, allowSharing: false };
+      }
+    }
     Config._instance = new Config(name, server, branding, authClient);
     if (import.meta.env.DEV) {
       console.debug("Configuration:", Config._instance);
@@ -241,11 +231,6 @@ export class Config {
   }
 }
 
-interface TileAccess {
-  param: string;
-  token: string;
-}
-
 // Array of user place colors in stable order (see #153)
 export const userPlaceColorsArray: [string, Color][] = [
   ["red", red],
@@ -298,19 +283,6 @@ export function getUserPlaceFillOpacity(opacity?: number): number {
   return isNumber(opacity) ? opacity : 0.25;
 }
 
-// See resources/maps.json
-const tileAccess: { [name: string]: TileAccess } = {
-  Mapbox: {
-    param: "access_token",
-    token:
-      "pk.eyJ1IjoiZm9ybWFuIiwiYSI6ImNrM2JranV0bDBtenczb2szZG84djh6bWUifQ.q0UKwf4CWt5fcQwIDwF8Bg",
-  },
-};
-
-export function getTileAccess(groupName: string) {
-  return tileAccess[groupName];
-}
-
 function decodeBrandingFlag(
   branding: Branding,
   flagName: keyof Branding,
@@ -318,6 +290,6 @@ function decodeBrandingFlag(
   const _flagValue = appParams.get(flagName);
   const flagValue: boolean = _flagValue
     ? !!parseInt(_flagValue)
-    : !!branding[flagName];
+    : branding[flagName] !== false;
   return { ...branding, [flagName]: flagValue };
 }

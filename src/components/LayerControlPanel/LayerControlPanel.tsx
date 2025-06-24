@@ -1,49 +1,50 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, SyntheticEvent, useState } from "react";
+import {
+  type CSSProperties,
+  type SyntheticEvent,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import Draggable, {
-  ControlPosition,
-  DraggableData,
-  DraggableEvent,
+  type ControlPosition,
+  type DraggableData,
+  type DraggableEvent,
 } from "react-draggable";
-import { ResizableBox, ResizeCallbackData } from "react-resizable";
+import { ResizableBox, type ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
-import { Theme } from "@mui/system";
+import { styled } from "@mui/material/styles";
+import type { Theme } from "@mui/system";
+import MuiAccordion, { type AccordionProps } from "@mui/material/Accordion";
+import MuiAccordionSummary, {
+  type AccordionSummaryProps,
+  accordionSummaryClasses,
+} from "@mui/material/AccordionSummary";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
-import { WithLocale } from "@/util/lang";
-import { LayerVisibilities } from "@/states/controlState";
-import LayerItem from "./LayerItem";
-import { LayerState } from "@/model/layerState";
+import type { WithLocale } from "@/util/lang";
+import {
+  LayerGroupStates,
+  LayerStates,
+  LayerVisibilities,
+} from "@/states/controlState";
+import type { LayerGroup } from "@/model/layerDefinition";
+import type { LayerState } from "@/model/layerState";
+import LayerMenu from "@/components/LayerControlPanel/LayerMenu";
 
 const initialPos: ControlPosition = { x: 48, y: 128 };
 const initialSize = { width: 320, height: 520 };
@@ -62,7 +63,6 @@ const styles = makeStyles({
     alignItems: "center",
     cursor: "move",
     padding: 1,
-    marginBottom: "2px",
     borderBottom: `1px solid ${theme.palette.mode === "dark" ? "#FFFFFF3F" : "#0000003F"}`,
   }),
   windowTitle: {
@@ -70,28 +70,145 @@ const styles = makeStyles({
   },
 });
 
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  "&:not(:last-child)": {
+    borderBottom: 0,
+  },
+  "&::before": {
+    display: "none",
+  },
+}));
+
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  backgroundColor: "rgba(0, 0, 0, .03)",
+  minHeight: 32,
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  flexDirection: "row-reverse",
+  [`& .${accordionSummaryClasses.expandIconWrapper}.${accordionSummaryClasses.expanded}`]:
+    {
+      transform: "rotate(90deg)",
+    },
+  [`& .${accordionSummaryClasses.content}`]: {
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(0),
+    marginRight: theme.spacing(0),
+  },
+  ...theme.applyStyles("dark", {
+    backgroundColor: "rgba(255, 255, 255, .05)",
+  }),
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme: _ }) => ({
+  padding: 0,
+  borderTop: "1px solid rgba(0, 0, 0, .125)",
+}));
+
 interface LayerControlPanelProps extends WithLocale {
   layerMenuOpen: boolean;
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
   openDialog: (dialogId: string) => void;
-  layerStates: Record<keyof LayerVisibilities, LayerState>;
-  setLayerVisibility: (
-    layerId: keyof LayerVisibilities,
-    visible: boolean,
-  ) => void;
+  layerStates: LayerStates;
+  setLayerVisibilities: (layerVisibilities: LayerVisibilities) => void;
+  layerGroupStates: LayerGroupStates;
+  setLayerGroupStates: (layerGroupStates: Partial<LayerGroupStates>) => void;
 }
 
-export default function LayerControlPanel(props: LayerControlPanelProps) {
+export default function LayerControlPanel({
+  layerStates,
+  layerMenuOpen,
+  setLayerMenuOpen,
+  openDialog,
+  setLayerVisibilities,
+  layerGroupStates,
+  setLayerGroupStates,
+}: LayerControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
   const [size, setSize] = useState(initialSize);
 
-  const { layerMenuOpen, setLayerMenuOpen, openDialog, ...layerProps } = props;
+  const setLayerVisibility = useCallback(
+    (layerId: string, visible: boolean) => {
+      const layerVisibilities: LayerVisibilities = { [layerId]: visible };
+      if (visible) {
+        const layer = layerStates[layerId];
+        if (layer && layer.type && layer.exclusive) {
+          Object.keys(layerStates).forEach((otherLayerId) => {
+            const otherLayer = layerStates[otherLayerId];
+            if (
+              otherLayer &&
+              otherLayer.type === layer.type &&
+              otherLayer.exclusive &&
+              otherLayer.visible
+            ) {
+              layerVisibilities[otherLayerId] = false;
+            }
+          });
+        }
+      }
+      setLayerVisibilities(layerVisibilities);
+    },
+    [layerStates, setLayerVisibilities],
+  );
+
+  const handleOverlaysStateChange = useCallback(
+    (_event: SyntheticEvent, newExpanded: boolean) => {
+      setLayerGroupStates({ overlays: newExpanded });
+    },
+    [setLayerGroupStates],
+  );
+
+  const handleBaseMapsStateChange = useCallback(
+    (_event: SyntheticEvent, newExpanded: boolean) => {
+      setLayerGroupStates({ baseMaps: newExpanded });
+    },
+    [setLayerGroupStates],
+  );
+
+  const handlePredefinedStateChange = useCallback(
+    (_event: SyntheticEvent, newExpanded: boolean) => {
+      setLayerGroupStates({ predefined: newExpanded });
+    },
+    [setLayerGroupStates],
+  );
+
+  const overlays = useMemo(
+    () => filterLayerStates(layerStates, "overlays"),
+    [layerStates],
+  );
+
+  const baseMaps = useMemo(
+    () => filterLayerStates(layerStates, "baseMaps"),
+    [layerStates],
+  );
+
+  const predefined = useMemo(
+    () =>
+      [
+        layerStates.userPlaces,
+        layerStates.datasetPlaces,
+        layerStates.datasetBoundary,
+        layerStates.datasetVariable,
+        layerStates.datasetVariable2,
+        layerStates.datasetRgb,
+        layerStates.datasetRgb2,
+      ].filter((layerState) => !!layerState),
+    [layerStates],
+  );
 
   if (!layerMenuOpen) {
     return null;
   }
 
-  console.log("layerProps", layerProps);
+  // console.log("layerProps", layerProps);
 
   const handleUserOverlays = () => {
     openDialog("userOverlays");
@@ -135,27 +252,77 @@ export default function LayerControlPanel(props: LayerControlPanelProps) {
             </IconButton>
           </Box>
           <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
-            <MenuList dense>
-              {/*<Divider />*/}
-              <LayerItem layerId="overlay" {...layerProps} />
-              <LayerItem layerId="userPlaces" {...layerProps} />
-              <LayerItem layerId="datasetPlaces" {...layerProps} />
-              <LayerItem layerId="datasetBoundary" {...layerProps} />
-              <LayerItem layerId="datasetVariable" {...layerProps} />
-              <LayerItem layerId="datasetVariable2" {...layerProps} />
-              <LayerItem layerId="datasetRgb" {...layerProps} />
-              <LayerItem layerId="datasetRgb2" {...layerProps} />
-              <LayerItem layerId="baseMap" {...layerProps} last={true} />
-              <MenuItem onClick={handleUserBaseMaps}>
-                {i18n.get("User Base Maps") + "..."}
-              </MenuItem>
-              <MenuItem onClick={handleUserOverlays}>
-                {i18n.get("User Overlays") + "..."}
-              </MenuItem>
-            </MenuList>
+            <Accordion
+              expanded={layerGroupStates.overlays}
+              onChange={handleOverlaysStateChange}
+            >
+              <AccordionSummary id="overlays">
+                <Typography component="span">{i18n.get("Overlays")}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <LayerMenu
+                  layerStates={overlays}
+                  setLayerVisibility={setLayerVisibility}
+                  extraItems={
+                    <MenuItem onClick={handleUserOverlays}>
+                      {i18n.get("User Overlays") + "..."}
+                    </MenuItem>
+                  }
+                  disableI18n
+                />
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={layerGroupStates.predefined}
+              onChange={handlePredefinedStateChange}
+            >
+              <AccordionSummary id="predefines">
+                <Typography component="span">
+                  {i18n.get("Predefined")}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <LayerMenu
+                  layerStates={predefined}
+                  setLayerVisibility={setLayerVisibility}
+                />
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={layerGroupStates.baseMaps}
+              onChange={handleBaseMapsStateChange}
+            >
+              <AccordionSummary id="baseMaps">
+                <Typography component="span">
+                  {i18n.get("Base maps")}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <LayerMenu
+                  layerStates={baseMaps}
+                  setLayerVisibility={setLayerVisibility}
+                  extraItems={
+                    <MenuItem onClick={handleUserBaseMaps}>
+                      {i18n.get("User Base Maps") + "..."}
+                    </MenuItem>
+                  }
+                  disableI18n
+                />
+              </AccordionDetails>
+            </Accordion>
           </Box>
         </Paper>
       </ResizableBox>
     </Draggable>
   );
+}
+
+function filterLayerStates(
+  layerStates: LayerStates,
+  layerType: LayerGroup,
+): LayerState[] {
+  return Object.keys(layerStates)
+    .filter((k) => layerStates[k].type === layerType)
+    .map((k) => layerStates[k])
+    .sort((s1, s2) => s1.title.localeCompare(s2.title));
 }

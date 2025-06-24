@@ -1,71 +1,63 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { CSSProperties, MouseEvent, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
 
 import { makeStyles } from "@/util/styles";
-import { ColorBar, ColorBars } from "@/model/colorBar";
-import { UserColorBar } from "@/model/userColorBar";
-import { ColorBarNorm } from "@/model/variable";
+import type { ColorBar, ColorBars } from "@/model/colorBar";
+import type { UserColorBar } from "@/model/userColorBar";
+import type { ColorBarNorm } from "@/model/variable";
+import { COLOR_BAR_ITEM_WIDTH } from "./constants";
+import { getBorderStyle } from "./style";
 import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
 import ColorBarLegendScalable from "./ColorBarLegendScalable";
 import ColorBarColorEditor from "./ColorBarColorEditor";
-import Typography from "@mui/material/Typography";
-import { COLOR_BAR_ITEM_WIDTH } from "@/components/ColorBarLegend/constants";
 
 const styles = makeStyles({
   container: (theme) => ({
     position: "absolute",
     zIndex: 1000,
     top: 10,
+    border: getBorderStyle(theme),
     borderRadius: "5px",
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderColor: "#00000020",
-    backgroundColor: "#FFFFFFAA",
-    color: "black",
+    boxShadow:
+      "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
+    backgroundColor: theme.palette.background.default,
     maxWidth: `${COLOR_BAR_ITEM_WIDTH + 20}px`,
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
     paddingBottom: theme.spacing(0.5),
     paddingTop: theme.spacing(0.5),
   }),
-  title: (theme) => ({
-    fontSize: "small",
-    fontWeight: "bold",
+  header: {
     width: "100%",
     display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    paddingBottom: 0.5,
+  },
+  title: {
+    fontSize: "0.8rem",
+    fontWeight: "normal",
     wordBreak: "break-word",
     wordWrap: "break-word",
-    justifyContent: "center",
-    paddingBottom: theme.spacing(0.5),
-  }),
+  },
+  subTitle: {
+    fontSize: "0.7rem",
+    fontWeight: "lighter",
+    wordBreak: "break-word",
+    wordWrap: "break-word",
+  },
 });
 
 interface ColorBarLegendProps {
+  datasetTitle: string | null;
   variableName: string | null;
   variableTitle: string | null;
   variableUnits: string;
@@ -95,6 +87,7 @@ export default function ColorBarLegend(
   props: Omit<ColorBarLegendProps, "onOpenColorBarEditor">,
 ) {
   const {
+    datasetTitle,
     variableName,
     variableTitle,
     variableUnits,
@@ -118,14 +111,30 @@ export default function ColorBarLegend(
     return null;
   }
 
-  const variableTitleWithUnits =
-    variableColorBar.type === "categorical"
+  const effectiveVariableTitle =
+    variableColorBar.type === "categorical" ||
+    !variableUnits ||
+    variableUnits === "1" ||
+    variableUnits === "-"
       ? variableTitle || variableName
-      : `${variableTitle || variableName} (${variableUnits || "-"})`;
+      : `${variableTitle || variableName} (${variableUnits})`;
 
   return (
     <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
-      <Typography sx={styles.title}>{variableTitleWithUnits}</Typography>
+      <Box sx={styles.header}>
+        <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
+          {effectiveVariableTitle}
+        </Typography>
+        {datasetTitle && (
+          <Typography
+            sx={styles.subTitle}
+            variant="subtitle2"
+            color="textSecondary"
+          >
+            {datasetTitle}
+          </Typography>
+        )}
+      </Box>
       {variableColorBar.type === "categorical" ? (
         <ColorBarLegendCategorical
           categories={variableColorBar.colorRecords}

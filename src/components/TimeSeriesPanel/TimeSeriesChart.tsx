@@ -1,28 +1,10 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
-import { MouseEvent, useMemo, useRef, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart,
   CartesianGrid,
@@ -128,6 +110,7 @@ interface TimeSeriesChartProps extends WithLocale {
     timeSeries: TimeSeries,
   ) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  selectedDatasetTitle: string | null;
 }
 
 export default function TimeSeriesChart({
@@ -148,6 +131,7 @@ export default function TimeSeriesChart({
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
   postMessage,
+  selectedDatasetTitle,
 }: TimeSeriesChartProps) {
   const theme = useTheme();
 
@@ -201,6 +185,8 @@ export default function TimeSeriesChart({
       ),
     [timeSeriesGroup],
   );
+
+  useEffect(updateLegendWrapperRef, []);
 
   const progress =
     completed.reduce((a: number, b: number) => a + b, 0) / completed.length;
@@ -339,8 +325,7 @@ export default function TimeSeriesChart({
     }
   };
 
-  const handleChartResize = (w: number, h: number) => {
-    chartSize.current = [w, h];
+  function updateLegendWrapperRef() {
     if (chartContainerRef.current) {
       // Hack: get the recharts legend wrapper div, so we can use its height
       // to compute cartesian chart coordinates
@@ -351,6 +336,11 @@ export default function TimeSeriesChart({
         legendWrapperRef.current = elements.item(0) as HTMLDivElement;
       }
     }
+  }
+
+  const handleChartResize = (w: number, h: number) => {
+    chartSize.current = [w, h];
+    updateLegendWrapperRef();
   };
 
   const getXDomain = ([dataMin, dataMax]: [number, number]) => {
@@ -382,19 +372,9 @@ export default function TimeSeriesChart({
     chartX: number,
     chartY: number,
   ): [number, number] | undefined => {
-    const legendWrapperEl = legendWrapperRef.current;
-    if (
-      !chartSize.current ||
-      !xDomain.current ||
-      !yDomain.current ||
-      !legendWrapperEl
-    ) {
+    if (!chartSize.current || !xDomain.current || !yDomain.current) {
       return undefined;
     }
-    const [xMin, xMax] = xDomain.current;
-    const [yMin, yMax] = yDomain.current;
-    const [chartWidth, chartHeight] = chartSize.current;
-    const legendHeight = legendWrapperEl.clientHeight;
     // WARNING: There is no recharts API to retrieve margin values of
     // the cartesian grid SVG group.
     // They have been found by manual analysis and may change for any
@@ -403,6 +383,15 @@ export default function TimeSeriesChart({
     const MARGIN_TOP = 5;
     const MARGIN_RIGHT = 5;
     const MARGIN_BOTTOM = 38;
+    const ONE_ROW_LEGEND_HEIGHT = 20;
+    //
+    const [xMin, xMax] = xDomain.current;
+    const [yMin, yMax] = yDomain.current;
+    const [chartWidth, chartHeight] = chartSize.current;
+    const legendWrapperEl = legendWrapperRef.current;
+    const legendHeight = legendWrapperEl
+      ? legendWrapperEl.clientHeight
+      : ONE_ROW_LEGEND_HEIGHT;
     const cartesianGridWidth = chartWidth - MARGIN_LEFT - MARGIN_RIGHT;
     const cartesianGridHeight =
       chartHeight - MARGIN_TOP - MARGIN_BOTTOM - legendHeight;
@@ -457,7 +446,7 @@ export default function TimeSeriesChart({
           onMouseLeave={handleMouseLeave}
           // onClick={handleClick}
           syncId="anyId"
-          style={{ color: labelTextColor, fontSize: "0.8em" }}
+          style={{ color: labelTextColor, fontSize: "0.7rem" }}
           data={data}
           barGap={1}
           barSize={30}
@@ -487,7 +476,10 @@ export default function TimeSeriesChart({
           )}
           <Legend
             content={
-              <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
+              <CustomLegend
+                removeTimeSeries={handleRemoveTimeSeriesClick}
+                datasetTitle={selectedDatasetTitle}
+              />
             }
           />
           {timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>

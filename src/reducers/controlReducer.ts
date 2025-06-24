@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import {
@@ -42,22 +24,24 @@ import {
   SELECT_VARIABLE,
   SELECT_VARIABLE_2,
   SET_LAYER_MENU_OPEN,
-  SET_LAYER_VISIBILITY,
+  SET_LAYER_VISIBILITIES,
   SET_MAP_INTERACTION,
-  SET_SIDEBAR_OPEN,
-  SET_SIDEBAR_PANEL_ID,
-  SET_SIDEBAR_POSITION,
   SET_MAP_POINT_INFO_BOX_ENABLED,
+  SET_SIDE_PANEL_ID,
+  SET_SIDE_PANEL_OPEN,
   SET_VARIABLE_COMPARE_MODE,
-  SET_VARIABLE_SPLIT_POS,
+  UPDATE_VARIABLE_SPLIT_POS,
   SET_VISIBLE_INFO_CARD_ELEMENTS,
   SET_VOLUME_RENDER_MODE,
   STORE_SETTINGS,
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
+  UPDATE_SIDE_PANEL_SIZE,
   UPDATE_TIME_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VOLUME_STATE,
+  SET_LAYER_GROUP_STATES,
+  TOGGLE_DATASET_RGB_LAYER,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -75,16 +59,18 @@ import {
   getDatasetTimeRange,
 } from "@/model/dataset";
 import {
-  selectedDatasetTimeIndexSelector,
   selectedDatasetTimeCoordinatesSelector,
+  selectedDatasetTimeIndexSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
 import { ControlState, newControlState } from "@/states/controlState";
 import { storeUserSettings } from "@/states/userSettings";
 import { findIndexCloseTo } from "@/util/find";
+import { isNumber } from "@/util/types";
 import { appParams } from "@/config";
 import { USER_DRAWN_PLACE_GROUP_ID } from "@/model/place";
 import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/userColorBar";
+import { APPLY_PERSISTED_STATE, OtherAction } from "@/actions/otherActions";
 
 // TODO (forman): Refactor reducers for UPDATE_DATASETS, SELECT_DATASET,
 //  SELECT_PLACE, SELECT_VARIABLE so they produce a consistent state.
@@ -98,13 +84,17 @@ import { USER_COLOR_BAR_CODE_EXAMPLE } from "@/model/userColorBar";
 
 export function controlReducer(
   state: ControlState | undefined,
-  action: ControlAction | DataAction,
+  action: ControlAction | DataAction | OtherAction,
   appState: AppState | undefined,
 ): ControlState {
   if (state === undefined) {
     state = newControlState();
   }
   switch (action.type) {
+    case APPLY_PERSISTED_STATE: {
+      const { controlState } = action.persistedState.state;
+      return { ...state, ...controlState };
+    }
     case UPDATE_SETTINGS: {
       const settings = { ...state, ...action.settings };
       storeUserSettings(settings);
@@ -134,7 +124,17 @@ export function controlReducer(
       } else {
         selectedDatasetId = null;
         selectedVariableName = null;
-        selectedDataset = action.datasets.length ? action.datasets[0] : null;
+        if (action.entrypointDatasetId) {
+          selectedDataset = findDataset(
+            action.datasets,
+            action.entrypointDatasetId,
+          );
+        }
+        selectedDataset = action.datasets.length
+          ? selectedDataset
+            ? selectedDataset
+            : action.datasets[0]
+          : null;
         if (selectedDataset) {
           selectedDatasetId = selectedDataset.id;
           if (selectedDataset.variables.length > 0) {
@@ -208,12 +208,31 @@ export function controlReducer(
         selectedVariableName: action.selectedVariableName,
       };
     }
-    case SET_LAYER_VISIBILITY: {
+    case TOGGLE_DATASET_RGB_LAYER: {
       return {
         ...state,
         layerVisibilities: {
           ...state.layerVisibilities,
-          [action.layerId]: action.visible,
+          datasetVariable: !action.visible,
+          datasetRgb: action.visible,
+        },
+      };
+    }
+    case SET_LAYER_VISIBILITIES: {
+      return {
+        ...state,
+        layerVisibilities: {
+          ...state.layerVisibilities,
+          ...action.layerVisibilities,
+        },
+      };
+    }
+    case SET_LAYER_GROUP_STATES: {
+      return {
+        ...state,
+        layerGroupStates: {
+          ...state.layerGroupStates,
+          ...action.layerGroupStates,
         },
       };
     }
@@ -225,9 +244,14 @@ export function controlReducer(
       const { variableCompareMode } = action;
       return { ...state, variableCompareMode, variableSplitPos: undefined };
     }
-    case SET_VARIABLE_SPLIT_POS: {
-      const { variableSplitPos } = action;
-      return { ...state, variableSplitPos };
+    case UPDATE_VARIABLE_SPLIT_POS: {
+      const { size, isDelta } = action;
+      if (!isDelta && state.variableSplitPos !== size) {
+        return { ...state, variableSplitPos: size };
+      } else if (isNumber(state.variableSplitPos) && size !== 0) {
+        return { ...state, variableSplitPos: state.variableSplitPos + size };
+      }
+      return state;
     }
     case SELECT_TIME: {
       let { selectedTime } = action;
@@ -422,22 +446,23 @@ export function controlReducer(
       storeUserSettings(state);
       return state;
     }
-    case SET_SIDEBAR_POSITION: {
-      const { sidebarPosition } = action;
-      state = { ...state, sidebarPosition };
-      return state;
-    }
-    case SET_SIDEBAR_OPEN: {
-      const { sidebarOpen } = action;
-      state = { ...state, sidebarOpen };
+    case SET_SIDE_PANEL_OPEN: {
+      const { sidePanelOpen } = action;
+      state = { ...state, sidePanelOpen };
       storeUserSettings(state);
       return state;
     }
-    case SET_SIDEBAR_PANEL_ID: {
-      const { sidebarPanelId } = action;
-      state = { ...state, sidebarPanelId };
+    case SET_SIDE_PANEL_ID: {
+      const { sidePanelId } = action;
+      state = { ...state, sidePanelId };
       storeUserSettings(state);
       return state;
+    }
+    case UPDATE_SIDE_PANEL_SIZE: {
+      const { sizeDelta } = action;
+      return sizeDelta
+        ? { ...state, sidePanelSize: state.sidePanelSize + sizeDelta }
+        : state;
     }
     case SET_VOLUME_RENDER_MODE: {
       state = {

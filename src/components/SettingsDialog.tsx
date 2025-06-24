@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import React from "react";
@@ -32,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { SxProps } from "@mui/system";
-import { Theme } from "@mui/material";
+import { Theme, useTheme } from "@mui/material";
 
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
@@ -42,14 +24,11 @@ import {
   LocateMode,
   TimeSeriesChartType,
   TimeAnimationInterval,
+  THEME_LABELS,
+  ThemeMode,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
-import {
-  findLayer,
-  getLayerTitle,
-  LayerDefinition,
-} from "@/model/layerDefinition";
-import LayerSelectMenu from "@/components/LayerSelectMenu";
+import { LayerDefinition } from "@/model/layerDefinition";
 import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
@@ -90,8 +69,8 @@ interface SettingsDialogProps {
   settings: ControlState;
   selectedServer: ApiServerConfig;
   viewerVersion: string;
-  baseMapLayers: LayerDefinition[];
-  overlayLayers: LayerDefinition[];
+  userBaseMapLayers: LayerDefinition[];
+  userOverlayLayers: LayerDefinition[];
   updateSettings: (settings: Partial<ControlState>) => void;
   changeLocale: (locale: string) => void;
   openDialog: (dialogId: string) => void;
@@ -103,8 +82,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   closeDialog,
   settings,
   selectedServer,
-  baseMapLayers,
-  overlayLayers,
+  userBaseMapLayers,
+  userOverlayLayers,
   updateSettings,
   changeLocale,
   openDialog,
@@ -113,13 +92,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 }) => {
   const [languageMenuAnchor, setLanguageMenuAnchor] =
     React.useState<Element | null>(null);
-  const [baseMapMenuAnchor, setBaseMapMenuAnchor] =
-    React.useState<Element | null>(null);
-  const [overlayMenuAnchor, setOverlayMenuAnchor] =
-    React.useState<Element | null>(null);
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
   );
+  const theme = useTheme();
 
   React.useEffect(() => {
     const newTimeChunkSize = parseInt(timeChunkSize);
@@ -209,37 +185,23 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     setLanguageMenuAnchor(null);
   }
 
-  function handleBaseMapMenuOpen(event: React.MouseEvent) {
-    setBaseMapMenuAnchor(event.currentTarget);
-  }
-
-  function handleBaseMapMenuClose() {
-    setBaseMapMenuAnchor(null);
-  }
-
   const handleManageUserBaseMaps = (event: React.MouseEvent) => {
     event.stopPropagation();
     openDialog("userBaseMaps");
   };
-
-  const baseMapLayer = findLayer(baseMapLayers, settings.selectedBaseMapId);
-  const baseMapLabel = getLayerTitle(baseMapLayer);
-
-  function handleOverlayMenuOpen(event: React.MouseEvent) {
-    setOverlayMenuAnchor(event.currentTarget);
-  }
-
-  function handleOverlayMenuClose() {
-    setOverlayMenuAnchor(null);
-  }
 
   const handleManageUserOverlays = (event: React.MouseEvent) => {
     event.stopPropagation();
     openDialog("userOverlays");
   };
 
-  const overlayLayer = findLayer(overlayLayers, settings.selectedOverlayId);
-  const overlayLabel = getLayerTitle(overlayLayer);
+  function handleThemeModeChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      themeMode: event.target.value as ThemeMode,
+    });
+  }
 
   return (
     <div>
@@ -279,8 +241,23 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 ))}
               </TextField>
             </SettingsSubPanel>
+            <SettingsSubPanel label={i18n.get("Appearance mode")}>
+              <TextField
+                variant="standard"
+                select
+                sx={styles.textField}
+                value={settings.themeMode || theme.palette.mode}
+                onChange={handleThemeModeChange}
+                margin="normal"
+              >
+                {THEME_LABELS.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {i18n.get(label)}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </SettingsSubPanel>
           </SettingsPanel>
-
           <SettingsPanel title={i18n.get("Time-Series")}>
             <SettingsSubPanel
               label={i18n.get("Show chart after adding a place")}
@@ -348,23 +325,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
           <SettingsPanel title={i18n.get("Map")}>
             <SettingsSubPanel
-              label={i18n.get("Base map")}
-              value={baseMapLabel}
-              onClick={handleBaseMapMenuOpen}
-            >
-              <Button onClick={handleManageUserBaseMaps}>
-                {i18n.get("User Base Maps") + "..."}
-              </Button>
-            </SettingsSubPanel>
+              label={i18n.get("User Base Maps") + "..."}
+              value={`${userBaseMapLayers.length} ${i18n.get("defined")}`}
+              onClick={handleManageUserBaseMaps}
+            />
             <SettingsSubPanel
-              label={i18n.get("Overlay")}
-              value={overlayLabel}
-              onClick={handleOverlayMenuOpen}
-            >
-              <Button onClick={handleManageUserOverlays}>
-                {i18n.get("User Overlays") + "..."}
-              </Button>
-            </SettingsSubPanel>
+              label={i18n.get("User Overlays") + "..."}
+              value={`${userOverlayLayers.length} ${i18n.get("defined")}`}
+              onClick={handleManageUserOverlays}
+            />
             <SettingsSubPanel label={i18n.get("Projection")}>
               <RadioSetting
                 propertyName={"mapProjection"}
@@ -462,26 +431,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       >
         {localeMenuItems}
       </Menu>
-
-      <LayerSelectMenu
-        anchorElement={baseMapMenuAnchor}
-        layers={baseMapLayers}
-        selectedLayerId={settings.selectedBaseMapId}
-        setSelectedLayerId={(selectedBaseMapId) =>
-          updateSettings({ selectedBaseMapId })
-        }
-        onClose={handleBaseMapMenuClose}
-      />
-
-      <LayerSelectMenu
-        anchorElement={overlayMenuAnchor}
-        layers={overlayLayers}
-        selectedLayerId={settings.selectedOverlayId}
-        setSelectedLayerId={(selectedOverlayId) =>
-          updateSettings({ selectedOverlayId })
-        }
-        onClose={handleOverlayMenuClose}
-      />
     </div>
   );
 };

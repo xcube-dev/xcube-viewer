@@ -2,7 +2,7 @@
   {
     "name": "OpenStreetMap",
     "link": "https://openstreetmap.org",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "OSM Mapnik",
         "endpoint": "https://a.tile.osm.org/{z}/{x}/{y}.png"
@@ -10,19 +10,14 @@
       {
         "name": "OSM Humanitarian",
         "endpoint": "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "OSM Landscape",
-        "endpoint": "https://a.tile3.opencyclemap.org/landscape/{z}/{x}/{y}.png"
       }
     ],
-    "overlays": [
-    ]
+    "overlays": []
   },
   {
     "name": "ESRI",
     "link": "https://services.arcgisonline.com/arcgis/rest/services",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "Dark Gray Base",
         "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
@@ -38,10 +33,6 @@
       {
         "name": "World Ocean Base",
         "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}"
-      },
-      {
-        "name": "DeLorme World Base Map",
-        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Street Map",
@@ -60,16 +51,8 @@
         "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       },
       {
-        "name": "World Physical Map",
-        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}"
-      },
-      {
         "name": "World Shaded Relief",
         "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"
-      },
-      {
-        "name": "World Terrain",
-        "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}"
       },
       {
         "name": "World Topo Map",
@@ -106,7 +89,7 @@
   {
     "name": "CartoDB",
     "link": "https://cartodb.com/basemaps/",
-    "datasets": [
+    "baseMaps": [
       {
         "name": "Positron",
         "endpoint": "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
@@ -133,75 +116,6 @@
         "name": "Dark Matter Labels",
         "endpoint": "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
       }
-    ]
-  },
-  {
-    "name": "Stamen",
-    "link": "https://maps.stamen.com",
-    "datasets": [
-      {
-        "name": "Toner",
-        "endpoint": "https://tile.stamen.com/toner/{z}/{x}/{y}.png",
-        "attribution": "Map tiles by <a href=\"https://stamen.com\">Stamen Design</a>, under <a href=\"https://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a>. Data by <a href=\"https://openstreetmap.org\">OpenStreetMap</a>, under <a href=\"https://www.openstreetmap.org/copyright\">ODbL</a>."
-      },
-      {
-        "name": "Terrain",
-        "endpoint": "https://tile.stamen.com/terrain/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Watercolor",
-        "endpoint": "https://tile.stamen.com/watercolor/{z}/{x}/{y}.png"
-      }
-    ],
-    "overlays": [
-    ]
-  },
-  {
-    "name": "Mapbox",
-    "link": "https://a.tiles.mapbox.com/v3/mapbox/maps.html",
-    "datasets": [
-      {
-        "name": "Blue Marble (January)",
-        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jan/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Blue Marble (July)",
-        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Blue Marble Topo & Bathy B/W (July)",
-        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.blue-marble-topo-bathy-jul-bw/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Control Room",
-        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Geography Class",
-        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.geography-class/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "World Dark",
-        "endpoint": "https://a.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "World Light",
-        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-light/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "World Glass",
-        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-glass/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "World Print",
-        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-print/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "World Blue",
-        "endpoint": "https:a.tiles.mapbox.com/v3/mapbox.world-blue/{z}/{x}/{y}.png"
-      }
-    ],
-    "overlays": [
     ]
   }
 ]

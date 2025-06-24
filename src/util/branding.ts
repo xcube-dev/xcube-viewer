@@ -1,25 +1,7 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
 import { CSSProperties } from "react";
@@ -46,8 +28,11 @@ import {
 } from "@mui/material/colors";
 import { ColorPartial } from "@mui/material/styles/createPalette";
 import { PaletteColorOptions } from "@mui/material/styles";
+import { PaletteMode } from "@mui/material";
 import baseUrl from "./baseurl";
 import { buildPath } from "./path";
+import { LayerVisibilities } from "@/states/controlState";
+import { LayerDefinition } from "@/model/layerDefinition";
 
 const COLOR_NAMES: { [name: string]: ColorPartial } = {
   amber,
@@ -71,35 +56,42 @@ const COLOR_NAMES: { [name: string]: ColorPartial } = {
   yellow,
 };
 
+export interface Layers {
+  overlays?: LayerDefinition[];
+  baseMaps?: LayerDefinition[];
+}
+
 // Align any changes made here with
 // - resources/config.json
 // - resources/config.schema.json
 export interface Branding {
   appBarTitle: string;
-  windowTitle: string;
-  windowIcon: string | null;
-  compact: boolean;
-  themeName: "dark" | "light";
-  primaryColor: PaletteColorOptions;
-  secondaryColor: PaletteColorOptions;
+  windowTitle?: string;
+  windowIcon?: string;
+  compact?: boolean;
+  themeMode?: PaletteMode | "system";
+  primaryColor?: PaletteColorOptions;
+  secondaryColor?: PaletteColorOptions;
   headerBackgroundColor?: string;
   headerTitleStyle?: CSSProperties;
   headerIconStyle?: CSSProperties;
   organisationUrl?: string;
   logoImage: string;
   logoWidth: number;
-  baseMapUrl?: string;
+  layers?: Layers;
+  layerVisibilities?: LayerVisibilities;
   defaultAgg?: "median" | "mean";
   polygonFillOpacity?: number;
   mapProjection?: string;
   allowDownloads?: boolean;
   allowRefresh?: boolean;
+  allowSharing?: boolean;
   allowViewModePython?: boolean;
   allowUserVariables?: boolean;
   allow3D?: boolean;
 }
 
-function setBrandingColor(
+function setBrandingPaletteColor(
   brandingConfig: Record<string, unknown>,
   key: keyof Branding,
 ) {
@@ -122,7 +114,7 @@ function setBrandingColor(
   if (color !== null) {
     brandingConfig[key] = color;
   } else {
-    throw new Error(`Value of branding.${key} is invalid: ${rawColor}`);
+    brandingConfig[key] = undefined;
   }
 }
 
@@ -142,8 +134,8 @@ export function parseBranding(
   configPath: string,
 ): Branding {
   brandingConfig = { ...brandingConfig };
-  setBrandingColor(brandingConfig, "primaryColor");
-  setBrandingColor(brandingConfig, "secondaryColor");
+  setBrandingPaletteColor(brandingConfig, "primaryColor");
+  setBrandingPaletteColor(brandingConfig, "secondaryColor");
   setBrandingImage(brandingConfig, "logoImage", configPath);
   return brandingConfig as unknown as Branding;
 }

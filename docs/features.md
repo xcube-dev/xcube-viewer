@@ -124,7 +124,7 @@ A list of all the features that the viewer contains will be created here, in whi
 					>User-defined variables</a
 				>
 				are marked with an icon and placed at the bottom of the list. The
-				currently selected variable is highlighted in blue.
+				currently selected variable is highlighted.
 			</td>
 		</tr>
 		<tr></tr>
@@ -152,7 +152,131 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
----
+### Show/Hide Sidebar
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="../assets/images/sidebar_button.png" alt="Sidebar button" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Show/Hide Sidebar</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>Button, highlighted when feature is enabled</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Shows or hides the
+				<a href="#sidebar" rel="noopener noreferrer">Sidebar</a>.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Provides access to the
+				<a href="#sidebar" rel="noopener noreferrer">Sidebar</a>.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="../user_guide/getting_started/#sidebar"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Sidebar
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="../assets/images/sidebar_highlighted.png" alt="Sidebar" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Sidebar</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A resizable window located at the right edge of the screen, which slides
+				out when activated. At the top, a tab bar displays all available panels.
+			</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Open the sidebar by clicking the
+				<a href="#showhide-sidebar" rel="noopener noreferrer"
+					>corresponding button</a
+				>, then select the panel of interest. The available panels depend on the
+				specific deployment configuration. <br /><br />
+				<strong>Always Available Panels:</strong>
+				<ul>
+					<li>
+						<strong>Info:</strong> Shows metadata and contextual information
+						about datasets, variables, and places.
+					</li>
+					<li>
+						<strong>Time Series:</strong> Allows visualization of time series
+						data for selected variables and locations.
+					</li>
+					<li>
+						<strong>Statistics:</strong> Provides statistical insights for
+						datasets and places.
+					</li>
+				</ul>
+				<strong>Optional Panels:</strong>
+				<ul>
+					<li>
+						<strong>Volume:</strong> Visualizes 3D volumetric data (if enabled).
+					</li>
+					<li>
+						<strong>User-Defined Panels:</strong> A planned feature for future
+						versions of <em>xcube-viewer</em>, enabling user customization of
+						panels.
+					</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Provide an interactive space to explore, analyse, and visualise data
+				through (configurable) panels.
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="../user_guide/getting_started/#sidebar"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 ### Show/Hide Layer Panel
 
@@ -360,6 +484,65 @@ A list of all the features that the viewer contains will be created here, in whi
 			</td>
 		</tr>
 	</tbody>
+</table>
+
+### Share Permalink
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/permalink_button.png"
+					alt="Permalink Button" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Sidebar</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>A button located in the header.</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Click the button to generate a permalink and copy it to the clipboard.
+				When using the feature, a pop-up window appears at the bottom of the
+				viewer, indicating whether the permalink was created successfully.
+				<br /><br /> 
+				This link can be shared with others to restore the current state of the
+    			viewer, including:
+    			<ul>
+    				<li>The selected map region, zoom level, and overlays.</li>
+    				<li>User-defined places, including the currently selected place.</li>
+    				<li>Opened panels, active tabs, and any selected options.</li>
+    				<li>
+    					Other UI-specific states such as selected items, filters, or toggle
+    					states.
+    				</li>
+    			</ul>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td><b>Aim</b></td>
+    		<td>To share the state of the viewer.</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2">
+    			Link to feature mentioned in
+    			<a
+    				href="../user_guide/getting_started/#share-state-of-viewer"
+    				rel="noopener noreferrer"
+    				>User Guide</a
+    			>.
+    		</td>
+    	</tr>
+    </tbody>
 </table>
 
 ## Compare Variables
@@ -740,7 +923,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				Positioned in the sidebar, the metadata for the
 				<strong>selected dataset, variable, or place</strong> is located under
-				the "Info"-Tab. The <strong>display can be enabled</strong> using the
+				the "Details"-Tab. The <strong>display can be enabled</strong> using the
 				buttons at the top left. When a display is enabled, the button's
 				background appears highlighted in gray. 
 				<br /><br />
@@ -753,7 +936,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Open the sidebar and navigate to the "Info" tab to view the metadata.
+				Open the sidebar and navigate to the "Details" tab to view the metadata.
 				Enable the display for the object of interest: <strong>dataset, selected
 				variable, or selected place</strong>. If no place is currently selected, the most
 				recently selected place will be used. Then, choose the relevant metadata
@@ -883,10 +1066,10 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td>
 				The space under the "Time Series" tab in the sidebar varies depending on
 				whether a time series graph is present. If no time series graph exists:
-				A message indicates that no time series is currently displayed. A button
-				is also available, which becomes active (with blue font color) when a
-				variable and place are selected and it is possible to create a time
-				series.
+				A message indicates that no time series is currently displayed. Additionally 
+				a button in the header is also available, which becomes active (with blue 
+				font color) when a variable and place are selected and it is possible to 
+				create a time series.
 			</td>
 		</tr>
 		<tr>
@@ -1662,6 +1845,47 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
+### Open Export Data Menu
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/export_data_button.png"
+					alt="Open Export Data Menu" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Open Export Data Menu</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A button that opens the
+				<a href="#export-data" rel="noopener noreferrer"
+					>Export Data</a
+				> menu.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>To open the Export Data menu.</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a href="../user_guide/analyse/#export" rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 ## Export Data
 
 <table>
@@ -1670,7 +1894,8 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/export_data.png"
-					alt="Export Data" style="max-width: 40%" />
+					alt="Export Data"
+					style="max-width: 40%" />
 			</th>
 		</tr>
 	</thead>
@@ -1689,7 +1914,11 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Open the export settings and select options for export:
+				Open the export settings by using
+				<a href="#open-export-data-menu" rel="noopener noreferrer"
+					>this button</a
+				>
+				in the header of the Viewer and select options for export:
 				<ul>
 					<li>
 						<strong>Include time series data</strong> (file format:
@@ -2179,7 +2408,7 @@ A list of all the features that the viewer contains will be created here, in whi
 
 </table>
 
-### Custom color Maps
+### Custom Color Maps
 
 <table>
 	<thead>

@@ -271,9 +271,24 @@
       "se": "Visa datauppsättningsgränser"
     },
     {
+      "en": "Overlays",
+      "de": "Overlays",
+      "se": "Överlagringar"
+    },
+    {
+      "en": "Predefined",
+      "de": "Vordefiniert",
+      "se": "Fördefinierad"
+    },
+    {
+      "en": "Base maps",
+      "de": "Basiskarten",
+      "se": "Baskartor"
+    },
+    {
       "en": "Base map",
       "de": "Basiskarte",
-      "se": "Grundkarta"
+      "se": "Baskarta"
     },
     {
       "en": "Hide small values",
@@ -321,19 +336,19 @@
       "se": "Andra"
     },
     {
-      "en": "Dataset information",
-      "de": "Informationen zum Datensatz",
-      "se": "Information om dataset"
+      "en": "Information about the selected dataset",
+      "de": "Informationen über den ausgewählten Datensatz",
+      "se": "Information om den valda datamängden"
     },
     {
-      "en": "Variable information",
-      "de": "Informationen zur Variablen",
-      "se": "Information om variabeln"
+      "en": "Information about the selected variable",
+      "de": "Informationen über die ausgewählte Variable",
+      "se": "Information om den valda variabeln"
     },
     {
-      "en": "Place information",
-      "de": "Informationen zum Ort",
-      "se": "Platsinformation"
+      "en": "Information about the selected place",
+      "de": "Informationen über den ausgewählten Ort",
+      "se": "Information om vald plats"
     },
     {
       "en": "Dimension names",
@@ -364,6 +379,11 @@
       "en": "Spatial reference system",
       "de": "Räumliches Bezugssystem",
       "se": "Rumsligt referenssystem"
+    },
+    {
+      "en": "No Title",
+      "de": "Kein Titel",
+      "se": "Ingen Titel"
     },
     {
       "en": "Name",
@@ -466,9 +486,24 @@
       "se": "Hjälp"
     },
     {
-      "en": "Copy snapshot to clipboard",
-      "de": "Schnappschuss in die Zwischenablage kopieren",
-      "se": "Kopiera ögonblicksbild till urklipp"
+      "en": "Documentation",
+      "de": "Dokumentation",
+      "se": "Dokumentation"
+    },
+    {
+      "en": "Developer Reference",
+      "de": "Entwickler Referenz",
+      "se": "Utvecklarreferens"
+    },
+    {
+      "en": "Share",
+      "de": "Teilen",
+      "se": "Dela"
+    },
+    {
+      "en": "Copy snapshot of chart to clipboard",
+      "de": "Schnappschuss des Diagramms in die Zwischenablage kopieren",
+      "se": "Kopiera ögonblicksbild av diagrammet till urklipp"
     },
     {
       "en": "Snapshot copied to clipboard",
@@ -836,9 +871,14 @@
       "se": "Slå på eller av informationsrutan"
     },
     {
-      "en": "Show or hide sidebar",
-      "de": "Seitenleiste ein- oder ausblenden",
-      "se": "Visa eller dölja sidofält"
+      "en": "Show sidebar",
+      "de": "Seitenleiste einblenden",
+      "se": "Visa sidofältet"
+    },
+    {
+      "en": "Hide sidebar",
+      "de": "Seitenleiste ausblenden",
+      "se": "Dölj sidofältet"
     },
     {
       "en": "Unknown color bar",
@@ -867,8 +907,13 @@
     },
     {
       "en": "User Base Maps",
-      "de": "Nutzer Basiskarte",
-      "se": "Användare Grundkarta"
+      "de": "Nutzer Basiskarten",
+      "se": "Användare Baskartor"
+    },
+    {
+      "en": "Switch between RGB layer and variable layer",
+      "de": "Zwischen RGB-Layer und Variablen-Layer wechseln",
+      "se": "Växla mellan RGB-lager och variabellager"
     },
     {
       "en": "Overlay",
@@ -877,8 +922,8 @@
     },
     {
       "en": "User Overlays",
-      "de": "Nutzer Overlay",
-      "se": "Användare Overlay"
+      "de": "Nutzer Overlays",
+      "se": "Användare Överlagringar"
     },
     {
       "en": "On dataset selection",
@@ -926,9 +971,14 @@
       "se": "Lagerattribution"
     },
     {
-      "en": "Info",
-      "de": "Info",
-      "se": "Info"
+      "en": "ID",
+      "de": "ID",
+      "se": "ID"
+    },
+    {
+      "en": "Details",
+      "de": "Details",
+      "se": "Detaljer"
     },
     {
       "en": "Charts",
@@ -1241,6 +1291,16 @@
       "se": "JSON-format"
     },
     {
+      "en": "defined",
+      "de": "definiert",
+      "se": "definierad"
+    },
+    {
+      "en": "docs/imprint.en.md",
+      "de": "docs/imprint.en.md",
+      "se": "docs/imprint.en.md"
+    },
+    {
       "en": "docs/privacy-note.en.md",
       "de": "docs/privacy-note.de.md",
       "se": "docs/privacy-note.se.md"
@@ -1264,6 +1324,11 @@
       "en": "docs/user-variables.en.md",
       "de": "docs/user-variables.de.md",
       "se": "docs/user-variables.se.md"
+    },
+    {
+      "en": "docs/dev-reference.en.md",
+      "de": "docs/dev-reference.en.md",
+      "se": "docs/dev-reference.en.md"
     }
   ]
 }

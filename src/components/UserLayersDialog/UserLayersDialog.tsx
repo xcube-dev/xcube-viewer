@@ -1,28 +1,10 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2019-2024 by the xcube development team and contributors.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
  */
 
-import React from "react";
+import React, { useCallback, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -32,7 +14,7 @@ import Tabs from "@mui/material/Tabs";
 
 import i18n from "@/i18n";
 import { LayerDefinition } from "@/model/layerDefinition";
-import { ControlState } from "@/states/controlState";
+import { ControlState, LayerVisibilities } from "@/states/controlState";
 import UserLayersPanel from "./UserLayersPanel";
 
 interface UserLayersDialogProps {
@@ -41,6 +23,7 @@ interface UserLayersDialogProps {
   closeDialog: (dialogId: string) => void;
   settings: ControlState;
   updateSettings: (settings: Partial<ControlState>) => void;
+  setLayerVisibilities: (layerVisibilities: LayerVisibilities) => void;
 }
 
 const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
@@ -49,37 +32,69 @@ const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
   closeDialog,
   settings,
   updateSettings,
+  setLayerVisibilities,
 }) => {
-  const [tabIndex, setTabIndex] = React.useState(
-    dialogId === "userBaseMaps" ? 0 : 1,
+  const [selectedBaseMapId, _setSelectedBaseMapId] = useState<string | null>(
+    null,
+  );
+  const [selectedOverlayId, _setSelectedOverlayId] = useState<string | null>(
+    null,
   );
 
-  if (!open) {
-    return null;
-  }
+  const _setLayerVisibilities = useCallback(
+    (oldLayerId: string | null, newLayerId: string | null) => {
+      const visibilities: LayerVisibilities = {};
+      if (oldLayerId) {
+        visibilities[oldLayerId] = false;
+      }
+      if (newLayerId) {
+        visibilities[newLayerId] = true;
+      }
+      setLayerVisibilities(visibilities);
+    },
+    [setLayerVisibilities],
+  );
+
+  const setSelectedBaseMapId = useCallback(
+    (layerId: string | null) => {
+      _setSelectedBaseMapId(layerId);
+      _setLayerVisibilities(selectedBaseMapId, layerId);
+    },
+    [selectedBaseMapId, _setLayerVisibilities],
+  );
+
+  const setSelectedOverlayId = useCallback(
+    (layerId: string | null) => {
+      _setSelectedOverlayId(layerId);
+      _setLayerVisibilities(selectedBaseMapId, layerId);
+    },
+    [selectedBaseMapId, _setLayerVisibilities],
+  );
+
+  const [tabIndex, setTabIndex] = useState(dialogId === "userBaseMaps" ? 0 : 1);
 
   const baseMaps = settings.userBaseMaps;
-  const setBaseMaps = (userBaseMaps: LayerDefinition[]) => {
-    updateSettings({ userBaseMaps });
-  };
+  const setBaseMaps = useCallback(
+    (userBaseMaps: LayerDefinition[]) => {
+      updateSettings({ userBaseMaps });
+    },
+    [updateSettings],
+  );
 
   const overlays = settings.userOverlays;
-  const setOverlays = (userOverlays: LayerDefinition[]) => {
-    updateSettings({ userOverlays });
-  };
-
-  const selectedBaseMapId = settings.selectedBaseMapId;
-  const setSelectedBaseMapId = (selectedBaseMapId: string | null) => {
-    updateSettings({ selectedBaseMapId });
-  };
-
-  const selectedOverlayId = settings.selectedOverlayId;
-  const setSelectedOverlayId = (selectedOverlayId: string | null) => {
-    updateSettings({ selectedOverlayId });
-  };
+  const setOverlays = useCallback(
+    (userOverlays: LayerDefinition[]) => {
+      updateSettings({ userOverlays });
+    },
+    [updateSettings],
+  );
 
   function handleCloseDialog() {
     closeDialog(dialogId);
+  }
+
+  if (!open) {
+    return null;
   }
 
   return (
@@ -94,8 +109,8 @@ const UserLayersDialog: React.FC<UserLayersDialogProps> = ({
       <DialogContent>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs value={tabIndex} onChange={(_, index) => setTabIndex(index)}>
-            <Tab label="Base Maps" />
-            <Tab label="Overlays" />
+            <Tab label={i18n.get("Base Maps")} />
+            <Tab label={i18n.get("Overlays")} />
           </Tabs>
         </Box>
         {tabIndex === 0 && (
