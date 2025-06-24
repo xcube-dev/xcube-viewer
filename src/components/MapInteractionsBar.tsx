@@ -39,7 +39,7 @@ interface MapInteractionsBarProps extends WithLocale {
 export default function MapInteractionsBar({
   mapInteraction,
   setMapInteraction,
-  postMessage
+  postMessage,
 }: MapInteractionsBarProps) {
   function handleChange(
     _event: React.MouseEvent<HTMLElement>,
@@ -110,7 +110,12 @@ export default function MapInteractionsBar({
             <FileUploadIcon />
           </Tooltip>
         </ToggleButton>
-        <MapSnapshotButton mapRef={"map"} postMessage={postMessage} fontSize="medium" isToggle={true} />
+        <MapSnapshotButton
+          mapRef={"map"}
+          postMessage={postMessage}
+          fontSize="medium"
+          isToggle={false}
+        />
       </ToggleButtonGroup>
     </StyledFromControl>
   );

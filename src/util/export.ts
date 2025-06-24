@@ -88,6 +88,7 @@ async function _exportElement(
     canvasWidth,
     canvasHeight,
     pixelRatio: options.pixelRatio,
+    skipFonts: true // workaround for html-to-image bug
   });
 
   const image = new Image();
