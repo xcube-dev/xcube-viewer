@@ -1,5 +1,16 @@
 ## Changes in version 1.6.2 (in development) 
 
+### Fixes
+
+*  Applied workaround for a bug in `html-to-image` libary that causes an 
+   issuesfor the export of screenshorts (charts and map) in the Firefox 
+   browser.
+   
+### New Features 
+
+* Users can now copy snapshots of a map into the clipboard by clicking a new 
+  camera icon on a map's action bar. (#290)
+  
 
 ## Changes in version 1.6.1
 
@@ -221,11 +232,6 @@ in various ways: (#456)
 
   A working example can be found in the
   [xcube repository](https://github.com/xcube-dev/xcube/tree/5ebf4c76fdccebdd3b65f4e04218e112410f561b/examples/serve/panels-demo).
-
-### New Features 
-
-* Users can now copy snapshots of a map into the clipboard by clicking a new 
-  camera icon on a map's action bar. (#290)
 
 ### Other changes
 
