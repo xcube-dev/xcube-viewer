@@ -14,18 +14,14 @@ import { exportElement } from "@/util/export";
 import ToolButton from "@/components/ToolButton";
 
 interface SnapshotButtonProps extends WithLocale {
-  elementRef?: RefObject<HTMLDivElement | null>;
+  elementRef: RefObject<HTMLDivElement | null>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  fontSize?: "small" | "inherit" | "medium" | "large";
-  isToggle?: boolean;
-  hiddenElements?: HTMLElement[];
+  hiddenElements: HTMLElement[];
 }
 
 export default function SnapshotButton({
   elementRef,
   postMessage,
-  fontSize = "inherit",
-  isToggle = false,
   hiddenElements = [],
 }: SnapshotButtonProps) {
   const pixelRatio = 1;
@@ -40,20 +36,16 @@ export default function SnapshotButton({
     postMessage("error", i18n.get(message));
   };
 
-  const handleButtonClick = async () => {
-    if (elementRef?.current) {
-      try {
-        exportElement(elementRef.current, {
-          format: "png",
-          width: 2000,
-          handleSuccess: handleExportSuccess,
-          handleError: handleExportError,
-          pixelRatio: pixelRatio,
-          hiddenElements
-        });
-      } catch (error) {
-        handleExportError(error);
-      }
+  const handleButtonClick = () => {
+    if (elementRef.current) {
+      exportElement(elementRef.current!, {
+        format: "png",
+        width: 2000,
+        handleSuccess: handleExportSuccess,
+        handleError: handleExportError,
+        pixelRatio: pixelRatio,
+        hiddenElements: hiddenElements,
+      });
     } else {
       handleExportError(new Error("missing element reference"));
     }
@@ -63,8 +55,7 @@ export default function SnapshotButton({
     <ToolButton
       tooltipText={i18n.get("Copy snapshot to clipboard")}
       onClick={handleButtonClick}
-      toggle={isToggle}
-      icon={<CameraAltIcon fontSize={fontSize} />}
+      icon={<CameraAltIcon fontSize="inherit" />}
     />
   );
 }

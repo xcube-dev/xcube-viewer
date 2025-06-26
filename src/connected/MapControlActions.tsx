@@ -13,6 +13,7 @@ import {
   setMapPointInfoBoxEnabled,
   setVariableCompareMode,
 } from "@/actions/controlActions";
+import { postMessage } from "@/actions/messageLogActions";
 
 const mapStateToProps = (state: AppState) => {
   return {
@@ -26,6 +27,7 @@ const mapDispatchToProps = {
   setLayerMenuOpen,
   setVariableCompareMode,
   setMapPointInfoBoxEnabled,
+  postMessage,
 };
 
 const MapControlActions = connect(

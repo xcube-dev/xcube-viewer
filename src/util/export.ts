@@ -24,7 +24,7 @@ export interface ExportOptions {
 }
 
 /**
- * Exports a HTML element as an image.
+ * Exports an HTML element as an image.
  * It uses the `html-to-image` package for that purpose.
  *
  * @param element The HTML element to export.
@@ -88,7 +88,7 @@ async function _exportElement(
     canvasWidth,
     canvasHeight,
     pixelRatio: options.pixelRatio,
-    skipFonts: true // workaround for html-to-image bug
+    skipFonts: true, // workaround for html-to-image bug
   });
 
   const image = new Image();

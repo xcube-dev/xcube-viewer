@@ -12,21 +12,15 @@ import { MessageType } from "@/states/messageLogState";
 import { WithLocale } from "@/util/lang";
 
 interface MapSnapshotButtonProps extends WithLocale {
-  mapRef: string;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  fontSize?: "small" | "inherit" | "medium" | "large";
-  isToggle?: boolean;
 }
 
 export default function MapSnapshotButton({
-  mapRef,
   postMessage,
-  fontSize = "inherit",
-  isToggle = false,
 }: MapSnapshotButtonProps) {
   const getMapElement = (): RefObject<HTMLDivElement | null> => {
-    const targetElement = MAP_OBJECTS[mapRef]
-      ? (MAP_OBJECTS[mapRef] as OlMap).getTargetElement()
+    const targetElement = MAP_OBJECTS["map"]
+      ? (MAP_OBJECTS["map"] as OlMap).getTargetElement()
       : null;
     return { current: targetElement as HTMLDivElement | null };
   };
@@ -47,8 +41,6 @@ export default function MapSnapshotButton({
       elementRef={elementRef}
       hiddenElements={hiddenElements}
       postMessage={postMessage}
-      fontSize={fontSize}
-      isToggle={isToggle}
     />
   );
 }
