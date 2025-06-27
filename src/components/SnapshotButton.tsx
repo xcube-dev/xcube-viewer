@@ -16,7 +16,7 @@ import ToolButton from "@/components/ToolButton";
 interface SnapshotButtonProps extends WithLocale {
   elementRef: RefObject<HTMLDivElement | null>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  hiddenElements?: HTMLElement[];
+  hiddenElements?: HTMLElement[] | ((root: HTMLElement) => HTMLElement[]);
 }
 
 export default function SnapshotButton({

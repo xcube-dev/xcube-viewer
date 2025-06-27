@@ -20,7 +20,7 @@ export interface ExportOptions {
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
   pixelRatio?: number;
-  hiddenElements?: HTMLElement[]; // Array of elements to hide
+  hiddenElements?: HTMLElement[] | ((root: HTMLElement) => HTMLElement[]);
 }
 
 /**
@@ -69,7 +69,13 @@ async function _exportElement(
     ((options.width || element.clientWidth) * element.clientHeight) /
       element.clientWidth;
 
-  const hiddenElements = options.hiddenElements || [];
+  let hiddenElements = options.hiddenElements;
+  if (typeof hiddenElements === "function") {
+    hiddenElements = hiddenElements(element);
+  } else if (!Array.isArray(hiddenElements)) {
+    hiddenElements = [];
+  }
+
   hiddenElements.forEach((el) => {
     el.style.visibility = "hidden";
   });
