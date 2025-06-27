@@ -1,9 +1,8 @@
 import { RefObject, useCallback } from "react";
 
 import i18n from "@/i18n";
-import { exportElement } from "@/util/export";
+import { exportElement, ExportOptions } from "@/util/export";
 import { MessageType } from "@/states/messageLogState";
-import { ExportOptions } from "@/util/export";
 
 type SnapshotExportOptions = ExportOptions & {
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
