@@ -17,6 +17,7 @@ import { GEOGRAPHIC_CRS } from "@/model/proj";
 import { MAP_OBJECTS } from "@/states/controlState";
 import { PlaceStyle } from "@/model/place";
 import { setFeatureStyle } from "@/components/ol/style";
+import { RefObject } from "react";
 
 // noinspection JSUnusedLocalSymbols
 export function renameUserPlaceInLayer(
@@ -74,4 +75,19 @@ export function locateInMap(
       map.getView().fit(geometry, { size: map.getSize() });
     }
   }
+}
+
+export function getMapElement(): RefObject<HTMLDivElement | null> {
+  const targetElement = MAP_OBJECTS["map"]
+    ? (MAP_OBJECTS["map"] as OlMap).getTargetElement()
+    : null;
+  return { current: targetElement as HTMLDivElement | null };
+}
+
+export function getHiddenElements(element: HTMLElement | null) {
+  if (!element) return [];
+  return [
+    element.querySelector(".ol-unselectable.ol-control.MuiBox-root.css-0"),
+    element.querySelector(".ol-zoom.ol-unselectable.ol-control"),
+  ].filter(Boolean) as HTMLElement[];
 }

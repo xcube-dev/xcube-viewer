@@ -1,5 +1,16 @@
 ## Changes in version 1.6.2 (in development) 
 
+### Fixes
+
+*  Applied workaround for a bug in `html-to-image` libary that causes an 
+   issuesfor the export of screenshorts (charts and map) in the Firefox 
+   browser.
+   
+### New Features 
+
+* Users can now copy snapshots of a map into the clipboard by clicking a new 
+  camera icon on a map's action bar. (#290)
+  
 
 ## Changes in version 1.6.1
 
@@ -261,14 +272,10 @@ in various ways: (#456)
 
 * Updated language translations (German and Swedish) for `Add Statistics`
   and `Style Place`.
-
+  
 ## Changes in version 1.3.0
 
 ### New Features 
-
-* Users can now copy snapshots of a time-series charts and statistics
-  into the clipboard by clicking a new camera icon on a chart's action bar.
-  (#290)
 
 * It is now possible to change the color and opacity of user places
   and hence associated time-series and statistic charts. (#97, #216)
@@ -294,6 +301,7 @@ in various ways: (#456)
 
 * Now recognising new custom color maps from xcube server, for details 
   refer to https://github.com/xcube-dev/xcube/issues/1046. (#392)
+
 
 ### Enhancements
 
