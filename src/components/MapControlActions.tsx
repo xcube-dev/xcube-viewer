@@ -47,7 +47,6 @@ export default function MapControlActions({
 
   postMessage,
 }: MapControlActionsProps) {
-  console.log("postMessage is", typeof postMessage);
   return (
     <MapButtonGroup style={GROUP_STYLE}>
       <MapButton
