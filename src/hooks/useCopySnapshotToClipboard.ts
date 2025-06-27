@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019-2025 by xcube team and contributors
+ * Permissions are hereby granted under the terms of the MIT License:
+ * https://opensource.org/licenses/MIT.
+ */
+
 import { RefObject, useCallback } from "react";
 
 import i18n from "@/i18n";
@@ -13,15 +19,18 @@ export function useCopySnapshotToClipboard(
 ) {
   const { postMessage, pixelRatio, hiddenElements } = exportOptions;
 
-  const handleExportSuccess = () => {
+  const handleExportSuccess = useCallback(() => {
     postMessage("success", i18n.get("Snapshot copied to clipboard"));
-  };
+  }, [postMessage]);
 
-  const handleExportError = (error: unknown) => {
-    const message = "Error copying snapshot to clipboard";
-    console.error(message + ":", error);
-    postMessage("error", i18n.get(message));
-  };
+  const handleExportError = useCallback(
+    (error: unknown) => {
+      const message = "Error copying snapshot to clipboard";
+      console.error(message + ":", error);
+      postMessage("error", i18n.get(message));
+    },
+    [postMessage],
+  );
 
   const onSnapshotClick = useCallback(() => {
     if (elementRef.current) {
@@ -36,6 +45,12 @@ export function useCopySnapshotToClipboard(
     } else {
       handleExportError(new Error("missing element reference"));
     }
-  }, [elementRef, pixelRatio, hiddenElements]);
+  }, [
+    elementRef,
+    pixelRatio,
+    handleExportSuccess,
+    handleExportError,
+    hiddenElements,
+  ]);
   return { onSnapshotClick };
 }
