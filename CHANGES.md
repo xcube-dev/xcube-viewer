@@ -246,10 +246,6 @@ in various ways: (#456)
 
 ## Changes in version 1.3.1
 
-### New Features 
-
-* Users can now change the application theme from light, dark or system mode from settings.
-  
 ### Fixes
 
 * The `<Time>` parameter is now no longer required to calculate the statistics 
@@ -277,6 +273,10 @@ in various ways: (#456)
 
 ### New Features 
 
+* Users can now copy snapshots of a time-series charts and statistics
+  into the clipboard by clicking a new camera icon on a chart's action bar.
+  (#290)
+
 * It is now possible to change the color and opacity of user places
   and hence associated time-series and statistic charts. (#97, #216)
 
@@ -301,7 +301,6 @@ in various ways: (#456)
 
 * Now recognising new custom color maps from xcube server, for details 
   refer to https://github.com/xcube-dev/xcube/issues/1046. (#392)
-
 
 ### Enhancements
 

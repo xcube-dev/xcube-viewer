@@ -13,6 +13,7 @@ import { setMapInteraction } from "@/actions/controlActions";
 const mapStateToProps = (state: AppState) => {
   return {
     mapInteraction: state.controlState.mapInteraction,
+    exportResolution: state.controlState.exportResolution,
   };
 };
 
