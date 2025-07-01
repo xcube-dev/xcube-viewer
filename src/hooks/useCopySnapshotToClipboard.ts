@@ -17,7 +17,8 @@ export function useCopySnapshotToClipboard(
   elementRef: RefObject<HTMLDivElement | null>,
   exportOptions: SnapshotExportOptions,
 ) {
-  const { postMessage, pixelRatio, hiddenElements } = exportOptions;
+  const { postMessage, pixelRatio, hiddenElements, exportResolution } =
+    exportOptions;
 
   const handleExportSuccess = useCallback(() => {
     postMessage("success", i18n.get("Snapshot copied to clipboard"));
@@ -41,6 +42,7 @@ export function useCopySnapshotToClipboard(
         handleError: handleExportError,
         pixelRatio: pixelRatio,
         hiddenElements: hiddenElements,
+        exportResolution: exportResolution,
       });
     } else {
       handleExportError(new Error("missing element reference"));
@@ -51,6 +53,7 @@ export function useCopySnapshotToClipboard(
     handleExportSuccess,
     handleExportError,
     hiddenElements,
+    exportResolution,
   ]);
   return { onSnapshotClick };
 }

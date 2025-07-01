@@ -65,10 +65,10 @@ const TS_CHART_TYPE_LABELS: [TimeSeriesChartType, string][] = [
 ];
 
 const EXPORT_RESOLUTION_LABELS: [ExportResolution, string][] = [
-  [96, "Screen Resolution (96 DPI)"],
-  [150, "Intermediate Resolution (150 DPI)"],
-  [300, "Print Resolution (300 DPI)"],
-  [600, "Professional Print Resolution (600 DPI)"],
+  [96, "96 dpi"],
+  [150, "150 dpi"],
+  [300, "300 dpi"],
+  [600, "600 dpi"],
 ];
 
 interface SettingsDialogProps {
@@ -198,7 +198,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     openDialog("userBaseMaps");
   };
 
-  function handleImageExportSizehange(
+  function handleImageExportSizeChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
@@ -263,7 +263,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 select
                 sx={styles.textField}
                 value={settings.exportResolution}
-                onChange={handleImageExportSizehange}
+                onChange={handleImageExportSizeChange}
                 margin="normal"
               >
                 {EXPORT_RESOLUTION_LABELS.map(([value, label]) => (

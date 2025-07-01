@@ -21,7 +21,7 @@ import { CategoricalChartState } from "recharts/types/chart/types";
 import { styled, useTheme } from "@mui/system";
 
 import { Place, PlaceInfo } from "@/model/place";
-import { TimeSeriesChartType } from "@/states/controlState";
+import { ExportResolution, TimeSeriesChartType } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import {
   equalTimeRanges,
@@ -111,6 +111,7 @@ interface TimeSeriesChartProps extends WithLocale {
   ) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   selectedDatasetTitle: string | null;
+  exportResolution: ExportResolution;
 }
 
 export default function TimeSeriesChart({
@@ -132,6 +133,7 @@ export default function TimeSeriesChart({
   addPlaceGroupTimeSeries,
   postMessage,
   selectedDatasetTitle,
+  exportResolution,
 }: TimeSeriesChartProps) {
   const theme = useTheme();
 
@@ -431,6 +433,7 @@ export default function TimeSeriesChart({
         setValueRange={handleEnteredValueRange}
         chartElement={chartContainerRef}
         postMessage={postMessage}
+        exportResolution={exportResolution}
       />
       <ResponsiveContainer
         // 99% per https://github.com/recharts/recharts/issues/172

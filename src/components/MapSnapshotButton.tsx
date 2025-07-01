@@ -4,6 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import { ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import { WithLocale } from "@/util/lang";
 import MapButton from "@/components/Viewer/MapButton";
@@ -14,10 +15,12 @@ import { getMapElement, getHiddenElements } from "@/actions/mapActions";
 
 interface MapSnapshotButtonProps extends WithLocale {
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  exportResolution?: ExportResolution;
 }
 
 export default function MapSnapshotButton({
   postMessage,
+  exportResolution,
 }: MapSnapshotButtonProps) {
   const elementRef = getMapElement();
   const hiddenElements = (root: HTMLElement) => getHiddenElements(root);
@@ -26,6 +29,7 @@ export default function MapSnapshotButton({
     pixelRatio: 1,
     hiddenElements,
     postMessage,
+    exportResolution,
   };
 
   const { onSnapshotClick } = useCopySnapshotToClipboard(

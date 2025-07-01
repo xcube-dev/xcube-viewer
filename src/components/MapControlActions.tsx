@@ -13,6 +13,7 @@ import i18n from "@/i18n";
 import MapButtonGroup from "@/components/Viewer/MapButtonGroup";
 import MapButton from "@/components/Viewer/MapButton";
 import MapSnapshotButton from "@/components/MapSnapshotButton";
+import { ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import { WithLocale } from "@/util/lang";
 
@@ -33,6 +34,7 @@ interface MapControlActionsProps extends WithLocale {
   setMapPointInfoBoxEnabled: (mapPointInfoBoxEnabled: boolean) => void;
 
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  exportResolution: ExportResolution;
 }
 
 export default function MapControlActions({
@@ -46,6 +48,7 @@ export default function MapControlActions({
   setMapPointInfoBoxEnabled,
 
   postMessage,
+  exportResolution,
 }: MapControlActionsProps) {
   return (
     <MapButtonGroup style={GROUP_STYLE}>
@@ -67,7 +70,10 @@ export default function MapControlActions({
         selected={mapPointInfoBoxEnabled}
         onSelect={(_e, selected) => void setMapPointInfoBoxEnabled(selected)}
       />
-      <MapSnapshotButton postMessage={postMessage} />
+      <MapSnapshotButton
+        postMessage={postMessage}
+        exportResolution={exportResolution}
+      />
     </MapButtonGroup>
   );
 }

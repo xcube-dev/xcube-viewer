@@ -20,6 +20,7 @@ const mapStateToProps = (state: AppState) => {
     layerMenuOpen: state.controlState.layerMenuOpen,
     variableCompareMode: state.controlState.variableCompareMode,
     mapPointInfoBoxEnabled: state.controlState.mapPointInfoBoxEnabled,
+    exportResolution: state.controlState.exportResolution,
   };
 };
 

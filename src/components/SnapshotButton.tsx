@@ -9,6 +9,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
+import { ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import ToolButton from "@/components/ToolButton";
 import { useCopySnapshotToClipboard } from "@/hooks/useCopySnapshotToClipboard";
@@ -16,19 +17,21 @@ import { useCopySnapshotToClipboard } from "@/hooks/useCopySnapshotToClipboard";
 interface SnapshotButtonProps extends WithLocale {
   elementRef: RefObject<HTMLDivElement | null>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  exportResolution?: number;
+  exportResolution?: ExportResolution;
 }
 
 export default function SnapshotButton({
   elementRef,
   postMessage,
-  exportResolution
+  exportResolution,
 }: SnapshotButtonProps) {
   const exportOptions = {
     pixelRatio: 1,
     postMessage,
+    exportResolution,
   };
 
+  console.log(`Snaphot.tx ${exportResolution}`);
   const { onSnapshotClick } = useCopySnapshotToClipboard(
     elementRef,
     exportOptions,

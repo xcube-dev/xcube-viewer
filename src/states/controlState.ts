@@ -216,7 +216,7 @@ export function newControlState(): ControlState {
     exportZipArchive: true,
     exportFileName: "export",
     themeMode: getInitialThemeMode(),
-    exportResolution: 96,
+    exportResolution: 300,
   };
   return loadUserSettings(state);
 }

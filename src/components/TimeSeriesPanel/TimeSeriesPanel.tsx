@@ -21,6 +21,7 @@ import { MessageType } from "@/states/messageLogState";
 import TimeRangeSlider from "./TimeRangeSlider";
 import TimeSeriesChart from "./TimeSeriesChart";
 import NoTimeSeriesChart from "@/components/TimeSeriesPanel/NoTimeSeriesChart";
+import { ExportResolution } from "@/states/controlState";
 
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
@@ -70,6 +71,7 @@ interface TimeSeriesPanelProps extends WithLocale {
   addTimeSeries: () => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   selectedDatasetTitle: string | null;
+  exportResolution: ExportResolution;
 }
 
 export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
@@ -81,9 +83,11 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
     canAddTimeSeries,
     addTimeSeries,
     selectedDatasetTitle,
+    exportResolution,
     ...chartProps
   } = props;
 
+  console.log(`TimeSeriesPanel: ${exportResolution}`);
   if (timeSeriesGroups.length === 0) {
     return (
       <NoTimeSeriesChart
@@ -109,6 +113,7 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
             selectedTimeRange={selectedTimeRange}
             selectTimeRange={selectTimeRange}
             selectedDatasetTitle={selectedDatasetTitle}
+            exportResolution={exportResolution}
             {...chartProps}
           />
         );

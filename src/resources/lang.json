@@ -1296,6 +1296,31 @@
       "se": "definierad"
     },
     {
+      "en": "Appearance Mode",
+      "de": "Darstellungsmodus",
+      "se": "Utseendeläge"
+    },
+    {
+      "en": "System",
+      "de": "System",
+      "se": "System"
+    },
+    {
+      "en": "Light",
+      "de": "Hell",
+      "se": "Ljus"
+    },
+    {
+      "en": "Dark",
+      "de": "Dunkel",
+      "se": "Mörk"
+    },
+    {
+      "en": "Export resolution in dpi",
+      "de": "Exportauflösung in dpi",
+      "se": "Exportupplösning i dpi"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"

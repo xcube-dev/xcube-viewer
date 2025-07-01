@@ -5,6 +5,7 @@
  */
 
 import { toJpeg, toPng } from "html-to-image";
+import { ExportResolution } from "@/states/controlState";
 
 const converters = {
   png: toPng,
@@ -21,6 +22,7 @@ export interface ExportOptions {
   handleError?: (error: unknown) => void;
   pixelRatio?: number;
   hiddenElements?: HTMLElement[] | ((root: HTMLElement) => HTMLElement[]);
+  exportResolution?: ExportResolution;
 }
 
 /**
@@ -60,21 +62,43 @@ async function _exportElement(
     throw new Error(`Image format '${format}' is unknown or not supported.`);
   }
 
-  const canvasWidth =
-    options.width ||
-    ((options.height || element.clientHeight) * element.clientWidth) /
-      element.clientHeight;
-  const canvasHeight =
-    options.height ||
-    ((options.width || element.clientWidth) * element.clientHeight) /
-      element.clientWidth;
+  let canvasWidth: number;
+  let canvasHeight: number;
 
+  if (options.exportResolution) {
+    const dpi = options.exportResolution;
+
+    const widthInches = 16 / 2.54;
+    canvasWidth = Math.round(widthInches * dpi);
+    canvasHeight = Math.round(
+      (canvasWidth * element.clientHeight) / element.clientWidth,
+    );
+
+    console.log(
+      `export.ts: DPI export → ${dpi}dpi, ${canvasWidth}x${canvasHeight} px`,
+    );
+  } else {
+    canvasWidth =
+      options.width ||
+      ((options.height || element.clientHeight) * element.clientWidth) /
+        element.clientHeight;
+    canvasHeight =
+      options.height ||
+      ((options.width || element.clientWidth) * element.clientHeight) /
+        element.clientWidth;
+
+    console.log(
+      `export.ts: Default export → ${canvasWidth}x${canvasHeight} px`,
+    );
+  }
   let hiddenElements = options.hiddenElements;
   if (typeof hiddenElements === "function") {
     hiddenElements = hiddenElements(element);
   } else if (!Array.isArray(hiddenElements)) {
     hiddenElements = [];
   }
+
+  console.log(`export.ts: ${options.exportResolution}`);
 
   hiddenElements.forEach((el) => {
     el.style.visibility = "hidden";
