@@ -94,7 +94,9 @@ async function _exportElement(
     canvasWidth,
     canvasHeight,
     pixelRatio: options.pixelRatio,
-    skipFonts: true, // workaround for html-to-image bug
+    // workaround for html-to-image bug, 
+    // see https://github.com/bubkoo/html-to-image/issues/508
+    skipFonts: true, 
   });
 
   const image = new Image();
