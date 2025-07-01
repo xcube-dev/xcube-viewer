@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { toJpeg, toPng } from "html-to-image";
+import { toJpeg, toPng, toCanvas } from "html-to-image";
 import { ExportResolution } from "@/states/controlState";
 
 const converters = {
@@ -22,7 +22,7 @@ export interface ExportOptions {
   handleError?: (error: unknown) => void;
   pixelRatio?: number;
   hiddenElements?: HTMLElement[] | ((root: HTMLElement) => HTMLElement[]);
-  exportResolution?: ExportResolution;
+  exportResolution: ExportResolution;
 }
 
 /**
@@ -36,7 +36,7 @@ export interface ExportOptions {
  */
 export function exportElement(
   element: HTMLElement,
-  options?: ExportOptions,
+  options: ExportOptions,
 ): void {
   _exportElement(element, options)
     .then(() => {
@@ -55,42 +55,14 @@ export function exportElement(
 
 async function _exportElement(
   element: HTMLElement,
-  options: ExportOptions = {},
+  options: ExportOptions,
 ): Promise<void> {
-  const format = options.format || "png";
+  const format = "jpeg"; //options.format || "png";
+
   if (!(format in converters)) {
     throw new Error(`Image format '${format}' is unknown or not supported.`);
   }
 
-  let canvasWidth: number;
-  let canvasHeight: number;
-
-  if (options.exportResolution) {
-    const dpi = options.exportResolution;
-
-    const widthInches = 16 / 2.54;
-    canvasWidth = Math.round(widthInches * dpi);
-    canvasHeight = Math.round(
-      (canvasWidth * element.clientHeight) / element.clientWidth,
-    );
-
-    console.log(
-      `export.ts: DPI export → ${dpi}dpi, ${canvasWidth}x${canvasHeight} px`,
-    );
-  } else {
-    canvasWidth =
-      options.width ||
-      ((options.height || element.clientHeight) * element.clientWidth) /
-        element.clientHeight;
-    canvasHeight =
-      options.height ||
-      ((options.width || element.clientWidth) * element.clientHeight) /
-        element.clientWidth;
-
-    console.log(
-      `export.ts: Default export → ${canvasWidth}x${canvasHeight} px`,
-    );
-  }
   let hiddenElements = options.hiddenElements;
   if (typeof hiddenElements === "function") {
     hiddenElements = hiddenElements(element);
@@ -98,42 +70,35 @@ async function _exportElement(
     hiddenElements = [];
   }
 
-  console.log(`export.ts: ${options.exportResolution}`);
-
   hiddenElements.forEach((el) => {
     el.style.visibility = "hidden";
   });
 
-  const offScreenCanvas = document.createElement("canvas");
-  offScreenCanvas.width = canvasWidth;
-  offScreenCanvas.height = canvasHeight;
-  const context = offScreenCanvas.getContext("2d");
+  const dpi = options.exportResolution;
+  const referenceDPI = 96;
+  const scaleFactor = dpi / referenceDPI;
 
-  if (!context) {
-    throw new Error("Failed to get canvas context.");
-  }
+  const width = element.clientWidth;
+  const height = element.clientHeight;
 
-  const dataUrl = await converters[format](element, {
-    backgroundColor: "#00000000",
-    canvasWidth,
-    canvasHeight,
-    pixelRatio: options.pixelRatio,
+  const canvas = await toCanvas(element, {
+    width: width * scaleFactor,
+    height: height * scaleFactor,
+    style: {
+      transform: `scale(${scaleFactor})`,
+      transformOrigin: "top left",
+      width: `${width}px`,
+      height: `${height}px`,
+    },
+    pixelRatio: 1,
+    canvasWidth: width * scaleFactor,
+    canvasHeight: height * scaleFactor,
+    backgroundColor: "#ffffff",
     skipFonts: true, // workaround for html-to-image bug
   });
 
-  const image = new Image();
-  image.crossOrigin = "anonymous";
-  image.src = dataUrl;
-
-  await new Promise<void>((resolve, reject) => {
-    image.onload = () => resolve();
-    image.onerror = (error) => reject(error);
-  });
-
-  context.drawImage(image, 0, 0);
-
   const blob = await new Promise<Blob>((resolve, reject) => {
-    offScreenCanvas.toBlob((blob) => {
+    canvas.toBlob((blob) => {
       if (blob === null) {
         reject(new Error("Failed to create a blob from the canvas."));
       } else {
@@ -142,11 +107,7 @@ async function _exportElement(
     }, `image/${format}`);
   });
 
-  await navigator.clipboard.write([
-    new ClipboardItem({
-      [`image/${format}`]: blob,
-    }),
-  ]);
+  await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
 
   hiddenElements.forEach((el) => {
     el.style.visibility = "visible";

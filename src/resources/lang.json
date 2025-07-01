@@ -1316,9 +1316,29 @@
       "se": "Mörk"
     },
     {
-      "en": "Export resolution in dpi",
-      "de": "Exportauflösung in dpi",
-      "se": "Exportupplösning i dpi"
+      "en": "Export resolution in DPI",
+      "de": "Exportauflösung in DPI",
+      "se": "Exportupplösning i DPI"
+    },
+    {
+      "en": "Screen Resolution (96 DPI)",
+      "de": "Bildschirmauflösung (96 DPI)",
+      "se": "Skärmupplösning (96 DPI)"
+    },
+    {
+      "en": "Intermediate Resolution (150 DPI)",
+      "de": "Mittlere Auflösung (150 DPI)",
+      "se": "Medelhög upplösning (150 DPI)"
+    },
+    {
+      "en": "Print Resolution (300 DPI)",
+      "de": "Druckauflösung (300 DPI)",
+      "se": "Utskriftsupplösning (300 DPI)"
+    },
+    {
+      "en": "Professional Print Resolution (600 DPI)",
+      "de": "Professionelle Druckauflösung (300 DPI)",
+      "se": "Professionell utskriftsupplösning (600 DPI)"
     },
     {
       "en": "docs/imprint.en.md",

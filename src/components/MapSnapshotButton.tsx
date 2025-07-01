@@ -15,7 +15,7 @@ import { getMapElement, getHiddenElements } from "@/actions/mapActions";
 
 interface MapSnapshotButtonProps extends WithLocale {
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  exportResolution?: ExportResolution;
+  exportResolution: ExportResolution;
 }
 
 export default function MapSnapshotButton({
@@ -26,7 +26,6 @@ export default function MapSnapshotButton({
   const hiddenElements = (root: HTMLElement) => getHiddenElements(root);
 
   const exportOptions = {
-    pixelRatio: 1,
     hiddenElements,
     postMessage,
     exportResolution,

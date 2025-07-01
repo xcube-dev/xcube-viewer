@@ -17,7 +17,7 @@ import { useCopySnapshotToClipboard } from "@/hooks/useCopySnapshotToClipboard";
 interface SnapshotButtonProps extends WithLocale {
   elementRef: RefObject<HTMLDivElement | null>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  exportResolution?: ExportResolution;
+  exportResolution: ExportResolution;
 }
 
 export default function SnapshotButton({
@@ -26,7 +26,6 @@ export default function SnapshotButton({
   exportResolution,
 }: SnapshotButtonProps) {
   const exportOptions = {
-    pixelRatio: 1,
     postMessage,
     exportResolution,
   };
