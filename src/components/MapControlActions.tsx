@@ -12,6 +12,9 @@ import MessageIcon from "@mui/icons-material/Message";
 import i18n from "@/i18n";
 import MapButtonGroup from "@/components/Viewer/MapButtonGroup";
 import MapButton from "@/components/Viewer/MapButton";
+import MapSnapshotButton from "@/components/MapSnapshotButton";
+import { MessageType } from "@/states/messageLogState";
+import { WithLocale } from "@/util/lang";
 
 const GROUP_STYLE: CSSProperties = {
   // Same sizes as for OpenLayers
@@ -19,7 +22,7 @@ const GROUP_STYLE: CSSProperties = {
   top: 65,
 };
 
-interface MapControlActionsProps {
+interface MapControlActionsProps extends WithLocale {
   layerMenuOpen: boolean;
   setLayerMenuOpen: (layerMenuOpen: boolean) => void;
 
@@ -28,6 +31,8 @@ interface MapControlActionsProps {
 
   mapPointInfoBoxEnabled: boolean;
   setMapPointInfoBoxEnabled: (mapPointInfoBoxEnabled: boolean) => void;
+
+  postMessage: (messageType: MessageType, messageText: string | Error) => void;
 }
 
 export default function MapControlActions({
@@ -39,6 +44,8 @@ export default function MapControlActions({
 
   mapPointInfoBoxEnabled,
   setMapPointInfoBoxEnabled,
+
+  postMessage,
 }: MapControlActionsProps) {
   return (
     <MapButtonGroup style={GROUP_STYLE}>
@@ -60,6 +67,7 @@ export default function MapControlActions({
         selected={mapPointInfoBoxEnabled}
         onSelect={(_e, selected) => void setMapPointInfoBoxEnabled(selected)}
       />
+      <MapSnapshotButton postMessage={postMessage} />
     </MapButtonGroup>
   );
 }

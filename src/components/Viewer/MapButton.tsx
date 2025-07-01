@@ -19,17 +19,6 @@ const SELECTED_BUTTON_STYLE: CSSProperties = {
   backgroundColor: "rgba(0,80,180,0.9)",
 };
 
-const TOOLTIP_COMPONENT_PROPS = {
-  tooltip: {
-    // Makes tooltip style  similar to OpenLayers
-    sx: {
-      backgroundColor: "#4A4A4A",
-      border: "1px solid white",
-      borderRadius: 0,
-    },
-  },
-};
-
 interface MapButtonProps {
   icon: ReactElement;
   tooltipTitle?: ReactNode;
@@ -55,11 +44,7 @@ export default function MapButton({
   };
 
   if (tooltipTitle) {
-    icon = (
-      <Tooltip title={tooltipTitle} componentsProps={TOOLTIP_COMPONENT_PROPS}>
-        {icon}
-      </Tooltip>
-    );
+    icon = <Tooltip title={tooltipTitle}>{icon}</Tooltip>;
   }
 
   return (
