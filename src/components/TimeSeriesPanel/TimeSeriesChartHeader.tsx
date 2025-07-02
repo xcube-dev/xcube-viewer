@@ -93,7 +93,7 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
   chartElement: RefObject<HTMLDivElement>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  exportResolution?: ExportResolution;
+  exportResolution: ExportResolution;
 }
 
 export default function TimeSeriesChartHeader({

@@ -29,6 +29,7 @@ const mapStateToProps = (state: AppState) => {
     statisticsLoading: statisticsLoadingSelector(state),
     statisticsRecords: resolvedStatisticsRecordsSelector(state),
     canAddStatistics: canAddStatisticsSelector(state),
+    exportResolution: state.controlState.exportResolution,
   };
 };
 

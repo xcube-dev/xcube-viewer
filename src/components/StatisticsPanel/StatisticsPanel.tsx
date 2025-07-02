@@ -6,6 +6,7 @@
 
 import Box from "@mui/material/Box";
 
+import { ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import { StatisticsRecord } from "@/model/statistics";
 import { Dataset } from "@/model/dataset";
@@ -35,6 +36,7 @@ interface StatisticsPanelProps {
   addStatistics: () => void;
   removeStatistics: (index: number) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  exportResolution: ExportResolution;
 }
 
 export default function StatisticsPanel({
@@ -48,6 +50,7 @@ export default function StatisticsPanel({
   addStatistics,
   removeStatistics,
   postMessage,
+  exportResolution,
 }: StatisticsPanelProps) {
   return (
     <Box sx={styles.container}>
@@ -67,6 +70,7 @@ export default function StatisticsPanel({
           rowIndex={rowIndex}
           removeStatistics={removeStatistics}
           postMessage={postMessage}
+          exportResolution={exportResolution}
         />
       ))}
     </Box>

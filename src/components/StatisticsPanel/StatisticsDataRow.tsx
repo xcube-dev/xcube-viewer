@@ -23,6 +23,7 @@ import SnapshotButton from "@/components/SnapshotButton";
 import StatisticsTable from "./StatisticsTable";
 import HistogramChart from "./HistogramChart";
 import StatisticsRow from "./StatisticsRow";
+import { ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 
 const styles = makeStyles({
@@ -43,6 +44,7 @@ interface StatisticsDataRowProps extends WithLocale {
   rowIndex: number;
   removeStatistics: (rowIndex: number) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  exportResolution: ExportResolution;
 }
 
 export default function StatisticsDataRow({
@@ -51,6 +53,7 @@ export default function StatisticsDataRow({
   rowIndex,
   removeStatistics,
   postMessage,
+  exportResolution,
 }: StatisticsDataRowProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [brush, setBrush] = useState(false);
@@ -108,6 +111,7 @@ export default function StatisticsDataRow({
               <SnapshotButton
                 elementRef={containerRef}
                 postMessage={postMessage}
+                exportResolution={exportResolution}
               />
             )}
           </HoverVisibleBox>
