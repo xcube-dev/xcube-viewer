@@ -12,7 +12,7 @@
   camera icon on a map's action bar. (#290)
   
 * Users can change the dpi (95, 150, 300, and 600) of exported images of the 
-  time series charts and the map in the settings. 
+  time series charts and the map in the settings. (#535)
   
 
 ## Changes in version 1.6.1
