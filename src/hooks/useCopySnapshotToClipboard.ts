@@ -17,8 +17,7 @@ export function useCopySnapshotToClipboard(
   elementRef: RefObject<HTMLDivElement | null>,
   exportOptions: SnapshotExportOptions,
 ) {
-  const { postMessage, pixelRatio, hiddenElements, exportResolution } =
-    exportOptions;
+  const { postMessage, hiddenElements, exportResolution } = exportOptions;
 
   const handleExportSuccess = useCallback(() => {
     postMessage("success", i18n.get("Snapshot copied to clipboard"));
@@ -37,10 +36,9 @@ export function useCopySnapshotToClipboard(
     if (elementRef.current) {
       exportElement(elementRef.current!, {
         format: "png",
-        // width: 2000,
+        //width: 2000,
         handleSuccess: handleExportSuccess,
         handleError: handleExportError,
-        pixelRatio: pixelRatio,
         hiddenElements: hiddenElements,
         exportResolution: exportResolution,
       });
@@ -49,7 +47,6 @@ export function useCopySnapshotToClipboard(
     }
   }, [
     elementRef,
-    pixelRatio,
     handleExportSuccess,
     handleExportError,
     hiddenElements,

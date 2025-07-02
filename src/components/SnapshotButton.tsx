@@ -30,7 +30,6 @@ export default function SnapshotButton({
     exportResolution,
   };
 
-  console.log(`Snaphot.tx ${exportResolution}`);
   const { onSnapshotClick } = useCopySnapshotToClipboard(
     elementRef,
     exportOptions,

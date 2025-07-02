@@ -4,15 +4,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { toJpeg, toPng, toCanvas } from "html-to-image";
+import { toCanvas } from "html-to-image";
 import { ExportResolution } from "@/states/controlState";
 
-const converters = {
-  png: toPng,
-  jpeg: toJpeg,
-};
-
-export type ExportFormat = keyof typeof converters;
+export type ExportFormat = "png" | "jpeg";
 
 export interface ExportOptions {
   format?: ExportFormat;
@@ -20,7 +15,6 @@ export interface ExportOptions {
   height?: number;
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
-  pixelRatio?: number;
   hiddenElements?: HTMLElement[] | ((root: HTMLElement) => HTMLElement[]);
   exportResolution: ExportResolution;
 }
@@ -57,11 +51,7 @@ async function _exportElement(
   element: HTMLElement,
   options: ExportOptions,
 ): Promise<void> {
-  const format = "jpeg"; //options.format || "png";
-
-  if (!(format in converters)) {
-    throw new Error(`Image format '${format}' is unknown or not supported.`);
-  }
+  const format = options.format || "png";
 
   let hiddenElements = options.hiddenElements;
   if (typeof hiddenElements === "function") {
@@ -78,8 +68,8 @@ async function _exportElement(
   const referenceDPI = 96;
   const scaleFactor = dpi / referenceDPI;
 
-  const width = element.clientWidth;
-  const height = element.clientHeight;
+  const width = options.width || element.clientWidth;
+  const height = options.height || element.clientHeight;
 
   const canvas = await toCanvas(element, {
     width: width * scaleFactor,
@@ -93,8 +83,10 @@ async function _exportElement(
     pixelRatio: 1,
     canvasWidth: width * scaleFactor,
     canvasHeight: height * scaleFactor,
-    backgroundColor: "#ffffff",
-    skipFonts: true, // workaround for html-to-image bug
+    backgroundColor: "#00000000",
+    // workaround for html-to-image bug
+    // see https://github.com/bubkoo/html-to-image/issues/508
+    skipFonts: true,
   });
 
   const blob = await new Promise<Blob>((resolve, reject) => {
