@@ -1316,9 +1316,9 @@
       "se": "Mörk"
     },
     {
-      "en": "Export resolution in DPI",
-      "de": "Exportauflösung in DPI",
-      "se": "Exportupplösning i DPI"
+      "en": "Image export resolution",
+      "de": "Auflösung des Bildexports",
+      "se": "Upplösning för bildexport"
     },
     {
       "en": "Screen Resolution (96 DPI)",

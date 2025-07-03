@@ -87,7 +87,6 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
     ...chartProps
   } = props;
 
-  console.log(`TimeSeriesPanel: ${exportResolution}`);
   if (timeSeriesGroups.length === 0) {
     return (
       <NoTimeSeriesChart
