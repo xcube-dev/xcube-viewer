@@ -52,10 +52,8 @@ export function getHiddenElements(element: HTMLElement | null) {
     // Map Elements
     element.querySelector(".ol-unselectable.ol-control.MuiBox-root.css-0"),
     element.querySelector(".ol-zoom.ol-unselectable.ol-control"),
-    // Statistics Elements
-    element.querySelector(".data-hover-invisible-box"),
-    // element.querySelector(".css-yld2sw"),
-    // element.querySelector(".css-kzq9y8"),
+    // Statistics-Panel Elements
+    element.querySelector("#statistics-row-buttons"),
   ].filter(Boolean) as HTMLElement[];
 }
 
