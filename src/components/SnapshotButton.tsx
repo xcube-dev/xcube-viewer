@@ -11,6 +11,7 @@ import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
+import { getHiddenElements } from "@/actions/otherActions";
 import ToolButton from "@/components/ToolButton";
 import { useCopySnapshotToClipboard } from "@/hooks/useCopySnapshotToClipboard";
 
@@ -25,9 +26,12 @@ export default function SnapshotButton({
   postMessage,
   exportResolution,
 }: SnapshotButtonProps) {
+  const hiddenElements = (root: HTMLElement) => getHiddenElements(root);
+
   const exportOptions = {
     postMessage,
     exportResolution,
+    hiddenElements,
   };
 
   const { onSnapshotClick } = useCopySnapshotToClipboard(
