@@ -10,7 +10,8 @@ import MapButton from "@/components/Viewer/MapButton";
 import i18n from "@/i18n";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { useCopySnapshotToClipboard } from "@/hooks/useCopySnapshotToClipboard";
-import { getMapElement, getHiddenElements } from "@/actions/mapActions";
+import { getMapElement } from "@/actions/mapActions";
+import { getHiddenElements } from "@/actions/otherActions";
 
 interface MapSnapshotButtonProps extends WithLocale {
   postMessage: (messageType: MessageType, messageText: string | Error) => void;

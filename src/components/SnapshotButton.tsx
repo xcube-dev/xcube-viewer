@@ -10,6 +10,7 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { MessageType } from "@/states/messageLogState";
+import { getHiddenElements } from "@/actions/otherActions";
 import ToolButton from "@/components/ToolButton";
 import { useCopySnapshotToClipboard } from "@/hooks/useCopySnapshotToClipboard";
 
@@ -22,9 +23,12 @@ export default function SnapshotButton({
   elementRef,
   postMessage,
 }: SnapshotButtonProps) {
+  const hiddenElements = (root: HTMLElement) => getHiddenElements(root);
+
   const exportOptions = {
     pixelRatio: 1,
     postMessage,
+    hiddenElements,
   };
 
   const { onSnapshotClick } = useCopySnapshotToClipboard(

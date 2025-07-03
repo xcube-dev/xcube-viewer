@@ -77,7 +77,8 @@ async function _exportElement(
   }
 
   hiddenElements.forEach((el) => {
-    el.style.visibility = "hidden";
+    // el.style.visibility = "hidden";
+    el.style.opacity = "0";
   });
 
   const offScreenCanvas = document.createElement("canvas");
@@ -94,9 +95,9 @@ async function _exportElement(
     canvasWidth,
     canvasHeight,
     pixelRatio: options.pixelRatio,
-    // workaround for html-to-image bug, 
+    // workaround for html-to-image bug,
     // see https://github.com/bubkoo/html-to-image/issues/508
-    skipFonts: true, 
+    skipFonts: true,
   });
 
   const image = new Image();
@@ -127,6 +128,7 @@ async function _exportElement(
   ]);
 
   hiddenElements.forEach((el) => {
-    el.style.visibility = "visible";
+    //  el.style.visibility = "visible";
+    el.style.opacity = "1";
   });
 }

@@ -45,6 +45,20 @@ function restoreMapView(mapState: PersistedMapState) {
   }
 }
 
+export function getHiddenElements(element: HTMLElement | null) {
+  if (!element) return [];
+
+  return [
+    // Map Elements
+    element.querySelector(".ol-unselectable.ol-control.MuiBox-root.css-0"),
+    element.querySelector(".ol-zoom.ol-unselectable.ol-control"),
+    // Statistics Elements
+    element.querySelector(".data-hover-invisible-box"),
+    // element.querySelector(".css-yld2sw"),
+    // element.querySelector(".css-kzq9y8"),
+  ].filter(Boolean) as HTMLElement[];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 export type OtherAction = ApplyPersistedState;
