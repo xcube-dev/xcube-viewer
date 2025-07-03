@@ -4,14 +4,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { toJpeg, toPng } from "html-to-image";
+import { toCanvas } from "html-to-image";
+import { ExportResolution } from "@/states/controlState";
 
-const converters = {
-  png: toPng,
-  jpeg: toJpeg,
-};
-
-export type ExportFormat = keyof typeof converters;
+export type ExportFormat = "png" | "jpeg";
 
 export interface ExportOptions {
   format?: ExportFormat;
@@ -19,8 +15,8 @@ export interface ExportOptions {
   height?: number;
   handleSuccess?: () => void;
   handleError?: (error: unknown) => void;
-  pixelRatio?: number;
   hiddenElements?: HTMLElement[] | ((root: HTMLElement) => HTMLElement[]);
+  exportResolution: ExportResolution;
 }
 
 /**
@@ -34,7 +30,7 @@ export interface ExportOptions {
  */
 export function exportElement(
   element: HTMLElement,
-  options?: ExportOptions,
+  options: ExportOptions,
 ): void {
   _exportElement(element, options)
     .then(() => {
@@ -53,21 +49,9 @@ export function exportElement(
 
 async function _exportElement(
   element: HTMLElement,
-  options: ExportOptions = {},
+  options: ExportOptions,
 ): Promise<void> {
   const format = options.format || "png";
-  if (!(format in converters)) {
-    throw new Error(`Image format '${format}' is unknown or not supported.`);
-  }
-
-  const canvasWidth =
-    options.width ||
-    ((options.height || element.clientHeight) * element.clientWidth) /
-      element.clientHeight;
-  const canvasHeight =
-    options.height ||
-    ((options.width || element.clientWidth) * element.clientHeight) /
-      element.clientWidth;
 
   let hiddenElements = options.hiddenElements;
   if (typeof hiddenElements === "function") {
@@ -80,38 +64,33 @@ async function _exportElement(
     el.style.visibility = "hidden";
   });
 
-  const offScreenCanvas = document.createElement("canvas");
-  offScreenCanvas.width = canvasWidth;
-  offScreenCanvas.height = canvasHeight;
-  const context = offScreenCanvas.getContext("2d");
+  const dpi = options.exportResolution;
+  const referenceDPI = 96;
+  const scaleFactor = dpi / referenceDPI;
 
-  if (!context) {
-    throw new Error("Failed to get canvas context.");
-  }
+  const width = options.width || element.clientWidth;
+  const height = options.height || element.clientHeight;
 
-  const dataUrl = await converters[format](element, {
+  const canvas = await toCanvas(element, {
+    width: width * scaleFactor,
+    height: height * scaleFactor,
+    style: {
+      transform: `scale(${scaleFactor})`,
+      transformOrigin: "top left",
+      width: `${width}px`,
+      height: `${height}px`,
+    },
+    pixelRatio: 1,
+    canvasWidth: width * scaleFactor,
+    canvasHeight: height * scaleFactor,
     backgroundColor: "#00000000",
-    canvasWidth,
-    canvasHeight,
-    pixelRatio: options.pixelRatio,
-    // workaround for html-to-image bug, 
+    // workaround for html-to-image bug
     // see https://github.com/bubkoo/html-to-image/issues/508
-    skipFonts: true, 
+    skipFonts: true,
   });
-
-  const image = new Image();
-  image.crossOrigin = "anonymous";
-  image.src = dataUrl;
-
-  await new Promise<void>((resolve, reject) => {
-    image.onload = () => resolve();
-    image.onerror = (error) => reject(error);
-  });
-
-  context.drawImage(image, 0, 0);
 
   const blob = await new Promise<Blob>((resolve, reject) => {
-    offScreenCanvas.toBlob((blob) => {
+    canvas.toBlob((blob) => {
       if (blob === null) {
         reject(new Error("Failed to create a blob from the canvas."));
       } else {
@@ -120,11 +99,7 @@ async function _exportElement(
     }, `image/${format}`);
   });
 
-  await navigator.clipboard.write([
-    new ClipboardItem({
-      [`image/${format}`]: blob,
-    }),
-  ]);
+  await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
 
   hiddenElements.forEach((el) => {
     el.style.visibility = "visible";

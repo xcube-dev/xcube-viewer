@@ -1296,6 +1296,51 @@
       "se": "definierad"
     },
     {
+      "en": "Appearance Mode",
+      "de": "Darstellungsmodus",
+      "se": "Utseendeläge"
+    },
+    {
+      "en": "System",
+      "de": "System",
+      "se": "System"
+    },
+    {
+      "en": "Light",
+      "de": "Hell",
+      "se": "Ljus"
+    },
+    {
+      "en": "Dark",
+      "de": "Dunkel",
+      "se": "Mörk"
+    },
+    {
+      "en": "Image export resolution",
+      "de": "Auflösung des Bildexports",
+      "se": "Upplösning för bildexport"
+    },
+    {
+      "en": "Screen Resolution (96 DPI)",
+      "de": "Bildschirmauflösung (96 DPI)",
+      "se": "Skärmupplösning (96 DPI)"
+    },
+    {
+      "en": "Intermediate Resolution (150 DPI)",
+      "de": "Mittlere Auflösung (150 DPI)",
+      "se": "Medelhög upplösning (150 DPI)"
+    },
+    {
+      "en": "Print Resolution (300 DPI)",
+      "de": "Druckauflösung (300 DPI)",
+      "se": "Utskriftsupplösning (300 DPI)"
+    },
+    {
+      "en": "Professional Print Resolution (600 DPI)",
+      "de": "Professionelle Druckauflösung (300 DPI)",
+      "se": "Professionell utskriftsupplösning (600 DPI)"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"

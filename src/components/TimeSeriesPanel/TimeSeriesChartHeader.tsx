@@ -29,7 +29,7 @@ import {
 } from "@/model/timeSeries";
 import { WithLocale } from "@/util/lang";
 import { makeStyles } from "@/util/styles";
-import { TimeSeriesChartType } from "@/states/controlState";
+import { ExportResolution, TimeSeriesChartType } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import HoverVisibleBox from "@/components/HoverVisibleBox";
 import SnapshotButton from "@/components/SnapshotButton";
@@ -93,6 +93,7 @@ interface TimeSeriesChartHeaderProps extends WithLocale {
   setValueRange: (fixedValueRange: ValueRange | undefined) => void;
   chartElement: RefObject<HTMLDivElement>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
+  exportResolution: ExportResolution;
 }
 
 export default function TimeSeriesChartHeader({
@@ -116,6 +117,7 @@ export default function TimeSeriesChartHeader({
   setValueRange,
   chartElement,
   postMessage,
+  exportResolution,
 }: TimeSeriesChartHeaderProps) {
   const valueRangeEl = useRef<HTMLButtonElement | null>(null);
   const [valueRangeEditorOpen, setValueRangeEditorOpen] = useState(false);
@@ -242,7 +244,11 @@ export default function TimeSeriesChartHeader({
             </Tooltip>
           </ToggleButtonGroup>
 
-          <SnapshotButton elementRef={chartElement} postMessage={postMessage} />
+          <SnapshotButton
+            elementRef={chartElement}
+            postMessage={postMessage}
+            exportResolution={exportResolution}
+          />
 
           <TimeSeriesAddButton
             sx={styles.actionButton}

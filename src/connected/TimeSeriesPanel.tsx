@@ -43,6 +43,7 @@ const mapStateToProps = (state: AppState) => {
     placeGroupTimeSeries: placeGroupTimeSeriesSelector(state),
     canAddTimeSeries: canAddTimeSeriesSelector(state),
     selectedDatasetTitle: selectedDatasetTitleSelector(state),
+    exportResolution: state.controlState.exportResolution,
   };
 };
 

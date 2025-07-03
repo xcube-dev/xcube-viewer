@@ -26,6 +26,7 @@ import {
   TimeAnimationInterval,
   THEME_LABELS,
   ThemeMode,
+  ExportResolution,
 } from "@/states/controlState";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import { LayerDefinition } from "@/model/layerDefinition";
@@ -61,6 +62,13 @@ const TS_CHART_TYPE_LABELS: [TimeSeriesChartType, string][] = [
   ["point", "Points"],
   ["line", "Lines"],
   ["bar", "Bars"],
+];
+
+const EXPORT_RESOLUTION_LABELS: [ExportResolution, string][] = [
+  [96, "Screen Resolution (96 DPI)"],
+  [150, "Intermediate Resolution (150 DPI)"],
+  [300, "Print Resolution (300 DPI)"],
+  [600, "Professional Print Resolution (600 DPI)"],
 ];
 
 interface SettingsDialogProps {
@@ -190,6 +198,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     openDialog("userBaseMaps");
   };
 
+  function handleImageExportSizeChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    updateSettings({
+      exportResolution: parseInt(event.target.value) as ExportResolution,
+    });
+  }
+
   const handleManageUserOverlays = (event: React.MouseEvent) => {
     event.stopPropagation();
     openDialog("userOverlays");
@@ -237,6 +253,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 {TIME_ANIMATION_INTERVALS.map((value, i) => (
                   <MenuItem key={i} value={value}>
                     {value + " ms"}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </SettingsSubPanel>
+            <SettingsSubPanel label={i18n.get("Export resolution in DPI")}>
+              <TextField
+                variant="standard"
+                select
+                sx={styles.textField}
+                value={settings.exportResolution}
+                onChange={handleImageExportSizeChange}
+                margin="normal"
+              >
+                {EXPORT_RESOLUTION_LABELS.map(([value, label]) => (
+                  <MenuItem key={value} value={value}>
+                    {i18n.get(label)}
                   </MenuItem>
                 ))}
               </TextField>

@@ -95,6 +95,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("userPlacesFormatName", settings);
       storage.setObjectProperty("userPlacesFormatOptions", settings);
       storage.setPrimitiveProperty("themeMode", settings);
+      storage.setPrimitiveProperty("exportResolution", settings);
       if (import.meta.env.DEV) {
         console.debug("Stored user settings:", settings);
       }
@@ -197,6 +198,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getStringProperty("themeMode", settings, defaultSettings);
+      storage.getStringProperty("exportResolution", settings, defaultSettings);
       if (import.meta.env.DEV) {
         console.debug("Loaded user settings:", settings);
       }

@@ -78,6 +78,7 @@ export type VolumeRenderMode = "mip" | "aip" | "iso";
 export type VolumeStatus = "loading" | "ok" | "error";
 export type VolumeState = { status: VolumeStatus; message?: string };
 export type VolumeStates = { [volumeId: string]: VolumeState };
+export type ExportResolution = 96 | 150 | 300 | 600;
 
 export interface ControlState {
   selectedDatasetId: string | null;
@@ -134,6 +135,7 @@ export interface ControlState {
   exportZipArchive: boolean;
   exportFileName: string;
   themeMode: ThemeMode;
+  exportResolution: ExportResolution;
 }
 
 export function newControlState(): ControlState {
@@ -214,6 +216,7 @@ export function newControlState(): ControlState {
     exportZipArchive: true,
     exportFileName: "export",
     themeMode: getInitialThemeMode(),
+    exportResolution: 300,
   };
   return loadUserSettings(state);
 }
