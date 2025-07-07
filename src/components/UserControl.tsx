@@ -7,7 +7,7 @@
 import * as React from "react";
 import { useAuth } from "react-oidc-context";
 import { makeStyles } from "@/util/styles";
-import { Theme, styled } from "@mui/system";
+import { styled } from "@mui/system";
 import { deepOrange } from "@mui/material/colors";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -55,10 +55,9 @@ const styles = makeStyles({
   }),
 });
 
-const StyledContainerDiv = styled("div")(({ theme }: { theme: Theme }) => ({
-  margin: theme.spacing(1),
+const StyledContainerDiv = styled("div")({
   position: "relative",
-}));
+});
 
 interface UserControlProps extends WithLocale {
   updateAccessToken: (accessToken: string | null) => void;
