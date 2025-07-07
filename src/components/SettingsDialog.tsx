@@ -257,7 +257,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 ))}
               </TextField>
             </SettingsSubPanel>
-            <SettingsSubPanel label={i18n.get("Export resolution in DPI")}>
+            <SettingsSubPanel label={i18n.get("Image export resolution")}>
               <TextField
                 variant="standard"
                 select
