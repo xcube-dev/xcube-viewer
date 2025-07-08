@@ -15,6 +15,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ShareIcon from "@mui/icons-material/Share";
@@ -29,6 +30,7 @@ import { AppState } from "@/states/appState";
 import { WithLocale } from "@/util/lang";
 import { openDialog } from "@/actions/controlActions";
 import { shareStatePermalink, updateResources } from "@/actions/dataActions";
+import AboutPage from "@/components/AboutPage";
 import DevRefPage from "@/components/DevRefPage";
 import ImprintPage from "@/components/ImprintPage";
 import UserControl from "./UserControl";
@@ -123,6 +125,7 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
   shareStatePermalink,
 }: AppBarImplProps) => {
   const [imprintOpen, setImprintOpen] = React.useState(false);
+  const [aboutOpen, setAboutOpen] = React.useState(false);
   const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
   const helpButtonEl = React.useRef<HTMLButtonElement | null>(null);
@@ -158,6 +161,14 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
 
   const handleCloseImprint = () => {
     setImprintOpen(false);
+  };
+
+  const handleOpenAbout = () => {
+    setAboutOpen(true);
+  };
+
+  const handleCloseAbout = () => {
+    setAboutOpen(false);
   };
 
   return (
@@ -227,6 +238,17 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
             <HelpOutlineIcon />
           </IconButton>
         </Tooltip>
+        {Config.instance.branding.allowAboutPage && (
+          <Tooltip arrow title={i18n.get("About")}>
+            <IconButton
+              onClick={handleOpenAbout}
+              size="small"
+              sx={styles.iconButton}
+            >
+              <InfoOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         <Tooltip arrow title={i18n.get("Imprint")}>
           <IconButton
             onClick={handleOpenImprint}
@@ -247,6 +269,7 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
         </Tooltip>
       </Toolbar>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
+      <AboutPage open={aboutOpen} onClose={handleCloseAbout} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
       <Menu
         anchorEl={helpButtonEl.current}
