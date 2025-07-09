@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 
 import * as api from "@/api";
 import i18n from "@/i18n";
-import { appParams } from "@/config";
+import { appParams, Config } from "@/config";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import { ColorBar, ColorBars } from "@/model/colorBar";
 import { Dataset, getDatasetUserVariables } from "@/model/dataset";
@@ -142,10 +142,18 @@ export function shareStatePermalink() {
           const location = window.location;
           const viewerUrl = location.origin + location.pathname;
           const stateUrl = `${viewerUrl}?stateKey=${stateKey}`;
+
+          const expiration = Config.instance.branding.permalinkExpirationDays;
+          const message =
+            expiration !== undefined
+              ? i18n.get(
+                  "Permalink copied to clipboard (expires in ${expiration} days)",
+                  { expiration },
+                )
+              : i18n.get("Permalink copied to clipboard");
+
           navigator.clipboard.writeText(stateUrl).then(() => {
-            dispatch(
-              postMessage("success", i18n.get("Permalink copied to clipboard")),
-            );
+            dispatch(postMessage("success", message));
           });
         } else {
           dispatch(

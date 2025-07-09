@@ -1,5 +1,10 @@
 ## Changes in version 1.6.2 (in development) 
 
+### Improvements
+
+*  Enabled configuration of the permalink message via `config.json`, 
+   with optional display of the expiration duration in days. (#500)
+
 ### Fixes
 
 *  Applied workaround for a bug in `html-to-image` libary that causes an 

@@ -89,6 +89,7 @@ export interface Branding {
   allowViewModePython?: boolean;
   allowUserVariables?: boolean;
   allow3D?: boolean;
+  permalinkExpirationDays?: number;
 }
 
 function setBrandingPaletteColor(
