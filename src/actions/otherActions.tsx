@@ -45,16 +45,15 @@ function restoreMapView(mapState: PersistedMapState) {
   }
 }
 
-export function getHiddenElements(element: HTMLElement | null) {
+export function getHiddenElements(
+  element: HTMLElement | null,
+  selectors: string[],
+): HTMLElement[] {
   if (!element) return [];
 
-  return [
-    // Map Elements
-    element.querySelector(".ol-unselectable.ol-control.MuiBox-root.css-0"),
-    element.querySelector(".ol-zoom.ol-unselectable.ol-control"),
-    // Statistics-Panel Elements
-    element.querySelector("#statistics-row-buttons"),
-  ].filter(Boolean) as HTMLElement[];
+  return selectors
+    .map((selector) => element.querySelector(selector))
+    .filter(Boolean) as HTMLElement[];
 }
 
 ////////////////////////////////////////////////////////////////////////////////

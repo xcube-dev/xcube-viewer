@@ -24,7 +24,13 @@ export default function MapSnapshotButton({
   exportResolution,
 }: MapSnapshotButtonProps) {
   const elementRef = getMapElement();
-  const hiddenElements = (root: HTMLElement) => getHiddenElements(root);
+
+  const hiddenElementsSelectors: string[] = [
+    ".ol-unselectable.ol-control.MuiBox-root.css-0",
+    ".ol-zoom.ol-unselectable.ol-control",
+  ];
+  const hiddenElements = (root: HTMLElement) =>
+    getHiddenElements(root, hiddenElementsSelectors);
 
   const exportOptions = {
     hiddenElements,

@@ -26,7 +26,9 @@ export default function SnapshotButton({
   postMessage,
   exportResolution,
 }: SnapshotButtonProps) {
-  const hiddenElements = (root: HTMLElement) => getHiddenElements(root);
+  const hiddenElementsSelectors: string[] = ["#statistics-row-buttons"];
+  const hiddenElements = (root: HTMLElement) =>
+    getHiddenElements(root, hiddenElementsSelectors);
 
   const exportOptions = {
     postMessage,
