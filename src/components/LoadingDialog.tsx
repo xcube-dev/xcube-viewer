@@ -4,7 +4,6 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 
 import CircularProgress from "@mui/material/CircularProgress";
@@ -13,8 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { Theme, styled } from "@mui/system";
 
-import Markdown from "@/components/Markdown";
-import useFetchText from "@/hooks/useFetchText";
+import AboutItem from "@/components/AboutItem";
 
 const StyledProgress = styled(CircularProgress)(
   ({ theme }: { theme: Theme }) => ({
@@ -38,15 +36,13 @@ interface LoadingDialogProps extends WithLocale {
 }
 
 export default function LoadingDialog({ messages }: LoadingDialogProps) {
-  const text = useFetchText(i18n.get("docs/about.en.md"));
-
   if (messages.length === 0) {
     return null;
   }
   return (
     <Dialog open={true} aria-labelledby="loading">
       <DialogContent>
-        <Markdown text={text} />
+        <AboutItem />
       </DialogContent>
       <StyledContainerDiv>
         <StyledProgress />
