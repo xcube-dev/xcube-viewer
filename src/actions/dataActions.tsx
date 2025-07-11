@@ -145,7 +145,7 @@ export function shareStatePermalink() {
 
           const expiration = Config.instance.branding.permalinkExpirationDays;
           const message =
-            expiration !== undefined
+            typeof expiration === "number"
               ? i18n.get(
                   "Permalink copied to clipboard (expires in ${expiration} days)",
                   { expiration },
