@@ -1,4 +1,4 @@
-[![examples.png](../images/examples.png)](https://xcube-dev.github.io/xcube-viewer/)
+[![example_logo_a.png](../images/example_logo_a.png)](https://xcube-dev.github.io/xcube-viewer/)
 
 Welcome to the xcube Viewer. The xcube Viewer is a single-page
 web application that provides tools to visualise and analyse multitemporal spatial datasets. 

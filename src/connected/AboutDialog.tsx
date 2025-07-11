@@ -6,11 +6,7 @@
 
 import { connect } from "react-redux";
 
-import {
-  changeLocale,
-  closeDialog,
-  openDialog,
-} from "@/actions/controlActions";
+import { changeLocale, closeDialog } from "@/actions/controlActions";
 import _AboutDialog from "@/components/AboutDialog";
 import { AppState } from "@/states/appState";
 
@@ -25,7 +21,6 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   closeDialog,
   changeLocale,
-  openDialog,
 };
 
 const AboutDialog = connect(mapStateToProps, mapDispatchToProps)(_AboutDialog);

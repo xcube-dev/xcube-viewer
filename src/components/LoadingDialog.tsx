@@ -4,14 +4,17 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import CircularProgress from "@mui/material/CircularProgress";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Theme, styled } from "@mui/system";
-import Typography from "@mui/material/Typography";
-
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
+
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Typography from "@mui/material/Typography";
+import { Theme, styled } from "@mui/system";
+
+import Markdown from "@/components/Markdown";
+import useFetchText from "@/hooks/useFetchText";
 
 const StyledProgress = styled(CircularProgress)(
   ({ theme }: { theme: Theme }) => ({
@@ -35,12 +38,16 @@ interface LoadingDialogProps extends WithLocale {
 }
 
 export default function LoadingDialog({ messages }: LoadingDialogProps) {
+  const text = useFetchText(i18n.get("docs/about.en.md"));
+
   if (messages.length === 0) {
     return null;
   }
   return (
     <Dialog open={true} aria-labelledby="loading">
-      <DialogTitle id="loading">{i18n.get("Please wait...")}</DialogTitle>
+      <DialogContent>
+        <Markdown text={text} />
+      </DialogContent>
       <StyledContainerDiv>
         <StyledProgress />
         {messages.map((message, i) => (
