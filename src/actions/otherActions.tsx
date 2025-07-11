@@ -45,6 +45,17 @@ function restoreMapView(mapState: PersistedMapState) {
   }
 }
 
+export function getHiddenElements(
+  element: HTMLElement | null,
+  selectors: string[],
+): HTMLElement[] {
+  if (!element) return [];
+
+  return selectors
+    .map((selector) => element.querySelector(selector))
+    .filter(Boolean) as HTMLElement[];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 export type OtherAction = ApplyPersistedState;

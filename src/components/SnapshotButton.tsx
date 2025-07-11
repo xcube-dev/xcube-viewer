@@ -11,6 +11,7 @@ import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
+import { getHiddenElements } from "@/actions/otherActions";
 import ToolButton from "@/components/ToolButton";
 import { useCopySnapshotToClipboard } from "@/hooks/useCopySnapshotToClipboard";
 
@@ -18,16 +19,22 @@ interface SnapshotButtonProps extends WithLocale {
   elementRef: RefObject<HTMLDivElement | null>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   exportResolution: ExportResolution;
+  hiddenElementItems?: string[];
 }
 
 export default function SnapshotButton({
   elementRef,
   postMessage,
   exportResolution,
+  hiddenElementItems = [],
 }: SnapshotButtonProps) {
+  const hiddenElements = (root: HTMLElement) =>
+    getHiddenElements(root, hiddenElementItems);
+
   const exportOptions = {
     postMessage,
     exportResolution,
+    hiddenElements,
   };
 
   const { onSnapshotClick } = useCopySnapshotToClipboard(

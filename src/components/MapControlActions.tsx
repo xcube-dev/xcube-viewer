@@ -73,6 +73,10 @@ export default function MapControlActions({
       <MapSnapshotButton
         postMessage={postMessage}
         exportResolution={exportResolution}
+        hiddenElementItems={[
+          ".ol-unselectable.ol-control.MuiBox-root.css-0",
+          ".ol-zoom.ol-unselectable.ol-control",
+        ]}
       />
     </MapButtonGroup>
   );

@@ -47,7 +47,7 @@ interface StatisticsRowProps extends WithLocale {
 }
 
 function Missing({ phrase }: { phrase: string }) {
-  return <span style={{ color: "red" }}>{`<${i18n.get(phrase)}?>`}</span>;
+  return <span style={{ color: "red" }}>{`<${i18n.get(phrase)} ?>`}</span>;
 }
 
 export default function StatisticsRow({
@@ -74,14 +74,17 @@ export default function StatisticsRow({
     <Missing phrase="Time" />
   ) : null;
   const placeLabel = placeInfo ? placeInfo.label : <Missing phrase="Place" />;
+
   return (
     <Box sx={styles.container} ref={containerRef}>
       <Box sx={styles.header}>
-        <Typography fontSize="small">
+        <Typography fontSize="small" variant="inherit" component="span">
           {datasetLabel} / {variableLabel}
           {timeLabel && `, ${timeLabel}`}, {placeLabel}
         </Typography>
-        <Box sx={styles.actions}>{actions}</Box>
+        <Box id="statistics-row-buttons" sx={styles.actions}>
+          {actions}
+        </Box>
       </Box>
       {body && <Box sx={styles.body}>{body}</Box>}
     </Box>

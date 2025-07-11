@@ -112,6 +112,7 @@ export default function StatisticsDataRow({
                 elementRef={containerRef}
                 postMessage={postMessage}
                 exportResolution={exportResolution}
+                hiddenElementItems={["#statistics-row-buttons"]}
               />
             )}
           </HoverVisibleBox>
