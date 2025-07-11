@@ -26,6 +26,7 @@ const AboutDialog = ({ open, closeDialog }: AboutDialogProps) => {
   }
 
   return (
+    //<Dialog open={true} onClose={handleCloseDialog}>
     <Dialog open={open} onClose={handleCloseDialog}>
       <DialogContent>
         <Markdown text={text} />
