@@ -19,16 +19,17 @@ interface SnapshotButtonProps extends WithLocale {
   elementRef: RefObject<HTMLDivElement | null>;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   exportResolution: ExportResolution;
+  hiddenElementItems?: string[];
 }
 
 export default function SnapshotButton({
   elementRef,
   postMessage,
   exportResolution,
+  hiddenElementItems = [],
 }: SnapshotButtonProps) {
-  const hiddenElementsSelectors: string[] = ["#statistics-row-buttons"];
   const hiddenElements = (root: HTMLElement) =>
-    getHiddenElements(root, hiddenElementsSelectors);
+    getHiddenElements(root, hiddenElementItems);
 
   const exportOptions = {
     postMessage,

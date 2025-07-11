@@ -17,20 +17,18 @@ import { getHiddenElements } from "@/actions/otherActions";
 interface MapSnapshotButtonProps extends WithLocale {
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   exportResolution: ExportResolution;
+  hiddenElementItems: string[];
 }
 
 export default function MapSnapshotButton({
   postMessage,
   exportResolution,
+  hiddenElementItems = [],
 }: MapSnapshotButtonProps) {
   const elementRef = getMapElement();
 
-  const hiddenElementsSelectors: string[] = [
-    ".ol-unselectable.ol-control.MuiBox-root.css-0",
-    ".ol-zoom.ol-unselectable.ol-control",
-  ];
   const hiddenElements = (root: HTMLElement) =>
-    getHiddenElements(root, hiddenElementsSelectors);
+    getHiddenElements(root, hiddenElementItems);
 
   const exportOptions = {
     hiddenElements,
