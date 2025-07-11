@@ -1341,6 +1341,26 @@
       "se": "Professionell utskriftsupplösning (600 DPI)"
     },
     {
+      "en": "Creating permalink",
+      "de": "Permalink erstellen",
+      "se": "Skapa permalänk"
+    },
+    {
+      "en": "Failed to create permalink",
+      "de": "Permalink konnte nicht erstellt werden",
+      "se": "Skapa permalänk misslyckades"
+    },
+    {
+      "en": "Permalink copied to clipboard",
+      "de": "Permalink in die Zwischenablage kopiert",
+      "se": "Permalink kopieras till klippbordet"
+    },
+     {
+      "en": "Permalink copied to clipboard (expires in ${expiration} days)",
+      "de": "Permalink in die Zwischenablage kopiert (läuft ab in ${expiration} Tagen)",
+      "se": "Permalink kopieras till klippbordet (går ut om ${expiration} dagar)"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"
