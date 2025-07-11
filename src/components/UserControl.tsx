@@ -7,7 +7,7 @@
 import * as React from "react";
 import { useAuth } from "react-oidc-context";
 import { makeStyles } from "@/util/styles";
-import { Theme, styled } from "@mui/system";
+import { styled } from "@mui/system";
 import { deepOrange } from "@mui/material/colors";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -19,6 +19,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Tooltip from "@mui/material/Tooltip";
 import PersonIcon from "@mui/icons-material/Person";
 
 import i18n from "@/i18n";
@@ -48,15 +49,15 @@ const styles = makeStyles({
     marginTop: -12,
     marginLeft: -12,
   },
-  iconButton: {
-    padding: 0,
-  },
+  iconButton: (theme) => ({
+    marginLeft: theme.spacing(2),
+    ...Config.instance.branding.headerIconStyle,
+  }),
 });
 
-const StyledContainerDiv = styled("div")(({ theme }: { theme: Theme }) => ({
-  margin: theme.spacing(1),
+const StyledContainerDiv = styled("div")({
   position: "relative",
-}));
+});
 
 interface UserControlProps extends WithLocale {
   updateAccessToken: (accessToken: string | null) => void;
@@ -205,12 +206,15 @@ const UserControlContent: React.FC<UserControlProps> = ({
     );
   } else {
     let userButton = (
-      <IconButton
-        onClick={auth.isLoading ? undefined : handleSignInButtonClicked}
-        size="small"
-      >
-        <PersonIcon />
-      </IconButton>
+      <Tooltip arrow title={i18n.get("User Profile")}>
+        <IconButton
+          onClick={auth.isLoading ? undefined : handleSignInButtonClicked}
+          size="small"
+          sx={styles.iconButton}
+        >
+          <PersonIcon />
+        </IconButton>
+      </Tooltip>
     );
     if (auth.isLoading) {
       userButton = (
