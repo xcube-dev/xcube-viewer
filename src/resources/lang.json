@@ -1361,6 +1361,11 @@
       "se": "Permalink kopieras till klippbordet (går ut om ${expiration} dagar)"
     },
     {
+      "en": "About",
+      "de": "Über das Projekt",
+      "se": "Om projektet"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"

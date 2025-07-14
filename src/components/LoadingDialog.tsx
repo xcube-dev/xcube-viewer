@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import { Theme, styled } from "@mui/system";
 
 import AboutItem from "@/components/AboutItem";
+import { Config } from "@/config";
 
 const StyledProgress = styled(CircularProgress)(
   ({ theme }: { theme: Theme }) => ({
@@ -41,9 +42,11 @@ export default function LoadingDialog({ messages }: LoadingDialogProps) {
   }
   return (
     <Dialog open={true} aria-labelledby="loading">
-      <DialogContent>
-        <AboutItem />
-      </DialogContent>
+      {Config.instance.branding.allowAboutPage && (
+        <DialogContent>
+          <AboutItem />
+        </DialogContent>
+      )}
       <StyledContainerDiv>
         <StyledProgress />
         {messages.map((message, i) => (
