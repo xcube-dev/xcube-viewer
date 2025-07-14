@@ -4,10 +4,12 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import i18n from "@/i18n";
 import { type WithLocale } from "@/util/lang";
 
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import AboutItem from "@/components/AboutItem";
 
@@ -23,6 +25,7 @@ const AboutDialog = ({ open, closeDialog }: AboutDialogProps) => {
 
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
+      <DialogTitle>{i18n.get("About")}</DialogTitle>
       <DialogContent>
         <AboutItem />
       </DialogContent>

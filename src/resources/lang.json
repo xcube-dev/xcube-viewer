@@ -1341,6 +1341,11 @@
       "se": "Professionell utskriftsupplösning (600 DPI)"
     },
     {
+      "en": "About",
+      "de": "Über das Projekt",
+      "se": "Om projektet"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"
