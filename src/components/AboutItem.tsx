@@ -4,15 +4,11 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { type WithLocale } from "@/util/lang";
-
 import Markdown from "@/components/Markdown";
 import useFetchText from "@/hooks/useFetchText";
 import { Config } from "@/config";
 
-interface AboutDialogProps extends WithLocale {}
-
-const AboutItem = ({}: AboutDialogProps) => {
+const AboutItem = () => {
   const path = Config.instance.branding.allowAboutPage ?? "";
   const text = useFetchText(path);
 
