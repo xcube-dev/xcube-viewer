@@ -83,7 +83,7 @@ export interface Branding {
   defaultAgg?: "median" | "mean";
   polygonFillOpacity?: number;
   mapProjection?: string;
-  allowAboutPage?: string;
+  allowAboutPage?: boolean;
   allowDownloads?: boolean;
   allowRefresh?: boolean;
   allowSharing?: boolean;

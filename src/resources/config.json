@@ -23,7 +23,7 @@
     "defaultAgg": "mean",
     "polygonFillOpacity": 0.2,
     "mapProjection": "EPSG:3857",
-    "allowAboutPage":"docs/about.en.md",
+    "allowAboutPage": true,
     "allowDownloads": true,
     "allowRefresh": true,
     "allowSharing": true,

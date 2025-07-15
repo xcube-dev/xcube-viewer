@@ -6,11 +6,10 @@
 
 import Markdown from "@/components/Markdown";
 import useFetchText from "@/hooks/useFetchText";
-import { Config } from "@/config";
+import i18n from "@/i18n";
 
 const AboutItem = () => {
-  const path = Config.instance.branding.allowAboutPage ?? "";
-  const text = useFetchText(path);
+  const text = useFetchText(i18n.get("docs/about.en.md"));
 
   return <Markdown text={text} />;
 };
