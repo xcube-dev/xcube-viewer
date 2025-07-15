@@ -20,6 +20,7 @@ const HoverVisibleBox = ({
 }: HoverVisibleBoxProps) => {
   return (
     <Box
+      id="data-hover-invisible-box"
       {...props}
       sx={{
         ...sx,

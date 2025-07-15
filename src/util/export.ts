@@ -61,7 +61,7 @@ async function _exportElement(
   }
 
   hiddenElements.forEach((el) => {
-    el.style.visibility = "hidden";
+    el.style.opacity = "0";
   });
 
   const dpi = options.exportResolution;
@@ -102,6 +102,6 @@ async function _exportElement(
   await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
 
   hiddenElements.forEach((el) => {
-    el.style.visibility = "visible";
+    el.style.opacity = "1";
   });
 }

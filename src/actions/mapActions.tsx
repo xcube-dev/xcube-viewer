@@ -83,11 +83,3 @@ export function getMapElement(): RefObject<HTMLDivElement | null> {
     : null;
   return { current: targetElement as HTMLDivElement | null };
 }
-
-export function getHiddenElements(element: HTMLElement | null) {
-  if (!element) return [];
-  return [
-    element.querySelector(".ol-unselectable.ol-control.MuiBox-root.css-0"),
-    element.querySelector(".ol-zoom.ol-unselectable.ol-control"),
-  ].filter(Boolean) as HTMLElement[];
-}
