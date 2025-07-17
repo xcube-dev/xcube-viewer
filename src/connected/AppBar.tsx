@@ -8,19 +8,24 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { SxProps, Theme, styled } from "@mui/material";
 import AppBarComponent from "@mui/material/AppBar";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ShareIcon from "@mui/icons-material/Share";
 import PolicyIcon from "@mui/icons-material/Policy";
 import { deepOrange } from "@mui/material/colors";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
@@ -123,28 +128,22 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
   shareStatePermalink,
 }: AppBarImplProps) => {
   const [imprintOpen, setImprintOpen] = React.useState(false);
-  const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
-  const helpButtonEl = React.useRef<HTMLButtonElement | null>(null);
+  const [moreMenuOpen, setMoreMenuOpen] = React.useState(false);
+  const moreButtonEl = React.useRef<HTMLButtonElement | null>(null);
 
   const handleSettingsButtonClicked = () => {
+    setMoreMenuOpen(false);
     openDialog("settings");
   };
 
-  const handleOpenHelpMenu = () => {
-    setHelpMenuOpen(true);
-  };
-
-  const handleCloseHelpMenu = () => {
-    setHelpMenuOpen(false);
-  };
-
   const handleOpenManual = () => {
-    setHelpMenuOpen(false);
+    setMoreMenuOpen(false);
     window.open("https://xcube-dev.github.io/xcube-viewer/", "Manual");
   };
 
   const handleOpenDevRef = () => {
+    setMoreMenuOpen(false);
     setDevRefOpen(true);
   };
 
@@ -153,6 +152,7 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
   };
 
   const handleOpenImprint = () => {
+    setMoreMenuOpen(false);
     setImprintOpen(true);
   };
 
@@ -160,6 +160,13 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
     setImprintOpen(false);
   };
 
+  const handleOpenMoreMenu = () => {
+    setMoreMenuOpen(true);
+  };
+
+  const handleCloseMoreMenu = () => {
+    setMoreMenuOpen(false);
+  };
   return (
     <AppBarComponent position="absolute" sx={appBarStyle.appBar} elevation={0}>
       <Toolbar disableGutters sx={styles.toolbar} variant="dense">
@@ -217,47 +224,46 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
             </IconButton>
           </Tooltip>
         )}
-        <Tooltip arrow title={i18n.get("Help")}>
-          <IconButton
-            onClick={handleOpenHelpMenu}
-            size="small"
-            sx={styles.iconButton}
-            ref={helpButtonEl}
-          >
-            <HelpOutlineIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip arrow title={i18n.get("Imprint")}>
-          <IconButton
-            onClick={handleOpenImprint}
-            size="small"
-            sx={styles.iconButton}
-          >
-            <PolicyIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip arrow title={i18n.get("Settings")}>
-          <IconButton
-            onClick={handleSettingsButtonClicked}
-            size="small"
-            sx={styles.iconButton}
-          >
-            <SettingsIcon />
-          </IconButton>
-        </Tooltip>
+        <IconButton
+          onClick={handleOpenMoreMenu}
+          size="small"
+          sx={styles.iconButton}
+          ref={moreButtonEl}
+        >
+          <MoreVertIcon />
+        </IconButton>
       </Toolbar>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
       <Menu
-        anchorEl={helpButtonEl.current}
-        open={helpMenuOpen}
-        onClose={handleCloseHelpMenu}
+        anchorEl={moreButtonEl.current}
+        open={moreMenuOpen}
+        onClose={handleCloseMoreMenu}
       >
         <MenuItem onClick={handleOpenManual}>
-          {i18n.get("Documentation")}
+          <ListItemIcon>
+            <HelpOutlineIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{i18n.get("Documentation")}</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleOpenDevRef}>
-          {i18n.get("Developer Reference")}
+          <ListItemIcon>
+            <CodeOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{i18n.get("Developer Reference")}</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleOpenImprint}>
+          <ListItemIcon>
+            <PolicyIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{i18n.get("Imprint")}</ListItemText>
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handleSettingsButtonClicked}>
+          <ListItemIcon>
+            <SettingsIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{i18n.get("Settings")}</ListItemText>
         </MenuItem>
       </Menu>
     </AppBarComponent>
