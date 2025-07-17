@@ -4,6 +4,13 @@
 
 *  Enabled configuration of the permalink message via `config.json`, 
    with optional display of the expiration duration in days. (#500)
+   
+*  Added support for changing image sources in Markdown based on 
+   the selected theme (e.g., light or dark mode). Examples: (#539)
+   ```
+   ![Logo](logo-light.png#light-mode-only)
+   ![Logo](logo-dark.png#dark-mode-only)
+   ```
 
 ### Fixes
 

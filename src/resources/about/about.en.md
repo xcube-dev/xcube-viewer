@@ -1,4 +1,5 @@
-[![xcube Viewer](/images/logo_xcube.png)](https://xcube-dev.github.io/xcube-viewer/)
+![xcube-light.png](../src/resources/xcube-light.png#light-mode-only)
+![xcube-light.png](../src/resources/xcube-dark.png#dark-mode-only)
 
 Welcome to **xcube Viewer**, which is a single-page
 web application that provides tools to visualise and analyse multitemporal 

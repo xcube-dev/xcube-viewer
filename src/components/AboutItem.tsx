@@ -9,8 +9,7 @@ import useFetchText from "@/hooks/useFetchText";
 import i18n from "@/i18n";
 
 const AboutItem = () => {
-  const text = useFetchText(i18n.get("docs/about.en.md"));
-
+  const text = useFetchText(i18n.get("../src/resources/about/about.en.md"));
   return <Markdown text={text} />;
 };
 
