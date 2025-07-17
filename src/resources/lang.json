@@ -1361,9 +1361,9 @@
       "se": "Permalink kopieras till klippbordet (går ut om ${expiration} dagar)"
     },
     {
-      "en": "About",
-      "de": "Über das Projekt",
-      "se": "Om projektet"
+      "en": "About ${appTitle}",
+      "de": "Über ${appTitle}",
+      "se": "Om ${appTitle}"
     },
     {
       "en": "docs/imprint.en.md",

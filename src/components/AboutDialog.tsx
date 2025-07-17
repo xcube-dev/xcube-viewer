@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
 import AboutItem from "@/components/AboutItem";
+import { Config } from "@/config";
 
 interface AboutDialogProps extends WithLocale {
   open: boolean;
@@ -23,9 +24,10 @@ const AboutDialog = ({ open, closeDialog }: AboutDialogProps) => {
     closeDialog("about");
   }
 
+  const appTitle = Config.instance.branding.appBarTitle;
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>{i18n.get("About")}</DialogTitle>
+      <DialogTitle>{i18n.get("About ${appTitle}", { appTitle })}</DialogTitle>
       <DialogContent>
         <AboutItem />
       </DialogContent>
