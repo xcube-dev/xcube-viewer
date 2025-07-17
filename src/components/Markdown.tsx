@@ -44,8 +44,24 @@ export default function Markdown({ text }: MarkdownProps) {
         );
       },
       img: (props: Record<string, unknown>) => {
+        const mode = theme.palette.mode;
+
         const { node: _, ...rest } = props;
-        return <img style={{ maxWidth: "100%" }} {...rest} />;
+        const alt = rest.alt as string;
+        const fullSrc = rest.src as string;
+
+        const [src, fragment] = fullSrc.split("#");
+
+        if (fragment === "light-mode-only" && mode !== "light") return null;
+        if (fragment === "dark-mode-only" && mode !== "dark") return null;
+
+        const style: React.CSSProperties = {
+          display: "block",
+          margin: "1rem auto",
+          maxWidth: "100%",
+        };
+
+        return <img src={src} alt={alt} style={style} />;
       },
     }),
     [theme],

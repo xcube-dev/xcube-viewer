@@ -4,14 +4,16 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import { WithLocale } from "@/util/lang";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Theme, styled } from "@mui/system";
+import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
+import { Theme, styled } from "@mui/system";
 
-import i18n from "@/i18n";
-import { WithLocale } from "@/util/lang";
+import AboutItem from "@/components/AboutItem";
+import { Config } from "@/config";
 
 const StyledProgress = styled(CircularProgress)(
   ({ theme }: { theme: Theme }) => ({
@@ -40,7 +42,11 @@ export default function LoadingDialog({ messages }: LoadingDialogProps) {
   }
   return (
     <Dialog open={true} aria-labelledby="loading">
-      <DialogTitle id="loading">{i18n.get("Please wait...")}</DialogTitle>
+      {Config.instance.branding.allowAboutPage && (
+        <DialogContent>
+          <AboutItem />
+        </DialogContent>
+      )}
       <StyledContainerDiv>
         <StyledProgress />
         {messages.map((message, i) => (

@@ -15,6 +15,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ShareIcon from "@mui/icons-material/Share";
@@ -227,6 +228,17 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
             <HelpOutlineIcon />
           </IconButton>
         </Tooltip>
+        {Config.instance.branding.allowAboutPage && (
+          <Tooltip arrow title={i18n.get("About")}>
+            <IconButton
+              onClick={() => openDialog("about")}
+              size="small"
+              sx={styles.iconButton}
+            >
+              <InfoOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         <Tooltip arrow title={i18n.get("Imprint")}>
           <IconButton
             onClick={handleOpenImprint}
