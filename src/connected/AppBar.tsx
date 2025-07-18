@@ -138,6 +138,11 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
     openDialog("settings");
   };
 
+  const handleOpenAbout = () => {
+    setMoreMenuOpen(false);
+    openDialog("about");
+  };
+
   const handleOpenManual = () => {
     setMoreMenuOpen(false);
     window.open("https://xcube-dev.github.io/xcube-viewer/", "Manual");
@@ -233,17 +238,6 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
         >
           <MoreVertIcon />
         </IconButton>
-        {Config.instance.branding.allowAboutPage && (
-          <Tooltip arrow title={i18n.get("About")}>
-            <IconButton
-              onClick={() => openDialog("about")}
-              size="small"
-              sx={styles.iconButton}
-            >
-              <InfoOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        )}
       </Toolbar>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
@@ -252,6 +246,17 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
         open={moreMenuOpen}
         onClose={handleCloseMoreMenu}
       >
+        {Config.instance.branding.allowAboutPage && (
+          <MenuItem onClick={handleOpenAbout}>
+            <ListItemIcon>
+              <InfoOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
+              {i18n.get("About ${appName}", { appName })}
+            </ListItemText>
+          </MenuItem>
+        )}
+        <Divider />
         <MenuItem onClick={handleOpenManual}>
           <ListItemIcon>
             <HelpOutlineIcon fontSize="small" />
