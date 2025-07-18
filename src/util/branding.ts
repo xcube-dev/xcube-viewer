@@ -83,11 +83,12 @@ export interface Branding {
   defaultAgg?: "median" | "mean";
   polygonFillOpacity?: number;
   mapProjection?: string;
+  allowAboutPage?: boolean;
   allowDownloads?: boolean;
   allowRefresh?: boolean;
   allowSharing?: boolean;
-  allowViewModePython?: boolean;
   allowUserVariables?: boolean;
+  allowViewModePython?: boolean;
   allow3D?: boolean;
   permalinkExpirationDays?: number;
 }

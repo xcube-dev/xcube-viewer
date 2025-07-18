@@ -20,6 +20,7 @@ import Typography from "@mui/material/Typography";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SettingsIcon from "@mui/icons-material/Settings";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -232,6 +233,17 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
         >
           <MoreVertIcon />
         </IconButton>
+        {Config.instance.branding.allowAboutPage && (
+          <Tooltip arrow title={i18n.get("About")}>
+            <IconButton
+              onClick={() => openDialog("about")}
+              size="small"
+              sx={styles.iconButton}
+            >
+              <InfoOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
       </Toolbar>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />

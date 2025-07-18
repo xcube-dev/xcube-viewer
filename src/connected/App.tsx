@@ -20,6 +20,7 @@ import { Config } from "@/config";
 import { lightTheme, darkTheme } from "@/theme";
 import { type AppState } from "@/states/appState";
 import { getPaletteMode, type ThemeMode } from "@/states/controlState";
+import AboutDialog from "./AboutDialog";
 import AuthWrapper from "@/components/AuthWrapper";
 import ScrollbarStyles from "@/components/ScrollbarStyles";
 import AppBar from "./AppBar";
@@ -99,6 +100,7 @@ const AppImpl: React.FC<AppImplProps> = ({ compact, themeMode }) => {
           <UserVariablesDialog />
           <UserPlacesDialog />
           <ExportDialog />
+          <AboutDialog />
           <LegalAgreementDialog />
           <MessageLog />
         </ThemeProvider>

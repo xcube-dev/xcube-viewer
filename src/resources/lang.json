@@ -1361,6 +1361,11 @@
       "se": "Permalink kopieras till klippbordet (går ut om ${expiration} dagar)"
     },
     {
+      "en": "About ${appTitle}",
+      "de": "Über ${appTitle}",
+      "se": "Om ${appTitle}"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"
@@ -1394,6 +1399,11 @@
       "en": "docs/dev-reference.en.md",
       "de": "docs/dev-reference.en.md",
       "se": "docs/dev-reference.en.md"
+    },
+    {
+      "en": "../src/resources/about/about.en.md",
+      "de": "../src/resources/about/about.de.md",
+      "se": "../src/resources/about/about.se.md"
     }
   ]
 }

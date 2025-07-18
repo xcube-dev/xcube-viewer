@@ -5,6 +5,13 @@
 *  Enabled configuration of the permalink message via `config.json`, 
    with optional display of the expiration duration in days. (#500)
    
+*  Added support for changing image sources in Markdown based on 
+   the selected theme (e.g., light or dark mode). Examples: (#539)
+   ```
+   ![Logo](logo-light.png#light-mode-only)
+   ![Logo](logo-dark.png#dark-mode-only)
+   ```
+
 *  Simplified the AppBar by grouping features under a 
    single button that opens a dropdown menu. The features are: 
    Documentation, Developer Reference, Imprint, and Settings. (#540)
@@ -22,7 +29,11 @@
   
 * Users can change the dpi (95, 150, 300, and 600) of exported images of 
   time series charts, statistics charts, and the map in the settings. (#535)
-  
+ 
+* Information about a project can be added to the Viewer via an `About`
+  Window. If this feature is configured, an `About` window can be opened
+  with a button in the header and it will be shown initially while
+  data is loading. (#508) 
 
 ## Changes in version 1.6.1
 
