@@ -12,6 +12,10 @@
    ![Logo](logo-dark.png#dark-mode-only)
    ```
 
+*  Simplified the AppBar by grouping features under a 
+   single button that opens a dropdown menu. The features are: 
+   Documentation, Developer Reference, Imprint, and Settings. (#540)
+   
 ### Fixes
 
 *  Applied workaround for a bug in `html-to-image` libary that causes an 
