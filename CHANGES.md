@@ -12,7 +12,8 @@
    ![Logo](logo-dark.png#dark-mode-only)
    ```
 
-*  Simplified the AppBar by grouping features under a 
+*  Slimmed down the main application bar by grouping features under a 
+
    single button that opens a dropdown menu. The features are: 
    Documentation, Developer Reference, Imprint, and Settings. (#540)
    
