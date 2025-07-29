@@ -39,25 +39,24 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
   const appName = Config.instance.branding.appBarTitle;
   const [imprintOpen, setImprintOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
-  const [, setMoreMenuOpen] = React.useState(false);
 
   const handleSettingsButtonClicked = () => {
-    setMoreMenuOpen(false);
+    onClose();
     openDialog("settings");
   };
 
   const handleOpenAbout = () => {
-    setMoreMenuOpen(false);
+    onClose();
     openDialog("about");
   };
 
   const handleOpenManual = () => {
-    setMoreMenuOpen(false);
+    onClose();
     window.open("https://xcube-dev.github.io/xcube-viewer/", "Manual");
   };
 
   const handleOpenDevRef = () => {
-    setMoreMenuOpen(false);
+    onClose();
     setDevRefOpen(true);
   };
 
@@ -66,7 +65,7 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
   };
 
   const handleOpenImprint = () => {
-    setMoreMenuOpen(false);
+    onClose();
     setImprintOpen(true);
   };
 
@@ -75,7 +74,7 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
   };
 
   return (
-    <div>
+    <>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
       <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
@@ -116,7 +115,7 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
           <ListItemText>{i18n.get("Settings")}</ListItemText>
         </MenuItem>
       </Menu>
-    </div>
+    </>
   );
 };
 
