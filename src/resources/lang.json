@@ -492,7 +492,7 @@
     },
     {
       "en": "Developer Reference",
-      "de": "Entwickler Referenz",
+      "de": "Entwicklerreferenz",
       "se": "Utvecklarreferens"
     },
     {
@@ -1361,9 +1361,9 @@
       "se": "Permalink kopieras till klippbordet (går ut om ${expiration} dagar)"
     },
     {
-      "en": "About ${appTitle}",
-      "de": "Über ${appTitle}",
-      "se": "Om ${appTitle}"
+      "en": "About ${appName}",
+      "de": "Über ${appName}",
+      "se": "Om ${appName}"
     },
     {
       "en": "docs/imprint.en.md",
