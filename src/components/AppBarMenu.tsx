@@ -79,16 +79,18 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
       <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
         {Config.instance.branding.allowAboutPage && (
-          <MenuItem onClick={handleOpenAbout}>
-            <ListItemIcon>
-              <InfoOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>
-              {i18n.get("About ${appName}", { appName })}
-            </ListItemText>
-          </MenuItem>
+          <>
+            <MenuItem onClick={handleOpenAbout}>
+              <ListItemIcon>
+                <InfoOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                {i18n.get("About ${appName}", { appName })}
+              </ListItemText>
+            </MenuItem>
+            <Divider />
+          </>
         )}
-        <Divider />
         <MenuItem onClick={handleOpenManual}>
           <ListItemIcon>
             <HelpOutlineIcon fontSize="small" />
