@@ -80,4 +80,7 @@ export const Default: Story = {
   args: {
     selectedPanelId: "details",
   },
+  parameters: {
+    layout: "centered",
+  },
 };

@@ -12,7 +12,6 @@ import { AppState } from "@/states/appState";
 
 const mapStateToProps = (state: AppState) => {
   return {
-    locale: state.controlState.locale,
     style: { right: 10, top: 120 },
     zoomLevel: zoomLevelSelector(state),
   };

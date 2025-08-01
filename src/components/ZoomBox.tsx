@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { default as OlMap } from "ol/Map";
@@ -12,8 +12,11 @@ import type { ObjectEvent } from "ol/Object";
 
 import { getLabelForValue } from "@/util/label";
 import { makeStyles } from "@/util/styles";
-import { WithLocale } from "@/util/lang";
 import { MAP_OBJECTS } from "@/states/controlState";
+
+import { CSSProperties } from "react";
+
+import Divider from "@mui/material/Divider";
 
 const styles = makeStyles({
   container: (theme) => ({
@@ -51,7 +54,7 @@ const styles = makeStyles({
   },
 });
 
-interface ZoomBoxProps extends WithLocale {
+interface ZoomBoxProps {
   style?: CSSProperties;
   zoomLevel?: number;
 }
@@ -86,7 +89,22 @@ export default function ZoomBox({ style, zoomLevel }: ZoomBoxProps) {
     >
       <Box>
         <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
-          {"Map zoom"}
+          {"Zoom"}
+        </Typography>
+        <Typography
+          sx={styles.subTitle}
+          variant="subtitle2"
+          color="textSecondary"
+        >
+          {currentZoom !== undefined
+            ? getLabelForValue(currentZoom, 4)
+            : "no zoom level"}
+        </Typography>
+      </Box>
+      <Divider />
+      <Box>
+        <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
+          {"Dataset Level"}
         </Typography>
         <Typography
           sx={styles.subTitle}
