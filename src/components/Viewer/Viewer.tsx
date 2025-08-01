@@ -126,6 +126,8 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
+  zoomBox?: MapElement;
+  allowZoomBox?: boolean;
 }
 
 export default function Viewer({
@@ -158,6 +160,8 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
+  zoomBox,
+  allowZoomBox,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -426,6 +430,7 @@ export default function Viewer({
         {mapPointInfoBox}
         {mapControlActions}
         {mapSplitter}
+        {allowZoomBox && zoomBox}
         <ScaleLine bar={false} />
       </Map>
     </ErrorBoundary>

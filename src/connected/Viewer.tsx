@@ -7,6 +7,7 @@
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
 
+import { Config } from "@/config";
 import { AppState } from "@/states/appState";
 import {
   baseMapLayersSelector,
@@ -35,6 +36,7 @@ import ColorBarLegend2 from "./ColorBarLegend2";
 import MapSplitter from "./MapSplitter";
 import MapPointInfoBox from "./MapPointInfoBox";
 import MapControlActions from "./MapControlActions";
+import ZoomBox from "./ZoomBox";
 
 interface OwnProps {
   onMapRef?: (map: OlMap | null) => void;
@@ -52,6 +54,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
     colorBarLegend: <ColorBarLegend />,
     colorBarLegend2: <ColorBarLegend2 />,
+    zoomBox: <ZoomBox />,
     mapSplitter: <MapSplitter />,
     mapPointInfoBox: <MapPointInfoBox />,
     mapControlActions: <MapControlActions />,
@@ -68,6 +71,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     imageSmoothing: imageSmoothingSelector(state),
     variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
+    allowZoomBox: Config.instance.branding.allowZoomBox,
   };
 };
 
