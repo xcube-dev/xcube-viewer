@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { default as OlMap } from "ol/Map";
 import type { ObjectEvent } from "ol/Object";
 
+import { getLabelForValue } from "@/util/label";
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
 import { MAP_OBJECTS } from "@/states/controlState";
@@ -92,7 +93,9 @@ export default function ZoomBox({ style, zoomLevel }: ZoomBoxProps) {
           variant="subtitle2"
           color="textSecondary"
         >
-          {currentZoom}
+          {currentZoom !== undefined
+            ? getLabelForValue(currentZoom, 4)
+            : "no zoom level"}
         </Typography>
       </Box>
     </Box>
