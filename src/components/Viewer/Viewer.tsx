@@ -279,7 +279,6 @@ export default function Viewer({
       if (percent >= 100 && loading > 0) {
         loading = 0;
         loaded = 0;
-        // setProgress(0);
       }
     };
 

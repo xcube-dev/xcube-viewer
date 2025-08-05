@@ -14,7 +14,7 @@ const styles = {
     bottom: 0,
     left: 0,
     width: "100%",
-    height: "4px",
+    height: "5px",
     pointerEvents: "none",
   },
 };
@@ -23,7 +23,9 @@ interface ProgressBarProps {
   progress: number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  progress,
+}: ProgressBarProps) => {
   return (
     <Box sx={styles.wrapper}>
       <Box
