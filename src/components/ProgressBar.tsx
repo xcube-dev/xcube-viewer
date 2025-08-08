@@ -22,7 +22,7 @@ const styles = {
 
 interface ProgressBarProps {
   progress: number;
-  visibility: string;
+  visibility: "visible" | "hidden";
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({

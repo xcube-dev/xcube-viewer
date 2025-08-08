@@ -6,13 +6,15 @@
 
 import { useEffect } from "react";
 import type TileSource from "ol/source/Tile";
+import { default as OlTileLayer } from "ol/layer/Tile";
+import { default as OlMap } from "ol/Map";
 
 // this solution is based on this example:
 // https://openlayers.org/en/latest/examples/tile-load-events.html
 export function useTileLoadingProgress(
-  map: any,
+  map: OlMap | null,
   setProgress: (progress: number) => void,
-  setVisibility: (visibility: string) => void,
+  setVisibility: (visibility: "hidden" | "visible") => void,
 ) {
   useEffect(() => {
     if (!map) return;
@@ -55,12 +57,14 @@ export function useTileLoadingProgress(
     const sourcesWithListeners: TileSource[] = [];
 
     for (const layer of layers) {
-      const source = layer.getSource();
-      if (source) {
-        sourcesWithListeners.push(source);
-        source.on("tileloadstart", onTileLoadStart);
-        source.on("tileloadend", onTileLoadEnd);
-        source.on("tileloaderror", onTileLoadError);
+      if (layer instanceof OlTileLayer) {
+        const source = layer.getSource();
+        if (source) {
+          sourcesWithListeners.push(source);
+          source.on("tileloadstart", onTileLoadStart);
+          source.on("tileloadend", onTileLoadEnd);
+          source.on("tileloaderror", onTileLoadError);
+        }
       }
     }
 
@@ -76,5 +80,5 @@ export function useTileLoadingProgress(
         map.un("loadend", onTileLoadError);
       }
     };
-  }, [map, setProgress]);
+  }, [map, setProgress, setVisibility]);
 }

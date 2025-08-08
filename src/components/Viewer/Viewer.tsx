@@ -170,8 +170,8 @@ export default function Viewer({
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
   );
-  const [progress, setProgress] = useState(0);
-  const [visibility, setVisibility] = useState("hidden");
+  const [progress, setProgress] = useState<number>(0);
+  const [visibility, setVisibility] = useState<"hidden" | "visible">("hidden");
 
   // set progress value for Tile Loading Progress Bar
   useTileLoadingProgress(map, setProgress, setVisibility);
