@@ -51,10 +51,8 @@ import { Map, MapElement } from "@/components/ol/Map";
 import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
+import { useTileLoadingProgress } from "@/hooks/useTileLoadingProgress";
 import { isNumber } from "@/util/types";
-
-import TileLayer from "ol/layer/Tile";
-import { Tile as TileSource } from "ol/source";
 
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
@@ -173,6 +171,10 @@ export default function Viewer({
     selectedPlaceId || null,
   );
   const [progress, setProgress] = useState(0);
+  const [visibility, setVisibility] = useState("hidden");
+
+  // set progress value for Tile Loading Progress Bar
+  useTileLoadingProgress(map, setProgress, setVisibility);
 
   // If the place selection changed in the UI,
   // synchronize selection in the map.
@@ -264,62 +266,6 @@ export default function Viewer({
       }
     };
   });
-
-  // display progress bar at the bottom of map, when tiles are loading
-  useEffect(() => {
-    if (!map) return;
-
-    let loading = 0;
-    let loaded = 0;
-
-    const updateProgress = () => {
-      const percent = loading > 0 ? (loaded / loading) * 100 : 0;
-      setProgress(Math.min(percent, 100));
-
-      if (percent >= 100 && loading > 0) {
-        loading = 0;
-        loaded = 0;
-      }
-    };
-
-    const onTileLoadStart = () => {
-      loading++;
-      updateProgress();
-    };
-
-    const onTileLoadEnd = () => {
-      loaded++;
-      updateProgress();
-    };
-
-    const onTileLoadError = () => {
-      loaded++;
-      updateProgress();
-    };
-
-    const layers = map.getLayers().getArray();
-    const sourcesWithListeners: TileSource[] = [];
-
-    for (const layer of layers) {
-      if (layer instanceof TileLayer) {
-        const source = layer.getSource();
-        if (source) {
-          sourcesWithListeners.push(source);
-          source.on("tileloadstart", onTileLoadStart);
-          source.on("tileloadend", onTileLoadEnd);
-          source.on("tileloaderror", onTileLoadError);
-        }
-      }
-    }
-
-    return () => {
-      for (const source of sourcesWithListeners) {
-        source.un("tileloadstart", onTileLoadStart);
-        source.un("tileloadend", onTileLoadEnd);
-        source.un("tileloaderror", onTileLoadError);
-      }
-    };
-  }, [map]);
 
   const handleMapClick = (event: OlMapBrowserEvent<UIEvent>) => {
     if (mapInteraction === "Select") {
@@ -488,7 +434,7 @@ export default function Viewer({
         {mapControlActions}
         {mapSplitter}
         <ScaleLine bar={false} />
-        <ProgressBar progress={progress} />
+        <ProgressBar progress={progress} visibility={visibility} />
       </Map>
     </ErrorBoundary>
   );

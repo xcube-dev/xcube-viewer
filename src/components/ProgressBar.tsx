@@ -10,6 +10,7 @@ import { Theme } from "@mui/system";
 
 const styles = {
   wrapper: {
+    zIndex: 1000,
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -21,10 +22,12 @@ const styles = {
 
 interface ProgressBarProps {
   progress: number;
+  visibility: string;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
+  visibility,
 }: ProgressBarProps) => {
   return (
     <Box sx={styles.wrapper}>
@@ -35,6 +38,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           transition: " width 300ms ease, opacity 500ms ease",
           width: `${progress}%`,
           opacity: progress >= 100 ? 0 : 1,
+          visibility: visibility,
         })}
       />
     </Box>
