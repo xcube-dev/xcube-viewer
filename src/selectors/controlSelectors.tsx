@@ -202,6 +202,24 @@ export const selectedUserVariablesSelector = createSelector(
   },
 );
 
+export const getDatasetResolutions = (dataset: Dataset | null): number[] =>
+  dataset && dataset.resolutions ? dataset.resolutions : [];
+
+export const selectedDatasetResolutionsSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetResolutions,
+);
+
+export const getDatasetSpatialUnits = (
+  dataset: Dataset | null,
+): string | null =>
+  dataset && dataset.spatialUnits ? dataset.spatialUnits : null;
+
+export const selectedDatasetSpatialUnitsSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetSpatialUnits,
+);
+
 const _findDatasetVariable = (
   dataset: Dataset | null,
   varName: string | null,

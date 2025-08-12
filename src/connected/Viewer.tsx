@@ -23,6 +23,9 @@ import {
   selectedPlaceGroupPlacesSelector,
   userPlaceGroupsVisibilitySelector,
   showUserPlacesLayerSelector,
+  zoomLevelSelector,
+  selectedDatasetResolutionsSelector,
+  selectedDatasetSpatialUnitsSelector,
 } from "@/selectors/controlSelectors";
 import {
   addDrawnUserPlace,
@@ -54,7 +57,6 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     placeGroupLayers: selectedDatasetPlaceGroupLayersSelector(state),
     colorBarLegend: <ColorBarLegend />,
     colorBarLegend2: <ColorBarLegend2 />,
-    zoomBox: <ZoomBox />,
     mapSplitter: <MapSplitter />,
     mapPointInfoBox: <MapPointInfoBox />,
     mapControlActions: <MapControlActions />,
@@ -72,6 +74,10 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
     allowZoomBox: Config.instance.branding.allowZoomBox,
+    zoomLevel: zoomLevelSelector(state),
+    selectedDatasetResolutions: selectedDatasetResolutionsSelector(state),
+    selectedDatasetSpatialUnits: selectedDatasetSpatialUnitsSelector(state),
+    zoomBox: <ZoomBox />,
   };
 };
 

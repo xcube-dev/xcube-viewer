@@ -7,13 +7,21 @@
 import { connect } from "react-redux";
 
 import _ZoomBox from "@/components/ZoomBox";
-import { zoomLevelSelector } from "@/selectors/controlSelectors";
+import {
+  mapProjectionSelector,
+  selectedDatasetResolutionsSelector,
+  selectedDatasetSpatialUnitsSelector,
+  zoomLevelSelector,
+} from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
 
 const mapStateToProps = (state: AppState) => {
   return {
     style: { right: 10, top: 120 },
     zoomLevel: zoomLevelSelector(state),
+    datasetResolutions: selectedDatasetResolutionsSelector(state),
+    datasetSpatialUnits: selectedDatasetSpatialUnitsSelector(state),
+    mapProjection: mapProjectionSelector(state),
   };
 };
 

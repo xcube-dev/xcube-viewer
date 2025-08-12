@@ -4,19 +4,17 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { default as OlMap } from "ol/Map";
-import type { ObjectEvent } from "ol/Object";
 
+import { getDatasetLevel } from "@/model/dataset";
 import { getLabelForValue } from "@/util/label";
 import { makeStyles } from "@/util/styles";
 import { MAP_OBJECTS } from "@/states/controlState";
-
-import { CSSProperties } from "react";
-
-import Divider from "@mui/material/Divider";
 
 const styles = makeStyles({
   container: (theme) => ({
@@ -55,67 +53,92 @@ const styles = makeStyles({
 });
 
 interface ZoomBoxProps {
-  style?: CSSProperties;
-  zoomLevel?: number;
+  style: CSSProperties;
+  zoomLevel: number | undefined;
+  //datasetLevel: () => number | undefined;
+  datasetResolutions: number[];
+  datasetSpatialUnits: string | null;
+  mapProjection: string;
 }
 
-export default function ZoomBox({ style, zoomLevel }: ZoomBoxProps) {
+export default function ZoomBox({
+  style,
+  zoomLevel,
+  //datasetLevel,
+  datasetResolutions,
+  datasetSpatialUnits,
+  mapProjection,
+}: ZoomBoxProps): JSX.Element {
   const [currentZoom, setCurrentZoom] = useState<number | undefined>(zoomLevel);
+  const [currentDatasetLevel, setCurrentDatasetLevel] = useState<
+    number | undefined
+  >(() =>
+    getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
+  );
 
-  // TODO: using MAP_OBJECTS here is really a bad idea,
-  //   but it seems we have no choice.
-  const map = MAP_OBJECTS["map"] as OlMap | undefined;
-
+  // update DatasetLevel when parameters change
   useEffect(() => {
-    if (map) {
-      const view = map.getView();
-      const handleZoomChange = (event: ObjectEvent) => {
-        const newZoom = event.target.getZoom();
-        setCurrentZoom(newZoom);
-      };
+    setCurrentDatasetLevel(
+      getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
+    );
+  }, [datasetResolutions, datasetSpatialUnits, mapProjection]);
 
-      view.on("change:resolution", handleZoomChange);
-      return () => {
-        view.un("change:resolution", handleZoomChange);
-      };
-    }
-  }, [map]);
+  const map = MAP_OBJECTS["map"] as OlMap | undefined;
+  const view = map?.getView();
+  useEffect(() => {
+    if (!view) return;
+
+    const handleZoomChange = () => {
+      const newZoom = view.getZoom();
+      setCurrentZoom(newZoom);
+      setCurrentDatasetLevel(
+        getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
+      );
+    };
+
+    view.on("change:resolution", handleZoomChange);
+    return () => {
+      view.un("change:resolution", handleZoomChange);
+    };
+  }, [view, datasetResolutions, datasetSpatialUnits, mapProjection]);
 
   return (
-    <Box
-      //className="ol-unselectable ol-control"
-      sx={styles.container}
-      style={style}
-    >
-      <Box>
-        <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
-          {"Zoom"}
-        </Typography>
-        <Typography
-          sx={styles.subTitle}
-          variant="subtitle2"
-          color="textSecondary"
-        >
-          {currentZoom !== undefined
-            ? getLabelForValue(currentZoom, 4)
-            : "no zoom level"}
-        </Typography>
+    <div>
+      <Box
+        //className="ol-unselectable ol-control"
+        sx={styles.container}
+        style={style}
+      >
+        <Box>
+          <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
+            {"Zoom"}
+          </Typography>
+          <Typography
+            sx={styles.subTitle}
+            variant="subtitle2"
+            color="textSecondary"
+          >
+            {currentZoom !== undefined
+              ? getLabelForValue(currentZoom, 4)
+              : "no zoom level"}
+          </Typography>
+        </Box>
+        <Divider />
+        <Box>
+          <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
+            {"Dataset Level"}
+          </Typography>
+          <Typography
+            sx={styles.subTitle}
+            variant="subtitle2"
+            color="textSecondary"
+          >
+            {currentDatasetLevel !== undefined
+              ? getLabelForValue(currentDatasetLevel, 4)
+              : "no dataset level"}
+          </Typography>
+        </Box>
       </Box>
-      <Divider />
-      <Box>
-        <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
-          {"Dataset Level"}
-        </Typography>
-        <Typography
-          sx={styles.subTitle}
-          variant="subtitle2"
-          color="textSecondary"
-        >
-          {currentZoom !== undefined
-            ? getLabelForValue(currentZoom, 4)
-            : "no zoom level"}
-        </Typography>
-      </Box>
-    </Box>
+    </div>
   );
 }
