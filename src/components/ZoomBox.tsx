@@ -62,19 +62,24 @@ export default function ZoomBox({
   zoomLevel,
   datasetLevel,
 }: ZoomBoxProps): JSX.Element {
-  const [currentZoom, setCurrentZoom] = useState<number | undefined>(zoomLevel);
-
-  const currentDatasetLevel = useMemo(
-    () => datasetLevel(),
-    [datasetLevel, currentZoom],
-  );
   const map = MAP_OBJECTS["map"] as OlMap | undefined;
   const view = map?.getView();
+
+  const [currentZoom, setCurrentZoom] = useState<number | undefined>(zoomLevel);
+  const [currentDatasetLevel, setCurrentDatasetLevel] = useState<
+    number | undefined
+  >(() => datasetLevel());
+
+  useMemo(() => {
+    setCurrentDatasetLevel(datasetLevel());
+  }, [datasetLevel]);
+
   useEffect(() => {
     if (!view) return;
 
     const handleZoomChange = () => {
       setCurrentZoom(view.getZoom());
+      setCurrentDatasetLevel(datasetLevel());
     };
 
     view.on("change:resolution", handleZoomChange);
