@@ -160,8 +160,8 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
-  zoomBox,
   allowZoomBox,
+  zoomBox,
 }: ViewerProps) {
   theme = useTheme();
 

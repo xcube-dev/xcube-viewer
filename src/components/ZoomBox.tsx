@@ -4,14 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties } from "react";
+import { CSSProperties, useMemo } from "react";
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { default as OlMap } from "ol/Map";
 
-import { getDatasetLevel } from "@/model/dataset";
 import { getLabelForValue } from "@/util/label";
 import { makeStyles } from "@/util/styles";
 import { MAP_OBJECTS } from "@/states/controlState";
@@ -55,52 +54,34 @@ const styles = makeStyles({
 interface ZoomBoxProps {
   style: CSSProperties;
   zoomLevel: number | undefined;
-  //datasetLevel: () => number | undefined;
-  datasetResolutions: number[];
-  datasetSpatialUnits: string | null;
-  mapProjection: string;
+  datasetLevel: () => number | undefined;
 }
 
 export default function ZoomBox({
   style,
   zoomLevel,
-  //datasetLevel,
-  datasetResolutions,
-  datasetSpatialUnits,
-  mapProjection,
+  datasetLevel,
 }: ZoomBoxProps): JSX.Element {
   const [currentZoom, setCurrentZoom] = useState<number | undefined>(zoomLevel);
-  const [currentDatasetLevel, setCurrentDatasetLevel] = useState<
-    number | undefined
-  >(() =>
-    getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
+
+  const currentDatasetLevel = useMemo(
+    () => datasetLevel(),
+    [datasetLevel, currentZoom],
   );
-
-  // update DatasetLevel when parameters change
-  useEffect(() => {
-    setCurrentDatasetLevel(
-      getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
-    );
-  }, [datasetResolutions, datasetSpatialUnits, mapProjection]);
-
   const map = MAP_OBJECTS["map"] as OlMap | undefined;
   const view = map?.getView();
   useEffect(() => {
     if (!view) return;
 
     const handleZoomChange = () => {
-      const newZoom = view.getZoom();
-      setCurrentZoom(newZoom);
-      setCurrentDatasetLevel(
-        getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
-      );
+      setCurrentZoom(view.getZoom());
     };
 
     view.on("change:resolution", handleZoomChange);
     return () => {
       view.un("change:resolution", handleZoomChange);
     };
-  }, [view, datasetResolutions, datasetSpatialUnits, mapProjection]);
+  }, [view, datasetLevel]);
 
   return (
     <div>

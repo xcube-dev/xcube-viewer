@@ -145,6 +145,24 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
   return [coordinates[0], coordinates[coordinates.length - 1]];
 }
 
+export const getDatasetZLevel = (): number | undefined => {
+  const map = MAP_OBJECTS["map"] as OlMap | undefined;
+  if (map) {
+    const view = map.getView();
+    const resolution = view.getResolution();
+
+    const layer = findMapLayer(map, "variable");
+    if (layer instanceof OlTileLayer) {
+      const source = layer.getSource();
+      const tileGrid = source.getTileGrid();
+
+      return tileGrid.getZForResolution(resolution);
+    } else {
+      return undefined;
+    }
+  }
+};
+
 export function isMeterUnit(unitName: string): boolean {
   const normalized = unitName.toLowerCase();
   return ["m", "metre", "metres", "meter", "meters"].includes(normalized);
@@ -164,25 +182,12 @@ export function isDegreeUnit(unitName: string): boolean {
 
 //Get the factor to convert from one unit into another
 //with units given by *unitNameFrom* and *unitNameTo*.
-//FROM: Map unit TO: Server unit
 export function getUnitFactor(
   unitNameFrom: string,
   unitNameTo: string,
 ): number {
   const EARTH_EQUATORIAL_RADIUS_WGS84 = 6378137.0;
   const EARTH_CIRCUMFERENCE_WGS84 = 2 * Math.PI * EARTH_EQUATORIAL_RADIUS_WGS84;
-
-  /*  const fromMeter = isMeterUnit(unitNameFrom);
-  const fromDegree = isDegreeUnit(unitNameFrom);
-
-  if (!fromMeter && !fromDegree) {
-    throw new Error(
-      `Unsupported unit '${unitNameFrom}'. Unit must be either meters or degrees.`,
-    );
-  }
-
-  const toMeter = unitNameTo === WEB_MERCATOR_CRS;
-  const toDegree = unitNameTo === GEOGRAPHIC_CRS;*/
 
   const fromMeter = unitNameFrom === WEB_MERCATOR_CRS;
   const fromDegree = unitNameFrom === GEOGRAPHIC_CRS;
@@ -213,67 +218,60 @@ export function getUnitFactor(
   return 1.0; // same units or unsupported conversion
 }
 
+// get current Level of Dataset
+// based on https://github.com/xcube-dev/xcube/blob/0de66ae448a6fac6362a4a3fc409dba71dd132ed/xcube/core/tilingscheme.py#L281
 export function getDatasetLevel(
-  resolutions: number[],
-  spatialUnit: string | null,
+  datasetResolutions: number[],
+  datasetSpatialUnit: string | null,
   mapProjection: string,
 ): number | undefined {
-  const map = MAP_OBJECTS["map"] as OlMap | undefined;
-  if (map && resolutions && mapProjection && spatialUnit) {
-    const view = map.getView();
-    const resolution = view.getResolution();
+  const datasetZLevel = getDatasetZLevel();
+  if (
+    datasetResolutions &&
+    datasetSpatialUnit &&
+    mapProjection &&
+    datasetZLevel
+  ) {
+    // Resolution at level 0
+    let levelZeroResolution: number;
+    if (mapProjection === WEB_MERCATOR_CRS) {
+      levelZeroResolution = 40075017 / 256;
+    } else {
+      levelZeroResolution = 180 / 256;
+    }
 
-    const layer = findMapLayer(map, "variable");
+    const fFromMap = getUnitFactor(mapProjection, datasetSpatialUnit);
+    // Tile pixel size in dataset units for map tile at level 0
+    const dsPixSizeL0 = fFromMap * levelZeroResolution;
+    // Tile pixel size in dataset units for map tile at level
+    const dsPixSize = dsPixSizeL0 / (1 << datasetZLevel);
 
-    if (layer instanceof OlTileLayer) {
-      const source = layer.getSource();
-      const tileGrid = source.getTileGrid();
-      const level = tileGrid.getZForResolution(resolution);
+    const numDsLevels = datasetResolutions.length;
 
-      //const unitFfromMap = getUnitFactor(spatialUnit, mapProjection);
-      const unitFfromMap = getUnitFactor(mapProjection, spatialUnit);
+    const dsPixSizeMin = datasetResolutions[0];
+    if (dsPixSize <= dsPixSizeMin) {
+      return 0;
+    }
 
-      // Resolution at level 0 (adjust this based on your tile scheme, e.g. WebMercator)
-      let levelZeroResolution: number;
-      if (mapProjection === WEB_MERCATOR_CRS) {
-        levelZeroResolution = 40075017 / 256;
-      } else {
-        levelZeroResolution = 180 / 256;
-      }
+    const dsPixSizeMax = datasetResolutions[datasetResolutions.length - 1];
+    if (dsPixSize >= dsPixSizeMax) {
+      return numDsLevels - 1;
+    }
 
-      const dsPixSizeL0 = unitFfromMap * levelZeroResolution;
+    for (let dsLevel = 0; dsLevel < numDsLevels - 1; dsLevel++) {
+      const dsPixSize1 = datasetResolutions[dsLevel];
+      const dsPixSize2 = datasetResolutions[dsLevel + 1];
 
-      // Tile pixel size in dataset units for the given zoom level
-      const dsPixSize = dsPixSizeL0 / (1 << level); // Equivalent to 2^level
-
-      // Number of available resolution levels in dataset
-      const numDsLevels = resolutions.length;
-
-      const dsPixSizeMin = resolutions[0];
-      if (dsPixSize <= dsPixSizeMin) {
-        return 0;
-      }
-
-      const dsPixSizeMax = resolutions[resolutions.length - 1];
-      if (dsPixSize >= dsPixSizeMax) {
-        return numDsLevels - 1;
-      }
-
-      for (let dsLevel = 0; dsLevel < numDsLevels - 1; dsLevel++) {
-        const dsPixSize1 = resolutions[dsLevel];
-        const dsPixSize2 = resolutions[dsLevel + 1];
-
-        if (dsPixSize1 <= dsPixSize && dsPixSize <= dsPixSize2) {
-          const r = (dsPixSize - dsPixSize1) / (dsPixSize2 - dsPixSize1);
-          if (r < 0.5) {
-            return dsLevel;
-          } else {
-            return dsLevel + 1;
-          }
+      if (dsPixSize1 <= dsPixSize && dsPixSize <= dsPixSize2) {
+        const r = (dsPixSize - dsPixSize1) / (dsPixSize2 - dsPixSize1);
+        if (r < 0.5) {
+          return dsLevel;
+        } else {
+          return dsLevel + 1;
         }
       }
-    } else {
-      return undefined;
     }
+  } else {
+    return undefined;
   }
 }

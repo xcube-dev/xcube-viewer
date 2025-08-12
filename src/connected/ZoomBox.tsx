@@ -7,6 +7,7 @@
 import { connect } from "react-redux";
 
 import _ZoomBox from "@/components/ZoomBox";
+import { getDatasetLevel } from "@/model/dataset";
 import {
   mapProjectionSelector,
   selectedDatasetResolutionsSelector,
@@ -16,12 +17,15 @@ import {
 import { AppState } from "@/states/appState";
 
 const mapStateToProps = (state: AppState) => {
+  const datasetResolutions = selectedDatasetResolutionsSelector(state);
+  const datasetSpatialUnits = selectedDatasetSpatialUnitsSelector(state);
+  const mapProjection = mapProjectionSelector(state);
+
   return {
     style: { right: 10, top: 120 },
     zoomLevel: zoomLevelSelector(state),
-    datasetResolutions: selectedDatasetResolutionsSelector(state),
-    datasetSpatialUnits: selectedDatasetSpatialUnitsSelector(state),
-    mapProjection: mapProjectionSelector(state),
+    datasetLevel: () =>
+      getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
   };
 };
 
