@@ -9,19 +9,14 @@ import { connect } from "react-redux";
 import { SxProps, Theme, styled } from "@mui/material";
 import AppBarComponent from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import SettingsIcon from "@mui/icons-material/Settings";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ShareIcon from "@mui/icons-material/Share";
-import PolicyIcon from "@mui/icons-material/Policy";
 import { deepOrange } from "@mui/material/colors";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
@@ -30,8 +25,7 @@ import { AppState } from "@/states/appState";
 import { WithLocale } from "@/util/lang";
 import { openDialog } from "@/actions/controlActions";
 import { shareStatePermalink, updateResources } from "@/actions/dataActions";
-import DevRefPage from "@/components/DevRefPage";
-import ImprintPage from "@/components/ImprintPage";
+import AppBarMenu from "@/components/AppBarMenu";
 import UserControl from "./UserControl";
 
 interface AppBarImplProps extends WithLocale {
@@ -123,42 +117,15 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
   allowSharing,
   shareStatePermalink,
 }: AppBarImplProps) => {
-  const [imprintOpen, setImprintOpen] = React.useState(false);
-  const [helpMenuOpen, setHelpMenuOpen] = React.useState(false);
-  const [devRefOpen, setDevRefOpen] = React.useState(false);
-  const helpButtonEl = React.useRef<HTMLButtonElement | null>(null);
+  const [moreMenuOpen, setMoreMenuOpen] = React.useState(false);
+  const moreButtonEl = React.useRef<HTMLButtonElement | null>(null);
 
-  const handleSettingsButtonClicked = () => {
-    openDialog("settings");
+  const handleOpenMoreMenu = () => {
+    setMoreMenuOpen(true);
   };
 
-  const handleOpenHelpMenu = () => {
-    setHelpMenuOpen(true);
-  };
-
-  const handleCloseHelpMenu = () => {
-    setHelpMenuOpen(false);
-  };
-
-  const handleOpenManual = () => {
-    setHelpMenuOpen(false);
-    window.open("https://xcube-dev.github.io/xcube-viewer/", "Manual");
-  };
-
-  const handleOpenDevRef = () => {
-    setDevRefOpen(true);
-  };
-
-  const handleCloseDevRef = () => {
-    setDevRefOpen(false);
-  };
-
-  const handleOpenImprint = () => {
-    setImprintOpen(true);
-  };
-
-  const handleCloseImprint = () => {
-    setImprintOpen(false);
+  const handleCloseMoreMenu = () => {
+    setMoreMenuOpen(false);
   };
 
   return (
@@ -218,60 +185,21 @@ const AppBarImpl: React.FC<AppBarImplProps> = ({
             </IconButton>
           </Tooltip>
         )}
-        <Tooltip arrow title={i18n.get("Help")}>
-          <IconButton
-            onClick={handleOpenHelpMenu}
-            size="small"
-            sx={styles.iconButton}
-            ref={helpButtonEl}
-          >
-            <HelpOutlineIcon />
-          </IconButton>
-        </Tooltip>
-        {Config.instance.branding.allowAboutPage && (
-          <Tooltip arrow title={i18n.get("About")}>
-            <IconButton
-              onClick={() => openDialog("about")}
-              size="small"
-              sx={styles.iconButton}
-            >
-              <InfoOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-        <Tooltip arrow title={i18n.get("Imprint")}>
-          <IconButton
-            onClick={handleOpenImprint}
-            size="small"
-            sx={styles.iconButton}
-          >
-            <PolicyIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip arrow title={i18n.get("Settings")}>
-          <IconButton
-            onClick={handleSettingsButtonClicked}
-            size="small"
-            sx={styles.iconButton}
-          >
-            <SettingsIcon />
-          </IconButton>
-        </Tooltip>
+        <IconButton
+          onClick={handleOpenMoreMenu}
+          size="small"
+          sx={styles.iconButton}
+          ref={moreButtonEl}
+        >
+          <MoreVertIcon />
+        </IconButton>
       </Toolbar>
-      <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
-      <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
-      <Menu
-        anchorEl={helpButtonEl.current}
-        open={helpMenuOpen}
-        onClose={handleCloseHelpMenu}
-      >
-        <MenuItem onClick={handleOpenManual}>
-          {i18n.get("Documentation")}
-        </MenuItem>
-        <MenuItem onClick={handleOpenDevRef}>
-          {i18n.get("Developer Reference")}
-        </MenuItem>
-      </Menu>
+      <AppBarMenu
+        anchorEl={moreButtonEl.current}
+        open={moreMenuOpen}
+        onClose={handleCloseMoreMenu}
+        openDialog={openDialog}
+      />
     </AppBarComponent>
   );
 };
