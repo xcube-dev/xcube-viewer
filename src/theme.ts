@@ -14,6 +14,7 @@ const baseTheme = {
 
 export const lightTheme: Theme = createTheme({
   ...baseTheme,
+  cssVariables: true,
   palette: {
     mode: "light",
     primary: { main: "#1976d2" },
@@ -24,6 +25,7 @@ export const lightTheme: Theme = createTheme({
 
 export const darkTheme: Theme = createTheme({
   ...baseTheme,
+  cssVariables: true,
   palette: {
     mode: "dark",
     primary: { main: "#39a6f2" },
