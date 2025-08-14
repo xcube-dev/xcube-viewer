@@ -40,8 +40,9 @@ import {
 import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
 import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import UserVectorLayer from "@/components/UserVectorLayer";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import ProgressBar from "@/components/ProgressBar";
+import UserVectorLayer from "@/components/UserVectorLayer";
 import { ScaleLine } from "@/components/ol/control/ScaleLine";
 import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
 import { Layers } from "@/components/ol/layer/Layers";
@@ -50,6 +51,7 @@ import { Map, MapElement } from "@/components/ol/Map";
 import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
+import { useTileLoadingProgress } from "@/hooks/useTileLoadingProgress";
 import { isNumber } from "@/util/types";
 
 const SELECTION_LAYER_ID = "selection";
@@ -168,6 +170,11 @@ export default function Viewer({
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
   );
+  const [progress, setProgress] = useState<number>(0);
+  const [visibility, setVisibility] = useState<"hidden" | "visible">("hidden");
+
+  // set progress value for Tile Loading Progress Bar
+  useTileLoadingProgress(map, setProgress, setVisibility);
 
   // If the place selection changed in the UI,
   // synchronize selection in the map.
@@ -427,6 +434,7 @@ export default function Viewer({
         {mapControlActions}
         {mapSplitter}
         <ScaleLine bar={false} />
+        <ProgressBar progress={progress} visibility={visibility} />
       </Map>
     </ErrorBoundary>
   );
