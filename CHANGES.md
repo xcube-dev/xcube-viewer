@@ -38,6 +38,9 @@
   
 * Added a progress bar to the bottom of the map to vizualize the progress
   of tile loading. (#541)
+  
+* A ZoomBox was added to the map. This box displays the current **zoomLevel** 
+  of the map and the current **datasetLevel**. (#287)
 
 ## Changes in version 1.6.1
 
