@@ -202,6 +202,24 @@ export const selectedUserVariablesSelector = createSelector(
   },
 );
 
+export const getDatasetResolutions = (dataset: Dataset | null): number[] =>
+  dataset && dataset.resolutions ? dataset.resolutions : [];
+
+export const selectedDatasetResolutionsSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetResolutions,
+);
+
+export const getDatasetSpatialUnits = (
+  dataset: Dataset | null,
+): string | null =>
+  dataset && dataset.spatialUnits ? dataset.spatialUnits : null;
+
+export const selectedDatasetSpatialUnitsSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetSpatialUnits,
+);
+
 const _findDatasetVariable = (
   dataset: Dataset | null,
   varName: string | null,
@@ -830,10 +848,10 @@ function getOlXYZSource(
     // minZoom: tileLevelMin,
     maxZoom: tileLevelMax,
     crossOrigin: "Anonymous",
-    //crossOrigin is set to  "Anonymous", for allowing 
-    //to copy image on clipboard as we have custom tiles. If the source is 
+    //crossOrigin is set to  "Anonymous", for allowing
+    //to copy image on clipboard as we have custom tiles. If the source is
     //not set to anonymous it will give the CORS error and image will not be copied.
-    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html 
+    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html
   });
 }
 
@@ -1274,6 +1292,14 @@ export const configBaseMapsSelector = (_state: AppState) =>
 
 export const configOverlaysSelector = (_state: AppState) =>
   getConfigLayers("overlays");
+
+export const zoomLevelSelector = (_state: AppState): number | undefined => {
+  const map = MAP_OBJECTS["map"] as OlMap | undefined;
+  if (!map) {
+    return undefined;
+  }
+  return map.getView().getZoom();
+};
 
 export const baseMapsSelector = createSelector(
   userBaseMapsSelector,

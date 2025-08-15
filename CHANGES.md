@@ -30,6 +30,9 @@
   Window. If this feature is configured, an `About` window can be opened
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
+  
+* A ZoomBox was added to the map. This box displays the current **zoomLevel** 
+  of the map and the current **datasetLevel**. (#287)
 
 ## Changes in version 1.6.1
 

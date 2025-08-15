@@ -1366,6 +1366,11 @@
       "se": "Om ${appTitle}"
     },
     {
+      "en": "Levels",
+      "de": "Levels",
+      "se": "Levels"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"
