@@ -19,7 +19,7 @@ import { WithLocale } from "@/util/lang";
 
 const GROUP_STYLE: CSSProperties = {
   // Same sizes as for OpenLayers
-  //left: "0.5em",
+  left: "0.5em",
   top: 85,
 };
 
