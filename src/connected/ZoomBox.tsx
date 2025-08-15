@@ -22,7 +22,7 @@ const mapStateToProps = (state: AppState) => {
   const mapProjection = mapProjectionSelector(state);
 
   return {
-    style: { right: 10, top: 120 },
+    style: { left: 10, bottom: 40 },
     zoomLevel: zoomLevelSelector(state),
     datasetLevel: () =>
       getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),

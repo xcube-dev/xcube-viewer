@@ -19,24 +19,19 @@ const styles = makeStyles({
   container: (theme) => ({
     position: "absolute",
     zIndex: 1000,
-    border: "red",
-    borderRadius: "5px",
+    borderRadius: "4px",
     boxShadow:
       "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
     backgroundColor: theme.palette.background.default,
-    width: "140px",
+    width: "110px",
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
     paddingBottom: theme.spacing(0.5),
     paddingTop: theme.spacing(0.5),
-  }),
-  header: {
-    width: "100%",
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingBottom: 0.5,
-  },
+    flexDirection: "row",
+    justifyContent: "space-between",
+  }),
   title: {
     fontSize: "0.8rem",
     fontWeight: "normal",
@@ -109,10 +104,10 @@ export default function ZoomBox({
               : "no zoom level"}
           </Typography>
         </Box>
-        <Divider />
+        <Divider orientation="vertical" flexItem />
         <Box>
           <Typography sx={styles.title} variant="subtitle1" color="textPrimary">
-            {"Dataset Level"}
+            {"Level"}
           </Typography>
           <Typography
             sx={styles.subTitle}
