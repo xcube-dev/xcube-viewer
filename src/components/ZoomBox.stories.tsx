@@ -22,8 +22,9 @@ type Story = StoryObj<typeof meta>;
 // noinspection JSUnusedGlobalSymbols
 export const Default: Story = {
   args: {
+    style: {},
     zoomLevel: 10,
     datasetLevel: () => 3,
-    style: {},
+    visibility: true,
   },
 };

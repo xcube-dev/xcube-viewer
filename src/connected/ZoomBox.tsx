@@ -22,10 +22,11 @@ const mapStateToProps = (state: AppState) => {
   const mapProjection = mapProjectionSelector(state);
 
   return {
-    style: { left: 10, bottom: 40 },
+    style: { left: "0.5em", bottom: 40 },
     zoomLevel: zoomLevelSelector(state),
     datasetLevel: () =>
       getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
+    visibility: state.controlState.zoomEnabled,
   };
 };
 

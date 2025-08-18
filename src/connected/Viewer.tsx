@@ -7,7 +7,6 @@
 import { connect } from "react-redux";
 import { default as OlMap } from "ol/Map";
 
-import { Config } from "@/config";
 import { AppState } from "@/states/appState";
 import {
   baseMapLayersSelector,
@@ -70,7 +69,6 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     imageSmoothing: imageSmoothingSelector(state),
     variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
-    allowZoomBox: Config.instance.branding.allowZoomBox,
     zoomBox: <ZoomBox />,
   };
 };

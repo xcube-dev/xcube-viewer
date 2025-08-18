@@ -23,7 +23,7 @@ const styles = makeStyles({
     boxShadow:
       "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
     backgroundColor: theme.palette.background.default,
-    width: "110px",
+    minWidth: "120px",
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
     paddingBottom: theme.spacing(0.5),
@@ -31,6 +31,7 @@ const styles = makeStyles({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 1,
   }),
   title: {
     fontSize: "0.8rem",
@@ -50,13 +51,15 @@ interface ZoomBoxProps {
   style: CSSProperties;
   zoomLevel: number | undefined;
   datasetLevel: () => number | undefined;
+  visibility: boolean;
 }
 
 export default function ZoomBox({
   style,
   zoomLevel,
   datasetLevel,
-}: ZoomBoxProps): JSX.Element {
+  visibility,
+}: ZoomBoxProps): JSX.Element | null {
   const map = MAP_OBJECTS["map"] as OlMap | undefined;
   const view = map?.getView();
 
@@ -82,6 +85,10 @@ export default function ZoomBox({
       view.un("change:resolution", handleZoomChange);
     };
   }, [view, datasetLevel]);
+
+  if (!visibility) {
+    return null;
+  }
 
   return (
     <div>
