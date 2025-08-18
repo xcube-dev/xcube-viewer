@@ -15,7 +15,7 @@
 ### Fixes
 
 *  Applied workaround for a bug in `html-to-image` libary that causes an 
-   issuesfor the export of screenshorts (charts and map) in the Firefox 
+   issue for the export of screenshorts (charts and map) in the Firefox 
    browser.
    
 ### New Features 
@@ -30,6 +30,12 @@
   Window. If this feature is configured, an `About` window can be opened
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
+  
+* A ZoomBox was added to the map. This box displays the current **zoomLevel** 
+  of the map and the current **datasetLevel**. The visibility of this feature
+  can be controlled in the settings. The initial visibitlity can be set in
+  `config.json` (`"branding":{ "allowZoomBox": true}`), `default: false`. The total 
+  number of dataset levels was added to the metadata in the Info-panel.(#287)
 
 ## Changes in version 1.6.1
 
