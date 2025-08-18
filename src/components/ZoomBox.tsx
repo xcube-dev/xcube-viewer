@@ -14,14 +14,14 @@ import { default as OlMap } from "ol/Map";
 import { getLabelForValue } from "@/util/label";
 import { makeStyles } from "@/util/styles";
 import { MAP_OBJECTS } from "@/states/controlState";
+import { getBorderStyle } from "@/components/ColorBarLegend/style";
 
 const styles = makeStyles({
   container: (theme) => ({
     position: "absolute",
     zIndex: 1000,
+    border: getBorderStyle(theme),
     borderRadius: "4px",
-    boxShadow:
-      "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
     backgroundColor: theme.palette.background.default,
     minWidth: "120px",
     paddingLeft: theme.spacing(1.5),
