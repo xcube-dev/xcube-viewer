@@ -30,5 +30,6 @@ export const Default: Story = {
   args: {
     progress: 75,
     visibility: "visible",
+    enabled: true,
   },
 };

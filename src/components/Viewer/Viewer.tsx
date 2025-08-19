@@ -41,7 +41,6 @@ import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
 import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import ProgressBar from "@/components/ProgressBar";
 import UserVectorLayer from "@/components/UserVectorLayer";
 import { ScaleLine } from "@/components/ol/control/ScaleLine";
 import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
@@ -51,7 +50,6 @@ import { Map, MapElement } from "@/components/ol/Map";
 import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
-import { useTileLoadingProgress } from "@/hooks/useTileLoadingProgress";
 import { isNumber } from "@/util/types";
 
 const SELECTION_LAYER_ID = "selection";
@@ -128,6 +126,7 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
+  progressBar: MapElement;
 }
 
 export default function Viewer({
@@ -160,6 +159,7 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
+  progressBar,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -170,11 +170,6 @@ export default function Viewer({
   const [selectedPlaceIdPrev, setSelectedPlaceIdPrev] = useState<string | null>(
     selectedPlaceId || null,
   );
-  const [progress, setProgress] = useState<number>(0);
-  const [visibility, setVisibility] = useState<"hidden" | "visible">("hidden");
-
-  // set progress value for Tile Loading Progress Bar
-  useTileLoadingProgress(map, setProgress, setVisibility);
 
   // If the place selection changed in the UI,
   // synchronize selection in the map.
@@ -357,6 +352,10 @@ export default function Viewer({
       });
     }
   };
+  /*
+  const enabled = useSelector(
+    (state: AppState) => state.controlState.progressBarEnabled,
+  );*/
 
   return (
     <ErrorBoundary>
@@ -433,8 +432,13 @@ export default function Viewer({
         {mapPointInfoBox}
         {mapControlActions}
         {mapSplitter}
+        {progressBar}
         <ScaleLine bar={false} />
-        <ProgressBar progress={progress} visibility={visibility} />
+        {/*        <ProgressBar
+          progress={progress}
+          visibility={visibility}
+          enabled={enabled}
+        />*/}
       </Map>
     </ErrorBoundary>
   );

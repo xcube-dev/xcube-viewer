@@ -4,9 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import React from "react";
+import { useState } from "react";
 import { Box } from "@mui/material";
 import { Theme } from "@mui/system";
+import { default as OlMap } from "ol/Map";
+
+import { useTileLoadingProgress } from "@/hooks/useTileLoadingProgress";
+import { MAP_OBJECTS } from "@/states/controlState";
 
 const styles = {
   wrapper: {
@@ -21,14 +25,29 @@ const styles = {
 };
 
 interface ProgressBarProps {
+  enabled: boolean;
   progress: number;
   visibility: "visible" | "hidden";
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({
+export default function ProgressBar({
   progress,
   visibility,
-}: ProgressBarProps) => {
+  enabled,
+}: ProgressBarProps) {
+  const map = MAP_OBJECTS["map"] as OlMap | null;
+
+  const [currentProgress, setProgress] = useState<number>(progress);
+  const [currentVisibility, setVisibility] = useState<"hidden" | "visible">(
+    visibility,
+  );
+
+  // set progress value for Tile Loading Progress Bar
+  useTileLoadingProgress(map, setProgress, setVisibility);
+
+  if (!enabled) {
+    return null;
+  }
   return (
     <Box sx={styles.wrapper}>
       <Box
@@ -36,13 +55,11 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           height: "100%",
           backgroundColor: theme.palette.primary.main,
           transition: " width 300ms ease, opacity 500ms ease",
-          width: `${progress}%`,
-          opacity: progress >= 100 ? 0 : 1,
-          visibility: visibility,
+          width: `${currentProgress}%`,
+          opacity: currentProgress >= 100 ? 0 : 1,
+          visibility: currentVisibility,
         })}
       />
     </Box>
   );
-};
-
-export default ProgressBar;
+}
