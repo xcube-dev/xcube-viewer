@@ -1366,6 +1366,11 @@
       "se": "Om ${appTitle}"
     },
     {
+      "en": "Show tile loading progress",
+      "de": "Ladefortschritt der Tiles anzeigen",
+      "se": "Visa laddningsförlopp för tiles"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"
