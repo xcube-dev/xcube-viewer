@@ -31,6 +31,12 @@
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
 
+### Other changes
+
+* Aligned styling of map elements (Zoom, MapActionsBar, ScaleBar, Attritution,
+  ColorLegend) to match styling of the rest of the Viewer. (#545).
+
+
 ## Changes in version 1.6.1
 
 * Slightly updated default logo image (to have a background and hence can be 
