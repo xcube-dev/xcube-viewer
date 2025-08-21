@@ -26,8 +26,6 @@ const styles = makeStyles({
     top: 10,
     border: getBorderStyle(theme),
     borderRadius: "5px",
-    boxShadow:
-      "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
     backgroundColor: theme.palette.background.default,
     maxWidth: `${COLOR_BAR_ITEM_WIDTH + 20}px`,
     paddingLeft: theme.spacing(1.5),

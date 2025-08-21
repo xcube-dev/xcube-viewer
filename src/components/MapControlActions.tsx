@@ -18,9 +18,8 @@ import { MessageType } from "@/states/messageLogState";
 import { WithLocale } from "@/util/lang";
 
 const GROUP_STYLE: CSSProperties = {
-  // Same sizes as for OpenLayers
   left: "0.5em",
-  top: 85,
+  top: 75,
 };
 
 interface MapControlActionsProps extends WithLocale {
