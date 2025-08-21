@@ -14,7 +14,7 @@ const baseTheme = {
 
 export const lightTheme: Theme = createTheme({
   ...baseTheme,
-  cssVariables: true,
+  cssVariables: true, // make theme values available as CSS variables (used in Map.css)
   palette: {
     mode: "light",
     primary: { main: "#1976d2" },
@@ -25,7 +25,7 @@ export const lightTheme: Theme = createTheme({
 
 export const darkTheme: Theme = createTheme({
   ...baseTheme,
-  cssVariables: true,
+  cssVariables: true, // make theme values available as CSS variables (used in Map.css)
   palette: {
     mode: "dark",
     primary: { main: "#39a6f2" },
