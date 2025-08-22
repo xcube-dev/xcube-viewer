@@ -28,7 +28,6 @@ import {
 } from "@/model/userVariable";
 import { isIdentifier } from "@/util/identifier";
 import { makeStyles } from "@/util/styles";
-import DoneCancel from "@/components/DoneCancel";
 import ExprPartChip from "@/components/UserVariablesDialog/ExprPartChip";
 import ExprPartFilterMenu from "@/components/UserVariablesDialog/ExprPartFilterMenu";
 import { EditedVariable, exprPartKeys, exprPartTypesDefault } from "./utils";
@@ -57,22 +56,24 @@ const styles = makeStyles({
 
 interface UserVariableEditorProps {
   userVariables: UserVariable[];
-  setUserVariables: (userVariables: UserVariable[]) => void;
   editedVariable: EditedVariable;
   setEditedVariable: (editedVariable: EditedVariable | null) => void;
   contextDataset: Dataset;
   expressionCapabilities: ExpressionCapabilities;
   serverUrl: string;
+  canApply: boolean;
+  setCanApply: (canApply: boolean) => void;
 }
 
 export default function UserVariableEditor({
   userVariables,
-  setUserVariables,
   editedVariable,
   setEditedVariable,
   contextDataset,
   expressionCapabilities,
   serverUrl,
+  canApply,
+  setCanApply,
 }: UserVariableEditorProps) {
   const [exprPartTypes, setExprPartTypes] = useState(exprPartTypesDefault);
   const [exprFilterAnchorEl, setExprFilterAnchorEl] =
@@ -95,7 +96,12 @@ export default function UserVariableEditor({
     null,
   );
   const isExpressionOk = !expressionProblem;
-  const canCommit = isNameOk && isExpressionOk;
+
+  canApply = isNameOk && isExpressionOk;
+  useEffect(() => {
+    setCanApply(canApply);
+  }, [setCanApply, canApply]);
+
   const handleInsertPartRef = useRef<null | ((part: string) => void)>(null);
   useEffect(() => {
     // Debounce expression changes
@@ -116,26 +122,6 @@ export default function UserVariableEditor({
       ...editedVariable,
       variable: { ...editedVariable.variable, [key]: value },
     });
-  };
-
-  const handleDone = () => {
-    if (editedVariable.editMode === "add") {
-      setUserVariables([editedVariable.variable, ...userVariables]);
-    } else {
-      const index = userVariables.findIndex(
-        (v) => v.id === editedVariable.variable.id,
-      );
-      if (index >= 0) {
-        const copy = [...userVariables];
-        copy[index] = editedVariable.variable;
-        setUserVariables(copy);
-      }
-    }
-    setEditedVariable(null);
-  };
-
-  const handleCancel = () => {
-    setEditedVariable(null);
   };
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -219,14 +205,6 @@ export default function UserVariableEditor({
           editedVariable.editMode === "add"
             ? i18n.get("Add user variable")
             : i18n.get("Edit user variable")
-        }
-        actions={
-          <DoneCancel
-            size={"medium"}
-            onDone={handleDone}
-            doneDisabled={!canCommit}
-            onCancel={handleCancel}
-          />
         }
       />
       <Box sx={styles.content}>

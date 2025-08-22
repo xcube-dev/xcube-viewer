@@ -64,6 +64,7 @@ export default function UserVariablesDialog({
   const [editedVariable, setEditedVariable] = useState<EditedVariable | null>(
     null,
   );
+  const [canApply, setCanApply] = useState<boolean>(false);
 
   useEffect(() => {
     setLocalUserVariables(userVariables);
@@ -84,6 +85,28 @@ export default function UserVariablesDialog({
   function handleCancelDialog() {
     setLocalUserVariables(userVariables);
     closeDialog(USER_VARIABLES_DIALOG_ID);
+  }
+
+  function handleCancelFromEditor() {
+    setEditedVariable(null);
+  }
+
+  function handleApplyFromEditor() {
+    if (!editedVariable) return;
+
+    if (editedVariable.editMode === "add") {
+      setLocalUserVariables([editedVariable.variable, ...userVariables]);
+    } else {
+      const index = userVariables.findIndex(
+        (v) => v.id === editedVariable.variable.id,
+      );
+      if (index >= 0) {
+        const copy = [...userVariables];
+        copy[index] = editedVariable.variable;
+        setLocalUserVariables(copy);
+      }
+    }
+    setEditedVariable(null);
   }
 
   return (
@@ -107,12 +130,13 @@ export default function UserVariablesDialog({
         ) : (
           <UserVariableEditor
             userVariables={localUserVariables}
-            setUserVariables={setLocalUserVariables}
             editedVariable={editedVariable}
             setEditedVariable={setEditedVariable}
             contextDataset={selectedDataset}
             expressionCapabilities={expressionCapabilities}
             serverUrl={serverUrl}
+            canApply={canApply}
+            setCanApply={setCanApply}
           />
         )}
       </DialogContent>
@@ -123,17 +147,26 @@ export default function UserVariablesDialog({
             helpUrl={i18n.get("docs/user-variables.en.md")}
           />
         </Box>
-        <Box>
-          <Button onClick={handleCancelDialog}>{i18n.get("Cancel")}</Button>
-          <Button
-            onClick={handleConfirmDialog}
-            disabled={
-              editedVariable !== null || !areUserVariablesOk(localUserVariables)
-            }
-          >
-            {i18n.get("OK")}
-          </Button>
-        </Box>
+        {editedVariable !== null ? (
+          <Box>
+            <Button onClick={handleCancelFromEditor}>
+              {i18n.get("Return")}
+            </Button>
+            <Button onClick={handleApplyFromEditor} disabled={!canApply}>
+              {i18n.get("Apply")}
+            </Button>
+          </Box>
+        ) : (
+          <Box>
+            <Button onClick={handleCancelDialog}>{i18n.get("Cancel")}</Button>
+            <Button
+              onClick={handleConfirmDialog}
+              disabled={!areUserVariablesOk(localUserVariables)}
+            >
+              {i18n.get("OK")}
+            </Button>
+          </Box>
+        )}
       </DialogActions>
     </Dialog>
   );
