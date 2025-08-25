@@ -61,8 +61,8 @@ interface UserVariableEditorProps {
   contextDataset: Dataset;
   expressionCapabilities: ExpressionCapabilities;
   serverUrl: string;
-  canApply: boolean;
-  setCanApply: (canApply: boolean) => void;
+  canCommit: boolean;
+  setCanCommit: (canCommit: boolean) => void;
 }
 
 export default function UserVariableEditor({
@@ -72,8 +72,8 @@ export default function UserVariableEditor({
   contextDataset,
   expressionCapabilities,
   serverUrl,
-  canApply,
-  setCanApply,
+  canCommit,
+  setCanCommit,
 }: UserVariableEditorProps) {
   const [exprPartTypes, setExprPartTypes] = useState(exprPartTypesDefault);
   const [exprFilterAnchorEl, setExprFilterAnchorEl] =
@@ -97,10 +97,10 @@ export default function UserVariableEditor({
   );
   const isExpressionOk = !expressionProblem;
 
-  canApply = isNameOk && isExpressionOk;
+  canCommit = isNameOk && isExpressionOk;
   useEffect(() => {
-    setCanApply(canApply);
-  }, [setCanApply, canApply]);
+    setCanCommit(canCommit);
+  }, [setCanCommit, canCommit]);
 
   const handleInsertPartRef = useRef<null | ((part: string) => void)>(null);
   useEffect(() => {

@@ -64,7 +64,7 @@ export default function UserVariablesDialog({
   const [editedVariable, setEditedVariable] = useState<EditedVariable | null>(
     null,
   );
-  const [canApply, setCanApply] = useState<boolean>(false);
+  const [canCommit, setCanCommit] = useState<boolean>(false);
 
   useEffect(() => {
     setLocalUserVariables(userVariables);
@@ -135,8 +135,8 @@ export default function UserVariablesDialog({
             contextDataset={selectedDataset}
             expressionCapabilities={expressionCapabilities}
             serverUrl={serverUrl}
-            canApply={canApply}
-            setCanApply={setCanApply}
+            canCommit={canCommit}
+            setCanCommit={setCanCommit}
           />
         )}
       </DialogContent>
@@ -152,7 +152,7 @@ export default function UserVariablesDialog({
             <Button onClick={handleCancelFromEditor}>
               {i18n.get("Return")}
             </Button>
-            <Button onClick={handleApplyFromEditor} disabled={!canApply}>
+            <Button onClick={handleApplyFromEditor} disabled={!canCommit}>
               {i18n.get(editedVariable.editMode == "edit" ? "Apply" : "Add")}
             </Button>
           </Box>
