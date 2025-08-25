@@ -1372,6 +1372,11 @@
       "se": "Anwända"
     },
     {
+      "en": "Already in use",
+      "de": "Bereits in Verwendung",
+      "se": "Redan i bruk"
+    },
+    {
       "en": "About ${appTitle}",
       "de": "Über ${appTitle}",
       "se": "Om ${appTitle}"

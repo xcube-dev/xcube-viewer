@@ -153,7 +153,7 @@ export default function UserVariablesDialog({
               {i18n.get("Return")}
             </Button>
             <Button onClick={handleApplyFromEditor} disabled={!canApply}>
-              {i18n.get("Apply")}
+              {i18n.get(editedVariable.editMode == "edit" ? "Apply" : "Add")}
             </Button>
           </Box>
         ) : (
