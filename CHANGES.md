@@ -2,15 +2,20 @@
 
 ### Improvements
 
-*  Enabled configuration of the permalink message via `config.json`, 
-   with optional display of the expiration duration in days. (#500)
+* Enabled configuration of the permalink message via `config.json`, 
+  with optional display of the expiration duration in days. (#500)
    
-*  Added support for changing image sources in Markdown based on 
-   the selected theme (e.g., light or dark mode). Examples: (#539)
-   ```
-   ![Logo](logo-light.png#light-mode-only)
-   ![Logo](logo-dark.png#dark-mode-only)
-   ```
+* Added support for changing image sources in Markdown based on 
+  the selected theme (e.g., light or dark mode). Examples: (#539)
+  ```
+  ![Logo](logo-light.png#light-mode-only)
+  ![Logo](logo-dark.png#dark-mode-only)
+  ```
+  
+* Restructured User Variables Dialog for adding and editing variables. 
+  Commit and cancel actions are no longer shown in the header, the 
+  bottom-right dialog buttons are now used for these actions. (#546)
+ 
 
 ### Fixes
 
