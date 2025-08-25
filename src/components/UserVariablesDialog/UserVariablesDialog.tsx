@@ -91,7 +91,7 @@ export default function UserVariablesDialog({
     setEditedVariable(null);
   }
 
-  function handleApplyFromEditor() {
+  function handleCommitFromEditor() {
     if (!editedVariable) return;
 
     if (editedVariable.editMode === "add") {
@@ -152,7 +152,7 @@ export default function UserVariablesDialog({
             <Button onClick={handleCancelFromEditor}>
               {i18n.get("Return")}
             </Button>
-            <Button onClick={handleApplyFromEditor} disabled={!canCommit}>
+            <Button onClick={handleCommitFromEditor} disabled={!canCommit}>
               {i18n.get(editedVariable.editMode == "edit" ? "Apply" : "Add")}
             </Button>
           </Box>
