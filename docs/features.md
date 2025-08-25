@@ -851,7 +851,7 @@ A list of all the features that the viewer contains will be created here, in whi
     	<tr>
     		<td colspan="2">
     			Link to feature mentioned in
-    			<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
+    			<a href="../user_guide/analyse/#add" rel="noopener noreferrer"
     				>User Guide</a
     			>.
     		</td>
@@ -867,7 +867,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/user_variables_edit.png"
-					alt="Add User Variable" />
+					alt="Edit User Variable" />
 			</th>
 		</tr>
 	</thead>
@@ -901,7 +901,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#edit" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>

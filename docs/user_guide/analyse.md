@@ -118,8 +118,8 @@ Open the User Variables Window via the button on the header:
 
 In the User Variables Window:
 
-- New user variables can be created and [added](#add-user-variable).
-- Existing user variables can be [edited](#edit-user-variable), duplicated,
+- New user variables can be created and [added](#add).
+- Existing user variables can be [edited](#edit), duplicated,
   and removed.
 
 ![user_variables_management.png](../assets/images/user_variables_management.png)
