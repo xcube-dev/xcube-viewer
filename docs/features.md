@@ -862,6 +862,15 @@ A list of all the features that the viewer contains will be created here, in whi
 ### Edit User Variable
 
 <table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/user_variables_edit.png"
+					alt="Add User Variable" />
+			</th>
+		</tr>
+	</thead>
 	<tbody>
 		<tr>
 			<td><b>Feature Name</b></td>
@@ -871,10 +880,9 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A window that opens using the <code>Edit</code>-button in the User
-				Variables Management menu. For layout see
-				<a href="#add-user-variable" rel="noopener noreferrer"
-					>add user variables</a
-				>.
+				Variables Management menu. The window contains input fields for name,
+        title, units, and expression. There is also an option to display various
+        optional components of the expression. 
 			</td>
 		</tr>
 		<tr>

@@ -63,9 +63,10 @@ For point places:
 
 ## User Variables
 
-![User Variables](../assets/images/analysis_uservariables.png)
-
-Define your own variables computed from Python-like expressions. The expressions can combine other variables of the [current dataset](../concepts.md/#selected-dataset) using almost all Python operators and all [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs). User data variables are persisted in the browser's local storage.
+Define your own variables computed from Python-like expressions. The expressions 
+can combine other variables of the [current dataset](../concepts.md/#selected-dataset) using almost all Python 
+operators and all [numpy universal functions](https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs). User data variables are 
+persisted in the browser's local storage.
 
 ??? info "In more detail"
 
@@ -110,6 +111,39 @@ Define your own variables computed from Python-like expressions. The expressions
 
     CTRL+SPACE: activates the autocomplete feature, which lists
     available Python functions and constants
+
+Open the User Variables Window via the button on the header:
+
+![User Variables](../assets/images/analysis_uservariables.png)
+
+In the User Variables Window:
+
+- New user variables can be created and [added](#add-user-variable).
+- Existing user variables can be [edited](#edit-user-variable), duplicated,
+  and removed.
+
+![user_variables_management.png](../assets/images/user_variables_management.png)
+
+
+### Add
+
+1. Open the User Variables window
+2. Use the `+` - button to open the `Add Variable` - Dialog.
+3. Set at least a unique identifier (`Name`) and a valid expression.
+4. Add the **new** variable.
+
+![user_variables_add.gif](../assets/videos/user_variables_add.gif)
+
+For more information on this feature, [see the feature references](../features.md#add-user-variable).
+
+### Edit
+
+1. Open the User Variables window.
+2. Use the `edit` - button to open the `Edit Variable` - Dialog.
+3. Edit the identifier, title, unit or expression.
+4. Apply the changes to the **selected** variable.
+
+For more information on this feature, [see the feature references](../features.md#edit-user-variable).
 
 ---
 
