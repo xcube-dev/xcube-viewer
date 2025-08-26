@@ -95,13 +95,13 @@ export default function UserVariablesDialog({
     if (!editedVariable) return;
 
     if (editedVariable.editMode === "add") {
-      setLocalUserVariables([editedVariable.variable, ...userVariables]);
+      setLocalUserVariables([editedVariable.variable, ...localUserVariables]);
     } else {
-      const index = userVariables.findIndex(
+      const index = localUserVariables.findIndex(
         (v) => v.id === editedVariable.variable.id,
       );
       if (index >= 0) {
-        const copy = [...userVariables];
+        const copy = [...localUserVariables];
         copy[index] = editedVariable.variable;
         setLocalUserVariables(copy);
       }
@@ -153,7 +153,7 @@ export default function UserVariablesDialog({
               {i18n.get("Return")}
             </Button>
             <Button onClick={handleCommitFromEditor} disabled={!canCommit}>
-              {i18n.get(editedVariable.editMode == "edit" ? "Apply" : "Add")}
+              {i18n.get(editedVariable.editMode === "edit" ? "Apply" : "Add")}
             </Button>
           </Box>
         ) : (
