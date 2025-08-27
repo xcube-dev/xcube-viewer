@@ -27,8 +27,12 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				A drop-down menu, which is grouped by data format. The selected dataset is
-				highlighted.
+				A drop-down menu, which holds all available datasets. The selected dataset is
+				highlighted and the dataset containing a 				
+        <a href="../user_guide/analyse/#pin-variables" rel="noopener noreferrer"
+					>pinned variable</a
+				> 
+        is marked with a <code>pin</code> icon.
 			</td>
 		</tr>
 		<tr></tr>
@@ -123,8 +127,11 @@ A list of all the features that the viewer contains will be created here, in whi
 				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User-defined variables</a
 				>
-				are marked with an icon and placed at the bottom of the list. The
-				currently selected variable is highlighted.
+				are marked with an icon and placed at the bottom of the list and the 				
+        <a href="../user_guide/analyse/#pin-variables" rel="noopener noreferrer"
+					>pinned variable</a
+				> 
+        is marked with a <code>pin</code> icon. The currently selected variable is highlighted.
 			</td>
 		</tr>
 		<tr></tr>
