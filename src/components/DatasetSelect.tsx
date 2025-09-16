@@ -8,7 +8,9 @@ import { ReactElement, useMemo } from "react";
 import Divider from "@mui/material/Divider";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
+import PushPinIcon from "@mui/icons-material/PushPin";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -24,6 +26,7 @@ import ControlBarItem from "./ControlBarItem";
 
 interface DatasetSelectProps extends WithLocale {
   selectedDataset: Dataset | null;
+  selectedDataset2Id: string | null;
   datasets: Dataset[];
   selectDataset: (
     datasetId: string | null,
@@ -37,6 +40,7 @@ interface DatasetSelectProps extends WithLocale {
 
 export default function DatasetSelect({
   selectedDataset,
+  selectedDataset2Id,
   datasets,
   selectDataset,
   layerVisibilities,
@@ -125,7 +129,10 @@ export default function DatasetSelect({
         value={dataset.id}
         selected={dataset.id === selectedDatasetId}
       >
-        {dataset.title}
+        <ListItemText>{getDatasetLabel(dataset)} </ListItemText>
+        {dataset.id === selectedDataset2Id && (
+          <PushPinIcon fontSize="small" color="secondary" />
+        )}
       </MenuItem>,
     );
   });
@@ -138,6 +145,9 @@ export default function DatasetSelect({
       input={<Input name="dataset" id="dataset-select" />}
       displayEmpty
       name="dataset"
+      renderValue={() =>
+        getDatasetLabel(datasets.find((d) => d.id === selectedDatasetId))
+      }
     >
       {items}
     </Select>
@@ -180,4 +190,11 @@ export default function DatasetSelect({
       sx={{ marginLeft: 0 }}
     />
   );
+}
+
+function getDatasetLabel(dataset: Dataset | undefined) {
+  if (!dataset) {
+    return "?";
+  }
+  return dataset.title || dataset.id;
 }

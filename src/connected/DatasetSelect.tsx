@@ -13,12 +13,16 @@ import {
   toggleDatasetRgbLayer,
   locateSelectedDatasetInMap,
 } from "@/actions/controlActions";
-import { selectedDatasetSelector } from "@/selectors/controlSelectors";
+import {
+  selectedDatasetSelector,
+  selectedDataset2IdSelector,
+} from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
     selectedDataset: selectedDatasetSelector(state),
+    selectedDataset2Id: selectedDataset2IdSelector(state),
     datasets: state.dataState.datasets,
     layerVisibilities: state.controlState.layerVisibilities,
   };
