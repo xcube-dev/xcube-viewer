@@ -24,10 +24,10 @@ const AboutDialog = ({ open, closeDialog }: AboutDialogProps) => {
     closeDialog("about");
   }
 
-  const appTitle = Config.instance.branding.appBarTitle;
+  const appName = Config.instance.branding.appBarTitle;
   return (
     <Dialog open={open} onClose={handleCloseDialog}>
-      <DialogTitle>{i18n.get("About ${appTitle}", { appTitle })}</DialogTitle>
+      <DialogTitle>{i18n.get("About ${appName}", { appName })}</DialogTitle>
       <DialogContent>
         <AboutItem />
       </DialogContent>
