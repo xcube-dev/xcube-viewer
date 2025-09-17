@@ -12,9 +12,9 @@
   ![Logo](logo-dark.png#dark-mode-only)
   ```
   
-* Restructured User Variables Dialog for adding and editing variables. 
-  Commit and cancel actions are no longer shown in the header, the 
-  bottom-right dialog buttons are now used for these actions. (#546)
+* Rearrange the User Variables dialog for managing user variables. 
+  Commit and cancel actions are no longer shown in the dialog header, instead 
+  the bottom-right dialog buttons are now used for these actions. (#546)
  
 
 ### Fixes
