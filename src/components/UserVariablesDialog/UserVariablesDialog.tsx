@@ -11,6 +11,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
@@ -149,8 +150,11 @@ export default function UserVariablesDialog({
         </Box>
         {editedVariable !== null ? (
           <Box>
-            <Button onClick={handleCancelFromEditor}>
-              {i18n.get("Return")}
+            <Button
+              onClick={handleCancelFromEditor}
+              startIcon={<NavigateBeforeIcon />}
+            >
+              {i18n.get("Back")}
             </Button>
             <Button onClick={handleCommitFromEditor} disabled={!canCommit}>
               {i18n.get(editedVariable.editMode === "edit" ? "Apply" : "Add")}
