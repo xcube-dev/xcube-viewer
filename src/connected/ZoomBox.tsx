@@ -6,7 +6,7 @@
 
 import { connect } from "react-redux";
 
-import _ZoomBox from "@/components/ZoomBox";
+import _ZoomBox from "@/components/ZoomBox/ZoomBox";
 import { getDatasetLevel } from "@/model/dataset";
 import {
   mapProjectionSelector,
@@ -26,7 +26,7 @@ const mapStateToProps = (state: AppState) => {
     zoomLevel: zoomLevelSelector(state),
     datasetLevel: () =>
       getDatasetLevel(datasetResolutions, datasetSpatialUnits, mapProjection),
-    visibility: state.controlState.zoomEnabled,
+    visibility: state.controlState.showZoomBox,
   };
 };
 

@@ -136,7 +136,7 @@ export interface ControlState {
   exportFileName: string;
   themeMode: ThemeMode;
   exportResolution: ExportResolution;
-  zoomEnabled: boolean;
+  showZoomBox: boolean;
 }
 
 export function newControlState(): ControlState {

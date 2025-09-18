@@ -6,6 +6,7 @@
 
 import { CSSProperties, useMemo } from "react";
 import { useEffect, useState } from "react";
+import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -22,7 +23,7 @@ const styles = makeStyles({
     zIndex: 1000,
     border: getBorderStyle(theme),
     borderRadius: "4px",
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: alpha(theme.palette.background.default, 0.85),
     minWidth: "120px",
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
@@ -104,7 +105,7 @@ export default function ZoomBox({
           <Typography
             sx={styles.subTitle}
             variant="subtitle2"
-            color="textSecondary"
+            color="textPrimary"
           >
             {currentZoom !== undefined
               ? getLabelForValue(currentZoom, 4)
@@ -119,7 +120,7 @@ export default function ZoomBox({
           <Typography
             sx={styles.subTitle}
             variant="subtitle2"
-            color="textSecondary"
+            color="textPrimary"
           >
             {currentDatasetLevel !== undefined
               ? getLabelForValue(currentDatasetLevel, 4)
