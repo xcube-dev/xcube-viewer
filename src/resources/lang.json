@@ -1360,6 +1360,22 @@
       "de": "Permalink in die Zwischenablage kopiert (läuft ab in ${expiration} Tagen)",
       "se": "Permalink kopieras till klippbordet (går ut om ${expiration} dagar)"
     },
+
+    {
+      "en": "Back",
+      "de": "Zurück",
+      "se": "Tillbaka"
+    },
+    {
+      "en": "Apply",
+      "de": "Anwenden",
+      "se": "Anwända"
+    },
+    {
+      "en": "Already in use",
+      "de": "Bereits in Verwendung",
+      "se": "Redan i bruk"
+    },
     {
       "en": "About ${appName}",
       "de": "Über ${appName}",

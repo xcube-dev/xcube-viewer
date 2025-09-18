@@ -13,7 +13,7 @@ import CalculateIcon from "@mui/icons-material/Calculate";
 interface HeaderBarProps {
   selected: boolean;
   title: ReactNode;
-  actions: ReactNode;
+  actions?: ReactNode;
 }
 
 export default function HeaderBar({
