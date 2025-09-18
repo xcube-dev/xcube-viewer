@@ -218,7 +218,7 @@ export function newControlState(): ControlState {
     exportFileName: "export",
     themeMode: getInitialThemeMode(),
     exportResolution: 300,
-    zoomEnabled: branding.allowZoomBox || false,
+    showZoomBox: branding.showZoomBox || false,
   };
   return loadUserSettings(state);
 }

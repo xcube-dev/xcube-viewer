@@ -91,7 +91,7 @@ export interface Branding {
   allowViewModePython?: boolean;
   allow3D?: boolean;
   permalinkExpirationDays?: number;
-  allowZoomBox?: boolean;
+  showZoomBox?: boolean;
 }
 
 function setBrandingPaletteColor(

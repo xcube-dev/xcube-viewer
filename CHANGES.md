@@ -31,11 +31,12 @@
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
   
-* A ZoomBox was added to the map. This box displays the current **zoomLevel** 
-  of the map and the current **datasetLevel**. The visibility of this feature
-  can be controlled in the settings. The initial visibitlity can be set in
-  `config.json` (`"branding":{ "allowZoomBox": true}`), `default: false`. The total 
-  number of dataset levels was added to the metadata in the Info-panel.(#287)
+* A zoom-level indicator was added to the map. This box displays the current 
+  zoom level of the map and the dataset resolution level used for displaying it. 
+  The visibility of this feature can be controlled in the settings. The initial visibility 
+  can be set in `config.json` (`"branding":{ "showZoomBox": true, ...`), 
+  the default is `false`. In addition, the total number of dataset levels has been 
+  added to the metadata in the Info panel. (#287)
 
 ## Changes in version 1.6.1
 

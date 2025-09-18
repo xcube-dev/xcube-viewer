@@ -389,10 +389,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             </SettingsSubPanel>
             <SettingsSubPanel
               label={i18n.get("Zoom indicator")}
-              value={getOnOff(settings.zoomEnabled)}
+              value={getOnOff(settings.showZoomBox)}
             >
               <ToggleSetting
-                propertyName={"zoomEnabled"}
+                propertyName={"showZoomBox"}
                 settings={settings}
                 updateSettings={updateSettings}
               />
