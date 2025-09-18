@@ -13,7 +13,8 @@
 .ol-control {
   background-color: var(--mui-palette-background-default) !important;
   border-radius: 4px;
-  padding: 0px;
+  padding: 0;
+  opacity: 0.85;
 }
 
 .ol-control button {
@@ -26,12 +27,14 @@
   width: 1.9em;
   border: solid 1px;
   border-radius: var(--mui-shape-borderRadius);
-  background-color: var(--mui-palette-background-default) !important;
-  color: var(--mui-palette-action-active) !important;
   border-color: var(--mui-palette-divider) !important;
+  background-color: var(--mui-palette-background-default) !important;
+  color: var(--mui-palette-text-primary);
 }
 
-.ol-control button:hover { background-color: rgba(var(--mui-palette-text-primaryChannel) / var(--mui-palette-action-hoverOpacity)) !important; }
+.ol-control button:hover {
+  background-color: rgba(var(--mui-palette-text-primaryChannel) / var(--mui-palette-action-hoverOpacity)) !important;
+}
 
 
 /*MapControlAction*/
@@ -43,6 +46,7 @@
   background-color: var(--mui-palette-action-selected) !important;
   color: var(--mui-palette-text-primary)!important;
 }
+
 .ol-control button[data-selected=true]:hover {
   background-color: rgba(var(--mui-palette-text-primaryChannel) / calc(var(--mui-palette-action-selectedOpacity) + var(--mui-palette-action-hoverOpacity))) !important;
 }
@@ -85,7 +89,7 @@
 
 /*Zoom*/
 .ol-zoom{
-  top:10px
+  top:10px;
 }
 
 .ol-zoom .ol-zoom-in {
@@ -109,6 +113,3 @@
   text-shadow: none;
 }
 
-.ol-attribution{
-  opacity: 0.85;
-}

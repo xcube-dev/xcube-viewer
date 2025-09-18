@@ -5,6 +5,7 @@
  */
 
 import { CSSProperties, MouseEvent, useRef, useState } from "react";
+import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
@@ -26,7 +27,9 @@ const styles = makeStyles({
     top: 10,
     border: getBorderStyle(theme),
     borderRadius: "5px",
-    backgroundColor: theme.palette.background.default,
+    boxShadow:
+      "0 3px 3px 0 rgba(0, 0, 0, 0.2), 1px 4px 4px 1px rgba(0, 0, 0, 0.2)",
+    backgroundColor: alpha(theme.palette.background.default, 0.85),
     maxWidth: `${COLOR_BAR_ITEM_WIDTH + 20}px`,
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
