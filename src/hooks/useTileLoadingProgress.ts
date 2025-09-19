@@ -23,8 +23,9 @@ export function useTileLoadingProgress(
     let loaded = 0;
 
     const updateProgress = () => {
-      const percent = loading > 0 ? (loaded / loading) * 100 : 0;
+      let percent = loading > 0 ? (loaded / loading) * 100 : 0;
       setProgress(Math.min(percent, 100));
+      console.log(percent);
     };
 
     const onTileLoadStart = () => {
@@ -50,6 +51,8 @@ export function useTileLoadingProgress(
       setTimeout(() => {
         setVisibility("hidden");
         setProgress(0);
+        loading = 0;
+        loaded = 0;
       }, 300);
     };
 
@@ -76,8 +79,8 @@ export function useTileLoadingProgress(
         source.un("tileloadstart", onTileLoadStart);
         source.un("tileloadend", onTileLoadEnd);
         source.un("tileloaderror", onTileLoadError);
-        map.un("loadstart", onTileLoadError);
-        map.un("loadend", onTileLoadError);
+        map.un("loadstart", onMapLoadStart);
+        map.un("loadend", onMapLoadEnd);
       }
     };
   }, [map, setProgress, setVisibility]);
