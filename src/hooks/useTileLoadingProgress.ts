@@ -23,7 +23,7 @@ export function useTileLoadingProgress(
     let loaded = 0;
 
     const updateProgress = () => {
-      let percent = loading > 0 ? (loaded / loading) * 100 : 0;
+      const percent = loading > 0 ? (loaded / loading) * 100 : 0;
       setProgress(Math.min(percent, 100));
     };
 
