@@ -95,6 +95,7 @@ const DatasetInfoCard: React.FC<DatasetInfoContentProps> = ({
         dataset.bbox.map((x) => getLabelForValue(x, 3)).join(", "),
       ],
       [i18n.get("Spatial reference system"), dataset.spatialRef],
+      [i18n.get("Levels"), dataset.resolutions.length],
     ];
     content = (
       <InfoCardContent>
