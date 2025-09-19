@@ -35,6 +35,7 @@ import ColorBarLegend2 from "./ColorBarLegend2";
 import MapSplitter from "./MapSplitter";
 import MapPointInfoBox from "./MapPointInfoBox";
 import MapControlActions from "./MapControlActions";
+import ProgressBar from "./ProgressBar";
 
 interface OwnProps {
   onMapRef?: (map: OlMap | null) => void;
@@ -68,6 +69,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     imageSmoothing: imageSmoothingSelector(state),
     variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
+    progressBar: <ProgressBar />,
   };
 };
 
