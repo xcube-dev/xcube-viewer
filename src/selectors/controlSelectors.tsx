@@ -32,6 +32,7 @@ import {
   Dataset,
   findDataset,
   findDatasetVariable,
+  getDatasetLevel,
   getDatasetTimeDimension,
   getDatasetTimeRange,
   getDatasetUserVariables,
@@ -219,6 +220,16 @@ export const selectedDatasetSpatialUnitsSelector = createSelector(
   selectedDatasetSelector,
   getDatasetSpatialUnits,
 );
+
+export const getDatasetLevelSelector = (
+  state: AppState,
+): number | undefined => {
+  const resolutions = selectedDatasetResolutionsSelector(state);
+  const units = selectedDatasetSpatialUnitsSelector(state);
+  const projection = mapProjectionSelector(state);
+
+  return getDatasetLevel(resolutions, units, projection);
+};
 
 const _findDatasetVariable = (
   dataset: Dataset | null,
