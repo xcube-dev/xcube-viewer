@@ -219,8 +219,13 @@ export function getUnitFactor(
   return 1.0; // same units or unsupported conversion
 }
 
-// get current Level of Dataset
-// based on https://github.com/xcube-dev/xcube/blob/0de66ae448a6fac6362a4a3fc409dba71dd132ed/xcube/core/tilingscheme.py#L281
+/*
+  This function computes the level of the actual dataset, by
+  computing the pixel size of the map tiles in dataset units and comparing
+  this value against the resolution levels provided by the dataset.
+  It the returns the most suitable dataset level, based on:
+  -> https://github.com/xcube-dev/xcube/blob/0de66ae448a6fac6362a4a3fc409dba71dd132ed/xcube/core/tilingscheme.py#L281
+*/
 export function getDatasetLevel(
   datasetResolutions: number[],
   datasetSpatialUnit: string | null,
