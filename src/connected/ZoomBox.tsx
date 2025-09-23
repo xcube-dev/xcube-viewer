@@ -6,9 +6,10 @@
 
 import { connect } from "react-redux";
 
+import { setZoomLevel } from "@/actions/controlActions";
 import _ZoomBox from "@/components/ZoomBox/ZoomBox";
 import {
-  getDatasetLevelSelector,
+  selectedDatasetLevelSelector,
   zoomLevelSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
@@ -17,12 +18,12 @@ const mapStateToProps = (state: AppState) => {
   return {
     style: { left: "0.5em", bottom: 40 },
     zoomLevel: zoomLevelSelector(state),
-    datasetLevel: () => getDatasetLevelSelector(state),
+    datasetLevel: selectedDatasetLevelSelector(state),
     visibility: state.controlState.showZoomBox,
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { setZoomLevel };
 
 const ZoomBox = connect(mapStateToProps, mapDispatchToProps)(_ZoomBox);
 export default ZoomBox;

@@ -145,6 +145,7 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
   return [coordinates[0], coordinates[coordinates.length - 1]];
 }
 
+// this returns the level of the current OLTileLayer
 export const getDatasetZLevel = (): number | undefined => {
   const map = MAP_OBJECTS["map"] as OlMap | undefined;
   if (map) {

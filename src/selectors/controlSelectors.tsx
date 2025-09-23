@@ -153,6 +153,8 @@ export const userColorBarsSelector = (state: AppState) =>
   state.controlState.userColorBars;
 export const userVariablesAllowedSelector = (_state: AppState) =>
   Config.instance.branding.allowUserVariables;
+export const zoomLevelSelector = (state: AppState) =>
+  state.controlState.zoomLevel;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -221,7 +223,7 @@ export const selectedDatasetSpatialUnitsSelector = createSelector(
   getDatasetSpatialUnits,
 );
 
-export const getDatasetLevelSelector = (
+export const selectedDatasetLevelSelector = (
   state: AppState,
 ): number | undefined => {
   const resolutions = selectedDatasetResolutionsSelector(state);
@@ -1303,14 +1305,6 @@ export const configBaseMapsSelector = (_state: AppState) =>
 
 export const configOverlaysSelector = (_state: AppState) =>
   getConfigLayers("overlays");
-
-export const zoomLevelSelector = (_state: AppState): number | undefined => {
-  const map = MAP_OBJECTS["map"] as OlMap | undefined;
-  if (!map) {
-    return undefined;
-  }
-  return map.getView().getZoom();
-};
 
 export const baseMapsSelector = createSelector(
   userBaseMapsSelector,

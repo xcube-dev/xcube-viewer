@@ -24,7 +24,7 @@ export const Default: Story = {
   args: {
     style: {},
     zoomLevel: 10,
-    datasetLevel: () => 3,
+    datasetLevel: 3,
     visibility: true,
   },
 };

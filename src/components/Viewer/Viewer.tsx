@@ -126,6 +126,7 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
+  setZoomLevel?: (zoomLevel: number | undefined) => void;
   zoomBox?: MapElement;
 }
 
@@ -160,6 +161,7 @@ export default function Viewer({
   variableSplitPos,
   onMapRef,
   zoomBox,
+  setZoomLevel,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -281,6 +283,14 @@ export default function Viewer({
     }
   };
 
+  const handleMapZoom = (event: OlMapBrowserEvent<UIEvent>) => {
+    const zoomLevel = event.target.getZoom();
+
+    if (setZoomLevel) {
+      setZoomLevel(zoomLevel);
+    }
+  };
+
   const handleDrawEnd = (event: DrawEvent) => {
     if (map !== null && addDrawnUserPlace && mapInteraction !== "Select") {
       const feature = event.feature;
@@ -358,6 +368,7 @@ export default function Viewer({
       <Map
         id={mapId}
         onClick={(event) => handleMapClick(event)}
+        onZoom={(event) => handleMapZoom(event)}
         onMapRef={handleMapRef}
         mapObjects={MAP_OBJECTS}
         isStale={true}

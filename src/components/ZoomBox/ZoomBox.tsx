@@ -4,17 +4,14 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { CSSProperties, useMemo } from "react";
-import { useEffect, useState } from "react";
+import { CSSProperties } from "react";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import { default as OlMap } from "ol/Map";
 
 import { getLabelForValue } from "@/util/label";
 import { makeStyles } from "@/util/styles";
-import { MAP_OBJECTS } from "@/states/controlState";
 import { getBorderStyle } from "@/components/ColorBarLegend/style";
 
 const styles = makeStyles({
@@ -51,7 +48,7 @@ const styles = makeStyles({
 interface ZoomBoxProps {
   style: CSSProperties;
   zoomLevel: number | undefined;
-  datasetLevel: () => number | undefined;
+  datasetLevel: number | undefined;
   visibility: boolean;
 }
 
@@ -61,32 +58,6 @@ export default function ZoomBox({
   datasetLevel,
   visibility,
 }: ZoomBoxProps): JSX.Element | null {
-  const map = MAP_OBJECTS["map"] as OlMap | undefined;
-  const view = map?.getView();
-
-  const [currentZoom, setCurrentZoom] = useState<number | undefined>(zoomLevel);
-  const [currentDatasetLevel, setCurrentDatasetLevel] = useState<
-    number | undefined
-  >(() => datasetLevel());
-
-  useMemo(() => {
-    setCurrentDatasetLevel(datasetLevel());
-  }, [datasetLevel]);
-
-  useEffect(() => {
-    if (!view) return;
-
-    const handleZoomChange = () => {
-      setCurrentZoom(view.getZoom());
-      setCurrentDatasetLevel(datasetLevel());
-    };
-
-    view.on("change:resolution", handleZoomChange);
-    return () => {
-      view.un("change:resolution", handleZoomChange);
-    };
-  }, [view, datasetLevel]);
-
   if (!visibility) {
     return null;
   }
@@ -107,8 +78,8 @@ export default function ZoomBox({
             variant="subtitle2"
             color="textPrimary"
           >
-            {currentZoom !== undefined
-              ? getLabelForValue(currentZoom, 4)
+            {zoomLevel !== undefined
+              ? getLabelForValue(zoomLevel, 4)
               : "no zoom level"}
           </Typography>
         </Box>
@@ -122,8 +93,8 @@ export default function ZoomBox({
             variant="subtitle2"
             color="textPrimary"
           >
-            {currentDatasetLevel !== undefined
-              ? getLabelForValue(currentDatasetLevel, 4)
+            {datasetLevel !== undefined
+              ? getLabelForValue(datasetLevel, 4)
               : "no dataset level"}
           </Typography>
         </Box>

@@ -137,6 +137,7 @@ export interface ControlState {
   themeMode: ThemeMode;
   exportResolution: ExportResolution;
   showZoomBox: boolean;
+  zoomLevel: number | undefined;
 }
 
 export function newControlState(): ControlState {
@@ -219,6 +220,7 @@ export function newControlState(): ControlState {
     themeMode: getInitialThemeMode(),
     exportResolution: 300,
     showZoomBox: branding.showZoomBox || false,
+    zoomLevel: undefined,
   };
   return loadUserSettings(state);
 }
