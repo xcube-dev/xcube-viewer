@@ -827,10 +827,10 @@ export const SET_ZOOM_LEVEL = "SET_ZOOM_LEVEL";
 
 export interface SetZoomLevel {
   type: typeof SET_ZOOM_LEVEL;
-  zoomLevel: number;
+  zoomLevel: number | undefined;
 }
 
-export function setZoomLevel(zoomLevel: number): SetZoomLevel {
+export function setZoomLevel(zoomLevel: number | undefined): SetZoomLevel {
   return { type: SET_ZOOM_LEVEL, zoomLevel };
 }
 
