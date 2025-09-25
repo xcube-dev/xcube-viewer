@@ -4,6 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import { useState, useEffect } from "react";
 import { WithLocale } from "@/util/lang";
 
 import CircularProgress from "@mui/material/CircularProgress";
@@ -37,9 +38,38 @@ interface LoadingDialogProps extends WithLocale {
 }
 
 export default function LoadingDialog({ messages }: LoadingDialogProps) {
-  if (messages.length === 0) {
+  const [startTime] = useState(Date.now());
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const minTime = 3000; // min. display time in ms (1000 ms = 1 s)
+
+    if (messages.length === 0) {
+      const elapsed = Date.now() - startTime;
+
+      if (elapsed >= minTime) {
+        setVisible(false);
+      } else {
+        // wait remaining time until minTime mark
+        const remaining = minTime - elapsed;
+        timer = setTimeout(() => {
+          setVisible(false);
+        }, remaining);
+      }
+    } else {
+      setVisible(true);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [messages, startTime]);
+
+  if (!visible) {
     return null;
   }
+
   return (
     <Dialog open={true} aria-labelledby="loading">
       {Config.instance.branding.allowAboutPage && (
