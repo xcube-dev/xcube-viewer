@@ -13,10 +13,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
+import ShareIcon from "@mui/icons-material/Share";
 import PolicyIcon from "@mui/icons-material/Policy";
 
 import ImprintPage from "@/components/ImprintPage";
@@ -25,16 +28,28 @@ import { Config } from "@/config";
 
 interface AppBarMenuProps extends WithLocale {
   anchorEl: HTMLElement | null;
+  allowRefresh: boolean;
+  allowSharing: boolean;
+  allowDownloads: boolean;
+  compact: boolean;
   open: boolean;
   onClose: () => void;
-  openDialog: (dialogId: string) => void;
+  openDialog: (dialogId: string) => unknown;
+  updateResources: () => unknown;
+  shareStatePermalink: () => unknown;
 }
 
 const AppBarMenu: React.FC<AppBarMenuProps> = ({
   anchorEl,
+  allowRefresh,
+  allowSharing,
+  allowDownloads,
+  compact,
   open,
   onClose,
   openDialog,
+  updateResources,
+  shareStatePermalink,
 }) => {
   const appName = Config.instance.branding.appBarTitle;
   const [imprintOpen, setImprintOpen] = React.useState(false);
@@ -73,11 +88,56 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
     setImprintOpen(false);
   };
 
+  const handleUpdateResources = () => {
+    onClose();
+    updateResources();
+  };
+
+  const handleSharing = () => {
+    onClose();
+    shareStatePermalink();
+  };
+
+  const handleDownloads = () => {
+    onClose();
+    openDialog("export");
+  };
+
   return (
     <>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
       <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
+        {compact && (
+          <div>
+            {allowRefresh && (
+              <MenuItem onClick={handleUpdateResources}>
+                <ListItemIcon>
+                  <RefreshIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{i18n.get("Refresh")}</ListItemText>
+              </MenuItem>
+            )}
+            {allowSharing && (
+              <MenuItem onClick={handleSharing}>
+                <ListItemIcon>
+                  <ShareIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{i18n.get("Share")}</ListItemText>
+              </MenuItem>
+            )}
+            {allowDownloads && (
+              <MenuItem onClick={handleDownloads}>
+                <ListItemIcon>
+                  <CloudDownloadIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{i18n.get("Export data")}</ListItemText>
+              </MenuItem>
+            )}
+
+            <Divider />
+          </div>
+        )}
         {Config.instance.branding.allowAboutPage && (
           <>
             <MenuItem onClick={handleOpenAbout}>
