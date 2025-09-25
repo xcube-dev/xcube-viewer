@@ -823,6 +823,19 @@ export function updateUserColorBars(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SET_ZOOM_LEVEL = "SET_ZOOM_LEVEL";
+
+export interface SetZoomLevel {
+  type: typeof SET_ZOOM_LEVEL;
+  zoomLevel: number | undefined;
+}
+
+export function setZoomLevel(zoomLevel: number | undefined): SetZoomLevel {
+  return { type: SET_ZOOM_LEVEL, zoomLevel };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
   | SelectDataset
   | UpdateDatasetPlaceGroup
@@ -860,4 +873,5 @@ export type ControlAction =
   | SetMapPointInfoBoxEnabled
   | SetVariableCompareMode
   | UpdateVariableSplitPos
-  | FlyTo;
+  | FlyTo
+  | SetZoomLevel;

@@ -387,6 +387,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 updateSettings={updateSettings}
               />
             </SettingsSubPanel>
+            <SettingsSubPanel
+              label={i18n.get("Number of resolution levels")}
+              value={getOnOff(settings.showZoomBox)}
+            >
+              <ToggleSetting
+                propertyName={"showZoomBox"}
+                settings={settings}
+                updateSettings={updateSettings}
+              />
+            </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("On dataset selection")}>
               <TextField
                 variant="standard"

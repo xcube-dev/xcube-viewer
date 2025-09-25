@@ -32,6 +32,7 @@ import {
   Dataset,
   findDataset,
   findDatasetVariable,
+  getDatasetLevel,
   getDatasetTimeDimension,
   getDatasetTimeRange,
   getDatasetUserVariables,
@@ -152,6 +153,8 @@ export const userColorBarsSelector = (state: AppState) =>
   state.controlState.userColorBars;
 export const userVariablesAllowedSelector = (_state: AppState) =>
   Config.instance.branding.allowUserVariables;
+export const zoomLevelSelector = (state: AppState) =>
+  state.controlState.zoomLevel;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -201,6 +204,34 @@ export const selectedUserVariablesSelector = createSelector(
     return dataset ? getDatasetUserVariables(dataset)[1] : [];
   },
 );
+
+export const getDatasetResolutions = (dataset: Dataset | null): number[] =>
+  dataset && dataset.resolutions ? dataset.resolutions : [];
+
+export const selectedDatasetResolutionsSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetResolutions,
+);
+
+export const getDatasetSpatialUnits = (
+  dataset: Dataset | null,
+): string | null =>
+  dataset && dataset.spatialUnits ? dataset.spatialUnits : null;
+
+export const selectedDatasetSpatialUnitsSelector = createSelector(
+  selectedDatasetSelector,
+  getDatasetSpatialUnits,
+);
+
+export const selectedDatasetLevelSelector = (
+  state: AppState,
+): number | undefined => {
+  const resolutions = selectedDatasetResolutionsSelector(state);
+  const units = selectedDatasetSpatialUnitsSelector(state);
+  const projection = mapProjectionSelector(state);
+
+  return getDatasetLevel(resolutions, units, projection);
+};
 
 const _findDatasetVariable = (
   dataset: Dataset | null,
@@ -830,10 +861,10 @@ function getOlXYZSource(
     // minZoom: tileLevelMin,
     maxZoom: tileLevelMax,
     crossOrigin: "Anonymous",
-    //crossOrigin is set to  "Anonymous", for allowing 
-    //to copy image on clipboard as we have custom tiles. If the source is 
+    //crossOrigin is set to  "Anonymous", for allowing
+    //to copy image on clipboard as we have custom tiles. If the source is
     //not set to anonymous it will give the CORS error and image will not be copied.
-    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html 
+    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html
   });
 }
 

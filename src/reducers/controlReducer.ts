@@ -42,6 +42,7 @@ import {
   UPDATE_VOLUME_STATE,
   SET_LAYER_GROUP_STATES,
   TOGGLE_DATASET_RGB_LAYER,
+  SET_ZOOM_LEVEL,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -568,6 +569,12 @@ export function controlReducer(
         selectedVariable2Name,
         variableCompareMode: true,
         // swipe handle stays the same
+      };
+    }
+    case SET_ZOOM_LEVEL: {
+      return {
+        ...state,
+        zoomLevel: action.zoomLevel,
       };
     }
     case CONFIGURE_SERVERS: {
