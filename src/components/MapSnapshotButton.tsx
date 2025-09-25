@@ -18,12 +18,14 @@ interface MapSnapshotButtonProps extends WithLocale {
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   exportResolution: ExportResolution;
   hiddenElementItems: string[];
+  className?: string;
 }
 
 export default function MapSnapshotButton({
   postMessage,
   exportResolution,
   hiddenElementItems = [],
+  className,
 }: MapSnapshotButtonProps) {
   const elementRef = getMapElement();
 
@@ -43,6 +45,7 @@ export default function MapSnapshotButton({
 
   return (
     <MapButton
+      className={className}
       icon={<CameraAltIcon fontSize="small" />}
       tooltipTitle={i18n.get("Copy snapshot to clipboard")}
       onClick={onSnapshotClick}

@@ -18,9 +18,8 @@ import { MessageType } from "@/states/messageLogState";
 import { WithLocale } from "@/util/lang";
 
 const GROUP_STYLE: CSSProperties = {
-  // Same sizes as for OpenLayers
   left: "0.5em",
-  top: 65,
+  top: 75,
 };
 
 interface MapControlActionsProps extends WithLocale {
@@ -53,24 +52,28 @@ export default function MapControlActions({
   return (
     <MapButtonGroup style={GROUP_STYLE}>
       <MapButton
+        className={"layer-panel"}
         icon={<LayersIcon fontSize={"small"} />}
         tooltipTitle={i18n.get("Show or hide layers panel")}
         selected={layerMenuOpen}
         onSelect={(_e, selected) => void setLayerMenuOpen(selected)}
       />
       <MapButton
+        className={"split-mode"}
         icon={<CompareIcon fontSize={"small"} />}
         tooltipTitle={i18n.get("Turn layer split mode on or off")}
         selected={variableCompareMode}
         onSelect={(_e, selected) => void setVariableCompareMode(selected)}
       />
       <MapButton
+        className={"info-box"}
         icon={<MessageIcon fontSize={"small"} />}
         tooltipTitle={i18n.get("Turn info box on or off")}
         selected={mapPointInfoBoxEnabled}
         onSelect={(_e, selected) => void setMapPointInfoBoxEnabled(selected)}
       />
       <MapSnapshotButton
+        className={"snapshot-button"}
         postMessage={postMessage}
         exportResolution={exportResolution}
         hiddenElementItems={[

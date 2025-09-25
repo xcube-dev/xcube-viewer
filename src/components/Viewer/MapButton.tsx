@@ -5,19 +5,8 @@
  */
 
 import IconButton from "@mui/material/IconButton";
-import { CSSProperties, MouseEvent, ReactElement, ReactNode } from "react";
+import { MouseEvent, ReactElement, ReactNode } from "react";
 import Tooltip from "@mui/material/Tooltip";
-
-const BUTTON_STYLE: CSSProperties = {
-  // Same sizes as for OpenLayers
-  width: "1.375em",
-  height: "1.375em",
-};
-
-const SELECTED_BUTTON_STYLE: CSSProperties = {
-  ...BUTTON_STYLE,
-  backgroundColor: "rgba(0,80,180,0.9)",
-};
 
 interface MapButtonProps {
   icon: ReactElement;
@@ -25,6 +14,7 @@ interface MapButtonProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   selected?: boolean;
   onSelect?: (event: MouseEvent<HTMLButtonElement>, selected: boolean) => void;
+  className?: string;
 }
 
 export default function MapButton({
@@ -33,6 +23,7 @@ export default function MapButton({
   onClick,
   selected,
   onSelect,
+  className,
 }: MapButtonProps) {
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (onSelect) {
@@ -49,8 +40,10 @@ export default function MapButton({
 
   return (
     <IconButton
+      className={className}
       onClick={handleClick}
-      style={selected ? SELECTED_BUTTON_STYLE : BUTTON_STYLE}
+      // create attribute to change styling in Map.css
+      data-selected={selected}
     >
       {icon}
     </IconButton>
