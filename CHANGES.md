@@ -42,6 +42,9 @@
   Window. If this feature is configured, an `About` window can be opened
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
+  
+* Added a progress bar to the bottom of the map to vizualize the progress
+  of tile loading. (#541)
 
 ### Other changes
 
