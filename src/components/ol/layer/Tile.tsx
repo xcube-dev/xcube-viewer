@@ -23,7 +23,7 @@ let trace: (message?: string, ...optionalParams: unknown[]) => void;
 if (import.meta.env.DEV && DEBUG) {
   trace = console.debug;
 } else {
-  trace = () => { };
+  trace = () => {};
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -48,20 +48,25 @@ export function OSMBlackAndWhite(): JSX.Element {
 
 interface TileProps
   extends MapComponentProps,
-  OlTileLayerOptions<OlTileSource> { }
+    OlTileLayerOptions<OlTileSource> {}
 
 export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
     const layer = new OlTileLayer(this.props);
     layer.set("id", this.props.id);
 
-    //The below lines of code of setting source as "Anonymous" is for allowing 
-    //to copy image on clipboard as we have custom tiles. If the source is 
+    //The below lines of code of setting source as "Anonymous" is for allowing
+    //to copy image on clipboard as we have custom tiles. If the source is
     //not set to anonymous it will give the CORS error and image will not be copied.
-    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html 
+    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html
     const source = layer.getSource() as OlTileSource & { crossOrigin?: string };
-    if (source && 'crossOrigin' in source) {
-      source.crossOrigin = "Anonymous";
+    if (source) {
+      if ("crossOrigin" in source) {
+        source.crossOrigin = "Anonymous";
+      }
+      // TODO: forman: cont. work here
+      source.on("tileloadstart", () => {});
+      source.on("tileloadend", () => {});
     }
     map.getLayers().push(layer);
     return layer;

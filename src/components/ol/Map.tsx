@@ -20,14 +20,24 @@ import "./Map.css";
 
 export type MapElement = React.ReactElement | null | undefined;
 
+export interface TileLoadProgress {
+  value: number;
+  active: boolean;
+}
+
 export interface MapContext {
   map?: OlMap;
   mapDiv?: HTMLDivElement | null;
   mapObjects: { [id: string]: OlBaseObject };
+  // For tile layers
+  reportTileLoadStart: () => void;
+  reportTileLoadEnd: () => void;
 }
 
 export const MapContextType = React.createContext<MapContext>({
   mapObjects: {},
+  reportTileLoadStart: () => {},
+  reportTileLoadEnd: () => {},
 });
 
 interface MapProps extends OlMapOptions {
@@ -38,9 +48,13 @@ interface MapProps extends OlMapOptions {
   onMapRef?: (map: OlMap | null) => void;
   isStale?: boolean;
   onDropFiles?: (files: File[]) => void;
+  onTileLoadProgress?: (progress: TileLoadProgress) => void;
 }
 
-type MapState = object;
+interface MapState {
+  numTilesLoading: number;
+  numTilesLoaded: number;
+}
 
 const DEFAULT_CONTAINER_STYLE: React.CSSProperties = {
   position: "relative",
@@ -56,20 +70,78 @@ export class Map extends React.Component<MapProps, MapState> {
 
   constructor(props: MapProps) {
     super(props);
-    // console.log("Map.constructor: id =", this.props.id);
+
+    // https://openlayers.org/en/latest/examples/tile-load-events.html
+    this.setState({
+      numTilesLoading: 0,
+      numTilesLoaded: 0,
+    });
 
     const { id, mapObjects } = props;
     if (mapObjects) {
       this.contextValue = {
         map: (mapObjects[id] as OlMap) || undefined,
         mapObjects: mapObjects,
+        reportTileLoadStart: this.reportTileLoadStart,
+        reportTileLoadEnd: this.reportTileLoadEnd,
       };
     } else {
       this.contextValue = {
         mapObjects: {},
+        reportTileLoadStart: this.reportTileLoadStart,
+        reportTileLoadEnd: this.reportTileLoadEnd,
       };
     }
   }
+
+  reportTileLoadStart = () => {
+    const onTileLoadProgress = this.props.onTileLoadProgress;
+    if (onTileLoadProgress) {
+      this.setState(
+        (s) => ({
+          numTilesLoading: s.numTilesLoading + 1,
+        }),
+        this.reportProgressUpdate,
+      );
+    }
+  };
+
+  reportTileLoadEnd = () => {
+    const onTileLoadProgress = this.props.onTileLoadProgress;
+    if (onTileLoadProgress) {
+      this.setState(
+        (s) => ({
+          numTilesLoaded: s.numTilesLoaded + 1,
+        }),
+        this.reportProgressUpdate,
+      );
+    }
+  };
+
+  reportProgressUpdate = () => {
+    const onTileLoadProgress = this.props.onTileLoadProgress;
+    if (onTileLoadProgress) {
+      onTileLoadProgress({
+        value: this.computeProgressValue(),
+        active: this.isProgressActive(),
+      });
+    }
+  };
+
+  isProgressActive = () => {
+    return this.state.numTilesLoading > 0;
+  };
+
+  computeProgressValue = () => {
+    return (
+      100 *
+      Math.min(
+        1,
+        Math.max(0, this.state.numTilesLoaded) /
+          Math.max(1, this.state.numTilesLoading),
+      )
+    );
+  };
 
   componentDidMount(): void {
     // console.log('Map.componentDidMount: id =', this.props.id);
