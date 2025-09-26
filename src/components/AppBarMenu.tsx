@@ -8,15 +8,19 @@ import i18n from "@/i18n";
 import type { WithLocale } from "@/util/lang";
 
 import * as React from "react";
+import { SxProps, Theme } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ShareIcon from "@mui/icons-material/Share";
@@ -27,51 +31,59 @@ import DevRefPage from "@/components/DevRefPage";
 import { Config } from "@/config";
 
 interface AppBarMenuProps extends WithLocale {
-  anchorEl: HTMLElement | null;
-  allowRefresh: boolean;
-  allowSharing: boolean;
-  allowDownloads: boolean;
-  compact: boolean;
-  open: boolean;
-  onClose: () => void;
-  openDialog: (dialogId: string) => unknown;
-  updateResources: () => unknown;
-  shareStatePermalink: () => unknown;
+  appName: string;
+  allowRefresh?: boolean;
+  allowSharing?: boolean;
+  allowDownloads?: boolean;
+  compact?: boolean;
+  style?: SxProps<Theme>;
+  openDialog: (dialogId: string) => void;
+  updateResources: () => void;
+  shareStatePermalink: () => void;
 }
 
-const AppBarMenu: React.FC<AppBarMenuProps> = ({
-  anchorEl,
+export default function AppBarMenu({
+  appName,
   allowRefresh,
   allowSharing,
   allowDownloads,
   compact,
-  open,
-  onClose,
+  style,
   openDialog,
   updateResources,
   shareStatePermalink,
-}) => {
-  const appName = Config.instance.branding.appBarTitle;
+}: AppBarMenuProps) {
   const [imprintOpen, setImprintOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
 
+  const [moreMenuOpen, setMoreMenuOpen] = React.useState(false);
+  const moreButtonEl = React.useRef<HTMLButtonElement | null>(null);
+
+  const handleOpenMoreMenu = () => {
+    setMoreMenuOpen(true);
+  };
+
+  const handleCloseMoreMenu = () => {
+    setMoreMenuOpen(false);
+  };
+
   const handleSettingsButtonClicked = () => {
-    onClose();
+    handleCloseMoreMenu();
     openDialog("settings");
   };
 
   const handleOpenAbout = () => {
-    onClose();
+    handleCloseMoreMenu();
     openDialog("about");
   };
 
   const handleOpenManual = () => {
-    onClose();
+    handleCloseMoreMenu();
     window.open("https://xcube-dev.github.io/xcube-viewer/", "Manual");
   };
 
   const handleOpenDevRef = () => {
-    onClose();
+    handleCloseMoreMenu();
     setDevRefOpen(true);
   };
 
@@ -80,7 +92,7 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
   };
 
   const handleOpenImprint = () => {
-    onClose();
+    handleCloseMoreMenu();
     setImprintOpen(true);
   };
 
@@ -89,27 +101,41 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
   };
 
   const handleUpdateResources = () => {
-    onClose();
+    handleCloseMoreMenu();
     updateResources();
   };
 
   const handleSharing = () => {
-    onClose();
+    handleCloseMoreMenu();
     shareStatePermalink();
   };
 
   const handleDownloads = () => {
-    onClose();
+    handleCloseMoreMenu();
     openDialog("export");
   };
 
   return (
-    <>
+    <React.Fragment>
+      <Tooltip arrow title={i18n.get("More")}>
+        <IconButton
+          onClick={handleOpenMoreMenu}
+          size="small"
+          sx={style}
+          ref={moreButtonEl}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </Tooltip>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
-      <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
+      <Menu
+        anchorEl={moreButtonEl.current}
+        open={moreMenuOpen}
+        onClose={handleCloseMoreMenu}
+      >
         {compact && (
-          <div>
+          <>
             {allowRefresh && (
               <MenuItem onClick={handleUpdateResources}>
                 <ListItemIcon>
@@ -134,9 +160,8 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
                 <ListItemText>{i18n.get("Export data")}</ListItemText>
               </MenuItem>
             )}
-
             <Divider />
-          </div>
+          </>
         )}
         {Config.instance.branding.allowAboutPage && (
           <>
@@ -177,8 +202,6 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
           <ListItemText>{i18n.get("Settings")}</ListItemText>
         </MenuItem>
       </Menu>
-    </>
+    </React.Fragment>
   );
-};
-
-export default AppBarMenu;
+}

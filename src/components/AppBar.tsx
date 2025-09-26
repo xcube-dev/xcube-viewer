@@ -4,7 +4,6 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import * as React from "react";
 import { SxProps, Theme, styled } from "@mui/material";
 import AppBarComponent from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
@@ -12,7 +11,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ShareIcon from "@mui/icons-material/Share";
 import { deepOrange } from "@mui/material/colors";
@@ -21,15 +19,15 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { Config } from "@/config";
 import { WithLocale } from "@/util/lang";
-import AppBarMenu from "@/components/AppBarMenu";
-import UserControl from "./UserControl";
+import AppBarMenu from "@/connected/AppBarMenu";
+import UserControl from "@/connected/UserControl";
 
 interface AppBarImplProps extends WithLocale {
   appName: string;
-  allowRefresh: boolean;
-  allowSharing: boolean;
-  allowDownloads: boolean;
-  compact: boolean;
+  allowRefresh?: boolean;
+  allowSharing?: boolean;
+  allowDownloads?: boolean;
+  compact?: boolean;
   openDialog: (dialogID: string) => void;
   updateResources: () => void;
   shareStatePermalink: () => void;
@@ -95,22 +93,10 @@ export default function AppBar({
   allowRefresh,
   allowSharing,
   allowDownloads,
-  compact,
   openDialog,
   updateResources,
   shareStatePermalink,
 }: AppBarImplProps) {
-  const [moreMenuOpen, setMoreMenuOpen] = React.useState(false);
-  const moreButtonEl = React.useRef<HTMLButtonElement | null>(null);
-
-  const handleOpenMoreMenu = () => {
-    setMoreMenuOpen(true);
-  };
-
-  const handleCloseMoreMenu = () => {
-    setMoreMenuOpen(false);
-  };
-
   return (
     <AppBarComponent position="absolute" sx={appBarStyle.appBar} elevation={0}>
       <Toolbar disableGutters sx={styles.toolbar} variant="dense">
@@ -168,27 +154,8 @@ export default function AppBar({
             </IconButton>
           </Tooltip>
         )}
-        <IconButton
-          onClick={handleOpenMoreMenu}
-          size="small"
-          sx={styles.iconButton}
-          ref={moreButtonEl}
-        >
-          <MoreVertIcon />
-        </IconButton>
+        <AppBarMenu style={styles.iconButton} />
       </Toolbar>
-      <AppBarMenu
-        anchorEl={moreButtonEl.current}
-        allowRefresh={allowRefresh}
-        allowSharing={allowSharing}
-        allowDownloads={allowDownloads}
-        compact={compact}
-        open={moreMenuOpen}
-        onClose={handleCloseMoreMenu}
-        openDialog={openDialog}
-        updateResources={updateResources}
-        shareStatePermalink={shareStatePermalink}
-      />
     </AppBarComponent>
   );
 }
