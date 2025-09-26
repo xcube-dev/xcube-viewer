@@ -12,6 +12,8 @@ import { default as OlView } from "ol/View";
 import { default as OlEvent } from "ol/events/Event";
 import { EventsKey as OlEventsKey } from "ol/events";
 import { MapOptions as OlMapOptions } from "ol/PluggableMap";
+import { TileSourceEvent as OlTileSourceEvent } from "ol/source/Tile";
+import { unByKey as ol_unByKey } from "ol/Observable";
 
 import { DEFAULT_MAP_CRS } from "@/model/proj";
 
@@ -30,14 +32,16 @@ export interface MapContext {
   mapDiv?: HTMLDivElement | null;
   mapObjects: { [id: string]: OlBaseObject };
   // For tile layers
-  reportTileLoadStart: () => void;
-  reportTileLoadEnd: () => void;
+  reportTileLoadStart: (e: OlTileSourceEvent) => void;
+  reportTileLoadEnd: (e: OlTileSourceEvent) => void;
+  reportTileLoadError: (e: OlTileSourceEvent) => void;
 }
 
 export const MapContextType = React.createContext<MapContext>({
   mapObjects: {},
   reportTileLoadStart: () => {},
   reportTileLoadEnd: () => {},
+  reportTileLoadError: () => {},
 });
 
 interface MapProps extends OlMapOptions {
@@ -54,7 +58,15 @@ interface MapProps extends OlMapOptions {
 interface MapState {
   numTilesLoading: number;
   numTilesLoaded: number;
+  numTilesErrored: number;
 }
+
+const newMapState = () => ({
+  // https://openlayers.org/en/latest/examples/tile-load-events.html
+  numTilesLoading: 0,
+  numTilesLoaded: 0,
+  numTilesErrored: 0,
+});
 
 const DEFAULT_CONTAINER_STYLE: React.CSSProperties = {
   position: "relative",
@@ -67,15 +79,14 @@ const DEFAULT_CONTAINER_STYLE: React.CSSProperties = {
 export class Map extends React.Component<MapProps, MapState> {
   private readonly contextValue: MapContext;
   private clickEventsKey: OlEventsKey | null = null;
+  private loadStartEventsKey: OlEventsKey | null = null;
+  private loadEndEventsKey: OlEventsKey | null = null;
+  private lastTileLoadProgress: TileLoadProgress | null = null;
 
   constructor(props: MapProps) {
     super(props);
 
-    // https://openlayers.org/en/latest/examples/tile-load-events.html
-    this.setState({
-      numTilesLoading: 0,
-      numTilesLoaded: 0,
-    });
+    this.state = newMapState();
 
     const { id, mapObjects } = props;
     if (mapObjects) {
@@ -84,64 +95,17 @@ export class Map extends React.Component<MapProps, MapState> {
         mapObjects: mapObjects,
         reportTileLoadStart: this.reportTileLoadStart,
         reportTileLoadEnd: this.reportTileLoadEnd,
+        reportTileLoadError: this.reportTileLoadError,
       };
     } else {
       this.contextValue = {
         mapObjects: {},
         reportTileLoadStart: this.reportTileLoadStart,
         reportTileLoadEnd: this.reportTileLoadEnd,
+        reportTileLoadError: this.reportTileLoadError,
       };
     }
   }
-
-  reportTileLoadStart = () => {
-    const onTileLoadProgress = this.props.onTileLoadProgress;
-    if (onTileLoadProgress) {
-      this.setState(
-        (s) => ({
-          numTilesLoading: s.numTilesLoading + 1,
-        }),
-        this.reportProgressUpdate,
-      );
-    }
-  };
-
-  reportTileLoadEnd = () => {
-    const onTileLoadProgress = this.props.onTileLoadProgress;
-    if (onTileLoadProgress) {
-      this.setState(
-        (s) => ({
-          numTilesLoaded: s.numTilesLoaded + 1,
-        }),
-        this.reportProgressUpdate,
-      );
-    }
-  };
-
-  reportProgressUpdate = () => {
-    const onTileLoadProgress = this.props.onTileLoadProgress;
-    if (onTileLoadProgress) {
-      onTileLoadProgress({
-        value: this.computeProgressValue(),
-        active: this.isProgressActive(),
-      });
-    }
-  };
-
-  isProgressActive = () => {
-    return this.state.numTilesLoading > 0;
-  };
-
-  computeProgressValue = () => {
-    return (
-      100 *
-      Math.min(
-        1,
-        Math.max(0, this.state.numTilesLoaded) /
-          Math.max(1, this.state.numTilesLoading),
-      )
-    );
-  };
 
   componentDidMount(): void {
     // console.log('Map.componentDidMount: id =', this.props.id);
@@ -180,6 +144,8 @@ export class Map extends React.Component<MapProps, MapState> {
     this.contextValue.mapObjects[id] = map;
 
     this.clickEventsKey = map.on("click", this.handleClick);
+    this.loadStartEventsKey = map.on("loadstart", this.handleMapLoadStart);
+    this.loadEndEventsKey = map.on("loadend", this.handleMapLoadEnd);
 
     //map.set('objectId', this.props.id);
     map.updateSize();
@@ -199,30 +165,22 @@ export class Map extends React.Component<MapProps, MapState> {
 
   componentDidUpdate(_prevProps: Readonly<MapProps>): void {
     // console.log('Map.componentDidUpdate: id =', this.props.id);
-
     const map = this.contextValue.map!;
     const mapDiv = this.contextValue.mapDiv!;
     const mapOptions = this.getMapOptions();
     map.setProperties({ ...mapOptions });
     map.setTarget(mapDiv);
-    // if (this.clickEventsKey) {
-    //     unByKey(this.clickEventsKey);
-    // }
-    // this.clickEventsKey = map.on('click', this.handleClick);
-    // console.log('Map: ', this.handleClick, this.clickEventsKey);
     map.updateSize();
   }
 
   componentWillUnmount(): void {
     // console.log('Map.componentWillUnmount: id =', this.props.id);
-
+    // Remove map listeners
+    ol_unByKey(this.clickEventsKey!);
+    ol_unByKey(this.loadStartEventsKey!);
+    ol_unByKey(this.loadEndEventsKey!);
     // Remove resize listeners
     window.removeEventListener("resize", this.handleResize);
-
-    // if (this.clickEventsKey) {
-    //     unByKey(this.clickEventsKey);
-    // }
-
     const onMapRef = this.props.onMapRef;
     if (onMapRef) {
       onMapRef(null);
@@ -327,5 +285,78 @@ export class Map extends React.Component<MapProps, MapState> {
       return minZoom;
     }
     return 0;
+  };
+
+  private handleMapLoadStart = () => {
+    this.resetProgressState();
+  };
+
+  private handleMapLoadEnd = () => {
+    this.resetProgressState();
+  };
+
+  private resetProgressState = () => {
+    this.setState(newMapState(), this.reportProgressUpdate);
+  };
+
+  private reportTileLoadStart = (e: OlTileSourceEvent) => {
+    this.reportTileLoadInternal(e, (s: MapState) => ({
+      numTilesLoading: s.numTilesLoading + 1,
+    }));
+  };
+
+  private reportTileLoadEnd = (e: OlTileSourceEvent) => {
+    this.reportTileLoadInternal(e, (s: MapState) => ({
+      numTilesLoaded: s.numTilesLoaded + 1,
+    }));
+  };
+
+  private reportTileLoadError = (e: OlTileSourceEvent) => {
+    this.reportTileLoadInternal(e, (s: MapState) => ({
+      numTilesErrored: s.numTilesErrored + 1,
+    }));
+  };
+
+  private reportTileLoadInternal = <K extends keyof MapState>(
+    _e: OlTileSourceEvent,
+    updater: (s: Readonly<MapState>) => Pick<MapState, K>,
+  ) => {
+    const onTileLoadProgress = this.props.onTileLoadProgress;
+    if (onTileLoadProgress) {
+      this.setState(updater, this.reportProgressUpdate);
+    }
+  };
+
+  private reportProgressUpdate = () => {
+    const onTileLoadProgress = this.props.onTileLoadProgress;
+    if (onTileLoadProgress) {
+      const prevProgress = this.lastTileLoadProgress;
+      // Note, we could also report tile load errors here
+      const newProgress = {
+        value: this.computeProgressValue(),
+        active: this.isProgressActive(),
+      };
+      if (
+        !prevProgress ||
+        prevProgress.active !== newProgress.active ||
+        prevProgress.value !== newProgress.value
+      ) {
+        this.lastTileLoadProgress = newProgress;
+        onTileLoadProgress(newProgress);
+      }
+    }
+  };
+
+  private isProgressActive = () => {
+    return this.state.numTilesLoading > 0;
+  };
+
+  private computeProgressValue = () => {
+    const loaded = this.state.numTilesLoaded;
+    const errored = this.state.numTilesErrored;
+    const loading = this.state.numTilesLoading;
+    return (
+      100 * Math.min(1, Math.max(0, loaded + errored) / Math.max(1, loading))
+    );
   };
 }

@@ -13,6 +13,8 @@ import { default as OlUrlTileSource } from "ol/source/UrlTile";
 import { default as OlXYZSource } from "ol/source/XYZ";
 import { default as OlOSMSource } from "ol/source/OSM";
 import { Options as OlTileLayerOptions } from "ol/layer/BaseTile";
+import { EventsKey as OlEventsKey } from "ol/events";
+import { unByKey as ol_unByKey } from "ol/Observable";
 
 import { MapComponent, MapComponentProps } from "../MapComponent";
 import { processLayerProperties } from "./common";
@@ -51,22 +53,24 @@ interface TileProps
     OlTileLayerOptions<OlTileSource> {}
 
 export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
+  tileLoadStartEventsKey: OlEventsKey | null = null;
+  tileLoadEndEventsKey: OlEventsKey | null = null;
+  tileLoadErrorEventsKey: OlEventsKey | null = null;
+
   addMapObject(map: OlMap): OlTileLayer<OlTileSource> {
     const layer = new OlTileLayer(this.props);
     layer.set("id", this.props.id);
 
-    //The below lines of code of setting source as "Anonymous" is for allowing
-    //to copy image on clipboard as we have custom tiles. If the source is
-    //not set to anonymous it will give the CORS error and image will not be copied.
-    //Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html
+    // The below lines of code of setting source as "Anonymous" is for allowing
+    // to copy image on clipboard as we have custom tiles. If the source is
+    // not set to anonymous it will give the CORS error and image will not be copied.
+    // Source link: https://openlayers.org/en/latest/examples/wms-custom-proj.html
     const source = layer.getSource() as OlTileSource & { crossOrigin?: string };
     if (source) {
       if ("crossOrigin" in source) {
         source.crossOrigin = "Anonymous";
       }
-      // TODO: forman: cont. work here
-      source.on("tileloadstart", () => {});
-      source.on("tileloadend", () => {});
+      this.registerTileLoadHandlers(source);
     }
     map.getLayers().push(layer);
     return layer;
@@ -144,6 +148,11 @@ export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
       }
 
       if (replaceSource) {
+        // re-register tileLoadStart and tileLoadEnd handlers
+        if (oldSource) {
+          this.unregisterTileLoadHandlers(oldSource);
+        }
+        this.registerTileLoadHandlers(newSource);
         // Replace the entire source and accept layer flickering.
         layer.setSource(newSource);
         trace("--> Replaced source (expect flickering!)");
@@ -156,7 +165,32 @@ export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   }
 
   removeMapObject(map: OlMap, layer: OlTileLayer<OlTileSource>): void {
+    const source = layer.getSource() as OlTileSource;
+    if (source) {
+      this.unregisterTileLoadHandlers(source);
+    }
     map.getLayers().remove(layer);
+  }
+
+  private registerTileLoadHandlers(source: OlTileSource): void {
+    this.tileLoadStartEventsKey = source.on(
+      "tileloadstart",
+      this.context.reportTileLoadStart,
+    );
+    this.tileLoadEndEventsKey = source.on(
+      "tileloadend",
+      this.context.reportTileLoadEnd,
+    );
+    this.tileLoadErrorEventsKey = source.on(
+      "tileloaderror",
+      this.context.reportTileLoadError,
+    );
+  }
+
+  unregisterTileLoadHandlers(_source: OlTileSource): void {
+    ol_unByKey(this.tileLoadStartEventsKey!);
+    ol_unByKey(this.tileLoadEndEventsKey!);
+    ol_unByKey(this.tileLoadErrorEventsKey!);
   }
 }
 
