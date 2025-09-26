@@ -39,6 +39,7 @@ export interface MapContext {
 
 export const MapContextType = React.createContext<MapContext>({
   mapObjects: {},
+  // values are initially dummy handlers
   reportTileLoadStart: () => {},
   reportTileLoadEnd: () => {},
   reportTileLoadError: () => {},
@@ -213,6 +214,7 @@ export class Map extends React.Component<MapProps, MapState> {
     delete mapOptions["children"];
     delete mapOptions["onClick"];
     delete mapOptions["onDropFiles"];
+    delete mapOptions["onTileLoadProgress"];
     return mapOptions;
   }
 
@@ -323,27 +325,29 @@ export class Map extends React.Component<MapProps, MapState> {
   ) => {
     const onTileLoadProgress = this.props.onTileLoadProgress;
     if (onTileLoadProgress) {
+      // Only report if we have a handler
       this.setState(updater, this.reportProgressUpdate);
     }
   };
 
   private reportProgressUpdate = () => {
     const onTileLoadProgress = this.props.onTileLoadProgress;
-    if (onTileLoadProgress) {
-      const prevProgress = this.lastTileLoadProgress;
-      // Note, we could also report tile load errors here
-      const newProgress = {
-        value: this.computeProgressValue(),
-        active: this.isProgressActive(),
-      };
-      if (
-        !prevProgress ||
-        prevProgress.active !== newProgress.active ||
-        prevProgress.value !== newProgress.value
-      ) {
-        this.lastTileLoadProgress = newProgress;
-        onTileLoadProgress(newProgress);
-      }
+    if (!onTileLoadProgress) {
+      return;
+    }
+    const prevProgress = this.lastTileLoadProgress;
+    // Note, we could also report tile load errors here
+    const newProgress = {
+      value: this.computeProgressValue(),
+      active: this.isProgressActive(),
+    };
+    if (
+      !prevProgress ||
+      prevProgress.active !== newProgress.active ||
+      prevProgress.value !== newProgress.value
+    ) {
+      onTileLoadProgress(newProgress);
+      this.lastTileLoadProgress = newProgress;
     }
   };
 
