@@ -20,6 +20,7 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import MenuIcon from "@mui/icons-material/Menu";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -124,7 +125,7 @@ export default function AppBarMenu({
           sx={style}
           ref={moreButtonEl}
         >
-          <MoreVertIcon />
+          {compact ? <MenuIcon /> : <MoreVertIcon />}
         </IconButton>
       </Tooltip>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
@@ -163,19 +164,13 @@ export default function AppBarMenu({
             <Divider />
           </>
         )}
-        {Config.instance.branding.allowAboutPage && (
-          <>
-            <MenuItem onClick={handleOpenAbout}>
-              <ListItemIcon>
-                <InfoOutlinedIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>
-                {i18n.get("About ${appName}", { appName })}
-              </ListItemText>
-            </MenuItem>
-            <Divider />
-          </>
-        )}
+        <MenuItem onClick={handleSettingsButtonClicked}>
+          <ListItemIcon>
+            <SettingsIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{i18n.get("Settings")}</ListItemText>
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={handleOpenManual}>
           <ListItemIcon>
             <HelpOutlineIcon fontSize="small" />
@@ -195,12 +190,16 @@ export default function AppBarMenu({
           <ListItemText>{i18n.get("Imprint")}</ListItemText>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleSettingsButtonClicked}>
-          <ListItemIcon>
-            <SettingsIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{i18n.get("Settings")}</ListItemText>
-        </MenuItem>
+        {Config.instance.branding.allowAboutPage && (
+          <MenuItem onClick={handleOpenAbout}>
+            <ListItemIcon>
+              <InfoOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
+              {i18n.get("About ${appName}", { appName })}
+            </ListItemText>
+          </MenuItem>
+        )}
       </Menu>
     </React.Fragment>
   );

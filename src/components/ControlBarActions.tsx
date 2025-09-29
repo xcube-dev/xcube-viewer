@@ -14,6 +14,7 @@ import { makeStyles } from "@/util/styles";
 import { commonStyles } from "@/components/common-styles";
 import ToolButton from "@/components/ToolButton";
 import AppBarMenu from "@/connected/AppBarMenu";
+import UserControl from "@/connected/UserControl";
 
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
@@ -59,6 +60,7 @@ export default function ControlBarActions({
 
   return (
     <FormControl sx={styles.formControl} variant={"standard"}>
+      {compact && <UserControl />}
       {compact && <AppBarMenu style={commonStyles.toggleButton} />}
       {sidebarButton}
     </FormControl>
