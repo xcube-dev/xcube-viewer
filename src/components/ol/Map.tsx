@@ -290,7 +290,7 @@ export class Map extends React.Component<MapProps, MapState> {
   };
 
   private handleMapLoadStart = () => {
-    this.resetProgressState();
+    //this.resetProgressState();
   };
 
   private handleMapLoadEnd = () => {
