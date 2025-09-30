@@ -387,6 +387,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 updateSettings={updateSettings}
               />
             </SettingsSubPanel>
+            <SettingsSubPanel
+              label={i18n.get("Show tile loading progress")}
+              value={getOnOff(settings.progressBarEnabled)}
+            >
+              <ToggleSetting
+                propertyName={"progressBarEnabled"}
+                settings={settings}
+                updateSettings={updateSettings}
+              />
+            </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("On dataset selection")}>
               <TextField
                 variant="standard"

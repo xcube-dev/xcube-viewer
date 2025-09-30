@@ -40,8 +40,8 @@ import {
 import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
 import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import UserVectorLayer from "@/components/UserVectorLayer";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import UserVectorLayer from "@/components/UserVectorLayer";
 import { ScaleLine } from "@/components/ol/control/ScaleLine";
 import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
 import { Layers } from "@/components/ol/layer/Layers";
@@ -126,6 +126,7 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
+  progressBar: MapElement;
 }
 
 export default function Viewer({
@@ -158,6 +159,7 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
+  progressBar,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -350,6 +352,10 @@ export default function Viewer({
       });
     }
   };
+  /*
+  const enabled = useSelector(
+    (state: AppState) => state.controlState.progressBarEnabled,
+  );*/
 
   const handleTileLoadProgress = useCallback((p: TileLoadProgress) => {
     console.log("tile load progress:", p);
@@ -431,7 +437,13 @@ export default function Viewer({
         {mapPointInfoBox}
         {mapControlActions}
         {mapSplitter}
+        {progressBar}
         <ScaleLine bar={false} />
+        {/*        <ProgressBar
+          progress={progress}
+          visibility={visibility}
+          enabled={enabled}
+        />*/}
       </Map>
     </ErrorBoundary>
   );
