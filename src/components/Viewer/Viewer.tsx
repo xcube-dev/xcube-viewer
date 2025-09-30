@@ -50,6 +50,7 @@ import { Map, MapElement, TileLoadProgress } from "@/components/ol/Map";
 import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
+import ProgressBar from "@/components/ProgressBar";
 import { isNumber } from "@/util/types";
 
 const SELECTION_LAYER_ID = "selection";
@@ -126,7 +127,7 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
-  progressBar: MapElement;
+  progressBarEnabled: boolean;
 }
 
 export default function Viewer({
@@ -159,7 +160,7 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
-  progressBar,
+  progressBarEnabled,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -352,13 +353,13 @@ export default function Viewer({
       });
     }
   };
-  /*
-  const enabled = useSelector(
-    (state: AppState) => state.controlState.progressBarEnabled,
-  );*/
+
+  const [progress, setProgress] = useState<number>(0);
+  const [visibility, setVisibility] = useState<"visible" | "hidden">("hidden");
 
   const handleTileLoadProgress = useCallback((p: TileLoadProgress) => {
-    console.log("tile load progress:", p);
+    setProgress(p.value);
+    setVisibility(p.active ? "visible" : "hidden");
   }, []);
 
   return (
@@ -437,13 +438,12 @@ export default function Viewer({
         {mapPointInfoBox}
         {mapControlActions}
         {mapSplitter}
-        {progressBar}
-        <ScaleLine bar={false} />
-        {/*        <ProgressBar
+        <ProgressBar
+          enabled={progressBarEnabled}
           progress={progress}
           visibility={visibility}
-          enabled={enabled}
-        />*/}
+        />
+        <ScaleLine bar={false} />
       </Map>
     </ErrorBoundary>
   );

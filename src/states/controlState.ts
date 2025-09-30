@@ -137,8 +137,6 @@ export interface ControlState {
   themeMode: ThemeMode;
   exportResolution: ExportResolution;
   progressBarEnabled: boolean;
-  progressBarSize: number;
-  progressBarVisibility: "hidden" | "visible";
 }
 
 export function newControlState(): ControlState {
@@ -221,8 +219,6 @@ export function newControlState(): ControlState {
     themeMode: getInitialThemeMode(),
     exportResolution: 300,
     progressBarEnabled: true,
-    progressBarSize: 0,
-    progressBarVisibility: "hidden",
   };
   return loadUserSettings(state);
 }

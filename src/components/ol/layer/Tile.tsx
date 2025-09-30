@@ -173,7 +173,7 @@ export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   }
 
   private registerTileLoadHandlers(source: OlTileSource): void {
-    console.log("adding tile load handlers to", source);
+    /*console.log("adding tile load handlers to", source);*/
     this.tileLoadStartEventsKey = source.on(
       "tileloadstart",
       this.context.reportTileLoadStart,
@@ -189,7 +189,7 @@ export class Tile extends MapComponent<OlTileLayer<OlTileSource>, TileProps> {
   }
 
   private unregisterTileLoadHandlers(source: OlTileSource): void {
-    console.log("removing tile load handlers from", source);
+    /*console.log("removing tile load handlers from", source);*/
     ol_unByKey(this.tileLoadStartEventsKey!);
     ol_unByKey(this.tileLoadEndEventsKey!);
     ol_unByKey(this.tileLoadErrorEventsKey!);

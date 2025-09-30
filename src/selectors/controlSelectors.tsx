@@ -152,8 +152,6 @@ export const userColorBarsSelector = (state: AppState) =>
   state.controlState.userColorBars;
 export const userVariablesAllowedSelector = (_state: AppState) =>
   Config.instance.branding.allowUserVariables;
-export const progressBarSelector = (state: AppState) =>
-  state.controlState.progressBarEnabled;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
