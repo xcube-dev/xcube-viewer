@@ -68,7 +68,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     imageSmoothing: imageSmoothingSelector(state),
     variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
-    progressBarEnabled: state.controlState.progressBarEnabled,
+    showProgressBar: state.controlState.showProgressBar,
   };
 };
 

@@ -127,7 +127,7 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
-  progressBarEnabled: boolean;
+  showProgressBar: boolean;
 }
 
 export default function Viewer({
@@ -160,7 +160,7 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
-  progressBarEnabled,
+  showProgressBar,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -439,7 +439,7 @@ export default function Viewer({
         {mapControlActions}
         {mapSplitter}
         <ProgressBar
-          enabled={progressBarEnabled}
+          enabled={showProgressBar}
           progress={progress}
           visibility={visibility}
         />

@@ -389,10 +389,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             </SettingsSubPanel>
             <SettingsSubPanel
               label={i18n.get("Show tile loading progress")}
-              value={getOnOff(settings.progressBarEnabled)}
+              value={getOnOff(settings.showProgressBar)}
             >
               <ToggleSetting
-                propertyName={"progressBarEnabled"}
+                propertyName={"showProgressBar"}
                 settings={settings}
                 updateSettings={updateSettings}
               />
