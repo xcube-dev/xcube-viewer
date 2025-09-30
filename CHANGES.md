@@ -43,8 +43,10 @@
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
   
-* Added a progress bar to the bottom of the map to vizualize the progress
-  of tile loading. (#541)
+* Added a progress bar to the bottom of the map to visualize the progress
+  of tile loading. The visibility of this feature can be controlled in the settings.
+  The initial visibility can be set in `config.json` 
+  (`"branding":{ "showProgressBar": true, ...`), the default is `true`.(#541)
 
 ### Other changes
 
