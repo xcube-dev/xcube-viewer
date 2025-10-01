@@ -6,11 +6,11 @@
 
 import OlTileLayer from "ol/layer/Tile";
 import { default as OlMap } from "ol/Map";
+import { default as OlView } from "ol/View";
 
 import { findMapLayer } from "@/components/ol/util";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import { type UserVariable } from "@/model/userVariable";
-import { MAP_OBJECTS } from "@/states/controlState";
 import { type JsonPrimitive } from "@/util/json";
 import { assertArrayNotEmpty, assertDefinedAndNotNull } from "@/util/assert";
 import { isString } from "@/util/types";
@@ -145,20 +145,44 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
   return [coordinates[0], coordinates[coordinates.length - 1]];
 }
 
-// this returns the level of the current OLTileLayer
-export const getDatasetZLevel = (): number | undefined => {
-  const map = MAP_OBJECTS["map"] as OlMap | undefined;
+/*// this returns the level of the current OLTileLayer
+export const getDatasetZLevel = (view, map): number | undefined => {
+  //return 5;
+  //const map = MAP_OBJECTS["map"] as OlMap | undefined;
+  console.log("getdataset, map", map);
   if (map) {
-    const view = map.getView();
+    //const view = map.getView();
     const resolution = view.getResolution();
+    const layer = findMapLayer(map, "variable");
+    console.log("getdataset - layers", layer);
+    if (layer instanceof OlTileLayer) {
+      const source = layer.getSource();
+      const tileGrid = source.getTileGrid();
+      console.log("getdataset - tileGrid", tileGrid);
+      return tileGrid.getZForResolution(resolution);
+    } else {
+      console.log("cant return zlevel");
+      return undefined;
+    }
+  }
+};*/
 
+// this returns the level of the current OLTileLayer
+export const getDatasetZLevel = (
+  view: OlView,
+  map: OlMap | undefined,
+): number | undefined => {
+  //const map = MAP_OBJECTS["map"] as OlMap | undefined;
+  if (map) {
+    //const view = map.getView();
+    const resolution = view.getResolution();
     const layer = findMapLayer(map, "variable");
     if (layer instanceof OlTileLayer) {
       const source = layer.getSource();
       const tileGrid = source.getTileGrid();
-
       return tileGrid.getZForResolution(resolution);
     } else {
+      console.log("cannot return zlevel");
       return undefined;
     }
   }
@@ -224,14 +248,15 @@ export function getUnitFactor(
   computing the pixel size of the map tiles in dataset units and comparing
   this value against the resolution levels provided by the dataset.
   It the returns the most suitable dataset level, based on:
-  -> https://github.com/xcube-dev/xcube/blob/0de66ae448a6fac6362a4a3fc409dba71dd132ed/xcube/core/tilingscheme.py#L281
+  -> https://github.com/xcube-dev/xcube/blob/main/xcube/core/tilingscheme.py#L281
 */
 export function getDatasetLevel(
   datasetResolutions: number[],
   datasetSpatialUnit: string | null,
   mapProjection: string,
+  datasetZLevel: number | undefined,
 ): number | undefined {
-  const datasetZLevel = getDatasetZLevel();
+  //const datasetZLevel = getDatasetZLevel();
   if (
     datasetResolutions &&
     datasetSpatialUnit &&

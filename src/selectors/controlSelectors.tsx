@@ -155,6 +155,8 @@ export const userVariablesAllowedSelector = (_state: AppState) =>
   Config.instance.branding.allowUserVariables;
 export const zoomLevelSelector = (state: AppState) =>
   state.controlState.zoomLevel;
+export const selectedDatasetZLevelSelector = (state: AppState) =>
+  state.controlState.datasetZLevel;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -223,15 +225,13 @@ export const selectedDatasetSpatialUnitsSelector = createSelector(
   getDatasetSpatialUnits,
 );
 
-export const selectedDatasetLevelSelector = (
-  state: AppState,
-): number | undefined => {
-  const resolutions = selectedDatasetResolutionsSelector(state);
-  const units = selectedDatasetSpatialUnitsSelector(state);
-  const projection = mapProjectionSelector(state);
-
-  return getDatasetLevel(resolutions, units, projection);
-};
+export const selectedDatasetLevelSelector = createSelector(
+  selectedDatasetResolutionsSelector,
+  selectedDatasetSpatialUnitsSelector,
+  mapProjectionSelector,
+  selectedDatasetZLevelSelector,
+  getDatasetLevel,
+);
 
 const _findDatasetVariable = (
   dataset: Dataset | null,

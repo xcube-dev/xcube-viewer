@@ -52,6 +52,8 @@ import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
 
+import { getDatasetZLevel } from "@/model/dataset";
+
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
@@ -126,7 +128,10 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
-  setZoomLevel?: (zoomLevel: number | undefined) => void;
+  setZoomLevel?: (
+    zoomLevel: number | undefined,
+    datasetZLevel: number | undefined,
+  ) => void;
   zoomBox?: MapElement;
 }
 
@@ -283,11 +288,17 @@ export default function Viewer({
     }
   };
 
-  const handleMapZoom = (event: OlMapBrowserEvent<UIEvent>) => {
+  const handleMapZoom = (
+    event: OlMapBrowserEvent<UIEvent>,
+    map: OlMap | undefined,
+  ) => {
     const zoomLevel = event.target.getZoom();
+    const datasetZLevel = getDatasetZLevel(event.target, map);
 
+    console.log("ZoomLevel: ", zoomLevel);
+    console.log("DatasetZLevel: ", datasetZLevel);
     if (setZoomLevel) {
-      setZoomLevel(zoomLevel);
+      setZoomLevel(zoomLevel, datasetZLevel);
     }
   };
 
@@ -368,7 +379,7 @@ export default function Viewer({
       <Map
         id={mapId}
         onClick={(event) => handleMapClick(event)}
-        onZoom={(event) => handleMapZoom(event)}
+        onZoom={(event, map) => handleMapZoom(event, map)}
         onMapRef={handleMapRef}
         mapObjects={MAP_OBJECTS}
         isStale={true}

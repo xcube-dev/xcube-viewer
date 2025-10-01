@@ -35,7 +35,7 @@ interface MapProps extends OlMapOptions {
   children?: React.ReactNode;
   mapObjects?: { [id: string]: OlBaseObject };
   onClick?: (event: OlMapBrowserEvent<UIEvent>) => void;
-  onZoom?: (event: OlMapBrowserEvent<UIEvent>) => void;
+  onZoom?: (event: OlMapBrowserEvent<UIEvent>, map: OlMap | undefined) => void;
   onMapRef?: (map: OlMap | null) => void;
   isStale?: boolean;
   onDropFiles?: (files: File[]) => void;
@@ -205,8 +205,9 @@ export class Map extends React.Component<MapProps, MapState> {
 
   private handleZoom = (event: OlEvent) => {
     const onZoom = this.props.onZoom;
+    const map = this.contextValue.map;
     if (onZoom) {
-      onZoom(event as OlMapBrowserEvent<UIEvent>);
+      onZoom(event as OlMapBrowserEvent<UIEvent>, map);
     }
   };
 

@@ -575,6 +575,7 @@ export function controlReducer(
       return {
         ...state,
         zoomLevel: action.zoomLevel,
+        datasetZLevel: action.datasetZLevel,
       };
     }
     case CONFIGURE_SERVERS: {

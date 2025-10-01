@@ -138,6 +138,7 @@ export interface ControlState {
   exportResolution: ExportResolution;
   showZoomBox: boolean;
   zoomLevel: number | undefined;
+  datasetZLevel: number | undefined;
 }
 
 export function newControlState(): ControlState {
@@ -221,6 +222,7 @@ export function newControlState(): ControlState {
     exportResolution: 300,
     showZoomBox: branding.showZoomBox || false,
     zoomLevel: undefined,
+    datasetZLevel: undefined,
   };
   return loadUserSettings(state);
 }

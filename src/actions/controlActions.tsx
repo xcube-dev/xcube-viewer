@@ -828,10 +828,14 @@ export const SET_ZOOM_LEVEL = "SET_ZOOM_LEVEL";
 export interface SetZoomLevel {
   type: typeof SET_ZOOM_LEVEL;
   zoomLevel: number | undefined;
+  datasetZLevel: number | undefined;
 }
 
-export function setZoomLevel(zoomLevel: number | undefined): SetZoomLevel {
-  return { type: SET_ZOOM_LEVEL, zoomLevel };
+export function setZoomLevel(
+  zoomLevel: number | undefined,
+  datasetZLevel: number | undefined,
+): SetZoomLevel {
+  return { type: SET_ZOOM_LEVEL, zoomLevel, datasetZLevel };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
