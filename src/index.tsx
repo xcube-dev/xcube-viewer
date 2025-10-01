@@ -24,6 +24,7 @@ import {
   changeLocale,
   UPDATE_SIDE_PANEL_SIZE,
   UPDATE_VARIABLE_SPLIT_POS,
+  SET_ZOOM_LEVEL,
   updateUserColorBarsImageData,
 } from "@/actions/controlActions";
 import { syncWithServer } from "@/actions/dataActions";
@@ -36,7 +37,8 @@ console.debug("baseUrl:", baseUrl);
 Config.load().then(() => {
   const actionFilter = (_getState: () => AppState, action: Action) =>
     action.type !== UPDATE_VARIABLE_SPLIT_POS &&
-    action.type !== UPDATE_SIDE_PANEL_SIZE;
+    action.type !== UPDATE_SIDE_PANEL_SIZE &&
+    action.type !== SET_ZOOM_LEVEL;
   const logger = ReduxLogger.createLogger({
     collapsed: true,
     diff: false,
