@@ -27,8 +27,12 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				A drop-down menu, which is grouped by data format. The selected dataset is
-				highlighted.
+				A drop-down menu, which holds all available datasets. The selected dataset is
+				highlighted and the dataset containing a 				
+        <a href="../user_guide/analyse/#pin-variables" rel="noopener noreferrer"
+					>pinned variable</a
+				> 
+        is marked with a <code>pin</code> icon.
 			</td>
 		</tr>
 		<tr></tr>
@@ -123,8 +127,11 @@ A list of all the features that the viewer contains will be created here, in whi
 				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
 					>User-defined variables</a
 				>
-				are marked with an icon and placed at the bottom of the list. The
-				currently selected variable is highlighted.
+				are marked with an icon and placed at the bottom of the list and the 				
+        <a href="../user_guide/analyse/#pin-variables" rel="noopener noreferrer"
+					>pinned variable</a
+				> 
+        is marked with a <code>pin</code> icon. The currently selected variable is highlighted.
 			</td>
 		</tr>
 		<tr></tr>
@@ -851,7 +858,7 @@ A list of all the features that the viewer contains will be created here, in whi
     	<tr>
     		<td colspan="2">
     			Link to feature mentioned in
-    			<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
+    			<a href="../user_guide/analyse/#add" rel="noopener noreferrer"
     				>User Guide</a
     			>.
     		</td>
@@ -862,6 +869,15 @@ A list of all the features that the viewer contains will be created here, in whi
 ### Edit User Variable
 
 <table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/user_variables_edit.png"
+					alt="Edit User Variable" />
+			</th>
+		</tr>
+	</thead>
 	<tbody>
 		<tr>
 			<td><b>Feature Name</b></td>
@@ -871,10 +887,9 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A window that opens using the <code>Edit</code>-button in the User
-				Variables Management menu. For layout see
-				<a href="#add-user-variable" rel="noopener noreferrer"
-					>add user variables</a
-				>.
+				Variables Management menu. The window contains input fields for name,
+        title, units, and expression. There is also an option to display various
+        optional components of the expression. 
 			</td>
 		</tr>
 		<tr>
@@ -893,7 +908,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
-				<a href="../user_guide/analyse/#user-variables" rel="noopener noreferrer"
+				<a href="../user_guide/analyse/#edit" rel="noopener noreferrer"
 					>User Guide</a
 				>.
 			</td>

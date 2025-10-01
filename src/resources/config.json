@@ -9,14 +9,16 @@
     "appBarTitle": "xcube Viewer",
     "windowTitle": "xcube Viewer",
     "headerBackgroundColor": "#606060",
+    "headerIconStyle":{
+      "color": "#FFFFFF"
+    },
     "themeMode": "system",
     "compact": false,
     "organisationUrl": "https://xcube.readthedocs.io/",
     "logoImage": "images/logo.png",
     "logoWidth": 32,
     "headerTitleStyle": {
-      "fontFamily": "Arial",
-      "fontStyle": "italic",
+      "fontFamily": "Roboto, Segoe UI, Helvetica, Arial, sans-serif",
       "fontSize": "1.2rem"
     },
     "baseMapUrl": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",

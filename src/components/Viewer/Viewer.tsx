@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Theme, useTheme } from "@mui/system";
 import * as geojson from "geojson";
 import { default as OlMap } from "ol/Map";
@@ -46,7 +46,7 @@ import { ScaleLine } from "@/components/ol/control/ScaleLine";
 import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
 import { Layers } from "@/components/ol/layer/Layers";
 import { Vector } from "@/components/ol/layer/Vector";
-import { Map, MapElement } from "@/components/ol/Map";
+import { Map, MapElement, TileLoadProgress } from "@/components/ol/Map";
 import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
@@ -374,6 +374,10 @@ export default function Viewer({
     }
   };
 
+  const handleTileLoadProgress = useCallback((p: TileLoadProgress) => {
+    console.log("tile load progress:", p);
+  }, []);
+
   return (
     <ErrorBoundary>
       <Map
@@ -384,6 +388,7 @@ export default function Viewer({
         mapObjects={MAP_OBJECTS}
         isStale={true}
         onDropFiles={handleDropFiles}
+        onTileLoadProgress={handleTileLoadProgress}
       >
         <View id="view" projection={mapProjection} />
         <Layers>

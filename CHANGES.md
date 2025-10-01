@@ -2,16 +2,28 @@
 
 ### Improvements
 
-*  Enabled configuration of the permalink message via `config.json`, 
-   with optional display of the expiration duration in days. (#500)
+* Enabled configuration of the permalink message via `config.json`, 
+  with optional display of the expiration duration in days. (#500)
    
-*  Added support for changing image sources in Markdown based on 
-   the selected theme (e.g., light or dark mode). Examples: (#539)
-   ```
-   ![Logo](logo-light.png#light-mode-only)
-   ![Logo](logo-dark.png#dark-mode-only)
-   ```
+* Added support for changing image sources in Markdown based on 
+  the selected theme (e.g., light or dark mode). Examples: (#539)
+  ```
+  ![Logo](logo-light.png#light-mode-only)
+  ![Logo](logo-dark.png#dark-mode-only)
+  ```
+  
+* Rearrange the User Variables dialog for managing user variables. 
+  Commit and cancel actions are no longer shown in the dialog header, instead 
+  the bottom-right dialog buttons are now used for these actions. (#546)
+ 
 
+* A pin icon is now used in the dataset selector to mark a dataset
+  that holds a pinned variable. (#424)
+  
+*  Slimmed down the main application bar by grouping features under a 
+   single button that opens a dropdown menu. The features are: 
+   Documentation, Developer Reference, Imprint, and Settings. (#540)
+   
 ### Fixes
 
 *  Applied workaround for a bug in `html-to-image` libary that causes an 
@@ -37,6 +49,12 @@
   can be set in `config.json` (`"branding":{ "showZoomBox": true, ...`), 
   the default is `false`. In addition, the total number of dataset levels has been 
   added to the metadata in the Info panel. (#287)
+
+### Other changes
+
+* Aligned styling of map elements (Zoom, MapActionsBar, ScaleBar, Attritution,
+  ColorLegend) to match styling of the rest of the Viewer. (#545).
+
 
 ## Changes in version 1.6.1
 

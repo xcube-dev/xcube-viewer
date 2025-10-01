@@ -11,6 +11,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
@@ -64,6 +65,7 @@ export default function UserVariablesDialog({
   const [editedVariable, setEditedVariable] = useState<EditedVariable | null>(
     null,
   );
+  const [canCommit, setCanCommit] = useState<boolean>(false);
 
   useEffect(() => {
     setLocalUserVariables(userVariables);
@@ -84,6 +86,28 @@ export default function UserVariablesDialog({
   function handleCancelDialog() {
     setLocalUserVariables(userVariables);
     closeDialog(USER_VARIABLES_DIALOG_ID);
+  }
+
+  function handleCancelFromEditor() {
+    setEditedVariable(null);
+  }
+
+  function handleCommitFromEditor() {
+    if (!editedVariable) return;
+
+    if (editedVariable.editMode === "add") {
+      setLocalUserVariables([editedVariable.variable, ...localUserVariables]);
+    } else {
+      const index = localUserVariables.findIndex(
+        (v) => v.id === editedVariable.variable.id,
+      );
+      if (index >= 0) {
+        const copy = [...localUserVariables];
+        copy[index] = editedVariable.variable;
+        setLocalUserVariables(copy);
+      }
+    }
+    setEditedVariable(null);
   }
 
   return (
@@ -107,12 +131,13 @@ export default function UserVariablesDialog({
         ) : (
           <UserVariableEditor
             userVariables={localUserVariables}
-            setUserVariables={setLocalUserVariables}
             editedVariable={editedVariable}
             setEditedVariable={setEditedVariable}
             contextDataset={selectedDataset}
             expressionCapabilities={expressionCapabilities}
             serverUrl={serverUrl}
+            canCommit={canCommit}
+            setCanCommit={setCanCommit}
           />
         )}
       </DialogContent>
@@ -123,17 +148,29 @@ export default function UserVariablesDialog({
             helpUrl={i18n.get("docs/user-variables.en.md")}
           />
         </Box>
-        <Box>
-          <Button onClick={handleCancelDialog}>{i18n.get("Cancel")}</Button>
-          <Button
-            onClick={handleConfirmDialog}
-            disabled={
-              editedVariable !== null || !areUserVariablesOk(localUserVariables)
-            }
-          >
-            {i18n.get("OK")}
-          </Button>
-        </Box>
+        {editedVariable !== null ? (
+          <Box>
+            <Button
+              onClick={handleCancelFromEditor}
+              startIcon={<NavigateBeforeIcon />}
+            >
+              {i18n.get("Back")}
+            </Button>
+            <Button onClick={handleCommitFromEditor} disabled={!canCommit}>
+              {i18n.get(editedVariable.editMode === "edit" ? "Apply" : "Add")}
+            </Button>
+          </Box>
+        ) : (
+          <Box>
+            <Button onClick={handleCancelDialog}>{i18n.get("Cancel")}</Button>
+            <Button
+              onClick={handleConfirmDialog}
+              disabled={!areUserVariablesOk(localUserVariables)}
+            >
+              {i18n.get("OK")}
+            </Button>
+          </Box>
+        )}
       </DialogActions>
     </Dialog>
   );
