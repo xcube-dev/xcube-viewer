@@ -288,20 +288,6 @@ export default function Viewer({
     }
   };
 
-  const handleMapZoom = (
-    event: OlMapBrowserEvent<UIEvent>,
-    map: OlMap | undefined,
-  ) => {
-    const zoomLevel = event.target.getZoom();
-    const datasetZLevel = getDatasetZLevel(event.target, map);
-
-    console.log("ZoomLevel: ", zoomLevel);
-    console.log("DatasetZLevel: ", datasetZLevel);
-    if (setZoomLevel) {
-      setZoomLevel(zoomLevel, datasetZLevel);
-    }
-  };
-
   const handleDrawEnd = (event: DrawEvent) => {
     if (map !== null && addDrawnUserPlace && mapInteraction !== "Select") {
       const feature = event.feature;
@@ -377,6 +363,18 @@ export default function Viewer({
   const handleTileLoadProgress = useCallback((p: TileLoadProgress) => {
     console.log("tile load progress:", p);
   }, []);
+
+  const handleMapZoom = (
+    event: OlMapBrowserEvent<UIEvent>,
+    map: OlMap | undefined,
+  ) => {
+    const zoomLevel = event.target.getZoom();
+    const datasetZLevel = getDatasetZLevel(event.target, map);
+
+    if (setZoomLevel) {
+      setZoomLevel(zoomLevel, datasetZLevel);
+    }
+  };
 
   return (
     <ErrorBoundary>

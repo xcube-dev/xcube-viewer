@@ -145,28 +145,6 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
   return [coordinates[0], coordinates[coordinates.length - 1]];
 }
 
-/*// this returns the level of the current OLTileLayer
-export const getDatasetZLevel = (view, map): number | undefined => {
-  //return 5;
-  //const map = MAP_OBJECTS["map"] as OlMap | undefined;
-  console.log("getdataset, map", map);
-  if (map) {
-    //const view = map.getView();
-    const resolution = view.getResolution();
-    const layer = findMapLayer(map, "variable");
-    console.log("getdataset - layers", layer);
-    if (layer instanceof OlTileLayer) {
-      const source = layer.getSource();
-      const tileGrid = source.getTileGrid();
-      console.log("getdataset - tileGrid", tileGrid);
-      return tileGrid.getZForResolution(resolution);
-    } else {
-      console.log("cant return zlevel");
-      return undefined;
-    }
-  }
-};*/
-
 // this returns the level of the current OLTileLayer
 export const getDatasetZLevel = (
   view: OlView,
@@ -244,10 +222,10 @@ export function getUnitFactor(
 }
 
 /*
-  This function computes the level of the actual dataset, by
+  This function computes the level of the actual dataset (min. value: 0), by
   computing the pixel size of the map tiles in dataset units and comparing
   this value against the resolution levels provided by the dataset.
-  It the returns the most suitable dataset level, based on:
+  It then returns the most suitable dataset level, based on:
   -> https://github.com/xcube-dev/xcube/blob/main/xcube/core/tilingscheme.py#L281
 */
 export function getDatasetLevel(

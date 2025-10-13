@@ -4,6 +4,6 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import ZoomBox from "./ZoomBox";
+import ZoomInfoBox from "./ZoomInfoBox";
 
-export default ZoomBox;
+export default ZoomInfoBox;

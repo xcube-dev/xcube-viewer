@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ZoomBox from "./ZoomBox";
+import ZoomInfoBox from "./ZoomInfoBox";
 
 const meta: Meta = {
-  component: ZoomBox,
-  title: "ZoomBox",
+  component: ZoomInfoBox,
+  title: "ZoomInfoBox",
   parameters: {
     // Optional parameter to center the component in the Canvas.
     // More info: https://storybook.js.org/docs/configure/story-layout
@@ -12,7 +12,7 @@ const meta: Meta = {
   // This component will have an automatically generated Autodocs entry:
   // https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
-} satisfies Meta<typeof ZoomBox>;
+} satisfies Meta<typeof ZoomInfoBox>;
 
 // noinspection JSUnusedGlobalSymbols
 export default meta;
@@ -25,6 +25,7 @@ export const Default: Story = {
     style: {},
     zoomLevel: 10,
     datasetLevel: 3,
+    datasetLevels: 4,
     visibility: true,
   },
 };

@@ -45,19 +45,21 @@ const styles = makeStyles({
   },
 });
 
-interface ZoomBoxProps {
+interface ZoomInfoBoxProps {
   style: CSSProperties;
   zoomLevel: number | undefined;
   datasetLevel: number | undefined;
+  datasetLevels: number;
   visibility: boolean;
 }
 
-export default function ZoomBox({
+export default function ZoomInfoBox({
   style,
   zoomLevel,
   datasetLevel,
+  datasetLevels,
   visibility,
-}: ZoomBoxProps): JSX.Element | null {
+}: ZoomInfoBoxProps): JSX.Element | null {
   if (!visibility) {
     return null;
   }
@@ -93,8 +95,12 @@ export default function ZoomBox({
             variant="subtitle2"
             color="textPrimary"
           >
+            {/*            increment datasetLevel with +1, so that the dataset level range
+            starts with 1 instead of 0.*/}
             {datasetLevel !== undefined
-              ? getLabelForValue(datasetLevel, 4)
+              ? getLabelForValue(datasetLevel + 1, 0) +
+                " / " +
+                getLabelForValue(datasetLevels, 0)
               : "no dataset level"}
           </Typography>
         </Box>
