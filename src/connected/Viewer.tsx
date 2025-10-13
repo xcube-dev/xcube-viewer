@@ -29,7 +29,11 @@ import {
 } from "@/actions/dataActions";
 import _Viewer from "@/components/Viewer";
 import { userPlaceGroupsSelector } from "@/selectors/dataSelectors";
-import { selectPlace, setZoomLevel } from "@/actions/controlActions";
+import {
+  selectPlace,
+  setDatasetZLevel,
+  setZoomLevel,
+} from "@/actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
 import ColorBarLegend2 from "./ColorBarLegend2";
 import MapSplitter from "./MapSplitter";
@@ -79,6 +83,7 @@ const mapDispatchToProps = {
   importUserPlacesFromText,
   selectPlace,
   setZoomLevel,
+  setDatasetZLevel,
 };
 
 const Viewer = connect(mapStateToProps, mapDispatchToProps)(_Viewer);

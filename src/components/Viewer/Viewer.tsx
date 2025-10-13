@@ -128,10 +128,8 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
-  setZoomLevel?: (
-    zoomLevel: number | undefined,
-    datasetZLevel: number | undefined,
-  ) => void;
+  setZoomLevel?: (zoomLevel: number | undefined) => void;
+  setDatasetZLevel?: (datasetZLevel: number | undefined) => void;
   zoomBox?: MapElement;
 }
 
@@ -167,6 +165,7 @@ export default function Viewer({
   onMapRef,
   zoomBox,
   setZoomLevel,
+  setDatasetZLevel,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -368,13 +367,30 @@ export default function Viewer({
     event: OlMapBrowserEvent<UIEvent>,
     map: OlMap | undefined,
   ) => {
-    const zoomLevel = event.target.getZoom();
-    const datasetZLevel = getDatasetZLevel(event.target, map);
-
     if (setZoomLevel) {
-      setZoomLevel(zoomLevel, datasetZLevel);
+      const zoomLevel = event.target.getZoom();
+      setZoomLevel(zoomLevel);
+    }
+
+    if (setDatasetZLevel) {
+      const datasetZLevel = getDatasetZLevel(event.target, map);
+      setDatasetZLevel(datasetZLevel);
     }
   };
+
+  useEffect(() => {
+    /* Force update of datasetZLevel after variable change. This is needed at
+       the moment and might become redundant in the future.
+       This ensures that datasetZLevel gets set, when the Viewer starts, so that
+       the datasetLevel can be calculated.
+     */
+    if (map) {
+      if (setDatasetZLevel) {
+        const datasetZLevel = getDatasetZLevel(map.getView(), map);
+        setDatasetZLevel(datasetZLevel);
+      }
+    }
+  }, [map, variableLayer]);
 
   return (
     <ErrorBoundary>

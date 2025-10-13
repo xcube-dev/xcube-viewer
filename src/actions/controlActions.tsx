@@ -828,14 +828,25 @@ export const SET_ZOOM_LEVEL = "SET_ZOOM_LEVEL";
 export interface SetZoomLevel {
   type: typeof SET_ZOOM_LEVEL;
   zoomLevel: number | undefined;
+}
+
+export function setZoomLevel(zoomLevel: number | undefined): SetZoomLevel {
+  return { type: SET_ZOOM_LEVEL, zoomLevel };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SET_DATASET_Z_LEVEL = "SET_DATASET_Z_LEVEL";
+
+export interface SetDatasetZLevel {
+  type: typeof SET_DATASET_Z_LEVEL;
   datasetZLevel: number | undefined;
 }
 
-export function setZoomLevel(
-  zoomLevel: number | undefined,
+export function setDatasetZLevel(
   datasetZLevel: number | undefined,
-): SetZoomLevel {
-  return { type: SET_ZOOM_LEVEL, zoomLevel, datasetZLevel };
+): SetDatasetZLevel {
+  return { type: SET_DATASET_Z_LEVEL, datasetZLevel };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -878,4 +889,5 @@ export type ControlAction =
   | SetVariableCompareMode
   | UpdateVariableSplitPos
   | FlyTo
-  | SetZoomLevel;
+  | SetZoomLevel
+  | SetDatasetZLevel;

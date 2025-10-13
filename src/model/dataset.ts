@@ -145,14 +145,12 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
   return [coordinates[0], coordinates[coordinates.length - 1]];
 }
 
-// this returns the level of the current OLTileLayer
+// this returns the level of the current OLTileLayer of the selected variable
 export const getDatasetZLevel = (
   view: OlView,
   map: OlMap | undefined,
 ): number | undefined => {
-  //const map = MAP_OBJECTS["map"] as OlMap | undefined;
   if (map) {
-    //const view = map.getView();
     const resolution = view.getResolution();
     const layer = findMapLayer(map, "variable");
     if (layer instanceof OlTileLayer) {
@@ -160,7 +158,6 @@ export const getDatasetZLevel = (
       const tileGrid = source.getTileGrid();
       return tileGrid.getZForResolution(resolution);
     } else {
-      console.log("cannot return zlevel");
       return undefined;
     }
   }

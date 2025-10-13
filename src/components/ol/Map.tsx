@@ -235,14 +235,6 @@ export class Map extends React.Component<MapProps, MapState> {
     }
   };
 
-  private handleZoom = (event: OlEvent) => {
-    const onZoom = this.props.onZoom;
-    const map = this.contextValue.map;
-    if (onZoom) {
-      onZoom(event as OlMapBrowserEvent<UIEvent>, map);
-    }
-  };
-
   private handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     if (this.props.onDropFiles) {
       event.preventDefault();
@@ -305,6 +297,14 @@ export class Map extends React.Component<MapProps, MapState> {
       return minZoom;
     }
     return 0;
+  };
+
+  private handleZoom = (event: OlEvent) => {
+    const onZoom = this.props.onZoom;
+    const map = this.contextValue.map;
+    if (onZoom) {
+      onZoom(event as OlMapBrowserEvent<UIEvent>, map);
+    }
   };
 
   private handleMapLoadStart = () => {
