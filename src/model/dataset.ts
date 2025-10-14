@@ -180,8 +180,8 @@ export function isDegreeUnit(unitName: string): boolean {
   ].includes(normalized);
 }
 
-//Get the factor to convert from one unit into another
-//with units given by *unitNameFrom* and *unitNameTo*.
+// Get the factor to convert from one unit into another
+// with units given by *unitNameFrom* and *unitNameTo*.
 export function getUnitFactor(
   unitNameFrom: string,
   unitNameTo: string,
@@ -218,25 +218,35 @@ export function getUnitFactor(
   return 1.0; // same units or unsupported conversion
 }
 
-/*
-  This function computes the level of the actual dataset (min. value: 0), by
-  computing the pixel size of the map tiles in dataset units and comparing
-  this value against the resolution levels provided by the dataset.
-  It then returns the most suitable dataset level, based on:
-  -> https://github.com/xcube-dev/xcube/blob/main/xcube/core/tilingscheme.py#L281
-*/
+/**
+ * Get the level in the sequence of spatial *resolutions* for a given *map_level*.
+ *
+ * The resolutions are typically those of a multi-resolution dataset,
+ * where the first entry represents level zero — the highest resolution
+ * (i.e. the smallest resolution value). Subsequent resolution values
+ * are monotonically increasing.
+ *
+ * @param datasetZLevel - A level within this tiling scheme.
+ * @param datasetResolutions - A sequence of spatial resolutions. Values must
+ *   be monotonically increasing. The first entry is the highest resolution
+ *   at level zero.
+ * @param datasetSpatialUnit - The spatial units for the resolutions.
+ * @param mapProjection - The projection of the map.
+ * @returns The multi-resolution level.
+ *
+ * @see https://github.com/xcube-dev/xcube/blob/main/xcube/core/tilingscheme.py#L281
+ */
 export function getDatasetLevel(
   datasetResolutions: number[],
   datasetSpatialUnit: string | null,
-  mapProjection: string,
   datasetZLevel: number | undefined,
+  mapProjection: string,
 ): number | undefined {
-  //const datasetZLevel = getDatasetZLevel();
   if (
     datasetResolutions &&
     datasetSpatialUnit &&
-    mapProjection &&
-    datasetZLevel
+    datasetZLevel &&
+    mapProjection
   ) {
     // Resolution at level 0
     let levelZeroResolution: number;

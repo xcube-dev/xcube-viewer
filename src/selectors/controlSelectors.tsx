@@ -228,8 +228,8 @@ export const selectedDatasetSpatialUnitsSelector = createSelector(
 export const selectedDatasetLevelSelector = createSelector(
   selectedDatasetResolutionsSelector,
   selectedDatasetSpatialUnitsSelector,
-  mapProjectionSelector,
   selectedDatasetZLevelSelector,
+  mapProjectionSelector,
   getDatasetLevel,
 );
 
