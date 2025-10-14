@@ -21,7 +21,7 @@ const mapStateToProps = (state: AppState) => {
     zoomLevel: zoomLevelSelector(state),
     datasetLevel: selectedDatasetLevelSelector(state),
     datasetLevels: selectedDatasetResolutionsSelector(state).length,
-    visibility: state.controlState.showZoomBox,
+    visibility: state.controlState.showZoomInfoBox,
   };
 };
 

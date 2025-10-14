@@ -1387,9 +1387,9 @@
       "se": "Levels"
     },
     {
-      "en": "Number of resolution levels",
-      "de": "Anzahl der Auflösungsebenen",
-      "se": "Antal upplösningsnivåer"
+      "en": "Show zoom level indicator",
+      "de": "Zoomstufen anzeigen",
+      "se": "Visa zoomnivåer"
     },
     {
       "en": "docs/imprint.en.md",

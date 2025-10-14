@@ -388,11 +388,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               />
             </SettingsSubPanel>
             <SettingsSubPanel
-              label={i18n.get("Number of resolution levels")}
-              value={getOnOff(settings.showZoomBox)}
+              label={i18n.get("Show zoom level indicator")}
+              value={getOnOff(settings.showZoomInfoBox)}
             >
               <ToggleSetting
-                propertyName={"showZoomBox"}
+                propertyName={"showZoomInfoBox"}
                 settings={settings}
                 updateSettings={updateSettings}
               />
