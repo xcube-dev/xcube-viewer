@@ -30,6 +30,7 @@ import { syncWithServer } from "@/actions/dataActions";
 import { appReducer } from "@/reducers/appReducer";
 import { AppState } from "@/states/appState";
 import baseUrl from "@/util/baseurl";
+import { composeWithDevTools } from "@redux-devtools/extension";
 
 console.debug("baseUrl:", baseUrl);
 
@@ -42,8 +43,13 @@ Config.load().then(() => {
     diff: false,
     predicate: actionFilter,
   });
+
   const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
-  const store = Redux.createStore(appReducer, middlewares);
+  const enhancer = import.meta.env.DEV
+    ? composeWithDevTools(middlewares)
+    : middlewares;
+
+  const store = Redux.createStore(appReducer, enhancer);
 
   const dispatch: Dispatch = store.dispatch;
 
