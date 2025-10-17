@@ -13,6 +13,8 @@ import { WithLocale } from "@/util/lang";
 import { makeStyles } from "@/util/styles";
 import { commonStyles } from "@/components/common-styles";
 import ToolButton from "@/components/ToolButton";
+import AppBarMenu from "@/connected/AppBarMenu";
+import UserControl from "@/connected/UserControl";
 
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
@@ -21,6 +23,11 @@ const styles = makeStyles({
     marginRight: 1,
     marginTop: 2,
     marginBottom: 0,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 1,
+    flexGrow: 0,
   },
 });
 
@@ -28,12 +35,14 @@ interface ControlBarActionsProps extends WithLocale {
   visible: boolean;
   sidePanelOpen: boolean;
   setSidePanelOpen: (sideBarOpen: boolean) => void;
+  compact?: boolean;
 }
 
 export default function ControlBarActions({
   visible,
   sidePanelOpen,
   setSidePanelOpen,
+  compact,
 }: ControlBarActionsProps) {
   if (!visible) {
     return null;
@@ -51,6 +60,8 @@ export default function ControlBarActions({
 
   return (
     <FormControl sx={styles.formControl} variant={"standard"}>
+      {compact && <UserControl />}
+      {compact && <AppBarMenu style={commonStyles.toggleButton} />}
       {sidebarButton}
     </FormControl>
   );
