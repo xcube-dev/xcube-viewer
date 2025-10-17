@@ -6,7 +6,7 @@
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import HoverVisibleBox, { type HoverVisibleBoxProps } from "./HoverVisibleBox";
 
 const meta: Meta<HoverVisibleBoxProps> = {
