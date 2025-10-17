@@ -29,12 +29,17 @@ import {
 } from "@/actions/dataActions";
 import _Viewer from "@/components/Viewer";
 import { userPlaceGroupsSelector } from "@/selectors/dataSelectors";
-import { selectPlace } from "@/actions/controlActions";
+import {
+  selectPlace,
+  setDatasetZLevel,
+  setZoomLevel,
+} from "@/actions/controlActions";
 import ColorBarLegend from "./ColorBarLegend";
 import ColorBarLegend2 from "./ColorBarLegend2";
 import MapSplitter from "./MapSplitter";
 import MapPointInfoBox from "./MapPointInfoBox";
 import MapControlActions from "./MapControlActions";
+import ZoomInfoBox from "./ZoomInfoBox";
 
 interface OwnProps {
   onMapRef?: (map: OlMap | null) => void;
@@ -68,6 +73,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
     imageSmoothing: imageSmoothingSelector(state),
     variableSplitPos: state.controlState.variableSplitPos,
     onMapRef: ownProps.onMapRef,
+    zoomBox: <ZoomInfoBox />,
   };
 };
 
@@ -76,6 +82,8 @@ const mapDispatchToProps = {
   addDrawnUserPlace,
   importUserPlacesFromText,
   selectPlace,
+  setZoomLevel,
+  setDatasetZLevel,
 };
 
 const Viewer = connect(mapStateToProps, mapDispatchToProps)(_Viewer);

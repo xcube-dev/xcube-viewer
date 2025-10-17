@@ -52,6 +52,8 @@ import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
 import { isNumber } from "@/util/types";
 
+import { getDatasetZLevel } from "@/model/dataset";
+
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
@@ -126,6 +128,9 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
+  setZoomLevel?: (zoomLevel: number | undefined) => void;
+  setDatasetZLevel?: (datasetZLevel: number | undefined) => void;
+  zoomBox?: MapElement;
 }
 
 export default function Viewer({
@@ -158,6 +163,9 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
+  zoomBox,
+  setZoomLevel,
+  setDatasetZLevel,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -355,11 +363,41 @@ export default function Viewer({
     console.log("tile load progress:", p);
   }, []);
 
+  const handleMapZoom = (
+    event: OlMapBrowserEvent<UIEvent>,
+    map: OlMap | undefined,
+  ) => {
+    if (setZoomLevel) {
+      const zoomLevel = event.target.getZoom();
+      setZoomLevel(zoomLevel);
+    }
+
+    if (setDatasetZLevel) {
+      const datasetZLevel = getDatasetZLevel(event.target, map);
+      setDatasetZLevel(datasetZLevel);
+    }
+  };
+
+  useEffect(() => {
+    /* Force update of datasetZLevel after variable change. This is needed at
+       the moment and might become redundant in the future.
+       This ensures that datasetZLevel gets set, when the Viewer starts, so that
+       the datasetLevel can be calculated.
+     */
+    if (map) {
+      if (setDatasetZLevel) {
+        const datasetZLevel = getDatasetZLevel(map.getView(), map);
+        setDatasetZLevel(datasetZLevel);
+      }
+    }
+  }, [map, variableLayer, setDatasetZLevel]);
+
   return (
     <ErrorBoundary>
       <Map
         id={mapId}
         onClick={(event) => handleMapClick(event)}
+        onZoom={(event, map) => handleMapZoom(event, map)}
         onMapRef={handleMapRef}
         mapObjects={MAP_OBJECTS}
         isStale={true}
@@ -431,6 +469,7 @@ export default function Viewer({
         {mapPointInfoBox}
         {mapControlActions}
         {mapSplitter}
+        {zoomBox}
         <ScaleLine bar={false} />
       </Map>
     </ErrorBoundary>

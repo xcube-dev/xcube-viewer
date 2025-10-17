@@ -4,10 +4,16 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { assertArrayNotEmpty, assertDefinedAndNotNull } from "@/util/assert";
-import { isString } from "@/util/types";
+import OlTileLayer from "ol/layer/Tile";
+import { default as OlMap } from "ol/Map";
+import { default as OlView } from "ol/View";
+
+import { findMapLayer } from "@/components/ol/util";
+import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import { type UserVariable } from "@/model/userVariable";
 import { type JsonPrimitive } from "@/util/json";
+import { assertArrayNotEmpty, assertDefinedAndNotNull } from "@/util/assert";
+import { isString } from "@/util/types";
 import { type PlaceGroup } from "./place";
 import { type TimeRange } from "./timeSeries";
 import { type Variable } from "./variable";
@@ -64,6 +70,8 @@ export interface Dataset {
   attributions?: string[];
   attrs: Record<string, JsonPrimitive | JsonPrimitive[]>;
   rgbSchema?: RgbSchema;
+  resolutions: number[];
+  spatialUnits: string;
 }
 
 export function findDataset(
@@ -135,4 +143,151 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
   }
   const coordinates = timeDimension.coordinates;
   return [coordinates[0], coordinates[coordinates.length - 1]];
+}
+
+// this returns the level of the current OLTileLayer of the selected variable
+export const getDatasetZLevel = (
+  view: OlView,
+  map: OlMap | undefined,
+): number | undefined => {
+  if (map) {
+    const resolution = view.getResolution();
+    const layer = findMapLayer(map, "variable");
+    if (layer instanceof OlTileLayer) {
+      const source = layer.getSource();
+      const tileGrid = source.getTileGrid();
+      return tileGrid.getZForResolution(resolution);
+    } else {
+      return undefined;
+    }
+  }
+};
+
+export function isMeterUnit(unitName: string): boolean {
+  const normalized = unitName.toLowerCase();
+  return ["m", "metre", "metres", "meter", "meters"].includes(normalized);
+}
+
+export function isDegreeUnit(unitName: string): boolean {
+  const normalized = unitName.toLowerCase();
+  return [
+    "°",
+    "deg",
+    "degree",
+    "degrees",
+    "decimal_degree",
+    "decimal_degrees",
+  ].includes(normalized);
+}
+
+// Get the factor to convert from one unit into another
+// with units given by *unitNameFrom* and *unitNameTo*.
+export function getUnitFactor(
+  unitNameFrom: string,
+  unitNameTo: string,
+): number {
+  const EARTH_EQUATORIAL_RADIUS_WGS84 = 6378137.0;
+  const EARTH_CIRCUMFERENCE_WGS84 = 2 * Math.PI * EARTH_EQUATORIAL_RADIUS_WGS84;
+
+  const fromMeter = unitNameFrom === WEB_MERCATOR_CRS;
+  const fromDegree = unitNameFrom === GEOGRAPHIC_CRS;
+
+  if (!fromMeter && !fromDegree) {
+    throw new Error(
+      `Unsupported unit '${unitNameFrom}'. Unit must be either meters or degrees.`,
+    );
+  }
+
+  const toMeter = isMeterUnit(unitNameTo);
+  const toDegree = isDegreeUnit(unitNameTo);
+
+  if (!toMeter && !toDegree) {
+    throw new Error(
+      `Unsupported unit '${unitNameTo}'. Unit must be either meters or degrees.`,
+    );
+  }
+
+  if (fromMeter && toDegree) {
+    return 360 / EARTH_CIRCUMFERENCE_WGS84;
+  }
+
+  if (fromDegree && toMeter) {
+    return EARTH_CIRCUMFERENCE_WGS84 / 360;
+  }
+
+  return 1.0; // same units or unsupported conversion
+}
+
+/**
+ * Get the level in the sequence of spatial *resolutions* for a given *map_level*.
+ *
+ * The resolutions are typically those of a multi-resolution dataset,
+ * where the first entry represents level zero — the highest resolution
+ * (i.e. the smallest resolution value). Subsequent resolution values
+ * are monotonically increasing.
+ *
+ * @param datasetZLevel - A level within this tiling scheme.
+ * @param datasetResolutions - A sequence of spatial resolutions. Values must
+ *   be monotonically increasing. The first entry is the highest resolution
+ *   at level zero.
+ * @param datasetSpatialUnit - The spatial units for the resolutions.
+ * @param mapProjection - The projection of the map.
+ * @returns The multi-resolution level.
+ *
+ * @see https://github.com/xcube-dev/xcube/blob/main/xcube/core/tilingscheme.py#L281
+ */
+export function getDatasetLevel(
+  datasetResolutions: number[],
+  datasetSpatialUnit: string | null,
+  datasetZLevel: number | undefined,
+  mapProjection: string,
+): number | undefined {
+  if (
+    datasetResolutions &&
+    datasetSpatialUnit &&
+    datasetZLevel &&
+    mapProjection
+  ) {
+    // Resolution at level 0
+    let levelZeroResolution: number;
+    if (mapProjection === WEB_MERCATOR_CRS) {
+      levelZeroResolution = 40075017 / 256;
+    } else {
+      levelZeroResolution = 180 / 256;
+    }
+
+    const fFromMap = getUnitFactor(mapProjection, datasetSpatialUnit);
+    // Tile pixel size in dataset units for map tile at level 0
+    const dsPixSizeL0 = fFromMap * levelZeroResolution;
+    // Tile pixel size in dataset units for map tile at level
+    const dsPixSize = dsPixSizeL0 / (1 << datasetZLevel);
+
+    const numDsLevels = datasetResolutions.length;
+
+    const dsPixSizeMin = datasetResolutions[0];
+    if (dsPixSize <= dsPixSizeMin) {
+      return 0;
+    }
+
+    const dsPixSizeMax = datasetResolutions[datasetResolutions.length - 1];
+    if (dsPixSize >= dsPixSizeMax) {
+      return numDsLevels - 1;
+    }
+
+    for (let dsLevel = 0; dsLevel < numDsLevels - 1; dsLevel++) {
+      const dsPixSize1 = datasetResolutions[dsLevel];
+      const dsPixSize2 = datasetResolutions[dsLevel + 1];
+
+      if (dsPixSize1 <= dsPixSize && dsPixSize <= dsPixSize2) {
+        const r = (dsPixSize - dsPixSize1) / (dsPixSize2 - dsPixSize1);
+        if (r < 0.5) {
+          return dsLevel;
+        } else {
+          return dsLevel + 1;
+        }
+      }
+    }
+  } else {
+    return undefined;
+  }
 }
