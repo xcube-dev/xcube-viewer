@@ -32,8 +32,6 @@
     "@mui/x-date-pickers": "^7.21.0",
     "@uiw/react-codemirror": "^4.19.5",
     "chartlets": "^0.1.6",
-    "vega": "^5.33.0",
-    "vega-lite": "^5.23.0",
     "classnames": "^2.2.6",
     "codemirror": "^6.0.1",
     "color-rgba": "^2.2.3",
@@ -61,6 +59,8 @@
     "remark-gfm": "^3.0.1",
     "reselect": "^4.0.0",
     "three": "^0.144.0",
+    "vega": "^5.33.0",
+    "vega-lite": "^5.23.0",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
@@ -68,6 +68,7 @@
     "@eslint/compat": "^1.2.7",
     "@eslint/eslintrc": "^3.3.0",
     "@eslint/js": "^9.21.0",
+    "@redux-devtools/extension": "^3.3.0",
     "@storybook/addon-essentials": "^8.6.0",
     "@storybook/addon-interactions": "^8.6.0",
     "@storybook/addon-links": "^8.6.0",
