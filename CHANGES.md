@@ -47,6 +47,10 @@
 
 * Aligned styling of map elements (Zoom, MapActionsBar, ScaleBar, Attritution,
   ColorLegend) to match styling of the rest of the Viewer. (#545).
+  
+* Redux Developement tools is now available in development mode. Installation of
+  browser extention is needed (https://github.com/reduxjs/redux-devtools).
+  Added dependency ("@redux-devtools/extension": "^3.3.0")
 
 
 ## Changes in version 1.6.1
