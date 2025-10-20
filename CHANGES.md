@@ -53,8 +53,8 @@
   Added dependency ("@redux-devtools/extension": "^3.3.0")
 
 * Updated development tools and updated TypeScript code base accordingly. Now using 
-  - `vite 7.1.11` (update from v6)
-  - `storybook 9.1.12` (update from v7, and needed due to vite v7)
+  - `vite 7.1.11` (updated from v6)
+  - `storybook 9.1.12` (updated from v7)
   - `@chromatic-com/storybook 4.1.1`
   - `@storybook/addon-links 9.1.12` 
   - `@storybook/addon-onboarding 9.1.12` 
