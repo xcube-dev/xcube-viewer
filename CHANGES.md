@@ -52,7 +52,26 @@
   browser extention is needed (https://github.com/reduxjs/redux-devtools).
   Added dependency ("@redux-devtools/extension": "^3.3.0")
 
-
+* Updated development tools and updated TypeScript code base accordingly. Now using 
+  - `vite 7.1.11` (update from v6)
+  - `storybook 9.1.12` (update from v7, and needed due to vite v7)
+  - `@chromatic-com/storybook 4.1.1`
+  - `@storybook/addon-links 9.1.12` 
+  - `@storybook/addon-onboarding 9.1.12` 
+  - `@storybook/react-vite 9.1.12` 
+  - `eslint-plugin-storybook 9.1.12`
+  Removed development dependencies since these are no longer required in
+  Storybook v9.
+  - `storybook/addon-essentials`
+  - `storybook/addon-interactions`
+  - `storybook/blocks`
+  - `storybook/react`
+  - `storybook/test`
+  - `storybook-dark-mode`
+  And added new development dependencies.
+  - `@storybook-community/storybook-dark-mode 6.0.8` 
+  - `@storybook/addon-docs 9.1.12` 
+  
 ## Changes in version 1.6.1
 
 * Slightly updated default logo image (to have a background and hence can be 
