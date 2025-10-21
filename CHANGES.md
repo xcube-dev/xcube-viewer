@@ -55,11 +55,16 @@
 * Updated development tools and updated TypeScript code base accordingly. Now using 
   - `vite 7.1.11` (updated from v6)
   - `storybook 9.1.12` (updated from v7)
+  - `vitest 3.2.4`
+  
   - `@chromatic-com/storybook 4.1.1`
   - `@storybook/addon-links 9.1.12` 
   - `@storybook/addon-onboarding 9.1.12` 
   - `@storybook/react-vite 9.1.12` 
+  - `@vitest/coverage-v8 3.2.4`
+  - `@vitest/ui 3.2.4`
   - `eslint-plugin-storybook 9.1.12`
+  
   Removed development dependencies since these are no longer required in
   Storybook v9.
   - `storybook/addon-essentials`
@@ -68,6 +73,7 @@
   - `storybook/react`
   - `storybook/test`
   - `storybook-dark-mode`
+  
   And added new development dependencies.
   - `@storybook-community/storybook-dark-mode 6.0.8` 
   - `@storybook/addon-docs 9.1.12` 

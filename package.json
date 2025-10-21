@@ -95,8 +95,8 @@
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "@vitejs/plugin-react-swc": "^3.8.0",
-    "@vitest/coverage-v8": "^3.0.7",
-    "@vitest/ui": "^3.0.7",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -109,7 +109,7 @@
     "storybook": "^9.1.12",
     "typescript": "5.1.6",
     "vite": "^7.1.11",
-    "vitest": "^3.0.7"
+    "vitest": "^3.2.4"
   },
   "resolutions": {
     "react": "^18.3.1",
