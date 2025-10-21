@@ -61,6 +61,8 @@
   - `@storybook/addon-links 9.1.12` 
   - `@storybook/addon-onboarding 9.1.12` 
   - `@storybook/react-vite 9.1.12` 
+  - `@vitest/coverage-v8 3.2.4`
+  - `@vitest/ui 3.2.4`
   - `eslint-plugin-storybook 9.1.12`
   
   Removed development dependencies since these are no longer required in
