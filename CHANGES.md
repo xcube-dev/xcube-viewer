@@ -57,6 +57,7 @@
   - `storybook 9.1.12` (updated from v7)
   - `vitest 3.2.4`
   - `eslint 9.38.0`
+  - `prettier 3.6.2`
   
   - `@chromatic-com/storybook 4.1.1`
   - `@eslint/compat 1.4.0` 
