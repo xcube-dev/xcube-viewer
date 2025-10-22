@@ -1382,6 +1382,11 @@
       "se": "Om ${appName}"
     },
     {
+      "en": "More",
+      "de": "Weiteres",
+      "se": "Ytterligare"
+    },
+    {
       "en": "docs/imprint.en.md",
       "de": "docs/imprint.en.md",
       "se": "docs/imprint.en.md"

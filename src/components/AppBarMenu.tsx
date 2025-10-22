@@ -8,15 +8,23 @@ import i18n from "@/i18n";
 import type { WithLocale } from "@/util/lang";
 
 import * as React from "react";
+import { SxProps, Theme } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import MenuIcon from "@mui/icons-material/Menu";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
+import ShareIcon from "@mui/icons-material/Share";
 import PolicyIcon from "@mui/icons-material/Policy";
 
 import ImprintPage from "@/components/ImprintPage";
@@ -24,39 +32,59 @@ import DevRefPage from "@/components/DevRefPage";
 import { Config } from "@/config";
 
 interface AppBarMenuProps extends WithLocale {
-  anchorEl: HTMLElement | null;
-  open: boolean;
-  onClose: () => void;
+  appName: string;
+  allowRefresh?: boolean;
+  allowSharing?: boolean;
+  allowDownloads?: boolean;
+  compact?: boolean;
+  style?: SxProps<Theme>;
   openDialog: (dialogId: string) => void;
+  updateResources: () => void;
+  shareStatePermalink: () => void;
 }
 
-const AppBarMenu: React.FC<AppBarMenuProps> = ({
-  anchorEl,
-  open,
-  onClose,
+export default function AppBarMenu({
+  appName,
+  allowRefresh,
+  allowSharing,
+  allowDownloads,
+  compact,
+  style,
   openDialog,
-}) => {
-  const appName = Config.instance.branding.appBarTitle;
+  updateResources,
+  shareStatePermalink,
+}: AppBarMenuProps) {
   const [imprintOpen, setImprintOpen] = React.useState(false);
   const [devRefOpen, setDevRefOpen] = React.useState(false);
 
+  const [moreMenuOpen, setMoreMenuOpen] = React.useState(false);
+  const moreButtonEl = React.useRef<HTMLButtonElement | null>(null);
+
+  const handleOpenMoreMenu = () => {
+    setMoreMenuOpen(true);
+  };
+
+  const handleCloseMoreMenu = () => {
+    setMoreMenuOpen(false);
+  };
+
   const handleSettingsButtonClicked = () => {
-    onClose();
+    handleCloseMoreMenu();
     openDialog("settings");
   };
 
   const handleOpenAbout = () => {
-    onClose();
+    handleCloseMoreMenu();
     openDialog("about");
   };
 
   const handleOpenManual = () => {
-    onClose();
+    handleCloseMoreMenu();
     window.open("https://xcube-dev.github.io/xcube-viewer/", "Manual");
   };
 
   const handleOpenDevRef = () => {
-    onClose();
+    handleCloseMoreMenu();
     setDevRefOpen(true);
   };
 
@@ -65,7 +93,7 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
   };
 
   const handleOpenImprint = () => {
-    onClose();
+    handleCloseMoreMenu();
     setImprintOpen(true);
   };
 
@@ -73,24 +101,76 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
     setImprintOpen(false);
   };
 
+  const handleUpdateResources = () => {
+    handleCloseMoreMenu();
+    updateResources();
+  };
+
+  const handleSharing = () => {
+    handleCloseMoreMenu();
+    shareStatePermalink();
+  };
+
+  const handleDownloads = () => {
+    handleCloseMoreMenu();
+    openDialog("export");
+  };
+
   return (
-    <>
+    <React.Fragment>
+      <Tooltip arrow title={i18n.get("More")}>
+        <IconButton
+          onClick={handleOpenMoreMenu}
+          size="small"
+          sx={style}
+          ref={moreButtonEl}
+        >
+          {compact ? <MenuIcon /> : <MoreVertIcon />}
+        </IconButton>
+      </Tooltip>
       <ImprintPage open={imprintOpen} onClose={handleCloseImprint} />
       <DevRefPage open={devRefOpen} onClose={handleCloseDevRef} />
-      <Menu anchorEl={anchorEl} open={open} onClose={onClose}>
-        {Config.instance.branding.allowAboutPage && (
+      <Menu
+        anchorEl={moreButtonEl.current}
+        open={moreMenuOpen}
+        onClose={handleCloseMoreMenu}
+      >
+        {compact && (
           <>
-            <MenuItem onClick={handleOpenAbout}>
-              <ListItemIcon>
-                <InfoOutlinedIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>
-                {i18n.get("About ${appName}", { appName })}
-              </ListItemText>
-            </MenuItem>
+            {allowRefresh && (
+              <MenuItem onClick={handleUpdateResources}>
+                <ListItemIcon>
+                  <RefreshIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{i18n.get("Refresh")}</ListItemText>
+              </MenuItem>
+            )}
+            {allowSharing && (
+              <MenuItem onClick={handleSharing}>
+                <ListItemIcon>
+                  <ShareIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{i18n.get("Share")}</ListItemText>
+              </MenuItem>
+            )}
+            {allowDownloads && (
+              <MenuItem onClick={handleDownloads}>
+                <ListItemIcon>
+                  <CloudDownloadIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>{i18n.get("Export data")}</ListItemText>
+              </MenuItem>
+            )}
             <Divider />
           </>
         )}
+        <MenuItem onClick={handleSettingsButtonClicked}>
+          <ListItemIcon>
+            <SettingsIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{i18n.get("Settings")}</ListItemText>
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={handleOpenManual}>
           <ListItemIcon>
             <HelpOutlineIcon fontSize="small" />
@@ -110,15 +190,17 @@ const AppBarMenu: React.FC<AppBarMenuProps> = ({
           <ListItemText>{i18n.get("Imprint")}</ListItemText>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleSettingsButtonClicked}>
-          <ListItemIcon>
-            <SettingsIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{i18n.get("Settings")}</ListItemText>
-        </MenuItem>
+        {Config.instance.branding.allowAboutPage && (
+          <MenuItem onClick={handleOpenAbout}>
+            <ListItemIcon>
+              <InfoOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>
+              {i18n.get("About ${appName}", { appName })}
+            </ListItemText>
+          </MenuItem>
+        )}
       </Menu>
-    </>
+    </React.Fragment>
   );
-};
-
-export default AppBarMenu;
+}

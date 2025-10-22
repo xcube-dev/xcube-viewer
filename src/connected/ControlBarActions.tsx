@@ -6,6 +6,7 @@
 
 import { connect } from "react-redux";
 
+import { Config } from "@/config";
 import { type AppState } from "@/states/appState";
 import _ControlBarActions from "@/components/ControlBarActions";
 import { setSidePanelOpen } from "@/actions/controlActions";
@@ -17,6 +18,7 @@ const mapStateToProps = (state: AppState) => {
       state.controlState.selectedDatasetId || state.controlState.selectedPlaceId
     ),
     sidePanelOpen: state.controlState.sidePanelOpen,
+    compact: Config.instance.branding.compact,
   };
 };
 
