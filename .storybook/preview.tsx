@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Preview } from "@storybook/react";
+import type { Preview } from "@storybook/react-vite";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 import { lightTheme, darkTheme } from "../src/theme";
@@ -20,13 +20,13 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: "light",
-      values: [
-        { name: "light", value: lightTheme.palette.background.default },
-        { name: "dark", value: darkTheme.palette.background.default },
-      ],
+      options: {
+        light: { name: "light", value: lightTheme.palette.background.default },
+        dark: { name: "dark", value: darkTheme.palette.background.default }
+      }
     },
   },
+
   decorators: [
     (Story, context) => {
       // Get the currently selected background in Storybook
@@ -48,6 +48,12 @@ const preview: Preview = {
       );
     },
   ],
+
+  initialGlobals: {
+    backgrounds: {
+      value: "light"
+    }
+  }
 };
 
 // noinspection JSUnusedGlobalSymbols

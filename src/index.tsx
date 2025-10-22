@@ -35,7 +35,7 @@ import baseUrl from "@/util/baseurl";
 
 console.debug("baseUrl:", baseUrl);
 
-Config.load().then(() => {
+Config.load().then(async () => {
   const actionFilter = (_getState: () => AppState, action: Action) =>
     action.type !== UPDATE_VARIABLE_SPLIT_POS &&
     action.type !== UPDATE_SIDE_PANEL_SIZE &&
@@ -46,8 +46,16 @@ Config.load().then(() => {
     diff: false,
     predicate: actionFilter,
   });
+
   const middlewares = Redux.applyMiddleware(thunk, logger as Redux.Middleware);
-  const store = Redux.createStore(appReducer, middlewares);
+  let enhancer;
+  if (import.meta.env.DEV) {
+    const { composeWithDevTools } = await import("@redux-devtools/extension");
+    enhancer = composeWithDevTools(middlewares);
+  } else {
+    enhancer = middlewares;
+  }
+  const store = Redux.createStore(appReducer, enhancer);
 
   const dispatch: Dispatch = store.dispatch;
 
