@@ -493,6 +493,52 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
+### Zoom Information Box
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img src="../assets/images/zoom_infobox.png" alt="Zoom Infobox" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Zoom Information Box</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+	      Displays an information box that showing the current 
+        zoom level of the map and the dataset resolution level (particularly 
+        useful for multi-resolution dataset) used for displaying the dataset 
+        in the map.
+			</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+        The visibility of this feature can be controlled in the 				
+          <a
+					href="../user_guide/settings"
+					rel="noopener noreferrer"
+					>settings</a
+				>. 
+        The initial visibility can be set in the Viewer configuration.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>Enable users to quickly access information about the zoom and dataset
+          level.
+      </td>
+		</tr>
+	</tbody>
+</table>
+
 ### Share Permalink
 
 <table>
