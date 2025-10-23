@@ -56,14 +56,20 @@
   - `vite 7.1.11` (updated from v6)
   - `storybook 9.1.12` (updated from v7)
   - `vitest 3.2.4`
+  - `eslint 9.38.0`
+  - `prettier 3.6.2`
   
   - `@chromatic-com/storybook 4.1.1`
+  - `@eslint/compat 1.4.0` 
+  - `@eslint/eslintrc 3.3.1` 
+  - `@eslint/js 9.38.0` 
   - `@storybook/addon-links 9.1.12` 
   - `@storybook/addon-onboarding 9.1.12` 
   - `@storybook/react-vite 9.1.12` 
   - `@vitest/coverage-v8 3.2.4`
   - `@vitest/ui 3.2.4`
-  - `eslint-plugin-storybook 9.1.12`
+  - `eslint-plugin-storybook 9.1.13`
+  - `eslint-config-prettier 10.1.8`
   
   Removed development dependencies since these are no longer required in
   Storybook v9.
