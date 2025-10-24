@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import type { Preview } from "@storybook/react-vite";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
@@ -29,16 +28,9 @@ const preview: Preview = {
 
   decorators: [
     (Story, context) => {
-      // Get the currently selected background in Storybook
-      const background = context.globals.backgrounds?.value;
-
       // Determine the theme based on the Storybook background
-      const theme = useMemo(() => {
-        if (background === darkTheme.palette.background.default) {
-          return darkTheme;
-        }
-        return lightTheme;
-      }, [background]);
+      const background = context.globals.backgrounds?.value;
+      const theme = background === "dark" ? darkTheme : lightTheme;
 
       return (
         <ThemeProvider theme={theme}>
