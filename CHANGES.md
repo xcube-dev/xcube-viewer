@@ -20,15 +20,15 @@
 * A pin icon is now used in the dataset selector to mark a dataset
   that holds a pinned variable. (#424)
   
-*  Slimmed down the main application bar by grouping features under a 
-   single button that opens a dropdown menu. The features are: 
-   Documentation, Developer Reference, Imprint, and Settings. (#540)
+* Slimmed down the main application bar by grouping features under a 
+  single button that opens a dropdown menu. The features are: 
+  Documentation, Developer Reference, Imprint, and Settings. (#540)
    
 ### Fixes
 
-*  Applied workaround for a bug in `html-to-image` libary that causes an 
-   issuesfor the export of screenshorts (charts and map) in the Firefox 
-   browser.
+* Applied workaround for a bug in `html-to-image` libary that causes an 
+  issue for the export of screenshorts (charts and map) in the Firefox 
+  browser.
    
 ### New Features 
 
@@ -42,10 +42,17 @@
   Window. If this feature is configured, an `About` window can be opened
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
+  
+* A zoom-level indicator was added to the map. This box displays the current 
+  zoom level of the map and the dataset resolution level used for displaying it. 
+  The visibility of this feature can be controlled in the settings. The initial visibility 
+  can be set in `config.json` (`"branding":{ "showZoomInfoBox": true, ...`), 
+  the default is `false`. In addition, the total number of dataset levels has been 
+  added to the metadata in the Info panel. (#287)
 
 ### Other changes
 
-* Aligned styling of map elements (Zoom, MapActionsBar, ScaleBar, Attritution,
+* Aligned styling of map elements (Zoom, MapActionsBar, ScaleBar, Attribution,
   ColorLegend) to match styling of the rest of the Viewer. (#545).
   
 * Redux Developement tools is now available in development mode. Installation of

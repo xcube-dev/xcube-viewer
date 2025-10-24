@@ -1382,6 +1382,16 @@
       "se": "Om ${appName}"
     },
     {
+      "en": "Levels",
+      "de": "Levels",
+      "se": "Levels"
+    },
+    {
+      "en": "Show zoom level indicator",
+      "de": "Zoomstufen anzeigen",
+      "se": "Visa zoomnivåer"
+    },
+    {
       "en": "More",
       "de": "Weiteres",
       "se": "Ytterligare"
