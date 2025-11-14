@@ -59,8 +59,8 @@
     "remark-gfm": "^3.0.1",
     "reselect": "^4.0.0",
     "three": "^0.144.0",
-    "vega": "^5.33.0",
-    "vega-lite": "^5.23.0",
+    "vega": ">=6.2.0",
+    "vega-lite": ">=6.4.1",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
