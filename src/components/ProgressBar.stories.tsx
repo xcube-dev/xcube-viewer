@@ -4,7 +4,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import ProgressBar from "./ProgressBar";
 
 const meta: Meta = {
