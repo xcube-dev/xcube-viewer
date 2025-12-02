@@ -23,7 +23,9 @@ const AuthWrapper: React.FC<React.PropsWithChildren<AuthWrapperProps>> = ({
   }
 
   const handleSigninCallback = (_user: User | void): void => {
-    console.debug("handleSigninCallback:", _user);
+    if (import.meta.env.DEV) {
+      console.debug("handleSigninCallback:", _user);
+    }
     window.history.replaceState({}, document.title, window.location.pathname);
   };
 
