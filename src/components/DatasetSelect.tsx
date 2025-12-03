@@ -85,6 +85,9 @@ export default function DatasetSelect({
   const handleDatasetChange = (event: SelectChangeEvent) => {
     const datasetId = event.target.value || null;
     selectDataset(datasetId, datasets, true);
+    if (rgbVisible) {
+      toggleDatasetRgbLayer(false);
+    }
   };
 
   const selectedDatasetId = selectedDataset ? selectedDataset.id : "";
