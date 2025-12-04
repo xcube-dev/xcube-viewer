@@ -7,9 +7,10 @@ hide:
 
 ## Demo
 
-To test the viewer, you can use the [xcube Viewer demo](https://bc-viewer.brockmann-consult.de). This is our 
-Brockmann Consult Demo xcube Viewer. Via the [viewer's settings](user_guide/settings.md) it is 
-possible to change the xcube Server url which is used for displaying data. 
+To check out the features of the app, you can use the  [xcube Viewer demo](https://bc-viewer.brockmann-consult.de). 
+It uses a demo server instance to publish a couple of free data cubes. You 
+can change the server URL via the [viewer apps's settings](user_guide/settings.md).
+
 Here is another demo server that you may add for testing:
 
 - Euro Data Cube Server (`https://edc-api.brockmann-consult.de/api`) has 
@@ -21,5 +22,5 @@ Here is another demo server that you may add for testing:
 ## Build and Deploy
 
 You can also build and deploy your own viewer instance. In the latter case, 
-visit the [xcube Viewer repository](https://github.com/xcube-dev/xcube-viewer) on GitHub and follow the instructions 
-provides in the related [README](https://github.com/xcube-dev/xcube-viewer/blob/main/README.md) file.
+visit the [xcube Viewer repository](https://github.com/xcube-dev/xcube-viewer) 
+on GitHub and follow the instructions provides in the related [README](https://github.com/xcube-dev/xcube-viewer/blob/main/README.md) file.
