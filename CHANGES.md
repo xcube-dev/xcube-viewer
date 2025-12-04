@@ -65,12 +65,6 @@
   Added dependency ("@redux-devtools/extension": "^3.3.0")
 
 * Updated development tools and updated TypeScript code base accordingly. Now using 
-  - `vite 7.1.11` (updated from v6)
-  - `storybook 9.1.12` (updated from v7)
-  - `vitest 3.2.4`
-  - `eslint 9.38.0`
-  - `prettier 3.6.2`
-  
   - `@chromatic-com/storybook 4.1.1`
   - `@eslint/compat 1.4.0` 
   - `@eslint/eslintrc 3.3.1` 
@@ -80,8 +74,17 @@
   - `@storybook/react-vite 9.1.12` 
   - `@vitest/coverage-v8 3.2.4`
   - `@vitest/ui 3.2.4`
+  
+  - `chartlets 0.1.7`
+  - `eslint 9.38.0`
   - `eslint-plugin-storybook 9.1.13`
   - `eslint-config-prettier 10.1.8`
+  - `prettier 3.6.2` 
+  - `vega 6.2.0` 
+  - `vega-lite 6.4.1` 
+  - `storybook 9.1.12` (updated from v7)
+  - `vite 7.1.11` (updated from v6)
+  - `vitest 3.2.4`  
   
   Removed development dependencies since these are no longer required in
   Storybook v9.
