@@ -136,6 +136,7 @@ export interface ControlState {
   exportFileName: string;
   themeMode: ThemeMode;
   exportResolution: ExportResolution;
+  showProgressBar: boolean;
   showZoomInfoBox: boolean;
   zoomLevel: number | undefined;
   datasetZLevel: number | undefined;
@@ -220,6 +221,7 @@ export function newControlState(): ControlState {
     exportFileName: "export",
     themeMode: getInitialThemeMode(),
     exportResolution: 300,
+    showProgressBar: branding.showProgressBar ?? true,
     showZoomInfoBox: branding.showZoomInfoBox || false,
     zoomLevel: undefined,
     datasetZLevel: undefined,

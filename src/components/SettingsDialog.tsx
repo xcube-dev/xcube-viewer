@@ -388,6 +388,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               />
             </SettingsSubPanel>
             <SettingsSubPanel
+              label={i18n.get("Show tile loading progress")}
+              value={getOnOff(settings.showProgressBar)}
+            >
+              <ToggleSetting
+                propertyName={"showProgressBar"}
+                settings={settings}
+                updateSettings={updateSettings}
+              />
+            </SettingsSubPanel>
+            <SettingsSubPanel
               label={i18n.get("Show zoom level indicator")}
               value={getOnOff(settings.showZoomInfoBox)}
             >

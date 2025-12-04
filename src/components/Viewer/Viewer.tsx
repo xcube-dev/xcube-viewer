@@ -40,8 +40,8 @@ import {
 import { MAP_OBJECTS, MapInteraction } from "@/states/controlState";
 import { newId } from "@/util/id";
 import { GEOGRAPHIC_CRS } from "@/model/proj";
-import UserVectorLayer from "@/components/UserVectorLayer";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import UserVectorLayer from "@/components/UserVectorLayer";
 import { ScaleLine } from "@/components/ol/control/ScaleLine";
 import { Draw, DrawEvent } from "@/components/ol/interaction/Draw";
 import { Layers } from "@/components/ol/layer/Layers";
@@ -50,6 +50,7 @@ import { Map, MapElement, TileLoadProgress } from "@/components/ol/Map";
 import { View } from "@/components/ol/View";
 import { setFeatureStyle } from "@/components/ol/style";
 import { findMapLayer } from "@/components/ol/util";
+import ProgressBar from "@/components/ProgressBar";
 import { isNumber } from "@/util/types";
 
 import { getDatasetZLevel } from "@/model/dataset";
@@ -128,6 +129,7 @@ interface ViewerProps {
   variableSplitPos?: number;
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
+  showProgressBar: boolean;
   setZoomLevel?: (zoomLevel: number | undefined) => void;
   setDatasetZLevel?: (datasetZLevel: number | undefined) => void;
   zoomBox?: MapElement;
@@ -163,6 +165,7 @@ export default function Viewer({
   imageSmoothing,
   variableSplitPos,
   onMapRef,
+  showProgressBar,
   zoomBox,
   setZoomLevel,
   setDatasetZLevel,
@@ -359,8 +362,12 @@ export default function Viewer({
     }
   };
 
+  const [progress, setProgress] = useState<number>(0);
+  const [visibility, setVisibility] = useState<"visible" | "hidden">("hidden");
+
   const handleTileLoadProgress = useCallback((p: TileLoadProgress) => {
-    console.log("tile load progress:", p);
+    setProgress(p.value);
+    setVisibility(p.active ? "visible" : "hidden");
   }, []);
 
   const handleMapZoom = (
@@ -469,6 +476,11 @@ export default function Viewer({
         {mapPointInfoBox}
         {mapControlActions}
         {mapSplitter}
+        <ProgressBar
+          enabled={showProgressBar}
+          progress={progress}
+          visibility={visibility}
+        />
         {zoomBox}
         <ScaleLine bar={false} />
       </Map>

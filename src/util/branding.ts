@@ -91,6 +91,7 @@ export interface Branding {
   allowViewModePython?: boolean;
   allow3D?: boolean;
   permalinkExpirationDays?: number;
+  showProgressBar?: boolean;
   showZoomInfoBox?: boolean;
 }
 

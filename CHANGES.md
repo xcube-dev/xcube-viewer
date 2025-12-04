@@ -43,6 +43,11 @@
   with a button in the header and it will be shown initially while
   data is loading. (#508) 
   
+* Added a progress bar to the bottom of the map to visualize the progress
+  of tile loading. The visibility of this feature can be controlled in the settings.
+  The initial visibility can be set in `config.json` 
+  (`"branding":{ "showProgressBar": true, ...`), the default is `true`.(#541)
+  
 * A zoom-level indicator was added to the map. This box displays the current 
   zoom level of the map and the dataset resolution level used for displaying it. 
   The visibility of this feature can be controlled in the settings. The initial visibility 
