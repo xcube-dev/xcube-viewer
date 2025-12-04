@@ -397,6 +397,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 updateSettings={updateSettings}
               />
             </SettingsSubPanel>
+            <SettingsSubPanel
+              label={i18n.get("Show zoom level indicator")}
+              value={getOnOff(settings.showZoomInfoBox)}
+            >
+              <ToggleSetting
+                propertyName={"showZoomInfoBox"}
+                settings={settings}
+                updateSettings={updateSettings}
+              />
+            </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("On dataset selection")}>
               <TextField
                 variant="standard"

@@ -33,6 +33,7 @@
     "allowViewModePython": true,
     "allow3D": true,
     "permalinkExpirationDays": 120,
-    "showProgressBar": true
+    "showProgressBar": true,
+    "showZoomInfoBox": true
   }
 }

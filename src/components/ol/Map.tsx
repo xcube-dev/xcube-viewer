@@ -50,6 +50,7 @@ interface MapProps extends OlMapOptions {
   children?: React.ReactNode;
   mapObjects?: { [id: string]: OlBaseObject };
   onClick?: (event: OlMapBrowserEvent<UIEvent>) => void;
+  onZoom?: (event: OlMapBrowserEvent<UIEvent>, map: OlMap | undefined) => void;
   onMapRef?: (map: OlMap | null) => void;
   isStale?: boolean;
   onDropFiles?: (files: File[]) => void;
@@ -83,6 +84,7 @@ export class Map extends React.Component<MapProps, MapState> {
   private loadStartEventsKey: OlEventsKey | null = null;
   private loadEndEventsKey: OlEventsKey | null = null;
   private lastTileLoadProgress: TileLoadProgress | null = null;
+  private zoomEventsKey: OlEventsKey | null = null;
 
   constructor(props: MapProps) {
     super(props);
@@ -115,6 +117,7 @@ export class Map extends React.Component<MapProps, MapState> {
     const mapDiv = this.contextValue.mapDiv!;
 
     let map: OlMap | null = null;
+    let view: OlView | null = null;
     if (this.props.isStale) {
       const mapObject = this.contextValue.mapObjects[id];
       if (mapObject instanceof OlMap) {
@@ -122,6 +125,10 @@ export class Map extends React.Component<MapProps, MapState> {
         map.setTarget(mapDiv);
         if (this.clickEventsKey) {
           map.un("click", this.clickEventsKey.listener);
+        }
+        view = map?.getView();
+        if (this.zoomEventsKey) {
+          view.un("change:resolution", this.zoomEventsKey.listener);
         }
       }
     }
@@ -141,13 +148,15 @@ export class Map extends React.Component<MapProps, MapState> {
       });
     }
 
+    view = map?.getView();
+
     this.contextValue.map = map;
     this.contextValue.mapObjects[id] = map;
 
     this.clickEventsKey = map.on("click", this.handleClick);
     this.loadStartEventsKey = map.on("loadstart", this.handleMapLoadStart);
     this.loadEndEventsKey = map.on("loadend", this.handleMapLoadEnd);
-
+    this.zoomEventsKey = view.on("change:resolution", this.handleZoom);
     //map.set('objectId', this.props.id);
     map.updateSize();
 
@@ -213,6 +222,7 @@ export class Map extends React.Component<MapProps, MapState> {
     const mapOptions = { ...this.props };
     delete mapOptions["children"];
     delete mapOptions["onClick"];
+    delete mapOptions["onZoom"];
     delete mapOptions["onDropFiles"];
     delete mapOptions["onTileLoadProgress"];
     return mapOptions;
@@ -287,6 +297,14 @@ export class Map extends React.Component<MapProps, MapState> {
       return minZoom;
     }
     return 0;
+  };
+
+  private handleZoom = (event: OlEvent) => {
+    const onZoom = this.props.onZoom;
+    const map = this.contextValue.map;
+    if (onZoom) {
+      onZoom(event as OlMapBrowserEvent<UIEvent>, map);
+    }
   };
 
   private handleMapLoadStart = () => {

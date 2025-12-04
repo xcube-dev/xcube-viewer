@@ -97,6 +97,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("themeMode", settings);
       storage.setPrimitiveProperty("exportResolution", settings);
       storage.setPrimitiveProperty("showProgressBar", settings);
+      storage.setPrimitiveProperty("showZoomInfoBox", settings);
       if (import.meta.env.DEV) {
         console.debug("Stored user settings:", settings);
       }

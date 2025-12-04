@@ -92,6 +92,7 @@ export interface Branding {
   allow3D?: boolean;
   permalinkExpirationDays?: number;
   showProgressBar?: boolean;
+  showZoomInfoBox?: boolean;
 }
 
 function setBrandingPaletteColor(

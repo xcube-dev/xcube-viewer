@@ -53,6 +53,8 @@ import { findMapLayer } from "@/components/ol/util";
 import ProgressBar from "@/components/ProgressBar";
 import { isNumber } from "@/util/types";
 
+import { getDatasetZLevel } from "@/model/dataset";
+
 const SELECTION_LAYER_ID = "selection";
 const SELECTION_LAYER_SOURCE = new OlVectorSource();
 
@@ -128,6 +130,9 @@ interface ViewerProps {
   onMapRef?: (map: OlMap | null) => void;
   importUserPlacesFromText?: (text: string) => void;
   showProgressBar: boolean;
+  setZoomLevel?: (zoomLevel: number | undefined) => void;
+  setDatasetZLevel?: (datasetZLevel: number | undefined) => void;
+  zoomBox?: MapElement;
 }
 
 export default function Viewer({
@@ -161,6 +166,9 @@ export default function Viewer({
   variableSplitPos,
   onMapRef,
   showProgressBar,
+  zoomBox,
+  setZoomLevel,
+  setDatasetZLevel,
 }: ViewerProps) {
   theme = useTheme();
 
@@ -362,11 +370,41 @@ export default function Viewer({
     setVisibility(p.active ? "visible" : "hidden");
   }, []);
 
+  const handleMapZoom = (
+    event: OlMapBrowserEvent<UIEvent>,
+    map: OlMap | undefined,
+  ) => {
+    if (setZoomLevel) {
+      const zoomLevel = event.target.getZoom();
+      setZoomLevel(zoomLevel);
+    }
+
+    if (setDatasetZLevel) {
+      const datasetZLevel = getDatasetZLevel(event.target, map);
+      setDatasetZLevel(datasetZLevel);
+    }
+  };
+
+  useEffect(() => {
+    /* Force update of datasetZLevel after variable change. This is needed at
+       the moment and might become redundant in the future.
+       This ensures that datasetZLevel gets set, when the Viewer starts, so that
+       the datasetLevel can be calculated.
+     */
+    if (map) {
+      if (setDatasetZLevel) {
+        const datasetZLevel = getDatasetZLevel(map.getView(), map);
+        setDatasetZLevel(datasetZLevel);
+      }
+    }
+  }, [map, variableLayer, setDatasetZLevel]);
+
   return (
     <ErrorBoundary>
       <Map
         id={mapId}
         onClick={(event) => handleMapClick(event)}
+        onZoom={(event, map) => handleMapZoom(event, map)}
         onMapRef={handleMapRef}
         mapObjects={MAP_OBJECTS}
         isStale={true}
@@ -443,6 +481,7 @@ export default function Viewer({
           progress={progress}
           visibility={visibility}
         />
+        {zoomBox}
         <ScaleLine bar={false} />
       </Map>
     </ErrorBoundary>
