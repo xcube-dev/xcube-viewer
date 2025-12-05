@@ -35,6 +35,7 @@ interface DatasetSelectProps extends WithLocale {
   ) => void;
   layerVisibilities: LayerVisibilities;
   toggleDatasetRgbLayer: (visible: boolean) => void;
+  toggleDatasetVariableLayer: (visible: boolean) => void;
   locateSelectedDataset: () => void;
 }
 
@@ -45,6 +46,7 @@ export default function DatasetSelect({
   selectDataset,
   layerVisibilities,
   toggleDatasetRgbLayer,
+  toggleDatasetVariableLayer,
   locateSelectedDataset,
 }: DatasetSelectProps) {
   const sortedDatasets = useMemo(() => {
@@ -85,10 +87,30 @@ export default function DatasetSelect({
   const handleDatasetChange = (event: SelectChangeEvent) => {
     const datasetId = event.target.value || null;
     selectDataset(datasetId, datasets, true);
-    if (rgbVisible) {
-      toggleDatasetRgbLayer(false);
+    console.log("dataset selected", selectedDataset);
+    console.log("dataset selected", selectedDataset?.rgbSchema);
+    if (rgbVisible && selectedDataset?.rgbSchema) {
+      toggleDatasetVariableLayer(false);
     }
   };
+
+  /*  const handleDatasetChange = (event: SelectChangeEvent) => {
+    const datasetId = event.target.value || null;
+
+    const newDataset = datasets.find((d) => d.id === datasetId);
+
+    selectDataset(datasetId, datasets, true);
+
+    console.log("new dataset", newDataset);
+    console.log("new rgbSchema", newDataset?.rgbSchema);
+
+    if (rgbVisible && !newDataset?.rgbSchema) {
+      toggleDatasetVariableLayer(true);
+    }
+    if (rgbVisible && newDataset?.rgbSchema) {
+      toggleDatasetVariableLayer(false);
+    }
+  };*/
 
   const selectedDatasetId = selectedDataset ? selectedDataset.id : "";
   datasets = datasets || [];

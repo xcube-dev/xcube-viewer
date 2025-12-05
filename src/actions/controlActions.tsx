@@ -297,6 +297,21 @@ export function toggleDatasetRgbLayer(visible: boolean): ToggleDatasetRgbLayer {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const TOGGLE_DATASET_VARIABLE_LAYER = "TOGGLE_DATASET_VARIABLE_LAYER";
+
+export interface ToggleDatasetVariableLayer {
+  type: typeof TOGGLE_DATASET_VARIABLE_LAYER;
+  visible: boolean;
+}
+
+export function toggleDatasetVariableLayer(
+  visible: boolean,
+): ToggleDatasetVariableLayer {
+  return { type: TOGGLE_DATASET_VARIABLE_LAYER, visible };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SET_LAYER_VISIBILITIES = "SET_LAYER_VISIBILITIES";
 
 export interface SetLayerVisibilities {
@@ -831,6 +846,7 @@ export type ControlAction =
   | SelectPlace
   | SelectTime
   | ToggleDatasetRgbLayer
+  | ToggleDatasetVariableLayer
   | SetLayerVisibilities
   | SetLayerGroupStates
   | IncSelectedTime

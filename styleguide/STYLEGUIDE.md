@@ -27,6 +27,14 @@ across all features.
 
 ![statistics_panel.png](img/statistics_panel.png)
 
+- A user’s action remains active until the user revokes it.
+  The app responds dynamically to the user’s settings, not the other way around
+
+  - **Example:** If a user enables the RGB view for datasets, this view remains 
+    active for every dataset the user selects. If a selected dataset does not 
+    have an RGB view configured, the app **responds** by displaying the selected 
+    variable instead.
+
 ### Dialogs
 Each dialog (e.g. User Variables) should offer three ways to close it:
 - **Accept** changes made in the dialog using an `OK` button. 

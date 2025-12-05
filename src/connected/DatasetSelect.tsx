@@ -11,6 +11,7 @@ import { AppState } from "@/states/appState";
 import {
   selectDataset,
   toggleDatasetRgbLayer,
+  toggleDatasetVariableLayer,
   locateSelectedDatasetInMap,
 } from "@/actions/controlActions";
 import {
@@ -31,6 +32,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   selectDataset,
   toggleDatasetRgbLayer,
+  toggleDatasetVariableLayer,
   locateSelectedDataset: locateSelectedDatasetInMap,
 };
 

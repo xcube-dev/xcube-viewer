@@ -42,6 +42,7 @@ import {
   UPDATE_VOLUME_STATE,
   SET_LAYER_GROUP_STATES,
   TOGGLE_DATASET_RGB_LAYER,
+  TOGGLE_DATASET_VARIABLE_LAYER,
 } from "@/actions/controlActions";
 import {
   ADD_DRAWN_USER_PLACE,
@@ -215,6 +216,15 @@ export function controlReducer(
           ...state.layerVisibilities,
           datasetVariable: !action.visible,
           datasetRgb: action.visible,
+        },
+      };
+    }
+    case TOGGLE_DATASET_VARIABLE_LAYER: {
+      return {
+        ...state,
+        layerVisibilities: {
+          ...state.layerVisibilities,
+          datasetVariable: action.visible,
         },
       };
     }
