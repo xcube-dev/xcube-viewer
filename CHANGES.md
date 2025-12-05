@@ -1,4 +1,4 @@
-## Changes in version 1.6.2 (in development) 
+## Changes in version 1.7.0  
 
 ### Improvements
 
