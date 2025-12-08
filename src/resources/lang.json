@@ -1437,9 +1437,9 @@
       "se": "docs/dev-reference.en.md"
     },
     {
-      "en": "../src/resources/about/about.en.md",
-      "de": "../src/resources/about/about.de.md",
-      "se": "../src/resources/about/about.se.md"
+      "en": "about.en.md",
+      "de": "about.en.md",
+      "se": "about.en.md"
     }
   ]
 }
