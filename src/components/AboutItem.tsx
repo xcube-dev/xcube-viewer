@@ -6,11 +6,13 @@
 
 import Markdown from "@/components/Markdown";
 import useFetchText from "@/hooks/useFetchText";
-import i18n from "@/i18n";
+import { Config } from "@/config";
 
 const AboutItem = () => {
-  const text = useFetchText(i18n.get("about.en.md"));
-  return <Markdown text={text} />;
+  const configPath = Config.instance.branding.configPath;
+
+  const text = useFetchText(configPath + "about.en.md");
+  return <Markdown text={text} path={configPath} />;
 };
 
 export default AboutItem;

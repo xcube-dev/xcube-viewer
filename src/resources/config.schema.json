@@ -252,6 +252,14 @@
         "allow3D": {
           "type": "boolean",
           "default": true
+        },
+        "allowAboutPage": {
+          "type": "boolean",
+          "default": true
+        },
+        "configPath": {
+          "type": "string",
+          "default": ""
         }
       },
       "additionalProperties": false

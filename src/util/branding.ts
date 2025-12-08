@@ -93,6 +93,7 @@ export interface Branding {
   permalinkExpirationDays?: number;
   showProgressBar?: boolean;
   showZoomInfoBox?: boolean;
+  configPath?: string;
 }
 
 function setBrandingPaletteColor(
@@ -122,6 +123,13 @@ function setBrandingPaletteColor(
   }
 }
 
+function setBrandingConfigPath(
+  brandingConfig: Record<string, unknown>,
+  configPath: string,
+) {
+  brandingConfig["configPath"] = buildPath(baseUrl.href, configPath);
+}
+
 function setBrandingImage(
   brandingConfig: Record<string, unknown>,
   key: keyof Branding,
@@ -141,5 +149,6 @@ export function parseBranding(
   setBrandingPaletteColor(brandingConfig, "primaryColor");
   setBrandingPaletteColor(brandingConfig, "secondaryColor");
   setBrandingImage(brandingConfig, "logoImage", configPath);
+  setBrandingConfigPath(brandingConfig, configPath);
   return brandingConfig as unknown as Branding;
 }
