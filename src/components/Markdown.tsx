@@ -65,7 +65,7 @@ export default function Markdown({ text, path }: MarkdownProps) {
         return <img src={path ? path + src : src} alt={alt} style={style} />;
       },
     }),
-    [theme],
+    [theme, path],
   );
 
   if (!text) {

@@ -127,7 +127,8 @@ function setBrandingConfigPath(
   brandingConfig: Record<string, unknown>,
   configPath: string,
 ) {
-  brandingConfig["configPath"] = buildPath(baseUrl.href, configPath);
+  const path = buildPath(baseUrl.href, configPath);
+  brandingConfig["configPath"] = path.endsWith("/") ? path : path + "/";
 }
 
 function setBrandingImage(
