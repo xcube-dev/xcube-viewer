@@ -1,8 +1,8 @@
-## Changes in version 1.7.1 (in development)  
+## Changes in version 1.7.1
 
 ### Fixes
 
-* Corrected all path handling to ensure custom about.en.md files can be
+* Corrected path handling to ensure custom about.en.md files can be
   displayed and overridden reliably. Also updated layout of AboutWindow 
   and AppBarMenu to correctly reflect branding configuration 
   `allowAboutPage: false`.
