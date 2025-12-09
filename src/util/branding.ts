@@ -123,6 +123,8 @@ function setBrandingPaletteColor(
   }
 }
 
+// TODO: this property is wrong here.
+//   It should be moved into dataState or an application-global state.`
 function setBrandingConfigPath(
   brandingConfig: Record<string, unknown>,
   configPath: string,
