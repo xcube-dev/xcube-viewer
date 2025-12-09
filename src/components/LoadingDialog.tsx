@@ -6,10 +6,12 @@
 
 import { useState, useEffect } from "react";
 import { WithLocale } from "@/util/lang";
+import i18n from "@/i18n";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { Theme, styled } from "@mui/system";
 
@@ -76,6 +78,9 @@ export default function LoadingDialog({ messages }: LoadingDialogProps) {
         <DialogContent>
           <AboutItem />
         </DialogContent>
+      )}
+      {!Config.instance.branding.allowAboutPage && (
+        <DialogTitle id="loading">{i18n.get("Please wait...")}</DialogTitle>
       )}
       <StyledContainerDiv>
         <StyledProgress />

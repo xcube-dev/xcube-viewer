@@ -189,16 +189,18 @@ export default function AppBarMenu({
           </ListItemIcon>
           <ListItemText>{i18n.get("Imprint")}</ListItemText>
         </MenuItem>
-        <Divider />
         {Config.instance.branding.allowAboutPage && (
-          <MenuItem onClick={handleOpenAbout}>
-            <ListItemIcon>
-              <InfoOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>
-              {i18n.get("About ${appName}", { appName })}
-            </ListItemText>
-          </MenuItem>
+          <>
+            <Divider />
+            <MenuItem onClick={handleOpenAbout}>
+              <ListItemIcon>
+                <InfoOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>
+                {i18n.get("About ${appName}", { appName })}
+              </ListItemText>
+            </MenuItem>
+          </>
         )}
       </Menu>
     </React.Fragment>

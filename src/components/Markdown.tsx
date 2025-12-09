@@ -11,9 +11,10 @@ import remarkGfm from "remark-gfm";
 
 interface MarkdownProps {
   text?: string;
+  path?: string;
 }
 
-export default function Markdown({ text }: MarkdownProps) {
+export default function Markdown({ text, path }: MarkdownProps) {
   const theme = useTheme();
   const components = useMemo(
     () => ({
@@ -61,10 +62,10 @@ export default function Markdown({ text }: MarkdownProps) {
           maxWidth: "100%",
         };
 
-        return <img src={src} alt={alt} style={style} />;
+        return <img src={path ? path + src : src} alt={alt} style={style} />;
       },
     }),
-    [theme],
+    [theme, path],
   );
 
   if (!text) {
