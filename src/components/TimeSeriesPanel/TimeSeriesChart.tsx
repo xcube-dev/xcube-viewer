@@ -110,7 +110,6 @@ interface TimeSeriesChartProps extends WithLocale {
     timeSeries: TimeSeries,
   ) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  selectedDatasetTitle: string | null;
   exportResolution: ExportResolution;
 }
 
@@ -132,7 +131,6 @@ export default function TimeSeriesChart({
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
   postMessage,
-  selectedDatasetTitle,
   exportResolution,
 }: TimeSeriesChartProps) {
   const theme = useTheme();
@@ -334,6 +332,7 @@ export default function TimeSeriesChart({
       const elements = chartContainerRef.current.getElementsByClassName(
         "recharts-legend-wrapper",
       );
+
       if (elements.length !== 0) {
         legendWrapperRef.current = elements.item(0) as HTMLDivElement;
       }
@@ -410,6 +409,7 @@ export default function TimeSeriesChart({
 
   const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
+  console.log("timeseriesgroup", timeSeriesGroup);
   return (
     <StyledContainerDiv>
       <TimeSeriesChartHeader
@@ -479,10 +479,7 @@ export default function TimeSeriesChart({
           )}
           <Legend
             content={
-              <CustomLegend
-                removeTimeSeries={handleRemoveTimeSeriesClick}
-                datasetTitle={selectedDatasetTitle}
-              />
+              <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
             }
           />
           {timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>

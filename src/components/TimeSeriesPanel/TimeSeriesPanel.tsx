@@ -70,7 +70,6 @@ interface TimeSeriesPanelProps extends WithLocale {
   canAddTimeSeries: boolean;
   addTimeSeries: () => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  selectedDatasetTitle: string | null;
   exportResolution: ExportResolution;
 }
 
@@ -82,7 +81,6 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
     selectTimeRange,
     canAddTimeSeries,
     addTimeSeries,
-    selectedDatasetTitle,
     exportResolution,
     ...chartProps
   } = props;
@@ -111,7 +109,6 @@ export default function TimeSeriesPanel(props: TimeSeriesPanelProps) {
             dataTimeRange={dataTimeRange}
             selectedTimeRange={selectedTimeRange}
             selectTimeRange={selectTimeRange}
-            selectedDatasetTitle={selectedDatasetTitle}
             exportResolution={exportResolution}
             {...chartProps}
           />
