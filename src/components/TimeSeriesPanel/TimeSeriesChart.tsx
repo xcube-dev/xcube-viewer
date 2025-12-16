@@ -332,7 +332,6 @@ export default function TimeSeriesChart({
       const elements = chartContainerRef.current.getElementsByClassName(
         "recharts-legend-wrapper",
       );
-
       if (elements.length !== 0) {
         legendWrapperRef.current = elements.item(0) as HTMLDivElement;
       }
@@ -409,7 +408,6 @@ export default function TimeSeriesChart({
 
   const ChartComponent = chartType === "bar" ? BarChart : LineChart;
 
-  console.log("timeseriesgroup", timeSeriesGroup);
   return (
     <StyledContainerDiv>
       <TimeSeriesChartHeader
