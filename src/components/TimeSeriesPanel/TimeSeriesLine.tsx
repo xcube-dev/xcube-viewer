@@ -64,12 +64,11 @@ export default function TimeSeriesLine({
     selectPlace(timeSeries.source.placeId, places, true);
   };
 
-  let lineName = source.variableName;
+  let lineName = `${source.datasetTitle}:${source.variableName}`;
   let lineColor = "red";
   if (source.placeId === null) {
     // Time series is from imported CSV or GeoJSON.
     // Then source.datasetId is the place group name.
-    lineName = `${source.datasetTitle}/${lineName}`;
     // Try detecting line color from a place group's first place color
     let placeLineColor: string | null = null;
     placeGroupTimeSeries.forEach((pgTs) => {
