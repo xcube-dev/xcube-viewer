@@ -2,8 +2,8 @@
 
 ### Fixes
 
-* Fixed time series legends to show the dataset title associated with 
-  each time series. (#574)
+* Fixed time series legend entry to show the dataset title associated with 
+  the time series. (#574)
 
 ## Changes in version 1.7.1
 
