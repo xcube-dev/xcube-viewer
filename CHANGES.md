@@ -2,7 +2,8 @@
 
 ### Fixes
 
-* Show dataset level in ZoomInfoBox when in RGB mode. (#576)
+* Show dataset level in the zoom level info box also if no dataset variable is being 
+  displayed (when in RGB-only mode). (#576)
 
 ## Changes in version 1.7.1
 
