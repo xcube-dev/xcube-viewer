@@ -8,7 +8,7 @@ import OlTileLayer from "ol/layer/Tile";
 import { default as OlMap } from "ol/Map";
 import { default as OlView } from "ol/View";
 
-import { findMapLayer } from "@/components/ol/util";
+import { findDatasetMapLayer } from "@/components/ol/util";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import { type UserVariable } from "@/model/userVariable";
 import { type JsonPrimitive } from "@/util/json";
@@ -153,11 +153,7 @@ export const getDatasetZLevel = (
   if (map) {
     const resolution = view.getResolution();
 
-    // Find the first tile layer named "variable" or "rgb" (in that order)
-    const layer = (["variable", "rgb", "variable2", "rgb2"] as const)
-      .map((name) => findMapLayer(map, name))
-      .find((layer) => layer instanceof OlTileLayer);
-
+    const layer = findDatasetMapLayer(map);
     if (layer instanceof OlTileLayer) {
       const source = layer.getSource();
       const tileGrid = source.getTileGrid();
