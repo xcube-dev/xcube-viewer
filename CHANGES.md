@@ -1,5 +1,9 @@
 ## Changes in version 1.7.2 (in development)
 
+### Fixes
+
+* Show dataset level in ZoomInfoBox when in RGB mode. (#576)
+
 ## Changes in version 1.7.1
 
 ### Fixes
