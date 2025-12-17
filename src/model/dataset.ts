@@ -154,7 +154,7 @@ export const getDatasetZLevel = (
     const resolution = view.getResolution();
 
     // Find the first tile layer named "variable" or "rgb" (in that order)
-    const layer = (["variable", "rgb"] as const)
+    const layer = (["variable", "rgb", "variable2", "rgb2"] as const)
       .map((name) => findMapLayer(map, name))
       .find((layer) => layer instanceof OlTileLayer);
 
