@@ -110,7 +110,6 @@ interface TimeSeriesChartProps extends WithLocale {
     timeSeries: TimeSeries,
   ) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
-  selectedDatasetTitle: string | null;
   exportResolution: ExportResolution;
 }
 
@@ -132,7 +131,6 @@ export default function TimeSeriesChart({
   placeGroupTimeSeries,
   addPlaceGroupTimeSeries,
   postMessage,
-  selectedDatasetTitle,
   exportResolution,
 }: TimeSeriesChartProps) {
   const theme = useTheme();
@@ -479,10 +477,7 @@ export default function TimeSeriesChart({
           )}
           <Legend
             content={
-              <CustomLegend
-                removeTimeSeries={handleRemoveTimeSeriesClick}
-                datasetTitle={selectedDatasetTitle}
-              />
+              <CustomLegend removeTimeSeries={handleRemoveTimeSeriesClick} />
             }
           />
           {timeSeriesGroup.timeSeriesArray.map((_, timeSeriesIndex) =>
