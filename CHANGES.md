@@ -1,5 +1,10 @@
 ## Changes in version 1.7.2 (in development)
 
+### Fixes
+
+* Fixed time series legend entry to show the dataset title associated with 
+  the time series. (#574)
+
 ## Changes in version 1.7.1
 
 ### Fixes
