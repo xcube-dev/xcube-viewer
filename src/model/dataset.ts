@@ -8,7 +8,7 @@ import OlTileLayer from "ol/layer/Tile";
 import { default as OlMap } from "ol/Map";
 import { default as OlView } from "ol/View";
 
-import { findMapLayer } from "@/components/ol/util";
+import { findDatasetMapLayer } from "@/components/ol/util";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
 import { type UserVariable } from "@/model/userVariable";
 import { type JsonPrimitive } from "@/util/json";
@@ -145,14 +145,15 @@ export function getDatasetTimeRange(dataset: Dataset): TimeRange | null {
   return [coordinates[0], coordinates[coordinates.length - 1]];
 }
 
-// this returns the level of the current OLTileLayer of the selected variable
+// Returns the level of the current OLTileLayer of the selected variable
 export const getDatasetZLevel = (
   view: OlView,
   map: OlMap | undefined,
 ): number | undefined => {
   if (map) {
     const resolution = view.getResolution();
-    const layer = findMapLayer(map, "variable");
+
+    const layer = findDatasetMapLayer(map);
     if (layer instanceof OlTileLayer) {
       const source = layer.getSource();
       const tileGrid = source.getTileGrid();

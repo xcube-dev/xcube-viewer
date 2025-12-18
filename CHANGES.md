@@ -5,6 +5,9 @@
 * Fixed time series legend entry to show the dataset title associated with 
   the time series. (#574)
 
+* Show dataset level in the zoom level info box also if no dataset variable is being 
+  displayed (when in RGB-only mode). (#576)
+
 ## Changes in version 1.7.1
 
 ### Fixes

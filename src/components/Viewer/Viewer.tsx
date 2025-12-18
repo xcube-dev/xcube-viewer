@@ -397,7 +397,14 @@ export default function Viewer({
         setDatasetZLevel(datasetZLevel);
       }
     }
-  }, [map, variableLayer, setDatasetZLevel]);
+  }, [
+    map,
+    variableLayer,
+    variable2Layer,
+    rgbLayer,
+    rgb2Layer,
+    setDatasetZLevel,
+  ]);
 
   return (
     <ErrorBoundary>
