@@ -26,6 +26,7 @@ import rawDefaultConfig from "@/resources/config.json";
 import { type AuthClientConfig } from "@/util/auth";
 import { type Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
+import { setConfigPath } from "@/util/configPath";
 import { buildPath } from "@/util/path";
 import { isNumber } from "./util/types";
 import { hasViewerStateApi } from "@/api/hasViewerStateApi";
@@ -63,6 +64,7 @@ export class Config {
     if (rawConfig === rawDefaultConfig) {
       configPath = "";
     }
+    setConfigPath(configPath);
 
     const name = (rawConfig.name || "default") as string;
     const authClient = this.getAuthConfig(rawConfig);

@@ -260,10 +260,6 @@
         "allowAboutPage": {
           "type": "boolean",
           "default": false
-        },
-        "configPath": {
-          "type": "string",
-          "default": ""
         }
       },
       "additionalProperties": false

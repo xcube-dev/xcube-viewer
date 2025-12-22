@@ -6,12 +6,14 @@
 
 import Markdown from "@/components/Markdown";
 import useFetchText from "@/hooks/useFetchText";
-import { Config } from "@/config";
+import { getConfigPath } from "@/util/configPath";
+import { buildPath } from "@/util/path";
 
 const AboutItem = () => {
-  const configPath = Config.instance.branding.configPath;
+  const configPath = getConfigPath();
+  const aboutItemPath = buildPath(configPath, "about.en.md");
 
-  const text = useFetchText(configPath + "about.en.md");
+  const text = useFetchText(aboutItemPath);
   return <Markdown text={text} path={configPath} />;
 };
 
