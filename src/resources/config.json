@@ -25,14 +25,13 @@
     "defaultAgg": "mean",
     "polygonFillOpacity": 0.2,
     "mapProjection": "EPSG:3857",
-    "allowAboutPage": true,
+    "allowAboutPage": false,
     "allowDownloads": true,
     "allowRefresh": true,
     "allowSharing": true,
     "allowUserVariables": true,
     "allowViewModePython": true,
     "allow3D": true,
-    "permalinkExpirationDays": 120,
     "showProgressBar": true,
     "showZoomInfoBox": true
   }
