@@ -40,6 +40,7 @@ const controlStateProps: readonly (keyof ControlState)[] = [
   "userOverlays",
   "userColorBars",
   "mapProjection",
+  "zoomLevel",
 ];
 
 type PersistedDataState = Pick<DataState, (typeof dataStateProps)[number]>;
