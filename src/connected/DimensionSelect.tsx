@@ -12,11 +12,13 @@ import { selectDimensionCoordinate } from "@/actions/controlActions";
 import {
   selectedDimensionSelector,
   selectedDimensionCoordinateSelector,
+  selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
+    selectedVariable: selectedVariableSelector(state),
     dimension: selectedDimensionSelector(state),
     selectedDimensionCoordinate: selectedDimensionCoordinateSelector(state),
   };

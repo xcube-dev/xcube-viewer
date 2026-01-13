@@ -15,8 +15,10 @@ import { WithLocale } from "@/util/lang";
 
 import ControlBarItem from "./ControlBarItem";
 import { Dimension } from "@/model/dataset";
+import { Variable } from "@/model/variable";
 
 interface DimensionSelectProps extends WithLocale {
+  selectedVariable: Variable | null;
   dimension: Dimension | null;
   selectedDimensionCoordinate: string | null;
   selectDimensionCoordinate: (
@@ -25,11 +27,14 @@ interface DimensionSelectProps extends WithLocale {
 }
 
 export default function DimensionSelect({
+  selectedVariable,
   dimension,
   selectedDimensionCoordinate,
   selectDimensionCoordinate,
 }: DimensionSelectProps) {
-  if (!dimension) return null;
+  // only show DimensionSelect if selectedVariables has another Dim
+  if (!dimension || !selectedVariable?.dims?.includes(dimension.name))
+    return null;
 
   const handleDimensionChange = (event: SelectChangeEvent) => {
     selectDimensionCoordinate(event.target.value || null);
