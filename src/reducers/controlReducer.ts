@@ -16,6 +16,7 @@ import {
   REMOVE_ACTIVITY,
   REMOVE_USER_COLOR_BAR,
   SELECT_DATASET,
+  SELECT_DIMENSION_COORDINATE,
   SELECT_PLACE,
   SELECT_PLACE_GROUPS,
   SELECT_TIME,
@@ -582,6 +583,12 @@ export function controlReducer(
       return {
         ...state,
         datasetZLevel: action.datasetZLevel,
+      };
+    }
+    case SELECT_DIMENSION_COORDINATE: {
+      return {
+        ...state,
+        selectedDimensionCoordinate: action.selectedDimensionCoordinate,
       };
     }
     case CONFIGURE_SERVERS: {

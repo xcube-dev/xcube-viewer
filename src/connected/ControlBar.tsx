@@ -20,6 +20,7 @@ import TimeSlider from "./TimeSlider";
 import TimePlayer from "./TimePlayer";
 import ControlBarActions from "./ControlBarActions";
 import Divider from "@mui/material/Divider";
+import DimensionSelect from "@/connected/DimensionSelect";
 
 interface ControlBarProps extends WithLocale {
   show: boolean;
@@ -43,6 +44,8 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
       <DatasetSelect />
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <VariableSelect />
+      <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
+      <DimensionSelect />
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <PlaceGroupsSelect />
       <PlaceSelect />

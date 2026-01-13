@@ -140,6 +140,7 @@ export interface ControlState {
   showZoomInfoBox: boolean;
   zoomLevel: number | undefined;
   datasetZLevel: number | undefined;
+  selectedDimensionCoordinate: string | null;
 }
 
 export function newControlState(): ControlState {
@@ -225,6 +226,7 @@ export function newControlState(): ControlState {
     showZoomInfoBox: branding.showZoomInfoBox || false,
     zoomLevel: undefined,
     datasetZLevel: undefined,
+    selectedDimensionCoordinate: null, // "0.5016462206840515",
   };
   return loadUserSettings(state);
 }

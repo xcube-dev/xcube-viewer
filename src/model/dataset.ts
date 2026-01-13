@@ -96,6 +96,18 @@ export function findDatasetVariable(
   );
 }
 
+export function findDatasetDimension(
+  dataset: Dataset,
+  dimensionName: string | null,
+): Dimension | null {
+  return (
+    (dimensionName &&
+      dataset.dimensions.find(
+        (dimension) => dimension.name === dimensionName,
+      )) ||
+    null
+  );
+}
 export function getDatasetUserVariablesIndex(dataset: Dataset): number {
   // vIndex is the first index that is a user variable.
   return dataset.variables.findIndex((v) => isString(v.expression));

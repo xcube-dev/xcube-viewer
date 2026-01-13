@@ -851,6 +851,21 @@ export function setDatasetZLevel(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SELECT_DIMENSION_COORDINATE = "SELECT_DIMENSION_COORDINATE";
+
+export interface SelectDimensionCoordinate {
+  type: typeof SELECT_DIMENSION_COORDINATE;
+  selectedDimensionCoordinate: string | null;
+}
+
+export function selectDimensionCoordinate(
+  selectedDimensionCoordinate: string | null,
+): SelectDimensionCoordinate {
+  return { type: SELECT_DIMENSION_COORDINATE, selectedDimensionCoordinate };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
   | SelectDataset
   | UpdateDatasetPlaceGroup
@@ -890,4 +905,5 @@ export type ControlAction =
   | UpdateVariableSplitPos
   | FlyTo
   | SetZoomLevel
-  | SetDatasetZLevel;
+  | SetDatasetZLevel
+  | SelectDimensionCoordinate;
