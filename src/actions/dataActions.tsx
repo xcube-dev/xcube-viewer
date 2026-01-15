@@ -848,7 +848,7 @@ export function _configureServers(
 ////////////////////////////////////////////////////////////////////////////////
 
 export function syncWithServer(store: Store, init: boolean = false) {
-  return async (dispatch: Dispatch) => {
+  return (dispatch: Dispatch) => {
     dispatch(updateServerInfo() as unknown as Action);
     dispatch(updateExpressionCapabilities() as unknown as Action);
     dispatch(updateColorBars() as unknown as Action);
