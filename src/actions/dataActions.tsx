@@ -855,15 +855,10 @@ export function syncWithServer(store: Store, init: boolean = false) {
     dispatch(initializeExtensions(store) as unknown as Action);
 
     const stateKey = appParams.get("stateKey");
-    const hasStateKey = Boolean(stateKey);
-
-    if (hasStateKey && init) {
-      dispatch(restorePersistedState(store, stateKey!) as unknown as Action);
+    if (stateKey && init) {
+      dispatch(restorePersistedState(store, stateKey) as unknown as Action);
     } else {
-      await dispatch(updateDatasets() as unknown as Action);
-      if (hasStateKey) {
-        dispatch(restorePersistedState(store, stateKey!) as unknown as Action);
-      }
+      dispatch(updateDatasets() as unknown as Action);
     }
   };
 }

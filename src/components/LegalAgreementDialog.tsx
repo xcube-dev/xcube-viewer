@@ -31,7 +31,7 @@ interface LegalAgreementDialogProps {
   open: boolean;
   settings: ControlState;
   updateSettings: (settings: ControlState) => void;
-  syncWithServer: (store: Store) => void;
+  syncWithServer: (store: Store, init: boolean) => void;
 }
 
 export default function LegalAgreementDialog({
@@ -58,7 +58,7 @@ export default function LegalAgreementDialog({
 
   function handleConfirm() {
     updateSettings({ ...settings, privacyNoticeAccepted: true });
-    syncWithServer(store);
+    syncWithServer(store, true);
   }
 
   function handleLeave() {
