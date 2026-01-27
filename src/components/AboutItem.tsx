@@ -7,11 +7,12 @@
 import Markdown from "@/components/Markdown";
 import { Config } from "@/config";
 import useFetchText from "@/hooks/useFetchText";
+import baseUrl from "@/util/baseurl";
 import { buildPath } from "@/util/path";
 
 const AboutItem = () => {
   const configPath = Config.instance.configPath;
-  const aboutItemPath = buildPath(configPath, "about.en.md");
+  const aboutItemPath = buildPath(baseUrl.href, configPath, "about.en.md");
 
   const text = useFetchText(aboutItemPath);
   return <Markdown text={text} path={configPath} />;
