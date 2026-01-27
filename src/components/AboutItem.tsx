@@ -5,10 +5,9 @@
  */
 
 import Markdown from "@/components/Markdown";
+import { Config } from "@/config";
 import useFetchText from "@/hooks/useFetchText";
 import { buildPath } from "@/util/path";
-
-import { Config } from "@/config";
 
 const AboutItem = () => {
   const configPath = Config.instance.configPath;
