@@ -26,7 +26,6 @@ import rawDefaultConfig from "@/resources/config.json";
 import { type AuthClientConfig } from "@/util/auth";
 import { type Branding, parseBranding } from "@/util/branding";
 import baseUrl from "@/util/baseurl";
-import { setConfigPath } from "@/util/configPath";
 import { buildPath } from "@/util/path";
 import { isNumber } from "./util/types";
 import { hasViewerStateApi } from "@/api/hasViewerStateApi";
@@ -44,6 +43,7 @@ export class Config {
   readonly server: ApiServerConfig;
   readonly branding: Branding;
   readonly authClient?: AuthClientConfig;
+  readonly configPath: string;
   private static _instance: Config;
 
   constructor(
@@ -51,11 +51,13 @@ export class Config {
     server: ApiServerConfig,
     branding: Branding,
     authClient?: AuthClientConfig,
+    configPath: string = "",
   ) {
     this.name = name;
     this.server = server;
     this.branding = branding;
     this.authClient = authClient;
+    this.configPath = configPath;
   }
 
   static async load(): Promise<Config> {
@@ -64,7 +66,6 @@ export class Config {
     if (rawConfig === rawDefaultConfig) {
       configPath = "";
     }
-    setConfigPath(configPath);
 
     const name = (rawConfig.name || "default") as string;
     const authClient = this.getAuthConfig(rawConfig);
@@ -88,7 +89,13 @@ export class Config {
         branding = { ...branding, allowSharing: false };
       }
     }
-    Config._instance = new Config(name, server, branding, authClient);
+    Config._instance = new Config(
+      name,
+      server,
+      branding,
+      authClient,
+      configPath,
+    );
     if (import.meta.env.DEV) {
       console.debug("Configuration:", Config._instance);
     }
