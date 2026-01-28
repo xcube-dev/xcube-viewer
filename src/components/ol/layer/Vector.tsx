@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 by xcube team and contributors
+ * Copyright (c) 2019-2026 by xcube team and contributors
  * Permissions are hereby granted under the terms of the MIT License:
  * https://opensource.org/licenses/MIT.
  */
@@ -13,8 +13,7 @@ import { MapComponent, MapComponentProps } from "../MapComponent";
 import { processLayerProperties } from "./common";
 
 interface VectorProps
-  extends MapComponentProps,
-    OlVectorLayerOptions<OlVectorSource> {}
+  extends MapComponentProps, OlVectorLayerOptions<OlVectorSource> {}
 
 export class Vector extends MapComponent<
   OlVectorLayer<OlVectorSource>,
