@@ -851,17 +851,17 @@ export function setDatasetZLevel(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SELECT_DIMENSION_COORDINATE = "SELECT_DIMENSION_COORDINATE";
+export const SELECT_DEPTH_COORDINATE = "SELECT_DEPTH_COORDINATE";
 
-export interface SelectDimensionCoordinate {
-  type: typeof SELECT_DIMENSION_COORDINATE;
-  selectedDimensionCoordinate: string | null;
+export interface SelectDepthCoordinate {
+  type: typeof SELECT_DEPTH_COORDINATE;
+  selectedDepthCoordinate: number | string | null;
 }
 
-export function selectDimensionCoordinate(
-  selectedDimensionCoordinate: string | null,
-): SelectDimensionCoordinate {
-  return { type: SELECT_DIMENSION_COORDINATE, selectedDimensionCoordinate };
+export function selectDepthCoordinate(
+  selectedDepthCoordinate: number | string | null,
+): SelectDepthCoordinate {
+  return { type: SELECT_DEPTH_COORDINATE, selectedDepthCoordinate };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -906,4 +906,4 @@ export type ControlAction =
   | FlyTo
   | SetZoomLevel
   | SetDatasetZLevel
-  | SelectDimensionCoordinate;
+  | SelectDepthCoordinate;

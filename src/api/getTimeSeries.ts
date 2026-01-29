@@ -34,6 +34,7 @@ export function getTimeSeriesForGeometry(
   useMedian: boolean,
   includeStdev: boolean,
   accessToken: string | null,
+  depth: number | string | null,
 ): Promise<TimeSeries | null> {
   let valueDataKey: keyof TimeSeriesPoint;
   let errorDataKey: keyof TimeSeriesPoint | null = null;
@@ -54,6 +55,9 @@ export function getTimeSeriesForGeometry(
   }
   if (endDate) {
     query.push(["endDate", endDate]);
+  }
+  if (depth) {
+    query.push(["depth", String(depth)]);
   }
   const url = makeRequestUrl(
     `${apiServerUrl}/timeseries/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
@@ -85,6 +89,7 @@ export function getTimeSeriesForGeometry(
       geometry,
       valueDataKey,
       errorDataKey,
+      depth,
     };
     return { source, data: points };
   };

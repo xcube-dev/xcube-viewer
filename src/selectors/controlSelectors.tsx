@@ -159,8 +159,8 @@ export const zoomLevelSelector = (state: AppState) =>
   state.controlState.zoomLevel;
 export const selectedDatasetZLevelSelector = (state: AppState) =>
   state.controlState.datasetZLevel;
-export const selectedDimensionCoordinateSelector = (state: AppState) =>
-  state.controlState.selectedDimensionCoordinate;
+export const selectedDepthCoordinateSelector = (state: AppState) =>
+  state.controlState.selectedDepthCoordinate;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -268,19 +268,18 @@ export const selectedVariable2Selector = createSelector(
 
 const _findDatasetDimension = (
   dataset: Dataset | null,
-  // dimName: string | null,
+  dimName: string | null,
 ): Dimension | null => {
-  const dimName = "depth";
   if (!dataset || !dimName) {
     return null;
   }
   return findDatasetDimension(dataset, dimName);
 };
 
-const dimensionNameSelector = () => "depth";
-export const selectedDimensionSelector = createSelector(
+const depthNameSelector = () => "depth";
+export const selectedDepthSelector = createSelector(
   selectedDatasetSelector,
-  dimensionNameSelector, //selectedDimensionNameSelector,
+  depthNameSelector,
   _findDatasetDimension,
 );
 
@@ -631,13 +630,15 @@ export const canAddTimeSeriesSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
   selectedPlaceIdSelector,
+  selectedDepthCoordinateSelector,
   (
     timeSeriesGroups: TimeSeriesGroup[],
     datasetId: string | null,
     variableName: string | null,
     placeId: string | null,
+    depth: number | string | null,
   ): boolean => {
-    if (!datasetId || !variableName || !placeId) {
+    if (!datasetId || !variableName || !placeId || !depth) {
       return false;
     }
     for (const timeSeriesGroup of timeSeriesGroups) {
@@ -646,7 +647,8 @@ export const canAddTimeSeriesSelector = createSelector(
         if (
           source.datasetId === datasetId &&
           source.variableName === variableName &&
-          source.placeId === placeId
+          source.placeId === placeId &&
+          source.depth === depth
         ) {
           return false;
         }
@@ -1084,10 +1086,9 @@ const getVariableTileLayer = (
   timeAnimationActive: boolean,
   mapProjection: string,
   imageSmoothing: boolean,
-  otherDimension: Dimension | null,
-  otherDimensionLabel: string | null,
+  depth: Dimension | null,
+  depthLabel: number | string | null,
 ): MapElement => {
-  // const otherDimensionLabel = "46.907535552978516";
   if (!dataset || !variable || !visibility) {
     return null;
   }
@@ -1096,16 +1097,14 @@ const getVariableTileLayer = (
     ["vmin", `${colorBarMinMax[0]}`],
     ["vmax", `${colorBarMinMax[1]}`],
     ["cmap", colorBarJson ? colorBarJson : colorBarName],
-    //  ["depth", "46.907535552978516"], //"148.90380859375"], //#"4.684081077575684"],
     // ['retina', '1'],
   ];
   if (colorBarNorm === "log") {
     queryParams.push(["norm", colorBarNorm]);
   }
 
-  if (otherDimension && otherDimensionLabel) {
-    console.log(otherDimension.name);
-    queryParams.push([otherDimension.name, otherDimensionLabel]);
+  if (depth && depthLabel) {
+    queryParams.push([depth.name, String(depthLabel)]);
   }
   return getTileLayer(
     layerId,
@@ -1124,7 +1123,6 @@ const getVariableTileLayer = (
   );
 };
 
-//export const selectedDimensionCoordinateSelector = () => "46.907535552978516";
 export const selectedDatasetVariableLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetSelector,
@@ -1142,8 +1140,8 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
-  selectedDimensionSelector,
-  selectedDimensionCoordinateSelector, // selectedDimensionLabelSelector "46.907535552978516",
+  selectedDepthSelector,
+  selectedDepthCoordinateSelector,
   getVariableTileLayer,
 );
 
@@ -1164,8 +1162,8 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
-  selectedDimensionSelector,
-  selectedDimensionCoordinateSelector, // selectedDimensionLabelSelector "46.907535552978516",
+  selectedDepthSelector,
+  selectedDepthCoordinateSelector,
   getVariableTileLayer,
 );
 

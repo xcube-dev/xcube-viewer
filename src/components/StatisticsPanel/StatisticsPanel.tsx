@@ -37,6 +37,7 @@ interface StatisticsPanelProps {
   removeStatistics: (index: number) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   exportResolution: ExportResolution;
+  selectedDepth: number | string | null;
 }
 
 export default function StatisticsPanel({
@@ -51,6 +52,7 @@ export default function StatisticsPanel({
   removeStatistics,
   postMessage,
   exportResolution,
+  selectedDepth,
 }: StatisticsPanelProps) {
   return (
     <Box sx={styles.container}>
@@ -62,6 +64,7 @@ export default function StatisticsPanel({
         canAddStatistics={canAddStatistics}
         addStatistics={addStatistics}
         statisticsLoading={statisticsLoading}
+        selectedDepth={selectedDepth}
       />
       {statisticsRecords.map((sr, rowIndex) => (
         <StatisticsDataRow

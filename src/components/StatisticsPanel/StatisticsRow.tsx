@@ -41,6 +41,7 @@ interface StatisticsRowProps extends WithLocale {
   variable: Variable | null;
   time: string | null;
   placeInfo: PlaceInfo | null;
+  depth: number | string | null;
   actions: React.ReactNode;
   body?: React.ReactNode;
   containerRef?: RefObject<HTMLDivElement>;
@@ -55,6 +56,7 @@ export default function StatisticsRow({
   variable,
   time,
   placeInfo,
+  depth,
   actions,
   body,
   containerRef,
@@ -73,6 +75,15 @@ export default function StatisticsRow({
   ) : isTimeDimensionAvailable ? (
     <Missing phrase="Time" />
   ) : null;
+
+  const isDepthDimensionAvailable = variable?.dims?.includes("depth");
+  const depthLabel =
+    depth && isDepthDimensionAvailable ? (
+      String(depth)
+    ) : isDepthDimensionAvailable ? (
+      <Missing phrase="Depth" />
+    ) : null;
+
   const placeLabel = placeInfo ? placeInfo.label : <Missing phrase="Place" />;
 
   return (
@@ -80,7 +91,8 @@ export default function StatisticsRow({
       <Box sx={styles.header}>
         <Typography fontSize="small" variant="inherit" component="span">
           {datasetLabel} / {variableLabel}
-          {timeLabel && `, ${timeLabel}`}, {placeLabel}
+          {timeLabel && `, ${timeLabel}`}
+          {depthLabel && `, Depth: ${depthLabel}`}, {placeLabel}
         </Typography>
         <Box id="statistics-row-buttons" sx={styles.actions}>
           {actions}

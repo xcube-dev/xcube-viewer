@@ -35,6 +35,7 @@ import {
   selectedDatasetSelector,
   selectedDatasetTimeDimensionSelector,
   selectedDatasetTimeLabelSelector,
+  selectedDepthCoordinateSelector,
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
@@ -572,10 +573,15 @@ export function addStatistics() {
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidePanelOpen = getState().controlState.sidePanelOpen;
     const sidePanelId = getState().controlState.sidePanelId;
+    const selectedDepth = selectedDepthCoordinateSelector(getState());
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
+
+    // check if variable has dimension `depth`
+    const hasDepth = selectedVariable?.dims?.includes("depth");
+    const selectedDepthLabel = hasDepth ? selectedDepth : null;
 
     if (sidePanelId !== "stats") {
       dispatch(setSidePanelId("stats"));
@@ -592,6 +598,7 @@ export function addStatistics() {
         selectedPlaceInfo,
         selectedTimeLabel,
         getState().userAuthState.accessToken,
+        selectedDepthLabel,
       )
       .then((stats) => dispatch(_addStatistics(stats)))
       .catch((error: Error) => {
@@ -649,6 +656,7 @@ export function addTimeSeries() {
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
     const sidebarOpen = getState().controlState.sidePanelOpen;
     const sidebarPanelId = getState().controlState.sidePanelId;
+    const selectedDepth = selectedDepthCoordinateSelector(getState());
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -677,6 +685,11 @@ export function addTimeSeries() {
         const startDateLabel =
           startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
         const endDateLabel = timeLabels[endTimeIndex];
+
+        // check if variable has dimension `depth`
+        const hasDepth = selectedVariable?.dims?.includes("depth");
+        const depthLabel = hasDepth ? selectedDepth : null;
+
         return api.getTimeSeriesForGeometry(
           apiServer.url,
           selectedDataset,
@@ -688,6 +701,7 @@ export function addTimeSeries() {
           useMedian,
           includeStdev,
           getState().userAuthState.accessToken,
+          depthLabel,
         );
       };
 

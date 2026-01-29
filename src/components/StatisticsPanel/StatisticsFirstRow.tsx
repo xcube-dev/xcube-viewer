@@ -29,6 +29,7 @@ interface StatisticsFirstRowProps extends WithLocale {
   canAddStatistics: boolean;
   addStatistics: () => void;
   statisticsLoading: boolean;
+  selectedDepth: number | string | null;
 }
 
 export default function StatisticsFirstRow({
@@ -39,6 +40,7 @@ export default function StatisticsFirstRow({
   canAddStatistics,
   addStatistics,
   statisticsLoading,
+  selectedDepth,
 }: StatisticsFirstRowProps) {
   return (
     <StatisticsRow
@@ -46,6 +48,7 @@ export default function StatisticsFirstRow({
       variable={selectedVariable}
       time={selectedTime}
       placeInfo={selectedPlaceInfo}
+      depth={selectedDepth}
       actions={
         statisticsLoading ? (
           <CircularProgress size={20} sx={styles.progress} />

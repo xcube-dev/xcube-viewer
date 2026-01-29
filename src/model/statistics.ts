@@ -13,6 +13,7 @@ export interface StatisticsSource {
   variable: Variable;
   time: string | null;
   placeInfo: PlaceInfo;
+  depth: number | string | null;
 }
 
 export interface Histogram {

@@ -34,6 +34,7 @@ export interface TimeSeriesSource {
   geometry: geojson.Geometry | null;
   valueDataKey: keyof TimeSeriesPoint;
   errorDataKey: keyof TimeSeriesPoint | null;
+  depth: number | string | null;
 }
 
 export interface TimeSeriesPoint {
@@ -261,6 +262,7 @@ export function placeGroupToTimeSeries(
             geometry: null, // could be computed later from data points (as GeometryCollection)
             valueDataKey: "mean",
             errorDataKey: null,
+            depth: null,
           },
           data: [point],
           dataProgress: 1.0,
