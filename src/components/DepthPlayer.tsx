@@ -18,7 +18,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
-import { TimeAnimationInterval } from "@/states/controlState";
+import { DimensionAnimationInterval } from "@/states/controlState";
 import { makeStyles } from "@/util/styles";
 import { Variable } from "@/model/variable";
 import { Dimension } from "@/model/dataset";
@@ -43,11 +43,11 @@ interface DepthPlayerProps extends WithLocale {
     selectedDepthCoordinate: number | string | null,
   ) => void;
   depthAnimationActive: boolean;
-  depthAnimationInterval: TimeAnimationInterval;
+  dimensionAnimationInterval: DimensionAnimationInterval;
   incSelectedDepth: (increment: -1 | 1) => void;
   updateDepthAnimation: (
     active: boolean,
-    interval: TimeAnimationInterval,
+    interval: DimensionAnimationInterval,
   ) => void;
 }
 
@@ -58,7 +58,7 @@ export default function DepthPlayer({
   selectDepthCoordinate,
   incSelectedDepth,
   depthAnimationActive,
-  depthAnimationInterval,
+  dimensionAnimationInterval,
   updateDepthAnimation,
 }: DepthPlayerProps) {
   const intervalId = useRef<number | null>(null);
@@ -81,7 +81,7 @@ export default function DepthPlayer({
     uninstallTimer();
     intervalId.current = window.setInterval(
       handlePlayEvent,
-      depthAnimationInterval,
+      dimensionAnimationInterval,
     );
   };
 
@@ -108,9 +108,7 @@ export default function DepthPlayer({
   };
 
   const handlePlayButtonClick = () => {
-    console.log("PLAY");
-    console.log("depthAnimationActive", depthAnimationActive);
-    updateDepthAnimation(!depthAnimationActive, depthAnimationInterval);
+    updateDepthAnimation(!depthAnimationActive, dimensionAnimationInterval);
   };
 
   const handleNextTimeStepButtonClick = () => {

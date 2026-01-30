@@ -35,7 +35,7 @@ import type {
   LayerVisibilities,
   LayerGroupStates,
   MapInteraction,
-  TimeAnimationInterval,
+  DimensionAnimationInterval,
   ViewMode,
   VolumeRenderMode,
   VolumeState,
@@ -499,17 +499,17 @@ export const UPDATE_TIME_ANIMATION = "UPDATE_TIME_ANIMATION";
 export interface UpdateTimeAnimation {
   type: typeof UPDATE_TIME_ANIMATION;
   timeAnimationActive: boolean;
-  timeAnimationInterval: TimeAnimationInterval;
+  dimensionAnimationInterval: DimensionAnimationInterval;
 }
 
 export function updateTimeAnimation(
   timeAnimationActive: boolean,
-  timeAnimationInterval: TimeAnimationInterval,
+  dimensionAnimationInterval: DimensionAnimationInterval,
 ): UpdateTimeAnimation {
   return {
     type: UPDATE_TIME_ANIMATION,
     timeAnimationActive,
-    timeAnimationInterval,
+    dimensionAnimationInterval,
   };
 }
 
@@ -520,17 +520,17 @@ export const UPDATE_DEPTH_ANIMATION = "UPDATE_DEPTH_ANIMATION";
 export interface UpdateDepthAnimation {
   type: typeof UPDATE_DEPTH_ANIMATION;
   depthAnimationActive: boolean;
-  depthAnimationInterval: TimeAnimationInterval;
+  dimensionAnimationInterval: DimensionAnimationInterval;
 }
 
 export function updateDepthAnimation(
   depthAnimationActive: boolean,
-  depthAnimationInterval: TimeAnimationInterval,
+  dimensionAnimationInterval: DimensionAnimationInterval,
 ): UpdateDepthAnimation {
   return {
     type: UPDATE_DEPTH_ANIMATION,
     depthAnimationActive,
-    depthAnimationInterval,
+    dimensionAnimationInterval,
   };
 }
 

@@ -19,11 +19,11 @@ import { Theme, useTheme } from "@mui/material";
 import i18n from "@/i18n";
 import { ApiServerConfig, ApiServerInfo } from "@/model/apiServer";
 import {
-  TIME_ANIMATION_INTERVALS,
+  DIMENSION_ANIMATION_INTERVALS,
   ControlState,
   LocateMode,
   TimeSeriesChartType,
-  TimeAnimationInterval,
+  DimensionAnimationInterval,
   THEME_LABELS,
   ThemeMode,
   ExportResolution,
@@ -131,9 +131,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     updateSettings({
-      timeAnimationInterval: parseInt(
+      dimensionAnimationInterval: parseInt(
         event.target.value,
-      ) as TimeAnimationInterval,
+      ) as DimensionAnimationInterval,
     });
   }
 
@@ -246,11 +246,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 variant="standard"
                 select
                 sx={styles.textField}
-                value={settings.timeAnimationInterval}
+                value={settings.dimensionAnimationInterval}
                 onChange={handleTimeAnimationIntervalChange}
                 margin="normal"
               >
-                {TIME_ANIMATION_INTERVALS.map((value, i) => (
+                {DIMENSION_ANIMATION_INTERVALS.map((value, i) => (
                   <MenuItem key={i} value={value}>
                     {value + " ms"}
                   </MenuItem>

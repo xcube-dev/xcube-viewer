@@ -26,7 +26,7 @@ const mapStateToProps = (state: AppState) => {
     depth: selectedDepthSelector(state),
     selectedDepthCoordinate: selectedDepthCoordinateSelector(state),
     depthAnimationActive: state.controlState.depthAnimationActive,
-    depthAnimationInterval: state.controlState.depthAnimationInterval,
+    dimensionAnimationInterval: state.controlState.dimensionAnimationInterval,
   };
 };
 

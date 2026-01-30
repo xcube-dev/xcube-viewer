@@ -23,8 +23,8 @@ import { loadUserSettings } from "./userSettings";
 import { PaletteMode } from "@mui/material";
 import { LayerState } from "@/model/layerState";
 
-export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
-export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
+export type DimensionAnimationInterval = 250 | 500 | 1000 | 2500;
+export const DIMENSION_ANIMATION_INTERVALS: DimensionAnimationInterval[] = [
   250, 500, 1000, 2500,
 ];
 
@@ -93,7 +93,6 @@ export interface ControlState {
   selectedTimeRange: TimeRange | null;
   timeSeriesUpdateMode: "add" | "replace";
   timeAnimationActive: boolean;
-  timeAnimationInterval: TimeAnimationInterval;
   timeChunkSize: number;
   autoShowTimeSeries: boolean;
   timeSeriesChartTypeDefault: TimeSeriesChartType;
@@ -142,7 +141,7 @@ export interface ControlState {
   datasetZLevel: number | undefined;
   selectedDepthCoordinate: number | string | null;
   depthAnimationActive: boolean;
-  depthAnimationInterval: TimeAnimationInterval;
+  dimensionAnimationInterval: DimensionAnimationInterval;
 }
 
 export function newControlState(): ControlState {
@@ -160,7 +159,6 @@ export function newControlState(): ControlState {
     selectedTimeRange: null,
     timeSeriesUpdateMode: "add",
     timeAnimationActive: false,
-    timeAnimationInterval: 1000,
     timeChunkSize: 20,
     autoShowTimeSeries: true,
     timeSeriesChartTypeDefault: "line",
@@ -230,7 +228,7 @@ export function newControlState(): ControlState {
     datasetZLevel: undefined,
     selectedDepthCoordinate: null,
     depthAnimationActive: false,
-    depthAnimationInterval: 1000,
+    dimensionAnimationInterval: 1000,
   };
   return loadUserSettings(state);
 }

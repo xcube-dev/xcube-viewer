@@ -354,7 +354,7 @@ export function controlReducer(
       return {
         ...state,
         timeAnimationActive: action.timeAnimationActive,
-        timeAnimationInterval: action.timeAnimationInterval,
+        DimensionAnimationInterval: action.timeAnimationInterval,
       };
     }
     case UPDATE_DEPTH_ANIMATION: {
