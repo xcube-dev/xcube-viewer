@@ -12,6 +12,7 @@ import {
   ControlAction,
   FLY_TO,
   INC_SELECTED_TIME,
+  INC_SELECTED_DEPTH,
   OPEN_DIALOG,
   REMOVE_ACTIVITY,
   REMOVE_USER_COLOR_BAR,
@@ -42,6 +43,7 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SIDE_PANEL_SIZE,
   UPDATE_TIME_ANIMATION,
+  UPDATE_DEPTH_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VARIABLE_SPLIT_POS,
   UPDATE_VOLUME_STATE,
@@ -62,6 +64,8 @@ import {
   getDatasetTimeRange,
 } from "@/model/dataset";
 import {
+  selectedDatasetDepthCoordinatesSelector,
+  selectedDatasetDepthIndexSelector,
   selectedDatasetTimeCoordinatesSelector,
   selectedDatasetTimeIndexSelector,
 } from "@/selectors/controlSelectors";
@@ -309,6 +313,31 @@ export function controlReducer(
       }
       return state;
     }
+    case INC_SELECTED_DEPTH: {
+      if (appState) {
+        let index = selectedDatasetDepthIndexSelector(appState);
+        console.log("Index", index);
+        if (index >= 0) {
+          const depthCoordinates =
+            selectedDatasetDepthCoordinatesSelector(appState)!;
+          index += action.increment;
+          if (index < 0) {
+            index = depthCoordinates.length - 1;
+          }
+          if (index > depthCoordinates.length - 1) {
+            index = 0;
+          }
+          const selectedDepth = depthCoordinates[index];
+          if (state.selectedDepthCoordinate !== selectedDepth) {
+            return {
+              ...state,
+              selectedDepthCoordinate: selectedDepth,
+            };
+          }
+        }
+      }
+      return state;
+    }
     case SELECT_TIME_RANGE: {
       return {
         ...state,
@@ -326,6 +355,13 @@ export function controlReducer(
         ...state,
         timeAnimationActive: action.timeAnimationActive,
         timeAnimationInterval: action.timeAnimationInterval,
+      };
+    }
+    case UPDATE_DEPTH_ANIMATION: {
+      return {
+        ...state,
+        depthAnimationActive: action.depthAnimationActive,
+        depthAnimationInterval: action.depthAnimationInterval,
       };
     }
     case ADD_DRAWN_USER_PLACE: {

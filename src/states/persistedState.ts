@@ -40,7 +40,7 @@ const controlStateProps: readonly (keyof ControlState)[] = [
   "userOverlays",
   "userColorBars",
   "mapProjection",
-  "selectedDimensionCoordinate",
+  "selectedDepthCoordinate",
 ];
 
 type PersistedDataState = Pick<DataState, (typeof dataStateProps)[number]>;

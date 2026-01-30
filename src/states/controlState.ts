@@ -141,6 +141,8 @@ export interface ControlState {
   zoomLevel: number | undefined;
   datasetZLevel: number | undefined;
   selectedDepthCoordinate: number | string | null;
+  depthAnimationActive: boolean;
+  depthAnimationInterval: TimeAnimationInterval;
 }
 
 export function newControlState(): ControlState {
@@ -227,6 +229,8 @@ export function newControlState(): ControlState {
     zoomLevel: undefined,
     datasetZLevel: undefined,
     selectedDepthCoordinate: null,
+    depthAnimationActive: false,
+    depthAnimationInterval: 1000,
   };
   return loadUserSettings(state);
 }

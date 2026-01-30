@@ -52,9 +52,6 @@ export default function DepthSliderProps({
     );
   }, [selectedDepthCoordinate, depth]);
 
-  if (!depth) {
-    return null;
-  }
   // only show DepthSelect if selectedVariables has depth dim
   // and selectedDepthCoordinate
   if (

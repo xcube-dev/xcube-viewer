@@ -22,6 +22,7 @@ import ControlBarActions from "./ControlBarActions";
 import Divider from "@mui/material/Divider";
 import DepthSelect from "@/connected/DepthSelect";
 import DepthSlider from "@/connected/DepthSlider";
+import DepthPlayer from "@/connected/DepthPlayer";
 
 interface ControlBarProps extends WithLocale {
   show: boolean;
@@ -47,6 +48,7 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
       <VariableSelect />
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <DepthSelect />
+      <DepthPlayer />
       <DepthSlider />
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <PlaceGroupsSelect />

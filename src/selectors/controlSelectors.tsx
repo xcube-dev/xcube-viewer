@@ -816,6 +816,47 @@ export const selectedDataset2TimeIndexSelector = createSelector(
   _getTimeIndex,
 );
 
+const _getDimensionCoordinates = (
+  dimension: Dimension | null,
+): number[] | null => {
+  if (dimension === null || dimension.coordinates.length === 0) {
+    return null;
+  }
+  return dimension.coordinates;
+};
+
+export const selectedDatasetDepthCoordinatesSelector = createSelector(
+  selectedDepthSelector,
+  _getDimensionCoordinates,
+);
+
+export const selectedDataset2DepthCoordinatesSelector = createSelector(
+  selectedDepthSelector,
+  _getDimensionCoordinates,
+);
+
+const _getDimensionIndex = (
+  value: number | string | null,
+  dimensionCoordinates: number[] | null,
+): number => {
+  if (value === null || dimensionCoordinates === null) {
+    return -1;
+  }
+  return findIndexCloseTo(dimensionCoordinates, value as number); //TODO `as number` should be removed/unnecessary
+};
+
+export const selectedDatasetDepthIndexSelector = createSelector(
+  selectedDepthCoordinateSelector,
+  selectedDatasetDepthCoordinatesSelector,
+  _getDimensionIndex,
+);
+
+export const selectedDataset2DepthIndexSelector = createSelector(
+  selectedDepthCoordinateSelector,
+  selectedDataset2DepthCoordinatesSelector,
+  _getDimensionIndex,
+);
+
 const _getTimeLabel = (
   time: Time | null,
   timeIndex: number,

@@ -446,6 +446,19 @@ export function incSelectedTime(increment: -1 | 1): IncSelectedTime {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const INC_SELECTED_DEPTH = "INC_SELECTED_DEPTH";
+
+export interface IncSelectedDepth {
+  type: typeof INC_SELECTED_DEPTH;
+  increment: -1 | 1;
+}
+
+export function incSelectedDepth(increment: -1 | 1): IncSelectedDepth {
+  return { type: INC_SELECTED_DEPTH, increment };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_TIME_RANGE = "SELECT_TIME_RANGE";
 
 export interface SelectTimeRange {
@@ -497,6 +510,27 @@ export function updateTimeAnimation(
     type: UPDATE_TIME_ANIMATION,
     timeAnimationActive,
     timeAnimationInterval,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_DEPTH_ANIMATION = "UPDATE_DEPTH_ANIMATION";
+
+export interface UpdateDepthAnimation {
+  type: typeof UPDATE_DEPTH_ANIMATION;
+  depthAnimationActive: boolean;
+  depthAnimationInterval: TimeAnimationInterval;
+}
+
+export function updateDepthAnimation(
+  depthAnimationActive: boolean,
+  depthAnimationInterval: TimeAnimationInterval,
+): UpdateDepthAnimation {
+  return {
+    type: UPDATE_DEPTH_ANIMATION,
+    depthAnimationActive,
+    depthAnimationInterval,
   };
 }
 
@@ -877,9 +911,11 @@ export type ControlAction =
   | SetLayerVisibilities
   | SetLayerGroupStates
   | IncSelectedTime
+  | IncSelectedDepth
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode
   | UpdateTimeAnimation
+  | UpdateDepthAnimation
   | SetMapInteraction
   | AddActivity
   | RemoveActivity
