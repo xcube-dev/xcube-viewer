@@ -35,7 +35,7 @@ import {
   selectedDatasetSelector,
   selectedDatasetTimeDimensionSelector,
   selectedDatasetTimeLabelSelector,
-  selectedDepthCoordinateSelector,
+  selectedDepthSelector,
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
@@ -573,7 +573,7 @@ export function addStatistics() {
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidePanelOpen = getState().controlState.sidePanelOpen;
     const sidePanelId = getState().controlState.sidePanelId;
-    const selectedDepth = selectedDepthCoordinateSelector(getState());
+    const selectedDepth = selectedDepthSelector(getState());
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
@@ -656,7 +656,7 @@ export function addTimeSeries() {
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
     const sidebarOpen = getState().controlState.sidePanelOpen;
     const sidebarPanelId = getState().controlState.sidePanelId;
-    const selectedDepth = selectedDepthCoordinateSelector(getState());
+    const selectedDepth = selectedDepthSelector(getState());
 
     const placeGroups = placeGroupsSelector(getState());
 

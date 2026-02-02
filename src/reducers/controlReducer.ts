@@ -17,7 +17,7 @@ import {
   REMOVE_ACTIVITY,
   REMOVE_USER_COLOR_BAR,
   SELECT_DATASET,
-  SELECT_DEPTH_COORDINATE,
+  SELECT_DEPTH,
   SELECT_PLACE,
   SELECT_PLACE_GROUPS,
   SELECT_TIME,
@@ -316,7 +316,6 @@ export function controlReducer(
     case INC_SELECTED_DEPTH: {
       if (appState) {
         let index = selectedDatasetDepthIndexSelector(appState);
-        console.log("Index", index);
         if (index >= 0) {
           const depthCoordinates =
             selectedDatasetDepthCoordinatesSelector(appState)!;
@@ -328,10 +327,10 @@ export function controlReducer(
             index = 0;
           }
           const selectedDepth = depthCoordinates[index];
-          if (state.selectedDepthCoordinate !== selectedDepth) {
+          if (state.selectedDepth !== selectedDepth) {
             return {
               ...state,
-              selectedDepthCoordinate: selectedDepth,
+              selectedDepth: selectedDepth,
             };
           }
         }
@@ -354,14 +353,14 @@ export function controlReducer(
       return {
         ...state,
         timeAnimationActive: action.timeAnimationActive,
-        DimensionAnimationInterval: action.timeAnimationInterval,
+        dimensionAnimationInterval: action.dimensionAnimationInterval,
       };
     }
     case UPDATE_DEPTH_ANIMATION: {
       return {
         ...state,
         depthAnimationActive: action.depthAnimationActive,
-        depthAnimationInterval: action.depthAnimationInterval,
+        dimensionAnimationInterval: action.dimensionAnimationInterval,
       };
     }
     case ADD_DRAWN_USER_PLACE: {
@@ -621,10 +620,10 @@ export function controlReducer(
         datasetZLevel: action.datasetZLevel,
       };
     }
-    case SELECT_DEPTH_COORDINATE: {
+    case SELECT_DEPTH: {
       return {
         ...state,
-        selectedDepthCoordinate: action.selectedDepthCoordinate,
+        selectedDepth: action.selectedDepth,
       };
     }
     case CONFIGURE_SERVERS: {

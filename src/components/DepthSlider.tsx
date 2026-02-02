@@ -30,38 +30,39 @@ const styles = makeStyles({
 
 interface DepthSliderProps {
   selectedVariable: Variable | null;
-  depth: Dimension | null;
-  selectedDepthCoordinate: number | string | null;
-  selectDepthCoordinate: (
-    selectedDepthCoordinate: number | string | null,
-  ) => void;
+  selectedDepthDimension: Dimension | null;
+  selectedDepth: number | string | null;
+  selectDepth: (selectedDepth: number | string | null) => void;
 }
 
 export default function DepthSliderProps({
   selectedVariable,
-  depth,
-  selectedDepthCoordinate,
-  selectDepthCoordinate,
+  selectedDepthDimension,
+  selectedDepth,
+  selectDepth,
 }: DepthSliderProps) {
-  const [selectedDepth_, setSelectedDepth_] = useState(selectedDepthCoordinate);
+  const [selectedDepth_, setSelectedDepth_] = useState(selectedDepth);
 
   useEffect(() => {
     setSelectedDepth_(
-      selectedDepthCoordinate ||
-        (depth?.coordinates ? depth.coordinates[0] : 0),
+      selectedDepth ||
+        (selectedDepthDimension?.coordinates
+          ? selectedDepthDimension.coordinates[0]
+          : 0),
     );
-  }, [selectedDepthCoordinate, depth]);
+  }, [selectedDepth, selectedDepthDimension]);
 
   // only show DepthSelect if selectedVariables has depth dim
-  // and selectedDepthCoordinate
+  // and selectedDepth
   if (
-    !depth ||
-    !selectedVariable?.dims?.includes(depth.name) ||
-    !selectedDepthCoordinate
+    !selectedDepthDimension ||
+    !selectedVariable?.dims?.includes(selectedDepthDimension.name) ||
+    !selectedDepth
   )
     return null;
 
-  let selectedDepthCoordinates = depth.coordinates;
+  //TODO use selector selectedDatasetDepthCoordiantes ...
+  let selectedDepthCoordinates = selectedDepthDimension.coordinates;
 
   const handleChange = (_event: Event, value: number | number[]) => {
     if (typeof value === "number") {
@@ -73,8 +74,8 @@ export default function DepthSliderProps({
     _event: React.SyntheticEvent | Event,
     value: number | number[],
   ) => {
-    if (selectDepthCoordinate && typeof value === "number") {
-      selectDepthCoordinate(value as number);
+    if (selectDepth && typeof value === "number") {
+      selectDepth(value as number);
     }
   };
 

@@ -159,8 +159,8 @@ export const zoomLevelSelector = (state: AppState) =>
   state.controlState.zoomLevel;
 export const selectedDatasetZLevelSelector = (state: AppState) =>
   state.controlState.datasetZLevel;
-export const selectedDepthCoordinateSelector = (state: AppState) =>
-  state.controlState.selectedDepthCoordinate;
+export const selectedDepthSelector = (state: AppState) =>
+  state.controlState.selectedDepth;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -277,7 +277,7 @@ const _findDatasetDimension = (
 };
 
 const depthNameSelector = () => "depth";
-export const selectedDepthSelector = createSelector(
+export const selectedDatasetDepthDimensionSelector = createSelector(
   selectedDatasetSelector,
   depthNameSelector,
   _findDatasetDimension,
@@ -630,7 +630,7 @@ export const canAddTimeSeriesSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
   selectedPlaceIdSelector,
-  selectedDepthCoordinateSelector,
+  selectedDepthSelector,
   (
     timeSeriesGroups: TimeSeriesGroup[],
     datasetId: string | null,
@@ -826,12 +826,12 @@ const _getDimensionCoordinates = (
 };
 
 export const selectedDatasetDepthCoordinatesSelector = createSelector(
-  selectedDepthSelector,
+  selectedDatasetDepthDimensionSelector,
   _getDimensionCoordinates,
 );
 
 export const selectedDataset2DepthCoordinatesSelector = createSelector(
-  selectedDepthSelector,
+  selectedDatasetDepthDimensionSelector,
   _getDimensionCoordinates,
 );
 
@@ -846,13 +846,13 @@ const _getDimensionIndex = (
 };
 
 export const selectedDatasetDepthIndexSelector = createSelector(
-  selectedDepthCoordinateSelector,
+  selectedDepthSelector,
   selectedDatasetDepthCoordinatesSelector,
   _getDimensionIndex,
 );
 
 export const selectedDataset2DepthIndexSelector = createSelector(
-  selectedDepthCoordinateSelector,
+  selectedDepthSelector,
   selectedDataset2DepthCoordinatesSelector,
   _getDimensionIndex,
 );
@@ -1181,8 +1181,8 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
+  selectedDatasetDepthDimensionSelector,
   selectedDepthSelector,
-  selectedDepthCoordinateSelector,
   getVariableTileLayer,
 );
 
@@ -1203,8 +1203,8 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
+  selectedDatasetDepthDimensionSelector,
   selectedDepthSelector,
-  selectedDepthCoordinateSelector,
   getVariableTileLayer,
 );
 

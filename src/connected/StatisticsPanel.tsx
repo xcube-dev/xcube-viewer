@@ -12,7 +12,7 @@ import {
   resolvedStatisticsRecordsSelector,
   selectedDatasetSelector,
   selectedDatasetTimeLabelSelector,
-  selectedDepthCoordinateSelector,
+  selectedDepthSelector,
   selectedPlaceInfoSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
@@ -31,7 +31,7 @@ const mapStateToProps = (state: AppState) => {
     statisticsRecords: resolvedStatisticsRecordsSelector(state),
     canAddStatistics: canAddStatisticsSelector(state),
     exportResolution: state.controlState.exportResolution,
-    selectedDepth: selectedDepthCoordinateSelector(state),
+    selectedDepth: selectedDepthSelector(state),
   };
 };
 

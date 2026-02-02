@@ -8,10 +8,10 @@ import { connect } from "react-redux";
 
 import _DepthSelect from "@/components/DepthSelect";
 import { AppState } from "@/states/appState";
-import { selectDepthCoordinate } from "@/actions/controlActions";
+import { selectDepth } from "@/actions/controlActions";
 import {
+  selectedDatasetDepthDimensionSelector,
   selectedDepthSelector,
-  selectedDepthCoordinateSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
@@ -19,13 +19,13 @@ const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
     selectedVariable: selectedVariableSelector(state),
-    depth: selectedDepthSelector(state),
-    selectedDepthCoordinate: selectedDepthCoordinateSelector(state),
+    selectedDepthDimension: selectedDatasetDepthDimensionSelector(state),
+    selectedDepth: selectedDepthSelector(state),
   };
 };
 
 const mapDispatchToProps = {
-  selectDepthCoordinate,
+  selectDepth,
 };
 
 const DepthSelect = connect(mapStateToProps, mapDispatchToProps)(_DepthSelect);

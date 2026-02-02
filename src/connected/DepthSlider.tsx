@@ -8,10 +8,10 @@ import { connect } from "react-redux";
 
 import { AppState } from "@/states/appState";
 import _DepthSlider from "@/components/DepthSlider";
-import { selectDepthCoordinate } from "@/actions/controlActions";
+import { selectDepth } from "@/actions/controlActions";
 import {
-  selectedDepthCoordinateSelector,
   selectedDepthSelector,
+  selectedDatasetDepthDimensionSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
@@ -19,13 +19,13 @@ const mapStateToProps = (state: AppState) => {
   return {
     selectedVariable: selectedVariableSelector(state),
     locale: state.controlState.locale,
-    depth: selectedDepthSelector(state),
-    selectedDepthCoordinate: selectedDepthCoordinateSelector(state),
+    selectedDepthDimension: selectedDatasetDepthDimensionSelector(state),
+    selectedDepth: selectedDepthSelector(state),
   };
 };
 
 const mapDispatchToProps = {
-  selectDepthCoordinate,
+  selectDepth,
 };
 
 const DepthSlider = connect(mapStateToProps, mapDispatchToProps)(_DepthSlider);

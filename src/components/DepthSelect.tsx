@@ -20,60 +20,60 @@ import { useEffect } from "react";
 
 interface DepthSelectProps extends WithLocale {
   selectedVariable: Variable | null;
-  depth: Dimension | null;
-  selectedDepthCoordinate: number | string | null;
-  selectDepthCoordinate: (
-    selectedDepthCoordinate: number | string | null,
-  ) => void;
+  selectedDepthDimension: Dimension | null;
+  selectedDepth: number | string | null;
+  selectDepth: (selectedDepth: number | string | null) => void;
 }
 
 export default function DepthSelect({
   selectedVariable,
-  depth,
-  selectedDepthCoordinate,
-  selectDepthCoordinate,
+  selectedDepthDimension,
+  selectedDepth,
+  selectDepth,
 }: DepthSelectProps) {
   useEffect(() => {
-    if (!selectedDepthCoordinate && depth?.coordinates?.length) {
-      selectDepthCoordinate(depth.coordinates[0]);
+    if (!selectedDepth && selectedDepthDimension?.coordinates?.length) {
+      selectDepth(selectedDepthDimension.coordinates[0]);
     }
-  }, [selectedDepthCoordinate, depth, selectDepthCoordinate]);
+  }, [selectedDepth, selectedDepthDimension, selectDepth]);
 
   // only show DepthSelect if selectedVariables has depth dim
-  // and selectedDepthCoordinate
+  // and selectedDepth
   if (
-    !depth ||
-    !selectedVariable?.dims?.includes(depth.name) ||
-    !selectedDepthCoordinate
+    !selectedDepthDimension ||
+    !selectedVariable?.dims?.includes(selectedDepthDimension.name) ||
+    !selectedDepth
   )
     return null;
 
   const handleDepthChange = (event: SelectChangeEvent) => {
-    selectDepthCoordinate(Number(event.target.value));
+    selectDepth(Number(event.target.value));
   };
 
   const depthSelectLabel = (
     <InputLabel shrink htmlFor="depth-select">
       {i18n.get("Depth")}{" "}
-      {depth?.name
-        ? `(${depth.name.charAt(0).toUpperCase() + depth.name.slice(1)})`
+      {selectedDepthDimension?.name
+        ? `(${selectedDepthDimension.name.charAt(0).toUpperCase() + selectedDepthDimension.name.slice(1)})`
         : ""}
     </InputLabel>
   );
 
   const depthSelect = (
     <Select
+      /*      autoWidth={false}*/
       variant="standard"
       value={
-        String(selectedDepthCoordinate) //|| String(depth.coordinates[0]) || ""
+        String(selectedDepth) //|| String(depth.coordinates[0]) || ""
       }
       onChange={handleDepthChange}
       input={<Input name="depthDimension" id="depth-select" />}
       displayEmpty
       name="depthDimension"
       renderValue={(value) => value || "Select coordinate"}
+      sx={{ width: "150px" }}
     >
-      {(depth.coordinates || []).map((coordinate) => {
+      {(selectedDepthDimension.coordinates || []).map((coordinate) => {
         return (
           <MenuItem key={coordinate} value={coordinate}>
             <ListItemText primary={coordinate} />

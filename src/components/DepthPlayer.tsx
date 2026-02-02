@@ -37,11 +37,9 @@ const styles = makeStyles({
 
 interface DepthPlayerProps extends WithLocale {
   selectedVariable: Variable | null;
-  depth: Dimension | null;
-  selectedDepthCoordinate: number | string | null;
-  selectDepthCoordinate: (
-    selectedDepthCoordinate: number | string | null,
-  ) => void;
+  selectedDepthDimension: Dimension | null;
+  selectedDepth: number | string | null;
+  selectDepth: (selectedDepth: number | string | null) => void;
   depthAnimationActive: boolean;
   dimensionAnimationInterval: DimensionAnimationInterval;
   incSelectedDepth: (increment: -1 | 1) => void;
@@ -53,9 +51,9 @@ interface DepthPlayerProps extends WithLocale {
 
 export default function DepthPlayer({
   selectedVariable,
-  depth,
-  selectedDepthCoordinate,
-  selectDepthCoordinate,
+  selectedDepthDimension,
+  selectedDepth,
+  selectDepth,
   incSelectedDepth,
   depthAnimationActive,
   dimensionAnimationInterval,
@@ -63,7 +61,6 @@ export default function DepthPlayer({
 }: DepthPlayerProps) {
   const intervalId = useRef<number | null>(null);
 
-  console.log("depthAnimationActive", depthAnimationActive);
   useEffect(() => {
     playOrNot();
     return uninstallTimer;
@@ -93,15 +90,15 @@ export default function DepthPlayer({
   };
 
   // only show DepthSelect if selectedVariables has depth dim
-  // and selectedDepthCoordinate
+  // and selectedDepth
   if (
-    !depth ||
-    !selectedVariable?.dims?.includes(depth.name) ||
-    !selectedDepthCoordinate
+    !selectedDepthDimension ||
+    !selectedVariable?.dims?.includes(selectedDepthDimension.name) ||
+    !selectedDepth
   )
     return null;
 
-  const selectedDepthCoordinates = depth.coordinates;
+  const selectedDepthCoordinates = selectedDepthDimension.coordinates;
 
   const handlePlayEvent = () => {
     incSelectedDepth(1);
@@ -120,20 +117,18 @@ export default function DepthPlayer({
   };
 
   const handleFirstTimeStepButtonClick = () => {
-    selectDepthCoordinate(
-      selectedDepthCoordinates ? selectedDepthCoordinates[0] : null,
-    );
+    selectDepth(selectedDepthCoordinates ? selectedDepthCoordinates[0] : null);
   };
 
   const handleLastTimeStepButtonClick = () => {
-    selectDepthCoordinate(
+    selectDepth(
       selectedDepthCoordinates
         ? selectedDepthCoordinates[selectedDepthCoordinates.length - 1]
         : null,
     );
   };
 
-  const isValid = typeof selectedDepthCoordinate === "number";
+  const isValid = typeof selectedDepth === "number";
 
   const playIcon = depthAnimationActive ? (
     <PauseCircleOutlineIcon />

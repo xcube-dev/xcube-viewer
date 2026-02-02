@@ -11,11 +11,11 @@ import _DepthPlayer from "@/components/DepthPlayer";
 import {
   incSelectedDepth,
   updateDepthAnimation,
-  selectDepthCoordinate,
+  selectDepth,
 } from "@/actions/controlActions";
 import {
-  selectedDepthCoordinateSelector,
   selectedDepthSelector,
+  selectedDatasetDepthDimensionSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
@@ -23,15 +23,15 @@ const mapStateToProps = (state: AppState) => {
   return {
     locale: state.controlState.locale,
     selectedVariable: selectedVariableSelector(state),
-    depth: selectedDepthSelector(state),
-    selectedDepthCoordinate: selectedDepthCoordinateSelector(state),
+    selectedDepthDimension: selectedDatasetDepthDimensionSelector(state),
+    selectedDepth: selectedDepthSelector(state),
     depthAnimationActive: state.controlState.depthAnimationActive,
     dimensionAnimationInterval: state.controlState.dimensionAnimationInterval,
   };
 };
 
 const mapDispatchToProps = {
-  selectDepthCoordinate,
+  selectDepth,
   incSelectedDepth,
   updateDepthAnimation,
 };
