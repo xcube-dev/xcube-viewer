@@ -93,7 +93,6 @@ export interface Branding {
   permalinkExpirationDays?: number;
   showProgressBar?: boolean;
   showZoomInfoBox?: boolean;
-  configPath?: string;
 }
 
 function setBrandingPaletteColor(
@@ -123,16 +122,6 @@ function setBrandingPaletteColor(
   }
 }
 
-// TODO: this property is wrong here.
-//   It should be moved into dataState or an application-global state.`
-function setBrandingConfigPath(
-  brandingConfig: Record<string, unknown>,
-  configPath: string,
-) {
-  const path = buildPath(baseUrl.href, configPath);
-  brandingConfig["configPath"] = path.endsWith("/") ? path : path + "/";
-}
-
 function setBrandingImage(
   brandingConfig: Record<string, unknown>,
   key: keyof Branding,
@@ -152,6 +141,5 @@ export function parseBranding(
   setBrandingPaletteColor(brandingConfig, "primaryColor");
   setBrandingPaletteColor(brandingConfig, "secondaryColor");
   setBrandingImage(brandingConfig, "logoImage", configPath);
-  setBrandingConfigPath(brandingConfig, configPath);
   return brandingConfig as unknown as Branding;
 }
