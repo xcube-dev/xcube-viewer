@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 by xcube team and contributors
+ * Copyright (c) 2019-2026 by xcube team and contributors
  * Permissions are hereby granted under the terms of the MIT License:
  * https://opensource.org/licenses/MIT.
  */
@@ -31,7 +31,7 @@ interface LegalAgreementDialogProps {
   open: boolean;
   settings: ControlState;
   updateSettings: (settings: ControlState) => void;
-  syncWithServer: (store: Store) => void;
+  syncWithServer: (store: Store, init: boolean) => void;
 }
 
 export default function LegalAgreementDialog({
@@ -58,7 +58,7 @@ export default function LegalAgreementDialog({
 
   function handleConfirm() {
     updateSettings({ ...settings, privacyNoticeAccepted: true });
-    syncWithServer(store);
+    syncWithServer(store, true);
   }
 
   function handleLeave() {
