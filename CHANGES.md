@@ -8,8 +8,12 @@
 * Show dataset level in the zoom level info box also if no dataset variable is being 
   displayed (when in RGB-only mode). (#576)
   
+* Fix zoom level info box not updating correctly when opening a viewer 
+  from a permalink. (#581)
+
 * Ensure that a persited viewer state gets restored after accepting the
   LegalAgreementDialog. (#570)
+
 
 ## Changes in version 1.7.1
 
