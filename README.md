@@ -65,15 +65,15 @@ Build `xcube-viewer` for deployment with `default` branding:
 
 Find outputs in `./dist`.
 
-### Update `xcube` by a new `xcube-viewer` build
+### Update `xcube` with a new `xcube-viewer` build
 
-To bundle the `xcube` package with a new `xcube-viewer` version first build 
+To bundle the `xcube` package with a new `xcube-viewer` version, first build 
 `xcube-viewer` as described above.
-Then, in the xcube repo checked out from GitHub replace the contents the 
-`xcube/webapi/viewer/data` directory with the contents of the `./dist` 
-directory. Note, it is important to replace the contents, 
-do not just copy. 
-Finally, add new files to git and commit all changes.  
+Then, in the xcube repo checked out from GitHub, replace the contents of the 
+`xcube/webapi/viewer/dist` directory with the contents of the `./dist` 
+directory. Note: it is important to replace the contents;
+do not just copy them.
+Finally, add the new files to git and commit all changes.
 
 
 ## Developer Guide
