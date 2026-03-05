@@ -101,7 +101,7 @@ export default function DepthSliderProps({
 
   return (
     <Box sx={styles.box}>
-      <Tooltip arrow title={i18n.get("Select depth")}>
+      <Tooltip arrow title={i18n.get("Select value in dimension")}>
         <Slider
           disabled={!selectedDepthRangeValid}
           min={min}

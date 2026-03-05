@@ -10,7 +10,6 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
-import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 
 import ControlBarItem from "./ControlBarItem";
@@ -52,9 +51,8 @@ export default function DepthSelect({
 
   const depthSelectLabel = (
     <InputLabel shrink htmlFor="depth-select">
-      {i18n.get("Depth")}{" "}
-      {selectedDepthDimension?.name
-        ? `(${selectedDepthDimension.name.charAt(0).toUpperCase() + selectedDepthDimension.name.slice(1)})`
+      {selectedDepthDimension.name
+        ? `${selectedDepthDimension.name.charAt(0).toUpperCase() + selectedDepthDimension.name.slice(1)}`
         : ""}
     </InputLabel>
   );

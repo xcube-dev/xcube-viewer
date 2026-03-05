@@ -628,7 +628,7 @@
     {
       "en": "Auto-step through times in the dataset",
       "de": "Zeiten im Datensatz automatisch durchlaufen",
-      "se": "Kör automatiskt genom tider i dataposten"
+      "se": "Stega automatiskt genom tider i dataposten"
     },
     {
       "en": "First time step",
@@ -654,6 +654,36 @@
       "en": "Select time in dataset",
       "de": "Datensatz-Zeit auswählen",
       "se": "Välj tid i dataset"
+    },
+    {
+      "en": "Auto-step through dimension",
+      "de": "Dimension automatisch durchlaufen",
+      "se": "Stega automatiskt genom dimensionen"
+    },
+    {
+      "en": "First step",
+      "de": "Erster Schritt",
+      "se": "Första steg"
+    },
+    {
+      "en": "Last step",
+      "de": "Letzter Schritt",
+      "se": "Sista steg"
+    },
+    {
+      "en": "Previous step",
+      "de": "Vorheriger Schritt",
+      "se": "Föregående steg"
+    },
+    {
+      "en": "Next step",
+      "de": "Nächster Schritt",
+      "se": "Nästa steg"
+    },
+    {
+      "en": "Select value in dimension",
+      "de": "Wert in der Dimension auswählen",
+      "se": "Välj värde i dimensionen"
     },
     {
       "en": "Refresh",

@@ -143,10 +143,7 @@ export default function DepthPlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip
-        arrow
-        title={i18n.get("Auto-step through depths in the dataset")}
-      >
+      <Tooltip arrow title={i18n.get("Auto-step through dimension")}>
         {playIcon}
       </Tooltip>
     </IconButton>
@@ -159,7 +156,7 @@ export default function DepthPlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("First depth step")}>
+      <Tooltip arrow title={i18n.get("First step")}>
         <FirstPageIcon />
       </Tooltip>
     </IconButton>
@@ -172,7 +169,7 @@ export default function DepthPlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("Previous depth step")}>
+      <Tooltip arrow title={i18n.get("Previous step")}>
         <ChevronLeftIcon />
       </Tooltip>
     </IconButton>
@@ -184,7 +181,7 @@ export default function DepthPlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("Next depth step")}>
+      <Tooltip arrow title={i18n.get("Next step")}>
         <ChevronRightIcon />
       </Tooltip>
     </IconButton>
@@ -196,7 +193,7 @@ export default function DepthPlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("Last depth step")}>
+      <Tooltip arrow title={i18n.get("Last step")}>
         <LastPageIcon />
       </Tooltip>
     </IconButton>
