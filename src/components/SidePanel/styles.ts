@@ -8,6 +8,8 @@ import type { Theme } from "@mui/system";
 
 import { makeStyles } from "@/util/styles";
 
+export const SIDEBAR_WIDTH: number = 46.5;
+
 const sidePanelThemeDark = {
   sidebarColor: "#181818",
   backgroundColor: "#1F1F1F",
@@ -66,6 +68,7 @@ const styles = makeStyles({
     borderTop: `1px solid ${getBorderColor(theme)}`,
     backgroundColor: getSidebarColor(theme),
     flex: "0 0 auto",
+    width: SIDEBAR_WIDTH,
   }),
   sidebarButton: (theme) => ({
     color: theme.palette.text.secondary,

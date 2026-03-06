@@ -97,6 +97,7 @@ export interface SplitPaneProps {
   updateChildSize: (childSize: number) => void;
   style?: CSSProperties;
   children: React.ReactNode[];
+  showResizeHandle?: boolean;
 }
 
 /**
@@ -110,6 +111,7 @@ export default function SplitPane({
   updateChildSize,
   children,
   style,
+  showResizeHandle = true,
 }: PropsWithChildren<SplitPaneProps>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const child1Ref = useRef<HTMLDivElement>(null);
@@ -165,11 +167,13 @@ export default function SplitPane({
         {children[0]}
       </Box>
       <Box id="SplitPane-Child2" sx={computedStyles.child2}>
-        <Box
-          id="SplitPane-ResizeHandle"
-          sx={computedStyles.resizeHandle}
-          onMouseDown={handleMouseDown}
-        />
+        {showResizeHandle && (
+          <Box
+            id="SplitPane-ResizeHandle"
+            sx={computedStyles.resizeHandle}
+            onMouseDown={handleMouseDown}
+          />
+        )}
         {children[1]}
       </Box>
     </Box>
