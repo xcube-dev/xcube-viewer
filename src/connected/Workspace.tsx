@@ -126,7 +126,7 @@ function WorkspaceImpl({
       childPos={"last"}
       childSize={effectiveChildSize}
       updateChildSize={showPanelContent ? updateSidePanelSize : () => {}}
-      showResizeHandle={showPanelContent}
+      resizeable={showPanelContent}
       style={layout === "hor" ? styles.containerHor : styles.containerVer}
     >
       <div style={styles.viewer}>
