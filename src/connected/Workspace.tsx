@@ -37,8 +37,6 @@ const styles = makeCssStyles({
     overflow: "hidden",
     width: "100%",
     height: "100%",
-    /*    minWidth: 0,
-    minHeight: 0,*/
   },
 
   sidePanelSplit: {
@@ -115,10 +113,8 @@ function WorkspaceImpl({
     setLayout(getLayout());
   };
 
-  const showSidebar = sidePanelOpen;
   const showPanelContent = sidePanelOpen && !!sidePanelId;
-
-  const effectiveChildSize = !showSidebar
+  const effectiveChildSize = !sidePanelOpen
     ? 0
     : showPanelContent
       ? sidePanelSize
@@ -139,7 +135,7 @@ function WorkspaceImpl({
 
       <Box
         sx={
-          showSidebar
+          sidePanelOpen
             ? showPanelContent
               ? styles.sidePanelSplit
               : layout === "hor"
