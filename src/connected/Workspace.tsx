@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import { AppState } from "@/states/appState";
 import { updateSidePanelSize } from "@/actions/controlActions";
 import SplitPane from "@/components/SplitPane";
+import { SIDEBAR_WIDTH } from "@/components/SidePanel/styles";
 import Viewer from "./Viewer";
 import SidePanel from "./SidePanel";
 import { makeCssStyles } from "@/util/styles";
@@ -23,21 +24,13 @@ const styles = makeCssStyles({
   containerHor: {
     flexGrow: 1,
     overflow: "hidden",
+    height: "100%",
   },
   containerVer: {
     flexGrow: 1,
     overflowX: "hidden",
     overflowY: "auto",
-  },
-
-  noSplitHor: {
-    display: "flex",
-    flexDirection: "row",
     height: "100%",
-  },
-  noSplitVer: {
-    display: "flex",
-    flexDirection: "column",
   },
 
   viewer: {
@@ -46,8 +39,23 @@ const styles = makeCssStyles({
     height: "100%",
   },
 
-  sidebarAlone: {
+  sidePanelSplit: {
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
+  },
+
+  sidePanelNoPanelHor: {
     flexGrow: 0,
+    height: "100%",
+  },
+
+  sidePanelNoPanelVer: {
+    flexGrow: 0,
+  },
+
+  sidePanelHidden: {
+    display: "none",
   },
 });
 
@@ -99,46 +107,47 @@ function WorkspaceImpl({
     if (map) {
       map.updateSize();
     }
-  }, [map, sidePanelSize]);
+  }, [map, sidePanelSize, sidePanelOpen, sidePanelId, layout]);
 
   const updateLayout = () => {
     setLayout(getLayout());
   };
 
-  if (sidePanelOpen) {
-    if (sidePanelId) {
-      // Viewer & Panel & Sidebar
-      return (
-        <SplitPane
-          dir={layout}
-          childPos={"last"}
-          childSize={sidePanelSize}
-          updateChildSize={updateSidePanelSize}
-          style={layout === "hor" ? styles.containerHor : styles.containerVer}
-        >
-          <Viewer onMapRef={setMap} theme={theme} />
-          <SidePanel />
-        </SplitPane>
-      );
-    } else {
-      // Viewer & Sidebar - no Panel
-      return (
-        <Box sx={layout === "hor" ? styles.noSplitHor : styles.noSplitVer}>
-          <Viewer onMapRef={setMap} theme={theme} />
-          <div style={styles.sidebarAlone}>
-            <SidePanel />
-          </div>
-        </Box>
-      );
-    }
-  } else {
-    // Viewer alone - no Panel, no Sidebar
-    return (
+  const showPanelContent = sidePanelOpen && !!sidePanelId;
+  const effectiveChildSize = !sidePanelOpen
+    ? 0
+    : showPanelContent
+      ? sidePanelSize
+      : SIDEBAR_WIDTH;
+
+  return (
+    <SplitPane
+      dir={layout}
+      childPos={"last"}
+      childSize={effectiveChildSize}
+      updateChildSize={showPanelContent ? updateSidePanelSize : () => {}}
+      resizeable={showPanelContent}
+      style={layout === "hor" ? styles.containerHor : styles.containerVer}
+    >
       <div style={styles.viewer}>
         <Viewer onMapRef={setMap} theme={theme} />
       </div>
-    );
-  }
+
+      <Box
+        sx={
+          sidePanelOpen
+            ? showPanelContent
+              ? styles.sidePanelSplit
+              : layout === "hor"
+                ? styles.sidePanelNoPanelHor
+                : styles.sidePanelNoPanelVer
+            : styles.sidePanelHidden
+        }
+      >
+        <SidePanel />
+      </Box>
+    </SplitPane>
+  );
 }
 
 const Workspace = connect(mapStateToProps, mapDispatchToProps)(WorkspaceImpl);
