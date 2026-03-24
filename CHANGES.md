@@ -16,6 +16,12 @@
 
 * Fixed a problem that caused the ProgressBar to appear stuck when 
   changing the state of the sidebar. (#592)
+  
+### Other changes
+
+* Updated dependencies. Now using
+	- `chartlets ^0.2.0` 
+	- `vega-lite >=6.4.2` 
 
 ## Changes in version 1.7.1
 
