@@ -1,4 +1,6 @@
-## Changes in version 1.7.2 (in development)
+## Changes in version 1.7.3 (in development)
+
+## Changes in version 1.7.2
 
 ### Fixes
 
@@ -7,6 +9,21 @@
 
 * Show dataset level in the zoom level info box also if no dataset variable is being 
   displayed (when in RGB-only mode). (#576)
+  
+* Fixed zoom level info box not updating correctly when opening a viewer 
+  from a permalink. (#581)
+
+* Ensured that a persited viewer state gets restored after accepting the
+  LegalAgreementDialog. (#570)
+
+* Fixed a problem that caused the ProgressBar to appear stuck when 
+  changing the state of the sidebar. (#592)
+  
+### Other changes
+
+* Updated dependencies. Now using
+	- `chartlets ^0.2.0` 
+	- `vega-lite >=6.4.2` 
 
 ## Changes in version 1.7.1
 

@@ -31,8 +31,8 @@
     "allowSharing": true,
     "allowUserVariables": true,
     "allowViewModePython": true,
+    "permalinkExpirationDays": null,
     "allow3D": true,
-    "permalinkExpirationDays": 120,
     "showProgressBar": true,
     "showZoomInfoBox": true
   }

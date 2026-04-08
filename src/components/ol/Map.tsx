@@ -85,6 +85,7 @@ export class Map extends React.Component<MapProps, MapState> {
   private loadEndEventsKey: OlEventsKey | null = null;
   private lastTileLoadProgress: TileLoadProgress | null = null;
   private zoomEventsKey: OlEventsKey | null = null;
+  private viewChangeKey: OlEventsKey | null = null;
 
   constructor(props: MapProps) {
     super(props);
@@ -156,7 +157,19 @@ export class Map extends React.Component<MapProps, MapState> {
     this.clickEventsKey = map.on("click", this.handleClick);
     this.loadStartEventsKey = map.on("loadstart", this.handleMapLoadStart);
     this.loadEndEventsKey = map.on("loadend", this.handleMapLoadEnd);
+
     this.zoomEventsKey = view.on("change:resolution", this.handleZoom);
+
+    /**
+     * Re-bind zoom listeners when the Map View changes.
+     * This is required because restoreMapView() replaces the View instance.
+     * @see restoreMapView
+     */
+    this.viewChangeKey = map.on("change:view", () => {
+      const newView = map?.getView();
+      this.bindViewListeners(newView);
+    });
+
     //map.set('objectId', this.props.id);
     map.updateSize();
 
@@ -170,6 +183,16 @@ export class Map extends React.Component<MapProps, MapState> {
     const onMapRef = this.props.onMapRef;
     if (onMapRef) {
       onMapRef(map);
+    }
+  }
+
+  private bindViewListeners(view: OlView | undefined): void {
+    if (this.zoomEventsKey) {
+      ol_unByKey(this.zoomEventsKey);
+      this.zoomEventsKey = null;
+    }
+    if (view) {
+      this.zoomEventsKey = view.on("change:resolution", this.handleZoom);
     }
   }
 
@@ -189,6 +212,8 @@ export class Map extends React.Component<MapProps, MapState> {
     ol_unByKey(this.clickEventsKey!);
     ol_unByKey(this.loadStartEventsKey!);
     ol_unByKey(this.loadEndEventsKey!);
+    ol_unByKey(this.zoomEventsKey!);
+    ol_unByKey(this.viewChangeKey!);
     // Remove resize listeners
     window.removeEventListener("resize", this.handleResize);
     const onMapRef = this.props.onMapRef;

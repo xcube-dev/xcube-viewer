@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { useTheme } from "@mui/material";
 import OriginalMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { buildPath } from "@/util/path";
 
 interface MarkdownProps {
   text?: string;
@@ -51,7 +52,8 @@ export default function Markdown({ text, path }: MarkdownProps) {
         const alt = rest.alt as string;
         const fullSrc = rest.src as string;
 
-        const [src, fragment] = fullSrc.split("#");
+        const [rawSrc, fragment] = fullSrc.split("#");
+        let src = rawSrc;
 
         if (fragment === "light-mode-only" && mode !== "light") return null;
         if (fragment === "dark-mode-only" && mode !== "dark") return null;
@@ -62,7 +64,11 @@ export default function Markdown({ text, path }: MarkdownProps) {
           maxWidth: "100%",
         };
 
-        return <img src={path ? path + src : src} alt={alt} style={style} />;
+        if (path) {
+          src = buildPath(path, src);
+        }
+
+        return <img src={src} alt={alt} style={style} />;
       },
     }),
     [theme, path],

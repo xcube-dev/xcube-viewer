@@ -241,6 +241,10 @@
           "type": "boolean",
           "default": true
         },
+        "permalinkExpirationDays": {
+          "type": "number",
+          "default": null
+        },
         "allowViewModePython": {
           "type": "boolean",
           "default": true
@@ -255,11 +259,7 @@
         },
         "allowAboutPage": {
           "type": "boolean",
-          "default": true
-        },
-        "configPath": {
-          "type": "string",
-          "default": ""
+          "default": false
         }
       },
       "additionalProperties": false
