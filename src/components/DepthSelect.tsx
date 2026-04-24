@@ -59,11 +59,8 @@ export default function DepthSelect({
 
   const depthSelect = (
     <Select
-      /*      autoWidth={false}*/
       variant="standard"
-      value={
-        String(selectedDepth) //|| String(depth.coordinates[0]) || ""
-      }
+      value={String(selectedDepth)}
       onChange={handleDepthChange}
       input={<Input name="depthDimension" id="depth-select" />}
       displayEmpty

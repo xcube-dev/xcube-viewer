@@ -579,7 +579,6 @@ export function addStatistics() {
       return;
     }
 
-    // check if variable has dimension `depth`
     const hasDepth = selectedVariable?.dims?.includes("depth");
     const selectedDepthLabel = hasDepth ? selectedDepth : null;
 
@@ -686,7 +685,6 @@ export function addTimeSeries() {
           startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
         const endDateLabel = timeLabels[endTimeIndex];
 
-        // check if variable has dimension `depth`
         const hasDepth = selectedVariable?.dims?.includes("depth");
         const depthLabel = hasDepth ? selectedDepth : null;
 

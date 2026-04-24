@@ -638,7 +638,7 @@ export const canAddTimeSeriesSelector = createSelector(
     placeId: string | null,
     depth: number | string | null,
   ): boolean => {
-    if (!datasetId || !variableName || !placeId || !depth) {
+    if (!datasetId || !variableName || !placeId) {
       return false;
     }
     for (const timeSeriesGroup of timeSeriesGroups) {
@@ -1000,7 +1000,6 @@ function getTileLayer(
   }
   const url = makeRequestUrl(tileUrl, queryParams);
 
-  console.log("url", url);
   if (typeof tileLevelMax === "number") {
     // It is ok to have some extra zoom levels, so we can magnify pixels.
     // Using more, artifacts will become visible.
