@@ -948,7 +948,10 @@ function getTileLayer(
 
   let transformedExtent;
 
-  if (datasetProjection === GEOGRAPHIC_CRS || WEB_MERCATOR_CRS) {
+  if (
+    datasetProjection === GEOGRAPHIC_CRS ||
+    datasetProjection === WEB_MERCATOR_CRS
+  ) {
     if (mapProjection === datasetProjection) {
       transformedExtent = extent;
     } else {
