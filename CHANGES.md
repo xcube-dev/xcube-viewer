@@ -4,7 +4,7 @@
 
 * Fixed tile visualization for projected datasets (e.g. UTM, LAEA).
   Layer extents are now only applied for supported CRS (EPSG:4326, EPSG:3857) 
-  to avoid incorrect cut-offs. (#595)
+  to avoid incorrect cut-offs. (#593)
 
 ## Changes in version 1.7.2
 
