@@ -919,6 +919,7 @@ function getTileLayer(
   timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
+  datasetProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
   zIndex: number = 10,
@@ -944,10 +945,24 @@ function getTileLayer(
     tileLevelMin,
     tileLevelMax,
   );
-  const transformedExtent =
-    mapProjection === GEOGRAPHIC_CRS
-      ? extent
-      : olTransformExtent(extent, "EPSG:4326", mapProjection);
+
+  let transformedExtent;
+
+  if (datasetProjection === GEOGRAPHIC_CRS || WEB_MERCATOR_CRS) {
+    if (mapProjection === datasetProjection) {
+      transformedExtent = extent;
+    } else {
+      transformedExtent = olTransformExtent(
+        extent,
+        datasetProjection,
+        mapProjection,
+      );
+    }
+  } else {
+    // For unsupported CRS (e.g. UTM, LAEA)
+    transformedExtent = undefined;
+  }
+
   return (
     <Tile
       id={layerId}
@@ -1078,6 +1093,7 @@ const getVariableTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
+    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1152,6 +1168,7 @@ const getDatasetRgbTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
+    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
