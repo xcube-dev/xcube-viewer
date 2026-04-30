@@ -952,6 +952,12 @@ function getTileLayer(
     datasetProjection === GEOGRAPHIC_CRS ||
     datasetProjection === WEB_MERCATOR_CRS
   ) {
+    // Only use extent for EPSG:4326 and EPSG:3857.
+    // For other CRS (e.g. UTM, LAEA), transforming the bbox can be inaccurate
+    // and may clip valid tiles due to projection distortion.
+    // Disabling extent avoids rendering artifacts. It can trigger extra
+    // tile requests, but the performance impact should be small
+    // as xcube Server already handles out-of-bounds tiles.
     if (mapProjection === datasetProjection) {
       transformedExtent = extent;
     } else {
@@ -962,7 +968,6 @@ function getTileLayer(
       );
     }
   } else {
-    // For unsupported CRS (e.g. UTM, LAEA)
     transformedExtent = undefined;
   }
 
