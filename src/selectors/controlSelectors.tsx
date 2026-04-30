@@ -919,6 +919,7 @@ function getTileLayer(
   timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
+  datasetProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
   zIndex: number = 10,
@@ -944,10 +945,32 @@ function getTileLayer(
     tileLevelMin,
     tileLevelMax,
   );
-  const transformedExtent =
-    mapProjection === GEOGRAPHIC_CRS
-      ? extent
-      : olTransformExtent(extent, "EPSG:4326", mapProjection);
+
+  let transformedExtent;
+
+  if (
+    datasetProjection === GEOGRAPHIC_CRS ||
+    datasetProjection === WEB_MERCATOR_CRS
+  ) {
+    // Only use extent for EPSG:4326 and EPSG:3857.
+    // For other CRS (e.g. UTM, LAEA), transforming the bbox can be inaccurate
+    // and may clip valid tiles due to projection distortion.
+    // Disabling extent avoids rendering artifacts. It can trigger extra
+    // tile requests, but the performance impact should be small
+    // as xcube Server already handles out-of-bounds tiles.
+    if (mapProjection === datasetProjection) {
+      transformedExtent = extent;
+    } else {
+      transformedExtent = olTransformExtent(
+        extent,
+        datasetProjection,
+        mapProjection,
+      );
+    }
+  } else {
+    transformedExtent = undefined;
+  }
+
   return (
     <Tile
       id={layerId}
@@ -1078,6 +1101,7 @@ const getVariableTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
+    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1152,6 +1176,7 @@ const getDatasetRgbTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
+    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
