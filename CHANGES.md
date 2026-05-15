@@ -1,4 +1,4 @@
-## Changes in version 1.7.3 (in development)
+## Changes in version 1.7.3
 
 ### Fixes
 
