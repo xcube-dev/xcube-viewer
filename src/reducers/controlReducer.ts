@@ -13,11 +13,14 @@ import {
   FLY_TO,
   INC_SELECTED_TIME,
   INC_SELECTED_DEPTH,
+  INC_SELECTED_DIMENSION,
   OPEN_DIALOG,
   REMOVE_ACTIVITY,
   REMOVE_USER_COLOR_BAR,
   SELECT_DATASET,
   SELECT_DEPTH,
+  SELECT_DIMENSION,
+  SELECT_DIMENSION_VALUES,
   SELECT_PLACE,
   SELECT_PLACE_GROUPS,
   SELECT_TIME,
@@ -44,6 +47,7 @@ import {
   UPDATE_SIDE_PANEL_SIZE,
   UPDATE_TIME_ANIMATION,
   UPDATE_DEPTH_ANIMATION,
+  UPDATE_DIMENSION_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VARIABLE_SPLIT_POS,
   UPDATE_VOLUME_STATE,
@@ -66,8 +70,11 @@ import {
 import {
   selectedDatasetDepthCoordinatesSelector,
   selectedDatasetDepthIndexSelector,
+  selectedDatasetDimensionCoordinatesSelector,
+  selectedDatasetDimensionIndexSelector,
   selectedDatasetTimeCoordinatesSelector,
   selectedDatasetTimeIndexSelector,
+  selectedDimensionLabelSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
 import { ControlState, newControlState } from "@/states/controlState";
@@ -337,6 +344,34 @@ export function controlReducer(
       }
       return state;
     }
+    case INC_SELECTED_DIMENSION: {
+      if (appState) {
+        let index = selectedDatasetDimensionIndexSelector(appState);
+        if (index >= 0) {
+          const coordinates =
+            selectedDatasetDimensionCoordinatesSelector(appState)!;
+          index += action.increment;
+          if (index < 0) {
+            index = coordinates.length - 1;
+          }
+          if (index > coordinates.length - 1) {
+            index = 0;
+          }
+          const selectedDimensionValue = coordinates[index];
+          const label = selectedDimensionLabelSelector(appState);
+          if (
+            label &&
+            state.selectedDimensionValues[label] !== selectedDimensionValue
+          ) {
+            return {
+              ...state,
+              selectedDimensionValues: { [label]: selectedDimensionValue },
+            };
+          }
+        }
+      }
+      return state;
+    }
     case SELECT_TIME_RANGE: {
       return {
         ...state,
@@ -360,6 +395,13 @@ export function controlReducer(
       return {
         ...state,
         depthAnimationActive: action.depthAnimationActive,
+        dimensionAnimationInterval: action.dimensionAnimationInterval,
+      };
+    }
+    case UPDATE_DIMENSION_ANIMATION: {
+      return {
+        ...state,
+        dimensionAnimationActive: action.dimensionAnimationActive,
         dimensionAnimationInterval: action.dimensionAnimationInterval,
       };
     }
@@ -624,6 +666,21 @@ export function controlReducer(
       return {
         ...state,
         selectedDepth: action.selectedDepth,
+      };
+    }
+    case SELECT_DIMENSION_VALUES: {
+      return {
+        ...state,
+        selectedDimensionValues: {
+          ...state.selectedDimensionValues,
+          ...action.selectedDimensionValues,
+        },
+      };
+    }
+    case SELECT_DIMENSION: {
+      return {
+        ...state,
+        selectedDimensionLabel: action.selectedDimension,
       };
     }
     case CONFIGURE_SERVERS: {

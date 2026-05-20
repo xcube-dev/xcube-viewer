@@ -66,6 +66,8 @@ export type LayerGroupStates = {
   baseMaps?: boolean;
 };
 
+export type DimensionValues = Record<string, string | number | null>;
+
 export type ThemeMode = PaletteMode | "system";
 export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
 export const THEME_LABELS: [ThemeMode, string][] = [
@@ -142,6 +144,9 @@ export interface ControlState {
   selectedDepth: number | string | null;
   depthAnimationActive: boolean;
   dimensionAnimationInterval: DimensionAnimationInterval;
+  dimensionAnimationActive: boolean;
+  selectedDimensionLabel: string | null;
+  selectedDimensionValues: DimensionValues;
 }
 
 export function newControlState(): ControlState {
@@ -229,6 +234,9 @@ export function newControlState(): ControlState {
     selectedDepth: null,
     depthAnimationActive: false,
     dimensionAnimationInterval: 1000,
+    dimensionAnimationActive: false,
+    selectedDimensionLabel: null,
+    selectedDimensionValues: {},
   };
   return loadUserSettings(state);
 }

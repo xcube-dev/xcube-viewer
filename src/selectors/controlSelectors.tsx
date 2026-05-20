@@ -65,6 +65,7 @@ import {
 } from "./dataSelectors";
 import { makeRequestUrl } from "@/api/callApi";
 import {
+  DimensionValues,
   LayerStates,
   LayerVisibilities,
   MAP_OBJECTS,
@@ -161,6 +162,10 @@ export const selectedDatasetZLevelSelector = (state: AppState) =>
   state.controlState.datasetZLevel;
 export const selectedDepthSelector = (state: AppState) =>
   state.controlState.selectedDepth;
+export const selectedDimensionLabelSelector = (state: AppState) =>
+  state.controlState.selectedDimensionLabel;
+export const selectedDimensionValuesSelector = (state: AppState) =>
+  state.controlState.selectedDimensionValues;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -211,7 +216,7 @@ export const selectedUserVariablesSelector = createSelector(
   },
 );
 
-export const selectedDimensionsSelector = createSelector(
+export const selectedDimensionSelector = createSelector(
   selectedDatasetSelector,
   (dataset: Dataset | null): Dimension[] => {
     return (dataset && dataset.dimensions) || [];
@@ -281,6 +286,24 @@ export const selectedDatasetDepthDimensionSelector = createSelector(
   selectedDatasetSelector,
   depthNameSelector,
   _findDatasetDimension,
+);
+
+export const selectedDatasetDimensionSelector = createSelector(
+  selectedDatasetSelector,
+  selectedDimensionLabelSelector,
+  _findDatasetDimension,
+);
+
+export const selectedDatasetDimensionValueSelector = createSelector(
+  selectedDimensionValuesSelector,
+  selectedDimensionLabelSelector,
+  (values: DimensionValues, label: string | null): string | number | null => {
+    if (label === null) {
+      return null;
+    }
+
+    return values[label] ?? null;
+  },
 );
 
 const getVariableTitle = (variable: Variable | null): string | null => {
@@ -835,6 +858,16 @@ export const selectedDataset2DepthCoordinatesSelector = createSelector(
   _getDimensionCoordinates,
 );
 
+export const selectedDatasetDimensionCoordinatesSelector = createSelector(
+  selectedDatasetDimensionSelector,
+  _getDimensionCoordinates,
+);
+
+export const selectedDataset2DimensionCoordinatesSelector = createSelector(
+  selectedDatasetDimensionSelector,
+  _getDimensionCoordinates,
+);
+
 const _getDimensionIndex = (
   value: number | string | null,
   dimensionCoordinates: number[] | null,
@@ -854,6 +887,18 @@ export const selectedDatasetDepthIndexSelector = createSelector(
 export const selectedDataset2DepthIndexSelector = createSelector(
   selectedDepthSelector,
   selectedDataset2DepthCoordinatesSelector,
+  _getDimensionIndex,
+);
+
+export const selectedDatasetDimensionIndexSelector = createSelector(
+  selectedDatasetDimensionValueSelector,
+  selectedDatasetDimensionCoordinatesSelector,
+  _getDimensionIndex,
+);
+
+export const selectedDataset2DimensionIndexSelector = createSelector(
+  selectedDatasetDimensionValueSelector,
+  selectedDataset2DimensionCoordinatesSelector,
   _getDimensionIndex,
 );
 
@@ -1126,8 +1171,7 @@ const getVariableTileLayer = (
   timeAnimationActive: boolean,
   mapProjection: string,
   imageSmoothing: boolean,
-  depth: Dimension | null,
-  depthLabel: number | string | null,
+  selectedDimensionValues: DimensionValues,
 ): MapElement => {
   if (!dataset || !variable || !visibility) {
     return null;
@@ -1143,9 +1187,12 @@ const getVariableTileLayer = (
     queryParams.push(["norm", colorBarNorm]);
   }
 
-  if (depth && depthLabel) {
-    queryParams.push([depth.name, String(depthLabel)]);
-  }
+  Object.entries(selectedDimensionValues).forEach(([name, value]) => {
+    if (value != null) {
+      queryParams.push([name, String(value)]);
+    }
+  });
+
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, variable),
@@ -1180,8 +1227,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
-  selectedDatasetDepthDimensionSelector,
-  selectedDepthSelector,
+  selectedDimensionValuesSelector,
   getVariableTileLayer,
 );
 
@@ -1202,8 +1248,7 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
-  selectedDatasetDepthDimensionSelector,
-  selectedDepthSelector,
+  selectedDimensionValuesSelector,
   getVariableTileLayer,
 );
 

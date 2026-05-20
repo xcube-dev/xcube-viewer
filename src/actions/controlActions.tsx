@@ -36,6 +36,7 @@ import type {
   LayerGroupStates,
   MapInteraction,
   DimensionAnimationInterval,
+  DimensionValues,
   ViewMode,
   VolumeRenderMode,
   VolumeState,
@@ -459,6 +460,19 @@ export function incSelectedDepth(increment: -1 | 1): IncSelectedDepth {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const INC_SELECTED_DIMENSION = "INC_SELECTED_DIMENSION";
+
+export interface IncSelectedDimension {
+  type: typeof INC_SELECTED_DIMENSION;
+  increment: -1 | 1;
+}
+
+export function incSelectedDimension(increment: -1 | 1): IncSelectedDimension {
+  return { type: INC_SELECTED_DIMENSION, increment };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_TIME_RANGE = "SELECT_TIME_RANGE";
 
 export interface SelectTimeRange {
@@ -530,6 +544,27 @@ export function updateDepthAnimation(
   return {
     type: UPDATE_DEPTH_ANIMATION,
     depthAnimationActive,
+    dimensionAnimationInterval,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const UPDATE_DIMENSION_ANIMATION = "UPDATE_DIMENSION_ANIMATION";
+
+export interface UpdateDimensionAnimation {
+  type: typeof UPDATE_DIMENSION_ANIMATION;
+  dimensionAnimationActive: boolean;
+  dimensionAnimationInterval: DimensionAnimationInterval;
+}
+
+export function updateDimensionAnimation(
+  dimensionAnimationActive: boolean,
+  dimensionAnimationInterval: DimensionAnimationInterval,
+): UpdateDimensionAnimation {
+  return {
+    type: UPDATE_DIMENSION_ANIMATION,
+    dimensionAnimationActive,
     dimensionAnimationInterval,
   };
 }
@@ -900,6 +935,39 @@ export function selectDepth(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SELECT_DIMENSION = "SELECT_DIMENSION";
+
+export interface SelectDimension {
+  type: typeof SELECT_DIMENSION;
+  selectedDimension: string | null;
+}
+
+export function selectDimension(
+  selectedDimension: string | null,
+): SelectDimension {
+  return { type: SELECT_DIMENSION, selectedDimension: selectedDimension };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_DIMENSION_VALUES = "SELECT_DIMENSION_VALUES";
+
+export interface SelectDimensionValues {
+  type: typeof SELECT_DIMENSION_VALUES;
+  selectedDimensionValues: DimensionValues;
+}
+
+export function selectDimensionValues(
+  selectedDimensionValues: DimensionValues,
+): SelectDimensionValues {
+  return {
+    type: SELECT_DIMENSION_VALUES,
+    selectedDimensionValues,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
   | SelectDataset
   | UpdateDatasetPlaceGroup
@@ -912,10 +980,12 @@ export type ControlAction =
   | SetLayerGroupStates
   | IncSelectedTime
   | IncSelectedDepth
+  | IncSelectedDimension
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode
   | UpdateTimeAnimation
   | UpdateDepthAnimation
+  | UpdateDimensionAnimation
   | SetMapInteraction
   | AddActivity
   | RemoveActivity
@@ -942,4 +1012,6 @@ export type ControlAction =
   | FlyTo
   | SetZoomLevel
   | SetDatasetZLevel
-  | SelectDepth;
+  | SelectDepth
+  | SelectDimension
+  | SelectDimensionValues;
