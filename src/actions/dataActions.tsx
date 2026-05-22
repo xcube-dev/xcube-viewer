@@ -662,7 +662,8 @@ export function addTimeSeries() {
       selectedDataset &&
       selectedVariable &&
       selectedPlaceId &&
-      selectedDatasetTimeDim
+      selectedDatasetTimeDim &&
+      selectedDimensionValues
     ) {
       if (sidebarPanelId !== "timeSeries") {
         dispatch(setSidePanelId("timeSeries"));

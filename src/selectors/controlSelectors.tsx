@@ -306,6 +306,23 @@ export const selectedDatasetDimensionValueSelector = createSelector(
   },
 );
 
+export const selectedVariableDimensionValuesSelector = createSelector(
+  selectedVariableSelector,
+  selectedDimensionValuesSelector,
+  (variable: Variable | null, dimensionValues): DimensionValues => {
+    const selectedDimensionLabels = variable?.dims
+      ?.filter((dim) => dimensionValues?.[dim] != null)
+      .reduce(
+        (result, dim) => ({
+          ...result,
+          [dim]: dimensionValues[dim],
+        }),
+        {},
+      );
+    return selectedDimensionLabels || {};
+  },
+);
+
 const getVariableTitle = (variable: Variable | null): string | null => {
   return variable && (variable.title || variable.name);
 };
@@ -653,13 +670,13 @@ export const canAddTimeSeriesSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
   selectedPlaceIdSelector,
-  selectedDepthSelector,
+  selectedVariableDimensionValuesSelector,
   (
     timeSeriesGroups: TimeSeriesGroup[],
     datasetId: string | null,
     variableName: string | null,
     placeId: string | null,
-    depth: number | string | null,
+    dimensionValues: DimensionValues,
   ): boolean => {
     if (!datasetId || !variableName || !placeId) {
       return false;
@@ -671,7 +688,7 @@ export const canAddTimeSeriesSelector = createSelector(
           source.datasetId === datasetId &&
           source.variableName === variableName &&
           source.placeId === placeId &&
-          source.depth === depth
+          source.dimensionValues === dimensionValues
         ) {
           return false;
         }

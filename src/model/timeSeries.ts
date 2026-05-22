@@ -9,6 +9,7 @@ import { parseISO } from "date-fns";
 
 import { utcTimeToIsoDateTimeString } from "@/util/time";
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from "./place";
+import { DimensionValues } from "@/states/controlState";
 
 /**
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
@@ -34,7 +35,7 @@ export interface TimeSeriesSource {
   geometry: geojson.Geometry | null;
   valueDataKey: keyof TimeSeriesPoint;
   errorDataKey: keyof TimeSeriesPoint | null;
-  depth: number | string | null;
+  dimensionValues: DimensionValues;
 }
 
 export interface TimeSeriesPoint {
@@ -262,7 +263,7 @@ export function placeGroupToTimeSeries(
             geometry: null, // could be computed later from data points (as GeometryCollection)
             valueDataKey: "mean",
             errorDataKey: null,
-            depth: null,
+            dimensionValues: {},
           },
           data: [point],
           dataProgress: 1.0,

@@ -66,7 +66,12 @@ export default function TimeSeriesLine({
 
   let lineName = `${source.datasetTitle}:${source.variableName}`;
   let lineColor = "red";
-  const depthLabel = source.depth ? `, Depth: ${source.depth}` : ``;
+
+  const dimensionLabel = source.dimensionValues
+    ? Object.entries(source.dimensionValues)
+        .map(([dimLabel, value]) => `${dimLabel}: ${value}`)
+        .join(", ")
+    : "";
 
   if (source.placeId === null) {
     // Time series is from imported CSV or GeoJSON.
@@ -89,9 +94,9 @@ export default function TimeSeriesLine({
       if (place.geometry.type === "Point") {
         const lon = place.geometry.coordinates[0];
         const lat = place.geometry.coordinates[1];
-        lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)}${depthLabel})`;
+        lineName += ` (${label}: ${lat.toFixed(5)},${lon.toFixed(5)} ${dimensionLabel})`;
       } else {
-        lineName += ` (${label}${depthLabel})`;
+        lineName += ` (${label} ${dimensionLabel})`;
       }
       lineColor = color;
     }
