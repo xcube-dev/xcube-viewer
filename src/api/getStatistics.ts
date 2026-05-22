@@ -19,6 +19,7 @@ import {
   QueryComponent,
 } from "./callApi";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
+import { DimensionValues } from "@/states/controlState";
 
 interface StatisticsResult {
   result: Statistics;
@@ -31,15 +32,19 @@ export function getStatistics(
   placeInfo: PlaceInfo,
   timeLabel: string | null,
   accessToken: string | null,
-  depthLabel: string | number | null,
+  dimensionValues: DimensionValues,
 ): Promise<StatisticsRecord> {
   const query: QueryComponent[] = [];
   if (timeLabel) {
     query.push(["time", timeLabel]);
   }
-  if (depthLabel) {
-    query.push(["depth", String(depthLabel)]);
-  }
+
+  Object.entries(dimensionValues).forEach(([name, value]) => {
+    if (value != null) {
+      query.push([name, String(value)]);
+    }
+  });
+
   const url = makeRequestUrl(
     `${apiServerUrl}/statistics/${encodeDatasetId(dataset)}/${encodeVariableName(variable)}`,
     query,
@@ -56,7 +61,7 @@ export function getStatistics(
     variable,
     placeInfo,
     time: timeLabel,
-    depth: depthLabel,
+    dimensionValues: dimensionValues,
   };
 
   return callJsonApi(url, init, (r: StatisticsResult) => ({

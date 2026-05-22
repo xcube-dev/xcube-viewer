@@ -35,7 +35,6 @@ import {
   selectedDatasetSelector,
   selectedDatasetTimeDimensionSelector,
   selectedDatasetTimeLabelSelector,
-  selectedDepthSelector,
   selectedPlaceGroupPlacesSelector,
   selectedPlaceGroupsSelector,
   selectedPlaceIdSelector,
@@ -43,6 +42,7 @@ import {
   selectedPlaceSelector,
   selectedServerSelector,
   selectedTimeChunkSizeSelector,
+  selectedVariableDimensionValuesSelector,
   selectedVariableSelector,
   userPlacesFormatNameSelector,
   userPlacesFormatOptionsCsvSelector,
@@ -573,14 +573,12 @@ export function addStatistics() {
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidePanelOpen = getState().controlState.sidePanelOpen;
     const sidePanelId = getState().controlState.sidePanelId;
-    const selectedDepth = selectedDepthSelector(getState());
+    const selectedDimensionValues =
+      selectedVariableDimensionValuesSelector(getState());
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
     }
-
-    const hasDepth = selectedVariable?.dims?.includes("depth");
-    const selectedDepthLabel = hasDepth ? selectedDepth : null;
 
     if (sidePanelId !== "stats") {
       dispatch(setSidePanelId("stats"));
@@ -597,7 +595,7 @@ export function addStatistics() {
         selectedPlaceInfo,
         selectedTimeLabel,
         getState().userAuthState.accessToken,
-        selectedDepthLabel,
+        selectedDimensionValues,
       )
       .then((stats) => dispatch(_addStatistics(stats)))
       .catch((error: Error) => {
@@ -655,7 +653,8 @@ export function addTimeSeries() {
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
     const sidebarOpen = getState().controlState.sidePanelOpen;
     const sidebarPanelId = getState().controlState.sidePanelId;
-    const selectedDepth = selectedDepthSelector(getState());
+    const selectedDimensionValues =
+      selectedVariableDimensionValuesSelector(getState());
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -685,9 +684,6 @@ export function addTimeSeries() {
           startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
         const endDateLabel = timeLabels[endTimeIndex];
 
-        const hasDepth = selectedVariable?.dims?.includes("depth");
-        const depthLabel = hasDepth ? selectedDepth : null;
-
         return api.getTimeSeriesForGeometry(
           apiServer.url,
           selectedDataset,
@@ -699,7 +695,7 @@ export function addTimeSeries() {
           useMedian,
           includeStdev,
           getState().userAuthState.accessToken,
-          depthLabel,
+          selectedDimensionValues,
         );
       };
 

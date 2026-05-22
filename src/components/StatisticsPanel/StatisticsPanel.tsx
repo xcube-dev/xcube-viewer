@@ -6,7 +6,7 @@
 
 import Box from "@mui/material/Box";
 
-import { ExportResolution } from "@/states/controlState";
+import { DimensionValues, ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import { StatisticsRecord } from "@/model/statistics";
 import { Dataset } from "@/model/dataset";
@@ -29,6 +29,7 @@ interface StatisticsPanelProps {
   selectedDataset: Dataset | null;
   selectedVariable: Variable | null;
   selectedTime: string | null;
+  selectedDimensionValues: DimensionValues;
   selectedPlaceInfo: PlaceInfo | null;
   statisticsLoading: boolean;
   statisticsRecords: StatisticsRecord[];
@@ -37,13 +38,13 @@ interface StatisticsPanelProps {
   removeStatistics: (index: number) => void;
   postMessage: (messageType: MessageType, messageText: string | Error) => void;
   exportResolution: ExportResolution;
-  selectedDepth: number | string | null;
 }
 
 export default function StatisticsPanel({
   selectedDataset,
   selectedVariable,
   selectedTime,
+  selectedDimensionValues,
   selectedPlaceInfo,
   statisticsLoading,
   statisticsRecords,
@@ -52,7 +53,6 @@ export default function StatisticsPanel({
   removeStatistics,
   postMessage,
   exportResolution,
-  selectedDepth,
 }: StatisticsPanelProps) {
   return (
     <Box sx={styles.container}>
@@ -60,11 +60,11 @@ export default function StatisticsPanel({
         selectedDataset={selectedDataset}
         selectedVariable={selectedVariable}
         selectedTime={selectedTime}
+        selectedDimensionValues={selectedDimensionValues}
         selectedPlaceInfo={selectedPlaceInfo}
         canAddStatistics={canAddStatistics}
         addStatistics={addStatistics}
         statisticsLoading={statisticsLoading}
-        selectedDepth={selectedDepth}
       />
       {statisticsRecords.map((sr, rowIndex) => (
         <StatisticsDataRow

@@ -7,13 +7,14 @@
 import { Dataset } from "./dataset";
 import { Variable } from "./variable";
 import { PlaceInfo } from "./place";
+import { DimensionValues } from "@/states/controlState";
 
 export interface StatisticsSource {
   dataset: Dataset;
   variable: Variable;
   time: string | null;
   placeInfo: PlaceInfo;
-  depth: number | string | null;
+  dimensionValues: DimensionValues;
 }
 
 export interface Histogram {

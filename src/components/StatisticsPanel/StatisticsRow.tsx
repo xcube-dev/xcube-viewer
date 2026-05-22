@@ -4,17 +4,18 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import i18n from "@/i18n";
 import React, { RefObject } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
+import { makeStyles } from "@/util/styles";
+import { isoDateTimeStringToLabel } from "@/util/time";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
-import i18n from "@/i18n";
-import { isoDateTimeStringToLabel } from "@/util/time";
+import { DimensionValues } from "@/states/controlState";
 
 const styles = makeStyles({
   container: {
@@ -40,8 +41,8 @@ interface StatisticsRowProps extends WithLocale {
   dataset: Dataset | null;
   variable: Variable | null;
   time: string | null;
+  dimensionValues: DimensionValues;
   placeInfo: PlaceInfo | null;
-  depth: number | string | null;
   actions: React.ReactNode;
   body?: React.ReactNode;
   containerRef?: RefObject<HTMLDivElement>;
@@ -55,8 +56,8 @@ export default function StatisticsRow({
   dataset,
   variable,
   time,
+  dimensionValues,
   placeInfo,
-  depth,
   actions,
   body,
   containerRef,
@@ -76,13 +77,11 @@ export default function StatisticsRow({
     <Missing phrase="Time" />
   ) : null;
 
-  const isDepthDimensionAvailable = variable?.dims?.includes("depth");
-  const depthLabel =
-    depth && isDepthDimensionAvailable ? (
-      String(depth)
-    ) : isDepthDimensionAvailable ? (
-      <Missing phrase="Depth" />
-    ) : null;
+  const dimensionLabel = dimensionValues
+    ? Object.entries(dimensionValues)
+        .map(([dimLabel, value]) => `${dimLabel}: ${value}`)
+        .join(", ")
+    : "";
 
   const placeLabel = placeInfo ? placeInfo.label : <Missing phrase="Place" />;
 
@@ -91,8 +90,15 @@ export default function StatisticsRow({
       <Box sx={styles.header}>
         <Typography fontSize="small" variant="inherit" component="span">
           {datasetLabel} / {variableLabel}
-          {timeLabel && `, ${timeLabel}`}
-          {depthLabel && `, Depth: ${depthLabel}`}, {placeLabel}
+          {timeLabel && (
+            <>
+              {", "}
+              {timeLabel}
+            </>
+          )}
+          {dimensionLabel && `, ${dimensionLabel} `}
+          {", "}
+          {placeLabel}
         </Typography>
         <Box id="statistics-row-buttons" sx={styles.actions}>
           {actions}

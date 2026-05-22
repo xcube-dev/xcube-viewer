@@ -4,8 +4,9 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
 
 import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
@@ -13,7 +14,7 @@ import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
 import StatisticsRow from "./StatisticsRow";
-import CircularProgress from "@mui/material/CircularProgress";
+import { DimensionValues } from "@/states/controlState";
 
 const styles = makeStyles({
   progress: {
@@ -25,30 +26,30 @@ interface StatisticsFirstRowProps extends WithLocale {
   selectedDataset: Dataset | null;
   selectedVariable: Variable | null;
   selectedTime: string | null;
+  selectedDimensionValues: DimensionValues;
   selectedPlaceInfo: PlaceInfo | null;
   canAddStatistics: boolean;
   addStatistics: () => void;
   statisticsLoading: boolean;
-  selectedDepth: number | string | null;
 }
 
 export default function StatisticsFirstRow({
   selectedDataset,
   selectedVariable,
   selectedTime,
+  selectedDimensionValues,
   selectedPlaceInfo,
   canAddStatistics,
   addStatistics,
   statisticsLoading,
-  selectedDepth,
 }: StatisticsFirstRowProps) {
   return (
     <StatisticsRow
       dataset={selectedDataset}
       variable={selectedVariable}
       time={selectedTime}
+      dimensionValues={selectedDimensionValues}
       placeInfo={selectedPlaceInfo}
-      depth={selectedDepth}
       actions={
         statisticsLoading ? (
           <CircularProgress size={20} sx={styles.progress} />

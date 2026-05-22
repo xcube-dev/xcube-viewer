@@ -49,7 +49,6 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
       <PlaceGroupsSelect />
       <PlaceSelect />
       <MapInteractionsBar />
-      <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <ControlBarActions />
     </ControlBarComponent>
   );

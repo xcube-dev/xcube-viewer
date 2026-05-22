@@ -12,8 +12,8 @@ import {
   resolvedStatisticsRecordsSelector,
   selectedDatasetSelector,
   selectedDatasetTimeLabelSelector,
-  selectedDepthSelector,
   selectedPlaceInfoSelector,
+  selectedVariableDimensionValuesSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 import _StatisticsPanel from "@/components/StatisticsPanel";
@@ -26,12 +26,12 @@ const mapStateToProps = (state: AppState) => {
     selectedDataset: selectedDatasetSelector(state),
     selectedVariable: selectedVariableSelector(state),
     selectedTime: selectedDatasetTimeLabelSelector(state),
+    selectedDimensionValues: selectedVariableDimensionValuesSelector(state),
     selectedPlaceInfo: selectedPlaceInfoSelector(state),
     statisticsLoading: statisticsLoadingSelector(state),
     statisticsRecords: resolvedStatisticsRecordsSelector(state),
     canAddStatistics: canAddStatisticsSelector(state),
     exportResolution: state.controlState.exportResolution,
-    selectedDepth: selectedDepthSelector(state),
   };
 };
 

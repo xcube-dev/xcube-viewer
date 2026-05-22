@@ -351,6 +351,11 @@
       "se": "Information om vald plats"
     },
     {
+      "en": "Dimension",
+      "de": "Dimension",
+      "se": "Dimension"
+    },
+    {
       "en": "Dimension names",
       "de": "Namen der Dimensionen",
       "se": "Dimensioner namn"
