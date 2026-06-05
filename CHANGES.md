@@ -1,4 +1,12 @@
-## Changes in version 1.7.3 (in development)
+## Changes in version 1.7.4 (in development)
+
+## Changes in version 1.7.3
+
+### Fixes
+
+* Fixed tile visualization for datasets with unsupported CRS (e.g. UTM, LAEA).
+  Layer extents are now only applied for supported CRS (EPSG:4326, EPSG:3857) 
+  to avoid incorrect cut-offs. (#593)
 
 ## Changes in version 1.7.2
 
