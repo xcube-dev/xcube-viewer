@@ -12,13 +12,11 @@ import {
   ControlAction,
   FLY_TO,
   INC_SELECTED_TIME,
-  INC_SELECTED_DEPTH,
   INC_SELECTED_DIMENSION,
   OPEN_DIALOG,
   REMOVE_ACTIVITY,
   REMOVE_USER_COLOR_BAR,
   SELECT_DATASET,
-  SELECT_DEPTH,
   SELECT_DIMENSION,
   SELECT_DIMENSION_VALUES,
   SELECT_PLACE,
@@ -46,7 +44,6 @@ import {
   UPDATE_SETTINGS,
   UPDATE_SIDE_PANEL_SIZE,
   UPDATE_TIME_ANIMATION,
-  UPDATE_DEPTH_ANIMATION,
   UPDATE_DIMENSION_ANIMATION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VARIABLE_SPLIT_POS,
@@ -72,8 +69,6 @@ import {
   isTemporalDim,
 } from "@/model/dataset";
 import {
-  selectedDatasetDepthCoordinatesSelector,
-  selectedDatasetDepthIndexSelector,
   selectedDatasetDimensionCoordinatesSelector,
   selectedDatasetDimensionIndexSelector,
   selectedDatasetSelector,
@@ -343,30 +338,6 @@ export function controlReducer(
       }
       return state;
     }
-    case INC_SELECTED_DEPTH: {
-      if (appState) {
-        let index = selectedDatasetDepthIndexSelector(appState);
-        if (index >= 0) {
-          const depthCoordinates =
-            selectedDatasetDepthCoordinatesSelector(appState)!;
-          index += action.increment;
-          if (index < 0) {
-            index = depthCoordinates.length - 1;
-          }
-          if (index > depthCoordinates.length - 1) {
-            index = 0;
-          }
-          const selectedDepth = depthCoordinates[index];
-          if (state.selectedDepth !== selectedDepth) {
-            return {
-              ...state,
-              selectedDepth: selectedDepth,
-            };
-          }
-        }
-      }
-      return state;
-    }
     case INC_SELECTED_DIMENSION: {
       if (appState) {
         let index = selectedDatasetDimensionIndexSelector(appState);
@@ -411,13 +382,6 @@ export function controlReducer(
       return {
         ...state,
         timeAnimationActive: action.timeAnimationActive,
-        dimensionAnimationInterval: action.dimensionAnimationInterval,
-      };
-    }
-    case UPDATE_DEPTH_ANIMATION: {
-      return {
-        ...state,
-        depthAnimationActive: action.depthAnimationActive,
         dimensionAnimationInterval: action.dimensionAnimationInterval,
       };
     }
@@ -683,12 +647,6 @@ export function controlReducer(
       return {
         ...state,
         datasetZLevel: action.datasetZLevel,
-      };
-    }
-    case SELECT_DEPTH: {
-      return {
-        ...state,
-        selectedDepth: action.selectedDepth,
       };
     }
     case SELECT_DIMENSION_VALUES: {

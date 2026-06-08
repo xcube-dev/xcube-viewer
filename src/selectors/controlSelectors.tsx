@@ -160,8 +160,6 @@ export const zoomLevelSelector = (state: AppState) =>
   state.controlState.zoomLevel;
 export const selectedDatasetZLevelSelector = (state: AppState) =>
   state.controlState.datasetZLevel;
-export const selectedDepthSelector = (state: AppState) =>
-  state.controlState.selectedDepth;
 export const selectedDimensionLabelSelector = (state: AppState) =>
   state.controlState.selectedDimensionLabel;
 export const selectedDimensionValuesSelector = (state: AppState) =>
@@ -280,13 +278,6 @@ const _findDatasetDimension = (
   }
   return findDatasetDimension(dataset, dimName);
 };
-
-const depthNameSelector = () => "depth";
-export const selectedDatasetDepthDimensionSelector = createSelector(
-  selectedDatasetSelector,
-  depthNameSelector,
-  _findDatasetDimension,
-);
 
 export const selectedDatasetDimensionSelector = createSelector(
   selectedDatasetSelector,
@@ -865,16 +856,6 @@ const _getDimensionCoordinates = (
   return dimension.coordinates;
 };
 
-export const selectedDatasetDepthCoordinatesSelector = createSelector(
-  selectedDatasetDepthDimensionSelector,
-  _getDimensionCoordinates,
-);
-
-export const selectedDataset2DepthCoordinatesSelector = createSelector(
-  selectedDatasetDepthDimensionSelector,
-  _getDimensionCoordinates,
-);
-
 export const selectedDatasetDimensionCoordinatesSelector = createSelector(
   selectedDatasetDimensionSelector,
   _getDimensionCoordinates,
@@ -894,18 +875,6 @@ const _getDimensionIndex = (
   }
   return findIndexCloseTo(dimensionCoordinates, value as number); //TODO `as number` should be removed/unnecessary
 };
-
-export const selectedDatasetDepthIndexSelector = createSelector(
-  selectedDepthSelector,
-  selectedDatasetDepthCoordinatesSelector,
-  _getDimensionIndex,
-);
-
-export const selectedDataset2DepthIndexSelector = createSelector(
-  selectedDepthSelector,
-  selectedDataset2DepthCoordinatesSelector,
-  _getDimensionIndex,
-);
 
 export const selectedDatasetDimensionIndexSelector = createSelector(
   selectedDatasetDimensionValueSelector,

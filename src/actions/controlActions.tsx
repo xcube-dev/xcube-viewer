@@ -447,19 +447,6 @@ export function incSelectedTime(increment: -1 | 1): IncSelectedTime {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const INC_SELECTED_DEPTH = "INC_SELECTED_DEPTH";
-
-export interface IncSelectedDepth {
-  type: typeof INC_SELECTED_DEPTH;
-  increment: -1 | 1;
-}
-
-export function incSelectedDepth(increment: -1 | 1): IncSelectedDepth {
-  return { type: INC_SELECTED_DEPTH, increment };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 export const INC_SELECTED_DIMENSION = "INC_SELECTED_DIMENSION";
 
 export interface IncSelectedDimension {
@@ -523,27 +510,6 @@ export function updateTimeAnimation(
   return {
     type: UPDATE_TIME_ANIMATION,
     timeAnimationActive,
-    dimensionAnimationInterval,
-  };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export const UPDATE_DEPTH_ANIMATION = "UPDATE_DEPTH_ANIMATION";
-
-export interface UpdateDepthAnimation {
-  type: typeof UPDATE_DEPTH_ANIMATION;
-  depthAnimationActive: boolean;
-  dimensionAnimationInterval: DimensionAnimationInterval;
-}
-
-export function updateDepthAnimation(
-  depthAnimationActive: boolean,
-  dimensionAnimationInterval: DimensionAnimationInterval,
-): UpdateDepthAnimation {
-  return {
-    type: UPDATE_DEPTH_ANIMATION,
-    depthAnimationActive,
     dimensionAnimationInterval,
   };
 }
@@ -920,21 +886,6 @@ export function setDatasetZLevel(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SELECT_DEPTH = "SELECT_DEPTH";
-
-export interface SelectDepth {
-  type: typeof SELECT_DEPTH;
-  selectedDepth: number | string | null;
-}
-
-export function selectDepth(
-  selectedDepth: number | string | null,
-): SelectDepth {
-  return { type: SELECT_DEPTH, selectedDepth: selectedDepth };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 export const SELECT_DIMENSION = "SELECT_DIMENSION";
 
 export interface SelectDimension {
@@ -979,12 +930,10 @@ export type ControlAction =
   | SetLayerVisibilities
   | SetLayerGroupStates
   | IncSelectedTime
-  | IncSelectedDepth
   | IncSelectedDimension
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode
   | UpdateTimeAnimation
-  | UpdateDepthAnimation
   | UpdateDimensionAnimation
   | SetMapInteraction
   | AddActivity
@@ -1012,6 +961,5 @@ export type ControlAction =
   | FlyTo
   | SetZoomLevel
   | SetDatasetZLevel
-  | SelectDepth
   | SelectDimension
   | SelectDimensionValues;

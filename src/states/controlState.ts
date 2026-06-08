@@ -141,8 +141,6 @@ export interface ControlState {
   showZoomInfoBox: boolean;
   zoomLevel: number | undefined;
   datasetZLevel: number | undefined;
-  selectedDepth: number | string | null;
-  depthAnimationActive: boolean;
   dimensionAnimationInterval: DimensionAnimationInterval;
   dimensionAnimationActive: boolean;
   selectedDimensionLabel: string | null;
@@ -231,8 +229,6 @@ export function newControlState(): ControlState {
     showZoomInfoBox: branding.showZoomInfoBox || false,
     zoomLevel: undefined,
     datasetZLevel: undefined,
-    selectedDepth: null,
-    depthAnimationActive: false,
     dimensionAnimationInterval: 1000,
     dimensionAnimationActive: false,
     selectedDimensionLabel: null,
