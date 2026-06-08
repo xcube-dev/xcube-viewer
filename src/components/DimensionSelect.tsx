@@ -48,8 +48,6 @@ export default function DimensionSelect({
   // and selectedDimensionValue
   if (!selectedVariable || !selectedDimensionLabel) return null;
 
-  console.log("selectedDimensionLabel", selectedDimensionLabel);
-  console.log("selectedVariable", selectedVariable);
   const handleDimensionChange = (event: SelectChangeEvent) => {
     selectDimension(String(event.target.value));
   };
@@ -63,8 +61,12 @@ export default function DimensionSelect({
 
   const nonSpatialDims =
     selectedVariable?.dims?.filter(
-      (dim) => !["lat", "lon", "x", "y"].includes(dim),
+      (dim) => !["lat", "lon", "latitude", "longitude", "x", "y"].includes(dim),
     ) ?? [];
+
+  if (nonSpatialDims.length <= 1) {
+    return null;
+  }
 
   //TODO: ducplication
   const hasSelectedDimension = selectedVariable?.dims?.includes(
@@ -84,7 +86,6 @@ export default function DimensionSelect({
       displayEmpty
       name="selectedDimension"
       renderValue={(value) => value || "Select dimension"}
-      /*      sx={{ width: "150px" }}*/
     >
       {nonSpatialDims.map((values) => {
         return (
