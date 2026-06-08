@@ -135,7 +135,7 @@ export function getDatasetTimeDimension(
   assertDefinedAndNotNull(dataset, "dataset");
   assertArrayNotEmpty(dataset.dimensions, "dataset.dimensions");
   const dimension = dataset.dimensions.find(
-    (dimension) => dimension.name === "time",
+    (dimension) => dimension.name === "time", // TODO: add "date", "year"
   );
   if (!dimension) {
     return null;
@@ -303,4 +303,16 @@ export function getDatasetLevel(
   } else {
     return undefined;
   }
+}
+
+export function isSpatialDim(dimName: string): boolean {
+  const normalized = dimName.toLowerCase();
+  return ["lat", "lon", "latitude", "longitude", "x", "y", "time"].includes(
+    normalized,
+  );
+}
+
+export function isTemporalDim(dimName: string): boolean {
+  const normalized = dimName.toLowerCase();
+  return ["time"].includes(normalized);
 }

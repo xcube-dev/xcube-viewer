@@ -63,21 +63,30 @@ import {
 } from "@/actions/dataActions";
 import i18n from "@/i18n";
 import {
+  Dataset,
   findDataset,
+  findDatasetDimension,
   findDatasetVariable,
   getDatasetTimeRange,
+  isSpatialDim,
+  isTemporalDim,
 } from "@/model/dataset";
 import {
   selectedDatasetDepthCoordinatesSelector,
   selectedDatasetDepthIndexSelector,
   selectedDatasetDimensionCoordinatesSelector,
   selectedDatasetDimensionIndexSelector,
+  selectedDatasetSelector,
   selectedDatasetTimeCoordinatesSelector,
   selectedDatasetTimeIndexSelector,
   selectedDimensionLabelSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
-import { ControlState, newControlState } from "@/states/controlState";
+import {
+  ControlState,
+  DimensionValues,
+  newControlState,
+} from "@/states/controlState";
 import { storeUserSettings } from "@/states/userSettings";
 import { findIndexCloseTo } from "@/util/find";
 import { isNumber } from "@/util/types";
@@ -188,6 +197,11 @@ export function controlReducer(
         selectedVariableName,
         selectedTimeRange,
         selectedTime,
+        selectedDimensionValues: getSelectedDimensionValuesForVariable(
+          state.selectedDimensionValues,
+          selectedDataset,
+          selectedVariableName,
+        ),
       };
     }
     case FLY_TO: {
@@ -217,9 +231,18 @@ export function controlReducer(
       };
     }
     case SELECT_VARIABLE: {
+      const selectedDataset = appState
+        ? selectedDatasetSelector(appState)
+        : null;
+
       return {
         ...state,
         selectedVariableName: action.selectedVariableName,
+        selectedDimensionValues: getSelectedDimensionValuesForVariable(
+          state.selectedDimensionValues,
+          selectedDataset,
+          action.selectedVariableName,
+        ),
       };
     }
     case TOGGLE_DATASET_RGB_LAYER: {
@@ -711,4 +734,36 @@ function selectUserPlace(
     selectedPlaceGroupIds,
     selectedPlaceId: placeId,
   };
+}
+
+function getSelectedDimensionValuesForVariable(
+  selectedDimensionValues: DimensionValues,
+  selectedDataset: Dataset | null | undefined,
+  selectedVariableName: string | null | undefined,
+) {
+  const nextSelectedDimensionValues = {
+    ...selectedDimensionValues,
+  };
+
+  if (!selectedDataset || !selectedVariableName) {
+    return nextSelectedDimensionValues;
+  }
+
+  const selectedVariable = findDatasetVariable(
+    selectedDataset,
+    selectedVariableName,
+  );
+
+  selectedVariable?.dims?.forEach((dim) => {
+    if (
+      !(dim in nextSelectedDimensionValues) &&
+      !isSpatialDim(dim) &&
+      !isTemporalDim(dim)
+    ) {
+      const dimension = findDatasetDimension(selectedDataset, dim);
+      nextSelectedDimensionValues[dim] = dimension?.coordinates?.[0] ?? null;
+    }
+  });
+
+  return nextSelectedDimensionValues;
 }
