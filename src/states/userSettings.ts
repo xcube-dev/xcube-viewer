@@ -70,7 +70,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("timeSeriesIncludeStdev", settings);
       storage.setPrimitiveProperty("timeSeriesChartTypeDefault", settings);
       storage.setPrimitiveProperty("timeSeriesUseMedian", settings);
-      storage.setPrimitiveProperty("DimensionAnimationInterval", settings);
+      storage.setPrimitiveProperty("dimensionAnimationInterval", settings);
       storage.setPrimitiveProperty("timeChunkSize", settings);
       storage.setPrimitiveProperty("sidePanelOpen", settings);
       storage.setPrimitiveProperty("sidePanelId", settings);
@@ -139,7 +139,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getIntProperty(
-        "DimensionAnimationInterval",
+        "dimensionAnimationInterval",
         settings,
         defaultSettings,
       );
