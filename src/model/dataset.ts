@@ -307,9 +307,7 @@ export function getDatasetLevel(
 
 export function isSpatialDim(dimName: string): boolean {
   const normalized = dimName.toLowerCase();
-  return ["lat", "lon", "latitude", "longitude", "x", "y", "time"].includes(
-    normalized,
-  );
+  return ["lat", "lon", "latitude", "longitude", "x", "y"].includes(normalized);
 }
 
 export function isTemporalDim(dimName: string): boolean {
