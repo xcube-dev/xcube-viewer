@@ -69,8 +69,6 @@ import {
   isTemporalDim,
 } from "@/model/dataset";
 import {
-  selectedDatasetDimensionCoordinatesSelector,
-  selectedDatasetDimensionIndexSelector,
   selectedDatasetSelector,
   selectedDatasetTimeCoordinatesSelector,
   selectedDatasetTimeIndexSelector,
@@ -340,10 +338,24 @@ export function controlReducer(
     }
     case INC_SELECTED_DIMENSION: {
       if (appState) {
-        let index = selectedDatasetDimensionIndexSelector(appState);
-        if (index >= 0) {
-          const coordinates =
-            selectedDatasetDimensionCoordinatesSelector(appState)!;
+        const label =
+          action.selectedDimensionLabel ??
+          selectedDimensionLabelSelector(appState);
+        const selectedDataset = selectedDatasetSelector(appState);
+        const dimension = selectedDataset
+          ? findDatasetDimension(selectedDataset, label)
+          : null;
+        const coordinates = dimension?.coordinates ?? null;
+        const selectedDimensionValue = label
+          ? state.selectedDimensionValues[label]
+          : null;
+        let index =
+          selectedDimensionValue !== null &&
+          selectedDimensionValue !== undefined &&
+          coordinates
+            ? findIndexCloseTo(coordinates, selectedDimensionValue as number)
+            : -1;
+        if (index >= 0 && coordinates) {
           index += action.increment;
           if (index < 0) {
             index = coordinates.length - 1;
@@ -351,15 +363,17 @@ export function controlReducer(
           if (index > coordinates.length - 1) {
             index = 0;
           }
-          const selectedDimensionValue = coordinates[index];
-          const label = selectedDimensionLabelSelector(appState);
+          const nextSelectedDimensionValue = coordinates[index];
           if (
             label &&
-            state.selectedDimensionValues[label] !== selectedDimensionValue
+            state.selectedDimensionValues[label] !== nextSelectedDimensionValue
           ) {
             return {
               ...state,
-              selectedDimensionValues: { [label]: selectedDimensionValue },
+              selectedDimensionValues: {
+                ...state.selectedDimensionValues,
+                [label]: nextSelectedDimensionValue,
+              },
             };
           }
         }
@@ -661,7 +675,7 @@ export function controlReducer(
     case SELECT_DIMENSION: {
       return {
         ...state,
-        selectedDimensionLabel: action.selectedDimension,
+        selectedDimensionLabel: action.selectedDimensionLabel,
       };
     }
     case CONFIGURE_SERVERS: {

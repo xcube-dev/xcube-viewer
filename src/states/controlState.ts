@@ -145,6 +145,7 @@ export interface ControlState {
   dimensionAnimationActive: boolean;
   selectedDimensionLabel: string | null;
   selectedDimensionValues: DimensionValues;
+  showAllDimensions: boolean;
 }
 
 export function newControlState(): ControlState {
@@ -233,6 +234,7 @@ export function newControlState(): ControlState {
     dimensionAnimationActive: false,
     selectedDimensionLabel: null,
     selectedDimensionValues: {},
+    showAllDimensions: false,
   };
   return loadUserSettings(state);
 }

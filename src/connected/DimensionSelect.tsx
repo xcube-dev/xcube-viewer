@@ -12,6 +12,7 @@ import { selectDimension } from "@/actions/controlActions";
 import {
   selectedDimensionLabelSelector,
   selectedVariableSelector,
+  showAllDimensionsSelector,
 } from "@/selectors/controlSelectors";
 
 const mapStateToProps = (state: AppState) => {
@@ -19,6 +20,7 @@ const mapStateToProps = (state: AppState) => {
     locale: state.controlState.locale,
     selectedVariable: selectedVariableSelector(state),
     selectedDimensionLabel: selectedDimensionLabelSelector(state),
+    showAllDimensions: showAllDimensionsSelector(state),
   };
 };
 

@@ -241,6 +241,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               value={i18n.languages[settings.locale]}
               onClick={handleLanguageMenuOpen}
             />
+            <SettingsSubPanel
+              label={i18n.get("Show all dimension selectors")}
+              value={getOnOff(settings.showAllDimensions)}
+            >
+              <ToggleSetting
+                propertyName={"showAllDimensions"}
+                settings={settings}
+                updateSettings={updateSettings}
+              />
+            </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("Time interval of the player")}>
               <TextField
                 variant="standard"

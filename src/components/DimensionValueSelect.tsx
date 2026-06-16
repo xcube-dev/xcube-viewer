@@ -36,7 +36,8 @@ export default function DimensionValueSelect({
   //TODO: simplify is possible
   useEffect(() => {
     const hasSelectedValue =
-      selectedDimensionValue &&
+      selectedDimensionValue !== null &&
+      selectedDimensionValue !== undefined &&
       selectedDimension?.coordinates?.includes(Number(selectedDimensionValue));
 
     if (
@@ -59,7 +60,8 @@ export default function DimensionValueSelect({
   if (
     !selectedDimensionLabel ||
     !selectedDimension ||
-    !selectedDimensionValue ||
+    selectedDimensionValue === null ||
+    selectedDimensionValue === undefined ||
     !selectedVariable?.dims?.includes(selectedDimension.name)
   )
     return null;

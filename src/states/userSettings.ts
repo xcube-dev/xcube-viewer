@@ -98,6 +98,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("exportResolution", settings);
       storage.setPrimitiveProperty("showProgressBar", settings);
       storage.setPrimitiveProperty("showZoomInfoBox", settings);
+      storage.setPrimitiveProperty("showAllDimensions", settings);
       if (import.meta.env.DEV) {
         console.debug("Stored user settings:", settings);
       }
@@ -201,6 +202,11 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
       );
       storage.getStringProperty("themeMode", settings, defaultSettings);
       storage.getStringProperty("exportResolution", settings, defaultSettings);
+      storage.getBooleanProperty(
+        "showAllDimensions",
+        settings,
+        defaultSettings,
+      );
       if (import.meta.env.DEV) {
         console.debug("Loaded user settings:", settings);
       }

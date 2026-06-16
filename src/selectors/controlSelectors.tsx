@@ -164,6 +164,8 @@ export const selectedDimensionLabelSelector = (state: AppState) =>
   state.controlState.selectedDimensionLabel;
 export const selectedDimensionValuesSelector = (state: AppState) =>
   state.controlState.selectedDimensionValues;
+export const showAllDimensionsSelector = (state: AppState) =>
+  state.controlState.showAllDimensions;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -288,6 +290,40 @@ export const selectedDatasetDimensionSelector = createSelector(
 export const selectedDatasetDimensionValueSelector = createSelector(
   selectedDimensionValuesSelector,
   selectedDimensionLabelSelector,
+  (values: DimensionValues, label: string | null): string | number | null => {
+    if (label === null) {
+      return null;
+    }
+
+    return values[label] ?? null;
+  },
+);
+
+const dimensionLabelArgumentSelector = (
+  _state: AppState,
+  dimensionLabel?: string | null,
+) => dimensionLabel ?? null;
+
+const _getEffectiveSelectedDimensionLabel = (
+  selectedDimensionLabel: string | null,
+  dimensionLabel: string | null,
+): string | null => dimensionLabel ?? selectedDimensionLabel;
+
+export const effectiveSelectedDimensionLabelSelector = createSelector(
+  selectedDimensionLabelSelector,
+  dimensionLabelArgumentSelector,
+  _getEffectiveSelectedDimensionLabel,
+);
+
+export const selectedDatasetDimensionForLabelSelector = createSelector(
+  selectedDatasetSelector,
+  effectiveSelectedDimensionLabelSelector,
+  _findDatasetDimension,
+);
+
+export const selectedDatasetDimensionValueForLabelSelector = createSelector(
+  selectedDimensionValuesSelector,
+  effectiveSelectedDimensionLabelSelector,
   (values: DimensionValues, label: string | null): string | number | null => {
     if (label === null) {
       return null;

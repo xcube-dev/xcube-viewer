@@ -452,10 +452,18 @@ export const INC_SELECTED_DIMENSION = "INC_SELECTED_DIMENSION";
 export interface IncSelectedDimension {
   type: typeof INC_SELECTED_DIMENSION;
   increment: -1 | 1;
+  selectedDimensionLabel?: string | null;
 }
 
-export function incSelectedDimension(increment: -1 | 1): IncSelectedDimension {
-  return { type: INC_SELECTED_DIMENSION, increment };
+export function incSelectedDimension(
+  increment: -1 | 1,
+  selectedDimensionLabel?: string | null,
+): IncSelectedDimension {
+  return {
+    type: INC_SELECTED_DIMENSION,
+    increment,
+    selectedDimensionLabel,
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -890,13 +898,13 @@ export const SELECT_DIMENSION = "SELECT_DIMENSION";
 
 export interface SelectDimension {
   type: typeof SELECT_DIMENSION;
-  selectedDimension: string | null;
+  selectedDimensionLabel: string | null;
 }
 
 export function selectDimension(
-  selectedDimension: string | null,
+  selectedDimensionLabel: string | null,
 ): SelectDimension {
-  return { type: SELECT_DIMENSION, selectedDimension: selectedDimension };
+  return { type: SELECT_DIMENSION, selectedDimensionLabel };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

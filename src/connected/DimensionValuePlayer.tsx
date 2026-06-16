@@ -14,19 +14,33 @@ import {
   updateDimensionAnimation,
 } from "@/actions/controlActions";
 import {
-  selectedDatasetDimensionSelector,
-  selectedDatasetDimensionValueSelector,
-  selectedDimensionLabelSelector,
+  effectiveSelectedDimensionLabelSelector,
+  selectedDatasetDimensionForLabelSelector,
+  selectedDatasetDimensionValueForLabelSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
-const mapStateToProps = (state: AppState) => {
+interface OwnProps {
+  dimensionLabel?: string;
+}
+
+const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
+  const selectedDimensionLabel = effectiveSelectedDimensionLabelSelector(
+    state,
+    ownProps.dimensionLabel,
+  );
   return {
     locale: state.controlState.locale,
     selectedVariable: selectedVariableSelector(state),
-    selectedDimensionLabel: selectedDimensionLabelSelector(state),
-    selectedDimension: selectedDatasetDimensionSelector(state),
-    selectedDimensionValue: selectedDatasetDimensionValueSelector(state),
+    selectedDimensionLabel,
+    selectedDimension: selectedDatasetDimensionForLabelSelector(
+      state,
+      ownProps.dimensionLabel,
+    ),
+    selectedDimensionValue: selectedDatasetDimensionValueForLabelSelector(
+      state,
+      ownProps.dimensionLabel,
+    ),
     dimensionAnimationActive: state.controlState.dimensionAnimationActive,
     dimensionAnimationInterval: state.controlState.dimensionAnimationInterval,
   };

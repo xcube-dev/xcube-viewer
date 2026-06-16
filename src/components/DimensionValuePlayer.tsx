@@ -46,7 +46,10 @@ interface DimensionValuePlayerProps extends WithLocale {
   selectDimensionValues: (selectedValues: DimensionValues) => void;
   dimensionAnimationActive: boolean;
   dimensionAnimationInterval: DimensionAnimationInterval;
-  incSelectedDimension: (increment: -1 | 1) => void;
+  incSelectedDimension: (
+    increment: -1 | 1,
+    selectedDimensionLabel?: string | null,
+  ) => void;
   updateDimensionAnimation: (
     active: boolean,
     interval: DimensionAnimationInterval,
@@ -100,15 +103,15 @@ export default function DimensionValuePlayer({
     !selectedDimension ||
     !selectedDimensionLabel ||
     !selectedVariable?.dims?.includes(selectedDimension.name) ||
-    !selectedDimensionValue
+    selectedDimensionValue === null ||
+    selectedDimensionValue === undefined
   )
     return null;
 
   const selectedCoordinates = selectedDimension.coordinates;
-  console.log("selectedCoordinates", selectedCoordinates);
 
   const handlePlayEvent = () => {
-    incSelectedDimension(1);
+    incSelectedDimension(1, selectedDimensionLabel);
   };
 
   const handlePlayButtonClick = () => {
@@ -119,11 +122,11 @@ export default function DimensionValuePlayer({
   };
 
   const handleNextStepButtonClick = () => {
-    incSelectedDimension(1);
+    incSelectedDimension(1, selectedDimensionLabel);
   };
 
   const handlePrevStepButtonClick = () => {
-    incSelectedDimension(-1);
+    incSelectedDimension(-1, selectedDimensionLabel);
   };
 
   const handleFirstStepButtonClick = () => {

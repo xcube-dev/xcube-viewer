@@ -20,12 +20,14 @@ import i18n from "@/i18n";
 interface DimensionsSelectProps extends WithLocale {
   selectedVariable: Variable | null;
   selectedDimensionLabel: string | null;
-  selectDimension: (selectedDimension: string | null) => void;
+  showAllDimensions: boolean;
+  selectDimension: (selectedDimensionLabel: string | null) => void;
 }
 
 export default function DimensionSelect({
   selectedVariable,
   selectedDimensionLabel,
+  showAllDimensions,
   selectDimension,
 }: DimensionsSelectProps) {
   useEffect(() => {
@@ -44,9 +46,8 @@ export default function DimensionSelect({
     }
   }, [selectedVariable, selectedDimensionLabel, selectDimension]);
 
-  // only show DepthSelect if selectedVariables has depth dim
-  // and selectedDimensionValue
-  if (!selectedVariable || !selectedDimensionLabel) return null;
+  if (!selectedVariable || !selectedDimensionLabel || showAllDimensions)
+    return null;
 
   const handleDimensionChange = (event: SelectChangeEvent) => {
     selectDimension(String(event.target.value));

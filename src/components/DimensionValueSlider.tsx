@@ -60,7 +60,8 @@ export default function DimensionValueSliderProps({
   if (
     !selectedDimension ||
     !selectedVariable?.dims?.includes(selectedDimension.name) ||
-    !selectedDimensionValue
+    selectedDimensionValue === null ||
+    selectedDimensionValue === undefined
   )
     return null;
 
