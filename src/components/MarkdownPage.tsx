@@ -16,8 +16,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { TransitionProps } from "@mui/material/transitions";
 
 import { makeStyles } from "@/util/styles";
-import { styled } from "@mui/system";
 import Markdown from "@/components/Markdown";
+import { Container } from "@mui/material";
 
 const styles = makeStyles({
   dialog: (theme) => ({
@@ -35,11 +35,6 @@ const styles = makeStyles({
     flex: 1,
   }),
 });
-const StyledDiv = styled("div")(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  marginLeft: theme.spacing(40),
-  marginRight: theme.spacing(40),
-}));
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children: React.ReactElement },
@@ -66,7 +61,9 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
       fullScreen
       open={open}
       onClose={onClose}
-      TransitionComponent={Transition}
+      slots={{
+        transition: Transition,
+      }}
       PaperProps={{ tabIndex: -1 }}
     >
       <AppBar sx={styles.appBar}>
@@ -86,9 +83,9 @@ const MarkdownPage: React.FC<MarkdownPageProps> = ({
         </Toolbar>
       </AppBar>
       <DialogContent sx={styles.dialog}>
-        <StyledDiv>
+        <Container maxWidth="md" sx={{ mt: 4}}>
           <Markdown text={text} />
-        </StyledDiv>
+        </Container>
       </DialogContent>
     </Dialog>
   );
