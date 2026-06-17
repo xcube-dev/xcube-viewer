@@ -13,11 +13,11 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import DialogContent from "@mui/material/DialogContent";
+import Container from "@mui/material/Container";
 import { TransitionProps } from "@mui/material/transitions";
 
 import { makeStyles } from "@/util/styles";
 import Markdown from "@/components/Markdown";
-import { Container } from "@mui/material";
 
 const styles = makeStyles({
   dialog: (theme) => ({
