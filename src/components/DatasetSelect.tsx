@@ -4,10 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
-import Divider from "@mui/material/Divider";
+import Collapse from "@mui/material/Collapse";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InputLabel from "@mui/material/InputLabel";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import TextField from "@mui/material/TextField";
@@ -46,6 +49,11 @@ export default function DatasetSelect({
   toggleDatasetRgbLayer,
   locateSelectedDataset,
 }: DatasetSelectProps) {
+  const [expandedGroups, setExpandedGroups] = useState<
+    Record<string, boolean>
+  >({});
+  const [isFilteringDatasets, setIsFilteringDatasets] = useState(false);
+
   const sortedDatasets = useMemo(() => {
     return [...(datasets || [])].sort(
       (dataset1: Dataset, dataset2: Dataset) => {
@@ -83,10 +91,29 @@ export default function DatasetSelect({
 
   const hasGroups = sortedDatasets.some((dataset) => !!dataset.groupTitle);
 
+  const selectedDatasetGroupTitle = selectedDataset
+    ? getDatasetGroupTitle(selectedDataset)
+    : undefined;
+
   const getGroupDescription = (groupTitle: string) =>
     sortedDatasets.find(
       (dataset) => getDatasetGroupTitle(dataset) === groupTitle,
     )?.groupDescription;
+
+  const getGroupExpanded = (groupTitle: string) =>
+    isFilteringDatasets ||
+    (expandedGroups[groupTitle] ?? groupTitle === selectedDatasetGroupTitle);
+
+  const toggleGroupExpanded = (groupTitle: string) => {
+    setExpandedGroups((currentExpandedGroups) => ({
+      ...currentExpandedGroups,
+      [groupTitle]: !(
+        isFilteringDatasets ||
+        (currentExpandedGroups[groupTitle] ??
+          groupTitle === selectedDatasetGroupTitle)
+      ),
+    }));
+  };
 
   const selectedDatasetId = selectedDataset ? selectedDataset.id : "";
 
@@ -107,6 +134,9 @@ export default function DatasetSelect({
       onChange={(_, dataset) => {
         selectDataset(dataset?.id ?? null, datasets || [], true);
       }}
+      onInputChange={(_, inputValue, reason) => {
+        setIsFilteringDatasets(reason === "input" && inputValue.trim() !== "");
+      }}
       getOptionLabel={getDatasetLabel}
       groupBy={hasGroups ? getDatasetGroupTitle : undefined}
       isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -121,12 +151,44 @@ export default function DatasetSelect({
       }}
       renderGroup={(params) => {
         const groupDescription = getGroupDescription(params.group);
+        const expanded = getGroupExpanded(params.group);
+        const groupListId = getDatasetGroupListId(params.group);
         const groupTitle = (
-          <Divider sx={{ mx: 1, my: 0.5 }}>
+          <ListItemButton
+            dense
+            aria-expanded={expanded}
+            aria-controls={groupListId}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleGroupExpanded(params.group);
+            }}
+            sx={{
+              mx: 1,
+              my: 0.5,
+              minHeight: 28,
+              px: 0.75,
+              py: 0,
+              color: "text.secondary",
+              "&::before, &::after": {
+                content: '""',
+                borderTop: 1,
+                borderColor: "divider",
+                flex: 1,
+              },
+              "&::before": { mr: 1 },
+              "&::after": { ml: 1 },
+            }}
+          >
             <Typography fontSize="small" color="text.secondary">
               {params.group}
             </Typography>
-          </Divider>
+            {expanded ? (
+              <ExpandLessIcon fontSize="small" sx={{ ml: 0.25 }} />
+            ) : (
+              <ExpandMoreIcon fontSize="small" sx={{ ml: 0.25 }} />
+            )}
+          </ListItemButton>
         );
 
         return (
@@ -138,12 +200,23 @@ export default function DatasetSelect({
             ) : (
               groupTitle
             )}
-            <ul style={{ margin: 0, padding: 0 }}>{params.children}</ul>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+              <ul id={groupListId} style={{ margin: 0, padding: 0 }}>
+                {params.children}
+              </ul>
+            </Collapse>
           </li>
         );
       }}
       renderOption={({ key, ...props }, dataset) => (
-        <li key={key} {...props}>
+        <li
+          key={key}
+          {...props}
+          style={{
+            ...props.style,
+            ...(hasGroups ? { paddingLeft: 32 } : {}),
+          }}
+        >
           <ListItemText>{getDatasetLabel(dataset)}</ListItemText>
           {dataset.id === selectedDataset2Id && (
             <PushPinIcon fontSize="small" color="secondary" />
@@ -210,4 +283,8 @@ function getDatasetLabel(dataset: Dataset | undefined) {
 }
 function getDatasetGroupTitle(dataset: Dataset) {
   return dataset.groupTitle || i18n.get("Others");
+}
+
+function getDatasetGroupListId(groupTitle: string) {
+  return `dataset-select-group-${encodeURIComponent(groupTitle)}`;
 }
