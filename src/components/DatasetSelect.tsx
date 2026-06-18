@@ -4,14 +4,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { ReactElement, useMemo } from "react";
+import { useMemo } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
 import Divider from "@mui/material/Divider";
-import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import ListItemText from "@mui/material/ListItemText";
-import MenuItem from "@mui/material/MenuItem";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -48,47 +47,48 @@ export default function DatasetSelect({
   locateSelectedDataset,
 }: DatasetSelectProps) {
   const sortedDatasets = useMemo(() => {
-    return datasets.sort((dataset1: Dataset, dataset2: Dataset) => {
-      const groupOrder1 = dataset1.groupOrder ?? Infinity;
-      const groupOrder2 = dataset2.groupOrder ?? Infinity;
+    return [...(datasets || [])].sort(
+      (dataset1: Dataset, dataset2: Dataset) => {
+        const groupOrder1 = dataset1.groupOrder ?? Infinity;
+        const groupOrder2 = dataset2.groupOrder ?? Infinity;
 
-      if (groupOrder1 !== groupOrder2) {
-        return groupOrder1 - groupOrder2;
-      }
+        if (groupOrder1 !== groupOrder2) {
+          return groupOrder1 - groupOrder2;
+        }
 
-      const groupTitle1 = dataset1.groupTitle || "zzz";
-      const groupTitle2 = dataset2.groupTitle || "zzz";
-      const delta = groupTitle1.localeCompare(groupTitle2);
-      if (delta !== 0) {
-        return delta;
-      }
-      const sortValue1 = dataset1.sortValue;
-      const sortValue2 = dataset2.sortValue;
+        const groupTitle1 = dataset1.groupTitle || "zzz";
+        const groupTitle2 = dataset2.groupTitle || "zzz";
+        const delta = groupTitle1.localeCompare(groupTitle2);
+        if (delta !== 0) {
+          return delta;
+        }
+        const sortValue1 = dataset1.sortValue;
+        const sortValue2 = dataset2.sortValue;
 
-      // Handles when both sortValue are available
-      if (sortValue1 !== undefined && sortValue2 !== undefined) {
-        return sortValue1 - sortValue2;
-      }
+        // Handles when both sortValue are available
+        if (sortValue1 !== undefined && sortValue2 !== undefined) {
+          return sortValue1 - sortValue2;
+        }
 
-      // Handles when no sortValue is available
-      if (sortValue1 === undefined && sortValue2 === undefined) {
-        return dataset1.title.localeCompare(dataset2.title);
-      }
+        // Handles when no sortValue is available
+        if (sortValue1 === undefined && sortValue2 === undefined) {
+          return dataset1.title.localeCompare(dataset2.title);
+        }
 
-      // Handles when only one sortValue is available
-      return sortValue1 !== undefined ? -1 : 1;
-    });
+        // Handles when only one sortValue is available
+        return sortValue1 !== undefined ? -1 : 1;
+      },
+    );
   }, [datasets]);
 
-  const hasGroups = sortedDatasets.length > 0 && !!sortedDatasets[0].groupTitle;
+  const hasGroups = sortedDatasets.some((dataset) => !!dataset.groupTitle);
 
-  const handleDatasetChange = (event: SelectChangeEvent) => {
-    const datasetId = event.target.value || null;
-    selectDataset(datasetId, datasets, true);
-  };
+  const getGroupDescription = (groupTitle: string) =>
+    sortedDatasets.find(
+      (dataset) => getDatasetGroupTitle(dataset) === groupTitle,
+    )?.groupDescription;
 
   const selectedDatasetId = selectedDataset ? selectedDataset.id : "";
-  datasets = datasets || [];
 
   const datasetSelectLabel = (
     <InputLabel shrink htmlFor="dataset-select">
@@ -96,61 +96,71 @@ export default function DatasetSelect({
     </InputLabel>
   );
 
-  const items: ReactElement[] = [];
-  let lastGroupTitle: string | undefined;
-  sortedDatasets.forEach((dataset) => {
-    if (hasGroups) {
-      const groupTitle = dataset.groupTitle || i18n.get("Others");
-      const groupDescription = dataset.groupDescription;
-      if (groupTitle !== lastGroupTitle) {
-        const content = (
-          <Divider key={groupTitle}>
+  const datasetSelect = (
+    <Autocomplete
+      id="dataset-select"
+      options={sortedDatasets}
+      value={
+        sortedDatasets.find((dataset) => dataset.id === selectedDatasetId) ??
+        null
+      }
+      onChange={(_, dataset) => {
+        selectDataset(dataset?.id ?? null, datasets || [], true);
+      }}
+      getOptionLabel={getDatasetLabel}
+      groupBy={hasGroups ? getDatasetGroupTitle : undefined}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      disableClearable={!!selectedDataset}
+      autoHighlight
+      blurOnSelect
+      sx={{
+        display: "inline-flex",
+        minWidth: 240,
+        mt: 2,
+        verticalAlign: "bottom",
+      }}
+      renderGroup={(params) => {
+        const groupDescription = getGroupDescription(params.group);
+        const groupTitle = (
+          <Divider sx={{ mx: 1, my: 0.5 }}>
             <Typography fontSize="small" color="text.secondary">
-              {groupTitle}
+              {params.group}
             </Typography>
           </Divider>
         );
-        items.push(
-          groupDescription ? (
-            <Tooltip arrow title={groupDescription}>
-              {content}
-            </Tooltip>
-          ) : (
-            content
-          ),
+
+        return (
+          <li key={params.key}>
+            {groupDescription ? (
+              <Tooltip arrow title={groupDescription}>
+                {groupTitle}
+              </Tooltip>
+            ) : (
+              groupTitle
+            )}
+            <ul style={{ margin: 0, padding: 0 }}>{params.children}</ul>
+          </li>
         );
-      }
-      lastGroupTitle = groupTitle;
-    }
-
-    items.push(
-      <MenuItem
-        key={dataset.id}
-        value={dataset.id}
-        selected={dataset.id === selectedDatasetId}
-      >
-        <ListItemText>{getDatasetLabel(dataset)} </ListItemText>
-        {dataset.id === selectedDataset2Id && (
-          <PushPinIcon fontSize="small" color="secondary" />
-        )}
-      </MenuItem>,
-    );
-  });
-
-  const datasetSelect = (
-    <Select
-      variant="standard"
-      value={selectedDatasetId}
-      onChange={handleDatasetChange}
-      input={<Input name="dataset" id="dataset-select" />}
-      displayEmpty
-      name="dataset"
-      renderValue={() =>
-        getDatasetLabel(datasets.find((d) => d.id === selectedDatasetId))
-      }
-    >
-      {items}
-    </Select>
+      }}
+      renderOption={({ key, ...props }, dataset) => (
+        <li key={key} {...props}>
+          <ListItemText>{getDatasetLabel(dataset)}</ListItemText>
+          {dataset.id === selectedDataset2Id && (
+            <PushPinIcon fontSize="small" color="secondary" />
+          )}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          inputProps={{
+            ...params.inputProps,
+            name: "dataset",
+          }}
+        />
+      )}
+    />
   );
 
   const rgbVisible =
@@ -197,4 +207,7 @@ function getDatasetLabel(dataset: Dataset | undefined) {
     return "?";
   }
   return dataset.title || dataset.id;
+}
+function getDatasetGroupTitle(dataset: Dataset) {
+  return dataset.groupTitle || i18n.get("Others");
 }
