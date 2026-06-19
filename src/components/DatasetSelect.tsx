@@ -49,9 +49,9 @@ export default function DatasetSelect({
   toggleDatasetRgbLayer,
   locateSelectedDataset,
 }: DatasetSelectProps) {
-  const [expandedGroups, setExpandedGroups] = useState<
-    Record<string, boolean>
-  >({});
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
+    {},
+  );
   const [isFilteringDatasets, setIsFilteringDatasets] = useState(false);
 
   const sortedDatasets = useMemo(() => {
@@ -89,7 +89,8 @@ export default function DatasetSelect({
     );
   }, [datasets]);
 
-  const hasGroups = sortedDatasets.some((dataset) => !!dataset.groupTitle);
+  const hasMultipleGroups =
+    new Set(sortedDatasets.map(getDatasetGroupTitle)).size > 1;
 
   const selectedDatasetGroupTitle = selectedDataset
     ? getDatasetGroupTitle(selectedDataset)
@@ -138,7 +139,7 @@ export default function DatasetSelect({
         setIsFilteringDatasets(reason === "input" && inputValue.trim() !== "");
       }}
       getOptionLabel={getDatasetLabel}
-      groupBy={hasGroups ? getDatasetGroupTitle : undefined}
+      groupBy={hasMultipleGroups ? getDatasetGroupTitle : undefined}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       disableClearable={!!selectedDataset}
       autoHighlight
@@ -214,7 +215,7 @@ export default function DatasetSelect({
           {...props}
           style={{
             ...props.style,
-            ...(hasGroups ? { paddingLeft: 32 } : {}),
+            ...(hasMultipleGroups ? { paddingLeft: 32 } : {}),
           }}
         >
           <ListItemText>{getDatasetLabel(dataset)}</ListItemText>

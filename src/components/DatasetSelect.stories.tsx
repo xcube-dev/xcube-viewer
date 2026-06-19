@@ -58,25 +58,88 @@ const meta = {
   component: DatasetSelectDemo,
   title: "DatasetSelect",
   parameters: {
-    // Optional parameter to center the component in the Canvas.
-    // More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
   },
-  // This component will have an automatically generated Autodocs entry:
-  // https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
 } satisfies Meta<typeof DatasetSelectDemo>;
 
-// noinspection JSUnusedGlobalSymbols
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Grouped: Story = {
+export const GroupedOneSelected: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Datasets are organized into multiple groups. Demonstrates group headers, collapsing/expanding, tooltips, and one selected dataset.",
+      },
+    },
+  },
+  args: {
+    datasets,
+    selectedDatasetId: "de-hamburg",
+    selectedDataset2Id: null,
+  },
+};
+
+export const GroupedTwoSelected: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "This story demonstrates a component with two selected datasets.",
+      },
+    },
+  },
   args: {
     datasets,
     selectedDatasetId: "de-hamburg",
     selectedDataset2Id: "fr-paris",
+  },
+};
+
+export const SingleGroup: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "All datasets belong to the same group. Demonstrates that group headers are not rendered when all datasets share the same group.",
+      },
+    },
+  },
+  args: {
+    datasets: datasets.filter((dataset) => dataset.groupTitle === "Germany"),
+    selectedDatasetId: "de-hamburg",
+    selectedDataset2Id: null,
+  },
+};
+
+export const NoGroups: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Datasets do not belong to any group. Demonstrates the component's behavior when groupTitle is undefined.",
+      },
+    },
+  },
+  args: {
+    datasets: datasets.map((dataset) => ({
+      ...dataset,
+      groupTitle: undefined,
+      groupDescription: undefined,
+    })),
+    selectedDatasetId: "de-hamburg",
+    selectedDataset2Id: null,
+  },
+};
+
+export const Empty: Story = {
+  args: {
+    datasets: [],
+    selectedDatasetId: null,
+    selectedDataset2Id: null,
   },
 };
 
