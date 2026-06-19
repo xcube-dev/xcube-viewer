@@ -55,53 +55,52 @@ export default function DatasetSelect({
   const [isFilteringDatasets, setIsFilteringDatasets] = useState(false);
 
   const sortedDatasets = useMemo(() => {
-    return [...(datasets || [])].sort(
-      (dataset1: Dataset, dataset2: Dataset) => {
-        const groupOrder1 = dataset1.groupOrder ?? Infinity;
-        const groupOrder2 = dataset2.groupOrder ?? Infinity;
+    return [...datasets].sort((dataset1: Dataset, dataset2: Dataset) => {
+      const groupOrder1 = dataset1.groupOrder ?? Infinity;
+      const groupOrder2 = dataset2.groupOrder ?? Infinity;
 
-        if (groupOrder1 !== groupOrder2) {
-          return groupOrder1 - groupOrder2;
-        }
+      if (groupOrder1 !== groupOrder2) {
+        return groupOrder1 - groupOrder2;
+      }
 
-        const groupTitle1 = dataset1.groupTitle || "zzz";
-        const groupTitle2 = dataset2.groupTitle || "zzz";
-        const delta = groupTitle1.localeCompare(groupTitle2);
-        if (delta !== 0) {
-          return delta;
-        }
-        const sortValue1 = dataset1.sortValue;
-        const sortValue2 = dataset2.sortValue;
+      const groupTitle1 = dataset1.groupTitle || "zzz";
+      const groupTitle2 = dataset2.groupTitle || "zzz";
+      const delta = groupTitle1.localeCompare(groupTitle2);
+      if (delta !== 0) {
+        return delta;
+      }
+      const sortValue1 = dataset1.sortValue;
+      const sortValue2 = dataset2.sortValue;
 
-        // Handles when both sortValue are available
-        if (sortValue1 !== undefined && sortValue2 !== undefined) {
-          return sortValue1 - sortValue2;
-        }
+      // Handles when both sortValue are available
+      if (sortValue1 !== undefined && sortValue2 !== undefined) {
+        return sortValue1 - sortValue2;
+      }
 
-        // Handles when no sortValue is available
-        if (sortValue1 === undefined && sortValue2 === undefined) {
-          return dataset1.title.localeCompare(dataset2.title);
-        }
+      // Handles when no sortValue is available
+      if (sortValue1 === undefined && sortValue2 === undefined) {
+        return dataset1.title.localeCompare(dataset2.title);
+      }
 
-        // Handles when only one sortValue is available
-        return sortValue1 !== undefined ? -1 : 1;
-      },
-    );
+      // Handles when only one sortValue is available
+      return sortValue1 !== undefined ? -1 : 1;
+    });
   }, [datasets]);
 
   const hasMultipleGroups =
-    new Set(sortedDatasets.map(getDatasetGroupTitle)).size > 1;
+    new Set(sortedDatasets.map(getDatasetGroupLabel)).size > 1;
 
   const selectedDatasetGroupTitle = selectedDataset
-    ? getDatasetGroupTitle(selectedDataset)
+    ? getDatasetGroupLabel(selectedDataset)
     : undefined;
 
+  // Group handling functions for rendering group headers, descriptions, and collapse/expand state
   const getGroupDescription = (groupTitle: string) =>
     sortedDatasets.find(
-      (dataset) => getDatasetGroupTitle(dataset) === groupTitle,
+      (dataset) => getDatasetGroupLabel(dataset) === groupTitle,
     )?.groupDescription;
 
-  const getGroupExpanded = (groupTitle: string) =>
+  const isGroupExpanded = (groupTitle: string) =>
     isFilteringDatasets ||
     (expandedGroups[groupTitle] ?? groupTitle === selectedDatasetGroupTitle);
 
@@ -116,7 +115,7 @@ export default function DatasetSelect({
     }));
   };
 
-  const selectedDatasetId = selectedDataset ? selectedDataset.id : "";
+  const selectedDatasetId = selectedDataset?.id ?? "";
 
   const datasetSelectLabel = (
     <InputLabel shrink htmlFor="dataset-select">
@@ -139,7 +138,7 @@ export default function DatasetSelect({
         setIsFilteringDatasets(reason === "input" && inputValue.trim() !== "");
       }}
       getOptionLabel={getDatasetLabel}
-      groupBy={hasMultipleGroups ? getDatasetGroupTitle : undefined}
+      groupBy={hasMultipleGroups ? getDatasetGroupLabel : undefined}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       disableClearable={!!selectedDataset}
       autoHighlight
@@ -152,13 +151,11 @@ export default function DatasetSelect({
       }}
       renderGroup={(params) => {
         const groupDescription = getGroupDescription(params.group);
-        const expanded = getGroupExpanded(params.group);
-        const groupListId = getDatasetGroupListId(params.group);
+        const expanded = isGroupExpanded(params.group);
         const groupTitle = (
           <ListItemButton
             dense
             aria-expanded={expanded}
-            aria-controls={groupListId}
             onMouseDown={(event) => event.preventDefault()}
             onClick={(event) => {
               event.stopPropagation();
@@ -202,9 +199,7 @@ export default function DatasetSelect({
               groupTitle
             )}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <ul id={groupListId} style={{ margin: 0, padding: 0 }}>
-                {params.children}
-              </ul>
+              <ul style={{ margin: 0, padding: 0 }}>{params.children}</ul>
             </Collapse>
           </li>
         );
@@ -282,10 +277,6 @@ function getDatasetLabel(dataset: Dataset | undefined) {
   }
   return dataset.title || dataset.id;
 }
-function getDatasetGroupTitle(dataset: Dataset) {
+function getDatasetGroupLabel(dataset: Dataset) {
   return dataset.groupTitle || i18n.get("Others");
-}
-
-function getDatasetGroupListId(groupTitle: string) {
-  return `dataset-select-group-${encodeURIComponent(groupTitle)}`;
 }
