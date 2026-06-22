@@ -7,6 +7,14 @@
 * Fixed tile visualization for datasets with unsupported CRS (e.g. UTM, LAEA).
   Layer extents are now only applied for supported CRS (EPSG:4326, EPSG:3857) 
   to avoid incorrect cut-offs. (#593)
+  
+### Other changes
+
+* Updated dependencies. Now using
+	- `react-draggable 4.5.0` (pinned due to issue in 4.6.0)
+	- `@vitest/coverage-v8 ^3.2.4`
+	- `@vitest/ui ^3.2.4`
+	- `vitest ^3.2.4`
 
 ## Changes in version 1.7.2
 
