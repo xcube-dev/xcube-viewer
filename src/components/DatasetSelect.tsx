@@ -17,6 +17,7 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 import i18n from "@/i18n";
 import type { Dataset } from "@/model/dataset";
@@ -90,8 +91,19 @@ export default function DatasetSelect({
   const hasMultipleGroups =
     new Set(sortedDatasets.map(getDatasetGroupLabel)).size > 1;
 
+  // this where to set the threshold to decide whether to collapse groups by default or not
+  const collapseGroupsByDefault = sortedDatasets.length > 10;
+
   const selectedDatasetGroupTitle = selectedDataset
     ? getDatasetGroupLabel(selectedDataset)
+    : undefined;
+
+  const selectedDataset2 = sortedDatasets.find(
+    (d) => d.id === selectedDataset2Id,
+  );
+
+  const selectedDataset2GroupTitle = selectedDataset2
+    ? getDatasetGroupLabel(selectedDataset2)
     : undefined;
 
   // Group handling functions for rendering group headers, descriptions, and collapse/expand state
@@ -100,19 +112,31 @@ export default function DatasetSelect({
       (dataset) => getDatasetGroupLabel(dataset) === groupTitle,
     )?.groupDescription;
 
+  const isDefaultExpanded = (groupTitle: string) => {
+    if (!collapseGroupsByDefault) {
+      return true;
+    }
+
+    return (
+      groupTitle === selectedDatasetGroupTitle ||
+      groupTitle === selectedDataset2GroupTitle
+    );
+  };
+
   const isGroupExpanded = (groupTitle: string) =>
     isFilteringDatasets ||
-    (expandedGroups[groupTitle] ?? groupTitle === selectedDatasetGroupTitle);
+    (expandedGroups[groupTitle] ?? isDefaultExpanded(groupTitle));
 
   const toggleGroupExpanded = (groupTitle: string) => {
-    setExpandedGroups((currentExpandedGroups) => ({
-      ...currentExpandedGroups,
-      [groupTitle]: !(
-        isFilteringDatasets ||
-        (currentExpandedGroups[groupTitle] ??
-          groupTitle === selectedDatasetGroupTitle)
-      ),
-    }));
+    setExpandedGroups((currentExpandedGroups) => {
+      const currentlyExpanded =
+        currentExpandedGroups[groupTitle] ?? isDefaultExpanded(groupTitle);
+
+      return {
+        ...currentExpandedGroups,
+        [groupTitle]: !currentlyExpanded,
+      };
+    });
   };
 
   const selectedDatasetId = selectedDataset?.id ?? "";
@@ -140,7 +164,6 @@ export default function DatasetSelect({
       getOptionLabel={getDatasetLabel}
       groupBy={hasMultipleGroups ? getDatasetGroupLabel : undefined}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      disableClearable={!!selectedDataset}
       autoHighlight
       blurOnSelect
       sx={{
@@ -168,36 +191,41 @@ export default function DatasetSelect({
               px: 0.75,
               py: 0,
               color: "text.secondary",
-              "&::before, &::after": {
-                content: '""',
-                borderTop: 1,
-                borderColor: "divider",
-                flex: 1,
-              },
-              "&::before": { mr: 1 },
-              "&::after": { ml: 1 },
             }}
           >
             <Typography fontSize="small" color="text.secondary">
               {params.group}
             </Typography>
+
+            <Typography
+              component="span"
+              sx={{
+                flex: 1,
+                borderTop: 1,
+                borderColor: "divider",
+                mx: 1,
+              }}
+            />
+            {groupDescription && (
+              <Tooltip arrow title={groupDescription}>
+                <InfoOutlinedIcon
+                  fontSize="small"
+                  sx={{ mr: 0.5 }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </Tooltip>
+            )}
             {expanded ? (
-              <ExpandLessIcon fontSize="small" sx={{ ml: 0.25 }} />
+              <ExpandLessIcon fontSize="small" />
             ) : (
-              <ExpandMoreIcon fontSize="small" sx={{ ml: 0.25 }} />
+              <ExpandMoreIcon fontSize="small" />
             )}
           </ListItemButton>
         );
 
         return (
           <li key={params.key}>
-            {groupDescription ? (
-              <Tooltip arrow title={groupDescription}>
-                {groupTitle}
-              </Tooltip>
-            ) : (
-              groupTitle
-            )}
+            {groupTitle}
             <Collapse in={expanded} timeout="auto" unmountOnExit>
               <ul style={{ margin: 0, padding: 0 }}>{params.children}</ul>
             </Collapse>
