@@ -15,7 +15,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ["**/dist", "**/site", "src/volume/**", "docs/**"],
+    ignores: ["**/coverage", "**/dist", "**/site", "src/volume/**", "docs/**"],
   },
   ...fixupConfigRules(
     compat.extends(
