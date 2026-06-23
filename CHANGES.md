@@ -1,5 +1,10 @@
 ## Changes in version 1.7.4 (in development)
 
+### Improvements 
+
+* Add support for multiple non-spatial dataset dimensions (e.g. time, depth). Selectors are displayed either for only one dimension or for
+  all dimensions at once, this can be configured in the settings.(#239)
+
 ### Other changes
 
 * Updated dependencies. Now using

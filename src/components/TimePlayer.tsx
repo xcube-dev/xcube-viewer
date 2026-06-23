@@ -19,7 +19,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import { Time, TimeRange } from "@/model/timeSeries";
-import { TimeAnimationInterval } from "@/states/controlState";
+import { DimensionAnimationInterval } from "@/states/controlState";
 import { makeStyles } from "@/util/styles";
 
 // noinspection JSUnusedLocalSymbols
@@ -40,16 +40,16 @@ interface TimePlayerProps extends WithLocale {
   incSelectedTime: (increment: -1 | 1) => void;
   selectedTimeRange: TimeRange | null;
   timeAnimationActive: boolean;
-  timeAnimationInterval: TimeAnimationInterval;
+  dimensionAnimationInterval: DimensionAnimationInterval;
   updateTimeAnimation: (
     active: boolean,
-    interval: TimeAnimationInterval,
+    interval: DimensionAnimationInterval,
   ) => void;
 }
 
 export default function TimePlayer({
   timeAnimationActive,
-  timeAnimationInterval,
+  dimensionAnimationInterval,
   updateTimeAnimation,
   selectedTime,
   selectedTimeRange,
@@ -68,7 +68,7 @@ export default function TimePlayer({
   };
 
   const handlePlayButtonClick = () => {
-    updateTimeAnimation(!timeAnimationActive, timeAnimationInterval);
+    updateTimeAnimation(!timeAnimationActive, dimensionAnimationInterval);
   };
 
   const handleNextTimeStepButtonClick = () => {
@@ -99,7 +99,7 @@ export default function TimePlayer({
     uninstallTimer();
     intervalId.current = window.setInterval(
       handlePlayEvent,
-      timeAnimationInterval,
+      dimensionAnimationInterval,
     );
   };
 

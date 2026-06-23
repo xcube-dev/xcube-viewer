@@ -42,6 +42,7 @@ import {
   selectedPlaceSelector,
   selectedServerSelector,
   selectedTimeChunkSizeSelector,
+  selectedVariableDimensionValuesSelector,
   selectedVariableSelector,
   userPlacesFormatNameSelector,
   userPlacesFormatOptionsCsvSelector,
@@ -572,6 +573,8 @@ export function addStatistics() {
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidePanelOpen = getState().controlState.sidePanelOpen;
     const sidePanelId = getState().controlState.sidePanelId;
+    const selectedDimensionValues =
+      selectedVariableDimensionValuesSelector(getState());
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
@@ -592,6 +595,7 @@ export function addStatistics() {
         selectedPlaceInfo,
         selectedTimeLabel,
         getState().userAuthState.accessToken,
+        selectedDimensionValues,
       )
       .then((stats) => dispatch(_addStatistics(stats)))
       .catch((error: Error) => {
@@ -649,6 +653,8 @@ export function addTimeSeries() {
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
     const sidebarOpen = getState().controlState.sidePanelOpen;
     const sidebarPanelId = getState().controlState.sidePanelId;
+    const selectedDimensionValues =
+      selectedVariableDimensionValuesSelector(getState());
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -656,7 +662,8 @@ export function addTimeSeries() {
       selectedDataset &&
       selectedVariable &&
       selectedPlaceId &&
-      selectedDatasetTimeDim
+      selectedDatasetTimeDim &&
+      selectedDimensionValues
     ) {
       if (sidebarPanelId !== "timeSeries") {
         dispatch(setSidePanelId("timeSeries"));
@@ -677,6 +684,7 @@ export function addTimeSeries() {
         const startDateLabel =
           startTimeIndex >= 0 ? timeLabels[startTimeIndex] : null;
         const endDateLabel = timeLabels[endTimeIndex];
+
         return api.getTimeSeriesForGeometry(
           apiServer.url,
           selectedDataset,
@@ -688,6 +696,7 @@ export function addTimeSeries() {
           useMedian,
           includeStdev,
           getState().userAuthState.accessToken,
+          selectedDimensionValues,
         );
       };
 

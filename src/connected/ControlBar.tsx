@@ -12,12 +12,11 @@ import ControlBarComponent from "@/components/ControlBar";
 import { WithLocale } from "@/util/lang";
 import DatasetSelect from "./DatasetSelect";
 import VariableSelect from "./VariableSelect";
+import DimensionSelect from "./DimensionSelect";
+import DimensionValueControl from "./DimensionValueControl";
 import PlaceGroupsSelect from "./PlaceGroupsSelect";
 import PlaceSelect from "./PlaceSelect";
 import MapInteractionsBar from "./MapInteractionsBar";
-import TimeSelect from "./TimeSelect";
-import TimeSlider from "./TimeSlider";
-import TimePlayer from "./TimePlayer";
 import ControlBarActions from "./ControlBarActions";
 import Divider from "@mui/material/Divider";
 
@@ -44,13 +43,12 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <VariableSelect />
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
+      <DimensionSelect />
+      <DimensionValueControl />
+      <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <PlaceGroupsSelect />
       <PlaceSelect />
       <MapInteractionsBar />
-      <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
-      <TimeSelect />
-      <TimePlayer />
-      <TimeSlider />
       <ControlBarActions />
     </ControlBarComponent>
   );

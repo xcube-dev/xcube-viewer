@@ -21,7 +21,7 @@ const mapStateToProps = (state: AppState) => {
     selectedTime: state.controlState.selectedTime,
     selectedTimeRange: state.controlState.selectedTimeRange,
     timeAnimationActive: state.controlState.timeAnimationActive,
-    timeAnimationInterval: state.controlState.timeAnimationInterval,
+    dimensionAnimationInterval: state.controlState.dimensionAnimationInterval,
   };
 };
 

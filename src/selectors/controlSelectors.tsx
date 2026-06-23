@@ -30,7 +30,9 @@ import { MapElement } from "@/components/ol/Map";
 
 import {
   Dataset,
+  Dimension,
   findDataset,
+  findDatasetDimension,
   findDatasetVariable,
   getDatasetLevel,
   getDatasetTimeDimension,
@@ -63,6 +65,7 @@ import {
 } from "./dataSelectors";
 import { makeRequestUrl } from "@/api/callApi";
 import {
+  DimensionValues,
   LayerStates,
   LayerVisibilities,
   MAP_OBJECTS,
@@ -157,6 +160,12 @@ export const zoomLevelSelector = (state: AppState) =>
   state.controlState.zoomLevel;
 export const selectedDatasetZLevelSelector = (state: AppState) =>
   state.controlState.datasetZLevel;
+export const selectedDimensionLabelSelector = (state: AppState) =>
+  state.controlState.selectedDimensionLabel;
+export const selectedDimensionValuesSelector = (state: AppState) =>
+  state.controlState.selectedDimensionValues;
+export const showAllDimensionsSelector = (state: AppState) =>
+  state.controlState.showAllDimensions;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -207,6 +216,13 @@ export const selectedUserVariablesSelector = createSelector(
   },
 );
 
+export const selectedDimensionSelector = createSelector(
+  selectedDatasetSelector,
+  (dataset: Dataset | null): Dimension[] => {
+    return (dataset && dataset.dimensions) || [];
+  },
+);
+
 export const getDatasetResolutions = (dataset: Dataset | null): number[] =>
   dataset && dataset.resolutions ? dataset.resolutions : [];
 
@@ -253,6 +269,85 @@ export const selectedVariable2Selector = createSelector(
   selectedDataset2Selector,
   selectedVariable2NameSelector,
   _findDatasetVariable,
+);
+
+const _findDatasetDimension = (
+  dataset: Dataset | null,
+  dimName: string | null,
+): Dimension | null => {
+  if (!dataset || !dimName) {
+    return null;
+  }
+  return findDatasetDimension(dataset, dimName);
+};
+
+export const selectedDatasetDimensionSelector = createSelector(
+  selectedDatasetSelector,
+  selectedDimensionLabelSelector,
+  _findDatasetDimension,
+);
+
+export const selectedDatasetDimensionValueSelector = createSelector(
+  selectedDimensionValuesSelector,
+  selectedDimensionLabelSelector,
+  (values: DimensionValues, label: string | null): string | number | null => {
+    if (label === null) {
+      return null;
+    }
+
+    return values[label] ?? null;
+  },
+);
+
+const dimensionLabelArgumentSelector = (
+  _state: AppState,
+  dimensionLabel?: string | null,
+) => dimensionLabel ?? null;
+
+const _getEffectiveSelectedDimensionLabel = (
+  selectedDimensionLabel: string | null,
+  dimensionLabel: string | null,
+): string | null => dimensionLabel ?? selectedDimensionLabel;
+
+export const effectiveSelectedDimensionLabelSelector = createSelector(
+  selectedDimensionLabelSelector,
+  dimensionLabelArgumentSelector,
+  _getEffectiveSelectedDimensionLabel,
+);
+
+export const selectedDatasetDimensionForLabelSelector = createSelector(
+  selectedDatasetSelector,
+  effectiveSelectedDimensionLabelSelector,
+  _findDatasetDimension,
+);
+
+export const selectedDatasetDimensionValueForLabelSelector = createSelector(
+  selectedDimensionValuesSelector,
+  effectiveSelectedDimensionLabelSelector,
+  (values: DimensionValues, label: string | null): string | number | null => {
+    if (label === null) {
+      return null;
+    }
+
+    return values[label] ?? null;
+  },
+);
+
+export const selectedVariableDimensionValuesSelector = createSelector(
+  selectedVariableSelector,
+  selectedDimensionValuesSelector,
+  (variable: Variable | null, dimensionValues): DimensionValues => {
+    const selectedDimensionLabels = variable?.dims
+      ?.filter((dim) => dimensionValues?.[dim] != null)
+      .reduce(
+        (result, dim) => ({
+          ...result,
+          [dim]: dimensionValues[dim],
+        }),
+        {},
+      );
+    return selectedDimensionLabels || {};
+  },
 );
 
 const getVariableTitle = (variable: Variable | null): string | null => {
@@ -602,11 +697,13 @@ export const canAddTimeSeriesSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
   selectedPlaceIdSelector,
+  selectedVariableDimensionValuesSelector,
   (
     timeSeriesGroups: TimeSeriesGroup[],
     datasetId: string | null,
     variableName: string | null,
     placeId: string | null,
+    dimensionValues: DimensionValues,
   ): boolean => {
     if (!datasetId || !variableName || !placeId) {
       return false;
@@ -617,7 +714,8 @@ export const canAddTimeSeriesSelector = createSelector(
         if (
           source.datasetId === datasetId &&
           source.variableName === variableName &&
-          source.placeId === placeId
+          source.placeId === placeId &&
+          source.dimensionValues === dimensionValues
         ) {
           return false;
         }
@@ -785,6 +883,47 @@ export const selectedDataset2TimeIndexSelector = createSelector(
   _getTimeIndex,
 );
 
+const _getDimensionCoordinates = (
+  dimension: Dimension | null,
+): number[] | null => {
+  if (dimension === null || dimension.coordinates.length === 0) {
+    return null;
+  }
+  return dimension.coordinates;
+};
+
+export const selectedDatasetDimensionCoordinatesSelector = createSelector(
+  selectedDatasetDimensionSelector,
+  _getDimensionCoordinates,
+);
+
+export const selectedDataset2DimensionCoordinatesSelector = createSelector(
+  selectedDatasetDimensionSelector,
+  _getDimensionCoordinates,
+);
+
+const _getDimensionIndex = (
+  value: number | string | null,
+  dimensionCoordinates: number[] | null,
+): number => {
+  if (value === null || dimensionCoordinates === null) {
+    return -1;
+  }
+  return findIndexCloseTo(dimensionCoordinates, value as number); //TODO `as number` should be removed/unnecessary
+};
+
+export const selectedDatasetDimensionIndexSelector = createSelector(
+  selectedDatasetDimensionValueSelector,
+  selectedDatasetDimensionCoordinatesSelector,
+  _getDimensionIndex,
+);
+
+export const selectedDataset2DimensionIndexSelector = createSelector(
+  selectedDatasetDimensionValueSelector,
+  selectedDataset2DimensionCoordinatesSelector,
+  _getDimensionIndex,
+);
+
 const _getTimeLabel = (
   time: Time | null,
   timeIndex: number,
@@ -928,6 +1067,7 @@ function getTileLayer(
     queryParams = [...queryParams, ["time", timeLabel]];
   }
   const url = makeRequestUrl(tileUrl, queryParams);
+
   if (typeof tileLevelMax === "number") {
     // It is ok to have some extra zoom levels, so we can magnify pixels.
     // Using more, artifacts will become visible.
@@ -1076,6 +1216,7 @@ const getVariableTileLayer = (
   timeAnimationActive: boolean,
   mapProjection: string,
   imageSmoothing: boolean,
+  selectedDimensionValues: DimensionValues,
 ): MapElement => {
   if (!dataset || !variable || !visibility) {
     return null;
@@ -1090,6 +1231,13 @@ const getVariableTileLayer = (
   if (colorBarNorm === "log") {
     queryParams.push(["norm", colorBarNorm]);
   }
+
+  Object.entries(selectedDimensionValues).forEach(([name, value]) => {
+    if (value != null) {
+      queryParams.push([name, String(value)]);
+    }
+  });
+
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, variable),
@@ -1125,6 +1273,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
+  selectedDimensionValuesSelector,
   getVariableTileLayer,
 );
 
@@ -1145,6 +1294,7 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   timeAnimationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
+  selectedDimensionValuesSelector,
   getVariableTileLayer,
 );
 
