@@ -2,10 +2,20 @@
 
 ### Improvements 
 
-* Add support for multiple non-spatial dataset dimensions (e.g. time, depth,
-  scenarios). Selectors are displayed either for only one dimension or for
+* Add support for multiple non-spatial dataset dimensions (e.g. time, depth). Selectors are displayed either for only one dimension or for
   all dimensions at once, this can be configured in the settings.(#239)
 
+### Other changes
+
+* Updated dependencies. Now using
+	- `@storybook-community/storybook-dark-mode ^7.1.3`
+	- `@vitejs/plugin-react-swc": "^4.3.1`
+	- `eslint-plugin-storybook ^10.4.6`
+	- `react-draggable 4.5.0` (pinned due to issue in 4.6.0)
+	- `storybook ^10.4.6`
+	- `vite ^8.0.16`
+	- `vitest ^3.2.4`
+	
 ## Changes in version 1.7.3
 
 ### Fixes
@@ -14,14 +24,6 @@
   Layer extents are now only applied for supported CRS (EPSG:4326, EPSG:3857) 
   to avoid incorrect cut-offs. (#593)
   
-### Other changes
-
-* Updated dependencies. Now using
-	- `react-draggable 4.5.0` (pinned due to issue in 4.6.0)
-	- `@vitest/coverage-v8 ^3.2.4`
-	- `@vitest/ui ^3.2.4`
-	- `vitest ^3.2.4`
-
 ## Changes in version 1.7.2
 
 ### Fixes
