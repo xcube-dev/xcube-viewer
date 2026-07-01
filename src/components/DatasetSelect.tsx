@@ -91,7 +91,7 @@ export default function DatasetSelect({
   const hasMultipleGroups =
     new Set(sortedDatasets.map(getDatasetGroupLabel)).size > 1;
 
-  // this where to set the threshold to decide whether to collapse groups by default or not
+  // Set threshold to decide whether to collapse groups by default or not
   const collapseGroupsByDefault = sortedDatasets.length > 10;
 
   const selectedDatasetGroupTitle = selectedDataset
