@@ -20,6 +20,8 @@ const styles = makeStyles({
     border: "2px solid black",
     borderRadius: theme.spacing(2),
     padding: theme.spacing(1.5),
+    maxWidth: theme.spacing(40),
+    overflowWrap: "break-word",
   }),
   toolTipValue: {
     fontWeight: "bold",
