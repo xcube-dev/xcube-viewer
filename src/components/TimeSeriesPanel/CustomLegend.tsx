@@ -12,12 +12,14 @@ import { makeStyles } from "@/util/styles";
 import Box from "@mui/material/Box";
 
 const styles = makeStyles({
-  legendContainer: {
+  legendContainer: (theme) => ({
     display: "flex",
     justifyContent: "center",
     columnGap: "12px",
     flexWrap: "wrap",
-  },
+    maxHeight: theme.spacing(7),
+    overflowY: "auto",
+  }),
   legendItem: {
     display: "flex",
     alignItems: "center",
