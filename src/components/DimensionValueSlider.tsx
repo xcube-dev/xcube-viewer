@@ -50,7 +50,7 @@ export default function DimensionValueSliderProps({
 
   useEffect(() => {
     setSelectedDimensionValue_(
-      selectedDimensionValue ||
+      selectedDimensionValue ??
         (selectedDimension?.coordinates ? selectedDimension.coordinates[0] : 0),
     );
   }, [selectedDimensionValue, selectedDimension]);
@@ -65,7 +65,6 @@ export default function DimensionValueSliderProps({
   )
     return null;
 
-  //TODO use selector selectedDatasetDepthCoordiantes ...
   let selectedCoordinates = selectedDimension.coordinates;
 
   const handleChange = (_event: Event, value: number | number[]) => {
