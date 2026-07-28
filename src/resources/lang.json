@@ -181,6 +181,26 @@
       "se": "Systeminformation"
     },
     {
+      "en": "Reset application",
+      "de": "Anwendung zurücksetzen",
+      "se": "Återställ applikationen"
+    },
+    {
+      "en": "Remove all stored data and reload",
+      "de": "Alle gespeicherten Daten entfernen und neu laden",
+      "se": "Ta bort all sparad data och ladda om"
+    },
+    {
+      "en": "Reset",
+      "de": "Zurücksetzen",
+      "se": "Återställ"
+    },
+    {
+      "en": "This removes all locally stored data, including settings, and reloads the application. This cannot be undone.",
+      "de": "Dies entfernt alle lokal gespeicherten Daten einschließlich Einstellungen und lädt die Anwendung neu. Dies kann nicht rückgängig gemacht werden.",
+      "se": "Detta tar bort all lokalt sparad data, inklusive inställningar, och laddar om applikationen. Detta kan inte ångras."
+    },
+    {
       "en": "version",
       "de": "Version",
       "se": "Version"
@@ -1355,7 +1375,7 @@
       "de": "Permalink in die Zwischenablage kopiert",
       "se": "Permalink kopieras till klippbordet"
     },
-     {
+    {
       "en": "Permalink copied to clipboard (expires in ${expiration} days)",
       "de": "Permalink in die Zwischenablage kopiert (läuft ab in ${expiration} Tagen)",
       "se": "Permalink kopieras till klippbordet (går ut om ${expiration} dagar)"

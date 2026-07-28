@@ -6,7 +6,9 @@
 
 import React from "react";
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
@@ -34,6 +36,7 @@ import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
 import ToggleSetting from "./ToggleSetting";
 import RadioSetting from "./RadioSetting";
+import { resetApplicationData } from "@/util/storage";
 
 const styles: Record<string, SxProps<Theme>> = {
   textField: (theme) => ({
@@ -103,6 +106,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [timeChunkSize, setTimeChunkSize] = React.useState(
     settings.timeChunkSize + "",
   );
+  const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
   const theme = useTheme();
 
   React.useEffect(() => {
@@ -217,6 +221,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     updateSettings({
       themeMode: event.target.value as ThemeMode,
     });
+  }
+
+  async function handleResetApplication() {
+    await resetApplicationData();
+    window.location.reload();
   }
 
   return (
@@ -458,6 +467,17 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             </SettingsSubPanel>
           </SettingsPanel>
 
+          <SettingsPanel title={i18n.get("Reset application")}>
+            <SettingsSubPanel
+              label={i18n.get("Reset application")}
+              value={i18n.get("Remove all stored data and reload")}
+            >
+              <Button color="error" onClick={() => setResetDialogOpen(true)}>
+                {i18n.get("Reset")}
+              </Button>
+            </SettingsSubPanel>
+          </SettingsPanel>
+
           <SettingsPanel title={i18n.get("System Information")}>
             <SettingsSubPanel
               label={`xcube Viewer ${i18n.get("version")}`}
@@ -473,6 +493,31 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             />
           </SettingsPanel>
         </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={resetDialogOpen}
+        onClose={() => setResetDialogOpen(false)}
+        aria-labelledby="reset-application-dialog-title"
+      >
+        <DialogTitle id="reset-application-dialog-title">
+          {i18n.get("Reset application")}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {i18n.get(
+              "This removes all locally stored data, including settings, and reloads the application. This cannot be undone.",
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setResetDialogOpen(false)}>
+            {i18n.get("Cancel")}
+          </Button>
+          <Button color="error" onClick={handleResetApplication} autoFocus>
+            {i18n.get("Reset")}
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Menu
