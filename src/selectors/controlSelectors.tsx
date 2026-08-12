@@ -573,6 +573,13 @@ export const selectedPlaceInfoSelector = createSelector(
   },
 );
 
+export const selectedPlaceLabelSelector = createSelector(
+  selectedPlaceInfoSelector,
+  (placeInfo: PlaceInfo | null): string | null => {
+    return placeInfo?.label || null;
+  },
+);
+
 export const selectedVolumeIdSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,

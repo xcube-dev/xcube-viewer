@@ -10,6 +10,9 @@
 	- `storybook ^10.4.6`
 	- `vite ^8.0.16`
 	- `vitest ^3.2.4`
+
+* Added `selectedPlaceLabel` to the list of available 
+  state properties. (#624)
 	
 ## Changes in version 1.7.3
 

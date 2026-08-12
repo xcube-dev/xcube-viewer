@@ -14,6 +14,7 @@ import {
   selectedDatasetTimeLabelSelector,
   selectedPlaceGeometrySelector,
   selectedPlaceIdSelector,
+  selectedPlaceLabelSelector,
   selectedDatasetAndUserPlaceGroupsSelector,
   selectedVariable2NameSelector,
   selectedVariableNameSelector,
@@ -71,6 +72,11 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     type: "str | None",
     description: "The identifier of the currently selected place.",
     selector: selectedPlaceIdSelector,
+  },
+  selectedPlaceLabel: {
+    type: "str | None",
+    description: "The label of the currently selected place.",
+    selector: selectedPlaceLabelSelector,
   },
   selectedPlaceGroup: {
     type: "list[dict[str, Any]]",
