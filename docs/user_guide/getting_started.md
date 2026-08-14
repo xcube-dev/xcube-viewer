@@ -13,6 +13,27 @@ If more than one [variable](../concepts.md/#variable) is available within a [sel
 
 ---
 
+## Select Dimensions
+
+Datasets can contain multiple non-spatial dimensions, such as *time*, *depth*, 
+or *scenario*. When such a dataset is displayed, xcube Viewer provides selectors 
+for navigating the available dimension values.
+
+The display of dimension selectors can be configured in two modes:
+
+**Single dimension**: Values can be selected for only one dimension at a time.
+
+![select_dimension_mode1.png](../assets/images/select_dimension_mode1.png)
+
+**All dimensions**: Selectors for all available non-spatial dimensions are shown simultaneously.
+
+![select_dimension_mode2.png](../assets/images/select_dimension_mode2.png)
+
+The preferred mode can be configured in the [settings](../user_guide/settings.md).
+
+
+---
+
 ## Integrate (User) Base Maps and Overlays
 
 The Viewer gives the option to display the datasets in front of a [base map](../concepts.md/#basemaps-and-overlays) and to [overlay](../concepts.md/#basemaps-and-overlays) datasets with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer, with the option to add more as needed. Further instructions can be found [here](../user_guide/settings.md/#base-maps-and-overlays).

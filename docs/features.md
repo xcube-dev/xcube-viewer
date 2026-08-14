@@ -159,6 +159,122 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
+
+### Select Dimension
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/select_dimension.png"
+					alt="Select Dimension" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Select Dimension</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				A drop-down menu that lists the non-spatial dimensions of the selected
+				variable.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Select the dimension of which you want to change the values. The value
+				selectors then displays the values available for the selected dimension.
+				<br /><br />
+				This drop-down menu is not displayed when the selectors of all 
+        dimensions are displayed at once. This can be enabled in the settings.
+        It is also not displayed when the selected variable has only one 
+        non-spatial dimension.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Enable users to choose which non-spatial dimension they want to
+				navigate through.
+			</td>
+		</tr>
+<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="../user_guide/getting_started/#select-dimensions"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Select Dimension Value
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">
+				<img
+					src="../assets/images/select_dimension_control.png"
+					alt="Select Dimension Value" />
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><b>Feature Name</b></td>
+			<td>Select Dimension Value</td>
+		</tr>
+		<tr>
+			<td><b>Description</b></td>
+			<td>
+				Controls used to select the value of a non-spatial dimension. The controls
+        consist of a drop-down menu or a calendar (depending on the dimension) a 
+        slider, and a player.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Functionality</b></td>
+			<td>
+				Select the dimension value that shall be displayed on the map.
+				<br /><br />
+				For time dimensions, values can be selected using the calendar, the
+				slider, or the player controls. For other non-spatial dimensions, values
+				can be selected from a drop-down menu, a slider, or a player.
+				<br /><br />
+				When the setting to show selectors for all dimensions at once is
+				enabled, a separate value selector is displayed for each non-spatial
+				dimension.
+			</td>
+		</tr>
+		<tr>
+			<td><b>Aim</b></td>
+			<td>
+				Enable users to navigate and display specific values of one or more
+				non-spatial dimensions.
+			</td>
+		</tr>
+<tr>
+			<td colspan="2">
+				Link to feature mentioned in
+				<a
+					href="../user_guide/getting_started/#select-dimensions"
+					rel="noopener noreferrer"
+					>User Guide</a
+				>.
+			</td>
+		</tr>
+	</tbody>
+</table>
+
 ### Show/Hide Sidebar
 
 <table>
@@ -1368,7 +1484,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				Located in the <strong>Statistics</strong>-tab, a table displays the
 				value at the selected point's coordinates for the selected variable.
 				Above the table, details are shown, including the dataset, variable,
-				time step, and place name.
+				selected values of the non-spatial dimensions, and place name.
 			</td>
 		</tr>
 				<tr>
@@ -2014,107 +2130,9 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
-## Navigate Time Steps
+## Navigate Dimensions with a Player
 
-### Select Time Steps (Calender)
-
-<table>
-	<thead>
-		<tr>
-			<th colspan="2">
-				<img
-					src="../assets/images/select_timestep_calender.png"
-					alt="Select Time Step" />
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><b>Feature Name</b></td>
-			<td>Select Time Step (Calender)</td>
-		</tr>
-		<tr>
-			<td><b>Description</b></td>
-			<td>A button that opens a calendar window when enabled.</td>
-		</tr>
-		<tr>
-			<td><b>Functionality</b></td>
-			<td>
-				The button opens a calendar window when clicked. Click on a date in the
-				calendar, to select and display the time step that is closest to the
-				chosen date.<br /><br />
-				The time resolution (HH:MM:SS) is not supported yet, but it will be
-				displayed in the calendar view if the resolution is available in the
-				dataset.
-			</td>
-		</tr>
-		<tr>
-			<td><b>Aim</b></td>
-			<td>
-				Easily navigate and select specific time steps within a dataset using a
-				visual calendar interface.
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				Link to feature mentioned in
-				<a
-					href="../user_guide/analyse/#navigate-through-time"
-					rel="noopener noreferrer"
-					>User Guide</a
-				>.
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-### Select Time Steps (Slider)
-
-<table>
-	<thead>
-		<tr>
-			<th colspan="2">
-				<img
-					src="../assets/images/select_timestep_slider.png"
-					alt="Select Time Step" />
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td><b>Feature Name</b></td>
-			<td>Select Time Step (Slider)</td>
-		</tr>
-		<tr>
-			<td><b>Description</b></td>
-			<td>
-				A time slider to navigate through the time steps of the selected
-				variable. The slider is labeled with the first and last time steps of
-				the dataset at the start and end points.
-			</td>
-		</tr>
-		<tr>
-			<td><b>Functionality</b></td>
-			<td>Move the slider to select and display the desired time step.</td>
-		</tr>
-		<tr>
-			<td><b>Aim</b></td>
-			<td>Easily navigate and explore time steps within a dataset.</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				Link to feature mentioned in
-				<a
-					href="../user_guide/analyse/#navigate-through-time"
-					rel="noopener noreferrer"
-					>User Guide</a
-				>.
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-### +/- 1 Time Step
+### +/- 1 Step
 
 <table>
 	<thead>
@@ -2122,41 +2140,41 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/player_next_prev.png"
-					alt="Move to previous or next Time Step" />
+					alt="Move to previous or next step" />
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td><b>Feature Name</b></td>
-			<td>Move to +/- 1 Time Step</td>
+			<td>Move to +/- 1 Step</td>
 		</tr>
 		<tr>
 			<td><b>Description</b></td>
 			<td>
 				Buttons, designed according to its function, allowing to navigate to
-				either the previous or next time step of the dataset.
+				either the previous or next step of a dimension.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Click the buttons to move to the previous/next time step in the dataset
-				and display the corresponding data on the map.
+				Click the buttons to move to the previous/next step in the dimension of 
+        in the dataset and display the corresponding data on the map.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
 			<td>
-				Quick navigation option to access the previous and next time steps in
-				the dataset.
+				Quick navigation option to access the previous and next steps in
+				the dimension of the dataset.
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="../user_guide/analyse/#navigate-through-time"
+					href="../user_guide/analyse/#navigate-through-dimensions"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -2173,33 +2191,33 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/player_first_last.png"
-					alt="Step to first/last Time Step" />
+					alt="Step to first/last step" />
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td><b>Feature Name</b></td>
-			<td>Move to first/last Time Step</td>
+			<td>Move to first/last step</td>
 		</tr>
 		<tr>
 			<td><b>Description</b></td>
 			<td>
 				Buttons, designed according to its function, allowing to navigate to
-				either the first or last time step of the dataset.
+				either the first or last step of the dimension of the dataset.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Click the buttons to move to the first/last time step in the dataset and
+				Click the buttons to move to the first/last step in the dataset and
 				display the corresponding data on the map.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
 			<td>
-				Quick navigation option to access the first and last time steps in the
+				Quick navigation option to access the first and last steps in the
 				dataset.
 			</td>
 		</tr>
@@ -2207,7 +2225,7 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="../user_guide/analyse/#navigate-through-time"
+					href="../user_guide/analyse/#navigate-through-dimension"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -2240,13 +2258,13 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A button that changes its appearance when the feature is activated,
-				while disabling the buttons used to navigate through time steps.
+				while disabling the buttons used to navigate through a dimension.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				When enabled, the feature iterates through the time steps sequentially,
+				When enabled, the feature iterates through the steps sequentially,
 				displaying each step in the Viewer. The speed or interval of this
 				iterating can be configured in the 						<a
 							href="../user_guide/settings/#player-interval"
@@ -2258,7 +2276,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
-			<td>Engaging way to visually explore multiple time steps.</td>
+			<td>Engaging way to visually explore multiple steps of a dimension.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
