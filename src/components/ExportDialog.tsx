@@ -6,18 +6,29 @@
 
 import React, { ChangeEvent } from "react";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import ListItem from "@mui/material/ListItem";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import TextField from "@mui/material/TextField";
 import { SxProps } from "@mui/system";
 import { Theme } from "@mui/material";
 
 import i18n from "@/i18n";
-import { ControlState } from "@/states/controlState";
+import {
+  ControlState,
+  ExportDataType,
+  ExportFormat,
+  ExportTimeRange,
+} from "@/states/controlState";
 import SettingsPanel from "./SettingsPanel";
 import SettingsSubPanel from "./SettingsSubPanel";
-import ToggleSetting from "./ToggleSetting";
 
 const styles: Record<string, SxProps<Theme>> = {
   separatorTextField: (theme) => ({
@@ -38,7 +49,7 @@ interface ExportDialogProps {
   closeDialog: (dialogId: string) => void;
   settings: ControlState;
   updateSettings: (settings: Partial<ControlState>) => void;
-  downloadTimeSeries: () => void;
+  downloadData: () => void;
 }
 
 const ExportDialog: React.FC<ExportDialogProps> = ({
@@ -46,7 +57,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
   closeDialog,
   settings,
   updateSettings,
-  downloadTimeSeries,
+  downloadData,
 }) => {
   const handleCloseDialog = () => {
     closeDialog("export");
@@ -64,10 +75,47 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
     updateSettings({ exportTimeSeriesSeparator: event.target.value });
   }
 
+  function handleDataTypeChange(
+    _event: React.ChangeEvent<HTMLInputElement>,
+    value: string,
+  ) {
+    const exportDataType = value as ExportDataType;
+    updateSettings({
+      exportDataType,
+      ...(exportDataType === "places" ? { exportFormat: "geojson" } : {}),
+    });
+  }
+
+  function handleFormatChange(
+    _event: React.ChangeEvent<HTMLInputElement>,
+    value: string,
+  ) {
+    updateSettings({ exportFormat: value as ExportFormat });
+  }
+
+  function handleTimeRangeChange(
+    _event: React.ChangeEvent<HTMLInputElement>,
+    value: string,
+  ) {
+    updateSettings({ exportTimeRange: value as ExportTimeRange });
+  }
+
+  function handleZipArchiveChange(event: React.ChangeEvent<HTMLInputElement>) {
+    updateSettings({ exportAsZipArchive: event.target.checked });
+  }
+
   const handleDoExport = () => {
     handleCloseDialog();
-    downloadTimeSeries();
+    downloadData();
   };
+
+  const isTimeSeriesExport = settings.exportDataType === "timeSeries";
+  const exportFormat = isTimeSeriesExport ? settings.exportFormat : "geojson";
+  const isTextExport = exportFormat === "text";
+  const hasDisplayedTimeRange = settings.selectedTimeRange !== null;
+  const exportTimeRange = hasDisplayedTimeRange
+    ? settings.exportTimeRange
+    : "full";
 
   return (
     <div>
@@ -80,58 +128,77 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
       >
         <DialogContent>
           <SettingsPanel title={i18n.get("Export Settings")}>
-            <SettingsSubPanel
-              label={i18n.get("Include time-series data") + " (*.txt)"}
-              value={getOnOff(settings.exportTimeSeries)}
-            >
-              <ToggleSetting
-                propertyName={"exportTimeSeries"}
-                settings={settings}
-                updateSettings={updateSettings}
-              />
-            </SettingsSubPanel>
-            <SettingsSubPanel
-              label={i18n.get("Separator for time-series data")}
-            >
-              <TextField
-                variant="standard"
-                sx={styles.separatorTextField}
-                value={settings.exportTimeSeriesSeparator}
-                onChange={handleSeparatorChange}
-                disabled={!settings.exportTimeSeries}
-                margin="normal"
-                size={"small"}
-              />
-            </SettingsSubPanel>
-            <SettingsSubPanel
-              label={i18n.get("Include places data") + " (*.geojson)"}
-              value={getOnOff(settings.exportPlaces)}
-            >
-              <ToggleSetting
-                propertyName={"exportPlaces"}
-                settings={settings}
-                updateSettings={updateSettings}
-              />
-            </SettingsSubPanel>
-            <SettingsSubPanel
-              label={i18n.get("Combine place data in one file")}
-              value={getOnOff(settings.exportPlacesAsCollection)}
-            >
-              <ToggleSetting
-                propertyName={"exportPlacesAsCollection"}
-                settings={settings}
-                updateSettings={updateSettings}
-                disabled={!settings.exportPlaces}
-              />
-            </SettingsSubPanel>
-            <SettingsSubPanel
-              label={i18n.get("As ZIP archive")}
-              value={getOnOff(settings.exportZipArchive)}
-            >
-              <ToggleSetting
-                propertyName={"exportZipArchive"}
-                settings={settings}
-                updateSettings={updateSettings}
+            <ExportOptionGroup label={i18n.get("Data")}>
+              <RadioGroup
+                value={settings.exportDataType}
+                onChange={handleDataTypeChange}
+              >
+                <FormControlLabel
+                  value="timeSeries"
+                  label={i18n.get("Time-series data with place information")}
+                  control={<Radio />}
+                />
+                <FormControlLabel
+                  value="places"
+                  label={i18n.get("Place geometries only")}
+                  control={<Radio />}
+                />
+              </RadioGroup>
+            </ExportOptionGroup>
+            <ExportOptionGroup label={i18n.get("Export format")}>
+              <RadioGroup value={exportFormat} onChange={handleFormatChange}>
+                <FormControlLabel
+                  value="text"
+                  label={i18n.get("Text/CSV")}
+                  control={<Radio />}
+                  disabled={!isTimeSeriesExport}
+                />
+                <FormControlLabel
+                  value="geojson"
+                  label={i18n.get("GeoJSON")}
+                  control={<Radio />}
+                />
+              </RadioGroup>
+            </ExportOptionGroup>
+            {isTimeSeriesExport && (
+              <ExportOptionGroup label={i18n.get("Time range")}>
+                <RadioGroup
+                  value={exportTimeRange}
+                  onChange={handleTimeRangeChange}
+                >
+                  <FormControlLabel
+                    value="full"
+                    label={i18n.get("Full time series")}
+                    control={<Radio />}
+                  />
+                  <FormControlLabel
+                    value="displayed"
+                    label={i18n.get("Displayed time range")}
+                    control={<Radio />}
+                    disabled={!hasDisplayedTimeRange}
+                  />
+                </RadioGroup>
+              </ExportOptionGroup>
+            )}
+            {isTextExport && (
+              <SettingsSubPanel
+                label={i18n.get("Separator for time-series data")}
+              >
+                <TextField
+                  variant="standard"
+                  sx={styles.separatorTextField}
+                  value={settings.exportTimeSeriesSeparator}
+                  onChange={handleSeparatorChange}
+                  margin="normal"
+                  size={"small"}
+                />
+              </SettingsSubPanel>
+            )}
+            <SettingsSubPanel label={i18n.get("Compress as ZIP")}>
+              <Checkbox
+                checked={settings.exportAsZipArchive}
+                onChange={handleZipArchiveChange}
+                inputProps={{ "aria-label": i18n.get("Compress as ZIP") }}
               />
             </SettingsSubPanel>
             <SettingsSubPanel label={i18n.get("File name")}>
@@ -148,7 +215,10 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleDoExport} disabled={!canDownload(settings)}>
+          <Button
+            onClick={handleDoExport}
+            disabled={!canDownload(settings, isTextExport)}
+          >
             {i18n.get("Download")}
           </Button>
         </DialogActions>
@@ -159,10 +229,6 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
 
 export default ExportDialog;
 
-const getOnOff = (state: boolean): string => {
-  return state ? i18n.get("On") : i18n.get("Off");
-};
-
 const isValidFileName = (fileName: string) => {
   return /^[0-9a-zA-Z_-]+$/.test(fileName);
 };
@@ -171,11 +237,25 @@ const isValidSeparator = (separator: string) => {
   return separator.toUpperCase() === "TAB" || separator.length === 1;
 };
 
-const canDownload = (settings: ControlState) => {
+const canDownload = (settings: ControlState, isTextExport: boolean) => {
   return (
-    (settings.exportTimeSeries || settings.exportPlaces) &&
     isValidFileName(settings.exportFileName) &&
-    (!settings.exportTimeSeries ||
-      isValidSeparator(settings.exportTimeSeriesSeparator))
+    (!isTextExport || isValidSeparator(settings.exportTimeSeriesSeparator))
   );
 };
+
+interface ExportOptionGroupProps {
+  label: string;
+  children: React.ReactNode;
+}
+
+function ExportOptionGroup({ label, children }: ExportOptionGroupProps) {
+  return (
+    <ListItem>
+      <FormControl component="fieldset" fullWidth>
+        <FormLabel component="legend">{label}</FormLabel>
+        {children}
+      </FormControl>
+    </ListItem>
+  );
+}

@@ -1,5 +1,12 @@
 ## Changes in version 1.7.4 (in development)
 
+### Improvements
+
+* Improved time-series data export: Text/CSV and GeoJSON exports now include
+  place identifiers, spatial information, and values in one file. Users can
+  export the full or currently displayed time range, or export place geometries
+  only. (#300)
+
 ### Other changes
 
 * Updated dependencies. Now using

@@ -7,7 +7,12 @@
 import { Config } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
 import { getLocalStorage } from "@/util/storage";
-import { ControlState } from "./controlState";
+import {
+  ControlState,
+  EXPORT_DATA_TYPES,
+  EXPORT_FORMATS,
+  EXPORT_TIME_RANGES,
+} from "./controlState";
 import { UserVariable } from "@/model/userVariable";
 import { ColorMapType } from "@/model/colorBar";
 import { isString } from "@/util/types";
@@ -86,11 +91,11 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("userDrawnPlaceGroupName", settings);
       storage.setPrimitiveProperty("datasetLocateMode", settings);
       storage.setPrimitiveProperty("placeLocateMode", settings);
-      storage.setPrimitiveProperty("exportTimeSeries", settings);
+      storage.setPrimitiveProperty("exportDataType", settings);
+      storage.setPrimitiveProperty("exportFormat", settings);
+      storage.setPrimitiveProperty("exportTimeRange", settings);
+      storage.setPrimitiveProperty("exportAsZipArchive", settings);
       storage.setPrimitiveProperty("exportTimeSeriesSeparator", settings);
-      storage.setPrimitiveProperty("exportPlaces", settings);
-      storage.setPrimitiveProperty("exportPlacesAsCollection", settings);
-      storage.setPrimitiveProperty("exportZipArchive", settings);
       storage.setPrimitiveProperty("exportFileName", settings);
       storage.setPrimitiveProperty("userPlacesFormatName", settings);
       storage.setObjectProperty("userPlacesFormatOptions", settings);
@@ -175,19 +180,19 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
       );
       storage.getStringProperty("datasetLocateMode", settings, defaultSettings);
       storage.getStringProperty("placeLocateMode", settings, defaultSettings);
-      storage.getBooleanProperty("exportTimeSeries", settings, defaultSettings);
+      storage.getStringProperty("exportDataType", settings, defaultSettings);
+      storage.getStringProperty("exportFormat", settings, defaultSettings);
+      storage.getStringProperty("exportTimeRange", settings, defaultSettings);
+      storage.getBooleanProperty(
+        "exportAsZipArchive",
+        settings,
+        defaultSettings,
+      );
       storage.getStringProperty(
         "exportTimeSeriesSeparator",
         settings,
         defaultSettings,
       );
-      storage.getBooleanProperty("exportPlaces", settings, defaultSettings);
-      storage.getBooleanProperty(
-        "exportPlacesAsCollection",
-        settings,
-        defaultSettings,
-      );
-      storage.getBooleanProperty("exportZipArchive", settings, defaultSettings);
       storage.getStringProperty("exportFileName", settings, defaultSettings);
       storage.getStringProperty(
         "userPlacesFormatName",
@@ -201,6 +206,15 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
       );
       storage.getStringProperty("themeMode", settings, defaultSettings);
       storage.getStringProperty("exportResolution", settings, defaultSettings);
+      if (!EXPORT_DATA_TYPES.includes(settings.exportDataType)) {
+        settings.exportDataType = defaultSettings.exportDataType;
+      }
+      if (!EXPORT_FORMATS.includes(settings.exportFormat)) {
+        settings.exportFormat = defaultSettings.exportFormat;
+      }
+      if (!EXPORT_TIME_RANGES.includes(settings.exportTimeRange)) {
+        settings.exportTimeRange = defaultSettings.exportTimeRange;
+      }
       if (import.meta.env.DEV) {
         console.debug("Loaded user settings:", settings);
       }
