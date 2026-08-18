@@ -6,7 +6,6 @@
 
 import { Action, Dispatch, Store } from "redux";
 import * as geojson from "geojson";
-import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
 import * as api from "@/api";
@@ -24,11 +23,12 @@ import {
 import { getUserPlacesFromCsv } from "@/model/user-place/csv";
 import { getUserPlacesFromGeoJson } from "@/model/user-place/geojson";
 import { getUserPlacesFromWkt } from "@/model/user-place/wkt";
+import { TimeSeries } from "@/model/timeSeries";
 import {
-  TimeSeries,
-  TimeSeriesGroup,
-  timeSeriesGroupsToTable,
-} from "@/model/timeSeries";
+  createExportArchive,
+  createExportFile,
+  ExportFile,
+} from "@/model/dataExport";
 import { initializeExtensions } from "@/ext/actions";
 import {
   mapProjectionSelector,
@@ -1093,17 +1093,17 @@ export function exportData() {
     getState: () => AppState,
   ) => {
     const {
-      exportTimeSeries,
+      exportDataType,
+      exportFormat,
+      exportTimeRange,
+      exportAsZipArchive,
       exportTimeSeriesSeparator,
-      exportPlaces,
-      exportPlacesAsCollection,
-      exportZipArchive,
       exportFileName,
+      selectedTimeRange,
     } = getState().controlState;
 
-    let placeGroups: PlaceGroup[] = [];
-
-    if (exportTimeSeries) {
+    let placeGroups: PlaceGroup[];
+    if (exportDataType === "timeSeries") {
       // Time series may reference any place, so collect all known place groups.
       placeGroups = [];
       const datasets = datasetsSelector(getState());
@@ -1113,188 +1113,43 @@ export function exportData() {
         }
       });
       placeGroups = [...placeGroups, ...userPlaceGroupsSelector(getState())];
-    } else if (exportPlaces) {
+    } else {
       // Just export all visible places.
       placeGroups = selectedPlaceGroupsSelector(getState());
     }
 
-    _exportData(getState().dataState.timeSeriesGroups, placeGroups, {
-      includeTimeSeries: exportTimeSeries,
-      includePlaces: exportPlaces,
-      separator: exportTimeSeriesSeparator,
-      placesAsCollection: exportPlacesAsCollection,
-      zip: exportZipArchive,
-      fileName: exportFileName,
-    });
+    const exportFile = createExportFile(
+      getState().dataState.timeSeriesGroups,
+      placeGroups,
+      {
+        dataType: exportDataType,
+        format: exportFormat,
+        timeRange: exportTimeRange === "displayed" ? selectedTimeRange : null,
+        separator: exportTimeSeriesSeparator,
+        fileName: exportFileName,
+      },
+    );
+    if (exportAsZipArchive) {
+      downloadArchive(`${exportFileName || "export"}.zip`, exportFile);
+    } else {
+      downloadFile(
+        exportFile.fileName,
+        exportFile.content,
+        exportFile.contentType,
+      );
+    }
   };
 }
 
-abstract class Exporter {
-  abstract write(path: string, content: string): void;
-
-  abstract close(): void;
+function downloadArchive(archiveFileName: string, exportFile: ExportFile) {
+  void createExportArchive(exportFile).then((archive) =>
+    saveAs(archive, archiveFileName),
+  );
 }
 
-class ZipExporter extends Exporter {
-  fileName: string;
-  zipArchive: JSZip;
-
-  constructor(fileName: string) {
-    super();
-    this.fileName = fileName;
-    this.zipArchive = new JSZip();
-  }
-
-  write(path: string, content: string) {
-    this.zipArchive.file(path, content);
-  }
-
-  close() {
-    this.zipArchive
-      .generateAsync({ type: "blob" })
-      .then((content) => saveAs(content, this.fileName));
-  }
+function downloadFile(fileName: string, content: string, type: string) {
+  saveAs(new Blob([content], { type }), fileName);
 }
-
-class FileExporter extends Exporter {
-  write(path: string, content: string) {
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    saveAs(blob, path);
-  }
-
-  close() {}
-}
-
-interface ExportOptions {
-  includeTimeSeries?: boolean;
-  separator?: string;
-  includePlaces?: boolean;
-  fileName?: string;
-  placesAsCollection?: boolean;
-  zip?: boolean;
-}
-
-function _exportData(
-  timeSeriesGroups: TimeSeriesGroup[],
-  placeGroups: PlaceGroup[],
-  options: ExportOptions,
-) {
-  const { includeTimeSeries, includePlaces, placesAsCollection, zip } = options;
-
-  let { separator, fileName } = options;
-
-  separator = separator || "TAB";
-  if (separator.toUpperCase() === "TAB") {
-    separator = "\t";
-  }
-
-  fileName = fileName || "export";
-
-  if (!includeTimeSeries && !includePlaces) {
-    return;
-  }
-
-  let exporter: Exporter;
-  if (zip) {
-    exporter = new ZipExporter(`${fileName}.zip`);
-  } else {
-    exporter = new FileExporter();
-  }
-
-  let placesToExport: { [placeId: string]: Place };
-
-  if (includeTimeSeries) {
-    const { colNames, dataRows, referencedPlaces } = timeSeriesGroupsToTable(
-      timeSeriesGroups,
-      placeGroups,
-    );
-    const validTypes: { [typeName: string]: boolean } = {
-      number: true,
-      string: true,
-    };
-    const csvHeaderRow = colNames.join(separator);
-    const csvDataRows = dataRows.map((row) =>
-      row
-        .map((value) => (validTypes[typeof value] ? value + "" : ""))
-        .join(separator),
-    );
-    const csvText = [csvHeaderRow].concat(csvDataRows).join("\n");
-    exporter.write(`${fileName}.txt`, csvText);
-    placesToExport = referencedPlaces;
-  } else {
-    placesToExport = {};
-    placeGroups.forEach((placeGroup) => {
-      if (placeGroup.features) {
-        placeGroup.features.forEach((place) => {
-          placesToExport[place.id] = place;
-        });
-      }
-    });
-  }
-
-  if (includePlaces) {
-    if (placesAsCollection) {
-      const collection = {
-        type: "FeatureCollection",
-        features: Object.keys(placesToExport).map(
-          (placeId) => placesToExport![placeId],
-        ),
-      };
-      exporter.write(
-        `${fileName}.geojson`,
-        JSON.stringify(collection, null, 2),
-      );
-    } else {
-      Object.keys(placesToExport).forEach((placeId) => {
-        exporter.write(
-          `${placeId}.geojson`,
-          JSON.stringify(placesToExport![placeId], null, 2),
-        );
-      });
-    }
-  }
-
-  exporter.close();
-}
-
-/*
-function _downloadTimeSeriesGeoJSON(timeSeriesGroups: TimeSeriesGroup[],
-                                    placeGroups: PlaceGroup[],
-                                    format: 'GeoJSON' | 'CSV',
-                                    fileName: string = 'time-series',
-                                    multiFile: boolean = true,
-                                    zipArchive: boolean = true) {
-    const featureCollection = timeSeriesGroupsToGeoJSON(timeSeriesGroups);
-
-    if (format === 'GeoJSON') {
-        if (zipArchive) {
-            const zip = new JSZip();
-            if (multiFile) {
-                zip.file(`${fileName}.geojson`,
-                         JSON.stringify(featureCollection, null, 2));
-            } else {
-                for (let feature of featureCollection.features) {
-                    zip.file(`${feature.id}.geojson`,
-                             JSON.stringify(feature, null, 2));
-                }
-            }
-            zip.generateAsync({type: "blob"})
-               .then((content) => saveAs(content, `${fileName}.zip`));
-        } else {
-            if (multiFile) {
-                throw new Error('Cannot download multi-file exports');
-            }
-            const blob = new Blob([JSON.stringify(featureCollection, null, 2)],
-                                  {type: "text/plain;charset=utf-8"});
-            saveAs(blob, `${fileName}.geojson`);
-        }
-    } else {
-        // TODO (forman): implement CSV export
-        throw new Error(`Download as ${format} is not yet implemented`);
-    }
-
-}
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -74,6 +74,9 @@ type CellValue = number | string | null | undefined;
 type DataRow = CellValue[];
 type RowData = {
   placeId: string | null;
+  longitude: number | null;
+  latitude: number | null;
+  geometry: string | null;
   time: string;
   [colName: string]: CellValue;
 };
@@ -85,9 +88,23 @@ export interface TimeSeriesTable {
   referencedPlaces: { [placeId: string]: Place };
 }
 
+export function timeSeriesTableToDelimitedText(
+  table: TimeSeriesTable,
+  separator: string,
+): string {
+  return [table.colNames, ...table.dataRows]
+    .map((row) =>
+      row
+        .map((value) => formatDelimitedValue(value, separator))
+        .join(separator),
+    )
+    .join("\n");
+}
+
 export function timeSeriesGroupsToTable(
   timeSeriesGroups: TimeSeriesGroup[],
   placeGroups: PlaceGroup[],
+  timeRange: TimeRange | null = null,
 ): TimeSeriesTable {
   const dataColNames = new Set<string>();
   const placeIds = new Set<string>();
@@ -96,9 +113,6 @@ export function timeSeriesGroupsToTable(
     for (const timeSeries of timeSeriesGroup.timeSeriesArray) {
       const { placeId, datasetId, variableName, valueDataKey, errorDataKey } =
         timeSeries.source;
-      if (placeId !== null) {
-        placeIds.add(placeId);
-      }
       const valueColName = `${datasetId}.${variableName}.${valueDataKey}`;
       dataColNames.add(valueColName);
       let errorColName: string | null = null;
@@ -106,7 +120,17 @@ export function timeSeriesGroupsToTable(
         errorColName = `${datasetId}.${variableName}.${errorDataKey}`;
         dataColNames.add(errorColName);
       }
-      timeSeries.data.forEach((point) => {
+
+      const place = findPlaceInPlaceGroups(placeGroups, placeId);
+      const spatialData = getSpatialData(
+        timeSeries.source.geometry ?? place?.geometry ?? null,
+      );
+
+      const data = filterTimeSeriesData(timeSeries.data, timeRange);
+      if (placeId !== null && data.length > 0) {
+        placeIds.add(placeId);
+      }
+      data.forEach((point) => {
         const time = utcTimeToIsoDateTimeString(point.time);
         // if placeId is null, then data is from import CSV / GeoJSON
         // and datasetId is the name of the place group.
@@ -115,6 +139,7 @@ export function timeSeriesGroupsToTable(
         if (!timePlaceRow) {
           timePlaceRows[timePlaceId] = {
             placeId,
+            ...spatialData,
             time,
             [valueColName]: point[valueDataKey],
           };
@@ -131,9 +156,13 @@ export function timeSeriesGroupsToTable(
     }
   }
 
-  const colNames: string[] = ["placeId", "time"].concat(
-    Array.from(dataColNames).sort(),
-  );
+  const colNames: string[] = [
+    "placeId",
+    "longitude",
+    "latitude",
+    "geometry",
+    "time",
+  ].concat(Array.from(dataColNames).sort());
   const dataRows: DataRow[] = [];
 
   Object.keys(timePlaceRows).forEach((timePlaceId) => {
@@ -146,20 +175,23 @@ export function timeSeriesGroupsToTable(
   });
 
   dataRows.sort((row1, row2) => {
-    const time1: string = row1[1] as string;
-    const time2: string = row2[1] as string;
+    const time1 = String(row1[4] ?? "");
+    const time2 = String(row2[4] ?? "");
     const timeDelta = time1.localeCompare(time2);
     if (timeDelta !== 0) {
       return timeDelta;
     }
-    const placeId1: string = row1[0] as string;
-    const placeId2: string = row2[0] as string;
+    const placeId1 = String(row1[0] ?? "");
+    const placeId2 = String(row2[0] ?? "");
     return placeId1.localeCompare(placeId2);
   });
 
   const referencedPlaces: { [placeId: string]: Place } = {};
   placeIds.forEach((placeId) => {
-    referencedPlaces[placeId] = findPlaceInPlaceGroups(placeGroups, placeId)!;
+    const place = findPlaceInPlaceGroups(placeGroups, placeId);
+    if (place !== null) {
+      referencedPlaces[placeId] = place;
+    }
   });
 
   return { colNames, dataRows, referencedPlaces };
@@ -167,14 +199,63 @@ export function timeSeriesGroupsToTable(
 
 export function timeSeriesGroupsToGeoJSON(
   timeSeriesGroups: TimeSeriesGroup[],
+  timeRange: TimeRange | null = null,
 ): geojson.FeatureCollection<geojson.Geometry | null> {
   const features: geojson.Feature<geojson.Geometry | null>[] = [];
   for (const timeSeriesGroup of timeSeriesGroups) {
     for (const timeSeries of timeSeriesGroup.timeSeriesArray) {
-      features.push(timeSeriesToGeoJSON(timeSeries));
+      const data = filterTimeSeriesData(timeSeries.data, timeRange);
+      if (data.length > 0) {
+        features.push(timeSeriesToGeoJSON({ ...timeSeries, data }));
+      }
     }
   }
   return { type: "FeatureCollection", features };
+}
+
+function filterTimeSeriesData(
+  data: TimeSeriesPoint[],
+  timeRange: TimeRange | null,
+): TimeSeriesPoint[] {
+  if (timeRange === null) {
+    return data;
+  }
+  const [startTime, endTime] = timeRange;
+  return data.filter(
+    (point) => point.time >= startTime && point.time <= endTime,
+  );
+}
+
+function getSpatialData(geometry: geojson.Geometry | null): {
+  longitude: number | null;
+  latitude: number | null;
+  geometry: string | null;
+} {
+  let longitude: number | null = null;
+  let latitude: number | null = null;
+  if (geometry?.type === "Point") {
+    const [x, y] = geometry.coordinates;
+    if (typeof x === "number" && typeof y === "number") {
+      longitude = x;
+      latitude = y;
+    }
+  }
+  return {
+    longitude,
+    latitude,
+    geometry: geometry === null ? null : JSON.stringify(geometry),
+  };
+}
+
+function formatDelimitedValue(value: CellValue, separator: string): string {
+  if (value === null || typeof value === "undefined") {
+    return "";
+  }
+  const text = String(value);
+  const escapedText = text.replace(/"/g, '""');
+  return escapedText.includes(separator) || /[\r\n"]/.test(text)
+    ? `"${escapedText}"`
+    : escapedText;
 }
 
 export function timeSeriesToGeoJSON(

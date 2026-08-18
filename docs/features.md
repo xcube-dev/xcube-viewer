@@ -1982,26 +1982,34 @@ A list of all the features that the viewer contains will be created here, in whi
 				in the header of the Viewer and select options for export:
 				<ul>
 					<li>
-						<strong>Include time series data</strong> (file format:
-						<code>.txt</code>)
+						<strong>Data</strong>: time-series data with place information,
+						or place geometries only
 					</li>
 					<li>
-						<strong>Separator</strong> for time series data (default:
-						<code>,</code>)
+						<strong>Export format</strong>: Text/CSV or GeoJSON
 					</li>
 					<li>
-						<strong>Include place data</strong> (file format:
-						<code>.geojson</code>)
+						<strong>Time range</strong>: the full time series or the range
+						currently displayed in the chart
 					</li>
-					<li><strong>Combine place data</strong> into a single file</li>
-					<li>Export as a <strong>ZIP archive</strong></li>
+					<li>
+						<strong>Separator</strong> for Text/CSV exports (default:
+						<code>TAB</code>)
+					</li>
+					<li>
+						<strong>Compress as ZIP</strong>: optionally wraps the single
+						export file in a ZIP archive
+					</li>
 					<li><strong>Filename</strong> configuration</li>
 				</ul>
 			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
-			<td>To export places and/or time series created within the Viewer.</td>
+			<td>
+				To export time-series values together with place identifiers and
+				spatial information in one file, or to export place geometries.
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2">

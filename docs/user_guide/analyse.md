@@ -38,10 +38,18 @@ There are multiple options to explore the graph:
 
 #### Export time series
 
-Export the time series using the option in the header at the top right. You have the option to export the time series, the geometries of the places, or both.
+Export time series using the option in the header at the top right. Select either
+Text/CSV or GeoJSON format. Both formats include the place identifier, spatial
+information, and time-series values in one file. Text/CSV exports provide
+longitude and latitude for point places and a GeoJSON geometry column for every
+place geometry. GeoJSON exports contain one feature per time series, including
+its geometry and values.
 
-![Export](../assets/images/analysis_timeseries_export.png)
+Choose whether to export the full time series or only the time range currently
+displayed in the chart. You can also export the visible place geometries without
+time-series values as a GeoJSON file.
 
+Select **Compress as ZIP** to wrap the single export file in a ZIP archive.
 ### Statistics
 
 Compute and display basic statistics for the currently [selected variable](../concepts.md/#selected-variable), [selected timestamp](../concepts.md/#selected-time), and [selected place](../concepts.md/#selected-place). To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
@@ -216,6 +224,7 @@ Modify both the color and opacity of a [place](../concepts.md/#places-and-place-
 
 ### Export
 
-The geometry of [places](../concepts.md/#places-and-place-groups) created in the Viewer can be exported. This feature can be enabled during [the export of time series](#export-time-series). To include the geometry information in the export, it must be explicitly selected.
-
-![Export](../assets/images/analysis_timeseries_export.png)
+The geometry of [places](../concepts.md/#places-and-place-groups) created in the
+Viewer can be exported as a single GeoJSON file. When exporting time series,
+place identifiers and spatial information are included automatically in the
+selected export format.
