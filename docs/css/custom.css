@@ -11,3 +11,20 @@
 [data-md-color-scheme="slate"] .dark-image {
   display: block;
 }
+
+.md-header__demo {
+  display: inline-block;
+  margin: 0 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid currentColor;
+  border-radius: 0.35rem;
+  color: var(--md-primary-bg-color);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.md-header__demo:hover {
+  color: var(--md-accent-fg-color);
+}
+
