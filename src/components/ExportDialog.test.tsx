@@ -92,15 +92,19 @@ describe("ExportDialog", () => {
     ).toBeDisabled();
   });
 
-  it("keeps places-only exports in GeoJSON and hides time-range controls", () => {
+  it("keeps places-only exports in GeoJSON and removes inapplicable options", () => {
     render(<ExportDialogHarness />);
 
     fireEvent.click(
       screen.getByRole("radio", { name: "Place geometries only" }),
     );
 
-    expect(screen.getByRole("radio", { name: "GeoJSON" })).toBeChecked();
-    expect(screen.getByRole("radio", { name: "Text/CSV" })).toBeDisabled();
+    expect(
+      screen.queryByRole("radio", { name: "Text/CSV" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Place geometries are exported as GeoJSON."),
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole("radio", { name: "Full time series" }),
     ).not.toBeInTheDocument();

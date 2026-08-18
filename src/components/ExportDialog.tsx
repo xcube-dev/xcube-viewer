@@ -10,13 +10,15 @@ import Checkbox from "@mui/material/Checkbox";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import ListItem from "@mui/material/ListItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 import { SxProps } from "@mui/system";
 import { Theme } from "@mui/material";
 
@@ -27,20 +29,20 @@ import {
   ExportFormat,
   ExportTimeRange,
 } from "@/states/controlState";
-import SettingsPanel from "./SettingsPanel";
-import SettingsSubPanel from "./SettingsSubPanel";
-
 const styles: Record<string, SxProps<Theme>> = {
-  separatorTextField: (theme) => ({
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    fontSize: theme.typography.fontSize / 2,
-    maxWidth: "5rem",
+  content: (theme) => ({ paddingTop: theme.spacing(1) }),
+  options: (theme) => ({ display: "grid", gap: theme.spacing(3) }),
+  optionGroup: (theme) => ({ display: "grid", gap: theme.spacing(0.5) }),
+  choices: (theme) => ({
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(12rem, 1fr))",
+    columnGap: theme.spacing(2),
   }),
-  fileNameTextField: (theme) => ({
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    fontSize: theme.typography.fontSize / 2,
+  fileOptions: (theme) => ({
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(12rem, 1fr))",
+    gap: theme.spacing(2),
+    alignItems: "start",
   }),
 };
 
@@ -126,12 +128,19 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
         onClose={handleCloseDialog}
         scroll="body"
       >
-        <DialogContent>
-          <SettingsPanel title={i18n.get("Export Settings")}>
-            <ExportOptionGroup label={i18n.get("Data")}>
+        <DialogTitle>{i18n.get("Export data")}</DialogTitle>
+        <DialogContent sx={styles.content}>
+          <Box sx={styles.options}>
+            <ExportOptionGroup
+              label={i18n.get("What would you like to export?")}
+              helperText={i18n.get(
+                "Time-series exports include values, place IDs, coordinates, and geometry.",
+              )}
+            >
               <RadioGroup
                 value={settings.exportDataType}
                 onChange={handleDataTypeChange}
+                sx={styles.choices}
               >
                 <FormControlLabel
                   value="timeSeries"
@@ -145,26 +154,36 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                 />
               </RadioGroup>
             </ExportOptionGroup>
-            <ExportOptionGroup label={i18n.get("Export format")}>
-              <RadioGroup value={exportFormat} onChange={handleFormatChange}>
-                <FormControlLabel
-                  value="text"
-                  label={i18n.get("Text/CSV")}
-                  control={<Radio />}
-                  disabled={!isTimeSeriesExport}
-                />
-                <FormControlLabel
-                  value="geojson"
-                  label={i18n.get("GeoJSON")}
-                  control={<Radio />}
-                />
-              </RadioGroup>
-            </ExportOptionGroup>
+            {isTimeSeriesExport ? (
+              <ExportOptionGroup label={i18n.get("File format")}>
+                <RadioGroup
+                  value={exportFormat}
+                  onChange={handleFormatChange}
+                  sx={styles.choices}
+                >
+                  <FormControlLabel
+                    value="text"
+                    label={i18n.get("Text/CSV")}
+                    control={<Radio />}
+                  />
+                  <FormControlLabel
+                    value="geojson"
+                    label={i18n.get("GeoJSON")}
+                    control={<Radio />}
+                  />
+                </RadioGroup>
+              </ExportOptionGroup>
+            ) : (
+              <FormHelperText>
+                {i18n.get("Place geometries are exported as GeoJSON.")}
+              </FormHelperText>
+            )}
             {isTimeSeriesExport && (
               <ExportOptionGroup label={i18n.get("Time range")}>
                 <RadioGroup
                   value={exportTimeRange}
                   onChange={handleTimeRangeChange}
+                  sx={styles.choices}
                 >
                   <FormControlLabel
                     value="full"
@@ -180,38 +199,39 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
                 </RadioGroup>
               </ExportOptionGroup>
             )}
-            {isTextExport && (
-              <SettingsSubPanel
-                label={i18n.get("Separator for time-series data")}
-              >
-                <TextField
-                  variant="standard"
-                  sx={styles.separatorTextField}
-                  value={settings.exportTimeSeriesSeparator}
-                  onChange={handleSeparatorChange}
-                  margin="normal"
-                  size={"small"}
-                />
-              </SettingsSubPanel>
-            )}
-            <SettingsSubPanel label={i18n.get("Compress as ZIP")}>
-              <Checkbox
-                checked={settings.exportAsZipArchive}
-                onChange={handleZipArchiveChange}
-                inputProps={{ "aria-label": i18n.get("Compress as ZIP") }}
-              />
-            </SettingsSubPanel>
-            <SettingsSubPanel label={i18n.get("File name")}>
+            <Box sx={styles.fileOptions}>
               <TextField
-                variant="standard"
-                sx={styles.fileNameTextField}
+                fullWidth
+                label={i18n.get("File name")}
                 value={settings.exportFileName}
                 onChange={handleFileNameChange}
-                margin="normal"
-                size={"small"}
+                size="small"
+                helperText={i18n.get(
+                  "Use letters, numbers, hyphens, or underscores.",
+                )}
               />
-            </SettingsSubPanel>
-          </SettingsPanel>
+              {isTextExport && (
+                <TextField
+                  fullWidth
+                  label={i18n.get("Text/CSV separator")}
+                  value={settings.exportTimeSeriesSeparator}
+                  onChange={handleSeparatorChange}
+                  size="small"
+                  helperText={i18n.get("Enter one character or TAB.")}
+                />
+              )}
+              <FormControlLabel
+                label={i18n.get("Compress as ZIP")}
+                control={
+                  <Checkbox
+                    checked={settings.exportAsZipArchive}
+                    onChange={handleZipArchiveChange}
+                    inputProps={{ "aria-label": i18n.get("Compress as ZIP") }}
+                  />
+                }
+              />
+            </Box>
+          </Box>
         </DialogContent>
 
         <DialogActions>
@@ -246,16 +266,20 @@ const canDownload = (settings: ControlState, isTextExport: boolean) => {
 
 interface ExportOptionGroupProps {
   label: string;
+  helperText?: string;
   children: React.ReactNode;
 }
 
-function ExportOptionGroup({ label, children }: ExportOptionGroupProps) {
+function ExportOptionGroup({
+  label,
+  helperText,
+  children,
+}: ExportOptionGroupProps) {
   return (
-    <ListItem>
-      <FormControl component="fieldset" fullWidth>
-        <FormLabel component="legend">{label}</FormLabel>
-        {children}
-      </FormControl>
-    </ListItem>
+    <FormControl component="fieldset" fullWidth sx={styles.optionGroup}>
+      <FormLabel component="legend">{label}</FormLabel>
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      {children}
+    </FormControl>
   );
 }
