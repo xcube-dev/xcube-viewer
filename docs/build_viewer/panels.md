@@ -84,7 +84,8 @@ to extensions:
 ## Examples
 ### Static panel
 
-![Custom Panels Example 1](../assets/images/custom_panels_example1.png)
+![custom_panels_example1_light.png](../assets/images/custom_panels_example1_light.png){: class="light-image" }
+![custom_panels_example1_dark.png](../assets/images/custom_panels_example1_dark.png){: class="dark-image" }
 
 Create `<folder-to-my-panels>/my_panel.py`:
 ```python
@@ -115,7 +116,8 @@ def render_panel(
 
 ### Reactive panel
 
-![Custom Panels Example 2](../assets/images/custom_panels_example2.png)
+![custom_panels_light.gif](../assets/videos/custom_panels_light.gif){: class="light-image" }
+![custom_panels_dark.gif](../assets/videos/custom_panels_dark.gif){: class="dark-image" }
 
 ```python
 from chartlets import Component, Input, Output, State
