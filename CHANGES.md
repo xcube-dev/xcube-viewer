@@ -1,5 +1,9 @@
 ## Changes in version 1.7.4 (in development)
 
+### Fixes
+
+* Fixed the color bar update for a pinned variable. (#637)
+
 ### Other changes
 
 * Updated dependencies. Now using
@@ -13,10 +17,6 @@
 
 * Added `selectedPlaceLabel` to the list of available
   state properties. (#624)
-
-### Fixes
-
-* Fixed the color bar update for a pinned variable. (#637)
 
 ## Changes in version 1.7.3
 
