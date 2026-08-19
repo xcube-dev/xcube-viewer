@@ -1007,7 +1007,7 @@ export function updateVariable2ColorBar(
     dispatch: Dispatch<UpdateVariableColorBar>,
     getState: () => AppState,
   ) => {
-    const selectedDatasetId = getState().controlState.selectedDatasetId;
+    const selectedDatasetId = getState().controlState.selectedDataset2Id;
     const selectedVariableName = getState().controlState.selectedVariable2Name;
     if (selectedDatasetId && selectedVariableName) {
       dispatch(
