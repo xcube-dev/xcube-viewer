@@ -1,4 +1,4 @@
-## Changes in version 1.7.4 (in development)
+## Changes in version 1.7.4
 
 ### Fixes
 
