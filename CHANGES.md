@@ -1,6 +1,22 @@
 ## Changes in version 1.7.4 (in development)
 
+### Fixes
+
+* Fixed the color bar update for a pinned variable. (#637)
+
 ### Other changes
+
+* Updated dependencies. Now using
+	- `@storybook-community/storybook-dark-mode ^7.1.3`
+	- `@vitejs/plugin-react-swc": "^4.3.1`
+	- `eslint-plugin-storybook ^10.4.6`
+	- `react-draggable 4.5.0` (pinned due to issue in 4.6.0)
+	- `storybook ^10.4.6`
+	- `vite ^8.0.16`
+	- `vitest ^3.2.4`
+
+* Added `selectedPlaceLabel` to the list of available
+  state properties. (#624)
 
 * Updated dependencies. Now using
 	- `@storybook-community/storybook-dark-mode ^7.1.3`
