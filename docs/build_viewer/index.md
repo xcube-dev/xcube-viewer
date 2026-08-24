@@ -1,13 +1,13 @@
-# Get your own Viewer
+# Setup your own Viewer
 
-Use these pages to decide how to run xcube Viewer, adapt it to your deployment,
+Use these pages to decide how to configure and run an xcube Viewer instance for your own datasets
 and extend it with custom sidebar panels.
 
 <div class="user-guide-grid" markdown>
 
 <a class="user-guide-card" href="ways_to_use/">
   <strong>Ways to use xcube Viewer</strong>
-  <span>Start a Viewer deployment from a Jupyter Notebook , xcube CLI, or learn how to deploy in development mode.</span>
+  <span>Start a Viewer instance from a Jupyter Notebook or the xcube CLI, and learn how to run it in development mode.</span>
 </a>
 
 <a class="user-guide-card" href="config_viewer/">

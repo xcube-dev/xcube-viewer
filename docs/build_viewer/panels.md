@@ -1,4 +1,4 @@
-# Extend xcube Viewer with custom panels
+# Custom sidebar panels
 
 ![custom_panels_spectrum.gif](../assets/videos/custom_panels_spectrum.gif)
 
@@ -8,9 +8,9 @@
     and the [xcube](https://github.com/xcube-dev/xcube/tree/main/examples/serve/panels-demo) demo panels.
 
 Starting with xcube Server 1.8 and xcube Viewer 1.4 it is possible to enhance
-xcube Viewer by **custom sidebar panels** programmed in Python contributed from the server-side.
+xcube Viewer by **custom sidebar panels** programmed in Python and published by xcube Server.
 
-For this to work, service providers can now configure xcube Server to load
+For this to work, you (as a service provider) can now configure xcube Server to load
 one or more Python modules that provide UI-contributions of type
 `xcube.webapi.viewer.contrib.Panel`.
 Users can create `Panel` objects and use the two decorators
@@ -21,7 +21,7 @@ behaviour, respectively. The new functionality is provided by the
 ## Available State Properties
 
 xcube Viewer exposes some of its application state properties to Python
-extension components, e.g., `panel = Panel(...)`. The current values of state
+extension components such as panels (`panel = Panel(...)`). The current values of state
 properties can be accessed via `Input` and `State` channels you define for your
 extension component decorators, i.e., `@panel.layout(...)` and/or `@panel.callback(...)`.
 
