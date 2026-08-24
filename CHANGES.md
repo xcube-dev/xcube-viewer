@@ -12,6 +12,7 @@
 * Updated dependencies. Now using
 	- `@storybook-community/storybook-dark-mode ^7.1.3`
 	- `@vitejs/plugin-react-swc": "^4.3.1`
+	- `chartlets ^0.2.1`
 	- `eslint-plugin-storybook ^10.4.6`
 	- `react-draggable 4.5.0` (pinned due to issue in 4.6.0)
 	- `storybook ^10.4.6`
