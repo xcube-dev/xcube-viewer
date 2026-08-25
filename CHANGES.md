@@ -2,6 +2,8 @@
 
 ### Fixes
 
+* Correctly transform dataset bounding boxes to the map projection.
+
 * Fixed the color bar update for a pinned variable. (#637)
 
 ### Other changes

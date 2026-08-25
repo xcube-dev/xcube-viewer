@@ -915,6 +915,22 @@ function getLoadTileOnlyAfterMove() {
   return _getLoadTileOnlyAfterMove(map);
 }
 
+export function getDatasetLayerExtent(
+  extent: [number, number, number, number],
+  mapProjection: string,
+): [number, number, number, number] {
+  // xcube Server always returns dataset bounding boxes in geographical
+  // coordinates, independently of a cube's native spatial reference.
+  return mapProjection === GEOGRAPHIC_CRS
+    ? extent
+    : (olTransformExtent(extent, GEOGRAPHIC_CRS, mapProjection) as [
+        number,
+        number,
+        number,
+        number,
+      ]);
+}
+
 function getTileLayer(
   layerId: string,
   tileUrl: string,
@@ -926,7 +942,6 @@ function getTileLayer(
   timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
-  datasetProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
   zIndex: number = 10,
@@ -953,30 +968,7 @@ function getTileLayer(
     tileLevelMax,
   );
 
-  let transformedExtent;
-
-  if (
-    datasetProjection === GEOGRAPHIC_CRS ||
-    datasetProjection === WEB_MERCATOR_CRS
-  ) {
-    // Only use extent for EPSG:4326 and EPSG:3857.
-    // For other CRS (e.g. UTM, LAEA), transforming the bbox can be inaccurate
-    // and may clip valid tiles due to projection distortion.
-    // Disabling extent avoids rendering artifacts. It can trigger extra
-    // tile requests, but the performance impact should be small
-    // as xcube Server already handles out-of-bounds tiles.
-    if (mapProjection === datasetProjection) {
-      transformedExtent = extent;
-    } else {
-      transformedExtent = olTransformExtent(
-        extent,
-        datasetProjection,
-        mapProjection,
-      );
-    }
-  } else {
-    transformedExtent = undefined;
-  }
+  const transformedExtent = getDatasetLayerExtent(extent, mapProjection);
 
   return (
     <Tile
@@ -1108,7 +1100,6 @@ const getVariableTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
-    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1183,7 +1174,6 @@ const getDatasetRgbTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
-    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
