@@ -2,7 +2,8 @@
 
 ### Fixes
 
-* Correctly transform dataset bounding boxes to the map projection.
+* Corrected tile layer extents by transforming the geographical dataset bounding boxes 
+  to the map projection currently used in the app. (#641)
 
 * Fixed the color bar update for a pinned variable. (#637)
 
