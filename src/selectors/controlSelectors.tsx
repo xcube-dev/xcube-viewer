@@ -7,6 +7,7 @@
 import { JSX } from "react";
 import { createSelector } from "reselect";
 import memoize from "fast-memoize";
+import { Geometry } from "geojson";
 import {
   Feature as OlFeature,
   ImageTile as OlImageTile,
@@ -31,7 +32,6 @@ import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
 import { Vector } from "@/components/ol/layer/Vector";
 import { MapElement } from "@/components/ol/Map";
-
 import {
   BBox,
   Dataset,
@@ -55,7 +55,6 @@ import {
 } from "@/model/place";
 import { Time, TimeRange, TimeSeriesGroup } from "@/model/timeSeries";
 import { ColorBarNorm, Variable } from "@/model/variable";
-
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
 import {
@@ -95,7 +94,6 @@ import {
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { StatisticsRecord } from "@/model/statistics";
-import { Geometry } from "geojson";
 import { LayerState } from "@/model/layerState";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
