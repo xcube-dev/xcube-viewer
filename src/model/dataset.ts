@@ -7,6 +7,7 @@
 import OlTileLayer from "ol/layer/Tile";
 import { default as OlMap } from "ol/Map";
 import { default as OlView } from "ol/View";
+import { type GeoJSONPolygon } from "ol/format/GeoJSON";
 
 import { findDatasetMapLayer } from "@/components/ol/util";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
@@ -17,7 +18,6 @@ import { isString } from "@/util/types";
 import { type PlaceGroup } from "./place";
 import { type TimeRange } from "./timeSeries";
 import { type Variable } from "./variable";
-import { GeoJSONPolygon } from "ol/format/GeoJSON";
 
 export interface Dimension {
   name: string;
