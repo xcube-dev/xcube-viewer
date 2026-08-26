@@ -7,9 +7,15 @@
 import { JSX } from "react";
 import { createSelector } from "reselect";
 import memoize from "fast-memoize";
-import { ImageTile as OlImageTile, Tile as OlTile } from "ol";
+import { Geometry } from "geojson";
+import {
+  Feature as OlFeature,
+  ImageTile as OlImageTile,
+  Tile as OlTile,
+} from "ol";
 import { default as OlMap } from "ol/Map";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
+import { default as OlGeometry } from "ol/geom/Geometry";
 import { default as OlVectorSource } from "ol/source/Vector";
 import { default as OlXYZSource } from "ol/source/XYZ";
 import { default as OlTileWMSSource } from "ol/source/TileWMS";
@@ -19,7 +25,6 @@ import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
-import { transformExtent as olTransformExtent } from "ol/proj";
 
 import { Config, getUserPlaceFillOpacity } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
@@ -27,8 +32,8 @@ import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
 import { Vector } from "@/components/ol/layer/Vector";
 import { MapElement } from "@/components/ol/Map";
-
 import {
+  BBox,
   Dataset,
   findDataset,
   findDatasetVariable,
@@ -50,7 +55,6 @@ import {
 } from "@/model/place";
 import { Time, TimeRange, TimeSeriesGroup } from "@/model/timeSeries";
 import { ColorBarNorm, Variable } from "@/model/variable";
-
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
 import {
@@ -90,7 +94,6 @@ import {
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { StatisticsRecord } from "@/model/statistics";
-import { Geometry } from "geojson";
 import { LayerState } from "@/model/layerState";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
@@ -178,6 +181,18 @@ export const selectedDataset2Selector = createSelector(
   datasetsSelector,
   selectedDataset2IdSelector,
   findDataset,
+);
+
+export const selectedDatasetExtentSelector = createSelector(
+  selectedDatasetSelector,
+  mapProjectionSelector,
+  computeDatasetExtent,
+);
+
+export const selectedDataset2ExtentSelector = createSelector(
+  selectedDataset2Selector,
+  mapProjectionSelector,
+  computeDatasetExtent,
 );
 
 export const getDatasetTitle = (dataset: Dataset | null) =>
@@ -918,7 +933,7 @@ function getLoadTileOnlyAfterMove() {
 function getTileLayer(
   layerId: string,
   tileUrl: string,
-  extent: [number, number, number, number],
+  extent: BBox | null,
   tileLevelMin: number | undefined,
   tileLevelMax: number | undefined,
   queryParams: Array<[string, string]>,
@@ -926,7 +941,6 @@ function getTileLayer(
   timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
-  datasetProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
   zIndex: number = 10,
@@ -953,40 +967,37 @@ function getTileLayer(
     tileLevelMax,
   );
 
-  let transformedExtent;
-
-  if (
-    datasetProjection === GEOGRAPHIC_CRS ||
-    datasetProjection === WEB_MERCATOR_CRS
-  ) {
-    // Only use extent for EPSG:4326 and EPSG:3857.
-    // For other CRS (e.g. UTM, LAEA), transforming the bbox can be inaccurate
-    // and may clip valid tiles due to projection distortion.
-    // Disabling extent avoids rendering artifacts. It can trigger extra
-    // tile requests, but the performance impact should be small
-    // as xcube Server already handles out-of-bounds tiles.
-    if (mapProjection === datasetProjection) {
-      transformedExtent = extent;
-    } else {
-      transformedExtent = olTransformExtent(
-        extent,
-        datasetProjection,
-        mapProjection,
-      );
-    }
-  } else {
-    transformedExtent = undefined;
-  }
-
   return (
     <Tile
       id={layerId}
       source={source}
-      extent={transformedExtent}
+      extent={extent ?? undefined}
       zIndex={zIndex}
       opacity={opacity}
     />
   );
+}
+
+export function computeDatasetExtent(
+  dataset: Dataset | null,
+  mapProjection: string,
+): BBox | null {
+  if (!dataset || !dataset.geometry) {
+    return null;
+  }
+  const transformedFeature: OlFeature<OlGeometry> = new OlGeoJSONFormat({
+    dataProjection: GEOGRAPHIC_CRS,
+    featureProjection: mapProjection,
+  }).readFeature(dataset.geometry);
+  const transformedGeometry = transformedFeature.getGeometry();
+  if (!transformedGeometry) {
+    return null;
+  }
+  const transformedExtent = transformedGeometry.getExtent();
+  if (transformedExtent.length !== 4) {
+    return null;
+  }
+  return transformedExtent as BBox;
 }
 
 export const selectedDatasetBoundaryLayerSelector = createSelector(
@@ -1069,6 +1080,7 @@ export const selectedServerSelector = createSelector(
 const getVariableTileLayer = (
   server: ApiServerConfig,
   dataset: Dataset | null,
+  extent: BBox | null,
   timeLabel: string | null,
   attributions: string[] | null,
   variable: Variable | null,
@@ -1100,7 +1112,7 @@ const getVariableTileLayer = (
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, variable),
-    dataset.bbox,
+    extent,
     variable.tileLevelMin,
     variable.tileLevelMax,
     queryParams,
@@ -1108,7 +1120,6 @@ const getVariableTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
-    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1118,6 +1129,7 @@ const getVariableTileLayer = (
 export const selectedDatasetVariableLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetSelector,
+  selectedDatasetExtentSelector,
   selectedDatasetTimeLabelSelector,
   selectedDatasetAttributionsSelector,
   selectedVariableSelector,
@@ -1138,6 +1150,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
 export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedServerSelector,
   selectedDataset2Selector,
+  selectedDataset2ExtentSelector,
   selectedDataset2TimeLabelSelector,
   selectedDataset2AttributionsSelector,
   selectedVariable2Selector,
@@ -1162,6 +1175,7 @@ const getDatasetRgbTileLayer = (
   visibility: boolean,
   layerId: string,
   zIndex: number,
+  extent: BBox | null,
   timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
@@ -1175,7 +1189,7 @@ const getDatasetRgbTileLayer = (
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, "rgb"),
-    dataset.bbox,
+    extent,
     rgbSchema.tileLevelMin,
     rgbSchema.tileLevelMax,
     queryParams,
@@ -1183,7 +1197,6 @@ const getDatasetRgbTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
-    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1197,6 +1210,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
   datasetRgbVisibilitySelector,
   datasetRgbLayerIdSelector,
   datasetRgbZIndexSelector,
+  selectedDatasetExtentSelector,
   selectedDatasetTimeLabelSelector,
   timeAnimationActiveSelector,
   mapProjectionSelector,
@@ -1212,6 +1226,7 @@ export const selectedDataset2RgbLayerSelector = createSelector(
   datasetRgb2VisibilitySelector,
   datasetRgb2LayerIdSelector,
   datasetRgb2ZIndexSelector,
+  selectedDataset2ExtentSelector,
   selectedDatasetTimeLabelSelector,
   timeAnimationActiveSelector,
   mapProjectionSelector,
