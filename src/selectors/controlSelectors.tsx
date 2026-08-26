@@ -917,8 +917,16 @@ function getLoadTileOnlyAfterMove() {
 
 export function getDatasetLayerExtent(
   extent: [number, number, number, number],
+  datasetProjection: string,
   mapProjection: string,
-): [number, number, number, number] {
+): [number, number, number, number] | undefined {
+  if (
+    datasetProjection !== GEOGRAPHIC_CRS &&
+    datasetProjection !== WEB_MERCATOR_CRS
+  ) {
+    return undefined;
+  }
+
   // xcube Server always returns dataset bounding boxes in geographical
   // coordinates, independently of a cube's native spatial reference.
   return mapProjection === GEOGRAPHIC_CRS
@@ -942,6 +950,7 @@ function getTileLayer(
   timeLabel: string | null,
   timeAnimationActive: boolean,
   mapProjection: string,
+  datasetProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
   zIndex: number = 10,
@@ -968,7 +977,11 @@ function getTileLayer(
     tileLevelMax,
   );
 
-  const transformedExtent = getDatasetLayerExtent(extent, mapProjection);
+  const transformedExtent = getDatasetLayerExtent(
+    extent,
+    datasetProjection,
+    mapProjection,
+  );
 
   return (
     <Tile
@@ -1100,6 +1113,7 @@ const getVariableTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
+    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1174,6 +1188,7 @@ const getDatasetRgbTileLayer = (
     timeLabel,
     timeAnimationActive,
     mapProjection,
+    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
