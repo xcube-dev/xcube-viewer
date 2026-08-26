@@ -6,10 +6,12 @@
 
 ### Other changes
 
+* Replaced `@vitejs/plugin-react-swc` with the Babel-based
+  `@vitejs/plugin-react ^6.0.5`. (#638)
+
 * Updated dependencies. Now using
 	- `@storybook-community/storybook-dark-mode ^7.1.3`
-	- `@vitejs/plugin-react-swc": "^4.3.1`
-	- `chartlets ^0.2.1`
+	- `@vitejs/plugin-react ^6.0.5`
 	- `eslint-plugin-storybook ^10.4.6`
 	- `react-draggable ^4.7.1`
 	- `storybook ^10.4.6`
