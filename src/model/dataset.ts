@@ -17,6 +17,7 @@ import { isString } from "@/util/types";
 import { type PlaceGroup } from "./place";
 import { type TimeRange } from "./timeSeries";
 import { type Variable } from "./variable";
+import { GeoJSONPolygon } from "ol/format/GeoJSON";
 
 export interface Dimension {
   name: string;
@@ -39,6 +40,7 @@ export interface TimeDimension extends Dimension {
 }
 
 export type NormRange = [number, number];
+export type BBox = [number, number, number, number];
 
 export interface RgbSchema {
   // The following are new since xcube 0.11
@@ -58,11 +60,8 @@ export interface Dataset {
   groupDescription?: string;
   sortValue?: number;
   tags?: string[];
-  bbox: [number, number, number, number];
-  geometry: {
-    type: "Polygon";
-    coordinates: Array<Array<[number, number]>>;
-  };
+  bbox: BBox;
+  geometry: GeoJSONPolygon;
   spatialRef: string;
   dimensions: Dimension[];
   variables: Variable[];
