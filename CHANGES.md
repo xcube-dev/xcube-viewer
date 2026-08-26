@@ -2,6 +2,11 @@
 
 ### Fixes
 
+* Fixed a problem when computing the extent of variable and RGB layers.
+  We are now correctly using the extrema of the dataset's boundary polygon 
+  in coordinates of the viewer's map projection for the extent, rather than
+  using the dataset's geographical bounding box. (#593, #641)
+
 * Fixed the color bar update for a pinned variable. (#637)
 
 ### Other changes
