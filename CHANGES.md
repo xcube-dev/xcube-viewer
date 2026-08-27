@@ -1,4 +1,9 @@
-## Changes in version 1.7.4 (in development)
+## Changes in version 1.7.4
+
+### Improvements
+
+* Added a **Reset application** action to the Settings dialog. It clears
+  browser-held Viewer data and reloads the application. (#628)
 
 ### Fixes
 
