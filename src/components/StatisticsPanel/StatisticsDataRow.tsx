@@ -58,7 +58,8 @@ export default function StatisticsDataRow({
   const containerRef = useRef<HTMLDivElement>(null);
   const [brush, setBrush] = useState(false);
   const [details, setDetails] = useState(false);
-  const { dataset, variable, time, placeInfo } = statisticsRecord.source;
+  const { dataset, variable, time, placeInfo, dimensionValues } =
+    statisticsRecord.source;
   const hasHistogram = isAreaStatistics(statisticsRecord.statistics);
   const handleToggleDetails = () => {
     setDetails(!details);
@@ -69,12 +70,14 @@ export default function StatisticsDataRow({
   const handleRemoveStatistics = () => {
     removeStatistics(rowIndex);
   };
+
   return (
     <StatisticsRow
       dataset={dataset}
       variable={variable}
       time={time}
       placeInfo={placeInfo}
+      dimensionValues={dimensionValues}
       containerRef={containerRef}
       actions={
         <>

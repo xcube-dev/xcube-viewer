@@ -95,6 +95,18 @@ export function findDatasetVariable(
   );
 }
 
+export function findDatasetDimension(
+  dataset: Dataset,
+  dimensionName: string | null,
+): Dimension | null {
+  return (
+    (dimensionName &&
+      dataset.dimensions.find(
+        (dimension) => dimension.name === dimensionName,
+      )) ||
+    null
+  );
+}
 export function getDatasetUserVariablesIndex(dataset: Dataset): number {
   // vIndex is the first index that is a user variable.
   return dataset.variables.findIndex((v) => isString(v.expression));
@@ -122,7 +134,7 @@ export function getDatasetTimeDimension(
   assertDefinedAndNotNull(dataset, "dataset");
   assertArrayNotEmpty(dataset.dimensions, "dataset.dimensions");
   const dimension = dataset.dimensions.find(
-    (dimension) => dimension.name === "time",
+    (dimension) => dimension.name === "time", // TODO: add "date", "year"
   );
   if (!dimension) {
     return null;
@@ -290,4 +302,14 @@ export function getDatasetLevel(
   } else {
     return undefined;
   }
+}
+
+export function isSpatialDim(dimName: string): boolean {
+  const normalized = dimName.toLowerCase();
+  return ["lat", "lon", "latitude", "longitude", "x", "y"].includes(normalized);
+}
+
+export function isTemporalDim(dimName: string): boolean {
+  const normalized = dimName.toLowerCase();
+  return ["time"].includes(normalized);
 }

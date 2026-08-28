@@ -14,6 +14,11 @@
 
 * Fixed the color bar update for a pinned variable. (#637)
 
+### Improvements 
+
+* Add support for multiple non-spatial dataset dimensions (e.g. time, depth). Selectors are displayed either for only one dimension or for
+  all dimensions at once, this can be configured in the settings.(#239)
+
 ### Other changes
 
 * Added two handy `npm` tasks that apply if the `xcube` project folder is
