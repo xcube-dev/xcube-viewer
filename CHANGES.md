@@ -16,6 +16,11 @@
 
 ### Other changes
 
+* Added two handy `npm` tasks that apply if the `xcube` project folder is
+  checked out in a directory next to `xcube-viewer`:
+  - `xcube:dev`: runs xcube server with the xcube's panels-demo configuration
+  - `xcube:build`: replaces the current viewer build in `../xcube/xcube/webapi/viewer/dist`
+    
 * Updated dependencies. Now using
 	- `@storybook-community/storybook-dark-mode ^7.1.3`
 	- `@vitejs/plugin-react-swc": "^4.3.1`

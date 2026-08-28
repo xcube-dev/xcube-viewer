@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "xcube:dev": "cd ../xcube && pixi run xcube serve -vvv -c examples/serve/panels-demo/config.yaml",
+    "xcube:build": "rimraf ../xcube/xcube/webapi/viewer/dist && tsc -b && vite build --emptyOutDir --outDir ../xcube/xcube/webapi/viewer/dist",
     "compile": "tsc",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
