@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../colormaps/">
+        <link rel="prev" href="../ways_to_use/">
       
       
-        <link rel="next" href="../../build_viewer/">
+        <link rel="next" href="../panels/">
       
       
       <link rel="icon" href="../../assets/logos/logo192.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Adjust Settings - xcube Viewer</title>
+        <title>Viewer Configuration - xcube Viewer</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adjust-settings" class="md-skip">
+        <a href="#xcube-viewer-configuration-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Adjust Settings
+              Viewer Configuration
             
           </span>
         </div>
@@ -274,8 +274,6 @@
       
   
   
-    
-  
   
   
     
@@ -296,16 +294,16 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../user_guide/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -323,7 +321,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             User Guide
@@ -339,7 +337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
+      <a href="../../user_guide/getting_started/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -361,7 +359,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../analyse/" class="md-nav__link">
+      <a href="../../user_guide/analyse/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -383,11 +381,122 @@
   
   
     <li class="md-nav__item">
-      <a href="../colormaps/" class="md-nav__link">
+      <a href="../../user_guide/colormaps/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     Colour Mapping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user_guide/settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adjust Settings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Get your own Viewer
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Get your own Viewer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ways_to_use/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ways to use xcube Viewer
     
   </span>
   
@@ -418,7 +527,7 @@
           
   
   <span class="md-ellipsis">
-    Adjust Settings
+    Viewer Configuration
     
   </span>
   
@@ -430,7 +539,7 @@
         
   
   <span class="md-ellipsis">
-    Adjust Settings
+    Viewer Configuration
     
   </span>
   
@@ -453,28 +562,101 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#general" class="md-nav__link">
+  <a href="#top-level-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      General
+      Top-level configuration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="General">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authclient" class="md-nav__link">
+    <span class="md-ellipsis">
+      authClient
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server" class="md-nav__link">
+    <span class="md-ellipsis">
+      server
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#branding" class="md-nav__link">
+    <span class="md-ellipsis">
+      branding
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="branding">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#change-the-server" class="md-nav__link">
+  <a href="#general-ui" class="md-nav__link">
     <span class="md-ellipsis">
-      Change the Server
+      General UI
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#player-interval" class="md-nav__link">
+  <a href="#colors" class="md-nav__link">
     <span class="md-ellipsis">
-      Player Interval
+      Colors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map &amp; Layers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Map &amp; Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      layers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layerwms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer.wms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layervisibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      layerVisibilities
     </span>
   </a>
   
@@ -484,48 +666,29 @@
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#time-series" class="md-nav__link">
-    <span class="md-ellipsis">
-      Time-Series
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#map" class="md-nav__link">
-    <span class="md-ellipsis">
-      Map
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Map">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#base-maps-and-overlays" class="md-nav__link">
+  <a href="#aggregation" class="md-nav__link">
     <span class="md-ellipsis">
-      Base maps and Overlays
+      Aggregation
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#user-base-maps-and-overlays" class="md-nav__link">
+  <a href="#additional-features" class="md-nav__link">
     <span class="md-ellipsis">
-      User Base maps and Overlays
+      Additional features
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#zoom-on-datasetplace-selection" class="md-nav__link">
+  <a href="#permalinks" class="md-nav__link">
     <span class="md-ellipsis">
-      Zoom on Dataset/Place Selection
+      Permalinks
     </span>
   </a>
   
@@ -545,71 +708,6 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../build_viewer/" class="md-nav__link ">
-              
-  
-  <span class="md-ellipsis">
-    Get your own Viewer
-    
-  </span>
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            Get your own Viewer
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
               
                 
   
@@ -617,51 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../build_viewer/ways_to_use/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Ways to use xcube Viewer
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../build_viewer/config_viewer/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Viewer Configuration
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../build_viewer/panels/" class="md-nav__link">
+      <a href="../panels/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -752,28 +806,101 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#general" class="md-nav__link">
+  <a href="#top-level-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      General
+      Top-level configuration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="General">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authclient" class="md-nav__link">
+    <span class="md-ellipsis">
+      authClient
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server" class="md-nav__link">
+    <span class="md-ellipsis">
+      server
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#branding" class="md-nav__link">
+    <span class="md-ellipsis">
+      branding
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="branding">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#change-the-server" class="md-nav__link">
+  <a href="#general-ui" class="md-nav__link">
     <span class="md-ellipsis">
-      Change the Server
+      General UI
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#player-interval" class="md-nav__link">
+  <a href="#colors" class="md-nav__link">
     <span class="md-ellipsis">
-      Player Interval
+      Colors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#map-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map &amp; Layers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Map &amp; Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      layers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layerwms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer.wms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layervisibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      layerVisibilities
     </span>
   </a>
   
@@ -783,48 +910,29 @@
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#time-series" class="md-nav__link">
-    <span class="md-ellipsis">
-      Time-Series
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#map" class="md-nav__link">
-    <span class="md-ellipsis">
-      Map
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Map">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#base-maps-and-overlays" class="md-nav__link">
+  <a href="#aggregation" class="md-nav__link">
     <span class="md-ellipsis">
-      Base maps and Overlays
+      Aggregation
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#user-base-maps-and-overlays" class="md-nav__link">
+  <a href="#additional-features" class="md-nav__link">
     <span class="md-ellipsis">
-      User Base maps and Overlays
+      Additional features
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#zoom-on-datasetplace-selection" class="md-nav__link">
+  <a href="#permalinks" class="md-nav__link">
     <span class="md-ellipsis">
-      Zoom on Dataset/Place Selection
+      Permalinks
     </span>
   </a>
   
@@ -854,37 +962,484 @@
   
 
 
-<h1 id="adjust-settings">Adjust Settings<a class="headerlink" href="#adjust-settings" title="Permanent link">&para;</a></h1>
-<p>In the settings, you have the option to adjust the default settings according to your needs. This can be the xcube Server, the language or adjustments to the Player, time series or the map. Detailed explanations of specific settings are provided below. Additionally, you can find information about legal agreements, as well as the Viewer and server version, within the settings.</p>
+<h1 id="xcube-viewer-configuration-overview">xcube Viewer Configuration Overview<a class="headerlink" href="#xcube-viewer-configuration-overview" title="Permanent link">&para;</a></h1>
+<p>Use the Viewer configuration to customize an xcube Viewer instance for your 
+deployment. The configuration defines the connected xcube Server, optional 
+authentication, branding, map layers, default map behaviour, and the Viewer 
+features available to users.</p>
+<p>This reference describes the main configuration sections and their supported 
+properties. For details on referencing the Viewer configuration from 
+xcube Server, see the <a href="https://xcube.readthedocs.io/en/latest/cli/xcube_serve.html#viewer-configuration-optional">xcube documentation</a>.</p>
+<h2 id="top-level-configuration">Top-level configuration<a class="headerlink" href="#top-level-configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Name of the Viewer</td>
+</tr>
+<tr>
+<td><code>authClient</code></td>
+<td>object</td>
+<td>❌</td>
+<td>Authentication client configuration</td>
+</tr>
+<tr>
+<td><code>server</code></td>
+<td>object</td>
+<td>✅</td>
+<td>xcube API server configuration</td>
+</tr>
+<tr>
+<td><code>branding</code></td>
+<td>object</td>
+<td>✅</td>
+<td>UI, map, and feature configuration</td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="general">General<a class="headerlink" href="#general" title="Permanent link">&para;</a></h2>
-<h3 id="change-the-server">Change the Server<a class="headerlink" href="#change-the-server" title="Permanent link">&para;</a></h3>
-<p>Change the Server URL by selecting <code>Server</code> and clicking the <code>+</code>-button to add a new server.</p>
-<p><img alt="Settings - Change Server" src="../../assets/images/settings_server.png" /></p>
-<h3 id="player-interval">Player Interval<a class="headerlink" href="#player-interval" title="Permanent link">&para;</a></h3>
-<p>Adjust the Player's interval settings. Additional information on the Player can be found <a href="../analyse/#the-player">here</a>.</p>
-<p><img alt="Settings - Player Interval" src="../../assets/images/settings_player.png" /></p>
+<h2 id="authclient"><code>authClient</code><a class="headerlink" href="#authclient" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>authority</code></td>
+<td>string (URI)</td>
+<td>✅</td>
+<td>Auth provider URL</td>
+<td><code>https://xcube-dev.eu.auth0.com</code></td>
+</tr>
+<tr>
+<td><code>client_id</code></td>
+<td>string</td>
+<td>✅</td>
+<td>OAuth client ID</td>
+<td><code>xxxxxxxxxxxxxxxxxxxxxxxx</code></td>
+</tr>
+<tr>
+<td><code>redirect_uri</code></td>
+<td>string (URI)</td>
+<td>❌</td>
+<td>Redirect URL after login</td>
+<td><code>https://xcube-dev.eu.auth0.com/viewer</code></td>
+</tr>
+<tr>
+<td><code>extraQueryParams</code></td>
+<td>object</td>
+<td>❌</td>
+<td>Additional auth query parameters</td>
+<td><code>{ "audience": "https://xcube-dev.eu/api/" }</code></td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="time-series">Time-Series<a class="headerlink" href="#time-series" title="Permanent link">&para;</a></h2>
-<p>This is the place to set preferences of displaying data and graphs of the time series. Additional information on time series can be found <a href="../analyse/#time-series">here</a>.</p>
-<p><img alt="Settings - Time Series" src="../../assets/images/settings_timeseries.png" /></p>
+<h2 id="server"><code>server</code><a class="headerlink" href="#server" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Unique server ID</td>
+<td><code>local</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Display name</td>
+<td><code>Local Server</code></td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string (URI)</td>
+<td>✅</td>
+<td>API endpoint</td>
+<td><code>https://localhost:8080/api/</code></td>
+</tr>
+</tbody>
+</table>
 <hr />
-<h2 id="map">Map<a class="headerlink" href="#map" title="Permanent link">&para;</a></h2>
-<p>Adjust the <strong>base map</strong> and <strong>overlays</strong>, choose the <strong>projection</strong> (<em>Geographic</em> or <em>Mercator</em>), enable <strong>image smoothing</strong> or decide on the <strong>map extent and focus</strong> when selecting datasets or places.</p>
-<h3 id="base-maps-and-overlays">Base maps and Overlays<a class="headerlink" href="#base-maps-and-overlays" title="Permanent link">&para;</a></h3>
-<p>The Viewer allows you to display datasets over a <a href="../../concepts/#basemaps-and-overlays">base map</a> and <a href="../../concepts/#basemaps-and-overlays">overlay</a> them with additional information, such as transportation routes or place names. A large number of base maps and overlay layers are already integrated in the Viewer. Others can be selected by clicking on <code>Base map</code> or <code>Overlay</code>.</p>
-<p><img alt="Settings - Maps - Overlay" src="../../assets/images/settings_overlay.png" /></p>
-<h3 id="user-base-maps-and-overlays">User Base maps and Overlays<a class="headerlink" href="#user-base-maps-and-overlays" title="Permanent link">&para;</a></h3>
-<p><a href="../../concepts/#basemaps-and-overlays">Additional layers</a> (WMS, XYZ) from external services can also be added by clicking on <code>User base map...</code> or <code>User overlays...</code>. These can also be added via the <a href="../getting_started/#adjust-layer-visibilities">Layers Panel</a>.</p>
-<p><img alt="Settings - Maps - User Maps" src="../../assets/images/settings_usermaps.png" /></p>
-<h3 id="zoom-on-datasetplace-selection">Zoom on Dataset/Place Selection<a class="headerlink" href="#zoom-on-datasetplace-selection" title="Permanent link">&para;</a></h3>
-<p><img alt="On Selection" src="../../assets/images/settings_on_selection.png" /></p>
-<p>The map extent can be changed when <a href="../../concepts/#selections">selecting</a> a new <a href="../../concepts/#selected-dataset">dataset</a> or <a href="../../concepts/#selected-place">place</a>. The following options are available:</p>
-<ul>
-<li><code>pan</code> : map moves to the center of dataset bounding box</li>
-<li><code>pan and zoom</code>: map moves to the center and zooms to the extent of the dataset</li>
-<li><code>do nothing</code></li>
-</ul>
+<h2 id="branding"><code>branding</code><a class="headerlink" href="#branding" title="Permanent link">&para;</a></h2>
+<h3 id="general-ui">General UI<a class="headerlink" href="#general-ui" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default / Allowed</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>appBarTitle</code></td>
+<td>string</td>
+<td>—</td>
+<td>Title in the app bar</td>
+</tr>
+<tr>
+<td><code>windowTitle</code></td>
+<td>string</td>
+<td>—</td>
+<td>Browser tab title</td>
+</tr>
+<tr>
+<td><code>windowIcon</code></td>
+<td>string / null</td>
+<td>—</td>
+<td>Path to favicon</td>
+</tr>
+<tr>
+<td><code>themeMode</code></td>
+<td>string</td>
+<td><code>dark</code>, <code>light</code>, <code>system</code></td>
+<td>Theme mode</td>
+</tr>
+<tr>
+<td><code>logoImage</code></td>
+<td>string</td>
+<td>—</td>
+<td>Path to logo image</td>
+</tr>
+<tr>
+<td><code>logoWidth</code></td>
+<td>integer ≥ 0</td>
+<td>—</td>
+<td>Logo width in px</td>
+</tr>
+<tr>
+<td><code>headerBackgroundColor</code></td>
+<td>string</td>
+<td>e.g. <code>#fafafa</code></td>
+<td>Header background color</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="colors">Colors<a class="headerlink" href="#colors" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>primaryColor</code></td>
+<td>ColorSchema</td>
+<td>Primary UI color</td>
+</tr>
+<tr>
+<td><code>secondaryColor</code></td>
+<td>ColorSchema</td>
+<td>Secondary UI color</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Supported formats:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hex</td>
+<td><code>"#001c32"</code></td>
+</tr>
+<tr>
+<td>Named color</td>
+<td><code>"lime"</code></td>
+</tr>
+<tr>
+<td>MUI palette</td>
+<td><code>{ "main": "#9abc31", "contrastText": "#ffffff" }</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Allowed named colors:</strong></p>
+<div class="highlight"><pre><span></span><code>amber, blue, blueGrey, brown, cyan, deepOrange, deepPurple,
+green, grey, indigo, lightBlue, lightGreen, lime, orange,
+pink, purple, red, teal, yellow
+</code></pre></div>
+<hr />
+<h3 id="map-layers">Map &amp; Layers<a class="headerlink" href="#map-layers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layers</code></td>
+<td>object</td>
+<td>Custom base maps and overlays</td>
+</tr>
+<tr>
+<td><code>layerVisibilities</code></td>
+<td>object</td>
+<td>Initial layer visibility settings</td>
+</tr>
+<tr>
+<td><code>mapProjection</code></td>
+<td>string</td>
+<td><code>EPSG:4326</code> or <code>EPSG:3857</code> (default)</td>
+</tr>
+<tr>
+<td><code>polygonFillOpacity</code></td>
+<td>number (0–1)</td>
+<td>Opacity for polygons</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layers"><code>layers</code><a class="headerlink" href="#layers" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>overlays</code></td>
+<td>Layer[]</td>
+<td>Overlay layers</td>
+</tr>
+<tr>
+<td><code>baseMaps</code></td>
+<td>Layer[]</td>
+<td>Base map layers</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer"><code>Layer</code><a class="headerlink" href="#layer" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Unique ID</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Layer type</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Display name</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Tile/service URL</td>
+</tr>
+<tr>
+<td><code>attribution</code></td>
+<td>string</td>
+<td>❌</td>
+<td>Attribution text</td>
+</tr>
+<tr>
+<td><code>wms</code></td>
+<td>object</td>
+<td>❌</td>
+<td>WMS configuration</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layerwms"><code>Layer.wms</code><a class="headerlink" href="#layerwms" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>layerName</code></td>
+<td>string</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>styleName</code></td>
+<td>string</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layervisibilities"><code>layerVisibilities</code><a class="headerlink" href="#layervisibilities" title="Permanent link">&para;</a></h4>
+<p>Dynamic object mapping layer IDs to visibility:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;datasetVariable&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;datasetBoundary&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;userPlaces&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;overlays.darkMatterLabels&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;baseMaps.darkMatterNoLabels&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;layer-id&gt;</code></td>
+<td>boolean</td>
+<td>Show (<code>true</code>) or hide (<code>false</code>) the layer</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="aggregation">Aggregation<a class="headerlink" href="#aggregation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Allowed Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>defaultAgg</code></td>
+<td>string</td>
+<td><code>mean</code>, <code>median</code>, <code>min</code>, <code>max</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="additional-features">Additional features<a class="headerlink" href="#additional-features" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allowDownloads</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Enable downloads</td>
+</tr>
+<tr>
+<td><code>allowRefresh</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Enable refresh</td>
+</tr>
+<tr>
+<td><code>allowSharing</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Enable sharing (of persisted Viewer state via permalink)</td>
+</tr>
+<tr>
+<td><code>allowViewModePython</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Enable Python mode</td>
+</tr>
+<tr>
+<td><code>allowUserVariables</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Enable custom variables</td>
+</tr>
+<tr>
+<td><code>allow3D</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Enable 3D view</td>
+</tr>
+<tr>
+<td><code>allowAboutPage</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Show <strong>About</strong> page</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="permalinks">Permalinks<a class="headerlink" href="#permalinks" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>permalinkExpirationDays</code></td>
+<td>number / null</td>
+<td><code>null</code></td>
+<td>Expiration time for shared links, needs to be further. This property only sets the text in the pop-up window. Permalink handling needs to be set up in <a href="https://xcube.readthedocs.io/en/latest/cli/xcube_serve.html#viewer-state-persistence">xcube Server configuration</a></td>
+</tr>
+</tbody>
+</table>
 
 
 

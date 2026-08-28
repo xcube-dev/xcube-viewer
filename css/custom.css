@@ -11,3 +11,111 @@
 [data-md-color-scheme="slate"] .dark-image {
   display: block;
 }
+
+.md-header__demo {
+  display: inline-block;
+  margin: 0 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid currentColor;
+  border-radius: 0.35rem;
+  color: var(--md-primary-bg-color);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.md-header__demo:hover {
+  color: var(--md-accent-fg-color);
+}
+
+.viewer-docs-grid,
+.user-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 0.5rem 0 1.75rem;
+}
+
+.viewer-docs-card,
+.user-guide-card {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 9rem;
+  padding: 1rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.45rem;
+  color: var(--md-default-fg-color);
+  background: #f5f5f5;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.viewer-docs-card:hover,
+.user-guide-card:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.12);
+  color: var(--md-default-fg-color);
+  transform: translateY(-0.1rem);
+}
+
+.viewer-docs-card:hover strong,
+.user-guide-card:hover strong {
+  color: var(--md-accent-fg-color);
+}
+
+.viewer-docs-card strong,
+.user-guide-card strong {
+  color: var(--md-typeset-a-color);
+  font-size: 1rem;
+}
+
+.viewer-docs-card span,
+.user-guide-card span {
+  color: var(--md-default-fg-color);
+}
+
+.viewer-docs-card strong {
+  font-size: 1.25rem;
+}
+
+.viewer-docs-card-kicker {
+  color: var(--md-default-fg-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+[data-md-color-scheme="slate"] .viewer-docs-card,
+[data-md-color-scheme="slate"] .user-guide-card {
+  border-color: #4a5568;
+  background: #2d3748;
+}
+
+[data-md-color-scheme="slate"] .viewer-docs-card span,
+[data-md-color-scheme="slate"] .user-guide-card span,
+[data-md-color-scheme="slate"] .viewer-docs-card-kicker {
+  color: #d7dce5;
+}
+
+.build-viewer-link-grid {
+  max-width: 42rem;
+}
+
+.build-viewer-link-card {
+  min-height: 6.25rem;
+  padding: 0.75rem;
+}
+
+.build-viewer-link-card span {
+  font-size: 0.82rem;
+}
+
+@media screen and (max-width: 60em) {
+  .viewer-docs-grid,
+  .user-guide-grid {
+    grid-template-columns: 1fr;
+  }
+}
