@@ -7,6 +7,7 @@
 import OlTileLayer from "ol/layer/Tile";
 import { default as OlMap } from "ol/Map";
 import { default as OlView } from "ol/View";
+import { type GeoJSONPolygon } from "ol/format/GeoJSON";
 
 import { findDatasetMapLayer } from "@/components/ol/util";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
@@ -39,6 +40,7 @@ export interface TimeDimension extends Dimension {
 }
 
 export type NormRange = [number, number];
+export type BBox = [number, number, number, number];
 
 export interface RgbSchema {
   // The following are new since xcube 0.11
@@ -58,11 +60,8 @@ export interface Dataset {
   groupDescription?: string;
   sortValue?: number;
   tags?: string[];
-  bbox: [number, number, number, number];
-  geometry: {
-    type: "Polygon";
-    coordinates: Array<Array<[number, number]>>;
-  };
+  bbox: BBox;
+  geometry: GeoJSONPolygon;
   spatialRef: string;
   dimensions: Dimension[];
   variables: Variable[];
