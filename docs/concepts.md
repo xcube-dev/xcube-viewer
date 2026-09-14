@@ -29,10 +29,7 @@ application instance. One of the available datasets is the viewer's
 
 A _variable_ provides n-dimensional, gridded, geospatial data.
 Every variable has a name, a numeric data type, and two spatial dimensions.
-Usually, variables are 3-D and also have one or multiple non-spatial dimensions
-(e.g. time, depth, scenario) that can be of variable length. Each time step 
-along the dimension determines an individual 2-D spatial image of the 3-D 
-variable and is associated with a given timestamp.
+In addition to the two spatial dimensions, geospatial variables may also have non-spatial dimensions such as time, depth, spectral wavelength, altitude.
 
 ### Places and Place Groups
 

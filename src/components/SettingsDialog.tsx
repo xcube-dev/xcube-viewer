@@ -251,7 +251,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               onClick={handleLanguageMenuOpen}
             />
             <SettingsSubPanel
-              label={i18n.get("Show all dimension selectors")}
+              label={i18n.get("Show selectors for all dimensions")}
               value={getOnOff(settings.showAllDimensions)}
             >
               <ToggleSetting

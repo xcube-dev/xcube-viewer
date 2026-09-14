@@ -353,7 +353,7 @@ export function controlReducer(
           selectedDimensionValue !== null &&
           selectedDimensionValue !== undefined &&
           coordinates
-            ? findIndexCloseTo(coordinates, selectedDimensionValue as number)
+            ? coordinates.indexOf(Number(selectedDimensionValue))
             : -1;
         if (index >= 0 && coordinates) {
           index += action.increment;

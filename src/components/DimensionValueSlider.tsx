@@ -90,13 +90,14 @@ export default function DimensionValueSliderProps({
     return String(value.toFixed(2));
   }
 
-  const selectedDepthRangeValid = Array.isArray(selectedCoordinates);
+  const selectedDepthRangeValid =
+    Array.isArray(selectedCoordinates) && selectedCoordinates.length > 0;
   if (!selectedDepthRangeValid) {
     selectedCoordinates = [0, 1];
   }
 
-  const min = selectedCoordinates[0];
-  const max = selectedCoordinates[selectedCoordinates.length - 1];
+  const min = Math.min(...selectedCoordinates);
+  const max = Math.max(...selectedCoordinates);
   // only labels for the min and max values
   const marks: Mark[] = selectedCoordinates.map((value, index) => ({
     value,

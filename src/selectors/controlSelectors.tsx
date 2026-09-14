@@ -737,7 +737,11 @@ export const canAddTimeSeriesSelector = createSelector(
           source.datasetId === datasetId &&
           source.variableName === variableName &&
           source.placeId === placeId &&
-          source.dimensionValues === dimensionValues
+          Object.keys(source.dimensionValues).length ===
+            Object.keys(dimensionValues).length &&
+          Object.entries(source.dimensionValues).every(
+            ([name, value]) => dimensionValues[name] === value,
+          )
         ) {
           return false;
         }

@@ -13,11 +13,12 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { WithLocale } from "@/util/lang";
 
 import ControlBarItem from "./ControlBarItem";
+import { isSpatialDim } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { useEffect } from "react";
 import i18n from "@/i18n";
 
-interface DimensionsSelectProps extends WithLocale {
+interface DimensionSelectProps extends WithLocale {
   selectedVariable: Variable | null;
   selectedDimensionLabel: string | null;
   showAllDimensions: boolean;
@@ -29,13 +30,10 @@ export default function DimensionSelect({
   selectedDimensionLabel,
   showAllDimensions,
   selectDimension,
-}: DimensionsSelectProps) {
+}: DimensionSelectProps) {
   useEffect(() => {
     const nonSpatialDims =
-      selectedVariable?.dims?.filter(
-        (dim) =>
-          !["lat", "lon", "latitude", "longitude", "x", "y"].includes(dim),
-      ) ?? [];
+      selectedVariable?.dims?.filter((dim) => !isSpatialDim(dim)) ?? [];
 
     const hasSelectedDimension =
       selectedDimensionLabel != null &&
@@ -61,9 +59,7 @@ export default function DimensionSelect({
   );
 
   const nonSpatialDims =
-    selectedVariable?.dims?.filter(
-      (dim) => !["lat", "lon", "latitude", "longitude", "x", "y"].includes(dim),
-    ) ?? [];
+    selectedVariable?.dims?.filter((dim) => !isSpatialDim(dim)) ?? [];
 
   if (nonSpatialDims.length <= 1) {
     return null;
