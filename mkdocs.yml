@@ -7,21 +7,28 @@ copyright: Copyright &copy; 2026 Brockmann Consult
 nav:
   - About: index.md
   - User Guide:
+      - user_guide/index.md
       - "Getting Started": user_guide/getting_started.md
       - "Analyse Variables": user_guide/analyse.md
       - "Colour Mapping": user_guide/colormaps.md
       - "Adjust Settings": user_guide/settings.md
+  - Get your own Viewer:
+      - build_viewer/index.md
+      - "Ways to use xcube Viewer": build_viewer/ways_to_use.md
+      - "Viewer Configuration": build_viewer/config_viewer.md
+      - "Create User Panels": build_viewer/panels.md
   - General Concepts: concepts.md
   - Feature References: features.md
-  - Get your own Viewer: build_viewer.md
 
 theme:
   name: material
-  logo: assets/logo512.png
-  favicon: assets/logo192.png
+  custom_dir: docs/overrides
+  logo: assets/logos/logo512.png
+  favicon: assets/logos/logo192.png
   icon:
     repo: fontawesome/brands/github
   features:
+    - content.code.copy
     - navigation.top
     - navigation.indexes
     # - navigation.sections
@@ -33,7 +40,7 @@ theme:
   palette:
     # Palette toggle for light mode
     - scheme: default
-      primary: blue grey
+      primary: white
       accent: pink
       toggle:
         icon: material/brightness-7
@@ -59,6 +66,7 @@ markdown_extensions:
   - md_in_html
 
 extra:
+  demo_url: https://bc-viewer.brockmann-consult.de
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/xcube-dev/xcube-viewer
@@ -69,7 +77,3 @@ plugins:
 
 extra_css:
   - css/custom.css
-
-extra_javascript:
-  - javascripts/mathjax.js
-  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

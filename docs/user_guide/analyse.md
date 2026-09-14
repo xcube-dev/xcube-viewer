@@ -44,7 +44,7 @@ Export the time series using the option in the header at the top right. You have
 
 ### Statistics
 
-Compute and display basic statistics for the currently [selected variable](../concepts.md/#selected-variable), [selected timestamp](../concepts.md/#selected-time), and [selected place](../concepts.md/#selected-place). To obtain the statistics select a place and compute by using the $\Sigma$ -icon next to the variables drop-down menu or use the `+`-icon under the Statistics Tab in the sidebar.
+Compute and display basic statistics for the currently [selected variable](../concepts.md/#selected-variable), [selected timestamp](../concepts.md/#selected-time), and [selected place](../concepts.md/#selected-place). To obtain the statistics select a place and compute by using the **Statistics** icon next to the variables drop-down menu or use the `+`-icon under the Statistics tab in the sidebar.
 
 ![Statistics](../assets/images/analysis_statistics.png)
 

@@ -1,4 +1,18 @@
-## Changes in version 1.7.4 (in development)
+## Changes in version 1.7.4
+
+### Improvements
+
+* Added a **Reset application** action to the Settings dialog. It clears
+  browser-held Viewer data and reloads the application. (#628)
+
+### Fixes
+
+* Fixed a problem when computing the extent of variable and RGB layers.
+  We are now correctly using the extrema of the dataset's boundary polygon 
+  in coordinates of the viewer's map projection for the extent, rather than
+  using the dataset's geographical bounding box. (#593, #641)
+
+* Fixed the color bar update for a pinned variable. (#637)
 
 ### Improvements 
 
@@ -7,15 +21,24 @@
 
 ### Other changes
 
+* Added two handy `npm` tasks that apply if the `xcube` project folder is
+  checked out in a directory next to `xcube-viewer`:
+  - `xcube:dev`: runs xcube server with the xcube's panels-demo configuration
+  - `xcube:build`: replaces the current viewer build in `../xcube/xcube/webapi/viewer/dist`
+    
 * Updated dependencies. Now using
 	- `@storybook-community/storybook-dark-mode ^7.1.3`
 	- `@vitejs/plugin-react-swc": "^4.3.1`
+	- `chartlets ^0.2.1`
 	- `eslint-plugin-storybook ^10.4.6`
-	- `react-draggable 4.5.0` (pinned due to issue in 4.6.0)
+	- `react-draggable ^4.7.1`
 	- `storybook ^10.4.6`
 	- `vite ^8.0.16`
 	- `vitest ^3.2.4`
-	
+
+* Added `selectedPlaceLabel` to the list of available
+  state properties. (#624)
+
 ## Changes in version 1.7.3
 
 ### Fixes
