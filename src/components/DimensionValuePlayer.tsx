@@ -68,6 +68,16 @@ export default function DimensionValuePlayer({
   updateDimensionAnimation,
 }: DimensionValuePlayerProps) {
   const intervalId = useRef<number | null>(null);
+  const hasValidDimension =
+    !!selectedDimension &&
+    !!selectedDimensionLabel &&
+    !!selectedVariable?.dims?.includes(selectedDimension.name) &&
+    selectedDimensionValue !== null &&
+    selectedDimensionValue !== undefined;
+
+  const handlePlayEvent = () => {
+    incSelectedDimension(1, selectedDimensionLabel);
+  };
 
   useEffect(() => {
     playOrNot();
@@ -84,6 +94,9 @@ export default function DimensionValuePlayer({
 
   const installTimer = () => {
     uninstallTimer();
+    if (!hasValidDimension) {
+      return;
+    }
     intervalId.current = window.setInterval(
       handlePlayEvent,
       dimensionAnimationInterval,
@@ -100,19 +113,13 @@ export default function DimensionValuePlayer({
   // only show DepthSelect if selectedVariables has depth dim
   // and selectedDimensionValue
   if (
+    !hasValidDimension ||
     !selectedDimension ||
-    !selectedDimensionLabel ||
-    !selectedVariable?.dims?.includes(selectedDimension.name) ||
-    selectedDimensionValue === null ||
-    selectedDimensionValue === undefined
+    !selectedDimensionLabel
   )
     return null;
 
   const selectedCoordinates = selectedDimension.coordinates;
-
-  const handlePlayEvent = () => {
-    incSelectedDimension(1, selectedDimensionLabel);
-  };
 
   const handlePlayButtonClick = () => {
     updateDimensionAnimation(
