@@ -22,7 +22,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   closeDialog,
   updateSettings,
-  downloadTimeSeries: exportData,
+  downloadData: exportData,
 };
 
 const ExportDialog = connect(

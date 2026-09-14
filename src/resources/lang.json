@@ -546,6 +546,46 @@
       "se": "Exportera Inställningar"
     },
     {
+      "en": "Data",
+      "de": "Daten",
+      "se": "Data"
+    },
+    {
+      "en": "Export format",
+      "de": "Exportformat",
+      "se": "Exportformat"
+    },
+    {
+      "en": "Time-series data with place information",
+      "de": "Zeitreihendaten mit Ortsinformationen",
+      "se": "Tidsseriedata med platsinformation"
+    },
+    {
+      "en": "Place geometries only",
+      "de": "Nur Ortsgeometrien",
+      "se": "Endast platsgeometrier"
+    },
+    {
+      "en": "Time range",
+      "de": "Zeitbereich",
+      "se": "Tidsintervall"
+    },
+    {
+      "en": "Full time series",
+      "de": "Vollständige Zeitreihe",
+      "se": "Hela tidsserien"
+    },
+    {
+      "en": "Displayed time range",
+      "de": "Angezeigter Zeitbereich",
+      "se": "Visat tidsintervall"
+    },
+    {
+      "en": "Compress as ZIP",
+      "de": "Als ZIP komprimieren",
+      "se": "Komprimera som ZIP"
+    },
+    {
       "en": "Include time-series data",
       "de": "Zeitseriendaten einschließen",
       "se": "Inkludera tidsseriedata"
