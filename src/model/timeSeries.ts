@@ -92,15 +92,29 @@ export function timeSeriesGroupsToTable(
   placeGroups: PlaceGroup[],
 ): TimeSeriesTable {
   const dataColNames = new Set<string>();
+  const dimensionColNames = new Set<string>();
   const placeIds = new Set<string>();
   const timePlaceRows: TimePlaceRows = {};
   for (const timeSeriesGroup of timeSeriesGroups) {
     for (const timeSeries of timeSeriesGroup.timeSeriesArray) {
-      const { placeId, datasetId, variableName, valueDataKey, errorDataKey } =
-        timeSeries.source;
+      const {
+        placeId,
+        datasetId,
+        variableName,
+        valueDataKey,
+        errorDataKey,
+        dimensionValues,
+      } = timeSeries.source;
       if (placeId !== null) {
         placeIds.add(placeId);
       }
+      Object.keys(dimensionValues).forEach((dimensionName) => {
+        dimensionColNames.add(dimensionName);
+      });
+      const dimensionRowId = Object.entries(dimensionValues)
+        .sort(([name1], [name2]) => name1.localeCompare(name2))
+        .map(([name, value]) => `${name}=${value}`)
+        .join("-");
       const valueColName = `${datasetId}.${variableName}.${valueDataKey}`;
       dataColNames.add(valueColName);
       let errorColName: string | null = null;
@@ -112,17 +126,19 @@ export function timeSeriesGroupsToTable(
         const time = utcTimeToIsoDateTimeString(point.time);
         // if placeId is null, then data is from import CSV / GeoJSON
         // and datasetId is the name of the place group.
-        const timePlaceId = `${placeId !== null ? placeId : datasetId}-${time}`;
+        const timePlaceId = `${placeId !== null ? placeId : datasetId}-${time}-${dimensionRowId}`;
         const timePlaceRow = timePlaceRows[timePlaceId];
         if (!timePlaceRow) {
           timePlaceRows[timePlaceId] = {
             placeId,
             time,
+            ...dimensionValues,
             [valueColName]: point[valueDataKey],
           };
         } else {
           timePlaceRows[timePlaceId] = {
             ...timePlaceRow,
+            ...dimensionValues,
             [valueColName]: point[valueDataKey],
           };
         }
@@ -133,9 +149,9 @@ export function timeSeriesGroupsToTable(
     }
   }
 
-  const colNames: string[] = ["placeId", "time"].concat(
-    Array.from(dataColNames).sort(),
-  );
+  const colNames: string[] = ["placeId", "time"]
+    .concat(Array.from(dimensionColNames).sort())
+    .concat(Array.from(dataColNames).sort());
   const dataRows: DataRow[] = [];
 
   Object.keys(timePlaceRows).forEach((timePlaceId) => {
