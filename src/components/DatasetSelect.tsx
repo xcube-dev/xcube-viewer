@@ -4,17 +4,20 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import { ReactElement, useMemo } from "react";
-import Divider from "@mui/material/Divider";
-import Input from "@mui/material/Input";
+import { useMemo, useState } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import Collapse from "@mui/material/Collapse";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InputLabel from "@mui/material/InputLabel";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import MenuItem from "@mui/material/MenuItem";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 import i18n from "@/i18n";
 import type { Dataset } from "@/model/dataset";
@@ -47,8 +50,13 @@ export default function DatasetSelect({
   toggleDatasetRgbLayer,
   locateSelectedDataset,
 }: DatasetSelectProps) {
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [isFilteringDatasets, setIsFilteringDatasets] = useState(false);
+
   const sortedDatasets = useMemo(() => {
-    return datasets.sort((dataset1: Dataset, dataset2: Dataset) => {
+    return [...datasets].sort((dataset1: Dataset, dataset2: Dataset) => {
       const groupOrder1 = dataset1.groupOrder ?? Infinity;
       const groupOrder2 = dataset2.groupOrder ?? Infinity;
 
@@ -80,15 +88,58 @@ export default function DatasetSelect({
     });
   }, [datasets]);
 
-  const hasGroups = sortedDatasets.length > 0 && !!sortedDatasets[0].groupTitle;
+  const hasMultipleGroups =
+    new Set(sortedDatasets.map(getDatasetGroupLabel)).size > 1;
 
-  const handleDatasetChange = (event: SelectChangeEvent) => {
-    const datasetId = event.target.value || null;
-    selectDataset(datasetId, datasets, true);
+  // Set threshold to decide whether to collapse groups by default or not
+  const collapseGroupsByDefault = sortedDatasets.length > 10;
+
+  const selectedDatasetGroupTitle = selectedDataset
+    ? getDatasetGroupLabel(selectedDataset)
+    : undefined;
+
+  const selectedDataset2 = sortedDatasets.find(
+    (d) => d.id === selectedDataset2Id,
+  );
+
+  const selectedDataset2GroupTitle = selectedDataset2
+    ? getDatasetGroupLabel(selectedDataset2)
+    : undefined;
+
+  // Group handling functions for rendering group headers, descriptions, and collapse/expand state
+  const getGroupDescription = (groupTitle: string) =>
+    sortedDatasets.find(
+      (dataset) => getDatasetGroupLabel(dataset) === groupTitle,
+    )?.groupDescription;
+
+  const isDefaultExpanded = (groupTitle: string) => {
+    if (!collapseGroupsByDefault) {
+      return true;
+    }
+
+    return (
+      groupTitle === selectedDatasetGroupTitle ||
+      groupTitle === selectedDataset2GroupTitle
+    );
   };
 
-  const selectedDatasetId = selectedDataset ? selectedDataset.id : "";
-  datasets = datasets || [];
+  const isGroupExpanded = (groupTitle: string) =>
+    isFilteringDatasets ||
+    (expandedGroups[groupTitle] ?? isDefaultExpanded(groupTitle));
+
+  const toggleGroupExpanded = (groupTitle: string) => {
+    setExpandedGroups((currentExpandedGroups) => {
+      const currentlyExpanded =
+        currentExpandedGroups[groupTitle] ?? isDefaultExpanded(groupTitle);
+
+      return {
+        ...currentExpandedGroups,
+        [groupTitle]: !currentlyExpanded,
+      };
+    });
+  };
+
+  const selectedDatasetId = selectedDataset?.id ?? "";
 
   const datasetSelectLabel = (
     <InputLabel shrink htmlFor="dataset-select">
@@ -96,61 +147,117 @@ export default function DatasetSelect({
     </InputLabel>
   );
 
-  const items: ReactElement[] = [];
-  let lastGroupTitle: string | undefined;
-  sortedDatasets.forEach((dataset) => {
-    if (hasGroups) {
-      const groupTitle = dataset.groupTitle || i18n.get("Others");
-      const groupDescription = dataset.groupDescription;
-      if (groupTitle !== lastGroupTitle) {
-        const content = (
-          <Divider key={groupTitle}>
-            <Typography fontSize="small" color="text.secondary">
-              {groupTitle}
-            </Typography>
-          </Divider>
-        );
-        items.push(
-          groupDescription ? (
-            <Tooltip arrow title={groupDescription}>
-              {content}
-            </Tooltip>
-          ) : (
-            content
-          ),
-        );
-      }
-      lastGroupTitle = groupTitle;
-    }
-
-    items.push(
-      <MenuItem
-        key={dataset.id}
-        value={dataset.id}
-        selected={dataset.id === selectedDatasetId}
-      >
-        <ListItemText>{getDatasetLabel(dataset)} </ListItemText>
-        {dataset.id === selectedDataset2Id && (
-          <PushPinIcon fontSize="small" color="secondary" />
-        )}
-      </MenuItem>,
-    );
-  });
-
   const datasetSelect = (
-    <Select
-      variant="standard"
-      value={selectedDatasetId}
-      onChange={handleDatasetChange}
-      input={<Input name="dataset" id="dataset-select" />}
-      displayEmpty
-      name="dataset"
-      renderValue={() =>
-        getDatasetLabel(datasets.find((d) => d.id === selectedDatasetId))
+    <Autocomplete
+      id="dataset-select"
+      options={sortedDatasets}
+      value={
+        sortedDatasets.find((dataset) => dataset.id === selectedDatasetId) ??
+        null
       }
-    >
-      {items}
-    </Select>
+      onChange={(_, dataset) => {
+        selectDataset(dataset?.id ?? null, datasets || [], true);
+      }}
+      onInputChange={(_, inputValue, reason) => {
+        setIsFilteringDatasets(reason === "input" && inputValue.trim() !== "");
+      }}
+      getOptionLabel={getDatasetLabel}
+      groupBy={hasMultipleGroups ? getDatasetGroupLabel : undefined}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      autoHighlight
+      blurOnSelect
+      sx={{
+        display: "inline-flex",
+        minWidth: 240,
+        mt: 2,
+        verticalAlign: "bottom",
+      }}
+      renderGroup={(params) => {
+        const groupDescription = getGroupDescription(params.group);
+        const expanded = isGroupExpanded(params.group);
+        const groupTitle = (
+          <ListItemButton
+            dense
+            aria-expanded={expanded}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleGroupExpanded(params.group);
+            }}
+            sx={{
+              mx: 1,
+              my: 0.5,
+              minHeight: 28,
+              px: 0.75,
+              py: 0,
+              color: "text.secondary",
+            }}
+          >
+            <Typography fontSize="small" color="text.secondary">
+              {params.group}
+            </Typography>
+
+            <Typography
+              component="span"
+              sx={{
+                flex: 1,
+                borderTop: 1,
+                borderColor: "divider",
+                mx: 1,
+              }}
+            />
+            {groupDescription && (
+              <Tooltip arrow title={groupDescription}>
+                <InfoOutlinedIcon
+                  fontSize="small"
+                  sx={{ mr: 0.5 }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </Tooltip>
+            )}
+            {expanded ? (
+              <ExpandLessIcon fontSize="small" />
+            ) : (
+              <ExpandMoreIcon fontSize="small" />
+            )}
+          </ListItemButton>
+        );
+
+        return (
+          <li key={params.key}>
+            {groupTitle}
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+              <ul style={{ margin: 0, padding: 0 }}>{params.children}</ul>
+            </Collapse>
+          </li>
+        );
+      }}
+      renderOption={({ key, ...props }, dataset) => (
+        <li
+          key={key}
+          {...props}
+          style={{
+            ...props.style,
+            ...(hasMultipleGroups ? { paddingLeft: 32 } : {}),
+          }}
+        >
+          <ListItemText>{getDatasetLabel(dataset)}</ListItemText>
+          {dataset.id === selectedDataset2Id && (
+            <PushPinIcon fontSize="small" color="secondary" />
+          )}
+        </li>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          inputProps={{
+            ...params.inputProps,
+            name: "dataset",
+          }}
+        />
+      )}
+    />
   );
 
   const rgbVisible =
@@ -197,4 +304,7 @@ function getDatasetLabel(dataset: Dataset | undefined) {
     return "?";
   }
   return dataset.title || dataset.id;
+}
+function getDatasetGroupLabel(dataset: Dataset) {
+  return dataset.groupTitle || i18n.get("Others");
 }
