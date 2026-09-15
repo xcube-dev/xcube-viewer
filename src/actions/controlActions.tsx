@@ -503,42 +503,21 @@ export interface SelectTimeSeriesUpdateMode {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const UPDATE_TIME_ANIMATION = "UPDATE_TIME_ANIMATION";
+export const UPDATE_ANIMATION_DIMENSION = "UPDATE_ANIMATION_DIMENSION";
 
-export interface UpdateTimeAnimation {
-  type: typeof UPDATE_TIME_ANIMATION;
-  timeAnimationActive: boolean;
+export interface UpdateAnimationDimension {
+  type: typeof UPDATE_ANIMATION_DIMENSION;
+  activeAnimationDimension: string | null;
   dimensionAnimationInterval: DimensionAnimationInterval;
 }
 
-export function updateTimeAnimation(
-  timeAnimationActive: boolean,
+export function updateAnimationDimension(
+  activeAnimationDimension: string | null,
   dimensionAnimationInterval: DimensionAnimationInterval,
-): UpdateTimeAnimation {
+): UpdateAnimationDimension {
   return {
-    type: UPDATE_TIME_ANIMATION,
-    timeAnimationActive,
-    dimensionAnimationInterval,
-  };
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-export const UPDATE_DIMENSION_ANIMATION = "UPDATE_DIMENSION_ANIMATION";
-
-export interface UpdateDimensionAnimation {
-  type: typeof UPDATE_DIMENSION_ANIMATION;
-  dimensionAnimationActive: boolean;
-  dimensionAnimationInterval: DimensionAnimationInterval;
-}
-
-export function updateDimensionAnimation(
-  dimensionAnimationActive: boolean,
-  dimensionAnimationInterval: DimensionAnimationInterval,
-): UpdateDimensionAnimation {
-  return {
-    type: UPDATE_DIMENSION_ANIMATION,
-    dimensionAnimationActive,
+    type: UPDATE_ANIMATION_DIMENSION,
+    activeAnimationDimension,
     dimensionAnimationInterval,
   };
 }
@@ -941,8 +920,7 @@ export type ControlAction =
   | IncSelectedDimension
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode
-  | UpdateTimeAnimation
-  | UpdateDimensionAnimation
+  | UpdateAnimationDimension
   | SetMapInteraction
   | AddActivity
   | RemoveActivity

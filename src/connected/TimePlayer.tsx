@@ -11,7 +11,7 @@ import _TimePlayer from "@/components/TimePlayer";
 import {
   selectTime,
   incSelectedTime,
-  updateTimeAnimation,
+  updateAnimationDimension,
 } from "@/actions/controlActions";
 
 const mapStateToProps = (state: AppState) => {
@@ -20,7 +20,7 @@ const mapStateToProps = (state: AppState) => {
 
     selectedTime: state.controlState.selectedTime,
     selectedTimeRange: state.controlState.selectedTimeRange,
-    timeAnimationActive: state.controlState.timeAnimationActive,
+    activeAnimationDimension: state.controlState.activeAnimationDimension,
     dimensionAnimationInterval: state.controlState.dimensionAnimationInterval,
   };
 };
@@ -28,7 +28,7 @@ const mapStateToProps = (state: AppState) => {
 const mapDispatchToProps = {
   selectTime,
   incSelectedTime,
-  updateTimeAnimation,
+  updateAnimationDimension,
 };
 
 const TimePlayer = connect(mapStateToProps, mapDispatchToProps)(_TimePlayer);

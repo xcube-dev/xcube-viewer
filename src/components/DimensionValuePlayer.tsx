@@ -44,14 +44,14 @@ interface DimensionValuePlayerProps extends WithLocale {
   selectedDimension: Dimension | null;
   selectedDimensionValue: number | string | null;
   selectDimensionValues: (selectedValues: DimensionValues) => void;
-  dimensionAnimationActive: boolean;
+  activeAnimationDimension: string | null;
   dimensionAnimationInterval: DimensionAnimationInterval;
   incSelectedDimension: (
     increment: -1 | 1,
     selectedDimensionLabel?: string | null,
   ) => void;
-  updateDimensionAnimation: (
-    active: boolean,
+  updateAnimationDimension: (
+    activeAnimationDimension: string | null,
     interval: DimensionAnimationInterval,
   ) => void;
 }
@@ -63,11 +63,14 @@ export default function DimensionValuePlayer({
   selectedDimensionValue,
   selectDimensionValues,
   incSelectedDimension,
-  dimensionAnimationActive,
+  activeAnimationDimension,
   dimensionAnimationInterval,
-  updateDimensionAnimation,
+  updateAnimationDimension,
 }: DimensionValuePlayerProps) {
   const intervalId = useRef<number | null>(null);
+  const isPlaying =
+    selectedDimensionLabel !== null &&
+    activeAnimationDimension === selectedDimensionLabel;
   const hasValidDimension =
     !!selectedDimension &&
     !!selectedDimensionLabel &&
@@ -85,7 +88,7 @@ export default function DimensionValuePlayer({
   });
 
   const playOrNot = () => {
-    if (dimensionAnimationActive) {
+    if (isPlaying) {
       installTimer();
     } else {
       uninstallTimer();
@@ -122,8 +125,8 @@ export default function DimensionValuePlayer({
   const selectedCoordinates = selectedDimension.coordinates;
 
   const handlePlayButtonClick = () => {
-    updateDimensionAnimation(
-      !dimensionAnimationActive,
+    updateAnimationDimension(
+      isPlaying ? null : selectedDimensionLabel,
       dimensionAnimationInterval,
     );
   };
@@ -154,7 +157,7 @@ export default function DimensionValuePlayer({
 
   const isValid = typeof selectedDimensionValue === "number";
 
-  const playIcon = dimensionAnimationActive ? (
+  const playIcon = isPlaying ? (
     <PauseCircleOutlineIcon />
   ) : (
     <PlayCircleOutlineIcon />
@@ -175,7 +178,7 @@ export default function DimensionValuePlayer({
 
   const firstStepButtonClick = (
     <IconButton
-      disabled={!isValid || dimensionAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handleFirstStepButtonClick}
       size="small"
       sx={styles.iconButton}
@@ -188,7 +191,7 @@ export default function DimensionValuePlayer({
 
   const prevStepButtonClick = (
     <IconButton
-      disabled={!isValid || dimensionAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handlePrevStepButtonClick}
       size="small"
       sx={styles.iconButton}
@@ -200,7 +203,7 @@ export default function DimensionValuePlayer({
   );
   const nextStepButtonClick = (
     <IconButton
-      disabled={!isValid || dimensionAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handleNextStepButtonClick}
       size="small"
       sx={styles.iconButton}
@@ -212,7 +215,7 @@ export default function DimensionValuePlayer({
   );
   const lastStepButtonClick = (
     <IconButton
-      disabled={!isValid || dimensionAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handleLastStepButtonClick}
       size="small"
       sx={styles.iconButton}

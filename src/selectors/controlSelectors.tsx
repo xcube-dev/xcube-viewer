@@ -117,8 +117,10 @@ export const selectedServerIdSelector = (state: AppState) =>
   state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) =>
   state.controlState.activities;
-export const timeAnimationActiveSelector = (state: AppState) =>
-  state.controlState.timeAnimationActive;
+export const activeAnimationDimensionSelector = (state: AppState) =>
+  state.controlState.activeAnimationDimension;
+export const animationActiveSelector = (state: AppState) =>
+  state.controlState.activeAnimationDimension !== null;
 export const imageSmoothingSelector = (state: AppState) =>
   state.controlState.imageSmoothingEnabled;
 export const userBaseMapsSelector = (state: AppState) =>
@@ -1006,7 +1008,7 @@ function getOlXYZSource(
   mapProjection: string,
   tileGrid: undefined | OlTileGrid,
   attributions: string[] | null,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   imageSmoothing: boolean,
   tileLoadFunction: LoadFunction | undefined,
   _tileLevelMin: number | undefined,
@@ -1017,7 +1019,7 @@ function getOlXYZSource(
     projection: mapProjection,
     tileGrid,
     attributions: attributions || undefined,
-    transition: timeAnimationActive ? 0 : 250,
+    transition: animationActive ? 0 : 250,
     imageSmoothing: imageSmoothing,
     tileLoadFunction,
     // TODO (forman): if we provide minZoom, we also need to set
@@ -1082,7 +1084,7 @@ function getTileLayer(
   queryParams: Array<[string, string]>,
   opacity: number,
   timeLabel: string | null,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   mapProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
@@ -1104,7 +1106,7 @@ function getTileLayer(
     mapProjection,
     tileGrid,
     attributions,
-    timeAnimationActive,
+    animationActive,
     imageSmoothing,
     getLoadTileOnlyAfterMove(),
     tileLevelMin,
@@ -1236,7 +1238,7 @@ const getVariableTileLayer = (
   visibility: boolean,
   layerId: string,
   zIndex: number,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   mapProjection: string,
   imageSmoothing: boolean,
   selectedDimensionValues: DimensionValues,
@@ -1270,7 +1272,7 @@ const getVariableTileLayer = (
     queryParams,
     opacity,
     timeLabel,
-    timeAnimationActive,
+    animationActive,
     mapProjection,
     attributions,
     imageSmoothing,
@@ -1293,7 +1295,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   selectedVariableVisibilitySelector,
   variableLayerIdSelector,
   variableZIndexSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
   selectedDimensionValuesSelector,
@@ -1315,7 +1317,7 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedVariable2VisibilitySelector,
   variable2LayerIdSelector,
   variable2ZIndexSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
   selectedDimensionValuesSelector,
@@ -1331,7 +1333,7 @@ const getDatasetRgbTileLayer = (
   zIndex: number,
   extent: BBox | null,
   timeLabel: string | null,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   mapProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
@@ -1349,7 +1351,7 @@ const getDatasetRgbTileLayer = (
     queryParams,
     1.0,
     timeLabel,
-    timeAnimationActive,
+    animationActive,
     mapProjection,
     attributions,
     imageSmoothing,
@@ -1366,7 +1368,7 @@ export const selectedDatasetRgbLayerSelector = createSelector(
   datasetRgbZIndexSelector,
   selectedDatasetExtentSelector,
   selectedDatasetTimeLabelSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   selectedDatasetAttributionsSelector,
   imageSmoothingSelector,
@@ -1382,7 +1384,7 @@ export const selectedDataset2RgbLayerSelector = createSelector(
   datasetRgb2ZIndexSelector,
   selectedDataset2ExtentSelector,
   selectedDatasetTimeLabelSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   selectedDatasetAttributionsSelector,
   imageSmoothingSelector,

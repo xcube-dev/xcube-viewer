@@ -39,24 +39,25 @@ interface TimePlayerProps extends WithLocale {
   selectTime: (time: Time | null) => void;
   incSelectedTime: (increment: -1 | 1) => void;
   selectedTimeRange: TimeRange | null;
-  timeAnimationActive: boolean;
+  activeAnimationDimension: string | null;
   dimensionAnimationInterval: DimensionAnimationInterval;
-  updateTimeAnimation: (
-    active: boolean,
+  updateAnimationDimension: (
+    activeAnimationDimension: string | null,
     interval: DimensionAnimationInterval,
   ) => void;
 }
 
 export default function TimePlayer({
-  timeAnimationActive,
+  activeAnimationDimension,
   dimensionAnimationInterval,
-  updateTimeAnimation,
+  updateAnimationDimension,
   selectedTime,
   selectedTimeRange,
   selectTime,
   incSelectedTime,
 }: TimePlayerProps) {
   const intervalId = useRef<number | null>(null);
+  const isPlaying = activeAnimationDimension === "time";
 
   useEffect(() => {
     playOrNot();
@@ -68,7 +69,10 @@ export default function TimePlayer({
   };
 
   const handlePlayButtonClick = () => {
-    updateTimeAnimation(!timeAnimationActive, dimensionAnimationInterval);
+    updateAnimationDimension(
+      isPlaying ? null : "time",
+      dimensionAnimationInterval,
+    );
   };
 
   const handleNextTimeStepButtonClick = () => {
@@ -88,7 +92,7 @@ export default function TimePlayer({
   };
 
   const playOrNot = () => {
-    if (timeAnimationActive) {
+    if (isPlaying) {
       installTimer();
     } else {
       uninstallTimer();
@@ -112,7 +116,7 @@ export default function TimePlayer({
 
   const isValid = typeof selectedTime === "number";
 
-  const playIcon = timeAnimationActive ? (
+  const playIcon = isPlaying ? (
     <PauseCircleOutlineIcon />
   ) : (
     <PlayCircleOutlineIcon />
@@ -133,7 +137,7 @@ export default function TimePlayer({
 
   const firstTimeStepButton = (
     <IconButton
-      disabled={!isValid || timeAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handleFirstTimeStepButtonClick}
       size="small"
       sx={styles.iconButton}
@@ -146,7 +150,7 @@ export default function TimePlayer({
 
   const prevTimeStepButton = (
     <IconButton
-      disabled={!isValid || timeAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handlePrevTimeStepButtonClick}
       size="small"
       sx={styles.iconButton}
@@ -158,7 +162,7 @@ export default function TimePlayer({
   );
   const nextTimeStepButton = (
     <IconButton
-      disabled={!isValid || timeAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handleNextTimeStepButtonClick}
       size="small"
       sx={styles.iconButton}
@@ -170,7 +174,7 @@ export default function TimePlayer({
   );
   const lastTimeStepButton = (
     <IconButton
-      disabled={!isValid || timeAnimationActive}
+      disabled={!isValid || activeAnimationDimension !== null}
       onClick={handleLastTimeStepButtonClick}
       size="small"
       sx={styles.iconButton}

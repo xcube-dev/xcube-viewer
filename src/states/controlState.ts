@@ -94,7 +94,7 @@ export interface ControlState {
   selectedTime: Time | null;
   selectedTimeRange: TimeRange | null;
   timeSeriesUpdateMode: "add" | "replace";
-  timeAnimationActive: boolean;
+  activeAnimationDimension: string | null;
   timeChunkSize: number;
   autoShowTimeSeries: boolean;
   timeSeriesChartTypeDefault: TimeSeriesChartType;
@@ -142,7 +142,6 @@ export interface ControlState {
   zoomLevel: number | undefined;
   datasetZLevel: number | undefined;
   dimensionAnimationInterval: DimensionAnimationInterval;
-  dimensionAnimationActive: boolean;
   selectedDimensionLabel: string | null;
   selectedDimensionValues: DimensionValues;
   showAllDimensions: boolean;
@@ -162,7 +161,7 @@ export function newControlState(): ControlState {
     selectedTime: null,
     selectedTimeRange: null,
     timeSeriesUpdateMode: "add",
-    timeAnimationActive: false,
+    activeAnimationDimension: null,
     timeChunkSize: 20,
     autoShowTimeSeries: true,
     timeSeriesChartTypeDefault: "line",
@@ -231,7 +230,6 @@ export function newControlState(): ControlState {
     zoomLevel: undefined,
     datasetZLevel: undefined,
     dimensionAnimationInterval: 1000,
-    dimensionAnimationActive: false,
     selectedDimensionLabel: null,
     selectedDimensionValues: {},
     showAllDimensions: false,

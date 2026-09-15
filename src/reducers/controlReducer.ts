@@ -43,8 +43,7 @@ import {
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_SIDE_PANEL_SIZE,
-  UPDATE_TIME_ANIMATION,
-  UPDATE_DIMENSION_ANIMATION,
+  UPDATE_ANIMATION_DIMENSION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VARIABLE_SPLIT_POS,
   UPDATE_VOLUME_STATE,
@@ -392,17 +391,10 @@ export function controlReducer(
         timeSeriesUpdateMode: action.timeSeriesUpdateMode,
       };
     }
-    case UPDATE_TIME_ANIMATION: {
+    case UPDATE_ANIMATION_DIMENSION: {
       return {
         ...state,
-        timeAnimationActive: action.timeAnimationActive,
-        dimensionAnimationInterval: action.dimensionAnimationInterval,
-      };
-    }
-    case UPDATE_DIMENSION_ANIMATION: {
-      return {
-        ...state,
-        dimensionAnimationActive: action.dimensionAnimationActive,
+        activeAnimationDimension: action.activeAnimationDimension,
         dimensionAnimationInterval: action.dimensionAnimationInterval,
       };
     }

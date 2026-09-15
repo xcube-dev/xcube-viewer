@@ -11,7 +11,7 @@ import { AppState } from "@/states/appState";
 import {
   incSelectedDimension,
   selectDimensionValues,
-  updateDimensionAnimation,
+  updateAnimationDimension,
 } from "@/actions/controlActions";
 import {
   effectiveSelectedDimensionLabelSelector,
@@ -41,7 +41,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
       state,
       ownProps.dimensionLabel,
     ),
-    dimensionAnimationActive: state.controlState.dimensionAnimationActive,
+    activeAnimationDimension: state.controlState.activeAnimationDimension,
     dimensionAnimationInterval: state.controlState.dimensionAnimationInterval,
   };
 };
@@ -49,7 +49,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
 const mapDispatchToProps = {
   selectDimensionValues,
   incSelectedDimension,
-  updateDimensionAnimation,
+  updateAnimationDimension,
 };
 
 const DimensionValuePlayer = connect(
