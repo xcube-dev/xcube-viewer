@@ -4,17 +4,18 @@
  * https://opensource.org/licenses/MIT.
  */
 
+import i18n from "@/i18n";
 import React, { RefObject } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import { makeStyles } from "@/util/styles";
 import { WithLocale } from "@/util/lang";
+import { makeStyles } from "@/util/styles";
+import { isoDateTimeStringToLabel } from "@/util/time";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
-import i18n from "@/i18n";
-import { isoDateTimeStringToLabel } from "@/util/time";
+import { CoordinateValues } from "@/states/controlState";
 
 const styles = makeStyles({
   container: {
@@ -40,6 +41,7 @@ interface StatisticsRowProps extends WithLocale {
   dataset: Dataset | null;
   variable: Variable | null;
   time: string | null;
+  coordinateValues: CoordinateValues;
   placeInfo: PlaceInfo | null;
   actions: React.ReactNode;
   body?: React.ReactNode;
@@ -54,6 +56,7 @@ export default function StatisticsRow({
   dataset,
   variable,
   time,
+  coordinateValues,
   placeInfo,
   actions,
   body,
@@ -73,6 +76,13 @@ export default function StatisticsRow({
   ) : isTimeDimensionAvailable ? (
     <Missing phrase="Time" />
   ) : null;
+
+  const dimensionLabel = coordinateValues
+    ? Object.entries(coordinateValues)
+        .map(([dimLabel, value]) => `${dimLabel}: ${value}`)
+        .join(", ")
+    : "";
+
   const placeLabel = placeInfo ? placeInfo.label : <Missing phrase="Place" />;
 
   return (
@@ -80,7 +90,15 @@ export default function StatisticsRow({
       <Box sx={styles.header}>
         <Typography fontSize="small" variant="inherit" component="span">
           {datasetLabel} / {variableLabel}
-          {timeLabel && `, ${timeLabel}`}, {placeLabel}
+          {timeLabel && (
+            <>
+              {", "}
+              {timeLabel}
+            </>
+          )}
+          {dimensionLabel && `, ${dimensionLabel} `}
+          {", "}
+          {placeLabel}
         </Typography>
         <Box id="statistics-row-buttons" sx={styles.actions}>
           {actions}
