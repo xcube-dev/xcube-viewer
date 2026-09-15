@@ -66,7 +66,7 @@ export type LayerGroupStates = {
   baseMaps?: boolean;
 };
 
-export type DimensionValues = Record<string, string | number | null>;
+export type CoordinateValues = Record<string, string | number | null>;
 
 export type ThemeMode = PaletteMode | "system";
 export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
@@ -143,7 +143,7 @@ export interface ControlState {
   datasetZLevel: number | undefined;
   dimensionAnimationInterval: DimensionAnimationInterval;
   selectedDimensionLabel: string | null;
-  selectedDimensionValues: DimensionValues;
+  selectedCoordinateValues: CoordinateValues;
   showAllDimensions: boolean;
 }
 
@@ -231,7 +231,7 @@ export function newControlState(): ControlState {
     datasetZLevel: undefined,
     dimensionAnimationInterval: 1000,
     selectedDimensionLabel: null,
-    selectedDimensionValues: {},
+    selectedCoordinateValues: {},
     showAllDimensions: false,
   };
   return loadUserSettings(state);

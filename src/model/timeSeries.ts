@@ -9,7 +9,7 @@ import { parseISO } from "date-fns";
 
 import { utcTimeToIsoDateTimeString } from "@/util/time";
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from "./place";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
 /**
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
@@ -35,7 +35,7 @@ export interface TimeSeriesSource {
   geometry: geojson.Geometry | null;
   valueDataKey: keyof TimeSeriesPoint;
   errorDataKey: keyof TimeSeriesPoint | null;
-  dimensionValues: DimensionValues;
+  coordinateValues: CoordinateValues;
 }
 
 export interface TimeSeriesPoint {
@@ -103,15 +103,15 @@ export function timeSeriesGroupsToTable(
         variableName,
         valueDataKey,
         errorDataKey,
-        dimensionValues,
+        coordinateValues,
       } = timeSeries.source;
       if (placeId !== null) {
         placeIds.add(placeId);
       }
-      Object.keys(dimensionValues).forEach((dimensionName) => {
+      Object.keys(coordinateValues).forEach((dimensionName) => {
         dimensionColNames.add(dimensionName);
       });
-      const dimensionRowId = Object.entries(dimensionValues)
+      const dimensionRowId = Object.entries(coordinateValues)
         .sort(([name1], [name2]) => name1.localeCompare(name2))
         .map(([name, value]) => `${name}=${value}`)
         .join("-");
@@ -132,13 +132,13 @@ export function timeSeriesGroupsToTable(
           timePlaceRows[timePlaceId] = {
             placeId,
             time,
-            ...dimensionValues,
+            ...coordinateValues,
             [valueColName]: point[valueDataKey],
           };
         } else {
           timePlaceRows[timePlaceId] = {
             ...timePlaceRow,
-            ...dimensionValues,
+            ...coordinateValues,
             [valueColName]: point[valueDataKey],
           };
         }
@@ -279,7 +279,7 @@ export function placeGroupToTimeSeries(
             geometry: null, // could be computed later from data points (as GeometryCollection)
             valueDataKey: "mean",
             errorDataKey: null,
-            dimensionValues: {},
+            coordinateValues: {},
           },
           data: [point],
           dataProgress: 1.0,

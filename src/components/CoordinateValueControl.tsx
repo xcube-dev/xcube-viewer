@@ -10,24 +10,24 @@ import { Variable } from "@/model/variable";
 import TimePlayer from "@/connected/TimePlayer";
 import TimeSelect from "@/connected/TimeSelect";
 import TimeSlider from "@/connected/TimeSlider";
-import DimensionValuePlayer from "@/connected/DimensionValuePlayer";
-import DimensionValueSelect from "@/connected/DimensionValueSelect";
-import DimensionValueSlider from "@/connected/DimensionValueSlider";
+import CoordinateValuePlayer from "@/connected/CoordinateValuePlayer";
+import CoordinateValueSelect from "@/connected/CoordinateValueSelect";
+import CoordinateValueSlider from "@/connected/CoordinateValueSlider";
 import { isSpatialDim } from "@/model/dataset";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 
-interface DimensionsValueControlProps extends WithLocale {
+interface CoordinateValueControlProps extends WithLocale {
   selectedVariable: Variable | null;
   selectedDimensionLabel: string | null;
   showAllDimensions: boolean;
 }
 
-export default function DimensionValueControl({
+export default function CoordinateValueControl({
   selectedVariable,
   selectedDimensionLabel,
   showAllDimensions,
-}: DimensionsValueControlProps) {
+}: CoordinateValueControlProps) {
   if (!selectedVariable) return null;
 
   const renderDimensionControls = (dimensionLabel: string) => {
@@ -40,9 +40,9 @@ export default function DimensionValueControl({
       </>
     ) : (
       <>
-        <DimensionValueSelect dimensionLabel={dimensionLabel} />
-        <DimensionValuePlayer dimensionLabel={dimensionLabel} />
-        <DimensionValueSlider dimensionLabel={dimensionLabel} />
+        <CoordinateValueSelect dimensionLabel={dimensionLabel} />
+        <CoordinateValuePlayer dimensionLabel={dimensionLabel} />
+        <CoordinateValueSlider dimensionLabel={dimensionLabel} />
       </>
     );
   };

@@ -15,7 +15,7 @@ import { isoDateTimeStringToLabel } from "@/util/time";
 import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
 const styles = makeStyles({
   container: {
@@ -41,7 +41,7 @@ interface StatisticsRowProps extends WithLocale {
   dataset: Dataset | null;
   variable: Variable | null;
   time: string | null;
-  dimensionValues: DimensionValues;
+  coordinateValues: CoordinateValues;
   placeInfo: PlaceInfo | null;
   actions: React.ReactNode;
   body?: React.ReactNode;
@@ -56,7 +56,7 @@ export default function StatisticsRow({
   dataset,
   variable,
   time,
-  dimensionValues,
+  coordinateValues,
   placeInfo,
   actions,
   body,
@@ -77,8 +77,8 @@ export default function StatisticsRow({
     <Missing phrase="Time" />
   ) : null;
 
-  const dimensionLabel = dimensionValues
-    ? Object.entries(dimensionValues)
+  const dimensionLabel = coordinateValues
+    ? Object.entries(coordinateValues)
         .map(([dimLabel, value]) => `${dimLabel}: ${value}`)
         .join(", ")
     : "";

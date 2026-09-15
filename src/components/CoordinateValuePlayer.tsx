@@ -20,7 +20,7 @@ import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
 import {
   DimensionAnimationInterval,
-  DimensionValues,
+  CoordinateValues,
 } from "@/states/controlState";
 import { makeStyles } from "@/util/styles";
 import { Variable } from "@/model/variable";
@@ -38,12 +38,12 @@ const styles = makeStyles({
   },
 });
 
-interface DimensionValuePlayerProps extends WithLocale {
+interface CoordinateValuePlayerProps extends WithLocale {
   selectedVariable: Variable | null;
   selectedDimensionLabel: string | null;
   selectedDimension: Dimension | null;
-  selectedDimensionValue: number | string | null;
-  selectDimensionValues: (selectedValues: DimensionValues) => void;
+  selectedCoordinateValue: number | string | null;
+  selectCoordinateValues: (selectedValues: CoordinateValues) => void;
   activeAnimationDimension: string | null;
   dimensionAnimationInterval: DimensionAnimationInterval;
   incSelectedDimension: (
@@ -56,17 +56,17 @@ interface DimensionValuePlayerProps extends WithLocale {
   ) => void;
 }
 
-export default function DimensionValuePlayer({
+export default function CoordinateValuePlayer({
   selectedVariable,
   selectedDimensionLabel,
   selectedDimension,
-  selectedDimensionValue,
-  selectDimensionValues,
+  selectedCoordinateValue,
+  selectCoordinateValues,
   incSelectedDimension,
   activeAnimationDimension,
   dimensionAnimationInterval,
   updateAnimationDimension,
-}: DimensionValuePlayerProps) {
+}: CoordinateValuePlayerProps) {
   const intervalId = useRef<number | null>(null);
   const isPlaying =
     selectedDimensionLabel !== null &&
@@ -75,8 +75,8 @@ export default function DimensionValuePlayer({
     !!selectedDimension &&
     !!selectedDimensionLabel &&
     !!selectedVariable?.dims?.includes(selectedDimension.name) &&
-    selectedDimensionValue !== null &&
-    selectedDimensionValue !== undefined;
+    selectedCoordinateValue !== null &&
+    selectedCoordinateValue !== undefined;
 
   const handlePlayEvent = () => {
     incSelectedDimension(1, selectedDimensionLabel);
@@ -114,7 +114,7 @@ export default function DimensionValuePlayer({
   };
 
   // only show DepthSelect if selectedVariables has depth dim
-  // and selectedDimensionValue
+  // and selectedCoordinateValue
   if (
     !hasValidDimension ||
     !selectedDimension ||
@@ -140,7 +140,7 @@ export default function DimensionValuePlayer({
   };
 
   const handleFirstStepButtonClick = () => {
-    selectDimensionValues({
+    selectCoordinateValues({
       [selectedDimensionLabel]: selectedCoordinates
         ? selectedCoordinates[0]
         : null,
@@ -148,14 +148,14 @@ export default function DimensionValuePlayer({
   };
 
   const handleLastStepButtonClick = () => {
-    selectDimensionValues({
+    selectCoordinateValues({
       [selectedDimensionLabel]: selectedCoordinates
         ? selectedCoordinates[selectedCoordinates.length - 1]
         : null,
     });
   };
 
-  const isValid = typeof selectedDimensionValue === "number";
+  const isValid = typeof selectedCoordinateValue === "number";
 
   const playIcon = isPlaying ? (
     <PauseCircleOutlineIcon />

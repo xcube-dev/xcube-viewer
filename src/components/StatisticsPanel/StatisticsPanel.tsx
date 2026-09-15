@@ -6,7 +6,7 @@
 
 import Box from "@mui/material/Box";
 
-import { DimensionValues, ExportResolution } from "@/states/controlState";
+import { CoordinateValues, ExportResolution } from "@/states/controlState";
 import { MessageType } from "@/states/messageLogState";
 import { StatisticsRecord } from "@/model/statistics";
 import { Dataset } from "@/model/dataset";
@@ -29,7 +29,7 @@ interface StatisticsPanelProps {
   selectedDataset: Dataset | null;
   selectedVariable: Variable | null;
   selectedTime: string | null;
-  selectedDimensionValues: DimensionValues;
+  selectedCoordinateValues: CoordinateValues;
   selectedPlaceInfo: PlaceInfo | null;
   statisticsLoading: boolean;
   statisticsRecords: StatisticsRecord[];
@@ -44,7 +44,7 @@ export default function StatisticsPanel({
   selectedDataset,
   selectedVariable,
   selectedTime,
-  selectedDimensionValues,
+  selectedCoordinateValues,
   selectedPlaceInfo,
   statisticsLoading,
   statisticsRecords,
@@ -60,7 +60,7 @@ export default function StatisticsPanel({
         selectedDataset={selectedDataset}
         selectedVariable={selectedVariable}
         selectedTime={selectedTime}
-        selectedDimensionValues={selectedDimensionValues}
+        selectedCoordinateValues={selectedCoordinateValues}
         selectedPlaceInfo={selectedPlaceInfo}
         canAddStatistics={canAddStatistics}
         addStatistics={addStatistics}

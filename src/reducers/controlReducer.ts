@@ -18,7 +18,7 @@ import {
   REMOVE_USER_COLOR_BAR,
   SELECT_DATASET,
   SELECT_DIMENSION,
-  SELECT_DIMENSION_VALUES,
+  SELECT_COORDINATE_VALUES,
   SELECT_PLACE,
   SELECT_PLACE_GROUPS,
   SELECT_TIME,
@@ -76,7 +76,7 @@ import {
 import { AppState } from "@/states/appState";
 import {
   ControlState,
-  DimensionValues,
+  CoordinateValues,
   newControlState,
 } from "@/states/controlState";
 import { storeUserSettings } from "@/states/userSettings";
@@ -190,8 +190,8 @@ export function controlReducer(
         selectedTimeRange,
         selectedTime,
         activeAnimationDimension: null,
-        selectedDimensionValues: getSelectedDimensionValuesForVariable(
-          state.selectedDimensionValues,
+        selectedCoordinateValues: getSelectedCoordinateValuesForVariable(
+          state.selectedCoordinateValues,
           selectedDataset,
           selectedVariableName,
         ),
@@ -232,8 +232,8 @@ export function controlReducer(
         ...state,
         selectedVariableName: action.selectedVariableName,
         activeAnimationDimension: null,
-        selectedDimensionValues: getSelectedDimensionValuesForVariable(
-          state.selectedDimensionValues,
+        selectedCoordinateValues: getSelectedCoordinateValuesForVariable(
+          state.selectedCoordinateValues,
           selectedDataset,
           action.selectedVariableName,
         ),
@@ -347,14 +347,14 @@ export function controlReducer(
           ? findDatasetDimension(selectedDataset, label)
           : null;
         const coordinates = dimension?.coordinates ?? null;
-        const selectedDimensionValue = label
-          ? state.selectedDimensionValues[label]
+        const selectedCoordinateValue = label
+          ? state.selectedCoordinateValues[label]
           : null;
         let index =
-          selectedDimensionValue !== null &&
-          selectedDimensionValue !== undefined &&
+          selectedCoordinateValue !== null &&
+          selectedCoordinateValue !== undefined &&
           coordinates
-            ? coordinates.indexOf(Number(selectedDimensionValue))
+            ? coordinates.indexOf(Number(selectedCoordinateValue))
             : -1;
         if (index >= 0 && coordinates) {
           index += action.increment;
@@ -364,16 +364,16 @@ export function controlReducer(
           if (index > coordinates.length - 1) {
             index = 0;
           }
-          const nextSelectedDimensionValue = coordinates[index];
+          const nextSelectedCoordinateValue = coordinates[index];
           if (
             label &&
-            state.selectedDimensionValues[label] !== nextSelectedDimensionValue
+            state.selectedCoordinateValues[label] !== nextSelectedCoordinateValue
           ) {
             return {
               ...state,
-              selectedDimensionValues: {
-                ...state.selectedDimensionValues,
-                [label]: nextSelectedDimensionValue,
+              selectedCoordinateValues: {
+                ...state.selectedCoordinateValues,
+                [label]: nextSelectedCoordinateValue,
               },
             };
           }
@@ -659,12 +659,12 @@ export function controlReducer(
         datasetZLevel: action.datasetZLevel,
       };
     }
-    case SELECT_DIMENSION_VALUES: {
+    case SELECT_COORDINATE_VALUES: {
       return {
         ...state,
-        selectedDimensionValues: {
-          ...state.selectedDimensionValues,
-          ...action.selectedDimensionValues,
+        selectedCoordinateValues: {
+          ...state.selectedCoordinateValues,
+          ...action.selectedCoordinateValues,
         },
       };
     }
@@ -705,17 +705,17 @@ function selectUserPlace(
   };
 }
 
-function getSelectedDimensionValuesForVariable(
-  selectedDimensionValues: DimensionValues,
+function getSelectedCoordinateValuesForVariable(
+  selectedCoordinateValues: CoordinateValues,
   selectedDataset: Dataset | null | undefined,
   selectedVariableName: string | null | undefined,
 ) {
-  const nextSelectedDimensionValues = {
-    ...selectedDimensionValues,
+  const nextSelectedCoordinateValues = {
+    ...selectedCoordinateValues,
   };
 
   if (!selectedDataset || !selectedVariableName) {
-    return nextSelectedDimensionValues;
+    return nextSelectedCoordinateValues;
   }
 
   const selectedVariable = findDatasetVariable(
@@ -725,14 +725,14 @@ function getSelectedDimensionValuesForVariable(
 
   selectedVariable?.dims?.forEach((dim) => {
     if (
-      !(dim in nextSelectedDimensionValues) &&
+      !(dim in nextSelectedCoordinateValues) &&
       !isSpatialDim(dim) &&
       !isTemporalDim(dim)
     ) {
       const dimension = findDatasetDimension(selectedDataset, dim);
-      nextSelectedDimensionValues[dim] = dimension?.coordinates?.[0] ?? null;
+      nextSelectedCoordinateValues[dim] = dimension?.coordinates?.[0] ?? null;
     }
   });
 
-  return nextSelectedDimensionValues;
+  return nextSelectedCoordinateValues;
 }

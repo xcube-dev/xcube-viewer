@@ -14,7 +14,7 @@ import { Dataset } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { PlaceInfo } from "@/model/place";
 import StatisticsRow from "./StatisticsRow";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
 const styles = makeStyles({
   progress: {
@@ -26,7 +26,7 @@ interface StatisticsFirstRowProps extends WithLocale {
   selectedDataset: Dataset | null;
   selectedVariable: Variable | null;
   selectedTime: string | null;
-  selectedDimensionValues: DimensionValues;
+  selectedCoordinateValues: CoordinateValues;
   selectedPlaceInfo: PlaceInfo | null;
   canAddStatistics: boolean;
   addStatistics: () => void;
@@ -37,7 +37,7 @@ export default function StatisticsFirstRow({
   selectedDataset,
   selectedVariable,
   selectedTime,
-  selectedDimensionValues,
+  selectedCoordinateValues,
   selectedPlaceInfo,
   canAddStatistics,
   addStatistics,
@@ -48,7 +48,7 @@ export default function StatisticsFirstRow({
       dataset={selectedDataset}
       variable={selectedVariable}
       time={selectedTime}
-      dimensionValues={selectedDimensionValues}
+      coordinateValues={selectedCoordinateValues}
       placeInfo={selectedPlaceInfo}
       actions={
         statisticsLoading ? (

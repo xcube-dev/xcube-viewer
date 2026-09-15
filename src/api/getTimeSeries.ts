@@ -16,7 +16,7 @@ import {
   QueryComponent,
 } from "./callApi";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
 type RawTimeSeriesPoint = Omit<TimeSeriesPoint, "time"> & { time: string };
 
@@ -35,7 +35,7 @@ export function getTimeSeriesForGeometry(
   useMedian: boolean,
   includeStdev: boolean,
   accessToken: string | null,
-  dimensionValues: DimensionValues,
+  coordinateValues: CoordinateValues,
 ): Promise<TimeSeries | null> {
   let valueDataKey: keyof TimeSeriesPoint;
   let errorDataKey: keyof TimeSeriesPoint | null = null;
@@ -57,7 +57,7 @@ export function getTimeSeriesForGeometry(
   if (endDate) {
     query.push(["endDate", endDate]);
   }
-  Object.entries(dimensionValues).forEach(([name, value]) => {
+  Object.entries(coordinateValues).forEach(([name, value]) => {
     if (value != null) {
       query.push([name, String(value)]);
     }
@@ -92,7 +92,7 @@ export function getTimeSeriesForGeometry(
       geometry,
       valueDataKey,
       errorDataKey,
-      dimensionValues,
+      coordinateValues,
     };
     return { source, data: points };
   };

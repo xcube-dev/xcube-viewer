@@ -13,12 +13,13 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { WithLocale } from "@/util/lang";
 
 import ControlBarItem from "./ControlBarItem";
-import { isSpatialDim } from "@/model/dataset";
+import { Dimension, isSpatialDim } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { useEffect } from "react";
 import i18n from "@/i18n";
 
 interface DimensionSelectProps extends WithLocale {
+  dimensions: Dimension[];
   selectedVariable: Variable | null;
   selectedDimensionLabel: string | null;
   showAllDimensions: boolean;
@@ -26,6 +27,7 @@ interface DimensionSelectProps extends WithLocale {
 }
 
 export default function DimensionSelect({
+  dimensions,
   selectedVariable,
   selectedDimensionLabel,
   showAllDimensions,
@@ -61,6 +63,10 @@ export default function DimensionSelect({
   const nonSpatialDims =
     selectedVariable?.dims?.filter((dim) => !isSpatialDim(dim)) ?? [];
 
+  const getDimensionLabel = (dimensionName: string) =>
+    dimensions.find((dimension) => dimension.name === dimensionName)?.title ||
+    dimensionName;
+
   if (nonSpatialDims.length <= 1) {
     return null;
   }
@@ -82,12 +88,14 @@ export default function DimensionSelect({
       input={<Input name="selectedDimension" id="dimension-select" />}
       displayEmpty
       name="selectedDimension"
-      renderValue={(value) => value || "Select dimension"}
+      renderValue={(value) =>
+        value ? getDimensionLabel(value) : "Select dimension"
+      }
     >
       {nonSpatialDims.map((values) => {
         return (
           <MenuItem key={values} value={values}>
-            <ListItemText primary={values} />
+            <ListItemText primary={getDimensionLabel(values)} />
           </MenuItem>
         );
       })}

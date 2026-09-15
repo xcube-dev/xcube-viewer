@@ -15,7 +15,7 @@ import i18n from "@/i18n";
 import { makeStyles } from "@/util/styles";
 import { Dimension } from "@/model/dataset";
 import { Variable } from "@/model/variable";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
 const HOR_MARGIN = 5;
 
@@ -29,39 +29,39 @@ const styles = makeStyles({
   },
 });
 
-interface DimensionValueSliderProps {
+interface CoordinateValueSliderProps {
   selectedVariable: Variable | null;
   selectedDimensionLabel: string | null;
   selectedDimension: Dimension | null;
-  selectedDimensionValue: number | string | null;
-  selectDimensionValues: (selectedValues: DimensionValues) => void;
+  selectedCoordinateValue: number | string | null;
+  selectCoordinateValues: (selectedValues: CoordinateValues) => void;
 }
 
-export default function DimensionValueSliderProps({
+export default function CoordinateValueSliderProps({
   selectedVariable,
   selectedDimensionLabel,
   selectedDimension,
-  selectedDimensionValue,
-  selectDimensionValues,
-}: DimensionValueSliderProps) {
-  const [selectedDimensionValue_, setSelectedDimensionValue_] = useState(
-    selectedDimensionValue,
+  selectedCoordinateValue,
+  selectCoordinateValues,
+}: CoordinateValueSliderProps) {
+  const [selectedCoordinateValue_, setSelectedCoordinateValue_] = useState(
+    selectedCoordinateValue,
   );
 
   useEffect(() => {
-    setSelectedDimensionValue_(
-      selectedDimensionValue ??
+    setSelectedCoordinateValue_(
+      selectedCoordinateValue ??
         (selectedDimension?.coordinates ? selectedDimension.coordinates[0] : 0),
     );
-  }, [selectedDimensionValue, selectedDimension]);
+  }, [selectedCoordinateValue, selectedDimension]);
 
   // only show DepthSelect if selectedVariables has depth dim
-  // and selectedDimensionValue
+  // and selectedCoordinateValue
   if (
     !selectedDimension ||
     !selectedVariable?.dims?.includes(selectedDimension.name) ||
-    selectedDimensionValue === null ||
-    selectedDimensionValue === undefined
+    selectedCoordinateValue === null ||
+    selectedCoordinateValue === undefined
   )
     return null;
 
@@ -69,7 +69,7 @@ export default function DimensionValueSliderProps({
 
   const handleChange = (_event: Event, value: number | number[]) => {
     if (typeof value === "number") {
-      setSelectedDimensionValue_(value);
+      setSelectedCoordinateValue_(value);
     }
   };
 
@@ -79,10 +79,10 @@ export default function DimensionValueSliderProps({
   ) => {
     if (
       selectedDimensionLabel !== null &&
-      selectDimensionValues &&
+      selectCoordinateValues &&
       typeof value === "number"
     ) {
-      selectDimensionValues({ [selectedDimensionLabel]: value as number });
+      selectCoordinateValues({ [selectedDimensionLabel]: value as number });
     }
   };
 
@@ -114,7 +114,7 @@ export default function DimensionValueSliderProps({
           disabled={!selectedDepthRangeValid}
           min={min}
           max={max}
-          value={Number(selectedDimensionValue_)} // || 0}
+          value={Number(selectedCoordinateValue_)} // || 0}
           valueLabelDisplay="off" // "auto" //"on"
           valueLabelFormat={valueLabelFormat}
           marks={marks}

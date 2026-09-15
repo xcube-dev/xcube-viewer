@@ -7,14 +7,14 @@
 import { Dataset } from "./dataset";
 import { Variable } from "./variable";
 import { PlaceInfo } from "./place";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
 export interface StatisticsSource {
   dataset: Dataset;
   variable: Variable;
   time: string | null;
   placeInfo: PlaceInfo;
-  dimensionValues: DimensionValues;
+  coordinateValues: CoordinateValues;
 }
 
 export interface Histogram {

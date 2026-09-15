@@ -13,7 +13,7 @@ import { WithLocale } from "@/util/lang";
 import DatasetSelect from "./DatasetSelect";
 import VariableSelect from "./VariableSelect";
 import DimensionSelect from "./DimensionSelect";
-import DimensionValueControl from "./DimensionValueControl";
+import CoordinateValueControl from "./CoordinateValueControl";
 import PlaceGroupsSelect from "./PlaceGroupsSelect";
 import PlaceSelect from "./PlaceSelect";
 import MapInteractionsBar from "./MapInteractionsBar";
@@ -44,7 +44,7 @@ const _ControlBar: React.FC<ControlBarProps> = ({ show }) => {
       <VariableSelect />
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <DimensionSelect />
-      <DimensionValueControl />
+      <CoordinateValueControl />
       <Divider orientation={"vertical"} variant="middle" flexItem></Divider>
       <PlaceGroupsSelect />
       <PlaceSelect />

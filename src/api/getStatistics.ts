@@ -19,7 +19,7 @@ import {
   QueryComponent,
 } from "./callApi";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
 interface StatisticsResult {
   result: Statistics;
@@ -32,14 +32,14 @@ export function getStatistics(
   placeInfo: PlaceInfo,
   timeLabel: string | null,
   accessToken: string | null,
-  dimensionValues: DimensionValues,
+  coordinateValues: CoordinateValues,
 ): Promise<StatisticsRecord> {
   const query: QueryComponent[] = [];
   if (timeLabel) {
     query.push(["time", timeLabel]);
   }
 
-  Object.entries(dimensionValues).forEach(([name, value]) => {
+  Object.entries(coordinateValues).forEach(([name, value]) => {
     if (value != null) {
       query.push([name, String(value)]);
     }
@@ -61,7 +61,7 @@ export function getStatistics(
     variable,
     placeInfo,
     time: timeLabel,
-    dimensionValues: dimensionValues,
+    coordinateValues: coordinateValues,
   };
 
   return callJsonApi(url, init, (r: StatisticsResult) => ({

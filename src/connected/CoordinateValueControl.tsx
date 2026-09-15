@@ -6,7 +6,7 @@
 
 import { connect } from "react-redux";
 
-import _DimensionValueControl from "@/components/DimensionValueControl";
+import _CoordinateValueControl from "@/components/CoordinateValueControl";
 import { AppState } from "@/states/appState";
 import {
   selectedDimensionLabelSelector,
@@ -25,8 +25,8 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = {};
 
-const DimensionValueControl = connect(
+const CoordinateValueControl = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(_DimensionValueControl);
-export default DimensionValueControl;
+)(_CoordinateValueControl);
+export default CoordinateValueControl;

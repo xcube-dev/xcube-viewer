@@ -16,43 +16,43 @@ import ControlBarItem from "./ControlBarItem";
 import { Dimension } from "@/model/dataset";
 import { Variable } from "@/model/variable";
 import { useEffect } from "react";
-import { DimensionValues } from "@/states/controlState";
+import { CoordinateValues } from "@/states/controlState";
 
-interface DimensionValueSelectProps extends WithLocale {
+interface CoordinateValueSelectProps extends WithLocale {
   selectedVariable: Variable | null;
   selectedDimensionLabel: string | null;
   selectedDimension: Dimension | null;
-  selectedDimensionValue: number | string | null;
-  selectDimensionValues: (selectedValues: DimensionValues) => void;
+  selectedCoordinateValue: number | string | null;
+  selectCoordinateValues: (selectedValues: CoordinateValues) => void;
 }
 
-export default function DimensionValueSelect({
+export default function CoordinateValueSelect({
   selectedVariable,
   selectedDimensionLabel,
   selectedDimension,
-  selectedDimensionValue,
-  selectDimensionValues,
-}: DimensionValueSelectProps) {
+  selectedCoordinateValue,
+  selectCoordinateValues,
+}: CoordinateValueSelectProps) {
   //TODO: simplify is possible
   useEffect(() => {
     const hasSelectedValue =
-      selectedDimensionValue !== null &&
-      selectedDimensionValue !== undefined &&
-      selectedDimension?.coordinates?.includes(Number(selectedDimensionValue));
+      selectedCoordinateValue !== null &&
+      selectedCoordinateValue !== undefined &&
+      selectedDimension?.coordinates?.includes(Number(selectedCoordinateValue));
 
     if (
       selectedDimensionLabel &&
       !hasSelectedValue &&
       selectedDimension?.coordinates?.length
     ) {
-      selectDimensionValues({
+      selectCoordinateValues({
         [selectedDimensionLabel]: selectedDimension.coordinates[0],
       });
     }
   }, [
-    selectedDimensionValue,
+    selectedCoordinateValue,
     selectedDimension,
-    selectDimensionValues,
+    selectCoordinateValues,
     selectedDimensionLabel,
   ]);
 
@@ -60,14 +60,14 @@ export default function DimensionValueSelect({
   if (
     !selectedDimensionLabel ||
     !selectedDimension ||
-    selectedDimensionValue === null ||
-    selectedDimensionValue === undefined ||
+    selectedCoordinateValue === null ||
+    selectedCoordinateValue === undefined ||
     !selectedVariable?.dims?.includes(selectedDimension.name)
   )
     return null;
 
   const handleValueChange = (event: SelectChangeEvent) => {
-    selectDimensionValues({ [selectedDimensionLabel]: event.target.value });
+    selectCoordinateValues({ [selectedDimensionLabel]: event.target.value });
   };
 
   const valueSelectLabel = (
@@ -79,7 +79,7 @@ export default function DimensionValueSelect({
   const valueSelect = (
     <Select
       variant="standard"
-      value={String(selectedDimensionValue)}
+      value={String(selectedCoordinateValue)}
       onChange={handleValueChange}
       input={<Input name="selectedDimension" id="value-select" />}
       displayEmpty

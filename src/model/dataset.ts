@@ -21,6 +21,7 @@ import { type Variable } from "./variable";
 
 export interface Dimension {
   name: string;
+  title?: string;
   size: number;
   dtype: string;
   coordinates: number[];

@@ -36,7 +36,7 @@ import type {
   LayerGroupStates,
   MapInteraction,
   DimensionAnimationInterval,
-  DimensionValues,
+  CoordinateValues,
   ViewMode,
   VolumeRenderMode,
   VolumeState,
@@ -888,19 +888,19 @@ export function selectDimension(
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const SELECT_DIMENSION_VALUES = "SELECT_DIMENSION_VALUES";
+export const SELECT_COORDINATE_VALUES = "SELECT_COORDINATE_VALUES";
 
-export interface SelectDimensionValues {
-  type: typeof SELECT_DIMENSION_VALUES;
-  selectedDimensionValues: DimensionValues;
+export interface SelectCoordinateValues {
+  type: typeof SELECT_COORDINATE_VALUES;
+  selectedCoordinateValues: CoordinateValues;
 }
 
-export function selectDimensionValues(
-  selectedDimensionValues: DimensionValues,
-): SelectDimensionValues {
+export function selectCoordinateValues(
+  selectedCoordinateValues: CoordinateValues,
+): SelectCoordinateValues {
   return {
-    type: SELECT_DIMENSION_VALUES,
-    selectedDimensionValues,
+    type: SELECT_COORDINATE_VALUES,
+    selectedCoordinateValues,
   };
 }
 
@@ -948,4 +948,4 @@ export type ControlAction =
   | SetZoomLevel
   | SetDatasetZLevel
   | SelectDimension
-  | SelectDimensionValues;
+  | SelectCoordinateValues;

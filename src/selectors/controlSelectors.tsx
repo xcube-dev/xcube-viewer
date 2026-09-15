@@ -69,7 +69,7 @@ import {
 } from "./dataSelectors";
 import { makeRequestUrl } from "@/api/callApi";
 import {
-  DimensionValues,
+  CoordinateValues,
   LayerStates,
   LayerVisibilities,
   MAP_OBJECTS,
@@ -167,8 +167,8 @@ export const selectedDatasetZLevelSelector = (state: AppState) =>
   state.controlState.datasetZLevel;
 export const selectedDimensionLabelSelector = (state: AppState) =>
   state.controlState.selectedDimensionLabel;
-export const selectedDimensionValuesSelector = (state: AppState) =>
-  state.controlState.selectedDimensionValues;
+export const selectedCoordinateValuesSelector = (state: AppState) =>
+  state.controlState.selectedCoordinateValues;
 export const showAllDimensionsSelector = (state: AppState) =>
   state.controlState.showAllDimensions;
 
@@ -304,10 +304,10 @@ export const selectedDatasetDimensionSelector = createSelector(
   _findDatasetDimension,
 );
 
-export const selectedDatasetDimensionValueSelector = createSelector(
-  selectedDimensionValuesSelector,
+export const selectedDatasetCoordinateValueSelector = createSelector(
+  selectedCoordinateValuesSelector,
   selectedDimensionLabelSelector,
-  (values: DimensionValues, label: string | null): string | number | null => {
+  (values: CoordinateValues, label: string | null): string | number | null => {
     if (label === null) {
       return null;
     }
@@ -338,10 +338,10 @@ export const selectedDatasetDimensionForLabelSelector = createSelector(
   _findDatasetDimension,
 );
 
-export const selectedDatasetDimensionValueForLabelSelector = createSelector(
-  selectedDimensionValuesSelector,
+export const selectedDatasetCoordinateValueForLabelSelector = createSelector(
+  selectedCoordinateValuesSelector,
   effectiveSelectedDimensionLabelSelector,
-  (values: DimensionValues, label: string | null): string | number | null => {
+  (values: CoordinateValues, label: string | null): string | number | null => {
     if (label === null) {
       return null;
     }
@@ -350,16 +350,16 @@ export const selectedDatasetDimensionValueForLabelSelector = createSelector(
   },
 );
 
-export const selectedVariableDimensionValuesSelector = createSelector(
+export const selectedVariableCoordinateValuesSelector = createSelector(
   selectedVariableSelector,
-  selectedDimensionValuesSelector,
-  (variable: Variable | null, dimensionValues): DimensionValues => {
+  selectedCoordinateValuesSelector,
+  (variable: Variable | null, coordinateValues): CoordinateValues => {
     const selectedDimensionLabels = variable?.dims
-      ?.filter((dim) => dimensionValues?.[dim] != null)
+      ?.filter((dim) => coordinateValues?.[dim] != null)
       .reduce(
         (result, dim) => ({
           ...result,
-          [dim]: dimensionValues[dim],
+          [dim]: coordinateValues[dim],
         }),
         {},
       );
@@ -721,13 +721,13 @@ export const canAddTimeSeriesSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
   selectedPlaceIdSelector,
-  selectedVariableDimensionValuesSelector,
+  selectedVariableCoordinateValuesSelector,
   (
     timeSeriesGroups: TimeSeriesGroup[],
     datasetId: string | null,
     variableName: string | null,
     placeId: string | null,
-    dimensionValues: DimensionValues,
+    coordinateValues: CoordinateValues,
   ): boolean => {
     if (!datasetId || !variableName || !placeId) {
       return false;
@@ -739,10 +739,10 @@ export const canAddTimeSeriesSelector = createSelector(
           source.datasetId === datasetId &&
           source.variableName === variableName &&
           source.placeId === placeId &&
-          Object.keys(source.dimensionValues).length ===
-            Object.keys(dimensionValues).length &&
-          Object.entries(source.dimensionValues).every(
-            ([name, value]) => dimensionValues[name] === value,
+          Object.keys(source.coordinateValues).length ===
+            Object.keys(coordinateValues).length &&
+          Object.entries(source.coordinateValues).every(
+            ([name, value]) => coordinateValues[name] === value,
           )
         ) {
           return false;
@@ -911,7 +911,7 @@ export const selectedDataset2TimeIndexSelector = createSelector(
   _getTimeIndex,
 );
 
-const _getDimensionCoordinates = (
+const _getDimensionCoordinateValues = (
   dimension: Dimension | null,
 ): number[] | null => {
   if (dimension === null || dimension.coordinates.length === 0) {
@@ -920,36 +920,36 @@ const _getDimensionCoordinates = (
   return dimension.coordinates;
 };
 
-export const selectedDatasetDimensionCoordinatesSelector = createSelector(
+export const selectedDatasetDimensionCoordinateValuesSelector = createSelector(
   selectedDatasetDimensionSelector,
-  _getDimensionCoordinates,
+  _getDimensionCoordinateValues,
 );
 
-export const selectedDataset2DimensionCoordinatesSelector = createSelector(
+export const selectedDataset2DimensionCoordinateValuesSelector = createSelector(
   selectedDatasetDimensionSelector,
-  _getDimensionCoordinates,
+  _getDimensionCoordinateValues,
 );
 
-const _getDimensionIndex = (
+const _getCoordinateIndex = (
   value: number | string | null,
-  dimensionCoordinates: number[] | null,
+  coordinateValues: number[] | null,
 ): number => {
-  if (value === null || dimensionCoordinates === null) {
+  if (value === null || coordinateValues === null) {
     return -1;
   }
-  return findIndexCloseTo(dimensionCoordinates, value as number); //TODO `as number` should be removed/unnecessary
+  return coordinateValues.indexOf(Number(value));
 };
 
-export const selectedDatasetDimensionIndexSelector = createSelector(
-  selectedDatasetDimensionValueSelector,
-  selectedDatasetDimensionCoordinatesSelector,
-  _getDimensionIndex,
+export const selectedDatasetCoordinateIndexSelector = createSelector(
+  selectedDatasetCoordinateValueSelector,
+  selectedDatasetDimensionCoordinateValuesSelector,
+  _getCoordinateIndex,
 );
 
-export const selectedDataset2DimensionIndexSelector = createSelector(
-  selectedDatasetDimensionValueSelector,
-  selectedDataset2DimensionCoordinatesSelector,
-  _getDimensionIndex,
+export const selectedDataset2CoordinateIndexSelector = createSelector(
+  selectedDatasetCoordinateValueSelector,
+  selectedDataset2DimensionCoordinateValuesSelector,
+  _getCoordinateIndex,
 );
 
 const _getTimeLabel = (
@@ -1241,7 +1241,7 @@ const getVariableTileLayer = (
   animationActive: boolean,
   mapProjection: string,
   imageSmoothing: boolean,
-  selectedDimensionValues: DimensionValues,
+  selectedCoordinateValues: CoordinateValues,
 ): MapElement => {
   if (!dataset || !variable || !visibility) {
     return null;
@@ -1257,7 +1257,7 @@ const getVariableTileLayer = (
     queryParams.push(["norm", colorBarNorm]);
   }
 
-  Object.entries(selectedDimensionValues).forEach(([name, value]) => {
+  Object.entries(selectedCoordinateValues).forEach(([name, value]) => {
     if (value != null) {
       queryParams.push([name, String(value)]);
     }
@@ -1298,7 +1298,7 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   animationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
-  selectedDimensionValuesSelector,
+  selectedCoordinateValuesSelector,
   getVariableTileLayer,
 );
 
@@ -1320,7 +1320,7 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   animationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
-  selectedDimensionValuesSelector,
+  selectedCoordinateValuesSelector,
   getVariableTileLayer,
 );
 

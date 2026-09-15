@@ -6,13 +6,13 @@
 
 import { connect } from "react-redux";
 
-import _DimensionValueSelect from "@/components/DimensionValueSelect";
+import _CoordinateValueSelect from "@/components/CoordinateValueSelect";
 import { AppState } from "@/states/appState";
-import { selectDimensionValues } from "@/actions/controlActions";
+import { selectCoordinateValues } from "@/actions/controlActions";
 import {
   effectiveSelectedDimensionLabelSelector,
   selectedDatasetDimensionForLabelSelector,
-  selectedDatasetDimensionValueForLabelSelector,
+  selectedDatasetCoordinateValueForLabelSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
@@ -33,7 +33,7 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
       state,
       ownProps.dimensionLabel,
     ),
-    selectedDimensionValue: selectedDatasetDimensionValueForLabelSelector(
+    selectedCoordinateValue: selectedDatasetCoordinateValueForLabelSelector(
       state,
       ownProps.dimensionLabel,
     ),
@@ -41,11 +41,11 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
 };
 
 const mapDispatchToProps = {
-  selectDimensionValues,
+  selectCoordinateValues,
 };
 
-const DimensionValueSelect = connect(
+const CoordinateValueSelect = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(_DimensionValueSelect);
-export default DimensionValueSelect;
+)(_CoordinateValueSelect);
+export default CoordinateValueSelect;

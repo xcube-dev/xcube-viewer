@@ -67,8 +67,8 @@ export default function TimeSeriesLine({
   let lineName = `${source.datasetTitle}:${source.variableName}`;
   let lineColor = "red";
 
-  const dimensionLabel = source.dimensionValues
-    ? Object.entries(source.dimensionValues)
+  const dimensionLabel = source.coordinateValues
+    ? Object.entries(source.coordinateValues)
         .map(([dimLabel, value]) => `${dimLabel}: ${value}`)
         .join(", ")
     : "";

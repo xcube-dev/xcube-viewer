@@ -20,7 +20,7 @@ import {
   selectedVariableNameSelector,
   selectedDatasetTitleSelector,
   selectedDataset2TitleSelector,
-  selectedVariableDimensionValuesSelector,
+  selectedVariableCoordinateValuesSelector,
 } from "@/selectors/controlSelectors";
 import { getPaletteMode } from "@/states/controlState";
 
@@ -95,10 +95,10 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     selector: (appState: AppState) =>
       getPaletteMode(appState.controlState.themeMode),
   },
-  selectedVariableDimensionValues: {
+  selectedVariableCoordinateValues: {
     type: "dict[str, Any] | None",
     description: "The selected dimension values of the selected variable.",
-    selector: selectedVariableDimensionValuesSelector,
+    selector: selectedVariableCoordinateValuesSelector,
   },
 };
 

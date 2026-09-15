@@ -6,13 +6,17 @@
 
 import { connect } from "react-redux";
 
-import _DimensionValueSlider from "@/components/DimensionValueSlider";
+import _CoordinateValuePlayer from "@/components/CoordinateValuePlayer";
 import { AppState } from "@/states/appState";
-import { selectDimensionValues } from "@/actions/controlActions";
+import {
+  incSelectedDimension,
+  selectCoordinateValues,
+  updateAnimationDimension,
+} from "@/actions/controlActions";
 import {
   effectiveSelectedDimensionLabelSelector,
   selectedDatasetDimensionForLabelSelector,
-  selectedDatasetDimensionValueForLabelSelector,
+  selectedDatasetCoordinateValueForLabelSelector,
   selectedVariableSelector,
 } from "@/selectors/controlSelectors";
 
@@ -33,19 +37,23 @@ const mapStateToProps = (state: AppState, ownProps: OwnProps) => {
       state,
       ownProps.dimensionLabel,
     ),
-    selectedDimensionValue: selectedDatasetDimensionValueForLabelSelector(
+    selectedCoordinateValue: selectedDatasetCoordinateValueForLabelSelector(
       state,
       ownProps.dimensionLabel,
     ),
+    activeAnimationDimension: state.controlState.activeAnimationDimension,
+    dimensionAnimationInterval: state.controlState.dimensionAnimationInterval,
   };
 };
 
 const mapDispatchToProps = {
-  selectDimensionValues,
+  selectCoordinateValues,
+  incSelectedDimension,
+  updateAnimationDimension,
 };
 
-const DimensionValueSlider = connect(
+const CoordinateValuePlayer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(_DimensionValueSlider);
-export default DimensionValueSlider;
+)(_CoordinateValuePlayer);
+export default CoordinateValuePlayer;

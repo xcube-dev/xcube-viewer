@@ -42,7 +42,7 @@ import {
   selectedPlaceSelector,
   selectedServerSelector,
   selectedTimeChunkSizeSelector,
-  selectedVariableDimensionValuesSelector,
+  selectedVariableCoordinateValuesSelector,
   selectedVariableSelector,
   userPlacesFormatNameSelector,
   userPlacesFormatOptionsCsvSelector,
@@ -573,8 +573,8 @@ export function addStatistics() {
     const selectedTimeLabel = selectedDatasetTimeLabelSelector(getState());
     const sidePanelOpen = getState().controlState.sidePanelOpen;
     const sidePanelId = getState().controlState.sidePanelId;
-    const selectedDimensionValues =
-      selectedVariableDimensionValuesSelector(getState());
+    const selectedCoordinateValues =
+      selectedVariableCoordinateValuesSelector(getState());
 
     if (!(selectedDataset && selectedVariable && selectedPlaceInfo)) {
       return;
@@ -595,7 +595,7 @@ export function addStatistics() {
         selectedPlaceInfo,
         selectedTimeLabel,
         getState().userAuthState.accessToken,
-        selectedDimensionValues,
+        selectedCoordinateValues,
       )
       .then((stats) => dispatch(_addStatistics(stats)))
       .catch((error: Error) => {
@@ -653,8 +653,8 @@ export function addTimeSeries() {
     let timeChunkSize = selectedTimeChunkSizeSelector(getState());
     const sidebarOpen = getState().controlState.sidePanelOpen;
     const sidebarPanelId = getState().controlState.sidePanelId;
-    const selectedDimensionValues =
-      selectedVariableDimensionValuesSelector(getState());
+    const selectedCoordinateValues =
+      selectedVariableCoordinateValuesSelector(getState());
 
     const placeGroups = placeGroupsSelector(getState());
 
@@ -663,7 +663,7 @@ export function addTimeSeries() {
       selectedVariable &&
       selectedPlaceId &&
       selectedDatasetTimeDim &&
-      selectedDimensionValues
+      selectedCoordinateValues
     ) {
       if (sidebarPanelId !== "timeSeries") {
         dispatch(setSidePanelId("timeSeries"));
@@ -696,7 +696,7 @@ export function addTimeSeries() {
           useMedian,
           includeStdev,
           getState().userAuthState.accessToken,
-          selectedDimensionValues,
+          selectedCoordinateValues,
         );
       };
 
