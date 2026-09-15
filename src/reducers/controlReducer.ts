@@ -189,6 +189,7 @@ export function controlReducer(
         selectedVariableName,
         selectedTimeRange,
         selectedTime,
+        activeAnimationDimension: null,
         selectedDimensionValues: getSelectedDimensionValuesForVariable(
           state.selectedDimensionValues,
           selectedDataset,
@@ -230,6 +231,7 @@ export function controlReducer(
       return {
         ...state,
         selectedVariableName: action.selectedVariableName,
+        activeAnimationDimension: null,
         selectedDimensionValues: getSelectedDimensionValuesForVariable(
           state.selectedDimensionValues,
           selectedDataset,
@@ -631,6 +633,7 @@ export function controlReducer(
           selectedDataset2Id: null,
           selectedVariable2Name: null,
           variableCompareMode: false,
+          activeAnimationDimension: null,
           // removes swipe handle
           variableSplitPos: undefined,
         };
@@ -640,6 +643,7 @@ export function controlReducer(
         selectedDataset2Id,
         selectedVariable2Name,
         variableCompareMode: true,
+        activeAnimationDimension: null,
         // swipe handle stays the same
       };
     }
@@ -668,6 +672,7 @@ export function controlReducer(
       return {
         ...state,
         selectedDimensionLabel: action.selectedDimensionLabel,
+        activeAnimationDimension: null,
       };
     }
     case CONFIGURE_SERVERS: {
