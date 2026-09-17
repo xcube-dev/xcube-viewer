@@ -22,6 +22,20 @@ import { defaultWktOptions, WktOptions } from "@/model/user-place/wkt";
 import { loadUserSettings } from "./userSettings";
 import { PaletteMode } from "@mui/material";
 import { LayerState } from "@/model/layerState";
+import type {
+  ExportDataType,
+  ExportFormat,
+  ExportTimeRange,
+} from "@/model/dataExport";
+
+export {
+  EXPORT_DATA_TYPES,
+  EXPORT_FORMATS,
+  EXPORT_TIME_RANGES,
+  type ExportDataType,
+  type ExportFormat,
+  type ExportTimeRange,
+} from "@/model/dataExport";
 
 export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
 export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
@@ -29,11 +43,7 @@ export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
 ];
 
 export type MapInteraction =
-  | "Select"
-  | "Point"
-  | "Polygon"
-  | "Circle"
-  | "Geometry";
+  "Select" | "Point" | "Polygon" | "Circle" | "Geometry";
 
 export type ViewMode = "text" | "list" | "code" | "python";
 
@@ -128,11 +138,11 @@ export interface ControlState {
   userColorBars: UserColorBar[];
   datasetLocateMode: LocateMode;
   placeLocateMode: LocateMode;
-  exportTimeSeries: boolean;
-  exportPlaces: boolean;
+  exportDataType: ExportDataType;
+  exportFormat: ExportFormat;
+  exportTimeRange: ExportTimeRange;
+  exportAsZipArchive: boolean;
   exportTimeSeriesSeparator: string;
-  exportPlacesAsCollection: boolean;
-  exportZipArchive: boolean;
   exportFileName: string;
   themeMode: ThemeMode;
   exportResolution: ExportResolution;
@@ -213,11 +223,11 @@ export function newControlState(): ControlState {
     userBaseMaps: [],
     userOverlays: [],
     userColorBars: [],
-    exportTimeSeries: true,
+    exportDataType: "timeSeries",
+    exportFormat: "text",
+    exportTimeRange: "full",
+    exportAsZipArchive: false,
     exportTimeSeriesSeparator: "TAB",
-    exportPlaces: true,
-    exportPlacesAsCollection: true,
-    exportZipArchive: true,
     exportFileName: "export",
     themeMode: getInitialThemeMode(),
     exportResolution: 300,
