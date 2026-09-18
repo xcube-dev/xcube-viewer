@@ -22,11 +22,10 @@ nav:
 
 theme:
   name: material
+  logo: https://www.brockmann-consult.de/logos/xcube-no_text-dark.png
+  favicon: https://www.brockmann-consult.de/logos/xcube.ico
+  font: false
   custom_dir: docs/overrides
-  logo: assets/logos/logo512.png
-  favicon: assets/logos/logo192.png
-  icon:
-    repo: fontawesome/brands/github
   features:
     - content.code.copy
     - navigation.top
@@ -67,13 +66,18 @@ markdown_extensions:
 
 extra:
   demo_url: https://bc-viewer.brockmann-consult.de
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/xcube-dev/xcube-viewer
+  footer_links:
+    - text: Imprint
+      href: https://www.brockmann-consult.de/imprint/
+    - text: Privacy Policy
+      href: https://www.brockmann-consult.de/privacy-policy-documentation-pages/
 
 plugins:
   - search
   - autorefs
 
 extra_css:
-  - css/custom.css
+  - stylesheet/extra.css
+
+hooks:
+  - docs/hooks/download_fonts.py
