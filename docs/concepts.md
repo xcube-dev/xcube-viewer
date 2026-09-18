@@ -17,9 +17,9 @@ about the content.
 A dataset can be associated with [place groups](#places-and-place-groups).
 
 Datasets that provide variables with two spatial dimensions and a time
-dimension are also referred to as _data cubes_. Hence, the data cubes
-supported by the viewer are 4-D: variable, time, y, and x.
-The viewer may support also other data cube dimensions in the future.
+dimension are also referred to as _data cubes_. Such variables are 3-D,
+with dimensions such as time, y, and x. The viewer also supports variables
+with other non-spatial dimensions.
 
 The list of available datasets is usually fixed for a deployed viewer
 application instance. One of the available datasets is the viewer's
@@ -51,17 +51,17 @@ or CSV files.
 ### Selected Dataset
 
 The selected dataset determines the set of selectable [variables](#variable)
-and the possible range of the currently [selected non-spatial dimensions values](#selected-non-spatial-dimension-values).
+and the available [non-spatial coordinate values](#selected-non-spatial-coordinate-values).
 Only one dataset can be selected at the same time.
 If the dataset selection changes, the [selected variable](#selected-variable)
-and the [selected non-spatial dimension values](#selected-time) may be adjusted 
-if their current values are not applicable to the newly selected dataset. 
+and the [selected non-spatial coordinate values](#selected-non-spatial-coordinate-values)
+may be adjusted if their current values are not applicable to the newly selected dataset.
 In this case:
 
 * The newly [selected variable](#selected-variable) will be the first
   variable of the selected dataset.
-* The [selected non-spatial dimension values](#selected-time) will be the latest time 
-  stamp or last value of the dimension.
+* The [selected non-spatial coordinate values](#selected-non-spatial-coordinate-values)
+  will be the latest timestamp or the final coordinate value along each dimension.
 
 ### Selected Variable
 
@@ -87,10 +87,10 @@ and statistics. Only one place can be selected at the same time.
 
 ### Selected Non-spatial Dimension
 
-The _selected non-spatial dimension_ determines the currently selected dimension,
-of which the value can be changed.
+The _selected non-spatial dimension_ identifies the dimension whose coordinate
+value controls are shown when only one dimension is displayed at a time.
 
-### Selected Non-spatial Coordinate Values
+### Selected Non-spatial Coordinate Value
 
 The _selected non-spatial coordinate value_ determines the current value for 
 the coordinates of a dataset for the _selected non-spatial dimension_. 

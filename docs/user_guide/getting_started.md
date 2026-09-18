@@ -17,11 +17,11 @@ If more than one [variable](../concepts.md/#variable) is available within a [sel
 
 Datasets can contain multiple non-spatial dimensions, such as *time*, *depth*, 
 or *scenario*. When such a dataset is displayed, xcube Viewer provides selectors 
-for navigating the available dimension values.
+for navigating the available coordinate values along those dimensions.
 
 The display of dimension selectors can be configured in two modes:
 
-**Single dimension**: Values can be selected for only one dimension at a time.
+**Single dimension**: The coordinate value selector for one dimension is shown at a time.
 
 ![select_dimension_mode1.png](../assets/images/select_dimension_mode1.png)
 

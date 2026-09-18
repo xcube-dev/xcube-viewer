@@ -187,8 +187,8 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Select the dimension of which you want to change the values. The value
-				selectors then displays the values available for the selected dimension.
+				Select the dimension whose coordinate value you want to change. The
+				coordinate value selector then displays the values available along that dimension.
 				<br /><br />
 				This drop-down menu is not displayed when the selectors of all 
         dimensions are displayed at once. This can be enabled in the settings.
@@ -224,42 +224,42 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/select_dimension_control.png"
-					alt="Select Dimension Value" />
+					alt="Select Coordinate Value" />
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td><b>Feature Name</b></td>
-			<td>Select Dimension Value</td>
+			<td>Select Coordinate Value</td>
 		</tr>
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				Controls used to select the value of a non-spatial dimension. The controls
-        consist of a drop-down menu or a calendar (depending on the dimension) a 
+				Controls used to select a coordinate value along a non-spatial dimension.
+				The controls consist of a drop-down menu or a calendar (depending on the dimension), a
         slider, and a player.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Select the dimension value that shall be displayed on the map.
+				Select the coordinate value whose data shall be displayed on the map.
 				<br /><br />
-				For time dimensions, values can be selected using the calendar, the
-				slider, or the player controls. For other non-spatial dimensions, values
-				can be selected from a drop-down menu, a slider, or a player.
+				For time dimensions, coordinate values can be selected using the calendar,
+				the slider, or the player controls. For other non-spatial dimensions,
+				coordinate values can be selected from a drop-down menu, a slider, or a player.
 				<br /><br />
 				When the setting to show selectors for all dimensions at once is
-				enabled, a separate value selector is displayed for each non-spatial
+				enabled, a separate coordinate value selector is displayed for each non-spatial
 				dimension.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
 			<td>
-				Enable users to navigate and display specific values of one or more
-				non-spatial dimensions.
+				Enable users to navigate and display specific coordinate values along one
+				or more non-spatial dimensions.
 			</td>
 		</tr>
 <tr>
@@ -2152,22 +2152,21 @@ A list of all the features that the viewer contains will be created here, in whi
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				Buttons, designed according to its function, allowing to navigate to
-				either the previous or next step of a dimension.
+				Buttons for navigating to the previous or next coordinate value along a
+				dimension.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Click the buttons to move to the previous/next step in the dimension of 
-        in the dataset and display the corresponding data on the map.
+				Click the buttons to move to the previous or next coordinate value along
+				the dimension and display the corresponding data on the map.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
 			<td>
-				Quick navigation option to access the previous and next steps in
-				the dimension of the dataset.
+				Quickly access the previous and next coordinate values along the dimension.
 			</td>
 		</tr>
 		<tr>
@@ -2183,7 +2182,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
-### First/Last Time Step
+### First/Last Coordinate Value
 
 <table>
 	<thead>
@@ -2191,41 +2190,40 @@ A list of all the features that the viewer contains will be created here, in whi
 			<th colspan="2">
 				<img
 					src="../assets/images/player_first_last.png"
-					alt="Step to first/last step" />
+					alt="Move to first or last coordinate value" />
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
 			<td><b>Feature Name</b></td>
-			<td>Move to first/last step</td>
+			<td>Move to first/last coordinate value</td>
 		</tr>
 		<tr>
 			<td><b>Description</b></td>
 			<td>
-				Buttons, designed according to its function, allowing to navigate to
-				either the first or last step of the dimension of the dataset.
+				Buttons for navigating to the first or last coordinate value along a
+				dimension.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				Click the buttons to move to the first/last step in the dataset and
-				display the corresponding data on the map.
+				Click the buttons to move to the first or last coordinate value and display
+				the corresponding data on the map.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
 			<td>
-				Quick navigation option to access the first and last steps in the
-				dataset.
+				Quickly access the first and last coordinate values along the dimension.
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
 				Link to feature mentioned in
 				<a
-					href="../user_guide/analyse/#navigate-through-dimension"
+					href="../user_guide/analyse/#navigate-through-dimensions"
 					rel="noopener noreferrer"
 					>User Guide</a
 				>.
@@ -2258,14 +2256,14 @@ A list of all the features that the viewer contains will be created here, in whi
 			<td><b>Description</b></td>
 			<td>
 				A button that changes its appearance when the feature is activated,
-				while disabling the buttons used to navigate through a dimension.
+				while disabling the buttons used to navigate coordinate values manually.
 			</td>
 		</tr>
 		<tr>
 			<td><b>Functionality</b></td>
 			<td>
-				When enabled, the feature iterates through the steps sequentially,
-				displaying each step in the Viewer. The speed or interval of this
+				When enabled, the feature iterates through the coordinate values sequentially,
+				displaying the data for each value in the Viewer. The speed or interval of this
 				iterating can be configured in the 						<a
 							href="../user_guide/settings/#player-interval"
 							rel="noopener noreferrer"
@@ -2276,7 +2274,7 @@ A list of all the features that the viewer contains will be created here, in whi
 		</tr>
 		<tr>
 			<td><b>Aim</b></td>
-			<td>Engaging way to visually explore multiple steps of a dimension.</td>
+			<td>Visually explore the coordinate values along a dimension.</td>
 		</tr>
 		<tr>
 			<td colspan="2">
