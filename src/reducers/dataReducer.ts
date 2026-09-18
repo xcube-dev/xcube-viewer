@@ -469,7 +469,13 @@ function updateTimeSeriesGroups(
       (ts) =>
         ts.source.datasetId === currentTimeSeries.source.datasetId &&
         ts.source.variableName === currentTimeSeries.source.variableName &&
-        ts.source.placeId === currentTimeSeries.source.placeId,
+        ts.source.placeId === currentTimeSeries.source.placeId &&
+        Object.keys(ts.source.coordinateValues).length ===
+          Object.keys(currentTimeSeries.source.coordinateValues).length &&
+        Object.entries(ts.source.coordinateValues).every(
+          ([name, value]) =>
+            currentTimeSeries.source.coordinateValues[name] === value,
+        ),
     );
     let newTimeSeriesArray;
     if (tsIndex >= 0) {

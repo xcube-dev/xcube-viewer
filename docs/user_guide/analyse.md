@@ -44,7 +44,7 @@ Export the time series using the option in the header at the top right. You have
 
 ### Statistics
 
-Compute and display basic statistics for the currently [selected variable](../concepts.md/#selected-variable), [selected timestamp](../concepts.md/#selected-time), and [selected place](../concepts.md/#selected-place). To obtain the statistics select a place and compute by using the **Statistics** icon next to the variables drop-down menu or use the `+`-icon under the Statistics tab in the sidebar.
+Compute and display basic statistics for the currently [selected variable](../concepts.md/#selected-variable), [selected non-spatial coordinate value](../concepts.md/#selected-non-spatial-coordinate-values), and [selected place](../concepts.md/#selected-place). To obtain the statistics select a place and compute by using the **Statistics** icon next to the variables drop-down menu or use the `+`-icon under the Statistics tab in the sidebar.
 
 ![Statistics](../assets/images/analysis_statistics.png)
 
@@ -162,16 +162,16 @@ To **exit** Compare Mode: use the button on the left
 
 ---
 
-## Navigate through time
+## Navigate through dimensions
 
 ![Player](../assets/images/analysis_player_light.png){: class="light-image" }
 ![Player](../assets/images/analysis_player_dark.png){: class="dark-image" }
 
-Use the shown features of the Viewer to navigate through the time steps of a [variable](../concepts.md/#variable). Select a specific date in the calendar view, move through the dataset time step by time step, jump to the beginning or end of the dataset, move the slider on the bar to select a time step, or start the player.
+Use the shown features of the Viewer to navigate through coordinate values along a [variable's](../concepts.md/#variable) dimension. Select a specific coordinate value, move through the values step by step, jump to the first or last value, move the slider, or start the player.
 
 ### The Player
 
-Use the player to auto-step through the [variable](../concepts.md/#variable) of a [dataset](../concepts.md/#dataset). The interval can be adjusted in the [settings](settings.md/#player-interval).
+Use the player to auto-step through coordinate values along a [variable's](../concepts.md/#variable) dimension. The interval can be adjusted in the [settings](settings.md/#player-interval).
 
 ![Player](../assets/videos/Player_hh.gif)
 

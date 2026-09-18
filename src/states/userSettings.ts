@@ -70,7 +70,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("timeSeriesIncludeStdev", settings);
       storage.setPrimitiveProperty("timeSeriesChartTypeDefault", settings);
       storage.setPrimitiveProperty("timeSeriesUseMedian", settings);
-      storage.setPrimitiveProperty("timeAnimationInterval", settings);
+      storage.setPrimitiveProperty("dimensionAnimationInterval", settings);
       storage.setPrimitiveProperty("timeChunkSize", settings);
       storage.setPrimitiveProperty("sidePanelOpen", settings);
       storage.setPrimitiveProperty("sidePanelId", settings);
@@ -98,6 +98,7 @@ export function storeUserSettings(settings: ControlState) {
       storage.setPrimitiveProperty("exportResolution", settings);
       storage.setPrimitiveProperty("showProgressBar", settings);
       storage.setPrimitiveProperty("showZoomInfoBox", settings);
+      storage.setPrimitiveProperty("showAllDimensions", settings);
       if (import.meta.env.DEV) {
         console.debug("Stored user settings:", settings);
       }
@@ -139,7 +140,7 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
         defaultSettings,
       );
       storage.getIntProperty(
-        "timeAnimationInterval",
+        "dimensionAnimationInterval",
         settings,
         defaultSettings,
       );
@@ -201,6 +202,11 @@ export function loadUserSettings(defaultSettings: ControlState): ControlState {
       );
       storage.getStringProperty("themeMode", settings, defaultSettings);
       storage.getStringProperty("exportResolution", settings, defaultSettings);
+      storage.getBooleanProperty(
+        "showAllDimensions",
+        settings,
+        defaultSettings,
+      );
       if (import.meta.env.DEV) {
         console.debug("Loaded user settings:", settings);
       }
