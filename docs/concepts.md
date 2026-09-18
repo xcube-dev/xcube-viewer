@@ -90,11 +90,10 @@ and statistics. Only one place can be selected at the same time.
 The _selected non-spatial dimension_ determines the currently selected dimension,
 of which the value can be changed.
 
-### Selected Non-spatial Dimension Values
+### Selected Non-spatial Coordinate Values
 
-The _selected non-spatial dimension values_ determines the current values for 
-dimensions of a datasets with that dimensions. For such datasets, 
-the selected dimension values are required, for example, to compute statistics.
+The _selected non-spatial coordinate value_ determines the current value for 
+the coordinates of a dataset for the _selected non-spatial dimension_. 
 
 ## Layers
 

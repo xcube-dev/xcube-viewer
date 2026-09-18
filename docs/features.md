@@ -216,7 +216,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
-### Select Dimension Value
+### Select Coordinate Value
 
 <table>
 	<thead>
@@ -1484,7 +1484,7 @@ A list of all the features that the viewer contains will be created here, in whi
 				Located in the <strong>Statistics</strong>-tab, a table displays the
 				value at the selected point's coordinates for the selected variable.
 				Above the table, details are shown, including the dataset, variable,
-				selected values of the non-spatial dimensions, and place name.
+				place name, and coordinate values of any non-spatial dimensions (e.g., time).
 			</td>
 		</tr>
 				<tr>
@@ -2130,7 +2130,7 @@ A list of all the features that the viewer contains will be created here, in whi
 	</tbody>
 </table>
 
-## Navigate Dimensions with a Player
+## Navigate through Dimensions with a Player
 
 ### +/- 1 Step
 
