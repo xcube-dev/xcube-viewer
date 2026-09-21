@@ -155,18 +155,12 @@
       },
       "examples": [
         {
-          "overlays": [
-            {
-              "id": "darkMatterLabels",
-              "title": "Dark Matter Labels",
-              "url": "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
-            }
-          ],
+          "overlays": [],
           "baseMaps": [
             {
-              "id": "darkMatterNoLabels",
-              "title": "Dark Matter (No Labels)",
-              "url": "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
+              "id": "osmMapnik",
+              "title": "OSM Mapnik",
+              "url": "https://a.tile.osm.org/{z}/{x}/{y}.png"
             }
           ]
         }
@@ -187,8 +181,7 @@
           "datasetBoundary": false,
           "datasetPlaces": true,
           "userPlaces": true,
-          "overlays.darkMatterLabels": true,
-          "baseMaps.darkMatterNoLabels": true
+          "baseMaps.osmMapnik": true
         }
       ]
     },
@@ -272,7 +265,7 @@
     "name": { "type": "string" },
     "authClient": { "$ref": "#/definitions/AuthClientConfig" },
     "server": { "$ref": "#/definitions/ApiServerConfig" },
-    "branding": { "$ref": "#/definitions/Branding" },
+    "branding": { "$ref": "#/definitions/Branding" }
   },
 
   "required": ["name", "server", "branding"],
