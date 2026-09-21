@@ -12,10 +12,13 @@ import {
   ControlAction,
   FLY_TO,
   INC_SELECTED_TIME,
+  INC_SELECTED_DIMENSION,
   OPEN_DIALOG,
   REMOVE_ACTIVITY,
   REMOVE_USER_COLOR_BAR,
   SELECT_DATASET,
+  SELECT_DIMENSION,
+  SELECT_COORDINATE_VALUES,
   SELECT_PLACE,
   SELECT_PLACE_GROUPS,
   SELECT_TIME,
@@ -40,7 +43,7 @@ import {
   UPDATE_INFO_CARD_ELEMENT_VIEW_MODE,
   UPDATE_SETTINGS,
   UPDATE_SIDE_PANEL_SIZE,
-  UPDATE_TIME_ANIMATION,
+  UPDATE_ANIMATION_DIMENSION,
   UPDATE_USER_COLOR_BAR,
   UPDATE_VARIABLE_SPLIT_POS,
   UPDATE_VOLUME_STATE,
@@ -56,16 +59,26 @@ import {
 } from "@/actions/dataActions";
 import i18n from "@/i18n";
 import {
+  Dataset,
   findDataset,
+  findDatasetDimension,
   findDatasetVariable,
   getDatasetTimeRange,
+  isSpatialDim,
+  isTemporalDim,
 } from "@/model/dataset";
 import {
+  selectedDatasetSelector,
   selectedDatasetTimeCoordinatesSelector,
   selectedDatasetTimeIndexSelector,
+  selectedDimensionLabelSelector,
 } from "@/selectors/controlSelectors";
 import { AppState } from "@/states/appState";
-import { ControlState, newControlState } from "@/states/controlState";
+import {
+  ControlState,
+  CoordinateValues,
+  newControlState,
+} from "@/states/controlState";
 import { storeUserSettings } from "@/states/userSettings";
 import { findIndexCloseTo } from "@/util/find";
 import { isNumber } from "@/util/types";
@@ -176,6 +189,12 @@ export function controlReducer(
         selectedVariableName,
         selectedTimeRange,
         selectedTime,
+        activeAnimationDimension: null,
+        selectedCoordinateValues: getSelectedCoordinateValuesForVariable(
+          state.selectedCoordinateValues,
+          selectedDataset,
+          selectedVariableName,
+        ),
       };
     }
     case FLY_TO: {
@@ -205,9 +224,19 @@ export function controlReducer(
       };
     }
     case SELECT_VARIABLE: {
+      const selectedDataset = appState
+        ? selectedDatasetSelector(appState)
+        : null;
+
       return {
         ...state,
         selectedVariableName: action.selectedVariableName,
+        activeAnimationDimension: null,
+        selectedCoordinateValues: getSelectedCoordinateValuesForVariable(
+          state.selectedCoordinateValues,
+          selectedDataset,
+          action.selectedVariableName,
+        ),
       };
     }
     case TOGGLE_DATASET_RGB_LAYER: {
@@ -308,6 +337,50 @@ export function controlReducer(
       }
       return state;
     }
+    case INC_SELECTED_DIMENSION: {
+      if (appState) {
+        const label =
+          action.selectedDimensionLabel ??
+          selectedDimensionLabelSelector(appState);
+        const selectedDataset = selectedDatasetSelector(appState);
+        const dimension = selectedDataset
+          ? findDatasetDimension(selectedDataset, label)
+          : null;
+        const coordinates = dimension?.coordinates ?? null;
+        const selectedCoordinateValue = label
+          ? state.selectedCoordinateValues[label]
+          : null;
+        let index =
+          selectedCoordinateValue !== null &&
+          selectedCoordinateValue !== undefined &&
+          coordinates
+            ? coordinates.indexOf(Number(selectedCoordinateValue))
+            : -1;
+        if (index >= 0 && coordinates) {
+          index += action.increment;
+          if (index < 0) {
+            index = coordinates.length - 1;
+          }
+          if (index > coordinates.length - 1) {
+            index = 0;
+          }
+          const nextSelectedCoordinateValue = coordinates[index];
+          if (
+            label &&
+            state.selectedCoordinateValues[label] !== nextSelectedCoordinateValue
+          ) {
+            return {
+              ...state,
+              selectedCoordinateValues: {
+                ...state.selectedCoordinateValues,
+                [label]: nextSelectedCoordinateValue,
+              },
+            };
+          }
+        }
+      }
+      return state;
+    }
     case SELECT_TIME_RANGE: {
       return {
         ...state,
@@ -320,11 +393,11 @@ export function controlReducer(
         timeSeriesUpdateMode: action.timeSeriesUpdateMode,
       };
     }
-    case UPDATE_TIME_ANIMATION: {
+    case UPDATE_ANIMATION_DIMENSION: {
       return {
         ...state,
-        timeAnimationActive: action.timeAnimationActive,
-        timeAnimationInterval: action.timeAnimationInterval,
+        activeAnimationDimension: action.activeAnimationDimension,
+        dimensionAnimationInterval: action.dimensionAnimationInterval,
       };
     }
     case ADD_DRAWN_USER_PLACE: {
@@ -560,6 +633,7 @@ export function controlReducer(
           selectedDataset2Id: null,
           selectedVariable2Name: null,
           variableCompareMode: false,
+          activeAnimationDimension: null,
           // removes swipe handle
           variableSplitPos: undefined,
         };
@@ -569,6 +643,7 @@ export function controlReducer(
         selectedDataset2Id,
         selectedVariable2Name,
         variableCompareMode: true,
+        activeAnimationDimension: null,
         // swipe handle stays the same
       };
     }
@@ -582,6 +657,22 @@ export function controlReducer(
       return {
         ...state,
         datasetZLevel: action.datasetZLevel,
+      };
+    }
+    case SELECT_COORDINATE_VALUES: {
+      return {
+        ...state,
+        selectedCoordinateValues: {
+          ...state.selectedCoordinateValues,
+          ...action.selectedCoordinateValues,
+        },
+      };
+    }
+    case SELECT_DIMENSION: {
+      return {
+        ...state,
+        selectedDimensionLabel: action.selectedDimensionLabel,
+        activeAnimationDimension: null,
       };
     }
     case CONFIGURE_SERVERS: {
@@ -612,4 +703,36 @@ function selectUserPlace(
     selectedPlaceGroupIds,
     selectedPlaceId: placeId,
   };
+}
+
+function getSelectedCoordinateValuesForVariable(
+  selectedCoordinateValues: CoordinateValues,
+  selectedDataset: Dataset | null | undefined,
+  selectedVariableName: string | null | undefined,
+) {
+  const nextSelectedCoordinateValues = {
+    ...selectedCoordinateValues,
+  };
+
+  if (!selectedDataset || !selectedVariableName) {
+    return nextSelectedCoordinateValues;
+  }
+
+  const selectedVariable = findDatasetVariable(
+    selectedDataset,
+    selectedVariableName,
+  );
+
+  selectedVariable?.dims?.forEach((dim) => {
+    if (
+      !(dim in nextSelectedCoordinateValues) &&
+      !isSpatialDim(dim) &&
+      !isTemporalDim(dim)
+    ) {
+      const dimension = findDatasetDimension(selectedDataset, dim);
+      nextSelectedCoordinateValues[dim] = dimension?.coordinates?.[0] ?? null;
+    }
+  });
+
+  return nextSelectedCoordinateValues;
 }

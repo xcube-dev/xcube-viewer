@@ -35,7 +35,8 @@ import type {
   LayerVisibilities,
   LayerGroupStates,
   MapInteraction,
-  TimeAnimationInterval,
+  DimensionAnimationInterval,
+  CoordinateValues,
   ViewMode,
   VolumeRenderMode,
   VolumeState,
@@ -446,6 +447,27 @@ export function incSelectedTime(increment: -1 | 1): IncSelectedTime {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const INC_SELECTED_DIMENSION = "INC_SELECTED_DIMENSION";
+
+export interface IncSelectedDimension {
+  type: typeof INC_SELECTED_DIMENSION;
+  increment: -1 | 1;
+  selectedDimensionLabel?: string | null;
+}
+
+export function incSelectedDimension(
+  increment: -1 | 1,
+  selectedDimensionLabel?: string | null,
+): IncSelectedDimension {
+  return {
+    type: INC_SELECTED_DIMENSION,
+    increment,
+    selectedDimensionLabel,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export const SELECT_TIME_RANGE = "SELECT_TIME_RANGE";
 
 export interface SelectTimeRange {
@@ -481,22 +503,22 @@ export interface SelectTimeSeriesUpdateMode {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export const UPDATE_TIME_ANIMATION = "UPDATE_TIME_ANIMATION";
+export const UPDATE_ANIMATION_DIMENSION = "UPDATE_ANIMATION_DIMENSION";
 
-export interface UpdateTimeAnimation {
-  type: typeof UPDATE_TIME_ANIMATION;
-  timeAnimationActive: boolean;
-  timeAnimationInterval: TimeAnimationInterval;
+export interface UpdateAnimationDimension {
+  type: typeof UPDATE_ANIMATION_DIMENSION;
+  activeAnimationDimension: string | null;
+  dimensionAnimationInterval: DimensionAnimationInterval;
 }
 
-export function updateTimeAnimation(
-  timeAnimationActive: boolean,
-  timeAnimationInterval: TimeAnimationInterval,
-): UpdateTimeAnimation {
+export function updateAnimationDimension(
+  activeAnimationDimension: string | null,
+  dimensionAnimationInterval: DimensionAnimationInterval,
+): UpdateAnimationDimension {
   return {
-    type: UPDATE_TIME_ANIMATION,
-    timeAnimationActive,
-    timeAnimationInterval,
+    type: UPDATE_ANIMATION_DIMENSION,
+    activeAnimationDimension,
+    dimensionAnimationInterval,
   };
 }
 
@@ -851,6 +873,39 @@ export function setDatasetZLevel(
 
 ////////////////////////////////////////////////////////////////////////////////
 
+export const SELECT_DIMENSION = "SELECT_DIMENSION";
+
+export interface SelectDimension {
+  type: typeof SELECT_DIMENSION;
+  selectedDimensionLabel: string | null;
+}
+
+export function selectDimension(
+  selectedDimensionLabel: string | null,
+): SelectDimension {
+  return { type: SELECT_DIMENSION, selectedDimensionLabel };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+export const SELECT_COORDINATE_VALUES = "SELECT_COORDINATE_VALUES";
+
+export interface SelectCoordinateValues {
+  type: typeof SELECT_COORDINATE_VALUES;
+  selectedCoordinateValues: CoordinateValues;
+}
+
+export function selectCoordinateValues(
+  selectedCoordinateValues: CoordinateValues,
+): SelectCoordinateValues {
+  return {
+    type: SELECT_COORDINATE_VALUES,
+    selectedCoordinateValues,
+  };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 export type ControlAction =
   | SelectDataset
   | UpdateDatasetPlaceGroup
@@ -862,9 +917,10 @@ export type ControlAction =
   | SetLayerVisibilities
   | SetLayerGroupStates
   | IncSelectedTime
+  | IncSelectedDimension
   | SelectTimeRange
   | SelectTimeSeriesUpdateMode
-  | UpdateTimeAnimation
+  | UpdateAnimationDimension
   | SetMapInteraction
   | AddActivity
   | RemoveActivity
@@ -890,4 +946,6 @@ export type ControlAction =
   | UpdateVariableSplitPos
   | FlyTo
   | SetZoomLevel
-  | SetDatasetZLevel;
+  | SetDatasetZLevel
+  | SelectDimension
+  | SelectCoordinateValues;

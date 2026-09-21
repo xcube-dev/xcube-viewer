@@ -9,6 +9,7 @@ import { parseISO } from "date-fns";
 
 import { utcTimeToIsoDateTimeString } from "@/util/time";
 import { findPlaceInPlaceGroups, Place, PlaceGroup } from "./place";
+import { CoordinateValues } from "@/states/controlState";
 
 /**
  * Time is an integer value that is the number of milliseconds since 1 January 1970 UTC (Unix Time Stamp).
@@ -34,6 +35,7 @@ export interface TimeSeriesSource {
   geometry: geojson.Geometry | null;
   valueDataKey: keyof TimeSeriesPoint;
   errorDataKey: keyof TimeSeriesPoint | null;
+  coordinateValues: CoordinateValues;
 }
 
 export interface TimeSeriesPoint {
@@ -90,15 +92,29 @@ export function timeSeriesGroupsToTable(
   placeGroups: PlaceGroup[],
 ): TimeSeriesTable {
   const dataColNames = new Set<string>();
+  const dimensionColNames = new Set<string>();
   const placeIds = new Set<string>();
   const timePlaceRows: TimePlaceRows = {};
   for (const timeSeriesGroup of timeSeriesGroups) {
     for (const timeSeries of timeSeriesGroup.timeSeriesArray) {
-      const { placeId, datasetId, variableName, valueDataKey, errorDataKey } =
-        timeSeries.source;
+      const {
+        placeId,
+        datasetId,
+        variableName,
+        valueDataKey,
+        errorDataKey,
+        coordinateValues,
+      } = timeSeries.source;
       if (placeId !== null) {
         placeIds.add(placeId);
       }
+      Object.keys(coordinateValues).forEach((dimensionName) => {
+        dimensionColNames.add(dimensionName);
+      });
+      const dimensionRowId = Object.entries(coordinateValues)
+        .sort(([name1], [name2]) => name1.localeCompare(name2))
+        .map(([name, value]) => `${name}=${value}`)
+        .join("-");
       const valueColName = `${datasetId}.${variableName}.${valueDataKey}`;
       dataColNames.add(valueColName);
       let errorColName: string | null = null;
@@ -110,17 +126,19 @@ export function timeSeriesGroupsToTable(
         const time = utcTimeToIsoDateTimeString(point.time);
         // if placeId is null, then data is from import CSV / GeoJSON
         // and datasetId is the name of the place group.
-        const timePlaceId = `${placeId !== null ? placeId : datasetId}-${time}`;
+        const timePlaceId = `${placeId !== null ? placeId : datasetId}-${time}-${dimensionRowId}`;
         const timePlaceRow = timePlaceRows[timePlaceId];
         if (!timePlaceRow) {
           timePlaceRows[timePlaceId] = {
             placeId,
             time,
+            ...coordinateValues,
             [valueColName]: point[valueDataKey],
           };
         } else {
           timePlaceRows[timePlaceId] = {
             ...timePlaceRow,
+            ...coordinateValues,
             [valueColName]: point[valueDataKey],
           };
         }
@@ -131,9 +149,9 @@ export function timeSeriesGroupsToTable(
     }
   }
 
-  const colNames: string[] = ["placeId", "time"].concat(
-    Array.from(dataColNames).sort(),
-  );
+  const colNames: string[] = ["placeId", "time"]
+    .concat(Array.from(dimensionColNames).sort())
+    .concat(Array.from(dataColNames).sort());
   const dataRows: DataRow[] = [];
 
   Object.keys(timePlaceRows).forEach((timePlaceId) => {
@@ -261,6 +279,7 @@ export function placeGroupToTimeSeries(
             geometry: null, // could be computed later from data points (as GeometryCollection)
             valueDataKey: "mean",
             errorDataKey: null,
+            coordinateValues: {},
           },
           data: [point],
           dataProgress: 1.0,

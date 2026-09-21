@@ -18,9 +18,13 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 
 import i18n from "@/i18n";
 import { WithLocale } from "@/util/lang";
-import { Time, TimeRange } from "@/model/timeSeries";
-import { DimensionAnimationInterval } from "@/states/controlState";
+import {
+  DimensionAnimationInterval,
+  CoordinateValues,
+} from "@/states/controlState";
 import { makeStyles } from "@/util/styles";
+import { Variable } from "@/model/variable";
+import { Dimension } from "@/model/dataset";
 
 // noinspection JSUnusedLocalSymbols
 const styles = makeStyles({
@@ -34,62 +38,54 @@ const styles = makeStyles({
   },
 });
 
-interface TimePlayerProps extends WithLocale {
-  selectedTime: Time | null;
-  selectTime: (time: Time | null) => void;
-  incSelectedTime: (increment: -1 | 1) => void;
-  selectedTimeRange: TimeRange | null;
+interface CoordinateValuePlayerProps extends WithLocale {
+  selectedVariable: Variable | null;
+  selectedDimensionLabel: string | null;
+  selectedDimension: Dimension | null;
+  selectedCoordinateValue: number | string | null;
+  selectCoordinateValues: (selectedValues: CoordinateValues) => void;
   activeAnimationDimension: string | null;
   dimensionAnimationInterval: DimensionAnimationInterval;
+  incSelectedDimension: (
+    increment: -1 | 1,
+    selectedDimensionLabel?: string | null,
+  ) => void;
   updateAnimationDimension: (
     activeAnimationDimension: string | null,
     interval: DimensionAnimationInterval,
   ) => void;
 }
 
-export default function TimePlayer({
+export default function CoordinateValuePlayer({
+  selectedVariable,
+  selectedDimensionLabel,
+  selectedDimension,
+  selectedCoordinateValue,
+  selectCoordinateValues,
+  incSelectedDimension,
   activeAnimationDimension,
   dimensionAnimationInterval,
   updateAnimationDimension,
-  selectedTime,
-  selectedTimeRange,
-  selectTime,
-  incSelectedTime,
-}: TimePlayerProps) {
+}: CoordinateValuePlayerProps) {
   const intervalId = useRef<number | null>(null);
-  const isPlaying = activeAnimationDimension === "time";
+  const isPlaying =
+    selectedDimensionLabel !== null &&
+    activeAnimationDimension === selectedDimensionLabel;
+  const hasValidDimension =
+    !!selectedDimension &&
+    !!selectedDimensionLabel &&
+    !!selectedVariable?.dims?.includes(selectedDimension.name) &&
+    selectedCoordinateValue !== null &&
+    selectedCoordinateValue !== undefined;
+
+  const handlePlayEvent = () => {
+    incSelectedDimension(1, selectedDimensionLabel);
+  };
 
   useEffect(() => {
     playOrNot();
     return uninstallTimer;
   });
-
-  const handlePlayEvent = () => {
-    incSelectedTime(1);
-  };
-
-  const handlePlayButtonClick = () => {
-    updateAnimationDimension(
-      isPlaying ? null : "time",
-      dimensionAnimationInterval,
-    );
-  };
-
-  const handleNextTimeStepButtonClick = () => {
-    incSelectedTime(1);
-  };
-
-  const handlePrevTimeStepButtonClick = () => {
-    incSelectedTime(-1);
-  };
-
-  const handleFirstTimeStepButtonClick = () => {
-    selectTime(selectedTimeRange ? selectedTimeRange[0] : null);
-  };
-
-  const handleLastTimeStepButtonClick = () => {
-    selectTime(selectedTimeRange ? selectedTimeRange[1] : null);
-  };
 
   const playOrNot = () => {
     if (isPlaying) {
@@ -101,6 +97,9 @@ export default function TimePlayer({
 
   const installTimer = () => {
     uninstallTimer();
+    if (!hasValidDimension) {
+      return;
+    }
     intervalId.current = window.setInterval(
       handlePlayEvent,
       dimensionAnimationInterval,
@@ -114,7 +113,49 @@ export default function TimePlayer({
     }
   };
 
-  const isValid = typeof selectedTime === "number";
+  // only show DepthSelect if selectedVariables has depth dim
+  // and selectedCoordinateValue
+  if (
+    !hasValidDimension ||
+    !selectedDimension ||
+    !selectedDimensionLabel
+  )
+    return null;
+
+  const selectedCoordinates = selectedDimension.coordinates;
+
+  const handlePlayButtonClick = () => {
+    updateAnimationDimension(
+      isPlaying ? null : selectedDimensionLabel,
+      dimensionAnimationInterval,
+    );
+  };
+
+  const handleNextStepButtonClick = () => {
+    incSelectedDimension(1, selectedDimensionLabel);
+  };
+
+  const handlePrevStepButtonClick = () => {
+    incSelectedDimension(-1, selectedDimensionLabel);
+  };
+
+  const handleFirstStepButtonClick = () => {
+    selectCoordinateValues({
+      [selectedDimensionLabel]: selectedCoordinates
+        ? selectedCoordinates[0]
+        : null,
+    });
+  };
+
+  const handleLastStepButtonClick = () => {
+    selectCoordinateValues({
+      [selectedDimensionLabel]: selectedCoordinates
+        ? selectedCoordinates[selectedCoordinates.length - 1]
+        : null,
+    });
+  };
+
+  const isValid = typeof selectedCoordinateValue === "number";
 
   const playIcon = isPlaying ? (
     <PauseCircleOutlineIcon />
@@ -129,57 +170,57 @@ export default function TimePlayer({
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("Auto-step through times in the dataset")}>
+      <Tooltip arrow title={i18n.get("Auto-step through dimension")}>
         {playIcon}
       </Tooltip>
     </IconButton>
   );
 
-  const firstTimeStepButton = (
+  const firstStepButtonClick = (
     <IconButton
       disabled={!isValid || activeAnimationDimension !== null}
-      onClick={handleFirstTimeStepButtonClick}
+      onClick={handleFirstStepButtonClick}
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("First time step")}>
+      <Tooltip arrow title={i18n.get("First step")}>
         <FirstPageIcon />
       </Tooltip>
     </IconButton>
   );
 
-  const prevTimeStepButton = (
+  const prevStepButtonClick = (
     <IconButton
       disabled={!isValid || activeAnimationDimension !== null}
-      onClick={handlePrevTimeStepButtonClick}
+      onClick={handlePrevStepButtonClick}
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("Previous time step")}>
+      <Tooltip arrow title={i18n.get("Previous step")}>
         <ChevronLeftIcon />
       </Tooltip>
     </IconButton>
   );
-  const nextTimeStepButton = (
+  const nextStepButtonClick = (
     <IconButton
       disabled={!isValid || activeAnimationDimension !== null}
-      onClick={handleNextTimeStepButtonClick}
+      onClick={handleNextStepButtonClick}
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("Next time step")}>
+      <Tooltip arrow title={i18n.get("Next step")}>
         <ChevronRightIcon />
       </Tooltip>
     </IconButton>
   );
-  const lastTimeStepButton = (
+  const lastStepButtonClick = (
     <IconButton
       disabled={!isValid || activeAnimationDimension !== null}
-      onClick={handleLastTimeStepButtonClick}
+      onClick={handleLastStepButtonClick}
       size="small"
       sx={styles.iconButton}
     >
-      <Tooltip arrow title={i18n.get("Last time step")}>
+      <Tooltip arrow title={i18n.get("Last step")}>
         <LastPageIcon />
       </Tooltip>
     </IconButton>
@@ -188,11 +229,11 @@ export default function TimePlayer({
   return (
     <FormControl sx={styles.formControl} variant="standard">
       <Box>
-        {firstTimeStepButton}
-        {prevTimeStepButton}
+        {firstStepButtonClick}
+        {prevStepButtonClick}
         {playButton}
-        {nextTimeStepButton}
-        {lastTimeStepButton}
+        {nextStepButtonClick}
+        {lastStepButtonClick}
       </Box>
     </FormControl>
   );
