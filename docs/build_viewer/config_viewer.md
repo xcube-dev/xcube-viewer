@@ -125,6 +125,7 @@ Dynamic object mapping layer IDs to visibility:
   "datasetVariable": true,
   "datasetBoundary": false,
   "userPlaces": true,
+  "overlays.worldTransportation": true,
   "baseMaps.osmMapnik": true
 }
 ```
