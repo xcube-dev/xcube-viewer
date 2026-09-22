@@ -21,6 +21,8 @@
 
 ### Other changes
 
+* Removed the CartoDB base maps and overlays from the built-in map selection. (#646)
+
 * Replaced `@vitejs/plugin-react-swc` with the Babel-based
   `@vitejs/plugin-react ^6.0.5`. (#638)
 

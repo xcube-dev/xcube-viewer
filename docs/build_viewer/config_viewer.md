@@ -125,8 +125,8 @@ Dynamic object mapping layer IDs to visibility:
   "datasetVariable": true,
   "datasetBoundary": false,
   "userPlaces": true,
-  "overlays.darkMatterLabels": true,
-  "baseMaps.darkMatterNoLabels": true
+  "overlays.worldTransportation": true,
+  "baseMaps.osmMapnik": true
 }
 ```
 
@@ -164,4 +164,3 @@ Dynamic object mapping layer IDs to visibility:
 | Property                  | Type          | Default | Description                                                                                                                                                                                                                                                               |
 | ------------------------- | ------------- | ------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `permalinkExpirationDays` | number / null | `null`  | Expiration time for shared links, needs to be further. This property only sets the text in the pop-up window. Permalink handling needs to be set up in [xcube Server configuration](https://xcube.readthedocs.io/en/latest/cli/xcube_serve.html#viewer-state-persistence) |
-
