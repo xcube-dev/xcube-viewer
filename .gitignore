@@ -27,3 +27,6 @@ logs
 *.sw?
 
 *storybook.log
+
+# Downloaded font assets
+docs/assets/fonts/*.ttf
