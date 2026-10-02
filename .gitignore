@@ -27,3 +27,6 @@ logs
 *.sw?
 
 *storybook.log
+
+# Downloaded assets
+docs/assets/downloaded/
