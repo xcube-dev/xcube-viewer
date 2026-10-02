@@ -29,4 +29,4 @@ logs
 *storybook.log
 
 # Downloaded assets
-docs/assets/downloaded/*
+docs/assets/downloaded/
