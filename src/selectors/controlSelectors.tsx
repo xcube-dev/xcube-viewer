@@ -7,9 +7,15 @@
 import { JSX } from "react";
 import { createSelector } from "reselect";
 import memoize from "fast-memoize";
-import { ImageTile as OlImageTile, Tile as OlTile } from "ol";
+import { Geometry } from "geojson";
+import {
+  Feature as OlFeature,
+  ImageTile as OlImageTile,
+  Tile as OlTile,
+} from "ol";
 import { default as OlMap } from "ol/Map";
 import { default as OlGeoJSONFormat } from "ol/format/GeoJSON";
+import { default as OlGeometry } from "ol/geom/Geometry";
 import { default as OlVectorSource } from "ol/source/Vector";
 import { default as OlXYZSource } from "ol/source/XYZ";
 import { default as OlTileWMSSource } from "ol/source/TileWMS";
@@ -19,7 +25,6 @@ import { default as OlStrokeStyle } from "ol/style/Stroke";
 import { default as OlStyle } from "ol/style/Style";
 import { default as OlTileGrid } from "ol/tilegrid/TileGrid";
 import { LoadFunction } from "ol/Tile";
-import { transformExtent as olTransformExtent } from "ol/proj";
 
 import { Config, getUserPlaceFillOpacity } from "@/config";
 import { ApiServerConfig } from "@/model/apiServer";
@@ -27,10 +32,12 @@ import { Layers } from "@/components/ol/layer/Layers";
 import { Tile } from "@/components/ol/layer/Tile";
 import { Vector } from "@/components/ol/layer/Vector";
 import { MapElement } from "@/components/ol/Map";
-
 import {
+  BBox,
   Dataset,
+  Dimension,
   findDataset,
+  findDatasetDimension,
   findDatasetVariable,
   getDatasetLevel,
   getDatasetTimeDimension,
@@ -50,7 +57,6 @@ import {
 } from "@/model/place";
 import { Time, TimeRange, TimeSeriesGroup } from "@/model/timeSeries";
 import { ColorBarNorm, Variable } from "@/model/variable";
-
 import { AppState } from "@/states/appState";
 import { findIndexCloseTo } from "@/util/find";
 import {
@@ -63,6 +69,7 @@ import {
 } from "./dataSelectors";
 import { makeRequestUrl } from "@/api/callApi";
 import {
+  CoordinateValues,
   LayerStates,
   LayerVisibilities,
   MAP_OBJECTS,
@@ -90,7 +97,6 @@ import {
 import { UserVariable } from "@/model/userVariable";
 import { encodeDatasetId, encodeVariableName } from "@/model/encode";
 import { StatisticsRecord } from "@/model/statistics";
-import { Geometry } from "geojson";
 import { LayerState } from "@/model/layerState";
 
 export const selectedDatasetIdSelector = (state: AppState) =>
@@ -111,8 +117,10 @@ export const selectedServerIdSelector = (state: AppState) =>
   state.controlState.selectedServerId;
 export const activitiesSelector = (state: AppState) =>
   state.controlState.activities;
-export const timeAnimationActiveSelector = (state: AppState) =>
-  state.controlState.timeAnimationActive;
+export const activeAnimationDimensionSelector = (state: AppState) =>
+  state.controlState.activeAnimationDimension;
+export const animationActiveSelector = (state: AppState) =>
+  state.controlState.activeAnimationDimension !== null;
 export const imageSmoothingSelector = (state: AppState) =>
   state.controlState.imageSmoothingEnabled;
 export const userBaseMapsSelector = (state: AppState) =>
@@ -157,6 +165,12 @@ export const zoomLevelSelector = (state: AppState) =>
   state.controlState.zoomLevel;
 export const selectedDatasetZLevelSelector = (state: AppState) =>
   state.controlState.datasetZLevel;
+export const selectedDimensionLabelSelector = (state: AppState) =>
+  state.controlState.selectedDimensionLabel;
+export const selectedCoordinateValuesSelector = (state: AppState) =>
+  state.controlState.selectedCoordinateValues;
+export const showAllDimensionsSelector = (state: AppState) =>
+  state.controlState.showAllDimensions;
 
 const variableLayerIdSelector = () => "variable";
 const variable2LayerIdSelector = () => "variable2";
@@ -178,6 +192,18 @@ export const selectedDataset2Selector = createSelector(
   datasetsSelector,
   selectedDataset2IdSelector,
   findDataset,
+);
+
+export const selectedDatasetExtentSelector = createSelector(
+  selectedDatasetSelector,
+  mapProjectionSelector,
+  computeDatasetExtent,
+);
+
+export const selectedDataset2ExtentSelector = createSelector(
+  selectedDataset2Selector,
+  mapProjectionSelector,
+  computeDatasetExtent,
 );
 
 export const getDatasetTitle = (dataset: Dataset | null) =>
@@ -204,6 +230,13 @@ export const selectedUserVariablesSelector = createSelector(
   selectedDatasetSelector,
   (dataset: Dataset | null): UserVariable[] => {
     return dataset ? getDatasetUserVariables(dataset)[1] : [];
+  },
+);
+
+export const selectedDimensionSelector = createSelector(
+  selectedDatasetSelector,
+  (dataset: Dataset | null): Dimension[] => {
+    return (dataset && dataset.dimensions) || [];
   },
 );
 
@@ -253,6 +286,85 @@ export const selectedVariable2Selector = createSelector(
   selectedDataset2Selector,
   selectedVariable2NameSelector,
   _findDatasetVariable,
+);
+
+const _findDatasetDimension = (
+  dataset: Dataset | null,
+  dimName: string | null,
+): Dimension | null => {
+  if (!dataset || !dimName) {
+    return null;
+  }
+  return findDatasetDimension(dataset, dimName);
+};
+
+export const selectedDatasetDimensionSelector = createSelector(
+  selectedDatasetSelector,
+  selectedDimensionLabelSelector,
+  _findDatasetDimension,
+);
+
+export const selectedDatasetCoordinateValueSelector = createSelector(
+  selectedCoordinateValuesSelector,
+  selectedDimensionLabelSelector,
+  (values: CoordinateValues, label: string | null): string | number | null => {
+    if (label === null) {
+      return null;
+    }
+
+    return values[label] ?? null;
+  },
+);
+
+const dimensionLabelArgumentSelector = (
+  _state: AppState,
+  dimensionLabel?: string | null,
+) => dimensionLabel ?? null;
+
+const _getEffectiveSelectedDimensionLabel = (
+  selectedDimensionLabel: string | null,
+  dimensionLabel: string | null,
+): string | null => dimensionLabel ?? selectedDimensionLabel;
+
+export const effectiveSelectedDimensionLabelSelector = createSelector(
+  selectedDimensionLabelSelector,
+  dimensionLabelArgumentSelector,
+  _getEffectiveSelectedDimensionLabel,
+);
+
+export const selectedDatasetDimensionForLabelSelector = createSelector(
+  selectedDatasetSelector,
+  effectiveSelectedDimensionLabelSelector,
+  _findDatasetDimension,
+);
+
+export const selectedDatasetCoordinateValueForLabelSelector = createSelector(
+  selectedCoordinateValuesSelector,
+  effectiveSelectedDimensionLabelSelector,
+  (values: CoordinateValues, label: string | null): string | number | null => {
+    if (label === null) {
+      return null;
+    }
+
+    return values[label] ?? null;
+  },
+);
+
+export const selectedVariableCoordinateValuesSelector = createSelector(
+  selectedVariableSelector,
+  selectedCoordinateValuesSelector,
+  (variable: Variable | null, coordinateValues): CoordinateValues => {
+    const selectedDimensionLabels = variable?.dims
+      ?.filter((dim) => coordinateValues?.[dim] != null)
+      .reduce(
+        (result, dim) => ({
+          ...result,
+          [dim]: coordinateValues[dim],
+        }),
+        {},
+      );
+    return selectedDimensionLabels || {};
+  },
 );
 
 const getVariableTitle = (variable: Variable | null): string | null => {
@@ -573,6 +685,13 @@ export const selectedPlaceInfoSelector = createSelector(
   },
 );
 
+export const selectedPlaceLabelSelector = createSelector(
+  selectedPlaceInfoSelector,
+  (placeInfo: PlaceInfo | null): string | null => {
+    return placeInfo?.label || null;
+  },
+);
+
 export const selectedVolumeIdSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
@@ -602,11 +721,13 @@ export const canAddTimeSeriesSelector = createSelector(
   selectedDatasetIdSelector,
   selectedVariableNameSelector,
   selectedPlaceIdSelector,
+  selectedVariableCoordinateValuesSelector,
   (
     timeSeriesGroups: TimeSeriesGroup[],
     datasetId: string | null,
     variableName: string | null,
     placeId: string | null,
+    coordinateValues: CoordinateValues,
   ): boolean => {
     if (!datasetId || !variableName || !placeId) {
       return false;
@@ -617,7 +738,12 @@ export const canAddTimeSeriesSelector = createSelector(
         if (
           source.datasetId === datasetId &&
           source.variableName === variableName &&
-          source.placeId === placeId
+          source.placeId === placeId &&
+          Object.keys(source.coordinateValues).length ===
+            Object.keys(coordinateValues).length &&
+          Object.entries(source.coordinateValues).every(
+            ([name, value]) => coordinateValues[name] === value,
+          )
         ) {
           return false;
         }
@@ -785,6 +911,47 @@ export const selectedDataset2TimeIndexSelector = createSelector(
   _getTimeIndex,
 );
 
+const _getDimensionCoordinateValues = (
+  dimension: Dimension | null,
+): number[] | null => {
+  if (dimension === null || dimension.coordinates.length === 0) {
+    return null;
+  }
+  return dimension.coordinates;
+};
+
+export const selectedDatasetDimensionCoordinateValuesSelector = createSelector(
+  selectedDatasetDimensionSelector,
+  _getDimensionCoordinateValues,
+);
+
+export const selectedDataset2DimensionCoordinateValuesSelector = createSelector(
+  selectedDatasetDimensionSelector,
+  _getDimensionCoordinateValues,
+);
+
+const _getCoordinateIndex = (
+  value: number | string | null,
+  coordinateValues: number[] | null,
+): number => {
+  if (value === null || coordinateValues === null) {
+    return -1;
+  }
+  return coordinateValues.indexOf(Number(value));
+};
+
+export const selectedDatasetCoordinateIndexSelector = createSelector(
+  selectedDatasetCoordinateValueSelector,
+  selectedDatasetDimensionCoordinateValuesSelector,
+  _getCoordinateIndex,
+);
+
+export const selectedDataset2CoordinateIndexSelector = createSelector(
+  selectedDatasetCoordinateValueSelector,
+  selectedDataset2DimensionCoordinateValuesSelector,
+  _getCoordinateIndex,
+);
+
 const _getTimeLabel = (
   time: Time | null,
   timeIndex: number,
@@ -841,7 +1008,7 @@ function getOlXYZSource(
   mapProjection: string,
   tileGrid: undefined | OlTileGrid,
   attributions: string[] | null,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   imageSmoothing: boolean,
   tileLoadFunction: LoadFunction | undefined,
   _tileLevelMin: number | undefined,
@@ -852,7 +1019,7 @@ function getOlXYZSource(
     projection: mapProjection,
     tileGrid,
     attributions: attributions || undefined,
-    transition: timeAnimationActive ? 0 : 250,
+    transition: animationActive ? 0 : 250,
     imageSmoothing: imageSmoothing,
     tileLoadFunction,
     // TODO (forman): if we provide minZoom, we also need to set
@@ -911,15 +1078,14 @@ function getLoadTileOnlyAfterMove() {
 function getTileLayer(
   layerId: string,
   tileUrl: string,
-  extent: [number, number, number, number],
+  extent: BBox | null,
   tileLevelMin: number | undefined,
   tileLevelMax: number | undefined,
   queryParams: Array<[string, string]>,
   opacity: number,
   timeLabel: string | null,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   mapProjection: string,
-  datasetProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
   zIndex: number = 10,
@@ -928,6 +1094,7 @@ function getTileLayer(
     queryParams = [...queryParams, ["time", timeLabel]];
   }
   const url = makeRequestUrl(tileUrl, queryParams);
+
   if (typeof tileLevelMax === "number") {
     // It is ok to have some extra zoom levels, so we can magnify pixels.
     // Using more, artifacts will become visible.
@@ -939,47 +1106,44 @@ function getTileLayer(
     mapProjection,
     tileGrid,
     attributions,
-    timeAnimationActive,
+    animationActive,
     imageSmoothing,
     getLoadTileOnlyAfterMove(),
     tileLevelMin,
     tileLevelMax,
   );
 
-  let transformedExtent;
-
-  if (
-    datasetProjection === GEOGRAPHIC_CRS ||
-    datasetProjection === WEB_MERCATOR_CRS
-  ) {
-    // Only use extent for EPSG:4326 and EPSG:3857.
-    // For other CRS (e.g. UTM, LAEA), transforming the bbox can be inaccurate
-    // and may clip valid tiles due to projection distortion.
-    // Disabling extent avoids rendering artifacts. It can trigger extra
-    // tile requests, but the performance impact should be small
-    // as xcube Server already handles out-of-bounds tiles.
-    if (mapProjection === datasetProjection) {
-      transformedExtent = extent;
-    } else {
-      transformedExtent = olTransformExtent(
-        extent,
-        datasetProjection,
-        mapProjection,
-      );
-    }
-  } else {
-    transformedExtent = undefined;
-  }
-
   return (
     <Tile
       id={layerId}
       source={source}
-      extent={transformedExtent}
+      extent={extent ?? undefined}
       zIndex={zIndex}
       opacity={opacity}
     />
   );
+}
+
+export function computeDatasetExtent(
+  dataset: Dataset | null,
+  mapProjection: string,
+): BBox | null {
+  if (!dataset || !dataset.geometry) {
+    return null;
+  }
+  const transformedFeature: OlFeature<OlGeometry> = new OlGeoJSONFormat({
+    dataProjection: GEOGRAPHIC_CRS,
+    featureProjection: mapProjection,
+  }).readFeature(dataset.geometry);
+  const transformedGeometry = transformedFeature.getGeometry();
+  if (!transformedGeometry) {
+    return null;
+  }
+  const transformedExtent = transformedGeometry.getExtent();
+  if (transformedExtent.length !== 4) {
+    return null;
+  }
+  return transformedExtent as BBox;
 }
 
 export const selectedDatasetBoundaryLayerSelector = createSelector(
@@ -1062,6 +1226,7 @@ export const selectedServerSelector = createSelector(
 const getVariableTileLayer = (
   server: ApiServerConfig,
   dataset: Dataset | null,
+  extent: BBox | null,
   timeLabel: string | null,
   attributions: string[] | null,
   variable: Variable | null,
@@ -1073,9 +1238,10 @@ const getVariableTileLayer = (
   visibility: boolean,
   layerId: string,
   zIndex: number,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   mapProjection: string,
   imageSmoothing: boolean,
+  selectedCoordinateValues: CoordinateValues,
 ): MapElement => {
   if (!dataset || !variable || !visibility) {
     return null;
@@ -1090,18 +1256,24 @@ const getVariableTileLayer = (
   if (colorBarNorm === "log") {
     queryParams.push(["norm", colorBarNorm]);
   }
+
+  Object.entries(selectedCoordinateValues).forEach(([name, value]) => {
+    if (value != null) {
+      queryParams.push([name, String(value)]);
+    }
+  });
+
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, variable),
-    dataset.bbox,
+    extent,
     variable.tileLevelMin,
     variable.tileLevelMax,
     queryParams,
     opacity,
     timeLabel,
-    timeAnimationActive,
+    animationActive,
     mapProjection,
-    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1111,6 +1283,7 @@ const getVariableTileLayer = (
 export const selectedDatasetVariableLayerSelector = createSelector(
   selectedServerSelector,
   selectedDatasetSelector,
+  selectedDatasetExtentSelector,
   selectedDatasetTimeLabelSelector,
   selectedDatasetAttributionsSelector,
   selectedVariableSelector,
@@ -1122,15 +1295,17 @@ export const selectedDatasetVariableLayerSelector = createSelector(
   selectedVariableVisibilitySelector,
   variableLayerIdSelector,
   variableZIndexSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
+  selectedCoordinateValuesSelector,
   getVariableTileLayer,
 );
 
 export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedServerSelector,
   selectedDataset2Selector,
+  selectedDataset2ExtentSelector,
   selectedDataset2TimeLabelSelector,
   selectedDataset2AttributionsSelector,
   selectedVariable2Selector,
@@ -1142,9 +1317,10 @@ export const selectedDatasetVariable2LayerSelector = createSelector(
   selectedVariable2VisibilitySelector,
   variable2LayerIdSelector,
   variable2ZIndexSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   imageSmoothingSelector,
+  selectedCoordinateValuesSelector,
   getVariableTileLayer,
 );
 
@@ -1155,8 +1331,9 @@ const getDatasetRgbTileLayer = (
   visibility: boolean,
   layerId: string,
   zIndex: number,
+  extent: BBox | null,
   timeLabel: string | null,
-  timeAnimationActive: boolean,
+  animationActive: boolean,
   mapProjection: string,
   attributions: string[] | null,
   imageSmoothing: boolean,
@@ -1168,15 +1345,14 @@ const getDatasetRgbTileLayer = (
   return getTileLayer(
     layerId,
     getTileUrl(server.url, dataset, "rgb"),
-    dataset.bbox,
+    extent,
     rgbSchema.tileLevelMin,
     rgbSchema.tileLevelMax,
     queryParams,
     1.0,
     timeLabel,
-    timeAnimationActive,
+    animationActive,
     mapProjection,
-    dataset.spatialRef,
     attributions,
     imageSmoothing,
     zIndex,
@@ -1190,8 +1366,9 @@ export const selectedDatasetRgbLayerSelector = createSelector(
   datasetRgbVisibilitySelector,
   datasetRgbLayerIdSelector,
   datasetRgbZIndexSelector,
+  selectedDatasetExtentSelector,
   selectedDatasetTimeLabelSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   selectedDatasetAttributionsSelector,
   imageSmoothingSelector,
@@ -1205,8 +1382,9 @@ export const selectedDataset2RgbLayerSelector = createSelector(
   datasetRgb2VisibilitySelector,
   datasetRgb2LayerIdSelector,
   datasetRgb2ZIndexSelector,
+  selectedDataset2ExtentSelector,
   selectedDatasetTimeLabelSelector,
-  timeAnimationActiveSelector,
+  animationActiveSelector,
   mapProjectionSelector,
   selectedDatasetAttributionsSelector,
   imageSmoothingSelector,

@@ -18,6 +18,57 @@ export function getLocalStorage(brandingName: string): Storage | null {
   return _getStorage("localStorage", brandingName);
 }
 
+/**
+ * Removes browser data that may keep this viewer instance from starting with
+ * its default state. HttpOnly cookies cannot be removed from JavaScript.
+ */
+export async function resetApplicationData(): Promise<void> {
+  try {
+    window.localStorage.clear();
+  } catch (_e) {
+    // Storage may be unavailable, for example when it is disabled by the user.
+  }
+
+  try {
+    window.sessionStorage.clear();
+  } catch (_e) {
+    // Storage may be unavailable, for example when it is disabled by the user.
+  }
+
+  clearCookies();
+
+  try {
+    if ("caches" in window) {
+      const cacheNames = await window.caches.keys();
+      await Promise.all(
+        cacheNames.map((cacheName) => window.caches.delete(cacheName)),
+      );
+    }
+  } catch (_e) {
+    // The Cache API is optional and may be unavailable in private browsing.
+  }
+
+  try {
+    if ("serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(
+        registrations.map((registration) => registration.unregister()),
+      );
+    }
+  } catch (_e) {
+    // Service workers are optional and can be unavailable for this origin.
+  }
+}
+
+function clearCookies(): void {
+  document.cookie.split(";").forEach((cookie) => {
+    const cookieName = cookie.split("=", 1)[0].trim();
+    if (cookieName) {
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    }
+  });
+}
+
 function _getStorage(
   type: "localStorage" | "sessionStorage",
   brandingName: string,

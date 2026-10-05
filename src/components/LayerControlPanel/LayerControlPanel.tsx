@@ -9,6 +9,7 @@ import {
   type SyntheticEvent,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import Draggable, {
@@ -50,7 +51,7 @@ const initialPos: ControlPosition = { x: 48, y: 128 };
 const initialSize = { width: 320, height: 520 };
 
 const styles = makeStyles({
-  resizeBox: { position: "absolute", zIndex: 1000 },
+  draggableWrapper: { position: "absolute", zIndex: 1000 },
   windowPaper: {
     width: "100%",
     height: "100%",
@@ -134,6 +135,7 @@ export default function LayerControlPanel({
 }: LayerControlPanelProps) {
   const [position, setPosition] = useState<ControlPosition>(initialPos);
   const [size, setSize] = useState(initialSize);
+  const draggableRef = useRef<HTMLDivElement>(null);
 
   const setLayerVisibility = useCallback(
     (layerId: string, visible: boolean) => {
@@ -233,86 +235,93 @@ export default function LayerControlPanel({
   return (
     <Draggable
       handle="#layer-select-header"
+      nodeRef={draggableRef}
       position={position}
       onStop={handleDragStop}
     >
-      <ResizableBox
-        width={size.width}
-        height={size.height}
-        style={styles.resizeBox as CSSProperties}
-        onResize={handleResize}
+      <div
+        ref={draggableRef}
+        style={styles.draggableWrapper as CSSProperties}
       >
-        <Paper elevation={10} sx={styles.windowPaper} component="div">
-          <Box id="layer-select-header" sx={styles.windowHeader}>
-            <Box component="span" sx={styles.windowTitle}>
-              {i18n.get("Layers")}
+        <ResizableBox
+          width={size.width}
+          height={size.height}
+          onResize={handleResize}
+        >
+          <Paper elevation={10} sx={styles.windowPaper} component="div">
+            <Box id="layer-select-header" sx={styles.windowHeader}>
+              <Box component="span" sx={styles.windowTitle}>
+                {i18n.get("Layers")}
+              </Box>
+              <IconButton size="small" onClick={handleCloseLayerMenu}>
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
             </Box>
-            <IconButton size="small" onClick={handleCloseLayerMenu}>
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          </Box>
-          <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
-            <Accordion
-              expanded={layerGroupStates.overlays}
-              onChange={handleOverlaysStateChange}
-            >
-              <AccordionSummary id="overlays">
-                <Typography component="span">{i18n.get("Overlays")}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <LayerMenu
-                  layerStates={overlays}
-                  setLayerVisibility={setLayerVisibility}
-                  extraItems={
-                    <MenuItem onClick={handleUserOverlays}>
-                      {i18n.get("User Overlays") + "..."}
-                    </MenuItem>
-                  }
-                  disableI18n
-                />
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={layerGroupStates.predefined}
-              onChange={handlePredefinedStateChange}
-            >
-              <AccordionSummary id="predefines">
-                <Typography component="span">
-                  {i18n.get("Predefined")}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <LayerMenu
-                  layerStates={predefined}
-                  setLayerVisibility={setLayerVisibility}
-                />
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={layerGroupStates.baseMaps}
-              onChange={handleBaseMapsStateChange}
-            >
-              <AccordionSummary id="baseMaps">
-                <Typography component="span">
-                  {i18n.get("Base maps")}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <LayerMenu
-                  layerStates={baseMaps}
-                  setLayerVisibility={setLayerVisibility}
-                  extraItems={
-                    <MenuItem onClick={handleUserBaseMaps}>
-                      {i18n.get("User Base Maps") + "..."}
-                    </MenuItem>
-                  }
-                  disableI18n
-                />
-              </AccordionDetails>
-            </Accordion>
-          </Box>
-        </Paper>
-      </ResizableBox>
+            <Box sx={{ width: "100%", overflow: "auto", flexGrow: 1 }}>
+              <Accordion
+                expanded={layerGroupStates.overlays}
+                onChange={handleOverlaysStateChange}
+              >
+                <AccordionSummary id="overlays">
+                  <Typography component="span">
+                    {i18n.get("Overlays")}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <LayerMenu
+                    layerStates={overlays}
+                    setLayerVisibility={setLayerVisibility}
+                    extraItems={
+                      <MenuItem onClick={handleUserOverlays}>
+                        {i18n.get("User Overlays") + "..."}
+                      </MenuItem>
+                    }
+                    disableI18n
+                  />
+                </AccordionDetails>
+              </Accordion>
+              <Accordion
+                expanded={layerGroupStates.predefined}
+                onChange={handlePredefinedStateChange}
+              >
+                <AccordionSummary id="predefines">
+                  <Typography component="span">
+                    {i18n.get("Predefined")}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <LayerMenu
+                    layerStates={predefined}
+                    setLayerVisibility={setLayerVisibility}
+                  />
+                </AccordionDetails>
+              </Accordion>
+              <Accordion
+                expanded={layerGroupStates.baseMaps}
+                onChange={handleBaseMapsStateChange}
+              >
+                <AccordionSummary id="baseMaps">
+                  <Typography component="span">
+                    {i18n.get("Base maps")}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <LayerMenu
+                    layerStates={baseMaps}
+                    setLayerVisibility={setLayerVisibility}
+                    extraItems={
+                      <MenuItem onClick={handleUserBaseMaps}>
+                        {i18n.get("User Base Maps") + "..."}
+                      </MenuItem>
+                    }
+                    disableI18n
+                  />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </Paper>
+        </ResizableBox>
+      </div>
     </Draggable>
   );
 }

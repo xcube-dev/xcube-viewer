@@ -14,11 +14,13 @@ import {
   selectedDatasetTimeLabelSelector,
   selectedPlaceGeometrySelector,
   selectedPlaceIdSelector,
+  selectedPlaceLabelSelector,
   selectedDatasetAndUserPlaceGroupsSelector,
   selectedVariable2NameSelector,
   selectedVariableNameSelector,
   selectedDatasetTitleSelector,
   selectedDataset2TitleSelector,
+  selectedVariableCoordinateValuesSelector,
 } from "@/selectors/controlSelectors";
 import { getPaletteMode } from "@/states/controlState";
 
@@ -72,6 +74,11 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     description: "The identifier of the currently selected place.",
     selector: selectedPlaceIdSelector,
   },
+  selectedPlaceLabel: {
+    type: "str | None",
+    description: "The label of the currently selected place.",
+    selector: selectedPlaceLabelSelector,
+  },
   selectedPlaceGroup: {
     type: "list[dict[str, Any]]",
     description: "The list of dataset place group and user place groups.",
@@ -87,6 +94,11 @@ export const derivedStateProperties: Record<string, DerivedStateProperty> = {
     description: 'The appearance mode of the UI. Either "light" or "dark".',
     selector: (appState: AppState) =>
       getPaletteMode(appState.controlState.themeMode),
+  },
+  selectedVariableCoordinateValues: {
+    type: "dict[str, Any] | None",
+    description: "The selected dimension values of the selected variable.",
+    selector: selectedVariableCoordinateValuesSelector,
   },
 };
 

@@ -17,9 +17,9 @@ about the content.
 A dataset can be associated with [place groups](#places-and-place-groups).
 
 Datasets that provide variables with two spatial dimensions and a time
-dimension are also referred to as _data cubes_. Hence, the data cubes
-supported by the viewer are 4-D: variable, time, y, and x.
-The viewer may support also other data cube dimensions in the future.
+dimension are also referred to as _data cubes_. Such variables are 3-D,
+with dimensions such as time, y, and x. The viewer also supports variables
+with other non-spatial dimensions.
 
 The list of available datasets is usually fixed for a deployed viewer
 application instance. One of the available datasets is the viewer's
@@ -29,9 +29,7 @@ application instance. One of the available datasets is the viewer's
 
 A _variable_ provides n-dimensional, gridded, geospatial data.
 Every variable has a name, a numeric data type, and two spatial dimensions.
-Usually, variables are 3-D and also have a time dimension that can be of
-variable length. Each time step along the dimension determines an individual
-2-D spatial image of the 3-D variable and is associated with a given timestamp.
+In addition to the two spatial dimensions, geospatial variables may also have non-spatial dimensions such as time, depth, spectral wavelength, altitude.
 
 ### Places and Place Groups
 
@@ -53,18 +51,17 @@ or CSV files.
 ### Selected Dataset
 
 The selected dataset determines the set of selectable [variables](#variable)
-and the possible range of the currently [selected time](#selected-time).
+and the available [non-spatial coordinate values](#selected-non-spatial-coordinate-values).
 Only one dataset can be selected at the same time.
-The selected dataset's time coverage limits the possible values for the
-[selected time](#selected-time).  
 If the dataset selection changes, the [selected variable](#selected-variable)
-and the [selected time](#selected-time) may be adjusted if their current values
-are not applicable to the newly selected dataset. In this case:
+and the [selected non-spatial coordinate values](#selected-non-spatial-coordinate-values)
+may be adjusted if their current values are not applicable to the newly selected dataset.
+In this case:
 
 * The newly [selected variable](#selected-variable) will be the first
   variable of the selected dataset.
-* The [selected time](#selected-time) will be the latest time stamp
-  of the selected dataset.
+* The [selected non-spatial coordinate values](#selected-non-spatial-coordinate-values)
+  will be the latest timestamp or the final coordinate value along each dimension.
 
 ### Selected Variable
 
@@ -88,11 +85,15 @@ One of the available [places](#places-and-place-groups) can be selected by point
 at it on the map. A selected place is required, for example, to compute time-series
 and statistics. Only one place can be selected at the same time.
 
-### Selected Time
+### Selected Non-spatial Dimension
 
-The _selected time_ determines the current time step for datasets with a
-time dimension. For such datasets, the selected time is required, for example,
-to compute statistics.
+The _selected non-spatial dimension_ identifies the dimension whose coordinate
+value controls are shown when only one dimension is displayed at a time.
+
+### Selected Non-spatial Coordinate Value
+
+The _selected non-spatial coordinate value_ determines the current value for 
+the coordinates of a dataset for the _selected non-spatial dimension_. 
 
 ## Layers
 

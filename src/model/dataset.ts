@@ -7,6 +7,7 @@
 import OlTileLayer from "ol/layer/Tile";
 import { default as OlMap } from "ol/Map";
 import { default as OlView } from "ol/View";
+import { type GeoJSONPolygon } from "ol/format/GeoJSON";
 
 import { findDatasetMapLayer } from "@/components/ol/util";
 import { GEOGRAPHIC_CRS, WEB_MERCATOR_CRS } from "@/model/proj";
@@ -20,6 +21,7 @@ import { type Variable } from "./variable";
 
 export interface Dimension {
   name: string;
+  title?: string;
   size: number;
   dtype: string;
   coordinates: number[];
@@ -39,6 +41,7 @@ export interface TimeDimension extends Dimension {
 }
 
 export type NormRange = [number, number];
+export type BBox = [number, number, number, number];
 
 export interface RgbSchema {
   // The following are new since xcube 0.11
@@ -58,11 +61,8 @@ export interface Dataset {
   groupDescription?: string;
   sortValue?: number;
   tags?: string[];
-  bbox: [number, number, number, number];
-  geometry: {
-    type: "Polygon";
-    coordinates: Array<Array<[number, number]>>;
-  };
+  bbox: BBox;
+  geometry: GeoJSONPolygon;
   spatialRef: string;
   dimensions: Dimension[];
   variables: Variable[];
@@ -96,6 +96,18 @@ export function findDatasetVariable(
   );
 }
 
+export function findDatasetDimension(
+  dataset: Dataset,
+  dimensionName: string | null,
+): Dimension | null {
+  return (
+    (dimensionName &&
+      dataset.dimensions.find(
+        (dimension) => dimension.name === dimensionName,
+      )) ||
+    null
+  );
+}
 export function getDatasetUserVariablesIndex(dataset: Dataset): number {
   // vIndex is the first index that is a user variable.
   return dataset.variables.findIndex((v) => isString(v.expression));
@@ -123,7 +135,7 @@ export function getDatasetTimeDimension(
   assertDefinedAndNotNull(dataset, "dataset");
   assertArrayNotEmpty(dataset.dimensions, "dataset.dimensions");
   const dimension = dataset.dimensions.find(
-    (dimension) => dimension.name === "time",
+    (dimension) => dimension.name === "time", // TODO: add "date", "year"
   );
   if (!dimension) {
     return null;
@@ -291,4 +303,14 @@ export function getDatasetLevel(
   } else {
     return undefined;
   }
+}
+
+export function isSpatialDim(dimName: string): boolean {
+  const normalized = dimName.toLowerCase();
+  return ["lat", "lon", "latitude", "longitude", "x", "y"].includes(normalized);
+}
+
+export function isTemporalDim(dimName: string): boolean {
+  const normalized = dimName.toLowerCase();
+  return ["time"].includes(normalized);
 }

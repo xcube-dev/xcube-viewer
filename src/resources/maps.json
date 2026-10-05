@@ -85,37 +85,5 @@
         "endpoint": "https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}"
       }
     ]
-  },
-  {
-    "name": "CartoDB",
-    "link": "https://cartodb.com/basemaps/",
-    "baseMaps": [
-      {
-        "name": "Positron",
-        "endpoint": "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Dark Matter",
-        "endpoint": "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Positron (No Labels)",
-        "endpoint": "https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Dark Matter (No Labels)",
-        "endpoint": "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
-      }
-    ],
-    "overlays": [
-      {
-        "name": "Positron Labels",
-        "endpoint": "https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
-      },
-      {
-        "name": "Dark Matter Labels",
-        "endpoint": "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png"
-      }
-    ]
   }
 ]

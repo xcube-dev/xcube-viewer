@@ -23,8 +23,8 @@ import { loadUserSettings } from "./userSettings";
 import { PaletteMode } from "@mui/material";
 import { LayerState } from "@/model/layerState";
 
-export type TimeAnimationInterval = 250 | 500 | 1000 | 2500;
-export const TIME_ANIMATION_INTERVALS: TimeAnimationInterval[] = [
+export type DimensionAnimationInterval = 250 | 500 | 1000 | 2500;
+export const DIMENSION_ANIMATION_INTERVALS: DimensionAnimationInterval[] = [
   250, 500, 1000, 2500,
 ];
 
@@ -66,6 +66,8 @@ export type LayerGroupStates = {
   baseMaps?: boolean;
 };
 
+export type CoordinateValues = Record<string, string | number | null>;
+
 export type ThemeMode = PaletteMode | "system";
 export const THEME_NAMES: ThemeMode[] = ["light", "dark", "system"];
 export const THEME_LABELS: [ThemeMode, string][] = [
@@ -92,8 +94,7 @@ export interface ControlState {
   selectedTime: Time | null;
   selectedTimeRange: TimeRange | null;
   timeSeriesUpdateMode: "add" | "replace";
-  timeAnimationActive: boolean;
-  timeAnimationInterval: TimeAnimationInterval;
+  activeAnimationDimension: string | null;
   timeChunkSize: number;
   autoShowTimeSeries: boolean;
   timeSeriesChartTypeDefault: TimeSeriesChartType;
@@ -140,6 +141,10 @@ export interface ControlState {
   showZoomInfoBox: boolean;
   zoomLevel: number | undefined;
   datasetZLevel: number | undefined;
+  dimensionAnimationInterval: DimensionAnimationInterval;
+  selectedDimensionLabel: string | null;
+  selectedCoordinateValues: CoordinateValues;
+  showAllDimensions: boolean;
 }
 
 export function newControlState(): ControlState {
@@ -156,8 +161,7 @@ export function newControlState(): ControlState {
     selectedTime: null,
     selectedTimeRange: null,
     timeSeriesUpdateMode: "add",
-    timeAnimationActive: false,
-    timeAnimationInterval: 1000,
+    activeAnimationDimension: null,
     timeChunkSize: 20,
     autoShowTimeSeries: true,
     timeSeriesChartTypeDefault: "line",
@@ -225,6 +229,10 @@ export function newControlState(): ControlState {
     showZoomInfoBox: branding.showZoomInfoBox || false,
     zoomLevel: undefined,
     datasetZLevel: undefined,
+    dimensionAnimationInterval: 1000,
+    selectedDimensionLabel: null,
+    selectedCoordinateValues: {},
+    showAllDimensions: false,
   };
   return loadUserSettings(state);
 }

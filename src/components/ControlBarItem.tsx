@@ -14,6 +14,7 @@ import { WithLocale } from "@/util/lang";
 const StyledForm = styled(FormControl)(({ theme }: { theme: Theme }) => ({
   marginRight: theme.spacing(1),
   marginLeft: theme.spacing(2),
+  minWidth: 50,
 }));
 
 interface ControlBarItemProps extends WithLocale {

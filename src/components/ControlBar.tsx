@@ -10,10 +10,10 @@ import { styled, Theme } from "@mui/system";
 const ControlBarForm = styled("form")(({ theme }: { theme: Theme }) => ({
   display: "flex",
   flexWrap: "wrap",
-  paddingTop: theme.spacing(1),
+  paddingTop: theme.spacing(0.75),
   paddingLeft: theme.spacing(0.5),
   paddingRight: theme.spacing(0),
-  paddingBottom: theme.spacing(0.25),
+  paddingBottom: theme.spacing(0.75),
   flexGrow: 0,
 }));
 
