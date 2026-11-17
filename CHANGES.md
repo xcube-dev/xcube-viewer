@@ -10,6 +10,9 @@
 
 * Added a **Reset application** action to the Settings dialog. It clears
   browser-held Viewer data and reloads the application. (#628)
+* Add support for multiple non-spatial dataset dimensions (e.g. time, depth). 
+  Selectors are displayed either for only one dimension or for
+  all dimensions at once, this can be configured in the settings. (#239)
 
 ### Fixes
 
@@ -19,11 +22,6 @@
   using the dataset's geographical bounding box. (#593, #641)
 
 * Fixed the color bar update for a pinned variable. (#637)
-
-### Improvements 
-
-* Add support for multiple non-spatial dataset dimensions (e.g. time, depth). Selectors are displayed either for only one dimension or for
-  all dimensions at once, this can be configured in the settings. (#239)
 
 ### Other changes
 
