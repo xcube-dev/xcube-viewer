@@ -9,11 +9,10 @@ import Popover from "@mui/material/Popover";
 
 import { ColorBar } from "@/model/colorBar";
 import { ColorBarNorm } from "@/model/variable";
-import ColorBarCanvas from "./ColorBarCanvas";
 import ColorBarLabels from "./ColorBarLabels";
 import ColorBarRangeEditor from "./ColorBarRangeEditor";
 
-export interface ColorBarLegendScalableProps {
+export interface ColorBarLegendRangeProps {
   variableColorBar: ColorBar;
   variableColorBarName: string;
   variableColorBarMinMax: [number, number];
@@ -25,18 +24,16 @@ export interface ColorBarLegendScalableProps {
     colorBarNorm: ColorBarNorm,
     opacity: number,
   ) => void;
-  onOpenColorBarEditor: () => void;
 }
 
-export default function ColorBarLegendScalable({
+export default function ColorBarLegendRange({
   variableColorBar,
   variableColorBarName,
   variableColorBarMinMax,
   variableColorBarNorm,
   variableOpacity,
   updateVariableColorBar,
-  onOpenColorBarEditor,
-}: ColorBarLegendScalableProps) {
+}: ColorBarLegendRangeProps) {
   const [colorBarRangeEditorAnchorEl, setColorBarRangeEditorAnchorEl] =
     useState<HTMLDivElement | null>(null);
 
@@ -50,11 +47,6 @@ export default function ColorBarLegendScalable({
 
   return (
     <>
-      <ColorBarCanvas
-        colorBar={variableColorBar}
-        opacity={variableOpacity}
-        onClick={onOpenColorBarEditor}
-      />
       <ColorBarLabels
         minValue={variableColorBarMinMax[0]}
         maxValue={variableColorBarMinMax[1]}
