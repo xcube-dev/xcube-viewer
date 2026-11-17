@@ -5,6 +5,6 @@
  */
 
 // Important: use semantic versioning (https://semver.org/)
-const version = "1.7.4";
+const version = "1.7.5-dev.0";
 
 export default version;

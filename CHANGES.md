@@ -1,3 +1,9 @@
+## Changes in version 1.7.5 (in development)
+
+### Improvements
+
+* Display legend with labeled categories for stepwise color maps. (#652)
+
 ## Changes in version 1.7.4
 
 ### Improvements
