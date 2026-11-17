@@ -16,8 +16,9 @@ import type { UserColorBar } from "@/model/userColorBar";
 import type { ColorBarNorm } from "@/model/variable";
 import { COLOR_BAR_ITEM_WIDTH } from "./constants";
 import { getBorderStyle } from "./style";
-import ColorBarLegendCategorical from "./ColorBarLegendCategorical";
-import ColorBarLegendScalable from "./ColorBarLegendScalable";
+import ColorBarLegendDiscrete from "./ColorBarLegendDiscrete";
+import ColorBarCanvas from "./ColorBarCanvas";
+import ColorBarLegendRange from "./ColorBarLegendRange";
 import ColorBarColorEditor from "./ColorBarColorEditor";
 
 const styles = makeStyles({
@@ -120,6 +121,41 @@ export default function ColorBarLegend(
       ? variableTitle || variableName
       : `${variableTitle || variableName} (${variableUnits})`;
 
+  let legend;
+  switch (variableColorBar.type) {
+    case "categorical":
+      legend = (
+        <ColorBarLegendDiscrete
+          categories={variableColorBar.colorRecords}
+          onOpenColorBarEditor={handleOpenColorBarSelect}
+        />
+      );
+      break;
+    case "stepwise":
+      legend = (
+        <>
+          <ColorBarLegendDiscrete
+            categories={variableColorBar.colorRecords}
+            stepwise={{ minMax: props.variableColorBarMinMax }}
+            onOpenColorBarEditor={handleOpenColorBarSelect}
+          />
+          <ColorBarLegendRange {...props} />
+        </>
+      );
+      break;
+    default:
+      legend = (
+        <>
+          <ColorBarCanvas
+            colorBar={variableColorBar}
+            opacity={props.variableOpacity}
+            onClick={handleOpenColorBarSelect}
+          />
+          <ColorBarLegendRange {...props} />
+        </>
+      );
+  }
+
   return (
     <Box sx={styles.container} style={style} ref={colorBarSelectAnchorRef}>
       <Box sx={styles.header}>
@@ -136,18 +172,7 @@ export default function ColorBarLegend(
           </Typography>
         )}
       </Box>
-      {variableColorBar.type === "categorical" ? (
-        <ColorBarLegendCategorical
-          categories={variableColorBar.colorRecords}
-          onOpenColorBarEditor={handleOpenColorBarSelect}
-          {...props}
-        />
-      ) : (
-        <ColorBarLegendScalable
-          onOpenColorBarEditor={handleOpenColorBarSelect}
-          {...props}
-        />
-      )}
+      {legend}
       <Popover
         anchorEl={colorBarSelectAnchorEl}
         open={Boolean(colorBarSelectAnchorEl)}
